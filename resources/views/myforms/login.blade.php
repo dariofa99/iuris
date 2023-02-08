@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}" id="myLoginForm">
                         {{ csrf_field() }}
-                        @include('msg.danger')
+                        @include('msg.alerts')
  
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} row">
                             <label for="email" class="col-md-3 col-form-label text-md-right">{{ __('Usuario') }}</label>
@@ -82,9 +82,14 @@ Sigue estos pasos:<br>
 
                         <div class="form-group row mb-0">
                               <div class="col-md-6" style="text-aling:center" align="center">
-                                <a class="btn btn-warning" href="/recepcion">
-                                  Solicitar atención
+                                <a class="btn btn-warning" href="/solicitudes/conciliacion/recepcion">
+                                  Solicitar conciliación
                                 </a>
+
+                                {{-- <a class="btn btn-warning" href="/recepcion">
+                                    Solicitar atención
+                                  </a> --}}
+
                             </div>
                             <div class="col-md-6" style="text-aling:center" align="center">
                                 <a class="btn btn-warning" href="/videos" target="_blank">

@@ -59,10 +59,10 @@ NO Aceptar
         @include('myforms.conciliaciones.componentes.parte_solicitante',[     
             'section'=>'parte_solicitante'
         ])
-     
-    @include('myforms.conciliaciones.componentes.parte_solicitante_rep_legal',[     
-        'section'=>'representante_legal_solicitante'
-    ])
+      
+        @include('myforms.conciliaciones.componentes.parte_solicitante_rep_legal',[     
+            'section'=>'representante_legal_solicitante'
+        ])
     
     </div>
     

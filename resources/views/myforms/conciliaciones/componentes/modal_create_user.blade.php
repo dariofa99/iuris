@@ -5,7 +5,7 @@ myModal_conc_user_create
 @endslot
 
 @slot('title')
-Editar
+
 @endslot
 
 

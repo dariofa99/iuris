@@ -382,12 +382,13 @@ class Expediente extends Model
             ->whereDate('fecha_fin','>=',$now)
             ->where("periodo_id",$periodo->id)->first();
             $fecha_asig = Carbon::parse($asig->fecha_asig); 
-            $fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);            
+            $fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);   
+                     
             $_vacaciones = DB::table("vacaciones_periodo")            
             ->whereDate('fecha_inicio','>=',$fecha_asig)
             ->whereDate('fecha_fin','<=',$fecha_max)
             ->where("periodo_id",$periodo->id)->first();
-            if($_vacaciones){
+            if($_vacaciones){ 
                 $fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
                 $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
                 $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
@@ -417,71 +418,31 @@ class Expediente extends Model
 
             }
             $dias = $days;
-            if ($days <= 0) {
-                if ($days == 0) {
-                    $color = 'gray !important';
-                    $days = 'Evaluado por sistema'; 
-                    //$days = $now->diffInDays($fecha_asig,false);
-                    if ($value) {
-                        $days = true;
-                    }
-                } else {
-                    $color = 'gray !important';
-                    $days = 'Evaluado por sistema';
-                    //$days = $now->diffInDays($fecha_asig,false);
-                    if ($value) {
-                        $days = $days;
-                    }
-                }
-            } elseif ($days > 0 && $days <= 10) {
-                //rojo
-                $color = '#CB4335 !important';
-                if ($value) {
-                    $days = $days;
-                } else {
-                    $days = $days . ' Días';
-                }
-            } elseif ($days > 10 && $days <= 19) {
-                //amarillo
-                $color = '#F4D03F !important';
+            $mgs = $days . ' Días';
+            if($days >= 1)$color = '#DA443F !important';                          
+            if($days >= 10)$color = '#F4D03F !important';
+            if($days >= 20) $color = '#0CA418 !important';
+            if($days < 1){
+                $color = 'gray !important';
+                $mgs = "Evaluado por sistema";
+            }
+            switch ($item) {
+                case 'color':
+                    return $color;
+                    break;
+                case 'mensaje':
+                    return $vacaciones_text ? "Vacaciones" : $mgs;                   
+                    break;
+                case 'dias':
+                    return $dias;
+                    break;
+                
+                default:
+                return "Sin argumento";
+                    break;
+            }
+            return "dias";
 
-                if ($value) {
-                    $days = $days;
-                } else {
-                    $days = $days . ' Días';
-                }
-            } elseif ($days > 19) {
-                if ($days <= 30) {
-                    //naranja
-                    $color = '#2ECC71 !important';
-                    if ($value) {
-                        $days = $days;
-                    } else {
-                        $days = $days . ' Días';
-                    }
-                } else {
-                    $color = '#2ECC71 !important';
-                    if ($value) {
-                        $days = 30;
-                    } else {
-                        $days = '+30 Días';
-                    }
-                }
-            }
-
-            if ($item == 'color') {                
-                if ($_vacaciones and $dias > 0 && $dias <= 10) {
-                    return $color = '#CB4335 !important';
-                }               
-                return $color;
-            }
-            if ($item == 'dias') {
-                if ($value and $_vacaciones) {
-                    return $days;
-                }
-                return $vacaciones_text ? "Vacaciones" : $days;
-            }
-            return 'Función sin argumento';
         } catch (\ErrorException $e) {
             return 'Error';
         }

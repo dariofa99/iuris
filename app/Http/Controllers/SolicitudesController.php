@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Conciliacion;
 use Illuminate\Http\Request;
 use App\Solicitud;
 use App\User;
 use App\Sede;
-use Auth;
 use DB;
 use Carbon\Carbon;
 use Storage;
 use Facades\App\Facades\NewPush;
 use App\File;
 use Facades\App\Facades\NewChat;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Validation\Rule;
 
@@ -20,7 +21,9 @@ class SolicitudesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth',['except' => ['store','waitRoom','userRegister','update','find','recepcion']]);
+        $sede = Sede::find(1);       
+        session(["sede"=>$sede]);
+        $this->middleware('auth',['except' => ['registro','solicitar_store','store','waitRoom','userRegister','update','find','recepcion','solicitar']]);
         $this->middleware('permission:ver_solicitudes',   ['only' => ['index','edita']]);
         $this->middleware('permission:admin_solicitudes',   ['only' => ['edit']]);
     }
@@ -40,6 +43,47 @@ class SolicitudesController extends Controller
         return view('myforms.solicitudes.frm_list_solicitudes',compact('solicitudes','solicitudesh'));
     }
 
+    public function solicitar(Request $request)
+    {           
+        return view('myforms.recepcion.solicitar_conciliacion');
+    }
+
+    public function registro(Request $request)
+    {      
+        $conciliacion = Conciliacion::find(103);     
+        return view('myforms.recepcion.frm_registro_conciliacion',compact('conciliacion'));
+    }
+
+    public function solicitar_store(Request $request)
+    {     
+        $user = User::where([
+            'email'=>$request->email,
+            //'idnumber'=>$request->idnumber
+        ])->first();
+
+        if(!$user){
+            $user = User::create([
+                'active' => 0,
+                'tipodoc_id' => $request['tipodoc'], 
+                'idnumber' => $request['idnumber'],
+                'name' => $request['name'],
+                'lastname' => $request['lastname'],
+                'password' => $request->has('password') ? $request['password'] : bcrypt($request['idnumber']),
+                'cursando_id' => 1,
+                'email' => $request['email'],                
+                'genero_id' => '6',
+                'estrato_id' => '9',
+                'estadocivil_id' =>'16'        
+            ]);    
+        }
+
+        Auth::login($user);
+
+     
+       // dd($request->all()) ;     
+        return redirect('/solicitudes/conciliacion/registro');
+    }
+    
     private function get_solicitudes()
     {
         $solicitudes = Solicitud::where('type_status_id',154)
@@ -448,7 +492,7 @@ class SolicitudesController extends Controller
 
     public function recepcion(Request $request){
         //$sedes = Sede::all();
-       // return view('vacaciones');
+        //return view('vacaciones');
         return view('myforms.recepcion.frm_solicitud');
     }
 }

@@ -17,6 +17,14 @@ use App\HistorialDatosCaso;
 
 class SegmentosController extends Controller
 {
+	public $periodo;
+
+	public function periodo(){
+		return Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
+		->where('sp.sede_id', session('sede')->id_sede)
+		->where('estado', true)
+		->first();
+	}
 
 	function getSegmentos(){
 			$segmentos = Segmento::join('periodo','periodo.id','=','segmentos.perid')
@@ -170,18 +178,35 @@ class SegmentosController extends Controller
 //revisar los casos de asesoria que estan abiertos pero requieren ser cerrados por el sistema
 		
 		$segmento = Segmento::find($id);
-		
+		//dd($segmento); 
 		if($segmento->fecha_corte == null) {
 			Session::flash('message-danger', 'Atención..! No hay una fecha de corte activa');
 			return response()->json(['saved'=>false]);
 		}
-		//dd($segmento); 
+		
 
+		$now = Carbon::now();
+
+
+	/* 	$vacaciones_text = DB::table("vacaciones_periodo")            
+		->whereDate('fecha_fin','>=',$now)
+		->where("periodo_id",$periodo->id)
+		->first();
+
+		$fecha_asig = Carbon::parse($asig->fecha_asig); 
+		$fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);            
+		$_vacaciones = DB::table("vacaciones_periodo")            
+		->whereDate('fecha_inicio','>=',$fecha_asig)
+		->whereDate('fecha_fin','<=',$fecha_max)
+		->where("periodo_id",$periodo->id)
+		->first(); */
+///////////////////
 		$dateini = Carbon::parse($segmento->fecha_inicio);
 		$dateiniciocorte = $dateini->format('Y-m-d 00:00:01');
 
 		$date = Carbon::parse($segmento->fecha_fin);
 		$datefinalcortereal = $date->format('Y-m-d 23:59:59');
+		
 		$date = $date->subDays(15);//se quitan 15 dias para evitar evaluacion a los casos asignados en los ultimos 15dias
 		$datemenosquincediasfinalcorte = $date->format('Y-m-d 23:59:59');
 		
@@ -202,22 +227,23 @@ class SegmentosController extends Controller
         */
 
 		//consulta sobre todos los casos asignados antes del corte
+		//Estos casos son viejos
 		 $expedientes = DB::select(DB::Raw("Select asignacion_caso.fecha_asig,
 		 expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id from expedientes
 		 join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid join `users` on expedientes.expidnumberest = users.idnumber join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
 		 where expedientes.expidnumberest = asignacion_caso.asigest_id and (expestado_id != 5 and expestado_id != 2) 
-		 and fecha_asig < '".$dateiniciocorte."' and sede_expedientes.sede_id=".session('sede')->id_sede ));
+		 and asignacion_caso.activo = 1 and fecha_asig < '".$dateiniciocorte."' and sede_expedientes.sede_id=".session('sede')->id_sede ));
 		 
-		
+	
+
+
 		 $docente_id = \Auth::user()->idnumber;
 		 $exps=[];
-		 
-		foreach ($expedientes as $key => $expediente) {
+		// return response()->json($expedientes);
+		foreach ($expedientes as $key => $expediente) {		
 
-			
 			if ($expediente->exphechos == 0 || $expediente->exprtaest == 0 ) {
-				// se registra un cero cuando no tiene informacion en datos del caso
-
+				//se registra un cero cuando no tiene informacion en datos del caso
 				$data = [ 
 					'ntaaplicacion'=>0,
 					'ntaconocimiento'=>0,
@@ -232,10 +258,14 @@ class SegmentosController extends Controller
 					'docidnumber'=>$docente_id,
 					'tbl_org_id'=>$expediente->id,
 				  ]; 
-
-				 $this->Asignotasnewdatos($data);
+				  return response()->json($data);
+				 //$this->Asignotasnewdatos($data);
 			} 
-			$asigdocencaso=AsigDocenteCaso::where(['asig_caso_id'=> $expediente->asig_caso_id, 'activo'=>'1'])->first();
+
+			
+
+			$asigdocencaso=AsigDocenteCaso::where(['asig_caso_id'=> $expediente->asig_caso_id, 'activo'=>'1'])
+			->first();
 			if(!$asigdocencaso){
 				$data = [ 
 					'ntaaplicacion'=>0,
@@ -251,18 +281,21 @@ class SegmentosController extends Controller
 					'docidnumber'=>$docente_id,
 					'tbl_org_id'=>$expediente->id,
 				  ]; 
-
-				 $this->Asignotasnewdatos($data);
+				 //$this->Asignotasnewdatos($data);
+				 return response()->json("Docente");
 				
 			}
+			//Evalua actuaciones
+			
 			if($expediente->exptipoproce_id != '1'){
-
+				
 				$actuaciones = Actuacion::where('actexpid',$expediente->expid)
 				->where('actidnumberest',$expediente->expidnumberest)
-				->whereDate('created_at','<=',$datefinalcortereal)->get();
-			
-					if(count($actuaciones)<=0){
+				->whereDate('actfecha','<=',$datefinalcortereal)
+				->limit(1)->get();	
+				
 
+					if(count($actuaciones)<=0){
 							$data = [ 
 								'ntaaplicacion'=>0,
 								'ntaconocimiento'=>0,
@@ -278,31 +311,24 @@ class SegmentosController extends Controller
 								'tbl_org_id'=>$expediente->id,
 							  ]; 
 			
-							$this->Asignotasnewdatos($data);
-		
-						
-
-						
+							//$this->Asignotasnewdatos($data);						
 					}else{
 
-						//Se verifica si se realizaron actuaciones cada mes en los casos viejos durante el corte evaluado
+						//Se verifica si se realizaron actuaciones cada mes en los casos viejos
+						// durante el corte evaluado
 
-						/* $actuacionsmesanteriores = DB::select(DB::Raw("SELECT date_format(created_at, '%Y-%m-%d') as fechas
-						 FROM actuacions
+						$actuacionsmes = DB::select(DB::Raw("SELECT date_format(actfecha, '%Y-%m-%d') as fechas 
+						FROM actuacions
 						 WHERE actexpid = '".$expediente->expid."' 
 						 AND actidnumberest = '".$expediente->expidnumberest."' 
-						 AND created_at < '".$dateiniciocorte."' GROUP BY 1 ORDER BY 1 DESC LIMIT 1"));
-						if(count($actuacionsmesanteriores)>0){
-							$fechainicomparacion=$actuacionsmesanteriores[0]->fechas;
-						} else {
-							$fechainicomparacion=$expediente->fecha_asig;
-						} */
-						$actuacionsmes = DB::select(DB::Raw("SELECT date_format(created_at, '%Y-%m-%d') as fechas FROM actuacions
-						 WHERE actexpid = '".$expediente->expid."' 
-						 AND actidnumberest = '".$expediente->expidnumberest."' 
-						 AND (created_at >= '".$dateiniciocorte."' 
-						 AND  created_at <= '".$datefinalcortereal."') 
+						 AND (actfecha >= '".$dateiniciocorte."' 
+						 AND  actfecha <= '".$datefinalcortereal."') 
 						 GROUP BY 1 ORDER BY 1 ASC"));
+
+						 $iseva = $this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin);
+
+						 return response()->json([$iseva,'sjsj',$actuacionsmes]);
+
 						if($this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin)){
 							$data = [ 
 								'ntaaplicacion'=>0, 
@@ -325,14 +351,16 @@ class SegmentosController extends Controller
 					
 
 			} 
-
+			
 			if($expediente->exptipoproce_id ==  1) {
+				
 				$expedientemodel=Expediente::where('expid', $expediente->expid)->first();
-				$days = $expedientemodel->getDaysOrColorForClose('dias',true);
-			  
+				$days = $expedientemodel->getDaysOrColorForClose('dias');
+				//return response()->json($days);
 				if($days<=0 || $days===true) {   
-				 
-				  if($expedientemodel->expestado_id != 5 AND $expedientemodel->expestado_id != 2){
+				
+					
+				if($expedientemodel->expestado_id != 5 AND $expedientemodel->expestado_id != 2){
 				$notas =  $expedientemodel->get_has_nota_final();
 			   
 				if (count($notas) <= 0) {
@@ -350,30 +378,28 @@ class SegmentosController extends Controller
 						  'docidnumber'=>\Auth::user()->idnumber, 
 						  'tbl_org_id'=>$expedientemodel->id, 
 						]; 
-						$expedientemodel->asignarNotas($data);
+						//$expedientemodel->asignarNotas($data);
 						$expedientemodel->expestado_id = 5;
-						$expedientemodel->save();
+						//$expedientemodel->save();
 				}
 				}
+			  }		
 			  }
-		
-		
-		
-			  }
-
-
 		}
-		
+
+		return response()->json([$expedientes]);
+		///////////////fin foreach todos los casos
 
 
 		//consulta sobre los casos asignados solo durante el corte para notas sobre tiempos limites de inicio
 		$expedientescorte = DB::select(DB::Raw("Select asignacion_caso.fecha_asig,
 		expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id from expedientes
 		join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid join `users` on expedientes.expidnumberest = users.idnumber join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
-		where expedientes.expidnumberest = asignacion_caso.asigest_id and (expestado_id != 5 and expestado_id != 2) and (fecha_asig >= '".$dateiniciocorte."' and fecha_asig <= '".$datemenosquincediasfinalcorte."') and sede_expedientes.sede_id=".session('sede')->id_sede ));
+		where expedientes.expidnumberest = asignacion_caso.asigest_id and (expestado_id != 5 and expestado_id != 2) 
+		and (fecha_asig >= '".$dateiniciocorte."' and fecha_asig <= '".$datemenosquincediasfinalcorte."') 
+		and sede_expedientes.sede_id=".session('sede')->id_sede ));
 
 		foreach ($expedientescorte as $key => $expediente) {
-
 						
 			if ($expediente->exphechos == 0 || $expediente->exprtaest == 0 ) {
 				// se registra un cero cuando no tierne informacion en datos del caso
@@ -481,7 +507,7 @@ class SegmentosController extends Controller
 						}
 					} else {
 						//tiene actuaciones por cada mes?
-					$actuacionsmes = DB::select(DB::Raw("SELECT date_format(created_at, '%Y-%m-%d') AS
+					$actuacionsmes = DB::select(DB::Raw("SELECT date_format(created_at, '%Y-%m') AS
 					 'fechas' FROM actuacions WHERE actexpid = '".$expediente->expid."'
 					  AND actidnumberest = '".$expediente->expidnumberest."'
 					  AND (created_at >= '".$dateiniciocorte."'
@@ -599,37 +625,195 @@ class SegmentosController extends Controller
 
 
 			$segmento->est_evaluado = 1;
-      $segmento->save();
-
+      		$segmento->save();
 			$segmentos = $this->getSegmentos();
 			$view = view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
-
 			return response()->json(['saved'=>true,'view'=>$view]);
 		//return redirect()->back();
 
 	}
 
+	private function hasVacationsNext($fecha_inicial,$fecha_final){
+		
+		$_vacaciones = DB::table("vacaciones_periodo")            
+		->whereDate('fecha_inicio','>=',$fecha_inicial)
+		->whereDate('fecha_fin','<=',$fecha_final)
+		->where("periodo_id",$this->periodo()->id)
+		->first();
+		if($_vacaciones){
+			$fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
+            $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
+            $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
+			return $days_vac ;
+		}
+		return 0 ;
+	}
+
+	private function hasVacations($fecha_inicial,$fecha_final){
+		
+		$_vacaciones = DB::table("vacaciones_periodo")            
+		->whereDate('fecha_inicio','<=',$fecha_inicial)
+		->whereDate('fecha_fin','>=',$fecha_final)
+		->where("periodo_id",$this->periodo()->id)
+		->first();
+		if($_vacaciones){
+			$fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
+            $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
+            $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
+			return $days_vac ;
+		}
+		return 0 ;
+	}
+	
+	private function getVacations($fecha_inicial,$fecha_final){
+	   $_vacaciones = DB::table("vacaciones_periodo")            
+		->whereDate('fecha_inicio','<=',$fecha_inicial)
+		->whereDate('fecha_fin','<=',$fecha_final)
+		->where("periodo_id",$this->periodo()->id)
+		->orderBy("fecha_inicio",'desc')
+		->first();;	
+		if($_vacaciones){			
+			return $_vacaciones ;
+		}
+		return $_vacaciones ;
+	}
+
+	private function hasVacationsFin($fecha_inicial,$fecha_final){
+		
+		$_vacaciones = DB::table("vacaciones_periodo")            
+		->whereDate('fecha_inicio','>=',$fecha_inicial)
+		->whereDate('fecha_fin','<=',$fecha_final)
+		->where("periodo_id",$this->periodo()->id)
+		->first();;	
+
+		if($_vacaciones){
+			$fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
+            $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
+            $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
+			return $days_vac ;
+		}
+		return 0 ;
+
+	}
 
 private function isActuacionEval($array,$fecha_asig,$fecha_fin){
 	$fecha_fin = Carbon::parse($fecha_fin);
 	$fechaasig = Carbon::parse($fecha_asig);
 	$fechafinalcorte = $fecha_fin;
+
+	//if($key == 0) return $days_add." no ".$fechaasig->diffInDays($fecha1)."  ".$dias_despues__fin_vc;
+
+
 	foreach ($array as $key => $fechacalc) {
-	  $fecha1 = Carbon::parse($fechacalc->fechas);
-	  if ($fechaasig->diffInDays($fecha1) >= 30) {	
-		return true;	
-		break;	
-	  } else {
-		if (array_key_exists($key+1,$array)) {
-		  $fechaasig =$fecha1;
-		} else {
-		  if ($fecha1->diffInDays($fechafinalcorte) >= 30) {
-			return true;
-			break;	
-		  }		  
-		} 	
+	  $fecha1 = Carbon::parse($fechacalc->fechas);	 
+	  $end_fecha = Carbon::parse($fecha_asig)->addDays(31)->format("Y-m-d"); 
+	  $dias_sin_act = $fechaasig->diffInDays($fecha1);
+	  
+	//if($key == 2) return " no ".$fechaasig->diffInDays($fecha1)."  ";
+
+
+
+	  if ($dias_sin_act > 30) {		
+		 $vacations_days = $this->hasVacations($end_fecha,$end_fecha);
+		//Si la actuacion se vence en vacaciones		
+		if($vacations_days > 0){ 
+			$vacations = $this->getVacations($end_fecha,$fechafinalcorte);
+			$v_date_ini = $vacations->fecha_inicio;
+			$v_date_fin = Carbon::parse($vacations->fecha_fin);
+			//Si la actuacion se hizo en vacaciones 
+			$vacations_days_r = $this->hasVacations($fecha1,$fecha1);
+			if($vacations_days_r>0){	
+				//Si no tiene mas actuaciones
+				if (!array_key_exists($key+1,$array)) {					
+					$dias_sin_act = $v_date_fin->diffInDays($fechafinalcorte);
+					if($dias_sin_act>30){
+						return $key." *se evalua 713* ".$dias_sin_act;
+					}
+					
+				}
+				
+			}else{
+				//si no se hizo en vacaciones
+				//Se evalua que hayan vacaciones
+				$vacations_days = $this->hasVacationsFin($fechaasig,$fecha1);
+				if($vacations_days>0){
+					$days_add = Carbon::parse($fecha_asig)->addDays(31)->diffInDays($v_date_ini);
+					$dias_despues__fin_vc = Carbon::parse($v_date_fin)->diffInDays($fecha1);
+					$dias_sin_act = (30 - $days_add) + $dias_despues__fin_vc;
+					if($dias_sin_act>30){
+						return $key." *se evalua 727* ".$dias_sin_act;
+					}
+				}else{
+					$dias_sin_act = Carbon::parse($fecha_asig)->addDays(31)->diffInDays($fecha1);
+					if($dias_sin_act>30){
+						return $key." *se evalua 732* ".$dias_sin_act;
+					}
+				}				
+				
+			}
+
+		}else{
+			//Si fue antes de vacaciones o no hay vacaciones
+			$dias_sin_act = Carbon::parse($fechaasig)->diffInDays($fecha1);			
+			if($dias_sin_act>30){
+				return $key." *se evalua 752* ".$dias_sin_act;
+			}
+			 
+		}
+	  }else{
+		//Si no esta vencida
+		//Si no tiene mas actuaciones
+		if (!array_key_exists($key+1,$array)) {				
+			//Si la ultima actuacion se hizo en vacaciones 			
+			$vacations_days_r = $this->hasVacations($fecha1,$fecha1);
+			
+
+			if($vacations_days_r>0){
+				$vacations = $this->getVacations($fecha1,$fechafinalcorte);			
+				$v_date_fin = Carbon::parse($vacations->fecha_fin);				
+				$dias_sin_act = $v_date_fin->diffInDays($fechafinalcorte);
+				if($dias_sin_act>30){
+					return $vacations_days_r." *se evalua 770* ".$dias_sin_act. " ".$v_date_fin;
+				}
+				
+			}else{
+				$dias_sin_act = Carbon::parse($fecha1)->diffInDays($fechafinalcorte);
+				if($dias_sin_act>30){
+					//Se evalua que no hayan vacaciones					
+					$vacations_days_r = $this->hasVacationsNext($fecha1,$fechafinalcorte);
+					$dias_sin_act = $dias_sin_act - $vacations_days_r;
+					if($dias_sin_act>30)	return $dias_sin_act." *se evalua 795* ".$vacations_days_r;
+					
+				}
+			}
+
+		/* 	if($dias_sin_act>30){
+				//Se evalua que hayan vacaciones
+				$vacations_days = $this->hasVacationsFin($fecha1,$fechafinalcorte);
+				if($vacations_days>0){
+					$dias_sin_act = $dias_sin_act - $vacations_days;
+					if($dias_sin_act>30){
+						return $key." *se evalua* ".$dias_sin_act;
+					}
+				}
+				
+			} */
+			//if($key == 0) return $dias_sin_act." se evalua ";
+		}
 	  }
+
+	  //$date = ($fechaasig->diffInDays($fecha1)) - $vacations_days ;
+
+
+		
+	  if (array_key_exists($key+1,$array)) {
+		$fechaasig = $fecha1;				
+	  }
+
+	   //return "joderos - ".$dias_sin_act ;	  
+	 
 	}
+	return false;
 }
 
 	private function verMeses($a){

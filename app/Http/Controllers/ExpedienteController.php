@@ -656,8 +656,8 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
      
 
       if($expediente->exptipoproce_id ==  1) {
-        $days = $expediente->getDaysOrColorForClose('dias',true);
-      
+        $days = $expediente->getDaysOrColorForClose('dias');
+        dd($days);
         if($days<=0 || $days===true) {   
          
         if($expediente->expestado_id != 5 AND $expediente->expestado_id != 2){
@@ -683,9 +683,9 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                   'docidnumber'=>\Auth::user()->idnumber, 
                   'tbl_org_id'=>$expediente->id, 
                 ]; 
-          $expediente->asignarNotas($data);
-          $expediente->expestado_id = 5; 
-          $expediente->save();
+         // $expediente->asignarNotas($data);
+         // $expediente->expestado_id = 5; 
+         // $expediente->save();
         }
         }
       }

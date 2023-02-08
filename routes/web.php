@@ -43,6 +43,9 @@ Route::get('terminosycondiciones', function () {
 });
 Route::get('conciliaciones/download/file/{file_id}', 'ConciliacionesController@downloadFile'); 
 Route::get('conciliaciones/enviar/correo', 'ConciliacionesController@enviarCorreo'); 
+
+
+
 Route::get('videos', function () {
   return view('videos');
 });
@@ -437,6 +440,10 @@ Route::get('solicitudes/find/e','SolicitudesController@find');
 Route::get('login',array('as'=>'login',function(){
     return view('myforms.login');
 }));
+Route::get('/solicitudes/conciliacion/registro', 'SolicitudesController@registro'); 
+
+Route::get('/solicitudes/conciliacion/recepcion', 'SolicitudesController@solicitar');
+Route::post('/solicitudes/conciliacion/recepcion', 'SolicitudesController@solicitar_store')->name("solicitudes.conciliacion"); 
 Route::get('recepcion',"SolicitudesController@recepcion");
 /* 
 Route::get('recepcion',function(){
@@ -488,11 +495,13 @@ Route::get('/prueba', function () {
  // $user = User::find(1);
   //Mail::to('darioj99@gmail.com')->send(new Firma($user));
 
-  $expediente = Expediente::where('expid', "2022B-103")->first();
-  //
-  $fecha = $expediente->setNotActLimit(); 
+  $fecha_ini = Carbon::parse('2022-12-17');
+  $fecha_fin = Carbon::parse('2023-01-09');
 
-  dd($fecha);
+  $fecha_v = Carbon::parse('2022-12-24');
+
+  $days = $fecha_ini->diffInDays($fecha_fin, false);
+  dd($days);
   $us = User::where("email",'darioj99@gmail.com')->first();
   $mensaje =  ConciliacionEstado::first();
    Notification::send($us, new SolicitudRadicarConciliacion( $mensaje ));

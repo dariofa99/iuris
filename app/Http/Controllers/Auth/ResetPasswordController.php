@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Session;
 
 class ResetPasswordController extends Controller
 {
@@ -111,10 +112,12 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/login';
     protected function resetPassword($user, $password){
         $user->password = $password;
         $user->save();
-        \Auth::login($user);
+        Session::flash('message-success', 'Ahora ya puedes iniciar sesión');
+               
+        //\Auth::login($user);
     }
 }

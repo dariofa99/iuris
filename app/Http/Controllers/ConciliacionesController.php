@@ -79,6 +79,8 @@ class ConciliacionesController extends Controller
         return view('myforms.conciliaciones.index',compact('conciliaciones'));
     }
 
+  
+
     public function audiencias(Request $request)
     {
         $conciliaciones = Conciliacion::orderBy(DB::raw("FIELD(estado_id,'182')"),'desc')->paginate(10);
