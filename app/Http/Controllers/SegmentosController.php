@@ -480,6 +480,7 @@ class SegmentosController extends Controller
 		foreach ($expedientescorte as $key => $expediente) {
 						
 			if ($expediente->exphechos == 0 || $expediente->exprtaest == 0 ) {
+
 					$dias_sinhechos = Carbon::parse($expediente->fecha_asig)->diffInDays($datefinalcortereal);
 					// se registra un cero cuando no tiene informacion en datos del caso				
 					if($dias_sinhechos>5){
@@ -490,10 +491,11 @@ class SegmentosController extends Controller
 						$vacaciones = $this->getVacations($fecha_vence,$datefinalcortereal);
 						$dias_sinhechos = Carbon::parse($expediente->fecha_asig)->diffInDays($vacaciones->fecha_inicio);
 						$dias_sinhechos = $dias_sinhechos + Carbon::parse($vacaciones->fecha_fin)->diffInDays($datefinalcortereal);
+						if($vacaciones)$vacations_days = $this->hasVacationsNext($vacaciones->fecha_fin,$datefinalcortereal);
+						
 					}
 					if($dias_sinhechos>5){
 						//se obtienen los dias de vacaciones desde el fin de las vacaciones hasta el cierre de corte;
-						$vacations_days = $this->hasVacationsNext($vacaciones->fecha_fin,$datefinalcortereal);
 						$dias_sinhechos = $dias_sinhechos -$vacations_days;
 
 					}
