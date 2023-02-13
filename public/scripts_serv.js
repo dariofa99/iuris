@@ -181,9 +181,11 @@ var estado_exp = $("#expestado_id").val();
 	
 	
 		var btn_add_respuesta =" <button "+estadoBtn+" type='button' value="+value.parent.id+" OnClick='Mostrar(this,"+value.parent.actestado_id+",\"myModal_act_add_revision\");' class='btn btn-default btn-sm' style='color:#777'>Ag. Respuesta</button>"
-		var bnt_rev_anexo_false =" <button "+estadoBtn+" type='button' value="+value.parent.id+"  class='btn btn-default btn-sm btn_change_status' style='color:#777'>Revisar</button>"
+		var bnt_rev_anexo_false =" <button "+estadoBtn+" type='button' value="+value.parent.id+"  class='btn btn-default btn-sm btn_change_status' style='color:#777'>Revisado</button>"
 		var bnt_rev_anexo_true =" <button "+estadoBtn+" type='button' value="+value.parent.id+" class='btn btn-default btn-sm btn_change_status' style='color:#777'>Quitar revisado</button>"
 		var bnt_return_actestado =" <button "+estadoBtn+" type='button' id="+value.parent.actestado_id+"	 value="+value.parent.id+" class='btn btn-warning btn-sm btn_change_status' style='color:#fff'>Volver a correcciones</button>"
+		var bnt_rev_anexo_anulado =" <button "+estadoBtn+" type='button' data-estado='235' value="+value.parent.id+" class='btn btn-danger btn-sm btn_change_status'>Anular</button>"
+		var bnt_rev_anexo_quitar_anulado =" <button "+estadoBtn+" type='button' data-estado='136' value="+value.parent.id+" class='btn btn-danger btn-sm btn_change_status'>Des-anular</button>"
 			
 		if((value.user.name == 'docente' || value.user.name == 'docente_prueba' || value.user.name == 'estudiante') && (estado_exp != 1 && estado_exp !=  3)){
 			btn_editar = '';
@@ -260,24 +262,24 @@ var estado_exp = $("#expestado_id").val();
       }
 
 			}else if(value.parent.actestado_id=='136'){
-				
+			//Anexo	
 				color='gray';
 			if (value.user.name == 'estudiante') {				
 				btnsParent = btn_detalles+""+btn_editar+" "+btn_eliminar;
 			}
 			if (value.user.name == 'docente' || value.user.name == 'docente_prueba') {
 				btnsParent = btn_detalles;
-				value.docenteasig ? btnsParent += bnt_rev_anexo_false :'';
+				value.docenteasig ? btnsParent += bnt_rev_anexo_false + bnt_rev_anexo_anulado :'';
              }
              if (value.user.name == 'amatai' || value.user.name =='diradmin' || value.user.name == 'dirgral') {
 				 btnsParent = btn_detalles;
-				 btnsParent += bnt_rev_anexo_false;
+				 btnsParent += bnt_rev_anexo_false + bnt_rev_anexo_anulado;
 				//btnsParent += btn_revisar;
 				btnsParent += btn_eliminar;
             }
 
 			}else if(value.parent.actestado_id=='138'){
-				
+				//Anexo revisado
 				color='gray';
 			if (value.user.name == 'estudiante') {				
 				btnsParent = btn_detalles;
@@ -289,13 +291,31 @@ var estado_exp = $("#expestado_id").val();
              }
              if (value.user.name == 'amatai' || value.user.name =='diradmin' || value.user.name == 'dirgral') {
 				 btnsParent = btn_detalles;
-				 btnsParent += bnt_rev_anexo_true;
+				 btnsParent += bnt_rev_anexo_true ;
+				//btnsParent += btn_revisar;
+				btnsParent += btn_eliminar;
+            }
+
+			}else if(value.parent.actestado_id=='235'){
+				//Anexo anulado
+				color='gray';
+			if (value.user.name == 'estudiante') {				
+				btnsParent = btn_detalles;
+			}
+			if (value.user.name == 'docente' || value.user.name == 'docente_prueba') {
+				btnsParent = btn_detalles;
+				value.docenteasig ? btnsParent += bnt_rev_anexo_quitar_anulado : '';
+				
+             }
+             if (value.user.name == 'amatai' || value.user.name =='diradmin' || value.user.name == 'dirgral') {
+				 btnsParent = btn_detalles;
+				 btnsParent +=  bnt_rev_anexo_quitar_anulado;
 				//btnsParent += btn_revisar;
 				btnsParent += btn_eliminar;
             }
 
 			}else if(value.parent.actestado_id=='139'){
-			//anexo revisado	
+			//Evaluado por el sistema	
 				color='default';
 			if (value.user.name == 'estudiante') {				
 				btnsParent = btn_detalles;
@@ -313,7 +333,7 @@ var estado_exp = $("#expestado_id").val();
 		   }
 
 			}else if(value.parent.actestado_id=='140'){
-				//enviado por docente	
+				//Solicitado por docente por docente	
 				color='purple';
 				if (value.user.name == 'estudiante') {		
 					const btn_ag_correccion = " <button " + estadoBtn + " type='button' value=" + value.parent.id + "  OnClick='Mostrar(this," + value.parent.actestado_id + ",\"myModal_act_add_revision\");' class='btn btn-primary btn-sm' > Agr. Actuación </button> ";

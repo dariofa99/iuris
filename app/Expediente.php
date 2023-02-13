@@ -365,7 +365,7 @@ class Expediente extends Model
         }
     }
 
-    function getDaysOrColorForClose($item = '', $value = false)
+    function getDaysOrColorForClose($item = '',$now = null)
     {
         /* $asig = $this->asignaciones()->where('asigest_id',$this->estudiante->idnumber)
         ->where('periodo_id',$periodo->id)
@@ -376,8 +376,10 @@ class Expediente extends Model
             ->where('sp.sede_id', session('sede')->id_sede)
             ->where('estado', true)
             ->first();
+        //    return  $asig;
         try {
-            $now = Carbon::now();
+            //dd($now);
+            $now = $now == null ? Carbon::now() : Carbon::parse($now);
             $vacaciones_text = DB::table("vacaciones_periodo")            
             ->whereDate('fecha_fin','>=',$now)
             ->where("periodo_id",$periodo->id)->first();
@@ -388,6 +390,8 @@ class Expediente extends Model
             ->whereDate('fecha_inicio','>=',$fecha_asig)
             ->whereDate('fecha_fin','<=',$fecha_max)
             ->where("periodo_id",$periodo->id)->first();
+           // return  $_vacaciones;
+             
             if($_vacaciones){ 
                 $fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
                 $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);

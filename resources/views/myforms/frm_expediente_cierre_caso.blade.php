@@ -157,9 +157,9 @@ Registrado
 @if($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber or currentUser()->hasRole("estudiante") or currentUser()->hasRole("amatai") or currentUser()->hasRole("diradmin") or currentUser()->hasRole('dirgral'))
 
 <div class="col-md-12" align="right">
-@if((currentUser()->hasRole("estudiante") and ($expediente->getDaysOrColorForClose('dias',true)>=1 || $expediente->exptipoproce_id !=1 )and ($expediente->estado->id == 1 || $expediente->estado->id == 3)) || (currentUser()->hasRole("docente") and $expediente->estado->id == 4) || (currentUser()->hasRole("amatai")  or currentUser()->hasRole("diradmin") or currentUser()->hasRole('dirgral')))
+@if((currentUser()->hasRole("estudiante") and ($expediente->getDaysOrColorForClose('dias')>=10 || $expediente->exptipoproce_id !=1 )and ($expediente->estado->id == 1 || $expediente->estado->id == 3)) || (currentUser()->hasRole("docente") and $expediente->estado->id == 4) || (currentUser()->hasRole("amatai")  or currentUser()->hasRole("diradmin") or currentUser()->hasRole('dirgral')))
 		<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
-		Actualizar Solicitud de cierre 
+			Actualizar Solicitud de cierre 
 		</button>
 @endif
 

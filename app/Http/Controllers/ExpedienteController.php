@@ -657,7 +657,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
 
       if($expediente->exptipoproce_id ==  1) {
         $days = $expediente->getDaysOrColorForClose('dias');
-        dd($days);
+        
         if($days<=0 || $days===true) {   
          
         if($expediente->expestado_id != 5 AND $expediente->expestado_id != 2){

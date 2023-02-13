@@ -627,29 +627,35 @@ function vacations(){
   public function revisiones(Request $request, $id)
   {
 
+//return response()->json([$request->all()]);
     $actuacion = Actuacion::find($id);
-    switch ($actuacion->actestado_id) {
-      case 136:
-        $actuacion->actestado_id = 138;
-        break;
-      case 139:
-        $actuacion->actestado_id = 102;
-        $today = Carbon::now();
-        $new_limit = $today->addDays(10);
-        $actuacion->fecha_limit =  $new_limit;
-        $notas = DB::table('notas')->where('tbl_org_id', $actuacion->id)->delete();
-        break;
-      case 138:
-        $actuacion->actestado_id = 136;
-        break;
-      case 137:
-        $actuacion->actestado_id = 139;
-        break;
-      case 139:
-        $actuacion->actestado_id = 137;
-        break;
+    if($request->has("new_estado")){
+      $actuacion->actestado_id = $request->get("new_estado");
+    }else{
+      switch ($actuacion->actestado_id) {
+        case 136:
+          $actuacion->actestado_id = 138;
+          break;
+        case 139:
+          $actuacion->actestado_id = 102;
+          $today = Carbon::now();
+          $new_limit = $today->addDays(10);
+          $actuacion->fecha_limit =  $new_limit;
+          $notas = DB::table('notas')->where('tbl_org_id', $actuacion->id)->delete();
+          break;
+        case 138:
+          $actuacion->actestado_id = 136;
+          break;
+        case 137:
+          $actuacion->actestado_id = 139;
+          break;
+        case 139:
+          $actuacion->actestado_id = 137;
+          break;
+      }
+      $actuacion->actuserupdated = currentUser()->idnumber;
     }
-    $actuacion->actuserupdated = currentUser()->idnumber;
+    
 
     $actuacion->save();
 

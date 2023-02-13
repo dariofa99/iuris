@@ -771,19 +771,24 @@ $(document).ready(function (e) {
 
     $("#tbl_ajax").on("click", ".btn_change_status", function () {
         var id = $(this).val();
-        var estado = $(this).attr("id");
+        var estado = $(this).attr("id"); 
+        var request = {
+            "id":id,
+            "new_estado":$(this).attr("data-estado")
+
+        }
 
         if (estado == 139) {
             var msj = alertify.confirm(
                 "¿Esta seguro de cambiar el estado?\nSe eliminaran las notas"
             );
             msj.set("onok", function () {
-                changeStateActuacion(id);
+                changeStateActuacion(request);
             });
 
             return false;
         } else {
-            changeStateActuacion(id);
+            changeStateActuacion(request);
         }
     });
 
@@ -10066,13 +10071,13 @@ function index_pageSol(route, request) {
     });
 }
 
-function changeStateActuacion(id) {
-    var route = "/actuaciones/revisar/" + id;
+function changeStateActuacion(request) {
+    var route = "/actuaciones/revisar/" + request.id;
     $.ajax({
         url: route,
         type: "POST",
         datatype: "json",
-        data: { id: id },
+        data: request,
         cache: false,
         beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));
