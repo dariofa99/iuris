@@ -10,12 +10,12 @@
     <div class="btn-group" style="display: block">
       &nbsp; &nbsp;
       <small>
-<i> Creado por: {{$hecho->user->name}} {{$hecho->user->lastname}}. {{getSmallDateWithHour($hecho->created_at)}}</i>
+      <i> Creado por: {{$hecho->user->name}} {{$hecho->user->lastname}}. {{getSmallDateWithHour($hecho->created_at)}}</i>
       </small>
      
       @if($hecho->user_id == auth()->user()->id)
       @if(($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194))
-      @if($tipo_id=='207')
+      @if($tipo_id=='207' and !Request::has("id"))
       <a href="#" data-id="{{$hecho->id}}" data-estado_id="{{$hecho->estado_id}}"  class="btn_estado_hepr pull-right btn_hepr"> Estado </a>
       @endif
       <a href="#"  data-id="{{$hecho->id}}" class="btn_editar_hepr pull-right btn_hepr"> Editar </a> 

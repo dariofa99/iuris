@@ -205,23 +205,3 @@
 ])
 </div>
 
-
-<div class="row">
-<div class="col-md-3">
-    <div class="form-group">
-        <label >
-            @if($conciliacion->getStaticDataLabel('desde_cuando_comenzo_conflicto',$section))
-            {{$conciliacion->getStaticDataLabel('desde_cuando_comenzo_conflicto',$section)->display_name}}
-            @endif</label>
-        <input class="form-control form-control-sm insert_adv" data-name="desde_cuando_comenzo_conflicto"  data-section="{{$section}}" required  type="text"
-        @if($conciliacion->getStaticDataVal('desde_cuando_comenzo_conflicto',$section)) value="{{$conciliacion->getStaticDataVal('desde_cuando_comenzo_conflicto',$section)->value}}" @endif
-        @if(!currentUserInConciliacion($conciliacion->id,['solicitante','autor','auxiliar']) || ($conciliacion->estado_id!=174 and $conciliacion->estado_id!=176 and $conciliacion->estado_id!=194))
-         disabled 
-         class="form-control form-control-sm"
-        @else 
-        class="form-control form-control-sm insert_adv"
-         @endif>
-
-    </div>
-</div>    
-</div>

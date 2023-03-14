@@ -83,10 +83,11 @@
                 <a class="urlactive" data-toggle="tab" href="#documentos">Documentos </a>
             </li>
             @endif
-        
+            
             @if((currentUser()->can('ver_comentarios_conciliacion'))
             || ((currentUserInConciliacion($conciliacion->id,['autor'])))
-            || ($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and $conciliacion->getUser(203)->pivot->estado_id == 230)
+            || ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id 
+            and $conciliacion->getUser(203)->pivot->estado_id == 230)
             )
          
          <li>
@@ -94,25 +95,26 @@
         </li>
 
          @endif
+        
          @if(((currentUser()->can('ver_estados_conciliacion')))
          || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and (
-            ($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
+            ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))) 
-         || ($conciliacion->getUser(199)->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['autor']))
+         || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['autor']))
          )
             <li><a class="urlactive" data-toggle="tab" href="#menu2">Estado de la solicitud</a></li>
         @endif
 
         @if((currentUser()->can('ver_asignaciones_conciliacion'))
         || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) 
-        and (($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
+        and (( $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))))
        
             <li><a class="urlactive" data-toggle="tab" href="#menu3">Asignaciones</a></li>
             @endif
 
             @if($audiencia!='' || (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and ( 
-            ($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
+            ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))
             || currentUser()->can('ver_audiencia_conciliacion'))
 
@@ -120,7 +122,7 @@
             @endif
 
             @if((currentUser()->can('act_conciliacion'))
-            || ($conciliacion->getUser(199)->hasRole('estudiante') and
+            || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and
              currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar'])
              and currentUser()->conciliaciones()->where([
                 'conciliacion_id'=>$conciliacion->id
@@ -131,7 +133,7 @@
             </li>
             @endif
             @if(((currentUser()->can('act_conciliacion')))
-            || ($conciliacion->getUser(199)->hasRole('estudiante') and (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar','autor']))))
+            || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar','autor']))))
              @if(count($conciliacion->expedientes)<=0) 
               <li><a class="urlactive" data-toggle="tab" href="#menu6">Expediente</a></li>
               @endif
@@ -158,7 +160,7 @@
           <div id="menu4" class="tab-pane fade">
               @include('myforms.conciliaciones.conciliacion_audiencia')
           </div>
-          <div id="menu5" class="tab-pane fade">
+          <div id="menu5" class="tab-pane fade"> 
             @include('myforms.conciliaciones.conciliacion_notas')
           </div>
           <div id="menu6" class="tab-pane fade">

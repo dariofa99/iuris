@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Services;
 
-use App\Http\Requests\Request;
+use Illuminate\Http\Request;
+use App\User;
 use Illuminate\Database\Eloquent\Collection;
 
 interface UsersService {
 
+    public function store(Request $request):User;
     public function getUsersByRoleName(String $role):Array;
     public function getDocentes():Array;
     public function getEstudiantes():Array;
@@ -13,3 +16,4 @@ interface UsersService {
     public function getUsersByPermissionName($permission):Collection; 
 
 }
+?>

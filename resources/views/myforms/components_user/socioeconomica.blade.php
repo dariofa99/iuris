@@ -1,0 +1,38 @@
+<div id="content_sin_secc_component">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h5>Información socio-económica</h5>
+        </div>
+       
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="estadocivil_id">Estado civil*</label>
+                <select name="estadocivil_id" id="estadocivil_id" class="form-control required" required>
+                    <option value="">Seleccione...</option>
+                    @foreach($estcivil as $key => $tipo)
+                    <option {{(isset($user) and $user->estadocivil_id == $key) ? "selected":"" }} value="{{$key}}">
+                        {{$tipo}}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="estrato_id">Estrato*</label>
+                <select name="estrato_id" id="estrato_id" class="form-control required" required>
+                    <option value="">Seleccione...</option>
+                    @foreach($estrato as $key => $tipo) 
+                    <option {{(isset($user) and $user->estrato_id == $key) ? "selected":"" }} value="{{$key}}">{{$tipo}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        @include('myforms.components_user.aditional_data',
+        [
+            "data"=>getReferencesDataBySection("socio_economica",'users')
+        ])
+    </div>       
+</div>

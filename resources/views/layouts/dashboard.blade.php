@@ -9,7 +9,7 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
-  {!! Html::style('bootstrap/css/bootstrap.min.css') !!}
+  {!! Html::style('bootstrap/css/bootstrap.min.css') !!} 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
@@ -338,6 +338,8 @@ function getDateServer(){
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <!-- /propios -->
+<script  src={{asset("js/config.js")}}></script> 
+{!! Html::script('js/application.js')!!}
 {!! Html::script('scripts_serv.js?v=3')!!}
 {!! Html::script('js/AdminRoles.js?v=3')!!}
 {!! Html::script('js/java.js?v=3')!!}
@@ -351,17 +353,7 @@ function getDateServer(){
 <div id="wait" style="display:none; position: absolute; width: 100%;min-height: 100%;height: auto;position: fixed;top:0; left:0;background-color: rgba(236, 240, 245, 0.8);" ><img src="{{asset('img/logo2.png')}}" id="load" width="67" height="71" style="margin-top:18%;margin-left:48%;padding:2px;" /><br><span style="margin-top:18%;margin-left:48%;padding:2px;color:#848484;font-size: 16px;">Cargando...<span></div>
 
 <script>
-  $(document).ready(function (){
-    $('.onlynumber').keyup(function (){
-      this.value = (this.value + '').replace(/[^0-9]/g, '');
-    });
-
-  $(':text[title]').tooltip({
-      placement: "right",
-      trigger: "focus"
-  });
-
-  });
+ 
 
 
 

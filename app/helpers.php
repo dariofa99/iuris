@@ -6,7 +6,7 @@
 
 use Carbon\Carbon;
 use App\ReferencesData;
-
+use App\ReferencesStaticData;
 
 function currentUser()
 {
@@ -277,4 +277,28 @@ if ( ! function_exists('icon_link_to_route')) {
     ->first();
 
   }
+
+  function getReferencesStaticTableBySection($section,$table){
+    $ref_data = ReferencesStaticData::where([
+        'section'=>$section,
+        'table'=>$table,
+        'is_visible'=>1
+        ])->get();
+    if ($ref_data) return $ref_data;            
+    
+   return false; 
+}
+
+function getReferencesDataBySection($section,$table){
+    $rdata_enf_dif = ReferencesData::where([
+        'section' => $section, 
+        'table'=>$table,
+        'is_visible'=>1
+        ])->get();
+    if ($rdata_enf_dif) return $rdata_enf_dif;            
+    
+   return false; 
+}
+
+
 ?>

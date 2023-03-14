@@ -107,6 +107,8 @@ class ConcHechosPretencionesController extends Controller
      */
     public function destroy($id)
     {
+        
+       
         $conHP = ConcHechosPretenciones::find($id);       
         
         $conHP->delete();

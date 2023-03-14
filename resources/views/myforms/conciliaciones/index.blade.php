@@ -161,7 +161,7 @@
     <tr>
         <td>
           <div class="container_img">
-            <img src="{{asset('dist/img/folder_icon.png')}}" alt="">
+            {{-- <img src="{{asset('dist/img/folder_icon.png')}}" alt=""> --}}
             <span>
               {{$conciliacion->num_conciliacion}}
             </span>

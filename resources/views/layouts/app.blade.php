@@ -11,25 +11,16 @@
     <title>{{ config('app.name', 'Iuris') }}</title>
 
     <link rel="shortcut icon" href="{{ asset('dist/img/favicon.png') }}">
-
-            <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" media="all" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
-        <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" >
-      <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+     <!-- Bootstrap 3.3.6 -->
+    {!! Html::style('bootstrap/css/bootstrap.min.css') !!}
+     <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">      <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" >   
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito" type="text/css">
-
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-
-<!-- SweetAlert2 -->
-  <link rel="stylesheet" href="{{asset('/plugins/sweetalert2/sweetalert2.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
-
-  <link rel="stylesheet" href="{{ asset('css/front.css?v=2') }}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{asset('/plugins/sweetalert2/sweetalert2.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/front.css?v=2') }}">
   
 
     
@@ -126,73 +117,15 @@ a {
 </div>
    
 <div clas="row" style="text-align:center;margin:17px;">
-
-     <p style="color:#000000;     font-size: 20px;"><b>Sistema de atención virtual</b></p>   
+     <p style="color:#000000;     font-size: 20px;">
+        <b>Sistema de atención virtual</b></p>   
 </div>     
 
 
 
 
     <div id="app">
-       {{-- <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
-                <img src="{{asset('css/img/logo.png')}}" alt="Logo Provecol" class="logo img-fluid" style="opacity: .8;width:60px;height:auto">
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                    <li>    <h5><a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                    </a></h5>
-                    </li>
-                        <!-- Authentication Links  end-->
-
-                        @guest
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Registrar') }}</a>
-                                </li>
-                            @endif
-
-
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav> --}}
-
-        <main class="py-4" style="padding-top: 3px !important;">
+        <main style="padding-top: 3px !important;margin:10px">
             @yield('content')
         </main>
 
@@ -200,7 +133,7 @@ a {
  
       
                        
-        
+        <hr>
     <footer class="footer">
   
         <div class="container container-footer" style="text-align: end;">
@@ -228,29 +161,32 @@ a {
     <div id="wait" style="display:none; position: absolute; width: 100%;min-height: 100%;height: auto;position: fixed;top:0; left:0;background-color: rgba(236, 240, 245, 0.8);" ><img src="{{asset('img/logo2.png')}}" id="load" width="67" height="71" style="margin-top:18%;margin-left:48%;padding:2px;" /><br><span style="margin-top:18%;margin-left:48%;padding:2px;color:#848484;font-size: 16px;">Cargando...<span></div>
 
 </body>
-<!-- Scripts -->
+
+<!-- jQuery 2.2.3 -->
 {!! Html::script('plugins/jQuery/jquery-2.2.3.min.js')!!}
+<!-- Scripts -->
+
+<!-- Bootstrap 3.3.6 -->
+{!! Html::script('bootstrap/js/bootstrap.min.js')!!}{{-- <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <script src="{{ asset('js/app.js') }}" defer></script>
-<script src="{{asset('plugins/slim/jquery-3.5.1.slim.min.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
-<!-- jQuery -->
-{{-- <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script> --}}
+{{-- <script src="{{asset('plugins/slim/jquery-3.5.1.slim.min.js')}}"></script>
+ --}}<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <!-- SweetAlert2 -->
-  <script src="{{asset('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-  <script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{asset('plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
+<script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
   {!! Html::script('plugins/datepicker/js/moment.min.js')!!}
+  
+  <script  src={{asset("js/config.js")}}></script> 
+  {!! Html::script('js/application.js?v=1')!!}
+
 @stack('scripts')
 
  
 <script type="text/javascript">
 var token = localStorage.getItem('tokensessionpc');
-const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-});
+
 $(document).ready(function(){
     $("#myLoginForm").on('submit',function(e){
       if (typeof(Storage) !== 'undefined') {

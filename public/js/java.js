@@ -16,12 +16,7 @@ $(document).ready(function(){
 });
 
 $("#wait").css("display", "block");
-const Toast = Swal.mixin({ 
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-});
+
 
 $(document).ready(function (e) {
     var summernote = $(".summernote");
@@ -1448,7 +1443,7 @@ return false;
                      var id = $("#myform_asig_nota_conciliacion input[name=estidnumber]").val();
                      oficinaUpdateNota(request, id);
                  }
-            }else{
+            }else{ 
                 toastr.error("Por favor, verifíque que no haya notas superiores a 5, con espacios o caracteres extraños", "", {
                     positionClass: "toast-top-right",
                     timeOut: "6000",
@@ -2106,10 +2101,7 @@ return false;
         $("#myModal_create_document").modal("show");
     });
 
-    $("#myModal_create_document").on(
-        "submit",
-        "#myformCreateConciliacionAnexo",
-        function (e) {
+    $("#myModal_create_document").on("submit","#myformCreateConciliacionAnexo",function (e) {
             var request = new FormData($(this)[0]);
             request.append("conciliacion_id", $("#conciliacion_id").val());
             storeConciliacionAnexo(request);
@@ -3170,7 +3162,7 @@ return false;
     
     $("#myFormCompartirDocumento #btn_addmail").on("click",function (e) {
         var usermail = $("#input_email").val()
-       if(validateEmail(usermail)){
+       if(validateEmail($("#input_email"))){
         var mail = "";
         mail = createRowMail(usermail);
         $("#tbl_list_mail_partes").append(mail)
@@ -3801,18 +3793,6 @@ function asigConcToExpediente(request){
 }
 
 
-function validateEmail(mail) 
-{
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-  {
-    return (true)
-  }
-  toastr.error("Correo invalido!", "", {
-    positionClass: "toast-top-right",
-    timeOut: "3000",
-});
-    return (false)
-}
 
 function createRowMail(usermail) {  
 
@@ -4758,7 +4738,7 @@ function editConciliacionHechoPretencion(id) {
 }
 
 function storeConciliacionHechoPretencion(request) {
-    var route = "/conciliaciones/hechos/pretenciones";
+    var route = "/conciliaciones/hechos/pretenciones"; 
     $.ajax({
         url: route,
         type: "POST",

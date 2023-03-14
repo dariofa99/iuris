@@ -44,13 +44,49 @@ class SolicitudesController extends Controller
     }
 
     public function solicitar(Request $request)
-    {           
+    {         
+       // $user = User::find(20351)  ;
         return view('myforms.recepcion.solicitar_conciliacion');
-    }
+    } 
+
+    public function recepcion_conciliacion(Request $request,$token)
+    {          
+        
+       // dd("aas");
+        $conciliacion = Conciliacion::where("token",$token)->first();
+        if($conciliacion and $request->paso !=1){   
+            if($request->paso == 2){
+                $user = $conciliacion->getUser(205);//solicitante
+                //natural
+                if($user->tipopers_id != 238){
+                    return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
+                }
+            } 
+            if($request->paso >= 3){
+                $user = $conciliacion->getUser(205);//solicitante
+                //juridico
+                if($user->tipopers_id == 238){
+                    $user = $conciliacion->getUser(195);//rep legal solicitante
+                    if($user->id==null){
+                        return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
+                    }
+                 }
+            }   
+            if($request->paso == 6){
+                $user = $conciliacion->getUser(197);;//solicitado
+                //natural
+                if($user->tipopers_id != 238){
+                    return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
+                }
+            }     
+            return view('myforms.recepcion.solicitar_conciliacion',compact('conciliacion'));
+        }
+        return abort(404);
+    } 
 
     public function registro(Request $request)
     {      
-        $conciliacion = Conciliacion::find(103);     
+        $conciliacion = Conciliacion::first();     
         return view('myforms.recepcion.frm_registro_conciliacion',compact('conciliacion'));
     }
 

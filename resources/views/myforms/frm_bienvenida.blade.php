@@ -15,6 +15,9 @@ Hola!!  {{  currentUser()->name  }}  bienvenido a <strong>Iuris </strong>!!
 
 
 <div class="contain">
+   
+
+
     <div class="row">
         <div class="col-md-4 col-xl-3">
             <div class="card bg-light-blue color-palette order-card">

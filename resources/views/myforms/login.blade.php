@@ -2,12 +2,14 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-md-6">
-            <div class="card" style="margin-bottom: 25px;">
-                <div class="card-header"><b>Ingresar, solo si ya tienes una cuenta.</b></div>
+            <div class="panel panel-success" style="margin-bottom: 25px;">
+                <div class="panel-heading">
+                    <b>Ingresar, solo si ya tienes una cuenta.</b>
+                </div>
 
-                <div class="card-body">
+                <div class="panel-body">
                     <form method="POST" action="{{ route('login') }}" id="myLoginForm">
                         {{ csrf_field() }}
                         @include('msg.alerts')
@@ -59,49 +61,29 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header"><b>¿No tienes cuenta?</b></div>
-
-                <div class="card-body">
-                    
-
-                        <div class="form-group row">
-                                <label class="desc" id="title1" for="Field1" style="text-align: justify; font-size: 12pt;font-weight: normal; margin: 0px 15px 0px 20px;">
-
-Sigue estos pasos:<br>
-1. Llene el Formulario con sus datos.<br>
-2. Espere su turno para la revisión de su caso.<br>
-3. Registre un correo y una contraseña para poder acceder al sistema y continuar con la atención.<br>
-
-</label>
-                        </div>
-
-
-
-
-                        <div class="form-group row mb-0">
-                              <div class="col-md-6" style="text-aling:center" align="center">
-                                <a class="btn btn-warning" href="/solicitudes/conciliacion/recepcion">
-                                  Solicitar conciliación
-                                </a>
-
-                                {{-- <a class="btn btn-warning" href="/recepcion">
-                                    Solicitar atención
-                                  </a> --}}
-
-                            </div>
-                            <div class="col-md-6" style="text-aling:center" align="center">
-                                <a class="btn btn-warning" href="/videos" target="_blank">
-                                  <i class="fa fa-play-circle-o" aria-hidden="true"></i> Vídeo tutorial
-                                </a>
-                            </div>
-
-                        </div>
-    
+        <div class="col-md-4">
+            <div class="panel panel-success shadow-sm"> 
+                <div class="panel-heading">                           
+                    <b>Solicitudes de conciliación.</b>                                
                 </div>
-            </div>
+             <div class="panel-body"> 
+               
+                     <h5>
+                            
+                        El centro de conciliación le ofrece la facilidad de solicitar
+                        conciliaciones de manera virtual. <br>
+                        
+                    
+                    </h5>
+                         <div class="text-center my-4">
+                             <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-warning">
+                                Solicitar
+                                </a> 
+                            </div> 
+                        </div> 
+                    </div>
         </div>
+        
     </div>
 </div>
 @endsection

@@ -48,6 +48,10 @@ class CreateUsersTable extends Migration
             $table->integer('tipodoc_id')->unsigned();
             $table->foreign('tipodoc_id')->references('id')->on('referencias_tablas'); //identificación 
 
+            $table->integer('tipopers_id')->unsigned();
+            $table->foreign('tipopers_id')->references('id')->on('referencias_tablas'); //identificación 
+
+
             $table->date('fechanacimien')->nullable();
             $table->string('pbesena',5)->nullable();            
             $table->string('pbepersondiscap',5)->nullable();

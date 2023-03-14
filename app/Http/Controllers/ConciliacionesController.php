@@ -121,7 +121,33 @@ class ConciliacionesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      //$conciliacion = Conciliacion::find(10);
+       // return response()->json($conciliacion);
+
+        $periodo = Periodo::where('estado','1')
+        ->first();
+        $conciliacion = Conciliacion::create([
+            'token'=>str_replace("/", "", bcrypt(\Str::random(5))),
+            'num_conciliacion'=> "CCEAH-".Str::random(7) ,//"CCEAH-0-00-00",
+            'categoria_id'=> $request->has('categoria_id') ? $request->get('categoria_id') : 173,
+            'estado_id'=>$request->has('estado_id') ? $request->get('estado_id') : 174,
+            'periodo_id'=> $periodo->id,
+            'user_id'=>auth()->user()->id
+        ]);
+
+        $conciliacion->usuarios()->attach(auth()->user()->id,[
+            'tipo_usuario_id'=> $request->has('tipo_usuario_id') ? $request->get('tipo_usuario_id') : 199,
+            'estado_id'=>1
+        ]);
+
+        if($request->has('solicitante_id')){
+            $conciliacion->usuarios()->attach($request->get('solicitante_id'),[
+                'tipo_usuario_id'=>205,
+                'estado_id'=>1
+            ]);
+        }
+
+        return response()->json($conciliacion);
     }
 
     /**
@@ -434,8 +460,7 @@ $estudiantes = $this->getEstudiantes();
         ]);
     }
 
-    public function deleteComentario(Request $request){
-       
+    public function deleteComentario(Request $request){       
         $comentario = ConciliacionComentario::find($request->comentario_id)->delete();
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $view = view('myforms.conciliaciones.componentes.solicitud_comentarios_ajax',compact('conciliacion'))->render();
@@ -488,34 +513,53 @@ $estudiantes = $this->getEstudiantes();
         ]);
     }
 
-    public function insertData(Request $request){
+    private function storeData($ref_data,$request){
 
-        $ref_data = ReferencesStaticData::where(['name'=>$request->name,'section'=>$request->section])->first();
-      //  return response()->json($request->all());
+        $data = ConciliationAditionalStaticData::where([
+            'reference_data_id'=>$ref_data->id,                
+            'conciliacion_id'=>$request['conciliacion_id']
+            ])->first();           
+    
+
+        if($data){
+            $data->fill([                    
+                'value'=>$request["value"],
+                'reference_data_option_id'=>$request["option_id"],
+                'value_is_other'=>$request["value_is_other"],
+            ]);
+            $data->save();
+        }else{
+            $data = ConciliationAditionalStaticData::create([
+                'reference_data_id'=>$ref_data->id,
+                'reference_data_option_id'=>$request["option_id"],
+                'conciliacion_id'=>$request["conciliacion_id"],
+                'value'=>$request["value"],
+                'value_is_other'=>$request["value_is_other"],
+            ]);
+        }
+    } 
+
+    public function insertData(Request $request){
+        //return response()->json($request->all());
+        if($request->has('data') and is_array($request->data)){            
+            foreach ($request->data as $key => $rq) {
+               $ref_data = ReferencesStaticData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
+                if($ref_data) {  
+                    $this->storeData($ref_data,$rq);
+                }
+            }
+        }else{
+            $ref_data = ReferencesStaticData::where(['name'=>$request['name'],'section'=>$request['section']])->first();
+               
+            $this->storeData($ref_data,$request);
+        }
+
+        
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+
+        return response()->json($conciliacion);
        if($ref_data) {  
            
-            $data = ConciliationAditionalStaticData::where([
-                'reference_data_id'=>$ref_data->id,                
-                'conciliacion_id'=>$request->conciliacion_id
-                ])->first();           
-        
-
-            if($data){
-                $data->fill([                    
-                    'value'=>$request->value,
-                    'reference_data_option_id'=>$request->has('reference_data_option_id') ? $request->reference_data_option_id : $ref_data->options[0]->id,
-                    'value_is_other'=>$request->value_is_other,
-                ]);
-                $data->save();
-            }else{
-                $data = ConciliationAditionalStaticData::create([
-                    'reference_data_id'=>$ref_data->id,
-                    'reference_data_option_id'=>$request->has('reference_data_option_id') ? $request->reference_data_option_id : $ref_data->options[0]->id,
-                    'conciliacion_id'=>$request->conciliacion_id,
-                    'value'=>$request->value,
-                    'value_is_other'=>$request->value_is_other,
-                ]);
-            }
        }else{
         return response()->json(['error'=>'El atributo no existe']);
        }
@@ -559,7 +603,8 @@ $estudiantes = $this->getEstudiantes();
                 $file->delete();          
             }        
             $conciliacion = Conciliacion::find($request->conciliacion_id);
-            $view = view("myforms.conciliaciones.componentes.anexos_ajax",compact("conciliacion"))->render();
+            $category  = $request->category_id;
+            $view = view("myforms.conciliaciones.componentes.anexos_ajax",compact("conciliacion","category"))->render();
             return response()->json([
                 'view'=>$view
             ]);
@@ -622,6 +667,13 @@ $estudiantes = $this->getEstudiantes();
         
         array_map('unlink', glob(public_path('act_temp/'.$id.'___*')));//elimina los archivos que el 
 		$file= File::find($file_id);
+      //  dd($file);
+        $rutaDeArchivo = storage_path($file->path);
+                $filename = $id.'___'.$file->original_name;			
+                copy( $rutaDeArchivo, public_path("act_temp/".$filename));	
+                /* $hash = hash_hmac_file("sha256",$rutaDeArchivo,'dario');
+                dd($hash); */
+                   return redirect("act_temp/".$filename); 
 		if ($file) {
             try {
                 $rutaDeArchivo = storage_path($file->path);
@@ -709,6 +761,26 @@ $estudiantes = $this->getEstudiantes();
         return response()->json([
             'user'=>$user
         ]);
+    }
+
+    public function addUser(Request $request){    
+      
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+      
+
+       try{
+
+        $conciliacion->usuarios()->attach($request->user_id,[
+            'tipo_usuario_id'=>$request->tipo_usuario,
+            'estado_id'=>1
+        ]);
+        
+        return response()->json($conciliacion,200);
+
+       } catch (\Throwable $th) {
+        return response()->json([],404);
+       }
+        
     }
 
     public function sancionarUser(Request $request){       

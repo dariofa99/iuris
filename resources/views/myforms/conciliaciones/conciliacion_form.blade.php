@@ -50,7 +50,7 @@ NO Aceptar
         <input type="hidden" id="older_value">
     <div class="row">
         <div class="col-md-12">
-            <h5>
+            <h5> 
                 INFORMACIÓN DE LAS PARTES
             </h5>
         </div>
@@ -61,7 +61,8 @@ NO Aceptar
         ])
       
         @include('myforms.conciliaciones.componentes.parte_solicitante_rep_legal',[     
-            'section'=>'representante_legal_solicitante'
+            'section'=>'representante_legal_solicitante',
+            'tipo_usuario_id'=>196
         ])
     
     </div>
@@ -79,6 +80,8 @@ NO Aceptar
         @include('myforms.conciliaciones.componentes.parte_solicitada',[     
         'section'=>'parte_solicitada'
     ])
+
+    
     @include('myforms.conciliaciones.componentes.parte_solicitada_rep_legal',[     
         'section'=>'representante_legal_solicitada'
     ])

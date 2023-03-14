@@ -66,8 +66,12 @@ Route::get('/firmar/digital/revocar/{token}/{codigo}', 'ConciliacionesFirmasCont
 Route::post('/firmar/revocar/ok', 'ConciliacionesFirmasController@firmaRevocarOk');
 Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirmaRevocar');
 
+
 ///rutas que requieren atenticación
 Route::group(['middleware' => ['auth']], function() {
+//Nuevo usuarios
+Route::resource('usuarios', 'UsersController');
+Route::get("usuarios/buscar/persona","UsersController@findUser");
  
 
 Route::post('mail', 'MailController@store')->name('mail.store');
@@ -302,6 +306,9 @@ Route::get('/descargar/documento/{id}','CaseLogController@downloadFileLog');
 
 //Conciliaciones
 Route::resource('conciliaciones', 'ConciliacionesController');
+//Solicitudes
+Route::post('conciliaciones/add/user', 'ConciliacionesController@addUser');
+
 Route::post('conciliaciones/insert/data', 'ConciliacionesController@insertData');
 Route::post('conciliaciones/generate/documents', 'ConciliacionesController@generateDocuments'); 
 Route::post('conciliaciones/insert/estado', 'ConciliacionesController@insertEstado'); 
@@ -427,12 +434,19 @@ Route::post('solicitudes/store/documento','SolicitudesController@storeDocument')
 Route::get('solicitudes/files/{id}/edit','SolicitudesController@editDocumento');
 Route::post('solicitudes/update/documento','SolicitudesController@updateDocument');
 Route::get('solicitudes/files/delete/{id}','SolicitudesController@deleteDocumento');
-});
+
+
+
+});//fin middleware front
 Route::get('/', function () {
   return redirect('/dashboard');
 });
 
+Route::get('solicitudes/recepcion/conciliacion/{token}','SolicitudesController@recepcion_conciliacion');
+
 });//fin middleware auth
+Route::post('usuarios', 'UsersController@store');
+
 Route::resource('solicitudes','SolicitudesController');
 Route::get('solicitudes/view/{token}','SolicitudesController@waitRoom');
 Route::post('solicitudes/user/register','SolicitudesController@userRegister');
@@ -483,6 +497,7 @@ Auth::routes();
 
 Route::post('/login', 'LoginController@store')->name('login'); 
 Route::get('/login', function () {
+        Auth::logout();
        return view('myforms.login');
 });
 /* Route::get('/', function () {

@@ -33,8 +33,7 @@ class ComposerServiceProvider extends ServiceProvider
             'myforms.frm_expediente_edit',
             'myforms.frm_expediente_show',
             'myforms.frm_expediente_list',
-            'myforms.frm_requerimiento_list',
-            'myforms.components_user.*',
+            'myforms.frm_requerimiento_list',            
             'myforms.solicitudes.*',   
             'myforms.conciliaciones.*'               
         ],'App\Http\ViewComposers\ExpedientesComposer');
@@ -55,6 +54,7 @@ class ComposerServiceProvider extends ServiceProvider
             'myforms.recepcion.*', 
             'front.solicitudes.*', 
             'myforms.register', 
+            'myforms.components_user.*',
                                   
         ],'App\Http\ViewComposers\UsersComposer');       
         

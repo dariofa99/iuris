@@ -5,26 +5,7 @@
 </div>
 
 {{-- {{dd($conciliacion->getStaticDataVal('fecha',$section))}} --}}
-<div class="row">
-<div class="col-md-5">
-    <div class="form-group">
-        <label >  
-            @if($conciliacion->getStaticDataLabel('cuantia_indeterminada_determinada',$section))
-            {{$conciliacion->getStaticDataLabel('cuantia_indeterminada_determinada',$section)->display_name}}
-            @endif</label>
-        <input  data-name="cuantia_indeterminada_determinada"  data-section="{{$section}}" required  type="text"
-        @if($conciliacion->getStaticDataVal('cuantia_indeterminada_determinada',$section)) value="{{$conciliacion->getStaticDataVal('cuantia_indeterminada_determinada',$section)->value}}" @endif
-        @if(currentUserInConciliacion($conciliacion->id,['autor','auxiliar'])  and ($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 ))
-        class="form-control  insert_adv"
-            @else 
-            disabled 
-            class="form-control"
-                
-            @endif>
 
-    </div>
-</div>
-</div>
 <hr>
 <div class="row">
 <div class="col-md-12">

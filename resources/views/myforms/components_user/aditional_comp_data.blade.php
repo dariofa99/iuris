@@ -8,7 +8,7 @@
             "data"=>$rdatos_personales
         ])
     </div> 
-
+    
 @endif
 @if(count($rdata_sin_secc)>0)
 

@@ -2016,27 +2016,7 @@ $("#myFormExpsStore").submit(function(){
 	
 
 });
-//Funcion para validar un formulario
-function validateForm(form){	
-	var errors = [];
-	$("#"+form+" .required").each(function(index,obj){
-		if ($(this).attr('disabled')!='disabled') {
-			if ($(this).val() =='') {
-	  			errors.push('El campo '+$(this).attr('name')+' es obligatorio');
-	  			$(this).css({'background':'#FDEDEC','border':'1px solid #EAEDED'});
-	  			$(this).attr('placeholder','Requerido');
-	  			//console.log($(this));
-	  		}else if ($(this).val() !='') {
-	  			//errors.push('El campo '+$(this).attr('data-name')+' es obligatorio');
-	  			$(this).css({'background':'#fff','border':'1px solid #EAEDED'});
-	  			//$(this).attr('placeholder','Requerido');
-	  			////console.log($(this).getAttribute('class'));
-	  		}	
-		}
-  		  			
-  	});
-  	return errors 	
-} 
+
 
 function validateNotas(form){	
 	var errors = [];

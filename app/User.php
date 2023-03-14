@@ -39,6 +39,7 @@ class User extends Authenticatable
     protected $fillable = [
     'active',
     'tipodoc_id',
+    'tipopers_id',
     'idnumber',
     'name',
     'lastname',
@@ -250,13 +251,14 @@ class User extends Authenticatable
 
     public function getDataVal($ref_id,$ref_option){
         $ref_data = $this->aditional_data()       
-        ->where([ 'reference_data_id'=>$ref_id,
-                'reference_data_option_id'=>$ref_option])->first();
+        ->where([
+             'reference_data_id'=>$ref_id,
+            'reference_data_option_id'=>$ref_option])->first();
                
         if($ref_data){
             return $ref_data;
         }
-       return false;
+       return false; 
     }
 
     public function getDataValWShort($short_name){

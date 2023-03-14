@@ -28,6 +28,10 @@ class ConciliacionesComposer
 	public function compose(View $view)
 	{
 
+		$tipopers = TablaReferencia::where(['categoria'=>'tipo_persona','tabla_ref'=>'users'])
+		->where('ref_nombre','<>','Sin definir')
+		->pluck('ref_nombre','id'); 
+
 		$types_status = TablaReferencia::where(['categoria'=>'type_status',
 		'tabla_ref'=>'conciliaciones'])
 		->where('ref_nombre','<>','Sin definir')
@@ -61,6 +65,7 @@ class ConciliacionesComposer
 		$periodo = Periodo::where('estado',1)->first();
 
 		$view->with([
+			'tipopers'=>$tipopers,
 			'types_firma_users'=>	$types_firma_users ,
 			'types_status'=>$types_status,
 			'types_users'=>$types_users,

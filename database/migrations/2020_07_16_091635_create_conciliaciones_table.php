@@ -17,7 +17,8 @@ class CreateConciliacionesTable extends Migration
             $table->increments('id');
             $table->dateTime('fecha_radicado');                        
             $table->string('num_conciliacion');   
-            $table->string('auto_admisorio')->default("0");          
+            $table->string('auto_admisorio')->default("0");
+            $table->string('token')->nullable();          
             $table->integer('estado_id')->unsigned(); // 
             $table->foreign('estado_id')->references('id')->on('referencias_tablas'); //Tipo de asistencia: asistencia, permiso, reposicion 
             $table->integer('categoria_id')->unsigned(); // 

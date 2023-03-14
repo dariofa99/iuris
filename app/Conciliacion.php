@@ -16,6 +16,7 @@ class Conciliacion extends Model
     protected $table = 'conciliaciones';
 
     protected $fillable = [
+        'token',
         'fecha_radicado',
         'num_conciliacion',
         'auto_admisorio',
@@ -66,7 +67,7 @@ class Conciliacion extends Model
         return $this->hasMany(ConcHechosPretenciones::class, 'conciliacion_id', 'id');
     }
 
-    public function getUserForm($parte,$section)
+    public function getUserForm($parte,$section) 
     {
         $referece_data = DB::table('conciliacion_user_form')
         ->join('references_data as rd','rd.id','=','conciliacion_user_form.reference_data_id')
@@ -109,16 +110,18 @@ class Conciliacion extends Model
      }
 
     public function getStaticDataVal($name,$section,$option_id=null){
-        $ref_data = ReferencesStaticData::where(['name'=>$name,'section'=>$section])->first();
+        $ref_data = ReferencesStaticData::where(
+            ['name'=>$name,
+            'section'=>$section
+            ])->first();
+        //return $ref_data;
          if ($ref_data) {           
             $data = $this->aditional_static_data()
             ->where([
                 'reference_data_id'=>$ref_data->id,
                 'reference_data_option_id'=>$option_id == null ? $ref_data->options[0]->id : $option_id
                     ])->first();
-                    
-                   // dd( $data);
-            if($data){
+            if($data){               
                 return $data;
             }
         }
@@ -129,10 +132,11 @@ class Conciliacion extends Model
     public function getStaticDataLabel($name,$section){
         $ref_data = ReferencesStaticData::where(['name'=>$name,'section'=>$section])->first();
       //dd( $ref_data->options[0]);
-        if ($ref_data) {       
+        if ($ref_data) {  
+                $ref_data->options ;//= $ref_data->options;     
                 return $ref_data;            
         }
-       return false;
+       return false; 
     }
 
     public function getUser($tipo_usuario){

@@ -683,9 +683,9 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                   'docidnumber'=>\Auth::user()->idnumber, 
                   'tbl_org_id'=>$expediente->id, 
                 ]; 
-         // $expediente->asignarNotas($data);
-         // $expediente->expestado_id = 5; 
-         // $expediente->save();
+            $expediente->asignarNotas($data);
+            $expediente->expestado_id = 5; 
+            $expediente->save();
         }
         }
       }
@@ -1396,7 +1396,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           );
     }
   public function historialDatosCaso($exp,$tipo){ 
-   // dd('jjjj');
+    
     $historial = HistorialDatosCaso::where('hisdc_expidnumber',$exp)
     ->join('users', 'users.idnumber','=','historial_datos_casos.hisdc_idnumberest_id')
     ->join('asignacion_caso', 'asignacion_caso.asigexp_id','=','historial_datos_casos.hisdc_expidnumber')
