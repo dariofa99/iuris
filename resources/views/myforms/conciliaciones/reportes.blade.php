@@ -11,64 +11,62 @@
 
 <div class="row">
    
-   <div class="col-md-6">
-    <label> Nombre del formato </label>
-    <input type="text" required class="form-control"  name="nombre_reporte"
-     @if($view and ($view=='update') and isset($reportes) and count($reportes)>0)
-      value="{{$reportes[count($reportes)-1]->nombre_reporte}}"
-     @elseif($view and $view=='update_temp' and $reporte)
-     value="{{$reporte->nombre_reporte}}"
-     @endif >
-
-    </div>
-    <div class="col-md-2">
-        <label> Categoria </label>
-        <select name="categoria_id" id="categoria_id" class="form-control form-control-sm">              
+    <div class="col-md-5">
+        <label> Seleccione una categoria </label>
+        <select name="categoria_id" id="categoria_id" class="form-control form-control-sm">  
+            <option value="">Seleccione...</option>            
             @forelse($types_categories_report as $key => $types_categorie)
-                <option @if($view and ($view=='update') and isset($reportes) and count($reportes)>0 and $reportes[count($reportes)-1]->categoria_id == $key )
-                 selected
-                @endif value="{{$key}}">{{$types_categorie}}</option>
+                <option value="{{$key}}">{{$types_categorie}}</option>
             @empty
             <option value="">Sin categoria</option>
             @endforelse                        
         </select>
     
         </div>
-        
-    <div class="col-md-4">
-        @if($view and $view=='update')  
-        @if(isset($reportes))
-        <label>Seleccionar otro formato</label>
-        <select name="id" id="sel_reporte_id" class="form-control">              
-            @forelse($reportes as $key => $reporte)
-                <option selected value="{{$reporte->id}}">{{$reporte->nombre_reporte}}</option>
-            @empty
-            <option value="">Sin reportes</option>
-            @endforelse                        
-        </select>
-  
-        @endif 
 
-        @elseif($view and $view=='update_temp')
-        
-        <div id="cont_temp">
+        <div class="col-md-4">
+            @if($view and $view=='update')  
+           
+            <label>Seleccionar formato</label>
+            <select name="id" id="sel_reporte_id" required class="form-control">              
+                <option value="">Seleccione...</option>
+            </select>
+      
+            @endif 
+    
+            @if($view and $view=='update_temp')
+            
+            <div id="cont_temp">
             @if($reporte->is_temp)
-            <input type="hidden" name="is_temp" value="{{$reporte->id}}">
-            <input type="hidden" name="id" value="{{$reporte->pdf_reporte_id}}">
-            @else
-            <input type="hidden" name="id" value="{{$reporte->id}}">
-        @endif
-        </div>       
-        @endif
+                <input type="hidden" name="is_temp" value="{{$reporte->id}}">
+                <input type="hidden" name="id" value="{{$reporte->pdf_reporte_id}}">
+                @else
+                <input type="hidden" name="id" value="{{$reporte->id}}">
+            @endif
+            </div>       
+            @endif
         </div>
+
+  
+           
+   
    
 </div>    
-
+<div class="row">
+    <div class="col-md-6">
+        <label> Nombre del formato </label>
+        <input type="text" required class="form-control"  name="nombre_reporte"
+         @if($view and $view=='update_temp' and $reporte)
+         value="{{$reporte->nombre_reporte}}"
+         @endif >
+    
+        </div>
+</div>
    <div class="row">
        <div class="col-md-12">
         <div class="content_s">
             <div id="{{$mySummernote}}" class="summernote">
-                @if(isset($reporte)) 
+                @if(isset($reporte) and $view and $view=='update_temp') 
                     {!! $reporte->reporte !!}
                 @endif
             </div>

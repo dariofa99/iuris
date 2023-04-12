@@ -68,5 +68,6 @@
 @push('scripts')
 <!-- aqui van los scripts de cada vista -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>    
+<script type="module"   src={{asset("js/admin_conciliacion.js")}}></script>
 
-@endpush
+@endpush 

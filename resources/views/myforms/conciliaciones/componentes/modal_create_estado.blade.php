@@ -10,21 +10,12 @@
 	@slot('body')
 	<div class="row">
 		<div class="col-md-12">   
-            <form method="POST" class="form_store" enctype="multipart/form-data" accept-charset="UTF-8" id="myformCreateEstado">
+            <form method="POST" class="form_store" enctype="multipart/form-data" accept-charset="UTF-8" id="myformCreateEstado1">
                 <input type="hidden" name="estado_id">
                 <div class="form-group">
                     <label for="description">Estado</label>
                    @include("myforms.conciliaciones.componentes.estados_select_list")       
-                  {{-- <select name="type_status_id" class="form-control" required>
-                  
-                  
-                  
-                    @foreach($types_status as $key => $type_status)
-                      @if($key!=$conciliacion->estado_id)
-                           <option value="{{$key}}">{{$type_status}}</option>
-                      @endif
-                      @endforeach 
-                   </select>  --}}          
+                         
                 </div>
                 <div class="form-group">
                     <label for="description">Concepto</label>

@@ -1,12 +1,23 @@
 <header class="main-header">
 
     <!-- Logo -->
-    <a href="/dashboard" class="logo">
+   {{--  <a href="/dashboard" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Sis Image" style="height: 45px;"> <b>Iuris</b></span>
+    </a> --}}
+
+    <a href="/dashboard" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>I</b>U</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">
+        <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Sis Image" style="height: 45px;"> <b>Iuris</b>
+      </span>
     </a>
+   
+  
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button-->

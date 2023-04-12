@@ -25,9 +25,18 @@ class Perfil
 
             if (!$user->active) { 
                 \Auth::logout();
+                
+              
               Session::flash('message-danger', 'Tu cuenta no esta activa, comunicate con el administrador del sistema.');
               return redirect()->back();
             } 
+
+            if ($user->codigo_estudiantil==0 || $user->codigo_estudiantil=="") { 
+              Session::flash('message-codigo', '');
+              Session::flash('message-info', 'Recuerda! Primero necesitamos que actualices tu código estudiantil');
+              return redirect('users/'.$user->id.'/edit');
+          } 
+
             $correo=explode("@", $user->email);
           if(isset($correo[1])){
             if (($user->tel1=='' and $user->tel2 =='') || $user->tipodoc_id=='1' || $user->idnumber=='' || $user->name =='' || $user->lastname=='' || $user->fechanacimien=='' || $user->address==''  || $correo[1]=='mail.com' || $user->cursando_id=='1'  ) {

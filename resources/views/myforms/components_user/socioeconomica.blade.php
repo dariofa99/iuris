@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="estadocivil_id">Estado civil*</label>
-                <select name="estadocivil_id" id="estadocivil_id" class="form-control required" required>
+                <select {{isset($disabled) ? $disabled : ''}} name="estadocivil_id" id="estadocivil_id" class="form-control required" required>
                     <option value="">Seleccione...</option>
                     @foreach($estcivil as $key => $tipo)
                     <option {{(isset($user) and $user->estadocivil_id == $key) ? "selected":"" }} value="{{$key}}">
@@ -21,7 +21,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="estrato_id">Estrato*</label>
-                <select name="estrato_id" id="estrato_id" class="form-control required" required>
+                <select {{isset($disabled) ? $disabled : ''}} name="estrato_id" id="estrato_id" class="form-control required" required>
                     <option value="">Seleccione...</option>
                     @foreach($estrato as $key => $tipo) 
                     <option {{(isset($user) and $user->estrato_id == $key) ? "selected":"" }} value="{{$key}}">{{$tipo}}</option>

@@ -15,7 +15,7 @@ $pasos = [
     "tipo_usuario"=>205,
     "visible"=>true,
     "title"=>"Solicitud",
-    "message"=>"Paso $paso:  Aquí tienes que diligenciar toda la información de la persona que solicita la conciliación, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud.",
+    "message"=>"Diligencia el siguiente formulario con la información de la persona que solicita la conciliación, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Los campos marcados con (*) son obligatorios.",
     "view"=>"myforms.recepcion.frm_parte_solicitante"
   ],
   1=>[
@@ -23,7 +23,7 @@ $pasos = [
      "tipo_usuario"=>195,
      "visible"=>false,
      "title"=>"Legal",
-     "message"=>"Paso $paso:  Aquí tienes que es el rep legal",
+     "message"=>"Diligencia el siguiente formulario con la información del <b>representante legal</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.",
      "view"=>"myforms.recepcion.frm_replegal_solicitante"
   ],
   2=>[
@@ -31,7 +31,7 @@ $pasos = [
      "tipo_usuario"=>196,
      "visible"=>true,
      "title"=>"Apoderado",
-     "message"=>"Paso $paso:  Aquí tienes que es el apoderado",
+     "message"=>"Diligencia el siguiente formulario con la información de la persona que actúa como <b>apoderado</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.",
      "view"=>"myforms.recepcion.frm_apoderado_solicitante"
   ],
   3=>[
@@ -39,7 +39,7 @@ $pasos = [
     "tipo_usuario"=>000,
      "visible"=>true,
      "title"=>"Asunto",
-     "message"=>"Paso $paso:  Aquí tienes que es la informacion del asunto",
+     "message"=>"Diligencia el siguiente formulario con la información del <b>asunto</b> de la conciliación. Recuerda que la cuantia no debe ser superior a dos salarios mínimos. Los campos marcados con (*) son obligatorios.",
      "view"=>"myforms.recepcion.frm_asunto"
   ],
   4=>[
@@ -47,7 +47,7 @@ $pasos = [
      "tipo_usuario"=>197,
      "visible"=>true,
      "title"=>"Parte convocada",
-     "message"=>"Paso $paso:  Aquí tienes que es la informacion de la parte convocada",
+     "message"=>"Diligencia el siguiente formulario con la información de la persona <b>convocada</b> a la conciliación. Los campos marcados con (*) son obligatorios.",
      "view"=>"myforms.recepcion.frm_parte_convocada"
   ],
   5=>[
@@ -55,7 +55,7 @@ $pasos = [
     "tipo_usuario"=>198,
      "visible"=>false,
      "title"=>"Rep. legal",
-     "message"=>"Paso $paso:  Aquí tienes que es la informacion del rep legal de la parte solicitada",
+     "message"=>"Diligencia el siguiente formulario con la información del <b>representante legal</b> de la persona convocada a la conciliación. Los campos marcados con (*) son obligatorios.",
      "view"=>"myforms.recepcion.frm_replegal_solicitante"
   ],
   6=>[
@@ -63,14 +63,13 @@ $pasos = [
      "tipo_usuario"=>000,
      "visible"=>true,
      "title"=>"Asunto a conciliar",
-     "message"=>"Paso $paso:  Aquí tienes que es la informacion del asunto",
+     "message"=>"Resuma los hechos y pretensiones de la conciliación y suba los siguientes archivos en pdf.<br>Copia de documento de identidad - Pruebas que apoyen el proceso.",
      "view"=>"myforms.recepcion.frm_anexos"
   ],
 ]; 
-
+  
   if(isset($conciliacion)){  
-    if($paso>="2")  {
-      
+    if($paso>="2")  {      
       $user = $conciliacion->getUser(205);//solicitante
       if($user->tipopers_id == 238){  
         //$before = $pasos[($paso - 1)];
@@ -111,6 +110,7 @@ $pasos = [
                    'pasos'=>$pasos
                 ])
               </div>
+              @include('msg.alerts')
               @if($paso==1)             
                @include('myforms.recepcion.frm_parte_solicitante')
               @else
@@ -127,8 +127,18 @@ $pasos = [
                <div class="row">
 
                 <div class="col-md-12">
-                  @if($paso>2)
-                 <a href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso={{$paso-1}}">
+                  @if($paso>2)                  
+                  @php
+                  $paso_an = $paso;
+                    if($paso==7){
+                      if(!$pasos[5]['visible']){
+                        $paso_an = 6;
+                      }else{
+                        
+                      }
+                    }
+                  @endphp
+                 <a href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso={{$paso_an-1}}">
                    <i style="cursor: pointer" class="fa fa-chevron-circle-left"  aria-hidden="true"></i>
                   </a>
                    @endif

@@ -87,7 +87,7 @@ export class UserService{
                 if(response.encontrado){
                   $("#"+form+" input[name='id']").remove();
                   $("#"+form).append($('<input>',{
-                    type:"hidden",
+                    type:"hidden", 
                     name:"id",
                     value:response.user.id
                   }));
@@ -98,6 +98,7 @@ export class UserService{
                   $("#"+form+" input[name='address']").val(response.user.address).prop("disabled",true);
                   $("#"+form+" select[name='tipopers_id']").val(response.user.tipopers_id).prop("disabled",true)
                   $("#"+form+" input[name='email']").val(response.user.email).prop("disabled",true)
+                  $("#"+form+" select[name='genero_id']").val(response.user.genero_id).prop("disabled",true)
                 }else{
                   $("#"+form+" input[name='id']").remove();
                   $("#"+form+" input[name='idnumber']").val(lastidnumber);

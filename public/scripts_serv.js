@@ -690,7 +690,8 @@ var con=0;
 						var vacdia = 0;
 					
 						if(res.vacaciones.length > 0){
-							vacdia = getDiffVacations(value.parent.fecha_limit,res.vacaciones);
+							
+							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,child);
 							if(Number.isInteger(dias)) dias+=vacdia;			
 						}
 						
@@ -718,12 +719,13 @@ var con=0;
 					var color_bg = getDiffdaysColor(value.parent.fecha_limit, act_fecha,value.parent.id,"pr")  ;
 					var vacdia = 0;
 					if(res.vacaciones.length > 0){
-						vacdia = getDiffVacations(value.parent.fecha_limit,res.vacaciones);
+						vacdia = getDiffVacations(value.parent.fecha_limit,res.vacaciones,value.parent);						
 						if(Number.isInteger(dias)) dias+=vacdia;			
 					}	
 					
 					if((dias<0 && value.parent.actestado_id !=176)  || value.children.length > 0){						
-						dias =  value.parent.fecha_limit == null ? moment(value.parent.created_at).format('MM/DD/YYYY'): value.parent.fecha_limit;	
+						dias =  value.parent.fecha_limit == null ?
+						 moment(value.parent.created_at).format('MM/DD/YYYY'): value.parent.fecha_limit;	
 						color_bg = 'bg-gray';
 					} 
 				
@@ -752,13 +754,29 @@ function getDiffdays(fecha_limit,date_2=''){
 	return date_2;	
 }
 
-function getDiffVacations(fecha_limit,vacaciones){	
-	if(vacaciones[0].fecha_inicio <= fecha_limit && vacaciones[0].fecha_fin >= fecha_limit ){
-		var admission = moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
-		var discharge = moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
-		return moment.duration(discharge.diff(admission)).asDays();
-	}	
-	return 0;	
+function getDiffVacations(fecha_limit,vacaciones,actuacion){	
+	
+	let dias = 0;
+	vacaciones.forEach(vacacion => {
+		if(vacacion.fecha_inicio <= fecha_limit && vacacion.fecha_fin >= fecha_limit ){		
+			var admission = moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
+			var discharge = moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
+			dias += moment.duration(discharge.diff(admission)).asDays();
+		}
+
+		if(vacacion.fecha_inicio >= actuacion.actfecha  && vacacion.fecha_fin <= fecha_limit ){		
+			
+			var admission = moment(vacacion.fecha_inicio, 'YYYY-MM-DD');
+			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');
+			console.log(moment.duration(discharge.diff(admission)).asDays())
+			dias += moment.duration(discharge.diff(admission)).asDays();
+		}
+
+	});
+	
+	
+	
+	return dias;	
 }
 
 function getDiffdaysColor(fecha_limit,actfecha='',id){	
@@ -851,7 +869,7 @@ function Mostrar(btn,child_estado,modal){
 		if(res.actestado_id==176){//$("#actestado").attr('selected',true);
 			$("#actestado").prop('disabled',false).val(102);
 		}
-		
+		res.length
 		//alert(res.actestado_id)
 		if(res.actestado_id==102) $("#fecha_limit_doc").prop('disabled',false);
 
@@ -1010,7 +1028,14 @@ $("#btn_act_edit_docen").click(function(){
 	var notaapl = $("#myform_act_edit_docente input[name='ntaaplicacion']").val();
 	var notacon = $("#myform_act_edit_docente input[name='ntaconocimiento']").val();
 	var notaet =  $("#myform_act_edit_docente input[name='ntaetica']").val();
-	
+	var fecha_limit =  $("#myform_act_edit_docente input[name='fecha_limit_doc']").val();
+	if(!existeFecha(fecha_limit)){
+		toastr.error("Por favor, verifíque que el año de fecha limite no sea inferior o superior a un año con respecto al año actual.", "", {
+			positionClass: "toast-top-right",
+			timeOut: "6000",
+		});
+		errors = 1;
+	}
 	if(notaapl > 5 || notacon > 5 || notaet > 5){
 		toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
 			positionClass: "toast-top-right",
@@ -1060,11 +1085,12 @@ $("#btn_act_edit_docen").click(function(){
         alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
     }
 	});
+	$(mydata)[0].reset();
 	}
 	if($("#actestado").val()!=104){
 		$("#formAddNotas .form-control").addClass('required');
 	}
-	$(mydata)[0].reset();
+	
 });
 
 

@@ -14,6 +14,7 @@ use Facades\App\Facades\NewPush;
 use App\File;
 use Facades\App\Facades\NewChat;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Validator;
 use Illuminate\Validation\Rule;
 
@@ -21,9 +22,10 @@ class SolicitudesController extends Controller
 {
     public function __construct()
     {
+        
         $sede = Sede::find(1);       
         session(["sede"=>$sede]);
-        $this->middleware('auth',['except' => ['registro','solicitar_store','store','waitRoom','userRegister','update','find','recepcion','solicitar']]);
+        $this->middleware('auth',['except' => ['registro','solicitar_store','store','waitRoom','userRegister','update','find','recepcion','solicitar','recepcion_conciliacion']]);
         $this->middleware('permission:ver_solicitudes',   ['only' => ['index','edita']]);
         $this->middleware('permission:admin_solicitudes',   ['only' => ['edit']]);
     }
@@ -52,35 +54,51 @@ class SolicitudesController extends Controller
     public function recepcion_conciliacion(Request $request,$token)
     {          
         
-       // dd("aas");
-        $conciliacion = Conciliacion::where("token",$token)->first();
-        if($conciliacion and $request->paso !=1){   
-            if($request->paso == 2){
-                $user = $conciliacion->getUser(205);//solicitante
-                //natural
-                if($user->tipopers_id != 238){
-                    return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
-                }
-            } 
-            if($request->paso >= 3){
-                $user = $conciliacion->getUser(205);//solicitante
-                //juridico
-                if($user->tipopers_id == 238){
-                    $user = $conciliacion->getUser(195);//rep legal solicitante
-                    if($user->id==null){
-                        return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
+        
+        $conciliacion = Conciliacion::where("token",$token)->first();  
+       
+        if($conciliacion and ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 176)){
+            if($conciliacion and $request->paso !=1){ 
+                
+                if($request->paso == 2){       
+                    $user = $conciliacion->getUser(205);//solicitante
+                    Auth::login($user);               
+                    //natural
+                    if($user->tipopers_id != 238){
+                        return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
                     }
-                 }
-            }   
-            if($request->paso == 6){
-                $user = $conciliacion->getUser(197);;//solicitado
-                //natural
-                if($user->tipopers_id != 238){
-                    return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
-                }
-            }     
-            return view('myforms.recepcion.solicitar_conciliacion',compact('conciliacion'));
+                } 
+                if($request->paso > 2){       
+                    $user = $conciliacion->getUser(205);//solicitante
+                    if(Auth::user()->id != $user->id) Auth::logout();
+                } 
+
+                if(Auth::guest()) return redirect('login');
+                if($request->paso >= 3){
+                    $user = $conciliacion->getUser(205);//solicitante
+                    //juridico
+                    if($user->tipopers_id == 238){
+                        $user = $conciliacion->getUser(195);//rep legal solicitante
+                        if($user->id==null){
+                            return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
+                        }
+                     }
+                }   
+                if($request->paso == 6){
+                    $user = $conciliacion->getUser(197);//solicitado
+                   
+                    //natural
+                    if($user->tipopers_id != 238){
+                        return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
+                    }
+                }     
+                return view('myforms.recepcion.solicitar_conciliacion',compact('conciliacion'));
+            }
+        }else{
+            Session::flash('message-danger', 'La solicitud ya fue enviada a revisión, pronto nos comunicaremos contigo.');
+            return redirect("/solicitudes/conciliacion/recepcion?paso=1");
         }
+       
         return abort(404);
     } 
 

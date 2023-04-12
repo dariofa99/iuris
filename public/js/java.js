@@ -2045,6 +2045,7 @@ return false;
                 value: $(this).val(),
                 value_is_other: "",
                 section: $(this).attr("data-section"),
+                option_id: $(this).attr("data-option"),
                 name: $(this).attr("data-name"),
                 conciliacion_id: $("#conciliacion_id").val(),
             };
@@ -2057,14 +2058,14 @@ return false;
         if ($(this).val() != "") {
             if ($(this).prop("type") == "select-one") {
                 var request = {
-                    value: $(this).val(),
+                    value: $(this)
+                    .find(":selected")
+                    .text(),
                     value_is_other: "",
                     section: $(this).attr("data-section"),
                     name: $(this).attr("data-name"),
                     conciliacion_id: $("#conciliacion_id").val(),
-                    reference_data_option_id: $(this)
-                        .find(":selected")
-                        .attr("data-option_id"),
+                    option_id: $(this).val()
                 };
             } else {
                 var request = {
@@ -2162,13 +2163,7 @@ return false;
         });
     });
 
-    $("#btn_cambiar_estado").on("click", function (e) {
-        $("#myformEditEstado").attr("id", "myformCreateEstado");
-        $("#myformCreateEstado textarea[name=comentario]").val("");
-        $("#myformCreateEstado button[type=submit]").text("Crear");
-        $("#myModal_create_estado .modal-title").text("Creando estado");
-        $("#myModal_create_estado").modal("show");
-    });
+   
     $("#btn_agregar_comentario").on("click", function (e) {
         $("#myformEditComentario").attr("id", "myformCreateComentario");
         $("#myformCreateComentario textarea[name=comentario]").val("");
@@ -2176,33 +2171,13 @@ return false;
         $("#myModal_create_comentario .modal-title").text("Creando comentario");
         $("#myModal_create_comentario").modal("show");
     });
-
-    $(".btn_asinar_usuario_conciliacion").on("click", function (e) {
-        var data_type = $(this).attr("data-type");
-        $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
-        $("#myModal_conc_user_create input[name=section]").val($(this).attr('data-section'));
-        var request = {          
-            'conciliacion_id':$("#conciliacion_id").val(),          
-            'data_type':data_type,
-            'section':$(this).attr('data-section'),
-        }
-        if ($(this).attr('data-user')!=undefined) {
-            request['idnumber'] = $(this).attr('data-user');
-            request['tipodoc_id'] = $("#myModal_conc_user_create select[name=tipodoc_id]").val();  
-            request['is_edit'] = true;  
-        }else{
-            request['idnumber'] = '0';
-            request['tipodoc_id'] = 1;          
-        }        
-        getUser(request,request.idnumber);
-        $("#myModal_conc_user_create").modal("show"); 
-    });
+   
     $(".btn_delete_usuario_conciliacion").on("click", function (e) {
         var data_pivot = $(this).attr("data-pivot");
         var request = {'pivot':data_pivot}
         Swal.fire({
             title: "Esta seguro de eliminar la asignación?",
-            type: "warning",
+            type: "warning", 
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
@@ -2278,29 +2253,7 @@ return false;
     });
 
 
-    $("#myModal_create_estado").on("submit","#myformCreateEstado",function (e) {
-            //var request = $(this).serialize() +  "&conciliacion_id=" +   $("#conciliacion_id").val();
-            var request = new FormData($(this)[0]);
-            request.append("conciliacion_id", $("#conciliacion_id").val());
-            var type_status_id = $("#myformCreateEstado select[name=type_status_id]").val()
-            if(type_status_id == 181){
-                var audiencia = $("#conciliacion_audiencia_id").val()
-                if(audiencia==undefined){
-                    toastr.error(
-                        "No se puede admitir la conciliación porque no hay una audiencia habilitada",
-                        "Error",
-                        { positionClass: "toast-top-right", timeOut: "50000" }
-                    );
-                }else{
-                    storeConciliacionEstado(request);
-                }
-            }else{
-                storeConciliacionEstado(request);
-            }
-            //
-            e.preventDefault();
-        }
-    );
+   
 
     $("#myModal_create_comentario").on(
         "submit",
@@ -2405,12 +2358,12 @@ return false;
         getEstadosReportesPdf(request);*/
 
         var request = {
-            conc_estado_id: $(this).attr("data-id"),
+          //  conc_estado_id: $(this).attr("data-id"),
             tabla_destino: "conciliaciones",
             status_id: $(this).attr("data-estado_id"),
             conciliacion_id:$("#conciliacion_id").val()
         };
-        getPdfReportesConciliacion(request);
+        getPdfReportesConciliacion(request); 
 
     });
 
@@ -2458,30 +2411,8 @@ return false;
         e.preventDefault();
     });
 
-    $("#myFormAsigReporte .select").on("change", function (e) {
-        var tabla_destino = $(
-            "#myFormAsigReporte select[name=tabla_destino]"
-        ).val();
-        var status_id = $("#myFormAsigReporte select[name=status_id]").val();
-        if (tabla_destino != "" && status_id != "") {
-            var request = {
-                tabla_destino: tabla_destino,
-                status_id: status_id,
-            };
-            editAsignacionReporte(request);
-        }
-    });
+    
 
-    $("#myformCreateEstado select[name=type_status_id]").on("change",function (e) {
-            if ($(this).val() != "") {
-                var request = {
-                    tabla_destino: "conciliaciones",
-                    status_id: $(this).val(),
-                    conciliacion_id:$("#conciliacion_id").val()
-                };
-               // getPdfReportesConciliacion(request);
-            }
-        });
 
      myPopupWindow = window;
     $("#myReportPdfList").on("click", ".btn_edit_con_pdf", function (e) {
@@ -5013,7 +4944,7 @@ function editPdfReporte(id) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            console.log(res);
+            
             // $("#myModal_create_comentario").modal("hide");
             $("#myFormEditPdfReporte input[name=nombre_reporte]").val(res.nombre_reporte);
             $("#myFormEditPdfReporte select[name=categoria_id]").val(res.categoria_id);

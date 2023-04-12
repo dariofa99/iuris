@@ -1,17 +1,3 @@
-{{-- <div class="row">
- 
-    <div class="col-md-2 col-md-offset-10">
-        @if(($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194))
-            @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
-                || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar']))))
-            <button type="button" id="btn_create_document" class="btn btn-primary btn-sm pull-right">Agregar anexo</button>
-            @endif
-        @endif
-        
-    </div>
-</div> --}}
-
-
 <div class="row" id="content_files_conciliacion" style="display: block">
     <div class="col-md-1">
         
@@ -26,36 +12,12 @@
         @endif
 
         @if($conciliacion->estado_id==178)       
-        <button id="btn_notificar_conci_est" class="btn btn-success" data-estado="{{$conciliacion->estado_id}}">Notificar</button>
+        <button id="btn_notificar_conci_est" class="btn btn-success" data-estado="{{$conciliacion->estado_id}}">
+            Notificar</button>
         @endif
         @endif
     </div>
-   {{--  <div class="col-md-12">
-        <table class="table" id="myReportPdfListPrincipal">
-            <thead>
-                <th>
-                    Concepto
-                </th>
-                <th>
-                    Archivo
-                </th>
-                <th>
-                    Subido por
-                </th>
-                <th>
-                    Acciones
-                </th>
-            </thead>
-            <tbody>
-                <tr>
-                <td>
-                
-                </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> --}}
-
+ 
     
         <div class="col-md-12">
             <table class="table" id="myReportPdfListPrincipal">
@@ -96,14 +58,7 @@
             <div class="form-group">             
               <div class="input-group">
                 <div class="input-group-addon">Destinatario</div>
-                {{-- <div id="content_mail">
-                    <input type="text" class="form-control" id="exampleInputAmount">
-                    <div class="content_mail">
-                        @foreach ($conciliacion->getUsersByType(196) as $key => $user)
-                            <span>{{$user->email}} <b> X </b></span>
-                        @endforeach
-                    </div>
-                </div> --}}
+             
                 <select required name="correo_send[]" class="selectpicker form-control" multiple>                    
                     @foreach ($conciliacion->getUsersByType(196) as $key => $user)
                             <option selected value="{{$user->email}}">{{$user->email}}</option>

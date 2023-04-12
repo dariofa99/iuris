@@ -28,7 +28,7 @@ class UsersRepository extends BaseRepository implements UsersService{
         'password' => $request->has('password') ? $request['password'] : bcrypt($request['idnumber']),
         'accesofvir' => $request->has('accesofvir') ? $request['accesofvir'] : '',
         'description' =>  $request->has('description') ?  $request['description'] : '',
-        'institution' => $request->has('institution') ? $request['institution'] : '',
+        'codigo_estudiantil' => $request->has('codigo_estudiantil') ? $request['codigo_estudiantil'] : '',
         'cursando_id' => $request->has('cursando_id') ?  $request['cursando_id'] : 1,
         'email' => $request['email'],
         'tel1' => $request['tel1'],

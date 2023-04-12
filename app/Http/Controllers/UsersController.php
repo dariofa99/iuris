@@ -477,6 +477,7 @@ class UsersController extends Controller
       $user =User::where(['tipodoc_id'=>$request->tipodoc_id,'idnumber'=>$request->idnumber])->first();
         if($user){
           $user->roles;
+          //$view = view('myforms.user.componentes.user_form',compact('user'))->render();          
           return response()->json(['encontrado'=>true,'user'=>$user]);   
         }  
           return  response()->json(['encontrado'=>false]);

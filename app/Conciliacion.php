@@ -19,6 +19,7 @@ class Conciliacion extends Model
         'token',
         'fecha_radicado',
         'num_conciliacion',
+        'num_solicitud',
         'auto_admisorio',
         'estado_id',
         'categoria_id',

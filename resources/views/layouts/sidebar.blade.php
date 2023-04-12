@@ -242,7 +242,7 @@
                 <li><a href="/conciliaciones"> Ver conciliaciones </a></li>   
                 <li><a href="/audiencias"> Agenda audiencias </a></li>  
           @if(((currentUser()->can('adm_formatos_conciliaciones'))))
-            <li><a href="{{route('reportes.create')}}"> Administrar formatos </a></li>        
+            <li><a href="{{route('reportes.create')}}"> Administrar actas y correos </a></li>        
            @endif
               </ul>
         </li>

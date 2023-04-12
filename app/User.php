@@ -47,7 +47,7 @@ class User extends Authenticatable
     'password',
     'accesofvir',
     'description',
-    'institution',
+    'codigo_estudiantil',
     'tel1',
     'tel2',
     //'idrol',

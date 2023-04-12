@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('tel2', 12)->nullable();
             $table->string('address', 100)->nullable();
            // $table->string('idrol', 1)->default('0');
-            $table->string('institution', 1)->default('0');
+            $table->string('codigo_estudiantil', 100)->nullable();
             $table->string('image')->default('default.jpg');;
             $table->date('datecreated')->nullable();
 

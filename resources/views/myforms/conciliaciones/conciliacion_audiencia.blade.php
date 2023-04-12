@@ -80,36 +80,8 @@
              and $conciliacion->getUser(203)->pivot->estado_id == 229))))
            
 <div class="edit_audiencia" style="@if ($audiencia != '') display:block @endif" >
-{{--     <div class="row" >
-        <div class="col-md-6">
-            <h4 class="box-title">
-                <label>
-                    Estudiantes
-                </label>
-            </h4>
-            <table class="normal-table">
-                <tr>
-                    <td>
-                        Busqueda
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-                        {!!Form::select('data_search',$cursando,null,['class' => 'form-control input-search  selectpicker input-select', 'data-live-search'=>'true', 'required' => 'required','id'=>'select_data_cursando_est_conciliacion'] ); !!}
-                    </td>
-                    <td>
-                        <input class="btn btn-success" id="search_data_cursando_est_conciliacion" type="button" data-id="{{$conciliacion->id}}" name="buscar" value="Buscar">
-                        <input class="btn btn-default" id="view_all_data_cursando_est_conciliacion" type="button" data-id="{{$conciliacion->id}}" name="vertodo" value="Ver todo">
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-    </div> --}}
-    <hr>
-    <div class="row"  style="height: 300px; overflow-x: auto;" id="list_turno_estudiantes_conciliacion">
-        
+   <hr>
+    <div class="row"  style="height: 300px; overflow-x: auto;display:{{($audiencia != "")? 'block':'none'}}" id="list_turno_estudiantes_conciliacion">
         @include('myforms.conciliaciones.componentes.list_turno_estudiante')
     </div>
 

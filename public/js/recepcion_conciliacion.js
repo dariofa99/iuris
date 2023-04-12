@@ -59,9 +59,12 @@ $(document).ready(function () {
                 });          
           });            
         }else{        
-                console.log(response);
+              
                 let request = {
-                    "solicitante_id":response.user.id
+                    "solicitante_id":response.user.id,
+                    'estado_id':240,
+                    'mail_solicitante':true,
+                    'categoria_id':219
                 }
                 
                 let response_ =  await conciliacionService.registrar_conciliacion(request);
@@ -118,6 +121,7 @@ $(document).ready(function () {
     });
 
     $("#btn_parte_convocada").on("click",async function() {
+      $("#wait").show();
       if(!$("#chk_not_parte").is(":checked")){
         var errors = validateForm("myFormParteConvocada"); 
         if(errors.length<=0){
@@ -147,6 +151,7 @@ $(document).ready(function () {
           var errors = validateForm("myFormParteConvocada");
         }
       }
+      $("#wait").hide();
     });
 
 
@@ -155,9 +160,10 @@ $(document).ready(function () {
       var request = {};
      
       if(errors.length<=0){
+        $("#wait").show();
         request["conciliacion_id"]  = $("#conciliacion_id").val();
         var data = [];
-        $(".insert_adv").each((index,obj)=>{          
+        $(".input_cd").each((index,obj)=>{          
           data.push({
             value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
             section : $(obj).attr("data-section"),
@@ -169,6 +175,7 @@ $(document).ready(function () {
           }) ;         
         }); 
         request["data"] = (data);
+        console.log(request);
         let response_ = await conciliacionService.addAditionalData(request);
         window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso="+5;
   
@@ -228,8 +235,7 @@ $(document).ready(function () {
 });
 
 $("#myModalCreateConcHechosPretenciones").on("submit",'#myformCreateHechoPretencion', async function (e) {
-  //var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
-  //storeConciliacionHechoPretencion(request);
+  $("#wait").show();
   var request = convertFormToJSON("myformCreateHechoPretencion");
   request['conciliacion_id'] = $("#conciliacion_id").val()
   e.preventDefault()
@@ -239,6 +245,7 @@ $("#myModalCreateConcHechosPretenciones").on("submit",'#myformCreateHechoPretenc
     $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
   }
   $("#myModalCreateConcHechosPretenciones").modal('hide');
+  $("#wait").hide();
 });
 
 $("#myModal_create_document").on("submit","#myformCreateConciliacionAnexo",async function (e) {
@@ -298,7 +305,8 @@ $("#myModalCreateConcHechosPretenciones").on("submit",'#myformEditHechoPretencio
   $("#wait").show();
   var request = convertFormToJSON("myformEditHechoPretencion");
   request['conciliacion_id'] = $("#conciliacion_id").val();  
-  var id = $("#myformEditHechoPretencion input[name=id]").val()
+  var id = $("#myformEditHechoPretencion input[name=id]").val();
+  $("#wait").show();
   const response = await conciliacionService.updateHechosPretensiones(request,id);
   if (response.view || response.view == "") {
     $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
@@ -354,42 +362,98 @@ $("#chk_not_parte").on("change",function (e) {
 
 $("#btn_solicitar_conciliacion").on("click",function (e) {
   e.preventDefault();
-  Swal.fire({
-    title: "Esta seguro de enviar la solicitud de conciliación?",
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si, validar!",
-    cancelButtonText: "No, cancelar",
-}).then(async (result) => {
-    if (result.value) {
-      $("#wait").show();
-      const response = await conciliacionService.deleteAnexo(request);
+  var files = $(".files").length;
+  var anexos = $(".content_he_pret").length
+  if(files<=0){
+    Swal.fire({
+      title: "Recuerda subir los anexos requeridos!",
+      icon: "warning",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Ok",   
+  });
+
+  }else if(anexos<=0){
+    Swal.fire({
+      title: "Recuerda subir los hechos o pretensiones requeridos!",
+      icon: "warning",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Ok",   
+  });
+  
+  }else{
    
-      $("#wait").hide();
-    
-    }
-});
+    Swal.fire({
+      title: "¿Está seguro envíar a revisión la solicitud de conciliación?",
+      html:"<h4>No podrá realizar cambios hasta que sea revisada. <br> Debe estar pendiente del correo o número de teléfono suministrado.</h4>",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, envíar!",
+      cancelButtonText: "No, cancelar",
+  }).then(async (result) => {
+      if (result.value) {
+        $("#wait").show();
+        var request = {
+          'concepto':"Solicitado por externo",
+          'type_status_id':175,
+          'conciliacion_id':$("#conciliacion_id").val(),
+          'send_notification':true
+        }
+        const response = await conciliacionService.updateEstado(request);
+        window.location.reload(true)     
+        $("#wait").hide();
+      
+      }
+  });
+  }
+  
 
 })
 });//fin document ready
 
 async function addUserByStep(form,obj,step) {
-  if($("#"+form+" input[name='id']").val()!=""){
+  $("#wait").show();
+
+  if($("#"+form+" input[name='id']").val()!=undefined && $("#"+form+" input[name='id']").val()!=""){
+    
     var request = {
       "user_id":$("#"+form+" input[name='id']").val(),
       "conciliacion_id":$("input[name='conciliacion_id']").val(),
       "tipo_usuario":$(obj).attr("data-type")
-    };      
+    };    
+ 
     let response_ = await  conciliacionService.addUser(request);    
     if(response_){
       window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso="+step;
     }
   }else{
-    toastr.error("Hay campos que son obligatorios", "Atención!", {
-      positionClass: "toast-top-right",
-      timeOut: "4000",
-    });
-  }
+   
+    var request = convertFormToJSON(form);
+    if(!request.hasOwnProperty("email")){
+      var email = $("#"+form + " input[name=idnumber]").val() + "@mail.com";
+      request['email'] = email;
+    }
+    let response = await  userService.registrar(request);
+      if(response.errors){                          
+          response.errors.forEach(error => {            
+              toastr.error(error, "", {
+                  positionClass: "toast-top-right",
+                  timeOut: "4000",
+              });          
+          });            
+      }else{
+        var request = {
+          "user_id":response.user.id,
+          "conciliacion_id":$("input[name='conciliacion_id']").val(),
+          "tipo_usuario":$(obj).attr("data-type")
+        };   
+        console.log(request);   
+       let response_ = await  conciliacionService.addUser(request);
+       window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso="+step;
+ 
+      }
+      }
+  $("#wait").show();
+
 }

@@ -61,6 +61,27 @@ export class ConciliacionService{
         return topics;
     }
 
+    
+    async editUser (idnumber,request)  {
+        const response = await fetch(BASE_URL+"/conciliacion/user/"+idnumber+"?"+ new URLSearchParams(request), {
+            method: 'GET',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            }         
+           
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
     async addAditionalData (request)  {
         const response = await fetch(BASE_URL+'conciliaciones/insert/data', {
             method: 'POST',
@@ -202,6 +223,86 @@ export class ConciliacionService{
         return topics;
     }
 
+    async updateEstado(request)  {
+        const response = await fetch(BASE_URL+"conciliaciones/insert/estado", {
+            method: 'POST',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            },            
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+    
+    async getReportesByCategory (request)  {
+        const response = await fetch(BASE_URL+"pdf/reportes/by/category?"+ new URLSearchParams(request), {
+            method: 'GET',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            }         
+           
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+    async getPdfReportForStatus (request)  {
+        const response = await fetch(BASE_URL+"conciliacion/reportes/for/status?"+ new URLSearchParams(request), {
+            method: 'GET',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            }         
+           
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+    async getPdfReportesConciliacion (request)  {
+        const response = await fetch(BASE_URL+"conciliacion/reportes/get?"+ new URLSearchParams(request), {
+            method: 'GET',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            }         
+           
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
 
 }
 

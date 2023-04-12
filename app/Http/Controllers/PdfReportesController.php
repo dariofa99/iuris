@@ -124,11 +124,8 @@ class PdfReportesController extends Controller
         ]);    
     }
     }
-    public function editAsignacionReporte(Request $request){
-        $asignacionReporte = PdfReporteDestino::where([
-            'tabla_destino'=>$request->tabla_destino,
-            'status_id'=>$request->status_id            
-       ])->get();
+    public function editAsignacionReporte(Request $request){        
+        $asignacionReporte = PdfReporteDestino::where($request->except(['_']))->get();
         return response()->json($asignacionReporte);
     }
 
@@ -272,5 +269,24 @@ class PdfReportesController extends Controller
         'error'=> "No hay modelos registrados",            
     ]);
     }
+
+    public function getReportesByCategory(Request $request){
+        
+        // return response()->json($request->all());
+ 
+         $reportes = PdfReporte::where('is_copy', 0)
+           ->where('categoria_id',$request->categoria)
+             ->get();
+
+            
+
+        if(count($reportes)>0){
+            return response()->json($reportes);
+        }
+        
+        return response()->json([
+         'errors'=> ["No hay modelos registrados"],            
+     ]);
+     }
 
 }

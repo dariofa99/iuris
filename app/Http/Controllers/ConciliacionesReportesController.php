@@ -25,10 +25,18 @@ use App\PdfReporteAditionalData;
 class ConciliacionesReportesController extends Controller
 {
     use PdfReport;
-
-    public function getPdfReportesConciliacion(Request $request)
+    public function getPdfReportForStatus(Request $request)
     {
-        // return response()->json($request->all());
+        $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+            $query->where('is_copy', 0);
+        })
+        ->with('reporte')
+            ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
+            ->get();
+
+        return response()->json($reportes);
+    }
+    private function getReportes(Request $request){
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 1);
         })
@@ -38,12 +46,6 @@ class ConciliacionesReportesController extends Controller
             //    ->with('users')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();
-            
-        //return response()->json($reportes);
-        $conciliacion = Conciliacion::find($request->conciliacion_id);
-       /*  $val = $reportes[0]->reporte;
-       $res = $this->hasValuesPersonalized($val);
-      return response()->json($res);  */
         $reportes->each(function ($reporte) use ($request) {
             $file = ConciliacionEstadoReporteGenerado::where([
                 'status_id' => $request->status_id,
@@ -78,6 +80,13 @@ class ConciliacionesReportesController extends Controller
 
             }
         });
+        return $reportes;
+    }
+    public function getPdfReportesConciliacion(Request $request)
+    {
+        // return response()->json($request->all());
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $reportes = $this->getReportes($request);
         $view = view('myforms.conciliaciones.componentes.pdf_report_list', compact('reportes', 'conciliacion'))->render();
         $response = [
             'conc_estado_id' => $request->conc_estado_id,

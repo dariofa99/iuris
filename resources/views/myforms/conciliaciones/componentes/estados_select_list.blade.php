@@ -1,3 +1,4 @@
+
 <select name="type_status_id" class="form-control" required>
     <option value="">Seleccione</option>
 
@@ -10,11 +11,15 @@
     @endif
     @endif
 
-    @if(auth()->user()->hasRole('docente') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
+    @endif
+
+    @if(auth()->user()->hasRole('docente') || currentUser()->hasRole('coord_centro_conciliacion')  || currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
+ 
     @if($conciliacion->estado_id==175)
     <option value="176"> Corregir </option>
-    <option value="177"> Aprobado por docente </option>
-    @endif
+    <option  value="{{(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')) ? "178" : "177"}}"> 
+        {{(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')) ? "Aprobar (radicar)" : "Aprobar (docente)"}} </option>
+    @endif 
     @endif
 
     @if(auth()->user()->hasRole('estudiante') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
@@ -23,11 +28,10 @@
     @endif
     @endif
 
-    @endif
+    
 
 
     @if(((currentUser()->hasRole('diradmin') ||  currentUser()->hasRole('amatai') ||  currentUser()->hasRole('secretaria'))))
-   
     @if($conciliacion->estado_id==194 || $conciliacion->estado_id==225)
     <option value="178"> Radicar </option>
     <option value="228"> Solicitar correcciones </option>
@@ -35,11 +39,10 @@
     @endif
  
 
-@if(((currentUser()->hasRole('diradmin') ||  currentUser()->hasRole('amatai') ||  currentUser()->hasRole('estudiante'))))
-   
+    @if(((currentUser()->hasRole('diradmin') ||  currentUser()->hasRole('amatai') ||  currentUser()->hasRole('estudiante'))))
     @if($conciliacion->estado_id==228)
     <option value="225"> Solicitar radicado </option>  
-    @endif
+    @endif    
     @endif
     
 

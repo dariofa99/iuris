@@ -65,7 +65,7 @@ array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//e
         $criterio= $request->data;
         //$fechaini=$request->get('fechaini');
         //$fechafin=$request->get('fechafin'); 
-	      $numpaginate='100';
+	      $numpaginate='20';
  
       }
 

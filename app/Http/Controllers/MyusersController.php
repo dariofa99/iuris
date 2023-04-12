@@ -124,7 +124,7 @@ class MyusersController extends Controller
             'password' => $request->has('password') ? $request['password'] : bcrypt($request['idnumber']),
             'accesofvir' => $request['accesofvir'],
             'description' => $request['description'],
-            'institution' => $request['institution'],
+            'codigo_estudiantil' => $request['institution'],
             'cursando_id' => 1,
             'email' => $request['email'],
             'tel1' => $request['tel1'],

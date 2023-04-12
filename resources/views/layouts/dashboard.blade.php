@@ -59,8 +59,8 @@
 {{ Html::script('plugins/btpselect/dist/js/bootstrap-select.js', array('defer' => 'defer')) }}
 
 <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="{{asset('/plugins/sweetalert2/sweetalert2.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+<link rel="stylesheet" href="{{asset('/plugins/sweetalert2/sweetalert2.min.css')}}">
+<link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
   
   
 
@@ -97,7 +97,9 @@
 
 </head>
 <body class="hold-transition skin-purple fixed {{((Request::is('graficas') || isset($ocultar_menu))? 'sidebar-collapse' : '' )}}">
-
+<div id="fondo_background">
+  
+</div>
 
 
 
@@ -126,7 +128,7 @@
     @if(!Request::is('graficas'))
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      @if(Session::has('message-information'))
+      @if(Session::has('message-information_'))
       <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Bienvendido a IURIS!</strong> 
@@ -332,8 +334,9 @@ function getDateServer(){
 
 <script src="{{ asset('plugins/alertifyJS/alertify.min.js') }}"></script>
 <!-- SweetAlert2 -->
-  <script src="{{asset('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-  <script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
+ <!-- SweetAlert2 -->
+<script src="{{asset('plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
+<script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
   
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 

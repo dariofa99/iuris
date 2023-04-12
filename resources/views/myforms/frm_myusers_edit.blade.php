@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('area_forms')
-Rol: {{$user->roles[0]->name}}
+
 @include('msg.alerts')
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -12,9 +12,9 @@ Rol: {{$user->roles[0]->name}}
     </div>
 @endif
 
-
+<h4>Rol de Usuario: {{$user->roles[0]->display_name}} </h4>
 {!!Form::model($user, ['route'=>['users.update', $user->id], 'method'=>'PUT', 'files' => 'true','id'=>'myformUserEdit'])!!}
-
+<div class="row">
 	 	<div class="col-md-9">
 		@if((currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin')) AND $user->hasRole('docente') )
 		<div class="form-group" align="right">			
@@ -35,9 +35,7 @@ Rol: {{$user->roles[0]->name}}
         @endif
      </div>    
 
-
-<div class="row">
-	<div class="col-md-4">
+	 <div class="col-md-4">
 		<div class="form-group">
 			{!!Form::label('Tipo de documento ') !!} 
 			{!!Form::select('tipodoc_id',$tipodoc,$user->tipodoc_id, ['placeholder' => 'Selecciona...', 'class' => 'form-control', 'required' => 'required' ]); !!}
@@ -45,7 +43,14 @@ Rol: {{$user->roles[0]->name}}
 	</div>
 
 
-
+	@if($user->hasRole('estudiante')  )
+		<div class="col-md-4">
+			<div class="form-group">
+				{!!Form::label('Código estudiantil ') !!} 
+				<input required minlength="7" maxlength="20" type="text" @if(Session::has('message-codigo')) style="background: rgb(163, 95, 92);border: 1px solid rgb(234, 237, 237);color: black;" @endif class="form-control required " value="{{$user->codigo_estudiantil}}" name="codigo_estudiantil">
+				</div>
+		</div>
+   @endif
 	<div class="col-md-4">
 		<div class="form-group">
 			{!!Form::label('Número de Identificación: ') !!}
@@ -61,9 +66,7 @@ Rol: {{$user->roles[0]->name}}
 			{!!Form::text('name', null, ['class' => 'form-control']); !!}
 		</div>
 	</div>
-</div>
 
-	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
 				{!!Form::label('Apellidos:') !!}
@@ -91,9 +94,7 @@ Rol: {{$user->roles[0]->name}}
 				{!!Form::text('email', null, ['class' => 'form-control']); !!}
 			</div>
 		</div>
-	</div>
-
-	<div class="row">
+	
 		<div class="col-md-4">
 			<div class="form-group">
 				{!!Form::label('Tel. Celular: ') !!}
@@ -124,18 +125,15 @@ Rol: {{$user->roles[0]->name}}
 			<!-- /.input group -->
 			</div>
 		</div>
-	</div>
-
 	
-
-
-<div class="row">
 	<div class="col-md-4">
 		<div class="form-group">
 			{!!Form::label('Estrato ') !!}
 			{!!Form::select('estrato_id',$estrato,$user->estrato_id,['placeholder' => 'Selecciona...', 'class' => 'form-control', 'required' => 'required' ]); !!}
 		</div>
 	</div>
+
+	
 
 	@if(!currentUser()->hasRole("estudiante"))
 
@@ -159,51 +157,7 @@ Rol: {{$user->roles[0]->name}}
 	</div>
 
 @endif	
-</div>
 
-
- 	
-
-
-
-
-
-
-
-
-	
-	
-<!-- 	<div class="col-md-4">
-		<div class="form-group">
-			{!!Form::label('Acceso a Oficina Virtual ') !!}
-			{!!Form::select('accesofvir', [
-
-										'0' => '.',
-										'1' => 'Si',
-										'0' => 'No',
-																		],
-
-			 null, ['placeholder' => 'Selecciona...', 'class' => 'form-control', 'required' => 'required' ]); !!}
-		</div>
-	</div>
-
-
-		<div class="col-md-4">
-		<div class="form-group">
-			{!!Form::label('Institucion ') !!}
-			{!!Form::select('institution', [
-
-										'1' => 'Universidad de Nariño',
-										'2' => 'Universidad Mariana',
-										'3' => 'Corporación Universitaria Cesmag',
-																		],
-
-			 null, ['placeholder' => 'Selecciona...', 'class' => 'form-control', 'required' => 'required' ]); !!}
-		</div>
-	</div> -->
-
-
-<div class="row">
 	<div class="col-md-4">
 		<div class="form-group">
 			{!!Form::label('Dirección: ') !!}
@@ -239,10 +193,6 @@ Rol: {{$user->roles[0]->name}}
 @endif	
 @endif
 
-</div>
-
-	
-<div class="row">
 	@if(count($user->role)>0)
 	@if ((currentUser()->hasRole('amatai') || currentUser()->hasRole('coordprac') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')))
 		<div class="col-md-4 col-lg-4">

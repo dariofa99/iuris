@@ -128,7 +128,7 @@ $segmento = Segmento::find($request->segmento_id);
 $periodo = Periodo::find($request->periodo_id);
 
 if($request->segmento_id){
-   $header =  ['cedula','nombres','curso','casos','defensas','conciliaciones','otros','final'];
+   $header =  ['cedula','codigo','nombres','curso','casos','defensas','conciliaciones','otros','final'];
    return Excel::download(new NotasExport($notas,$header,null,'Notas_'.$periodo->prddes_periodo),'Reporte.xlsx');
    
 }else{
@@ -136,7 +136,7 @@ if($request->segmento_id){
     ->where('sg.sede_id',session('sede')->id_sede)
     ->where('perid',$request->periodo_id)
     ->get();
-    $header = ['cedula','nombres','curso'];
+    $header = ['cedula','codigo','nombres','curso'];
     $segme = ['Datos del estudiante'];   
     foreach ($segmentos as $key => $segmento) {
         $header[] = 'casos';
@@ -377,7 +377,7 @@ return response()->json($data);
             ->where ('users.active', true)
             ->where ('users.idnumber', $request->idnumber)
             ->where('sedes.id_sede',session('sede')->id_sede)
-            ->select('users.active','users.id','ref_nombre','users.idnumber',
+            ->select('users.active','users.id','ref_nombre','users.idnumber','users.codigo_estudiantil',
               DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
               ,'role_user.role_id', 'roles.display_name')
              ->orderBy('users.created_at', 'desc')
@@ -392,7 +392,7 @@ return response()->json($data);
             ->where ('role_id', '6' )
             ->where ('users.active', true)
             ->where('sedes.id_sede',session('sede')->id_sede)
-            ->select('users.active','users.id','ref_nombre','users.idnumber',
+            ->select('users.active','users.id','ref_nombre','users.idnumber','users.codigo_estudiantil',
               DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
               ,'role_user.role_id', 'roles.display_name')
              ->orderBy('users.created_at', 'desc')
@@ -407,6 +407,7 @@ return response()->json($data);
               
             $to_excel = []; 
             $to_excel[] = $user->idnumber;
+            $to_excel[] = $user->codigo_estudiantil;
             $to_excel[] = $user->full_name;
             $to_excel[] = $user->ref_nombre;
             $nota_us = $this->getNotas($user,$request->segmento_id);
@@ -426,6 +427,7 @@ return response()->json($data);
                     $final = 0;
                     $to_excel = []; 
                     $to_excel[] = $user->idnumber;
+                    $to_excel[] = $user->codigo_estudiantil;
                     $to_excel[] = $user->full_name;
                     $to_excel[] = $user->ref_nombre;
                     foreach ($segmentos as $key => $segmento) {

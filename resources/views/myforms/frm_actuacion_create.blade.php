@@ -8,9 +8,9 @@
 		@if($expediente->exptipoproce_id != '1')
 			<button type="button" @if(currentUser()->hasRole('docente')) id="btn_new_act_doct" @else id="btn_new_act"  @endif   class="btn btn-primary btn-sm btn_new_act" data-toggle="modal" data-titulo_modal="Nueva actuación" data-target="#myModal_act_create">Nueva Actuación</button>
  		@endif
-		{{--  <button type="button" class="btn btn-warning btn-sm" id="btn_nueva_conciliacion">
+		 <button type="button" class="btn btn-warning btn-sm" id="btn_nueva_conciliacion">
 			Crear conciliación
-		</button> --}}
+		</button> 
 	</div>
  
 @endif 

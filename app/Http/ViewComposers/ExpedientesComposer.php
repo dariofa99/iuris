@@ -43,9 +43,9 @@ class ExpedientesComposer
 		$motivos_cierre = MotivoEstadoCaso::all();
 		$estadosPluck = Estado::pluck('nombre_estado','id');
 		$motivo_asig = MotivoAsigCaso::pluck('nom_motivo','id');
-		$tipodoc = DB::table('referencias_tablas')
+		/* $tipodoc = DB::table('referencias_tablas')
 		->where(['tabla_ref'=>'users','categoria'=>'tipo_doc'])
-		->where('ref_nombre','<>','Sin definir')->get();
+		->where('ref_nombre','<>','Sin definir')->get(); */
 		$genero = DB::table('referencias_tablas')
 		->where(['tabla_ref'=>'users','categoria'=>'genero'])
 		->where('ref_nombre','<>','Sin definir')->get();
@@ -101,7 +101,7 @@ class ExpedientesComposer
 		->with(['rdata_discap'=>$rdata_discap])
 		->with(['rdata_gretnc'=>$rdata_gretnc])
 		->with(['segmento'=>$segmento])
-		->with(['tipodoc'=>$tipodoc])
+		//->with(['tipodoc'=>$tipodoc])
 		->with(['genero'=>$genero])
 		->with(['tipvivienda'=>$tipvivienda])
 		->with(['muncpios'=>$muncpios])

@@ -5,7 +5,7 @@
    <td>{{$estado->user->name}} {{$estado->user->lastname}}</td>
    <td>{{$estado->created_at}}</td>
    <td>
-    <button type="button" class="btn btn-warning btn-sm btn_descargar_rep_pdf" data-estado_id="{{$estado->type_status_id}}"  data-id="{{$estado->id}}">Ver</button>
+    <button type="button" class="btn btn-warning btn-sm btn_descargar_rep_pdf" data-estado_id="{{$estado->type_status_id}}"  data-id="{{$estado->id}}">Ver actas</button>
     
     @if(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai'))
     <button type="button" class="btn btn-primary btn-sm btn_compartir_rep_pdf" data-estado_id="{{$estado->type_status_id}}"  data-id="{{$estado->id}}">Compartir</button></td>

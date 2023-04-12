@@ -15,6 +15,7 @@ use App\Conciliacion;
 use App\ConciliacionEstado;
 use App\Expediente;
 use App\Mail\Firma;
+use App\Mail\RegConciliacionSuccess;
 use App\Notifications\SolicitudRadicarConciliacion;
 use App\Periodo;
 use App\Segmento;
@@ -94,7 +95,14 @@ Route::post('users/store', 'MyusersController@userStore');
 Route::group(['middleware' => ['confirm_email','perfil']], function() {
 
 Route::get('pruebas/mail',function(){
-  return view('myforms.admin.frm_mail');
+
+  $conciliacion = Conciliacion::find(17);
+  $user = $conciliacion->getUser(205);
+  Mail::to("darioj99@gmail.com")->send(new RegConciliacionSuccess($user));
+
+  $mensaje = "Se ha registrado con exito";
+  $url = 'https://iurisapp.udenar.edu.co/solicitudes/recepcion/conciliacion/$2y$10$IU16lRViqmYzIrQPUEBkieqXbdS.ecmPbFanSgHZPB6j6UpnuLiPm?id=17&paso=2';
+  return view('myforms.mails.formato_correo_',compact('mensaje','url'));
 });
 
 Route::get('home',function(){
@@ -347,6 +355,7 @@ Route::get('conciliacion/chat/{chatroom}', 'AudienciaController@getChangeChatRoo
 //PDF >Reportes
 
 Route::get('pdf/reportes/get', 'PdfReportesController@getReportes');
+Route::get('pdf/reportes/by/category', 'PdfReportesController@getReportesByCategory');
 
 Route::get('pdf/reportes/generate/{conciliacion}/{reporte}/{estado}', 'PdfReportesController@loadPdf')->name('pdf.generate');
 Route::post('pdf/reportes/preview', 'PdfReportesController@loadPdfPreview')->name('pdf.generate');
@@ -359,6 +368,8 @@ Route::resource('conciliaciones/pdf', 'ConciliacionesReportesController');
 Route::post('conciliaciones/pdf/{id}', 'ConciliacionesReportesController@update');
 Route::post('conciliaciones/get/all/pdf', 'ConciliacionesReportesController@getAllPdf');
 Route::get('conciliacion/reportes/get', 'ConciliacionesReportesController@getPdfReportesConciliacion');
+Route::get('conciliacion/reportes/for/status', 'ConciliacionesReportesController@getPdfReportForStatus');
+
 Route::get('pdf/reportes/editar/temporal/{reporte}/{conciliacion}/{estado}', 'ConciliacionesReportesController@editReporteTemporal');
 Route::get('conciliacion/reporte/firmantes', 'ConciliacionesReportesController@getFirmantes');
 Route::post('conciliacion/reporte/firmantes', 'ConciliacionesReportesController@setFirmantes');
@@ -442,9 +453,12 @@ Route::get('/', function () {
   return redirect('/dashboard');
 });
 
-Route::get('solicitudes/recepcion/conciliacion/{token}','SolicitudesController@recepcion_conciliacion');
+
 
 });//fin middleware auth
+
+Route::get('solicitudes/recepcion/conciliacion/{token}','SolicitudesController@recepcion_conciliacion');
+
 Route::post('usuarios', 'UsersController@store');
 
 Route::resource('solicitudes','SolicitudesController');
@@ -510,16 +524,11 @@ Route::get('/prueba', function () {
  // $user = User::find(1);
   //Mail::to('darioj99@gmail.com')->send(new Firma($user));
 
-  $fecha_ini = Carbon::parse('2022-12-17');
-  $fecha_fin = Carbon::parse('2023-01-09');
+  $expediente = Expediente::where('expid', '2023A-1507')->first();
+  //
+  $expediente->getDaysOrColorForClose();
 
-  $fecha_v = Carbon::parse('2022-12-24');
-
-  $days = $fecha_ini->diffInDays($fecha_fin, false);
-  dd($days);
-  $us = User::where("email",'darioj99@gmail.com')->first();
-  $mensaje =  ConciliacionEstado::first();
-   Notification::send($us, new SolicitudRadicarConciliacion( $mensaje ));
+  dd($expediente);
 
    return view('myforms.mails.solicitud_radicado_conciliacion',[
     'mensaje'=>"heols",

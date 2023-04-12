@@ -28,7 +28,7 @@ $(document).ready(function (){
 		let status = $("#option_id-" + id + " option:selected").attr(
 			"data-active_other"
 		);
-	  console.log(status,id);
+	
 		if (status == 1) {
 			$("#value_other_text-" + id).attr("type", "text").addClass("required");
 			$("#lbl_other-" + id).show();
@@ -79,8 +79,12 @@ function validateForm(form){
 } 
 
 function validateTypeDoc(form) {
+	console.log($(form.target)[0].form);
+	var form = $(form.target)[0].form;
 	
-	if($("select[name='tipodoc_id']").val()==''){
+	var form = $(form).attr("id");
+	console.log(form);
+	if($("#"+form+" select[name='tipodoc_id']").val()==''){
         toastr.error("Primero selecciona un tipo de documento", "Atención!", {
         positionClass: "toast-top-right",
         timeOut: "4000"}); 
@@ -96,3 +100,20 @@ function convertFormToJSON(form) {
 		return json;
 	  }, {});
   }
+
+  function existeFecha(fecha){
+	console.log(fecha);
+	try{        
+		fecha_limit = moment(fecha).format('YYYY');
+		var today = moment().format('YYYY')
+		var limit = moment().add(1, 'years').format('YYYY');
+		console.log(fecha_limit,today,limit);
+		if(fecha_limit<today || fecha_limit > limit ){
+			return false
+		}
+		return true
+		
+   }catch(err){  
+	alert("Error fechas");    
+}
+}

@@ -58,7 +58,7 @@
 
 @include('msg.success')
 
-{{-- {{dd($conciliacion->getUsersByType(196))}} --}}
+ 
  
 {{-- {{dd(currentUser()->conciliaciones()
 ->where(['conciliacion_id'=>$conciliacion->id,'tipo_usuario_id'=>203])->get())}} --}} 
@@ -72,10 +72,10 @@
             
             </li>
             @endif
-
+            
             @if( currentUser()->can('ver_documentos_conciliacion') ||
              (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
-            and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
+            and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
             $conciliacion->getUser(203)->pivot->estado_id == 230
             ))
 
@@ -104,6 +104,11 @@
          )
             <li><a class="urlactive" data-toggle="tab" href="#menu2">Estado de la solicitud</a></li>
         @endif
+        
+{{-- 
+        <li>
+            <a class="urlactive" data-toggle="tab" href="#menu7">Actas</a>
+        </li> --}}
 
         @if((currentUser()->can('ver_asignaciones_conciliacion'))
         || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) 
@@ -138,6 +143,9 @@
               <li><a class="urlactive" data-toggle="tab" href="#menu6">Expediente</a></li>
               @endif
            @endif
+
+       
+
           </ul>
 
           <div class="tab-content">
@@ -146,7 +154,9 @@
               </div>
 
             <div id="home" class="tab-pane fade in active">
-              @include('myforms.conciliaciones.conciliacion_form')
+              @include('myforms.conciliaciones.conciliacion_form') 
+             {{--  @include('myforms.conciliaciones.conciliacion_informacion') --}}
+
             </div>
             <div id="menu1" class="tab-pane fade">
                 @include('myforms.conciliaciones.conciliacion_comentarios')
@@ -166,15 +176,20 @@
           <div id="menu6" class="tab-pane fade">
             @include('myforms.conciliaciones.conciliacion_expediente')
           </div>
+
+          <div id="menu7" class="tab-pane fade">
+            @include('myforms.conciliaciones.formatos_actas')
+          </div>
+
           </div>
     </div>
 </div>
     @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
     @include('myforms.conciliaciones.componentes.modal_reportes_pdf_estados')
     @include('myforms.conciliaciones.componentes.modal_create_document')
-    @include('myforms.conciliaciones.componentes.modal_create_estado')
+    {{-- @include('myforms.conciliaciones.componentes.modal_create_estado') --}}
     @include('myforms.conciliaciones.componentes.modal_create_comentario')
-    @include('myforms.conciliaciones.componentes.modal_create_user')
+   {{--  @include('myforms.conciliaciones.componentes.modal_create_user') --}}
     @include('myforms.conciliaciones.componentes.modal_create_estado_pretension')
     @include('myforms.conciliaciones.componentes.modal_detalles_user')
     @include('myforms.conciliaciones.componentes.modal_audiencia_salas_alternas')
@@ -187,6 +202,8 @@
 
 @push('scripts')
 <!-- aqui van los scripts de cada vista -->
+<script type="module"   src={{asset("js/admin_conciliacion.js")}}></script>
+
 {!! Html::script('js/audiencia_conciliacion.js?v=1')!!}
 <script src="https://meet.jit.si/external_api.js"></script>
 {!! Html::script('js/config_jitsi.js?v=3')!!}

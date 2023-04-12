@@ -378,7 +378,7 @@ class Expediente extends Model
             ->first();
         //    return  $asig;
         try {
-            //dd($now);
+            
             $now = $now == null ? Carbon::now() : Carbon::parse($now);
             $vacaciones_text = DB::table("vacaciones_periodo")            
             ->whereDate('fecha_fin','>=',$now)
@@ -430,6 +430,7 @@ class Expediente extends Model
                 $color = 'gray !important';
                 $mgs = "Evaluado por sistema";
             }
+           
             switch ($item) {
                 case 'color':
                     return $color;
@@ -589,7 +590,7 @@ class Expediente extends Model
             ->groupBy('actuacions.id')
             ->get();
 
-        $hijos = [];
+        $hijos = []; 
         $segmento = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
             ->where('sg.sede_id', session('sede')->id_sede)
             ->where('estado', true)
@@ -615,7 +616,7 @@ class Expediente extends Model
                     $date = Carbon::now()->format('Y-m-d');
                     $fecha_limit = Carbon::parse($hijosAct[0]->fecha_limit);
                     if(count($vacaciones)>0){
-                        if($vacaciones[0]->fecha_inicio <= $fecha_limit && $vacaciones[0]->fecha_fin <= $fecha_limit ){                            
+                        if($vacaciones[0]->fecha_inicio <= $fecha_limit && $vacaciones[0]->fecha_fin >= $fecha_limit ){                            
                             $inicio = Carbon::parse($vacaciones[0]->fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
                             $fin = Carbon::parse($vacaciones[0]->fecha_fin);//moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
                             $days_vac = $inicio->diffInDays($fin, false);

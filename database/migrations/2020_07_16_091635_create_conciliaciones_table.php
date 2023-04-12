@@ -16,7 +16,8 @@ class CreateConciliacionesTable extends Migration
         Schema::create('conciliaciones', function (Blueprint $table) {
             $table->increments('id');
             $table->dateTime('fecha_radicado');                        
-            $table->string('num_conciliacion');   
+            $table->string('num_conciliacion');
+            $table->string('num_solicitud')->nullable();     
             $table->string('auto_admisorio')->default("0");
             $table->string('token')->nullable();          
             $table->integer('estado_id')->unsigned(); // 
