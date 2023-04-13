@@ -28,6 +28,7 @@ Registrado
 	<input type="hidden" id="userupdated" name="userupdated" value="{{currentUser()->idnumber}}" >
 	<input type="hidden"  name='cursando_id' value="1">
 	<input type="hidden" name="genero_id" value="9">
+	<input type="hidden" name="tipopers_id" value="237">
 	<input type="hidden" name="estadocivil_id" value="9">
 	<input type="hidden" name="estrato_id" value="9">
 	{!!Form::hidden('id',  null , ['class' => 'form-control', 'readonly', 'id'=>'id' ]); !!}
@@ -45,12 +46,14 @@ Registrado
 		<div class="form-group">
 			{!!Form::label('Tipo de documento ') !!}
 			
-			<select onchange="comprIdnumber()" name="tipodoc_id" id="tipodoc_id" class="form-control required" required>
-				<option value="">Seleccione...</option>
-				@foreach($tipodoc as $doc)
-				<option value="{{$doc->id}}">{{$doc->ref_nombre}}</option>
-				@endforeach
-			</select>
+			
+
+			<select onchange="comprIdnumber()" {{isset($disabled) ? $disabled : ''}} name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required" required>
+                <option value="">Seleccione...</option>
+                @foreach($tipodoc as $key => $doc)
+                <option  {{(isset($user) and $user->tipodoc_id == $key) ? "selected":"" }} value="{{$key}}">{{$doc}}</option>
+                @endforeach
+            </select>
 
 					</div>
 	</div>
@@ -106,10 +109,10 @@ Registrado
 		<div class="form-group"> 
 			{!!Form::label('Orientación Sexual') !!} 
 
-			<select name="genero_id" id="genero_id" class="form-control required" required>
+			<select {{isset($disabled) ? $disabled : ''}} name="genero_id" id="genero_id" class="form-control required" required>
 				<option value="">Seleccione...</option>
-				@foreach($genero as $tipo)
-				<option value="{{$tipo->id}}">{{$tipo->ref_nombre}}</option>
+				@foreach($genero as $key => $tipo)
+				<option {{(isset($user) and $user->genero_id == $key) ? "selected":"" }} value="{{$key}}">{{$tipo}}</option>
 				@endforeach
 			</select>
 
@@ -121,10 +124,12 @@ Registrado
 	<div class="col-md-6">
 		<div class="form-group">
 			{!!Form::label('Estado Civil') !!}
-			<select name="estadocivil_id" id="estadocivil_id" class="form-control required" required>
+			<select {{isset($disabled) ? $disabled : ''}} name="estadocivil_id" id="estadocivil_id" class="form-control required" required>
 				<option value="">Seleccione...</option>
-				@foreach($estcivil as $tipo)
-				<option value="{{$tipo->id}}">{{$tipo->ref_nombre}}</option>
+				@foreach($estcivil as $key => $tipo)
+				<option {{(isset($user) and $user->estadocivil_id == $key) ? "selected":"" }} value="{{$key}}">
+					{{$tipo}}
+				</option>
 				@endforeach
 			</select>
 		</div>
@@ -134,10 +139,10 @@ Registrado
 	<div class="col-md-6">
 		<div class="form-group">
 			{!!Form::label('Estrato ') !!}
-			<select name="estrato_id" id="estrato_id" class="form-control required" required>
+			<select {{isset($disabled) ? $disabled : ''}} name="estrato_id" id="estrato_id" class="form-control required" required>
 				<option value="">Seleccione...</option>
-				@foreach($estrato as $tipo) 
-				<option value="{{$tipo->id}}">{{$tipo->ref_nombre}}</option>
+				@foreach($estrato as $key => $tipo) 
+				<option {{(isset($user) and $user->estrato_id == $key) ? "selected":"" }} value="{{$key}}">{{$tipo}}</option>
 				@endforeach
 			</select>
 		</div>

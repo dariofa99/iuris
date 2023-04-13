@@ -196,14 +196,15 @@
           <label for="">Nota Ética: </label>
           <label id="lbl_not_etireq"></label>
         </div>
-        @if($segmento and $segmento->act_fc)
+        
 				<div class="col-md-3">
+          @if(currentUser()->hasRole('docente') || currentUser()->hasRole('amatai'))
 				<input type="hidden" value="{{$segmento->id}}" id="segmento_id"/>
 					<a style="cursor:pointer" id="btn_cam_nt_req"  >Cambiar Notas</a> 
              <br>
-					
+					@endif
 				</div>
-				@endif
+				
         <div class="col-md-12">
           <label for="">Concepto nota</label><br>
           {!!Form::textarea('ntaconcepto_req',  null , ['id'=>'ntaconcepto_req','class' => 'form-control required','maxlength'=>'225', 'rows' => 3,'disabled' ]); !!}
@@ -213,8 +214,9 @@
           <label for="">Evaluado por: </label> 
          <i id="lbldocevname"></i> 
         </div>
+        </div>
 
-      </div>
+       
     </div>
   </div>
   @endslot

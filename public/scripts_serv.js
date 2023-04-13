@@ -688,7 +688,7 @@ var con=0;
 						var act_fecha = child.actdocenfechamod != null ? child.actdocenfechamod : child.actfecha;
 					    var dias = getDiffdays(child.fecha_limit, act_fecha);
 						var vacdia = 0;
-					
+						
 						if(res.vacaciones.length > 0){
 							
 							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,child);
@@ -697,11 +697,12 @@ var con=0;
 						
 						if(dias<=0) dias = child.fecha_limit;
 						var color_bg = getDiffdaysColor(child.fecha_limit, act_fecha,child.id);
-
-						if(end_status.id != child.id && child.actestado_id!='136'){
+					
+						if(end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136)){
 							dias = child.fecha_limit;
 							color_bg = 'bg-gray';
 						} 
+					
 						if(dias===null){
 							dias = child.actfecha;
 						}
@@ -764,11 +765,9 @@ function getDiffVacations(fecha_limit,vacaciones,actuacion){
 			dias += moment.duration(discharge.diff(admission)).asDays();
 		}
 
-		if(vacacion.fecha_inicio >= actuacion.actfecha  && vacacion.fecha_fin <= fecha_limit ){		
-			
+		if(vacacion.fecha_inicio >= actuacion.actfecha  && vacacion.fecha_fin <= fecha_limit ){				
 			var admission = moment(vacacion.fecha_inicio, 'YYYY-MM-DD');
-			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');
-			console.log(moment.duration(discharge.diff(admission)).asDays())
+			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');			
 			dias += moment.duration(discharge.diff(admission)).asDays();
 		}
 
@@ -1029,7 +1028,7 @@ $("#btn_act_edit_docen").click(function(){
 	var notacon = $("#myform_act_edit_docente input[name='ntaconocimiento']").val();
 	var notaet =  $("#myform_act_edit_docente input[name='ntaetica']").val();
 	var fecha_limit =  $("#myform_act_edit_docente input[name='fecha_limit_doc']").val();
-	if(!existeFecha(fecha_limit)){
+	if(!existeFecha(fecha_limit) && $("#actestado").val()==102){
 		toastr.error("Por favor, verifíque que el año de fecha limite no sea inferior o superior a un año con respecto al año actual.", "", {
 			positionClass: "toast-top-right",
 			timeOut: "6000",
@@ -1362,7 +1361,7 @@ fechaActual = getFechaActual();
 				if(value.reqentregado == 1){
 			  // btns = btnAsistencia+""+btnDetalles;
 					btnAsistencia = "<button href='#' "+estadoBtn+" data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_asist'  class='btn btn-primary btn-block' role='button'>Comentar</button>";
-				 btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_details'  class='btn btn-success btn-block' role='button'>Detalles</a>";
+				 btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")'   class='btn btn-success btn-block' >Detalles</a>";
 				 
 				}	
 				
@@ -1370,7 +1369,7 @@ fechaActual = getFechaActual();
 					btnEdit = "";
 					btnDel = "";
 					btnAsistencia = "<button href='#' disabled data-toggle='modal'  class='btn btn-primary btn-block' role='button'>Evaluado</button>";
-					 btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_details'  class='btn btn-success btn-block' role='button'>Detalles</a>";
+					 btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")'   class='btn btn-success btn-block' >Detalles</a>";
 					 
 					}	
 				 
@@ -1382,7 +1381,7 @@ fechaActual = getFechaActual();
 						btnEdit = "";
 						btnDel = "";	
 						btnAsistencia = "<button href='#' "+estadoBtn+" data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_asist'  class='btn btn-primary btn-block' role='button'>"+label+"</button>";
-						btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_details'  class='btn btn-success btn-block' role='button'>Detalles</a>";
+						btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")'   class='btn btn-success btn-block' role='button'>Detalles</a>";
 			
 				}
  
@@ -1390,7 +1389,7 @@ fechaActual = getFechaActual();
 				//		btns = btnAsistencia+""+btnDetalles;
 			 	 btnPrint='';	
 					btnAsistencia = "<button href='#' "+estadoBtn+" data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_asist'  class='btn btn-primary btn-block' role='button'>Asistencia</button>";
-					btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_details'  class='btn btn-success btn-block' role='button'>Detalles</a>";
+					btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")'   class='btn btn-success btn-block' role='button'>Detalles</a>";
 					btnEdit = "";
 					btnDel = "<a href='#'  class='btn btn-danger btn-block' OnClick='delReq("+value.id+")' role='button'>Eliminar</a>";
 					
@@ -1398,7 +1397,7 @@ fechaActual = getFechaActual();
 
 				if (res.userSession.name =='amatai' || res.userSession.name =='secretaria') {
 				//	btns = btnDetalles;
-			 btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_details'  class='btn btn-success btn-block' role='button'>Detalles</a>";
+			 btnDetalles = "<a href='#' data-toggle='modal' OnClick='searchReq("+value.id+")' class='btn btn-success btn-block' role='button'>Detalles</a>";
 				if (!value.reqentregado) {
 				 	btnChangeEstado = "<a href='#' OnClick='changeStateReq("+value.id+")'   class='btn btn-primary btn-block' role='button'>Marcar como Entregado</a>";
 				  }else{
@@ -1439,6 +1438,7 @@ fechaActual = getFechaActual();
 	Buscar requerimiento para acualizarlo
 */
 function searchReq(id){
+	//
 	var route = "/requerimientos/"+id+"/edit" ;
 	var token = $("#token").val();
 	$("#req_id").val(id);
@@ -1450,6 +1450,7 @@ function searchReq(id){
 		data: {'id_req':id},
 		 beforeSend: function(xhr){
       xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+	  $("#wait").show(); 
      // $("#wait").css("display", "block");   
     }, //se envia id para listar datos que cumplan con ese identificador
 		/*muestra div con mensaje de 'regristrado'*/
@@ -1458,6 +1459,7 @@ function searchReq(id){
 			llenarFormEditReq(res);
 			llenarModalDetailsReq(res);
 			llenarModalUpdateReq(res);
+			$("#wait").hide();
 		},
     error:function(xhr, textStatus, thrownError){
         alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
@@ -1500,7 +1502,7 @@ function searchReq(id){
  }
 
  function llenarModalDetailsReq(res){
-	 console.log(res)
+	
  	hideElement('cont_notas_req');
  	$("#req_id_det").val(res.requerimiento.id);
  	$("#lab_cod_exp_det").text(res.requerimiento.expediente.expid);
@@ -1518,7 +1520,7 @@ function searchReq(id){
  	$("#lab_req_comest_det").text(res.requerimiento.reqcomentario_est);
 	 hideElement('btn_cam_nt_req');
 	 var segmento_id = $("#segmento_id").val();
-	// alert(segmento_id)
+	 hideElement('btn_cam_nt_req');
 	 if(res.requerimiento.notas_f.encontrado){
 		$("#lbl_not_etireq").text(res.requerimiento.notas_f.nota_etica);
 		$("#ntaconcepto_req").text(res.requerimiento.notas_f.nota_concepto); 
@@ -1537,7 +1539,7 @@ function searchReq(id){
 			} 
 	}
  	
-	 
+	$("#myModal_req_details").modal("show") 
  	
 
  }

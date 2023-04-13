@@ -35,7 +35,8 @@ class ComposerServiceProvider extends ServiceProvider
             'myforms.frm_expediente_list',
             'myforms.frm_requerimiento_list',            
             'myforms.solicitudes.*',   
-            'myforms.conciliaciones.*'               
+            'myforms.conciliaciones.*',
+            'myforms.components_user.*'               
         ],'App\Http\ViewComposers\ExpedientesComposer');
 
         View::composer([
@@ -56,6 +57,7 @@ class ComposerServiceProvider extends ServiceProvider
             'front.solicitudes.*', 
             'myforms.register', 
             'myforms.components_user.*',
+            'myforms.frm_expediente_create',
                                   
         ],'App\Http\ViewComposers\UsersComposer');       
         

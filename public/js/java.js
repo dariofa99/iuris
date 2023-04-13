@@ -8475,11 +8475,15 @@ function updateNota(data, refresh = "") {
 
             if (refresh != "") {
                 window.location.reload(true);
-            }
+            } 
+            toastr.success("Actualizado con éxito", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
             //  $("#table_list_notas tbody").html(res.notas_caso);
             $("#myform_update_notas #lbldocevname").text(res.user_name);
             $("#wait").css("display", "none");
-            // $("#myModal_edit_notas").modal("hide");
+            $("#myModal_edit_notas").modal("hide");
         },
         error: function (xhr, textStatus, thrownError) {
             alert(

@@ -38,7 +38,7 @@
 
       <input {{isset($disabled) ? $disabled : ''}}  data-name="{{$reference->name}}" data-option="{{$reference->options[0]->id}}"
        data-type="{{$reference->type_data_id}}"  name="static_data[]"  
-        data-section="{{$reference->section}}" required  type="text"
+        data-section="{{$reference->section}}"   type="text"
         @if(isset($user)  and $reference->options[0] and $user->getDataVal($reference->id,$reference->options[0]->id)) 
         value="{{$user->getDataVal($reference->id,$reference->options[0]->id)->value}}"
         @endif             

@@ -2,7 +2,7 @@
 
 
 @section('titulo_general')
-Hola!!  {{  currentUser()->name  }}  bienvenido a <strong>Iuris </strong>!! 
+ 
 @endsection
 
 @section('titulo_area')
@@ -16,16 +16,21 @@ Hola!!  {{  currentUser()->name  }}  bienvenido a <strong>Iuris </strong>!!
 
 <div class="contain">
    
+<div class="row">
+    <div class="col-md-12">
+       <h2> Hola!!  {{  currentUser()->name  }} {{  currentUser()->lastname  }}  bienvenido a <strong>{{ config('app.name') }}
+        </strong>!! </h2>
+    </div>
+</div>
 
-
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-4 col-xl-3">
             <div class="card bg-light-blue color-palette order-card">
                 <div class="card-block">
                     <h4 class="m-b-20">Estudiantes que menos han ingresado</h4>
                     <h2 class="text-right"><i class="fa fa-users f-left"></i><span>
                         <a style="color: aliceblue" href="/dashboard/search?type=users_not_session">486</a></span></h2>
-                   {{--  <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> --}}
+                   {{--  <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> 
                 </div>
             </div>
         </div>
@@ -35,7 +40,7 @@ Hola!!  {{  currentUser()->name  }}  bienvenido a <strong>Iuris </strong>!!
                 <div class="card-block">
                     <h4 class="m-b-20">Estudiantes con menos interacciones</h4>
                     <h2 class="text-right"><i class="fa fa-user-times f-left"></i><span>486</span></h2>
-                   {{--  <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> --}}
+                   {{--  <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> 
                 </div>
             </div>
         </div>
@@ -45,7 +50,7 @@ Hola!!  {{  currentUser()->name  }}  bienvenido a <strong>Iuris </strong>!!
                 <div class="card-block">
                     <h4 class="m-b-20">Estudiantes con mas casos evaluados por sistema</h4>
                     <h2 class="text-right"><i class="fa fa-clipboard f-left"></i><span>486</span></h2>
-                   {{--  <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> --}}
+                   {{--  <p class="m-b-0">Completed Orders<span class="f-right">351</span></p>
                 </div>
             </div>
         </div>
@@ -78,7 +83,7 @@ Hola!!  {{  currentUser()->name  }}  bienvenido a <strong>Iuris </strong>!!
             </div>
         </div>
     </div>
-	</div>
+	</div> --}}
 </div>
 
 

@@ -37,7 +37,7 @@
                 <input {{isset($disabled) ? $disabled : ''}} id='name' value="{{(isset($user)) ? $user->name:"" }}" name='name' required type="text" class="form-control form-control-sm required"  data-toggle="tooltip" title="Nombres"  placeholder="Nombres" maxlength="20" >
                 
             </div>           
-        </div>
+        </div> 
     
         <div class="col-md-6">
             <div class="form-group has-feedback"><label for="name">Apellidos*</label>

@@ -50,7 +50,7 @@ class Requerimiento extends Model
    public function req_asistencia(){
     return $this->belongsTo(ReqAsistencia::class, 'reqid_asistencia','reqid_refasis');
    } 
-
+ 
    function getFechaCorta($date){
         $fecha = substr($date,0,11);
         return $fecha;
