@@ -133,14 +133,16 @@
                 'conciliacion_id'=>$conciliacion->id
              ])->first()->pivot->estado_id != 231
              ))
-            <li>
+           {{--  <li>
                 <a class="urlactive" data-toggle="tab" href="#menu5">Notas</a>
-            </li>
+            </li> --}}
             @endif
             @if(((currentUser()->can('act_conciliacion')))
-            || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar','autor']))))
+            || ($conciliacion->getUser(199)->pivot and
+             $conciliacion->getUser(199)->hasRole('estudiante') and
+             (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))))
              @if(count($conciliacion->expedientes)<=0) 
-              <li><a class="urlactive" data-toggle="tab" href="#menu6">Expediente</a></li>
+              {{-- <li><a class="urlactive" data-toggle="tab" href="#menu6">Expediente</a></li> --}}
               @endif
            @endif
 

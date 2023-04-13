@@ -82,7 +82,7 @@
 <div class="edit_audiencia" style="@if ($audiencia != '') display:block @endif" >
    <hr>
     <div class="row"  style="height: 300px; overflow-x: auto;display:{{($audiencia != "")? 'block':'none'}}" id="list_turno_estudiantes_conciliacion">
-        @include('myforms.conciliaciones.componentes.list_turno_estudiante')
+       {{--  @include('myforms.conciliaciones.componentes.list_turno_estudiante') --}}
     </div>
 
 

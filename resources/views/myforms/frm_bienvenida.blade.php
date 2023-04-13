@@ -18,7 +18,8 @@
    
 <div class="row">
     <div class="col-md-12">
-       <h2> Hola!!  {{  currentUser()->name  }} {{  currentUser()->lastname  }}  bienvenido a <strong>{{ config('app.name') }}
+       <h2> Hola!!  {{  currentUser()->name  }} {{  currentUser()->lastname  }}  bienvenido a
+         <strong>{{ config('app.name') }}
         </strong>!! </h2>
     </div>
 </div>

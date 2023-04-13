@@ -129,7 +129,7 @@ class ConciliacionesController extends Controller
         ->first();
         $conciliacion = Conciliacion::create([
             'token'=>str_replace("/", "", bcrypt(\Str::random(5))),
-            'num_conciliacion'=> strtoupper("CCEAH-CCEAH-0-00-00") ,//"CCEAH-0-00-00",
+            'num_conciliacion'=> strtoupper("CCEAH-0-00-00") ,//"CCEAH-0-00-00",
             'num_solicitud'=> strtoupper("CCEAH-".Str::random(7)) ,//"CCEAH-0-00-00"
             'categoria_id'=> $request->has('categoria_id') ? $request->get('categoria_id') : 173,
             'estado_id'=>$request->has('estado_id') ? $request->get('estado_id') : 174,

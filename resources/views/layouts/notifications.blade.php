@@ -53,40 +53,29 @@
               
   <img src="{{asset('/thumbnails/'.$user->image)}}" alt="User Image" class="user-image">
              
-              <span class="hidden-xs">{{  $user->name  }}</span>
+              <span class="hidden-xs"></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
                <img src="{{asset('/thumbnails/'.$user->image)}}" alt="User Image" class="img-circle">
               <p>
-                  {{  $user->name  }} 
+                  {{  $user->name  }} {{  $user->lastname  }}
                   <small>Miembro desde {{   TiempoTrans(  $user->created_at  )   }} </small>
                 </p>
               </li>
               <!-- Menu Body -->
               <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="expedientes">Mis Casos</a>
-                  </div>
-{{--                   <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Pagos</a>
-                  </div> --}}
-                </div>
-                <!-- /.row -->
+             
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
                   
-                 {!! link_to_route('users.edit', $title = 'Perfil', $parameters = $user->id, $attributes = ['class'=>'btn btn-default btn-flat']) !!}
+                 {!! link_to_route('users.edit', $title = 'Perfil', $parameters = $user->id, $attributes = ['class'=>'btn btn-info btn-flat']) !!}
                 </div>
                 <div class="pull-right">
-                {!! link_to_route('logout.index', $title = 'Salir', $parameters = $user->id, $attributes = ['class'=>'btn btn-default btn-flat']) !!}
+                {!! link_to_route('logout.index', $title = 'Salir', $parameters = $user->id, $attributes = ['class'=>'btn btn-danger btn-flat']) !!}
                   
                 </div>
               </li>
