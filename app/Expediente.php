@@ -616,15 +616,22 @@ class Expediente extends Model
                     $date = Carbon::now()->format('Y-m-d');
                     $fecha_limit = Carbon::parse($hijosAct[0]->fecha_limit);
                     if(count($vacaciones)>0){
-                        if($vacaciones[0]->fecha_inicio <= $fecha_limit && $vacaciones[0]->fecha_fin >= $fecha_limit ){                            
-                            $inicio = Carbon::parse($vacaciones[0]->fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
-                            $fin = Carbon::parse($vacaciones[0]->fecha_fin);//moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
-                            $days_vac = $inicio->diffInDays($fin, false);
-                            $fecha_limit->addDays($days_vac);                                         
+                        $days_vac = 0;
+                        foreach ($vacaciones as $key => $vacacion) {
+                            //if( $key==2) dd($fecha_limit ,  $key,$vacacion->fecha_fin); 
+                            if($vacacion->fecha_inicio <= $fecha_limit && $vacacion->fecha_fin >= $fecha_limit ||
+                            ($vacacion->fecha_inicio <= $fecha_limit && $vacacion->fecha_fin <= $fecha_limit)){                            
+                                $inicio = Carbon::parse($vacacion->fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
+                                $fin = Carbon::parse($vacacion->fecha_fin);//moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
+                                $days_vac =  $inicio->diffInDays($fin, false);
+                                $fecha_limit->addDays($days_vac);    
+                               //if( $key==2) dd($fecha_limit ,  $key);                                                     
+                            }
                         }
+                                               
                     }
                     
-
+                   
                     if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $fecha_limit < $date) {
                         $hijos[] = $hijosAct;                        
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
@@ -642,9 +649,10 @@ class Expediente extends Model
                             'docidnumber' => \Auth::user()->idnumber,
                             'tbl_org_id' => $actuacion->id,
                         ];
-                        $actuacion->actestado_id = 139;
-                        $actuacion->save();
-                        $actuacion->asignarNotas($data);
+                        //
+                       // $actuacion->actestado_id = 139;
+                       // $actuacion->save();
+                       // $actuacion->asignarNotas($data);
                     }
                 }
             }

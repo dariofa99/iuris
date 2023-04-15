@@ -524,9 +524,9 @@ Route::get('/prueba', function () {
  // $user = User::find(1);
   //Mail::to('darioj99@gmail.com')->send(new Firma($user));
 
-  $expediente = Expediente::where('expid', '2023A-1507')->first();
+  $expediente = Expediente::where('expid', '2023A-558')->first();
   //
-  $expediente->getDaysOrColorForClose();
+  $expediente->setNotActLimit();
 
   dd($expediente);
 

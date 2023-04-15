@@ -44,7 +44,7 @@ class NotaController extends Controller
      */
     public function notas_ver(Request $request)
     {
-        $user = User::where('idnumber',3030)->first();
+       // $user = User::where('idnumber',3030)->first();
         if(currentUser()->hasRole("estudiante")){
             $user = User::where('idnumber',auth()->user()->idnumber)->first();
         }elseif(currentUser()->can("ver_notas_estudiante")){
@@ -54,15 +54,17 @@ class NotaController extends Controller
             
         } 
         $notas = [];
-        if($user){
+        if(isset($user)){
             $notas = $user->getNotas($request);
+            return view("myforms.notas_ver.index",compact('user','notas'));
         }else{
+            //$user = User::where('idnumber',3030)->first();
             $request->session()->flash('message-success', 'No se encontró el estudiante!');
         }
        
        
     // dd($notas);
-       return view("myforms.notas_ver.index",compact('user','notas'));
+       return view("myforms.notas_ver.index",compact('notas'));
 
        
    }

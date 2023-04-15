@@ -687,22 +687,32 @@ var con=0;
 						con++;			
 						var act_fecha = child.actdocenfechamod != null ? child.actdocenfechamod : child.actfecha;
 					    var dias = getDiffdays(child.fecha_limit, act_fecha);
+						console.log(dias,"sss",act_fecha);
 						var vacdia = 0;
 						
 						if(res.vacaciones.length > 0){
 							
 							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,child);
-							if(Number.isInteger(dias)) dias+=vacdia;			
+							console.log(dias,"sss",vacdia);
+							if(Number.isInteger(dias)) dias+=vacdia;	
+							console.log(dias,"sss",act_fecha);
 						}
-						
-						if(dias<=0) dias = child.fecha_limit;
+						//
 						var color_bg = getDiffdaysColor(child.fecha_limit, act_fecha,child.id);
-					
+						if(dias<=0){
+							color_bg = 'bg-red';
+							dias = dias +" días";
+						} 
+						if(dias<0)dias = child.fecha_limit;
+						
+						
+						
 						if(end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136)){
 							dias = child.fecha_limit;
 							color_bg = 'bg-gray';
+							
 						} 
-					
+						
 						if(dias===null){
 							dias = child.actfecha;
 						}
@@ -746,10 +756,12 @@ var con=0;
 }
 
 function getDiffdays(fecha_limit,date_2=''){
+			
 	if(fecha_limit!=null){
 		var given = moment(fecha_limit,"YYYY-MM-DD");
 		var current = moment().startOf('day');
 		var dias = moment.duration(given.diff(current)).asDays();
+		//console.log(dias,"dias",fecha_limit);	
 		return dias;
 	}
 	return date_2;	
@@ -760,15 +772,17 @@ function getDiffVacations(fecha_limit,vacaciones,actuacion){
 	let dias = 0;
 	vacaciones.forEach(vacacion => {
 		if(vacacion.fecha_inicio <= fecha_limit && vacacion.fecha_fin >= fecha_limit ){		
-			var admission = moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
-			var discharge = moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
+			var admission = moment(vacacion.fecha_inicio, 'YYYY-MM-DD');
+			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');
 			dias += moment.duration(discharge.diff(admission)).asDays();
+			//console.log(dias,"jdjd",admission,vacacion.fecha_fin);
 		}
 
 		if(vacacion.fecha_inicio >= actuacion.actfecha  && vacacion.fecha_fin <= fecha_limit ){				
 			var admission = moment(vacacion.fecha_inicio, 'YYYY-MM-DD');
 			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');			
 			dias += moment.duration(discharge.diff(admission)).asDays();
+			
 		}
 
 	});

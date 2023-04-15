@@ -11,12 +11,17 @@
         </div>
 
         <div class="pull-left info">
-          <p>
+        
             @if(currentUser()->turno)
             <span  class="badge {{ (currentUser()->getColorTurno(currentUser()->turno->color->ref_value)) }}">.</span>
+           @else
+         {{--   <span title="En linea"  class="badge bg-green">.</span> <br>
+         --}}
             @endif
-              {{  currentUser()->name  }} </p>
-          <a href="#"><label class="label ">Online</label> </a>
+            <p>
+             <small> {{  currentUser()->name  }} <br> {{  currentUser()->lastname  }} </small>
+            </p> 
+          {{-- <a href="#"><label class="label ">Online</label> </a> --}}
         </div>
         
       </div>

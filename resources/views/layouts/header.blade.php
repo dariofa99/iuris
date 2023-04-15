@@ -13,17 +13,17 @@
       <span class="logo-mini"><b>I</b>U</span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg">
-        {{-- <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Sis Image" style="height: 45px;"> --}}
-        <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
-         <b>
-         
+         <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Sis Image" style="height: 45px;">
+       {{--  <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
+        --}}  <b>
+         Iuris
         </b>
       </span>
     </a>
    
   
     <!-- Header Navbar: style can be found in header.less -->
-    <nav class="navbar navbar-static-top" style="background-color: #2b4b5a !important">
+    <nav class="navbar navbar-static-top" {{-- style="background-color: #2b4b5a !important" --}}>
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>

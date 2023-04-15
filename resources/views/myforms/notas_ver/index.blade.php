@@ -7,7 +7,7 @@ Notas
 
 @section('titulo_area')
 <h3>
-    @if($user!=null) {{$user->name}} {{$user->lastname}}  @endif
+    @if(isset($user) and $user!=null) {{$user->name}} {{$user->lastname}}  @endif
 </h3>
 @endsection
 

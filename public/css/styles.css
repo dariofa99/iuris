@@ -9,13 +9,13 @@
 background-color: #00923f !important;
 } 
 .skin-purple .main-header .logo {
-    background-color: #28414c !important;
+    background-color: #374850 !important;
 }
 .sidebar-toggle:hover {
- background-color: #11405e !important;
+ background-color: #00923f !important;
 }
 .user-header{
- background-color: #22444e !important;
+ background-color: #00923f !important;
 }
 
 .skin-purple .sidebar-menu>li:hover>a, .skin-purple .sidebar-menu>li.active>a {

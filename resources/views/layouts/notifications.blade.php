@@ -53,7 +53,9 @@
               
   <img src="{{asset('/thumbnails/'.$user->image)}}" alt="User Image" class="user-image">
              
-              <span class="hidden-xs"></span>
+              <span class="hidden-xs">
+               <small> {{  $user->name  }} {{  $user->lastname  }}</small>
+              </span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->

@@ -128,19 +128,32 @@
     @if(!Request::is('graficas'))
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      @if(Session::has('message-information_'))
-      <div class="alert alert-info alert-dismissible" role="alert">
+      @if(Session::has('message-information'))
+     {{-- 
+       <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Bienvendido a IURIS!</strong> 
-        Recuerda que si tienes algun problema, duda o inquetitud con respecto al funcionamiento 
-        de la plataforma
-        puedes comunicarte via WhatsApp al número <b>310-6038006</b>
+        <h4>
+          <strong>Bienvendido a {{config("app.name")}}!</strong> <br>
+          Recuerda que si tienes algun problema, duda o inquetitud con respecto al funcionamiento 
+          de la plataforma puedes comunicarte vía WhatsApp al número <b>310-6038006</b>
+        </h4> 
+      </div> 
+      --}}
+
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       <h4>
+        <strong style="border-bottom:1px solid white">Bienvendido a {{ Str::upper(config("app.name"))}}!</strong> <br>
+        Recuerda que estamos actualizando la plataforma, si presentas algún problema refresca el navegador
+        con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles).
+      </h4> 
       </div>
+
+
       @endif
-      <h1>
-       @yield('titulo_general')
-        <small>.</small>
-      </h1>
+      <h4>
+       @yield('titulo_general')       
+      </h4>
 {{--       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> .</a></li>
         <li><a href="#">.</a></li>
@@ -341,13 +354,13 @@ function getDateServer(){
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <!-- /propios -->
-<script  src={{asset("js/config.js")}}></script> 
-{!! Html::script('js/application.js')!!}
-{!! Html::script('scripts_serv.js?v=3')!!}
-{!! Html::script('js/AdminRoles.js?v=3')!!}
-{!! Html::script('js/java.js?v=3')!!}
-{!! Html::script('js/graficas.js?v=3')!!}
-{!! Html::script('js/excel.js?v=3')!!}
+<script  src={{asset("js/config.js?v=1")}}></script> 
+{!! Html::script('js/application.js?v=1')!!}
+{!! Html::script('scripts_serv.js?v=3.1')!!}
+{!! Html::script('js/AdminRoles.js?v=3.1')!!}
+{!! Html::script('js/java.js?v=3.1')!!}
+{!! Html::script('js/graficas.js?v=3.1')!!}
+{!! Html::script('js/excel.js?v=3.1')!!}
 
 @yield('script_calendar')
 
