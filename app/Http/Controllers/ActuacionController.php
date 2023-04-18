@@ -274,6 +274,7 @@ function vacations(){
           'a.actestado_id',
           'r.ref_nombre',
           'a.actdocnomgen',
+          'a.actdocenfechamod',
           'a.actdocnompropio',
           'a.actdocruta',
           'a.actusercreated',

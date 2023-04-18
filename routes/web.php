@@ -356,6 +356,7 @@ Route::get('conciliacion/chat/{chatroom}', 'AudienciaController@getChangeChatRoo
 
 Route::get('pdf/reportes/get', 'PdfReportesController@getReportes');
 Route::get('pdf/reportes/by/category', 'PdfReportesController@getReportesByCategory');
+Route::get('pdf/reportes/for/destinos', 'PdfReportesController@getDestinosForReport');
 
 Route::get('pdf/reportes/generate/{conciliacion}/{reporte}/{estado}', 'PdfReportesController@loadPdf')->name('pdf.generate');
 Route::post('pdf/reportes/preview', 'PdfReportesController@loadPdfPreview')->name('pdf.generate');

@@ -766,3 +766,22 @@ body{
 	position: relative;
 	
   }
+ 
+  .image_us_not img{
+	width: 40px;
+	height: 40px;
+  }
+  .bodyuser_not{
+	max-height: 350px;
+	overflow-y: auto;
+	font-size: 13px;
+  }
+  .fila_usuarios_not:hover{
+	background-color: #989898;
+	
+  }
+  .fila_usuarios_not_selected{
+	background-color: #989898;
+	border-radius: 3px;
+  }
+  

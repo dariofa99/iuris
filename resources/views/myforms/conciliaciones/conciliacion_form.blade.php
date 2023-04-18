@@ -14,13 +14,21 @@
 
     @if (currentUserInConciliacion($conciliacion->id,['conciliador','asistente']))
 
-    
+    @php
+        $conciliador = $conciliacion->getUser(203);
+        $auth_is_con = ($conciliador->id == currentUser()->id);
+        if(!$auth_is_con){
+            $conciliador = $conciliacion->getUser(204);
+            $auth_is_con = ($conciliador->id == currentUser()->id);
+        }
+        
+    @endphp
 <div class="col-md-2">
-    <button data-user_estado="230" data-pivot_id=""
+    <button data-user_estado="230" data-pivot_id="{{$conciliador->pivot->id}}"
     style="display: block;margin-bottom:1px;" data-estado="{{$conciliacion->estado_id}}" id="btn_notificarse" class="btn btn-success">
     Aceptar (Notificarse)
 </button>
-<button data-user_estado="231" data-pivot_id=""
+<button data-user_estado="231" data-pivot_id="{{$conciliador->pivot->id}}"
 style="display: block;margin-bottom:1px;" data-estado="{{$conciliacion->estado_id}}" id="btn_notificarse_cancelar" class="btn btn-warning">
 NO Aceptar 
 </button>

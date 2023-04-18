@@ -684,7 +684,7 @@ $estudiantes = $this->getEstudiantes();
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         if($user){       
           $user->roles;       
-          $view = view('myforms.conciliaciones.componentes.'.$request->view,compact('conciliacion','user'))->render();
+          $view = view('myforms.conciliaciones.componentes.user_solicitante_form',compact('conciliacion','user'))->render();
           //$viewD = view('myforms.conciliaciones.componentes.user_detalles_form',compact('conciliacion','user'))->render();
            return response()->json(['encontrado'=>true,'user'=>$user,'view'=>$view]);   
         } 
@@ -984,7 +984,7 @@ public function enviarCorreo(Request $request){
     }else{
         $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');       
     }
-    if($request->has('pivot_id')){
+    if($request->has('pivot_id') and $request->get('pivot_id')!='' and $request->get('pivot_id')!=null){
         $update = $conciliacion->usuarios()
         ->where('conciliacion_has_user.id',$request->pivot_id)->first();
         $update->pivot->estado_id = $request->user_estado_id;

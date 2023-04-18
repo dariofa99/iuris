@@ -130,6 +130,7 @@ class PdfReportesController extends Controller
     }
 
     public function asignarReporte(Request $request){
+        //return response()->json($request->all());
         $asignacionReporte = PdfReporteDestino::where([
             'tabla_destino'=>$request->tabla_destino ,
             'status_id'=>$request->status_id     ,
@@ -242,7 +243,7 @@ class PdfReportesController extends Controller
    
     public function getReportes(Request $request){
         
-       // return response()->json($request->all());
+      //  return response()->json($request->all());
 
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 0);
@@ -252,7 +253,7 @@ class PdfReportesController extends Controller
             }) */
             //    ->with('users')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
-            ->where('categoria',$request->categoria)
+           // ->where('categoria',$request->categoria)
             ->get();
        if(count($reportes)>0){
             $conciliacion = Conciliacion::find($request->conciliacion_id);
@@ -272,13 +273,13 @@ class PdfReportesController extends Controller
 
     public function getReportesByCategory(Request $request){
         
-        // return response()->json($request->all());
+       //  return response()->json($request->all());
  
          $reportes = PdfReporte::where('is_copy', 0)
-           ->where('categoria_id',$request->categoria)
+           ->where($request->all())
              ->get();
 
-            
+               
 
         if(count($reportes)>0){
             return response()->json($reportes);
@@ -288,5 +289,27 @@ class PdfReportesController extends Controller
          'errors'=> ["No hay modelos registrados"],            
      ]);
      }
+
+     public function getDestinosForReport(Request $request){
+        
+        //  return response()->json($request->all());
+  
+          $reportes = PdfReporte:: whereHas('destino', function (Builder $query) use($request) {
+             $query->where($request->all());
+         })->
+         where('is_copy', 0)
+            //->where($request->all())
+              ->get();
+ 
+                   
+ 
+         if(count($reportes)>0){
+             return response()->json($reportes);
+         }
+         
+         return response()->json([
+          'errors'=> ["No hay modelos registrados"],            
+      ]);
+      }
 
 }

@@ -107,14 +107,14 @@ a {
 </head>
 <body class="content-wrapper" style="background-image: linear-gradient(-90deg,#c0c0c0 0,#ffffff 50%,#c0c0c0 100%);">
 
-<div class="row" style="background-color: #222d32; opacity: 1; margin-right: 0px;" >
+ <div class="row" style="background-color: #222d32; opacity: 1; margin-right: 0px;" >
     <div class="col-md-3 image d-none d-sm-inline-block" style="padding-left: 50px;">
         <img src="{{ asset('dist/img/udenarbl.png') }}" class="elevation-2" style="width: 250px;margin:10px;" alt="User Image">
     </div>
     <div class="col-md-6 " style="padding-top: 25px; text-align: center; font-size: 17px;">
         <p style="color:#ffffff;     font-size: 20px; font-weight: 900;"><b>Consultorios Jurídicos y Centro de Conciliación<br>"Eduardo Alvarado Hurtado"</b></p> 
     </div>
-</div>
+</div> 
 
 {{-- <div class="row" style="background-color: #222d32; opacity: 1; margin-right: 0px;" >
     <div class="col-md-3 image d-none d-sm-inline-block" style="padding-left: 50px;">
@@ -143,7 +143,7 @@ a {
       
                        
         <hr>
-    <footer class="footer">  
+     <footer class="footer">  
         <div class="container container-footer" style="text-align: end;">
             <img src="https://iurisapp.udenar.edu.co/dist/img/consultorios.png" class="d-none d-sm-inline-block" style="width: 400px;margin-top:-370px;opacity: 0.3;z-index: -1;position: absolute;margin-left: -401px;" alt="User Image">
             <div class="row" style="text-align: center; margin: 0px 30px 0px 30px;">

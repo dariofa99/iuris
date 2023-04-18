@@ -1,8 +1,10 @@
 import {UserService} from '../js/users.js';
 import {ConciliacionService} from '../js/conciliaciones.js';
+import { FormatosService } from './repositories/formatos_documentos.js';
 
 const userService = new UserService();
-const conciliacionService = new ConciliacionService()
+const conciliacionService = new ConciliacionService();
+const formatosService = new FormatosService();
 $(document).ready(function () {
  
     $("#myUserSolicitanteForm").on("focus","input[name='idnumber']",validateTypeDoc);
@@ -52,6 +54,27 @@ $(document).ready(function () {
         $("#"+form+" select").prop("disabled",false);            
 
     });
+
+    $(".btn_asinar_usuario_gen_conciliacion").on("click", function (e) {
+      var data_type = $(this).attr("data-type");
+      $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
+      $("#myModal_conc_user_create input[name=section]").val($(this).attr('data-section'));
+      var request = {          
+          'conciliacion_id':$("#conciliacion_id").val(),          
+          'data_type':data_type,
+          'section':$(this).attr('data-section'),
+      }
+      if ($(this).attr('data-user')!=undefined) {
+          request['idnumber'] = $(this).attr('data-user');
+          request['tipodoc_id'] = $("#myModal_conc_user_create select[name=tipodoc_id]").val();  
+          request['is_edit'] = true;  
+      }else{
+          request['idnumber'] = '0';
+          request['tipodoc_id'] = 1;          
+      }        
+      getUser(request,request.idnumber);
+      $("#myModal_conc_user_create").modal("show"); 
+  });
 
     $(".btn_agregar_usuario_conciliacion").on("click", async function (e) {
       var form = $(this).attr("data-form")
@@ -116,7 +139,7 @@ $(document).ready(function () {
     var categoria = $(this).val();
     if(categoria!=''){
       var request = {
-        'categoria':categoria
+        'categoria_id':categoria
       }
       let response = await conciliacionService.getReportesByCategory(request);
       $("#summernote_update").summernote("code", "");
@@ -137,7 +160,7 @@ $(document).ready(function () {
         });
         $("#sel_reporte_id").html(option)
       }
-      console.log(response);
+     
     }
   });
 
@@ -145,7 +168,8 @@ $(document).ready(function () {
     var categoria = $(this).val();
     if(categoria!=''){
       var request = {
-        'categoria':categoria
+        'categoria_id':categoria,
+
       }
       let response = await conciliacionService.getReportesByCategory(request);
       if(response.errors && response.errors.length >0){
@@ -245,9 +269,81 @@ $("#btn_cancelar_estado").on("click",function () {
   $("#btn_cambiar_estado").show();
   $("#content_form_estado_c").hide();
   $("#content_list_estado_c").show();
+});
+$("#categoria_notifica__id").on("change",async function(e){
+  var request = {
+    'conciliacion_id':$("#conciliacion_id").val(),
+    'tabla_destino':'227',
+    'status_id':$("#estado_conciliacion_id").val(),
+   // 'categoria':'mensaje_radicado',
+    'reporte_id':$(this).val()
+}
+let response = await formatosService.getReportes(request);
+//getReportes(request,'content_form_correo_est_responder');
+if(response.body){
+  $("#content_notificacion_correo").summernote("code", response.body);
+}else if(response.error){
+  toastr.error(response.error, "Algo falló!", {
+      positionClass: "toast-bottom-right",
+      timeOut: "4000",
+  });
+  $("#content_notificacion_correo").summernote("code", "Escriba su mensaje aquí!");
+}});
+$(".fila_usuarios_not").on("click",function(e){
+ 
+if(!$(this).hasClass("fila_usuarios_not_selected") )
+{
+  $(this).removeClass("fila_usuarios_not").addClass("fila_usuarios_not_selected");
+  var mail = $(this).attr("data-email")
+  var id = $(this).attr("data-id")
+ 
+  var mail =`
+        <div class="rows_mails" id="row-${id}">
+        <input type="hidden" value=" ${mail}" name="notify_mail[]" data-row="${id}">                      
+          <label id="btn_delete_mail-${id}" type="button" data-id="${id}" data-row="${id}" class="btn_delete_not_mail label label-default">
+              ${mail} <span class="badge">x</span>
+          </label>                                 
+      </div>`;
+
+  $("#row_mail_not").append(mail);
+  var length = $(".rows_mails").length
+  $("#btn_env_not").prop("disabled",true)
+  if(length>=0){
+    $("#btn_env_not").prop("disabled",false)
+  }
+}
+  
 })
-getActas()
+$("#row_mail_not").on("click",".btn_delete_not_mail",function(e){
+  var id = $(this).attr("data-id");
+  $("#row-"+id).remove();
+  $("#user_"+id).removeClass("fila_usuarios_not_selected").addClass("fila_usuarios_not");
+  $("#btn_env_not").prop("disabled",true);
+  var length = $(".rows_mails").length
+  if(length>0){
+    $("#btn_env_not").prop("disabled",false)
+  }
+});
+getActas();
+getReportesForDestiny()
 });//fin document ready
+async function getReportesForDestiny(){
+  var request = {
+   
+    'tabla_destino': "227",
+    'status_id': $("#estado_conciliacion_id").val(),
+  }
+  let response = await conciliacionService.getDestinyForReport(request);
+  console.log(response);
+   var option = '<option value="">Seleccione...</option>';
+        response.forEach(element => {
+          option += `
+          <option value="${element.id}">${element.nombre_reporte}</option>
+          `;
+        });
+        $("#categoria_notifica__id").html(option)
+
+}
 async function getActas(){
   var request = {
     //conc_estado_id: $(this).attr("data-id"),

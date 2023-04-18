@@ -2,7 +2,7 @@
  <div class="col-md-2">
     @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
     || ((currentUserInConciliacion($conciliacion->id,['autor','conciliador','asistente']))))     
-        <input type="button" data-section="general" value="Nueva asignación" class="btn btn-primary btn-block btn-sm btn_asinar_usuario_conciliacion" id="btn_asinar_usuario">
+        <input type="button" data-section="general" value="Nueva asignación" class="btn btn-primary btn-block btn-sm btn_asinar_usuario_gen_conciliacion" id="btn_asinar_usuario">
     @endif
     </div> 
 </div>

@@ -3301,10 +3301,16 @@ return false;
     });
 
     $("#btn_notificarse").on("click",function () {
-        var request = {
+       /*  var request = {
             'conciliacion_id':$("#conciliacion_id").val(),
             'tabla_destino':'conciliaciones_email',
             'status_id':$(this).attr("data-estado"),
+            'categoria':'mensaje_notificarse'
+        } */
+        var request = {
+            'conciliacion_id':$("#conciliacion_id").val(),
+            'tabla_destino':'227',
+            'status_id':$("#estado_conciliacion_id").val(),
             'categoria':'mensaje_notificarse'
         }
         
@@ -3334,10 +3340,9 @@ return false;
         var formatVal = $("#content_form_correo_est_responder")
         .summernote("code")
         .trim();
-
         $("#myFormResponderCorreo input[name=cuerpo_correo]").val(formatVal)
         var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
-        console.log(request);
+       
         enviarCorreoConciliacion(request)
         e.preventDefault();
     });
@@ -3381,7 +3386,7 @@ function enviarCorreoConciliacion(request) {
 
 function getReportes(request,idform) {
     var route = "/pdf/reportes/get" ;
-	
+	 
 	$.ajax({
 		url: route,		
 		type:'GET',

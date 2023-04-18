@@ -687,17 +687,18 @@ var con=0;
 						con++;			
 						var act_fecha = child.actdocenfechamod != null ? child.actdocenfechamod : child.actfecha;
 					    var dias = getDiffdays(child.fecha_limit, act_fecha);
-						console.log(dias,"sss",act_fecha);
+						
 						var vacdia = 0;
 						
 						if(res.vacaciones.length > 0){
 							
-							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,child);
-							console.log(dias,"sss",vacdia);
+							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,act_fecha);
+							
 							if(Number.isInteger(dias)) dias+=vacdia;	
-							console.log(dias,"sss",act_fecha);
+							
 						}
 						//
+						
 						var color_bg = getDiffdaysColor(child.fecha_limit, act_fecha,child.id);
 						if(dias<=0){
 							color_bg = 'bg-red';
@@ -767,7 +768,7 @@ function getDiffdays(fecha_limit,date_2=''){
 	return date_2;	
 }
 
-function getDiffVacations(fecha_limit,vacaciones,actuacion){	
+function getDiffVacations(fecha_limit,vacaciones,actuacion_fecha){	
 	
 	let dias = 0;
 	vacaciones.forEach(vacacion => {
@@ -775,14 +776,13 @@ function getDiffVacations(fecha_limit,vacaciones,actuacion){
 			var admission = moment(vacacion.fecha_inicio, 'YYYY-MM-DD');
 			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');
 			dias += moment.duration(discharge.diff(admission)).asDays();
-			//console.log(dias,"jdjd",admission,vacacion.fecha_fin);
+			
 		}
 
-		if(vacacion.fecha_inicio >= actuacion.actfecha  && vacacion.fecha_fin <= fecha_limit ){				
+		if(vacacion.fecha_inicio >= actuacion_fecha  && vacacion.fecha_fin <= fecha_limit ){				
 			var admission = moment(vacacion.fecha_inicio, 'YYYY-MM-DD');
 			var discharge = moment(vacacion.fecha_fin, 'YYYY-MM-DD');			
 			dias += moment.duration(discharge.diff(admission)).asDays();
-			
 		}
 
 	});
