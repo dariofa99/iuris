@@ -700,13 +700,13 @@ var con=0;
 						//
 						
 						var color_bg = getDiffdaysColor(child.fecha_limit, act_fecha,child.id);
-						if(dias<=0){
+						if(dias==0){
 							color_bg = 'bg-red';
 							dias = dias +" días";
 						} 
 						if(dias<0)dias = child.fecha_limit;
 						
-						
+						console.log(child.fecha_limit, act_fecha,dias);
 						
 						if(end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136)){
 							dias = child.fecha_limit;
