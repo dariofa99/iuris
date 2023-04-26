@@ -140,7 +140,7 @@
       </div> 
       --}}
 
-   <div class="alert alert-warning alert-dismissible" role="alert">
+   <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        <h4>
         <strong style="border-bottom:1px solid white">Bienvendido a {{ Str::upper(config("app.name"))}}!</strong> <br>

@@ -18,7 +18,7 @@ class CheckForMaintenanceMode
     public function handle($request, Closure $next)
     {
         $user = \Auth::user();
-        if(($user)){
+        if(($user and !currentUser()->hasRole('amatai'))){
             \Auth::logout();
             return redirect('/mantenimiento')     ;    
         }
