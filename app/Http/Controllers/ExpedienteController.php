@@ -92,7 +92,7 @@ array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//e
               $expedientes= Expediente::join('asignacion_caso','asignacion_caso.asigexp_id','=','expedientes.expid')
               ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
               ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
-              ->Criterio($request->data,$request->tipo_busqueda)
+              ->Criterio($request)
               ->where('expidnumberest', '=', currentUser()->idnumber)
               ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber)
               ->where('asignacion_caso.activo',1)
@@ -104,12 +104,12 @@ array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//e
                 ->paginate(10);  
 
             /*  $expedientes= Expediente::where('expidnumberest', '=', currentUser()->idnumber)
-             ->Criterio($request->data,$request->tipo_busqueda)
+             ->Criterio($request)
              ->orderBy(DB::raw("FIELD(expestado_id,'3','1','4','2')"))->paginate(10); */
             $numEx= Expediente::join('asignacion_caso','asignacion_caso.asigexp_id','=','expedientes.expid')
             ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
-              ->Criterio($request->data,$request->tipo_busqueda)
+              ->Criterio($request)
                 ->where('expidnumberest', '=', currentUser()->idnumber)
                  ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber)
                ->where('asignacion_caso.activo',1)
@@ -221,7 +221,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
             ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
-            ->Criterio($request->data,$request->tipo_busqueda,true)  
+            ->Criterio($request)  
             ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
             ->where('asignacion_docente_caso.activo',1)
             ->where('sedes.id_sede',session('sede')->id_sede)
@@ -233,7 +233,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
             ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
-            ->Criterio($request->data,$request->tipo_busqueda,true)  
+            ->Criterio($request)  
             ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
             ->where('asignacion_docente_caso.activo',1)
             ->where('sedes.id_sede',session('sede')->id_sede)
@@ -248,7 +248,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                           ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
                        // ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
-                        ->Criterio($request->data,$request->tipo_busqueda,true) 
+                        ->Criterio($request) 
                         /*->where(function($query)use($request){
                           if($request->tipo_busqueda=='all'){
                             return $query->Where('expedientes.expestado_id','<>',2);
@@ -264,7 +264,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                         ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
                         ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                         ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
-                        ->Criterio($request->data,$request->tipo_busqueda,true)  
+                        ->Criterio($request)  
                         /*->where(function($query)use($request){
                           if($request->tipo_busqueda=='all'){
                             return $query->Where('expedientes.expestado_id','<>',2);                           
@@ -320,7 +320,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
         ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
         ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
        
-        ->Criterio($request->data,$request->tipo_busqueda)
+        ->Criterio($request)
         ->where('expidnumber', '=', currentUser()->idnumber)
         ->where('asignacion_caso.activo',1)
         ->where('sedes.id_sede',session('sede')->id_sede)
@@ -337,7 +337,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
 
       }else{ 
 
-        $count_colors = DB::select(
+          $count_colors = DB::select(
           DB::raw("SELECT SUM(IF(DATEDIFF(NOW(), `fecha_asig`)<=10,1,0)) AS verde, 
           SUM(IF(DATEDIFF(NOW(), `fecha_asig`)<=20,IF(DATEDIFF(NOW(), `fecha_asig`)>10,1,0),0)) AS amarillo, 
           SUM(IF(DATEDIFF(NOW(), `fecha_asig`)>20,IF(DATEDIFF(NOW(), `fecha_asig`)<30,1,0),0)) AS rojo, 
@@ -363,19 +363,19 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
               ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
              
                ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
-               ->Criterio($request->data,$request->tipo_busqueda) 
+               ->Criterio($request) 
                ->where('sedes.id_sede',session('sede')->id_sede)
               ->groupBy ('asignacion_caso.asigexp_id')
               ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
 
               ->paginate($numpaginate);
-             // $expedientes= Expediente::Criterio($request->data,$request->tipo_busqueda)->orderBy(DB::raw("created_at"), 'desc')->paginate($numpaginate);
+             // $expedientes= Expediente::Criterio($request)->orderBy(DB::raw("created_at"), 'desc')->paginate($numpaginate);
               $numEx=Expediente::join('asignacion_caso','asignacion_caso.asigexp_id','=','expedientes.expid')
                ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
                ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
                ->where('sedes.id_sede',session('sede')->id_sede)
-              ->Criterio($request->data,$request->tipo_busqueda)->count();
+              ->Criterio($request)->count();
 
 
             } else {
@@ -383,18 +383,18 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
              $expedientes= Expediente::join('asignacion_caso','asignacion_caso.asigexp_id','=','expedientes.expid')
              ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
               ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')                   
-             ->Criterio($request->data,$request->tipo_busqueda) 
+             ->Criterio($request) 
              ->where('sedes.id_sede',session('sede')->id_sede)
             ->groupBy ('asignacion_caso.asigexp_id')
             ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
             ->paginate($numpaginate);
-           // $expedientes= Expediente::Criterio($request->data,$request->tipo_busqueda)->orderBy(DB::raw("created_at"), 'desc')->paginate($numpaginate);
+           // $expedientes= Expediente::Criterio($request)->orderBy(DB::raw("created_at"), 'desc')->paginate($numpaginate);
             $numEx=Expediente::join('asignacion_caso','asignacion_caso.asigexp_id','=','expedientes.expid')
              ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
              ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
              ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
              ->where('sedes.id_sede',session('sede')->id_sede)
-            ->Criterio($request->data,$request->tipo_busqueda)->count();
+            ->Criterio($request)->count();
           }
             
           }else{
@@ -911,14 +911,14 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             $expedientes= Expediente::leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
           ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
           ->where('sedes.id_sede',session('sede')->id_sede)
-          ->Criterio($request->data,$request->tipo_busqueda)
+          ->Criterio($request)
           ->orderBy(DB::raw("FIELD(expestado_id,'4','1','2','3')"))
           ->orderBy(DB::raw("expedientes.created_at"), 'desc')->paginate($numpaginate);
             
             $numEx= Expediente::leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
             ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
             ->where('sedes.id_sede',session('sede')->id_sede)
-            ->Criterio($request->data,$request->tipo_busqueda)->count();
+            ->Criterio($request)->count();
 
           }else{
 
@@ -953,12 +953,12 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             $expedientes= Expediente::leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
             ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
             ->where('sedes.id_sede',session('sede')->id_sede)
-            ->Criterio($request->data,$request->tipo_busqueda)
+            ->Criterio($request)
             ->orderBy(DB::raw("expedientes.created_at"), 'desc')->paginate($numpaginate);
             $numEx= Expediente::leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
             ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
             ->where('sedes.id_sede',session('sede')->id_sede)
-            ->Criterio($request->data,$request->tipo_busqueda)->count();
+            ->Criterio($request)->count();
           }else{
             $expedientes= Expediente::leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
             ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')

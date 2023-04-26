@@ -704,12 +704,12 @@ var con=0;
 							color_bg = 'bg-red';
 							dias = dias +" días";
 						} 
-						if(dias<0)dias = child.fecha_limit;
+						if(dias<0)dias = child.actfecha;
 						
-						console.log(child.fecha_limit, act_fecha,dias);
+						//console.log(child.fecha_limit, act_fecha,dias);
 						
 						if(end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136)){
-							dias = child.fecha_limit;
+							dias = child.actfecha;
 							color_bg = 'bg-gray';
 							
 						} 
@@ -734,13 +734,15 @@ var con=0;
 						vacdia = getDiffVacations(value.parent.fecha_limit,res.vacaciones,value.parent);						
 						if(Number.isInteger(dias)) dias+=vacdia;			
 					}	
-					
-					if((dias<0 && value.parent.actestado_id !=176)  || value.children.length > 0){						
-						dias =  value.parent.fecha_limit == null ?
-						 moment(value.parent.created_at).format('MM/DD/YYYY'): value.parent.fecha_limit;	
+				
+					if((!Number.isInteger(dias) && value.parent.actestado_id !=176 || (Number.isInteger(dias) && dias < 0))  || value.children.length > 0){						
+						dias =  moment(value.parent.created_at).format('MM-DD-YYYY');	
 						color_bg = 'bg-gray';
 					} 
 				
+					if(value.parent.actestado_id !=176){
+
+					}
 				
 
 				tabla.prepend("<tr role='row' class='odd row-parent'><td>"+ value.parent.actnombre +
@@ -924,7 +926,7 @@ function llenarModalDetails(res){
 		$("#actfecha_det").val(res.created_at);
 		hideElement('datos_docente');
 	}else{
-		$("#actfecha_det").val(res.actdocenfechamod);
+		$("#actfecha_det").val(res.created_at);
 		showElement('datos_docente');
 	}
 	//$("#myform_act_edit_docen")[0].reset();

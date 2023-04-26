@@ -663,10 +663,26 @@ class Expediente extends Model
         // return $hijos;
     }
 
-    public function scopeCriterio($query, $data, $criterio, $search_all_exp = false)
+    public function scopeCriterio($query, $request, $search_all_exp = false)
     {
-        if (trim($data) != '') {
-            switch ($criterio) {
+        if($request->tipo_busqueda=="adv"){
+           
+              //  dd($request->all());
+                return $query->Orwhere(['expidnumberest' => $request->expidnumberest])
+                ->where('exptipoproce_id', $request->exptipoproce_id)
+                ->where('expestado_id', $request->expestado_id);
+
+                if($request->estado_id){
+                    //return $query->where('expestado_id', $data);
+                }
+                //dd("dd00");
+        }
+
+        if (trim($request->data) != '') {
+           
+            $data = $request->data;
+            switch ($request->tipo_busqueda) {
+               
                 case 'codido_exp':
                     return $query->where('expid', 'like', '%' . $data);
                     break;
@@ -966,4 +982,24 @@ class Expediente extends Model
         }
         return false;
     }
+
+    public function getDaysForNexAct()
+    {
+        $act = $this->actuacion()
+		->where(['actusercreated'=>$this->expidnumberest])
+		->orderBy('actuacions.actfecha','desc')->first();
+        $color = 'green';
+        $dias = 0;
+        if($act)$dias = $this->difDays($act->actfecha,date('Y-m-d'));
+        if($dias>10) $color = 'orange';
+        if($dias>20) $color = 'red';
+        
+
+       $text =  "<b>Días transcurridos desde última actuación:</b> <span style='background-color:$color' class='pull-center badge'>$dias</span>";
+       
+
+
+        return $text;
+    }
+
 }

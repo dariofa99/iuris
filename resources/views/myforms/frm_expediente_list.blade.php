@@ -76,7 +76,7 @@
              {{--  <option value="estudiante" @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'estudiante' ) selected @endif >Nombre Estudiante</option> --}}
              
               @endif
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'consultante' ) selected @endif value="consultante">Nombre o apellidos</option> 
+              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'consultante' ) selected @endif value="consultante">Nombre o apellidos (consultante)</option> 
 
             {{--  <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'consultante_num' ) selected @endif value="consultante_num">Buscar por Documento</option> --}}
 
@@ -195,6 +195,9 @@
         </td>
         <td>
           <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar </button>
+          @if(currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('coordprac') || currentUser()->hasRole('amatai'))
+          <button type="button" id="btn_exp_bus_avz" class="btn btn-default"><i class="fa fa-cogs"> </i> Avanzada </button>
+          @endif
         </td>
       </tr>
       
@@ -255,5 +258,5 @@
 </div>
 
 <div>
-
+@include('myforms.frm_modal_buscar_exp_avanzada')
               @stop

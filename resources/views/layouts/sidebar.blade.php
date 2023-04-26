@@ -5,8 +5,7 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-
-         {!! HTML::image('/thumbnails/'.currentUser()->image,'User Image', array('class' => 'img-circle')) !!}
+          <img class='img-circle' src="{{ is_file(public_path('thumbnails/'.currentUser()->image)) ? asset('thumbnails/'.currentUser()->image ) : asset('thumbnails/default.jpg' )}}" alt="User">
            
         </div>
 

@@ -167,7 +167,7 @@ Notas
                                 <tr @if($nota['concepto_nota_id'] == '4') style="border-bottom: 2px solid black" @endif>
                                     
                                     <td>
-                                        {{$nota['concepto_nota']}}
+                                        {!! $nota['concepto_nota'] !!} 
                                     </td>
                                 
                                     @php
@@ -188,7 +188,7 @@ Notas
                                     @endphp
 
                                     <td  width="30%">
-                                        {{$nota['nota']}}
+                                        {!!$nota['nota']!!}
                                     </td>
                                     <td>
                                         {{$nota['origen_nota']}}

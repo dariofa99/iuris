@@ -51,7 +51,9 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               
-  <img src="{{asset('/thumbnails/'.$user->image)}}" alt="User Image" class="user-image">
+  <img src="{{ is_file(public_path('thumbnails/'.currentUser()->image)) ? asset('thumbnails/'.currentUser()->image ) : asset('thumbnails/default.jpg' )}}" alt="User Image" class="user-image">
+ 
+          
              
               <span class="hidden-xs">
                <small> {{  $user->name  }} {{  $user->lastname  }}</small>
@@ -60,7 +62,7 @@
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-               <img src="{{asset('/thumbnails/'.$user->image)}}" alt="User Image" class="img-circle">
+               <img src="{{ is_file(public_path('thumbnails/'.currentUser()->image)) ? asset('thumbnails/'.currentUser()->image ) : asset('thumbnails/default.jpg' )}}" alt="User Image" class="img-circle">
               <p>
                   {{  $user->name  }} {{  $user->lastname  }}
                   <small>Miembro desde {{   TiempoTrans(  $user->created_at  )   }} </small>

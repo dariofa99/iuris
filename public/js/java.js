@@ -3347,8 +3347,8 @@ return false;
         e.preventDefault();
     });
 
-    $("#btn_subir_archivo_conciliacion").on("click",function(e){
-
+    $("#btn_exp_bus_avz").on("click",function(e){
+        $("#mymodalBuscarExpAvanzadas").modal("show")
 
     });
    
