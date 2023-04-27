@@ -220,17 +220,18 @@ class SegmentosController extends Controller
 		 expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id from expedientes
 		 join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid join `users` on expedientes.expidnumberest = users.idnumber join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
 		 where expedientes.expidnumberest = asignacion_caso.asigest_id and (expestado_id != 5 and expestado_id != 2) 
-		
+		 and expedientes.expidnumberest = '1085947437'
 		 and asignacion_caso.activo = 1 and fecha_asig < '".$dateiniciocorte."' and sede_expedientes.sede_id=".session('sede')->id_sede ));
 		 
 	
-// and expedientes.expidnumberest = '1006106455'
+// and expedientes.expidnumberest = '1085947437'
 
 		 $docente_id = \Auth::user()->idnumber;
 		 $exps=[];
 		
+
 		foreach ($expedientes as $key => $expediente) {	
-			
+			$expediente = $expedientes[3];
 			if (($expediente->exptipoproce_id == 3 and $expediente->exphechos == 0) || ($expediente->exptipoproce_id != 3 and ($expediente->exphechos == 0 || $expediente->exprtaest == 0 ))) {
 				
 				
@@ -250,7 +251,7 @@ class SegmentosController extends Controller
 					'tbl_org_id'=>$expediente->id,
 				  ]; 
 				  
-				 $this->Asignotasnewdatos($data);
+				// $this->Asignotasnewdatos($data);
 				 
 			}else{
 				
@@ -307,7 +308,7 @@ class SegmentosController extends Controller
 								'tbl_org_id'=>$expediente->id,
 							]; 
 			
-							$this->Asignotasnewdatos($data);
+						//	$this->Asignotasnewdatos($data);
 			
 							}
 						}
@@ -336,7 +337,7 @@ class SegmentosController extends Controller
 					'docidnumber'=>$docente_id,
 					'tbl_org_id'=>$expediente->id,
 				  ]; 
-				 $this->Asignotasnewdatos($data);
+				// $this->Asignotasnewdatos($data);
 				// return response()->json("Docente");
 				
 			}
@@ -366,7 +367,7 @@ class SegmentosController extends Controller
 								'tbl_org_id'=>$expediente->id,
 							  ]; 
 			
-							$this->Asignotasnewdatos($data);						
+							//$this->Asignotasnewdatos($data);						
 					}else{
 
 						//Se verifica si se realizaron actuaciones cada mes en los casos viejos
@@ -387,7 +388,7 @@ class SegmentosController extends Controller
 						// return response()->json([$iseva,'sjsj',$actuacionsmes]);
 						$res_act = $this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin);
 						
-						//return response()->json([$res_act,$actuacionsmes,$expediente]); 
+						return response()->json([$res_act,$actuacionsmes,$expediente]); 
 
 						if($res_act[0]){
 							$data = [ 
@@ -405,7 +406,7 @@ class SegmentosController extends Controller
 								'tbl_org_id'=>$expediente->id,
 							  ]; 
 			
-							 $this->Asignotasnewdatos($data);
+							// $this->Asignotasnewdatos($data);
 						}	
 					}
 					
@@ -441,9 +442,9 @@ class SegmentosController extends Controller
 						  'docidnumber'=>\Auth::user()->idnumber, 
 						  'tbl_org_id'=>$expedientemodel->id, 
 						]; 
-						$expedientemodel->asignarNotas($data);
+						//$expedientemodel->asignarNotas($data);
 						$expedientemodel->expestado_id = 5;
-						$expedientemodel->save();
+						//$expedientemodel->save();
 				}
 				}
 			  }		
@@ -459,7 +460,7 @@ class SegmentosController extends Controller
 		expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id from expedientes
 		join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid join `users` on expedientes.expidnumberest = users.idnumber join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
 		where expedientes.expidnumberest = asignacion_caso.asigest_id and (expestado_id != 5 and expestado_id != 2)
-		
+		and expedientes.expidnumberest = '1085947437'
 		and (fecha_asig >= '".$dateiniciocorte."' and fecha_asig <= '".$datemenosquincediasfinalcorte."') 
 		and sede_expedientes.sede_id=".session('sede')->id_sede ));
 
@@ -505,7 +506,7 @@ class SegmentosController extends Controller
 							'docidnumber'=>$docente_id,
 							'tbl_org_id'=>$expediente->id,
 						  ];
-						  $this->Asignotasnewdatos($data);
+						 // $this->Asignotasnewdatos($data);
 					}			
 				}
 				
@@ -562,7 +563,7 @@ class SegmentosController extends Controller
 							'tbl_org_id'=>$expediente->id,
 						  ]; 
 		
-						 $this->Asignotasnewdatos($data);
+						// $this->Asignotasnewdatos($data);
 		
 						}
 						}
@@ -589,7 +590,7 @@ class SegmentosController extends Controller
 					'tbl_org_id'=>$expediente->id,
 				  ]; 
 				  
-				 $this->Asignotasnewdatos($data);
+				// $this->Asignotasnewdatos($data);
 				// 
 			}
 			
@@ -628,7 +629,7 @@ class SegmentosController extends Controller
 							'docidnumber'=>$docente_id,
 							'tbl_org_id'=>$expediente->id,
 						  ]; 		
-						$this->Asignotasnewdatos($data);
+						//$this->Asignotasnewdatos($data);
 						 
 						}
 					} else {
@@ -669,7 +670,7 @@ class SegmentosController extends Controller
 							'tbl_org_id'=>$expediente->id,
 						  ]; 
 		
-						 $this->Asignotasnewdatos($data);
+						// $this->Asignotasnewdatos($data);
 					}					
 					
 					//cuanto se demoro al subir la primera actuacion o anexo
@@ -705,9 +706,9 @@ class SegmentosController extends Controller
 						  'docidnumber'=>\Auth::user()->idnumber, 
 						  'tbl_org_id'=>$expedientemodel->id, 
 						]; 
-						$expedientemodel->asignarNotas($data);
+						//$expedientemodel->asignarNotas($data);
 						$expedientemodel->expestado_id = 5;
-						$expedientemodel->save();
+						//$expedientemodel->save();
 				}
 				}
 			  }
@@ -721,8 +722,8 @@ class SegmentosController extends Controller
 
 
 		//return response()->json([$expedientescorte]);
-			$segmento->est_evaluado = 1;
-      		$segmento->save();
+			//$segmento->est_evaluado = 1;
+      		//$segmento->save();
 			$segmentos = $this->getSegmentos();
 			$view = view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
 			return response()->json(['saved'=>true,'view'=>$view]);

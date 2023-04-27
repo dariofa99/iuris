@@ -1,6 +1,6 @@
-import {UserService} from '../js/users.js';
-import {ConciliacionService} from '../js/conciliaciones.js';
-import { FormatosService } from './repositories/formatos_documentos.js';
+import {UserService} from './services/users.js';
+import {ConciliacionService} from '../services/conciliaciones.js';
+import { FormatosService } from './services/formatos_documentos.js';
 
 const userService = new UserService();
 const conciliacionService = new ConciliacionService();

@@ -1,5 +1,5 @@
-import {UserService} from '../js/users.js';
-import {ConciliacionService} from '../js/conciliaciones.js';
+import {UserService} from '../js/services/users.js';
+import {ConciliacionService} from '../js/services/conciliaciones.js';
 
 const userService = new UserService();
 const conciliacionService = new ConciliacionService()
