@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth']], function() {
 //Nuevo usuarios
 Route::resource('usuarios', 'UsersController');
 Route::get("usuarios/buscar/persona","UsersController@findUser");
- 
+Route::get("usuarios/find/by/name","UsersController@findUserByNameOrLastNameAndRole");
 
 Route::post('mail', 'MailController@store')->name('mail.store');
 
@@ -197,6 +197,7 @@ Route::post('excel/search', 'ExcelController@search_data');
 Route::post('excel/download', 'ExcelController@generate_data');
 Route::post('excel/search/options', 'ExcelController@search_options');
 Route::get('excel/notas/download', 'ExcelController@notas_download'); 
+Route::get('excel/exp/user/download/', 'ExcelController@descargarExpUser'); 
 
 //Asignaciones
 Route::resource('asignaciones', 'AsignacionesController');

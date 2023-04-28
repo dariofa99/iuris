@@ -482,5 +482,14 @@ class UsersController extends Controller
         }  
           return  response()->json(['encontrado'=>false]);
       }
+
+      public function findUserByNameOrLastNameAndRole(Request $request){
+        $users = $this->userService->findUserByNameOrLastNameAndRole($request->name,$request->role);
+          
+        if(count($users)>0){
+          return response()->json(['encontrado'=>true,'users'=>$users]);
+        }    
+            return  response()->json(['encontrado'=>false]);
+        }
 }
 

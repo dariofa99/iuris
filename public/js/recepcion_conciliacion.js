@@ -49,7 +49,6 @@ $(document).ready(function () {
         }); 
         request["data"] = (data);
 
-       console.log((request));
         let response = await  userService.registrar(request);
         if(response.errors){                          
             response.errors.forEach(error => {            

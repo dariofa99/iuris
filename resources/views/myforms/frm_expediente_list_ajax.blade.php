@@ -22,7 +22,7 @@
                 <tbody>
                 
                 @foreach($expedientes as $expediente)
-                  <tr role="row" >
+                  <tr role="row" > 
                     <td>{{ $expediente->expid }}</td>
                     @if(!currentUser()->hasRole("solicitante"))
                     <td>

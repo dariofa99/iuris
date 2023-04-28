@@ -259,4 +259,8 @@
 
 <div>
 @include('myforms.frm_modal_buscar_exp_avanzada')
-              @stop
+     @stop
+@push('scripts')
+   <!-- aqui van los scripts de cada vista -->
+  <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
+@endpush

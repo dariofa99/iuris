@@ -14,6 +14,7 @@ interface UsersService {
     public function getEstudiantes():Array;
     public function getDocentesByRama($rama):Array;
     public function getUsersByPermissionName($permission):Collection; 
+    public function findUserByNameOrLastNameAndRole(String $name,$role):Array; 
 
 }
 ?>

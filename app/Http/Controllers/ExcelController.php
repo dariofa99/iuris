@@ -11,14 +11,14 @@ use App\User;
 use App\Expediente;
 use App\TablaReferencia;
 use Carbon\Carbon; 
-use DB;
-use Session;
+
 use App\Periodo;
 use App\Segmento;
 use App\Exports\ExpedientesExport;
+use App\Exports\UserExpedientesExport;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
-
- 
 class ExcelController extends Controller
 {
 
@@ -738,5 +738,22 @@ public function actionIndex()
   //return View::make('index');
  }
 
-    
+ public function descargarExpUser(Request $request){
+  
+  $expedientes= Expediente::join('asignacion_caso','asignacion_caso.asigexp_id','=','expedientes.expid')
+             ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
+              ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')                   
+             ->Criterio($request) 
+             ->where('sedes.id_sede',session('sede')->id_sede)
+            ->groupBy ('asignacion_caso.asigexp_id')
+            ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
+            ->get();   
+    ob_end_clean(); // this
+    ob_start();
+     return Excel::download(new UserExpedientesExport($expedientes), 'estudiantes_exp.xlsx');
+
+     //return view("report.estudiante_exp",compact("expedientes"));
+   
+}
+
 }

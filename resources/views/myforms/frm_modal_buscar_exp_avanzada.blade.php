@@ -19,13 +19,14 @@
 @include('msg.ajax.success')
 <div class="row">
     <div class="col-md-12 ">
-        <form method="GET" action="{{route('expedientes.index')}}">
+        <form id="myFormBsExpAdv" method="GET" action="{{route('expedientes.index')}}">
             <input type="hidden" name="tipo_busqueda" value="adv">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-12">
                 <label for="">Estudiante</label>
-               
-                  <input type="text" required class="form-control" name="expidnumberest" placeholder="Numero de identificación">
-               
+                {!!Form::select('expidnumberest',[],null,['class' => 'selectpicker buscar_usuario', 'data-live-search'=>'true', 'data-select-origen'=>'estudiante', 'required' => 'required','id'=>'select_data_estudiantes','data-width'=>'500px','data-live-search-placeholder'=>'Escriba el nombre'] ); !!}
+            
+                 {{--  <input type="text" required class="form-control" name="expidnumberest" placeholder="Numero de identificación">
+                --}}
             </div>
             <div class="form-group col-md-6">
                 <label for="">Tipo de proceso</label>
@@ -54,7 +55,9 @@
             <div class="form-group col-md-6">
                 <br>
                 <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar </button>
-             </div>
+                <button id="btn_desc_exp_us" type="button" class="btn btn-warning"><i class="fa fa-file-excel"> </i> Descargar </button>
+        
+            </div>
 
         </form>
     </div>
