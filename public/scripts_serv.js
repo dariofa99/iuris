@@ -690,12 +690,9 @@ var con=0;
 						
 						var vacdia = 0;
 						
-						if(res.vacaciones.length > 0){
-							
-							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,act_fecha);
-							
-							if(Number.isInteger(dias)) dias+=vacdia;	
-							
+						if(res.vacaciones.length > 0){							
+							vacdia = getDiffVacations(child.fecha_limit,res.vacaciones,act_fecha);							
+							if(Number.isInteger(dias)) dias+=vacdia;							
 						}
 						//
 						
@@ -706,9 +703,9 @@ var con=0;
 						} 
 						if(dias<0)dias = child.actfecha;
 						
-						//console.log(child.fecha_limit, act_fecha,dias);
+						//console.log(child.fecha_limit, act_fecha,dias,"dias");
 						
-						if(end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136)){
+						if((end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136))||child.actestado_id=='104'){
 							dias = child.actfecha;
 							color_bg = 'bg-gray';
 							
@@ -874,7 +871,8 @@ function Mostrar(btn,child_estado,modal){
 		if(modal=='myModal_act_edit')$("#actnombre").val(res.actnombre);
 		$("#actnombre_edit").val(res.actnombre);
 		$("#actnombre_cr").val(res.actnombre);
-		$("#actfecha").val(res.actfecha); 
+		$("#actfecha_edit").val(res.actfecha); 
+		
 		$("#fecha_limite").val(res.fecha_limit);
 		$("#fecha_limit_doc").val(res.fecha_limit);	
 		$("#fullnameest").val(res.user_created.name+' '+res.user_created.lastname)  ;

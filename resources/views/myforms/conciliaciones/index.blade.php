@@ -150,7 +150,7 @@
         Estado
     </th>
     <th>
-        Conciliador/Asistente
+        Fecha
     </th>
     <th>
         Acciones
@@ -186,7 +186,7 @@
         
         <td>
            
-          @if(count($conciliacion->usuarios()->whereIn('tipo_usuario_id',[203,204])
+         {{--  @if(count($conciliacion->usuarios()->whereIn('tipo_usuario_id',[203,204])
          // ->where("conciliacion_has_user.estado_id",)
           ->get())>0)
           {{$conciliacion->usuarios()
@@ -199,8 +199,11 @@
           ->first()->lastname}}
           @else
           Sin usuarios
-          @endif
-        
+          @endif --}}
+          {{  \Carbon\Carbon::parse($conciliacion->created_at)->format("d-m-Y") }}
+          <small>
+            <i>({{  \Carbon\Carbon::parse($conciliacion->created_at)->diffForHumans() }})</i>
+            </small>
         </td>
         <td>
             <a href="/conciliaciones/{{$conciliacion->id}}/edit" class="btn btn-sm btn-primary">Abrir</a>

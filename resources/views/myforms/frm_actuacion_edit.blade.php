@@ -53,7 +53,7 @@ Registrado
 		      <div class="input-group-addon">
 		        <i class="fa fa-calendar"></i>
 		      </div>
-		      {!!Form::text('actfecha', fechaActual(), ['id'=>'actfecha', 'class' => 'form-control', 'required' => 'required','data-inputmask'=>"'alias': 'yyyy/mm/dd'" , 'data-mask', 'readonly' ] ); !!}
+		      {!!Form::text('actfecha_edit', null, ['id'=>'actfecha_edit', 'class' => 'form-control', 'required' => 'required','data-inputmask'=>"'alias': 'yyyy/mm/dd'" , 'data-mask','disabled' ] ); !!}
 		</div>
 		 <!-- /.input group -->
 	</div>

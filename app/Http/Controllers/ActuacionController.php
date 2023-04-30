@@ -341,7 +341,7 @@ function vacations(){
    */
   public function update(Request $request, $id)
   {
-    // return response()->json($request->all()); 
+   //  return response()->json($request->all()); 
     if ($request->ajax()) {
       $actuacion = Actuacion::find($id);
       $actuacion->fill($request->all());
