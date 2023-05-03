@@ -1,5 +1,5 @@
 import {UserService} from './services/users.js';
-import {ConciliacionService} from '../services/conciliaciones.js';
+import {ConciliacionService} from './services/conciliaciones.js';
 import { FormatosService } from './services/formatos_documentos.js';
 
 const userService = new UserService();
@@ -12,6 +12,13 @@ $(document).ready(function () {
     $("#myUserApoderadoForm").on("focus","input[name='idnumber']",validateTypeDoc);
     $("#myUserParteSolicitadaForm").on("focus","input[name='idnumber']",validateTypeDoc);
     $("#myUserRepLegalSolicitadaForm").on("focus","input[name='idnumber']",validateTypeDoc);
+    $("#myUserConciliacionesForm").on("focus","input[name='idnumber']",validateTypeDoc);
+    
+    $("#myUserConciliacionesForm").on("blur","input[name='idnumber']",async function() {      
+      var lastidnumber = $(this).val();
+      alertValidateUser(lastidnumber,"myUserConciliacionesForm");
+      $(this).val("");
+    });
 
     $("#myUserRepLegalSolicitadaForm").on("blur","input[name='idnumber']",async function() {      
       var lastidnumber = $(this).val();
@@ -72,7 +79,7 @@ $(document).ready(function () {
           request['idnumber'] = '0';
           request['tipodoc_id'] = 1;          
       }        
-      getUser(request,request.idnumber);
+     // getUser(request,request.idnumber);
       $("#myModal_conc_user_create").modal("show"); 
   });
 
@@ -196,7 +203,7 @@ $(document).ready(function () {
           $("#myFormAsigReporte select[name='categoria']").show().prop("disabled",false);;         
         } 
       }
-      console.log(response);
+     
     }
   });
 
@@ -324,6 +331,25 @@ $("#row_mail_not").on("click",".btn_delete_not_mail",function(e){
     $("#btn_env_not").prop("disabled",false)
   }
 });
+$("#btn_crear_usuario_conciliacion").on("click",function(e){
+  e.preventDefault();
+  var request = convertFormToJSON("myUserConciliacionesForm");
+  var data = [];
+  $("#myUserConciliacionesForm .insert_adv").each((index,obj)=>{          
+    data.push({
+      value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
+      section : $(obj).attr("data-section"),
+      type : $(obj).attr("data-type"),
+      name :  $(obj).attr("data-name"),
+      option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
+      value_is_other:$("#value_other_text-"+$(obj).val()).val(),
+      conciliacion_id:$("#conciliacion_id").val()            
+    }) ;         
+  }); 
+  request["data"] = (data);
+  console.log(request);
+
+})
 getActas();
 getReportesForDestiny()
 });//fin document ready
@@ -334,14 +360,18 @@ async function getReportesForDestiny(){
     'status_id': $("#estado_conciliacion_id").val(),
   }
   let response = await conciliacionService.getDestinyForReport(request);
-  console.log(response);
-   var option = '<option value="">Seleccione...</option>';
-        response.forEach(element => {
-          option += `
-          <option value="${element.id}">${element.nombre_reporte}</option>
-          `;
-        });
-        $("#categoria_notifica__id").html(option)
+  if(response.errors && response.errors.length>0){
+    console.log(response);
+  }else{   
+    var option = '<option value="">Seleccione...</option>';
+         response.forEach(element => {
+           option += `
+           <option value="${element.id}">${element.nombre_reporte}</option>
+           `;
+         });
+         $("#categoria_notifica__id").html(option)
+  }
+ 
 
 }
 async function getActas(){

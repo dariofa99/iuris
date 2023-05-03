@@ -2049,7 +2049,6 @@ return false;
                 name: $(this).attr("data-name"),
                 conciliacion_id: $("#conciliacion_id").val(),
             };
-
             insertConADValue(request);
         }
     });
@@ -2226,7 +2225,7 @@ return false;
     });
     
 
-    $("#myModal_conc_user_create").on("blur",'input[name=idnumber]',function (e) {
+ /*    $("#myModal_conc_user_create").on("blur",'input[name=idnumber]',function (e) {
         var id = $(this).val();
         var request = {
             'idnumber':id,
@@ -2236,7 +2235,7 @@ return false;
         }
         console.log(request);
         getUser(request,id);
-    });
+    }); */
 
     $("#myModal_conc_user_create").on("submit",'#myformEditConciliacionUser',function (e) {
         var id = $("#myformEditConciliacionUser input[name=id]").val();
@@ -2359,7 +2358,7 @@ return false;
 
         var request = {
           //  conc_estado_id: $(this).attr("data-id"),
-            tabla_destino: "conciliaciones",
+            tabla_destino: "226",
             status_id: $(this).attr("data-estado_id"),
             conciliacion_id:$("#conciliacion_id").val()
         };
@@ -4331,6 +4330,7 @@ function descargarAllPdfConcEstado(request) {
         success: function (res) {
             var tr = '';
             var  files = {};
+           
             res.estados.forEach(estado => {
                 estado.files.forEach(file => {
                     tr +=
@@ -4344,12 +4344,10 @@ function descargarAllPdfConcEstado(request) {
                         </td>
 
                         <td>
-                            
-                        </td>
-
-                    
+                        ${file.userinestado[0].name}   ${file.userinestado[0].lastname}
+                        </td>                    
                         <td width="5%">
-                        <a class="btn btn-block btn-primary" toltip="Vista previa del  documento" target="_blank" href="/conciliaciones/download/file/${file.pivot.file_id}">
+                        <a class="btn btn-block btn-warning" toltip="Vista previa del  documento" target="_blank" href="/conciliaciones/download/file/${file.pivot.file_id}">
                         <i class="fa fa-download"></i>
                         </a>
                         </td>                    
@@ -5528,7 +5526,7 @@ function storeConciliacionEstado(request) {
             positionClass: "toast-bottom-right",
             timeOut: "1000",
         });
-        window.location.reload(true)
+       // window.location.reload(true)
         $("#myModal_create_estado").modal("hide");
         $("#wait").hide();
     });

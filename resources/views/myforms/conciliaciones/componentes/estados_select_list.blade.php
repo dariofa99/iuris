@@ -13,14 +13,14 @@
 
     @endif
 
-    @if(auth()->user()->hasRole('docente') || currentUser()->hasRole('coord_centro_conciliacion')  || currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
+    @if(auth()->user()->hasRole('docente') || currentUser()->hasRole('coord_centro_conciliacion')  || currentUser()->hasRole('secretaria') || currentUser()->hasRole('amatai'))
  
     @if($conciliacion->estado_id==175)
     <option value="176"> Corregir </option>
-    <option  value="{{(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')) ? "178" : "177"}}"> 
-        {{(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')) ? "Aprobar (radicar)" : "Aprobar (docente)"}} </option>
+    <option  value="{{(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('secretaria') || currentUser()->hasRole('amatai')) ? "178" : "177"}}"> 
+        {{(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('secretaria') || currentUser()->hasRole('amatai')) ? "Aprobar (radicar)" : "Aprobar (docente)"}} </option>
     @endif 
-    @endif
+    @endif 
 
     @if(auth()->user()->hasRole('estudiante') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
     @if($conciliacion->estado_id==177)

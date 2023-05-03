@@ -34,7 +34,7 @@ class ConciliacionEstado extends Model
      public function files()
      {
         return $this->belongsToMany(File::class,'conciliacion_estados_files','con_status_id')
-        ->withPivot('conciliacion_id','con_status_id','file_id')->withTimestamps();
+        ->withPivot('conciliacion_id','con_status_id','file_id','user_id')->withTimestamps();
      } 
 
 }

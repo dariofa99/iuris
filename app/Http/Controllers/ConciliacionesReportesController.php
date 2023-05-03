@@ -46,6 +46,7 @@ class ConciliacionesReportesController extends Controller
             //    ->with('users')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();
+           // return $reportes;
         $reportes->each(function ($reporte) use ($request) {
             $file = ConciliacionEstadoReporteGenerado::where([
                 'status_id' => $request->status_id,
@@ -84,7 +85,7 @@ class ConciliacionesReportesController extends Controller
     }
     public function getPdfReportesConciliacion(Request $request)
     {
-        // return response()->json($request->all());
+         
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $reportes = $this->getReportes($request);
         $view = view('myforms.conciliaciones.componentes.pdf_report_list', compact('reportes', 'conciliacion'))->render();

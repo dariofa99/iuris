@@ -15,7 +15,7 @@
           </div>
           
         <div class="col-md-6">
-          <div class="form-group has-feedback"><label for="idnumber">Tipo documento*</label>
+          <div class="form-group has-feedback"><label for="tipodoc_id">Tipo documento*</label>
             <select {{isset($disabled) ? $disabled : ''}} name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required" required>
                 <option value="">Seleccione...</option>
                 @foreach($tipodoc as $key => $doc)
@@ -66,16 +66,4 @@
             </div>
         </div>
 
-      {{--   <div class="col-md-6">
-            <div class="form-group has-feedback"><label for="name">Telefóno fijo*</label>
-                <input id='tel2' name='tel2' required type="text" class="form-control form-control-sm onlynumber"  data-toggle="tooltip" title="Número de contacto"  placeholder="Número de contacto" maxlength="10" >
-                
-            </div>
-        </div> --}}
-
- 
       </div>
-
-     {{--  <div id="content_aditional_data">
-        @include('myforms.components_user.aditional_comp_data')
-    </div> --}}

@@ -151,7 +151,12 @@ class ConciliacionesController extends Controller
 
         if($request->has('mail_solicitante')){
             $user = $conciliacion->getUser(205);
-            Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
+            try {
+                Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
+            } catch (\Throwable $th) {
+                return response()->json([$conciliacion]);
+            }
+            
         }
 
         return response()->json($conciliacion);
@@ -247,7 +252,71 @@ $estudiantes = $this->getEstudiantes();
     }
      
 
+    private function crearCopiasFormatoEstado(Request $request,$conciliacion)
+    {
+        $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query){
+            $query->where('is_copy', 1);
+    })->whereHas('temporales', function (Builder $query) use ($request){
+            $query->where("conciliacion_id",$request->conciliacion_id);
+    })->where(([
+            "status_id"=>$request->type_status_id,
+            "tabla_destino"=>"226"
+        ]))->get();
 
+        if(count($reportes)<=0){
+            $data = PdfReporteDestino::whereHas('reporte', function (Builder $query){
+                $query->where('is_copy', 0);
+                })
+                ->where([
+                    "status_id"=>$request->type_status_id,
+                    "tabla_destino"=>"226"
+                ])->get();
+                
+          
+                //return response()->json($data);
+
+               $data->each(function($data) use ($request,$conciliacion){
+              //  $reporte_or = PdfReporte::find($reporte->id);
+                $copy_reporte = PdfReporte::create(
+                    [
+                        'reporte'=>$data->reporte->reporte,
+                        'report_keys'=>$data->reporte->report_keys,
+                        'nombre_reporte'=>$data->reporte->nombre_reporte,
+                        'configuraciones'=>$data->reporte->configuraciones,
+                        'is_copy'=>1
+                    ]
+                );
+                $reporDest = PdfReporteDestino::create([
+                    "status_id"=>$request->type_status_id,
+                    "tabla_destino"=>"226",
+                    "reporte_id"=>$copy_reporte->id
+                ]);
+                $co_pdf = ConciliacionPdfTemporal::create([
+                    'reporte_pdf_id'=>$copy_reporte->id,
+                    'status_id'=>$request->type_status_id,
+                    'parent_reporte_pdf_id'=>$data->reporte->id,
+                    'conciliacion_id'=>$conciliacion->id
+                ]);
+        
+                $file_en = $data->reporte->files()->where('seccion','encabezado')->first();
+                    if($file_en){
+                        $data->reporte->files()->attach($file_en,[
+                            'seccion'=>'encabezado' ,
+                            'configuracion'=>$file_en->pivot->configuracion          
+                            ]);
+                    }
+                
+                $file_pie = $data->reporte->files()->where('seccion','pie')->first();
+                    if($file_pie){
+                        $data->reporte->files()->attach($file_pie,[
+                        'seccion'=>'pie' ,
+                        'configuracion'=>$file_pie->pivot->configuracion          
+                        ]);
+                    }
+               });
+        
+        }
+    }
 
     public function insertEstado(Request $request){
             
@@ -262,7 +331,7 @@ $estudiantes = $this->getEstudiantes();
        $conciliacion->estado_id = $request->type_status_id;
        if($request->type_status_id == 181 )  $conciliacion->auto_admisorio = intval($conciliacion->auto_admisorio)+1;
        
-        if($request->type_status_id == 178 ){
+        if($request->type_status_id == 178 ){//radicado
             $periodo = Periodo::where("estado",1)->first();
             $date_fin = Carbon::parse($periodo->prdfecha_fin)->year;
             $date_ini = Carbon::parse($periodo->prdfecha_inicio)->year;
@@ -279,86 +348,19 @@ $estudiantes = $this->getEstudiantes();
                 $numero = "CCEAH-".$id_num."-".substr($date_ini,-2)."-".substr($date_fin,-2);
                 
             }
-            $conciliacion->num_conciliacion = $numero;
-            //$user = $conciliacion->getUser(205);
-           // if($user->id!=null and $conciliacion->categoria_id == 219) Mail::to($user)->send(new RegConciliacionCorregir($conciliacion));
-     
-
-
-           // dd($id_num);
+            $conciliacion->num_conciliacion = $numero; 
+            $conciliacion->fecha_radicado = date('Y-m-d H:i:s');       
             
         }
        $conciliacion->save();   
-
-       $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query){
-                $query->where('is_copy', 1);
-        })->whereHas('temporales', function (Builder $query) use ($request){
-                $query->where("conciliacion_id",$request->conciliacion_id);
-        })->where(([
-                "status_id"=>$request->type_status_id,
-                "tabla_destino"=>"conciliaciones"
-            ]))->get();
-
-
-            if(count($reportes)<=0){
-                $data = PdfReporteDestino::whereHas('reporte', function (Builder $query){
-                    $query->where('is_copy', 0);
-                    })
-                    ->where([
-                        "status_id"=>$request->type_status_id,
-                        "tabla_destino"=>"conciliaciones"
-                    ])->get();
-                    
-                 
-                   $data->each(function($data) use ($request,$conciliacion){
-                  //  $reporte_or = PdfReporte::find($reporte->id);
-                    $copy_reporte = PdfReporte::create(
-                        [
-                            'reporte'=>$data->reporte->reporte,
-                            'report_keys'=>$data->reporte->report_keys,
-                            'nombre_reporte'=>$data->reporte->nombre_reporte,
-                            'configuraciones'=>$data->reporte->configuraciones,
-                            'is_copy'=>1
-                        ]
-                    );
-                    $reporDest = PdfReporteDestino::create([
-                        "status_id"=>$request->type_status_id,
-                        "tabla_destino"=>"conciliaciones",
-                        "reporte_id"=>$copy_reporte->id
-                    ]);
-                    $co_pdf = ConciliacionPdfTemporal::create([
-                        'reporte_pdf_id'=>$copy_reporte->id,
-                        'status_id'=>$request->type_status_id,
-                        'parent_reporte_pdf_id'=>$data->reporte->id,
-                        'conciliacion_id'=>$conciliacion->id
-                    ]);
-            
-                    $file_en = $data->reporte->files()->where('seccion','encabezado')->first();
-                        if($file_en){
-                            $data->reporte->files()->attach($file_en,[
-                                'seccion'=>'encabezado' ,
-                                'configuracion'=>$file_en->pivot->configuracion          
-                                ]);
-                        }
-                    
-                    $file_pie = $data->reporte->files()->where('seccion','pie')->first();
-                        if($file_pie){
-                            $data->reporte->files()->attach($file_pie,[
-                            'seccion'=>'pie' ,
-                            'configuracion'=>$file_pie->pivot->configuracion          
-                            ]);
-                        }
-                   });
-            
-            }
-
-    
+        //Crea las copias del formatos para el estado
+        $this->crearCopiasFormatoEstado($request,$conciliacion);   
 
 
     if($request->has("status_file")){
         $file = $estado->uploadFile($request->file('status_file'),'/concilacion_'.$conciliacion->id.'/status_'.$estado->id);
         $estado->files()->attach($file,
-                ['conciliacion_id'=>$conciliacion->id]); 
+                ['conciliacion_id'=>$conciliacion->id,'user_id'=>currentUser()->id]); 
     }
 
     if($conciliacion->estado_id==175){//Enviado a revision
@@ -380,7 +382,7 @@ $estudiantes = $this->getEstudiantes();
     if($conciliacion->estado_id==225){//solicitud de radicado
        
         //if($conciliacion->fecha_radicado=='0000-00-00')
-        $conciliacion->fecha_radicado = date('Y-m-d H:i:s');
+        //$conciliacion->fecha_radicado = date('Y-m-d H:i:s');
         $conciliacion->save();
         $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
         Notification::send($users, new SolicitudRadicarConciliacion($estado));
@@ -619,23 +621,14 @@ $estudiantes = $this->getEstudiantes();
         
         array_map('unlink', glob(public_path('act_temp/'.$id.'___*')));//elimina los archivos que el 
 		$file= File::find($file_id);
-      //  dd($file);
-        $rutaDeArchivo = storage_path($file->path);
-                $filename = $id.'___'.$file->original_name;			
-                copy( $rutaDeArchivo, public_path("act_temp/".$filename));	
-                /* $hash = hash_hmac_file("sha256",$rutaDeArchivo,'dario');
-                dd($hash); */
-                   return redirect("act_temp/".$filename); 
-		if ($file) {
+        if ($file) {
             try {
                 $rutaDeArchivo = storage_path($file->path);
                 $filename = $id.'___'.$file->original_name;			
                 copy( $rutaDeArchivo, public_path("act_temp/".$filename));	
-                /* $hash = hash_hmac_file("sha256",$rutaDeArchivo,'dario');
-                dd($hash); */
-                   return redirect("act_temp/".$filename); 
+                return redirect("act_temp/".$filename); 
             } catch (\Throwable $th) {
-                echo "<h3>El archivo que buscas ya no existe!</h3>";
+                echo "<h3>El archivo que buscas ya no existe!</h3><small><i>Amatai&copy".date("Y")."</i></small><br>$th";
             }
 			
 		}
@@ -680,11 +673,14 @@ $estudiantes = $this->getEstudiantes();
     public function getUser(Request $request,$idnumber)
     {
         //return $request->all();
-        $user =User::where(['idnumber'=>$idnumber])->first();
+        $user =User::where(['idnumber'=>$idnumber,'tipodoc_id'=>$request->tipodoc_id])->first();
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         if($user){       
           $user->roles;       
           $view = view('myforms.conciliaciones.componentes.user_solicitante_form',compact('conciliacion','user'))->render();
+          if($request->has("view")){
+            $view = view('myforms.conciliaciones.componentes.'.$request->get("view"),compact('conciliacion','user'))->render();
+           }
           //$viewD = view('myforms.conciliaciones.componentes.user_detalles_form',compact('conciliacion','user'))->render();
            return response()->json(['encontrado'=>true,'user'=>$user,'view'=>$view]);   
         } 

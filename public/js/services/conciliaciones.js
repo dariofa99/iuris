@@ -42,7 +42,7 @@ export class ConciliacionService{
     }
 
     async deleteConciliacionUser (request) {
-        const response = await fetch(BASE_URL+'/conciliacion/delete/user?'+ new URLSearchParams(request),{
+        const response = await fetch(BASE_URL+'conciliacion/delete/user?'+ new URLSearchParams(request),{
             method: 'GET',
             headers: {        
                 "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export class ConciliacionService{
 
     
     async editUser (idnumber,request)  {
-        const response = await fetch(BASE_URL+"/conciliacion/user/"+idnumber+"?"+ new URLSearchParams(request), {
+        const response = await fetch(BASE_URL+"conciliacion/user/"+idnumber+"?"+ new URLSearchParams(request), {
             method: 'GET',
             headers: {        
                 "Content-Type": "application/json",

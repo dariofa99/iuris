@@ -91,7 +91,7 @@
             )
          
          <li>
-            <a class="urlactive" data-toggle="tab" href="#menu1">Comentarios</a>
+            <a class="urlactive" data-toggle="tab" href="#menu1">Notificaciones</a>
         </li>
 
          @endif
@@ -191,7 +191,7 @@
     @include('myforms.conciliaciones.componentes.modal_create_document')
     {{-- @include('myforms.conciliaciones.componentes.modal_create_estado') --}}
     @include('myforms.conciliaciones.componentes.modal_create_comentario')
-   {{--  @include('myforms.conciliaciones.componentes.modal_create_user') --}}
+    @include('myforms.conciliaciones.componentes.modal_create_user')
     @include('myforms.conciliaciones.componentes.modal_create_estado_pretension')
     @include('myforms.conciliaciones.componentes.modal_detalles_user')
     @include('myforms.conciliaciones.componentes.modal_audiencia_salas_alternas')
