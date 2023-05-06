@@ -68,7 +68,8 @@
             @if(currentUser()->can('ver_form_conciliacion') 
             || (currentUserInConciliacion($conciliacion->id,['conciliador','asistente','autor'])))
             <li class="active">
-                <a class="urlactive" data-toggle="tab" href="#home">Información de Solicitud</a>
+                <a class="urlactive" data-toggle="tab" href="#home">
+                    <i class="fa fa-folder"></i> Información de Solicitud</a>
             
             </li>
             @endif
@@ -80,7 +81,10 @@
             ))
 
             <li>
-                <a class="urlactive" data-toggle="tab" href="#documentos">Documentos </a>
+               
+                <a class="urlactive" data-toggle="tab" href="#documentos">
+                    <i class="fa fa-file-archive"></i>
+                    Documentos </a>
             </li>
             @endif
             
@@ -91,7 +95,9 @@
             )
          
          <li>
-            <a class="urlactive" data-toggle="tab" href="#menu1">Notificaciones</a>
+            <a class="urlactive" data-toggle="tab" href="#menu1"> 
+                <i class="fa fa-bell"></i>
+                Notificaciones</a>
         </li>
 
          @endif
@@ -102,7 +108,8 @@
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))) 
          || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['autor']))
          )
-            <li><a class="urlactive" data-toggle="tab" href="#menu2">Estado de la solicitud</a></li>
+            <li><a class="urlactive" data-toggle="tab" href="#menu2">  <i class="fa fa-tasks"></i>
+                Estado de la solicitud</a></li>
         @endif
         
 {{-- 
@@ -115,7 +122,8 @@
         and (( $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))))
        
-            <li><a class="urlactive" data-toggle="tab" href="#menu3">Asignaciones</a></li>
+            <li><a class="urlactive" data-toggle="tab" href="#menu3">  <i class="fa fa-users"></i>
+                Usuarios</a></li>
             @endif
 
             @if($audiencia!='' || (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and ( 
@@ -123,7 +131,11 @@
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))
             || currentUser()->can('ver_audiencia_conciliacion'))
 
-            <li><a class="urlactive" data-toggle="tab" href="#menu4">Audiencia</a></li>
+            <li><a class="urlactive" data-toggle="tab" href="#menu4"> 
+                <i class="fa fa-university"></i>
+
+
+                Audiencia</a></li>
             @endif
 
             @if((currentUser()->can('act_conciliacion'))

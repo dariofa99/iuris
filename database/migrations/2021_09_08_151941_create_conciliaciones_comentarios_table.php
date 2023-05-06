@@ -15,6 +15,7 @@ class CreateConciliacionesComentariosTable extends Migration
     {
         Schema::create('conciliaciones_comentarios', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('asunto')->nullable(); 
             $table->string('comentario')->nullable(); 
             $table->boolean('compartido')->default(0);          
             $table->integer('user_id')->unsigned();
@@ -22,6 +23,9 @@ class CreateConciliacionesComentariosTable extends Migration
             ->onDelete('cascade')->onUpdate('cascade');
             $table->integer('conciliacion_id')->unsigned();
             $table->foreign('conciliacion_id')->references('id')->on('conciliaciones')->onDelete('cascade')
+            ->onUpdate('cascade');
+            $table->bigInteger('reporte_id')->unsigned();
+            $table->foreign('reporte_id')->references('id')->on('pdf_reportes')->onDelete('cascade')
             ->onUpdate('cascade');
             $table->timestamps();
         });

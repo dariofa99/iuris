@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 
-class RespuestaRadicarConciliacion extends Notification
+class NotificationsSummernote extends Notification
 {
     use Queueable;
 
@@ -21,9 +21,11 @@ class RespuestaRadicarConciliacion extends Notification
      */
     public $mensaje;
     public $conciliacion;
-    public function __construct($mensaje,$conciliacion)
+    public $asunto;
+    public function __construct($mensaje,$conciliacion,$asunto)
     {
-       $this->mensaje = $mensaje;  
+       $this->mensaje = $mensaje; 
+       $this->asunto = $asunto;  
        $this->conciliacion = $conciliacion;        
     }
     /**
@@ -47,7 +49,7 @@ class RespuestaRadicarConciliacion extends Notification
     {
        
         return (new MailMessage($notifiable))
-        ->subject('Respuesta de radicado conciliación')
+        ->subject($this->asunto)
         ->view('myforms.mails.formato_correo',[
                 'mensaje'=>$this->mensaje,
                 'url'=>url('/conciliaciones/'.$this->conciliacion->id.'/edit')

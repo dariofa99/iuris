@@ -29,9 +29,9 @@
 
         @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
     || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))))
-         <button type="button" data-type="{{$user->pivot->tipo_usuario_id}}" data-user="{{$user->idnumber}}"  data-section="general" class="btn btn-primary btn-sm btn_asinar_usuario_conciliacion">  
+        {{-- <button type="button" data-type="{{$user->pivot->tipo_usuario_id}}" data-user="{{$user->idnumber}}" data-doc="{{$user->tipodoc_id}}"  data-section="general" class="btn btn-primary btn-sm btn_editar_usuario_conciliacion">  
            Actualizar
-           </button>
+        </button> --}}
 @endif
            <button type="button" data-type="{{$user->pivot->tipo_usuario_id}}" data-user="{{$user->idnumber}}"  data-section="general" class="btn btn-success btn-sm btn_detalles_us_con">  
             Detalles

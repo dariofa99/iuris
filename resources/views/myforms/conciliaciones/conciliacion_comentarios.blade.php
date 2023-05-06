@@ -1,12 +1,20 @@
 <div class="row" >
     <div class="col-md-2">
         @if(auth()->user()->can('crea_comentarios_conciliacion'))
-        <input type="button" id="btn_agregar_comentario" value="Agregar comentario" class="btn btn-primary btn-sm btn-block">
+        <input type="button" id="btn_conciliacion_notificacion" value="Nueva notificación" class="btn btn-primary btn-sm btn-block">
+        
+        <input type="button" id="btn_cancelar_conc_not" style="display: none" value="Cancelar" class="btn btn-warning btn-sm btn-block">
+       
         @endif
     </div>
+  {{--   <div class="col-md-2">
+        @if(auth()->user()->can('crea_comentarios_conciliacion'))
+        <input type="button" id="btn_agregar_comentario" value="Agregar comentario" class="btn btn-primary btn-sm btn-block">
+        @endif
+    </div> --}}
 </div>
 
-<div class="row">
+<div class="row" id="content_create_notification" style="display:none">
     <div class="col-md-4">
         <div class="panel panel-default" style="margin-bottom: 25px;">
             <div class="panel-body bodyuser_not">
@@ -61,31 +69,41 @@
     <div class="col-md-8">
         <div class="panel panel-default" style="margin-bottom: 25px;">
             <div class="panel-body">
+                <form id="myFormNotificationSend">
+                    <input type="hidden" name="cuerpo_correo">
+               
                 <label> Seleccione un formato </label>
-                <select id="categoria_notifica__id"  class="form-control form-control-sm">  
+                <select id="categoria_notifica__id" name="reporte_id" required class="form-control form-control-sm required">  
                     <option value="">Seleccione...</option>            
                                        
                 </select>
          
-                
+              
+                       <label for="asunto">Asunto</label>
+                       <input type="text" required name="asunto" class="form-control required" placeholder="Ingrese un asunto">
+              
               
                 <div class="row" id="row_mail_not">                    
                     
                 </div>     
-                <div id="content_notificacion_correo" class="summernote">
+                <div id="content_notificacion_correo" class="summernote required">
                         
                 </div>
                 <div>
                     <button disabled id="btn_env_not" class="btn btn-primary">Enviar notificación</button>
                 </div>
-            </div>
+            </form>
         </div>
-
+        
+        </div>
+ 
           
            
     </div>
 </div>
-<div class="row">
+
+
+<div class="row" id="content_conc_notif">
     <div class="col-md-12 table-responsive no-padding">
         <table class="table" id="table_list_comentarios">
             <thead>

@@ -155,7 +155,7 @@ class UsersController extends Controller
             $user->sedes()->attach(session('sede')->id_sede);
           }
         Session::flash('message-success', ' Registrado');
-        Auth::login($user);
+        if(Auth::guest()) Auth::login($user);
         return response()->json(['user' => $user]);
         return Redirect::to('/users/create');
     }
@@ -190,7 +190,7 @@ class UsersController extends Controller
   } 
 
 
-    private function aditionalData($request,$id){
+private function aditionalData($request,$id){
       if($request->has('reference_data_id')){   
         foreach ($request->reference_data_id as $key => $rd_id) {
             $var = "value_".$rd_id;

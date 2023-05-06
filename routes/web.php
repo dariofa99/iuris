@@ -43,7 +43,8 @@ Route::get('terminosycondiciones', function () {
   return view('auth.terminosycondiciones');
 });
 Route::get('conciliaciones/download/file/{file_id}', 'ConciliacionesController@downloadFile'); 
-Route::get('conciliaciones/enviar/correo', 'ConciliacionesController@enviarCorreo'); 
+Route::post('conciliaciones/enviar/correo', 'ConciliacionesController@enviarCorreo'); 
+Route::get('conciliaciones/get/comentarios', 'ConciliacionesController@getComentarios'); 
 
 
 
@@ -341,6 +342,7 @@ Route::get('conciliaciones/get/status/files', 'ConciliacionesController@getEstad
 Route::post('conciliaciones/store/conc/shared/files', 'ConciliacionesController@storeSharedConcFiles');
 Route::post('conciliaciones/asignar/expediente', 'ConciliacionesController@asigExpediente');
 Route::get('conciliacion/sancionar/user', 'ConciliacionesController@sancionarUser');
+Route::get('conciliacion/send/notification/mail', 'ConciliacionesController@enviarNotificacionesCorreo');
 
 Route::post('conciliacion/audiencia/create', 'AudienciaController@audienciaCreate');
 Route::get('conciliacion/users/salasalternasaudiencia/{id}/{cont}', 'AudienciaController@getSalasAudiencia');

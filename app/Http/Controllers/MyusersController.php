@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Session;
-use Redirect;
-use Validator;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use \App\User;
 use Intervention\Image\ImageManagerStatic as Image;
-use DB; 
 use App\TablaReferencia; 
 use App\Mail\ConfirmarCorreo;
 use App\Services\UsersService;
-use Illuminate\Support\Facades\Mail;  
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class MyusersController extends Controller 
 {
@@ -193,7 +194,7 @@ class MyusersController extends Controller
       
         $user = User::find($id);
        // dd($user->id);
-        if ($user->id != \Auth::user()->id and !currentUser()->can("edit_usuarios")) {
+        if ($user->id != Auth::user()->id and !currentUser()->can("edit_usuarios")) {
             return view('errors.error'); 
         }
 

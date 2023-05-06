@@ -1,7 +1,7 @@
 <div id="content_sin_secc_component">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <h5>Información socio-económica</h5>
+            <h4>Información socio-económica</h4>
         </div>
        
         <div class="col-md-6">

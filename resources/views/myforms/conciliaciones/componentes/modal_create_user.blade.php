@@ -27,7 +27,8 @@ Registrado
    @include('myforms.conciliaciones.componentes.user_general_form')
 </div>
 <div class="col-md-12">
-    <input type="button" id="btn_crear_usuario_conciliacion" value="Asignar usuario">
+    <input type="button" id="btn_crear_usuario_conciliacion" value="Asignar usuario" class="btn btn-primary btn-block">
+	{{-- <input type="button" id="btn_actualizar_usuario_conciliacion" value="Actualizar usuario" class="btn btn-warning btn-block"> --}}
 </div>
 @endslot
 @endcomponent

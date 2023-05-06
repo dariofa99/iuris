@@ -701,18 +701,18 @@ var con=0;
 							color_bg = 'bg-red';
 							dias = dias +" días";
 						} 
-						if(dias<0)dias = child.actfecha;
+						if(dias<0)dias = moment(child.created_at).format('MM-DD-YYYY');
 						
 						//console.log(child.fecha_limit, act_fecha,dias,"dias");
 						
 						if((end_status.id != child.id && child.actestado_id!='136' && (end_status.actestado_id!=138 && end_status.actestado_id!=136))||child.actestado_id=='104'){
-							dias = child.actfecha;
+							dias = moment(child.created_at).format('MM-DD-YYYY');
 							color_bg = 'bg-gray';
 							
 						} 
 						
 						if(dias===null){
-							dias = child.actfecha;
+							dias = moment(child.created_at).format('MM-DD-YYYY');
 						}
 						
                 		tabla.prepend("<tr><td  colspan='6'> <tr><td><i class='fa fa-reply' style='transform:rotate(180deg)'> &nbsp; </i>  "+

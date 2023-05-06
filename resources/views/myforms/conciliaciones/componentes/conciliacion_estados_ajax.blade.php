@@ -3,7 +3,7 @@
    <td>{{$estado->type_status->ref_nombre}}</td>
    <td>{{$estado->concepto}}</td>
    <td>{{$estado->user->name}} {{$estado->user->lastname}}</td>
-   <td>{{$estado->created_at}}</td>
+   <td>{{getSmallDateWithHour($estado->created_at)}}</td>
    <td>
     <button type="button" class="btn btn-warning btn-sm btn_descargar_rep_pdf" data-estado_id="{{$estado->type_status_id}}"  data-id="{{$estado->id}}">Ver actas</button>
     

@@ -1,14 +1,10 @@
 <!-- Trigger the modal with a button -->
 <div class="row">
-	{{-- <div class="col-md-12" style="border-bottom: 1px solid rgb(233, 233, 233);margin:2px;padding-bottom:3px">
-		Días transcurridos desde última actuación
-		<span style="background-color:gray" class="pull-center badge">
-			{{($expediente->getDaysForNexAct())}}
-		</span>
-		
-	</div> --}}
+	
 	<div class="col-md-8">
-	@if(currentUser()->hasRole('amatai') || $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('estudiante'))
+	@if(currentUser()->hasRole('amatai') || 
+	$expediente->getDocenteAsig()->idnumber == currentUser()->idnumber 
+	|| currentUser()->hasRole('estudiante'))
 	@if($expediente->expestado_id <>'2' AND  $expediente->expestado_id <>'4' )
 	
 		
@@ -24,6 +20,7 @@
 	
 	 
 	@endif 
+	@endif
 </div>
 		 
 	<div class="col-md-4" style="border-bottom: 1px solid rgb(233, 233, 233);padding-bottom:3px">
@@ -32,7 +29,7 @@
 	</div>
 	
 	
-	@endif
+	
 </div>
 
 

@@ -42,7 +42,7 @@
         @if(isset($user)  and $reference->options[0] and $user->getDataVal($reference->id,$reference->options[0]->id)) 
         value="{{$user->getDataVal($reference->id,$reference->options[0]->id)->value}}"
         @endif             
-        class="form-control insert_adv"> 
+        class="form-control input_user_ad"> 
 
     @endif
 

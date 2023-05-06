@@ -79,16 +79,16 @@
 ($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 229))))
            
-<div class="edit_audiencia" style="@if ($audiencia != '') display:block @endif" >
+{{-- <div class="edit_audiencia" style="@if ($audiencia != '') display:block @endif" >
    <hr>
     <div class="row"  style="height: 300px; overflow-x: auto;display:{{($audiencia != "")? 'block':'none'}}" id="list_turno_estudiantes_conciliacion">
-        @include('myforms.conciliaciones.componentes.list_turno_estudiante')
+         @include('myforms.conciliaciones.componentes.list_turno_estudiante') 
     </div>
 
 
   
 <hr>
-</div>
+</div> --}}
 @endif 
 
 @if ($audiencia != "")

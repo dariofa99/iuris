@@ -3358,7 +3358,7 @@ function enviarCorreoConciliacion(request) {
 	
 	$.ajax({
 		url: route,		
-		type:'GET',
+		type:'POST',
 		datatype: 'json',
 		data: request,
 		 beforeSend: function(xhr){

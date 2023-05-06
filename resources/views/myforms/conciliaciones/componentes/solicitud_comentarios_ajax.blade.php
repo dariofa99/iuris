@@ -4,7 +4,7 @@
 <tr>
    <td>{{$comentario->comentario}}</td>
    <td>{{$comentario->user->name}} {{$comentario->user->lastname}}</td>
-   <td>{{$comentario->created_at}}</td>
+   <td>{{getSmallDateWithHour($comentario->created_at)}}</td>
    <td>
        @if(currentUser()->id == $comentario->user_id || currentUser()->hasRole('amatai'))
        <button class="btn btn-danger btn-sm btn_delete_com_con" data-id="{{$comentario->id}}">Eliminar</button>

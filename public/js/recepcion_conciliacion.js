@@ -36,7 +36,7 @@ $(document).ready(function () {
       //  var request = new FormData(document.getElementById("myFormParteSolicitante"));  
         var request = convertFormToJSON("myFormParteSolicitante");
         var data = [];
-        $(".insert_adv").each((index,obj)=>{          
+        $(".input_user_ad").each((index,obj)=>{          
           data.push({
             value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
             section : $(obj).attr("data-section"),
@@ -132,7 +132,7 @@ $(document).ready(function () {
           var request={};
           request["conciliacion_id"]  = $("#conciliacion_id").val();
           var data = [];
-          $(".insert_adv").each((index,obj)=>{          
+          $(".input_user_ad").each((index,obj)=>{          
             data.push({
               value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
               section : $(obj).attr("data-section"),
@@ -447,7 +447,7 @@ async function addUserByStep(form,obj,step) {
           "conciliacion_id":$("input[name='conciliacion_id']").val(),
           "tipo_usuario":$(obj).attr("data-type")
         };   
-        console.log(request);   
+       
        let response_ = await  conciliacionService.addUser(request);
        window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso="+step;
  

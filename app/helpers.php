@@ -300,5 +300,15 @@ function getReferencesDataBySection($section,$table){
    return false; 
 }
 
+function getReferencesTableByCategory($category){
+    $rollist = DB::table('referencias_tablas')
+    ->select('id','ref_nombre')
+    ->where('categoria',$category)
+    //->where('categoria',$category)
+    ->get();
+
+    return $rollist;
+
+}
 
 ?>

@@ -15,7 +15,7 @@ class ConciliacionComentario extends Model
      * @var array
      */
     protected $fillable = [
-        'comentario','user_id','conciliacion_id','compartido'];
+        'comentario','user_id','conciliacion_id','compartido','asunto','reporte_id'];
 
     public function user(){
          return $this->belongsTo(User::class,'user_id');

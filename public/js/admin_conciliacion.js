@@ -63,23 +63,7 @@ $(document).ready(function () {
     });
 
     $(".btn_asinar_usuario_gen_conciliacion").on("click", function (e) {
-      var data_type = $(this).attr("data-type");
-      $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
-      $("#myModal_conc_user_create input[name=section]").val($(this).attr('data-section'));
-      var request = {          
-          'conciliacion_id':$("#conciliacion_id").val(),          
-          'data_type':data_type,
-          'section':$(this).attr('data-section'),
-      }
-      if ($(this).attr('data-user')!=undefined) {
-          request['idnumber'] = $(this).attr('data-user');
-          request['tipodoc_id'] = $("#myModal_conc_user_create select[name=tipodoc_id]").val();  
-          request['is_edit'] = true;  
-      }else{
-          request['idnumber'] = '0';
-          request['tipodoc_id'] = 1;          
-      }        
-     // getUser(request,request.idnumber);
+      resetForm('myUserConciliacionesForm');
       $("#myModal_conc_user_create").modal("show"); 
   });
 
@@ -277,25 +261,32 @@ $("#btn_cancelar_estado").on("click",function () {
   $("#content_form_estado_c").hide();
   $("#content_list_estado_c").show();
 });
+
 $("#categoria_notifica__id").on("change",async function(e){
-  var request = {
-    'conciliacion_id':$("#conciliacion_id").val(),
-    'tabla_destino':'227',
-    'status_id':$("#estado_conciliacion_id").val(),
-   // 'categoria':'mensaje_radicado',
-    'reporte_id':$(this).val()
-}
-let response = await formatosService.getReportes(request);
-//getReportes(request,'content_form_correo_est_responder');
-if(response.body){
-  $("#content_notificacion_correo").summernote("code", response.body);
-}else if(response.error){
-  toastr.error(response.error, "Algo falló!", {
-      positionClass: "toast-bottom-right",
-      timeOut: "4000",
-  });
-  $("#content_notificacion_correo").summernote("code", "Escriba su mensaje aquí!");
-}});
+  $("#content_notificacion_correo").summernote("code", "");
+  if($(this).val()==1){
+    $("#content_notificacion_correo").summernote("code", "Escriba su mensaje aquí!");
+  }else if($(this).val()!=""){
+    var request = {
+      'conciliacion_id':$("#conciliacion_id").val(),
+      'tabla_destino':'227',
+      'status_id':$("#estado_conciliacion_id").val(),
+     // 'categoria':'mensaje_radicado',
+      'reporte_id':$(this).val()
+  }
+  let response = await formatosService.getReportes(request);
+  //getReportes(request,'content_form_correo_est_responder');
+  if(response.body){
+    $("#content_notificacion_correo").summernote("code", response.body);
+  }else if(response.error){
+    toastr.error(response.error, "Algo falló!", {
+        positionClass: "toast-bottom-right",
+        timeOut: "4000",
+    });
+  }}
+});
+
+
 $(".fila_usuarios_not").on("click",function(e){
  
 if(!$(this).hasClass("fila_usuarios_not_selected") )
@@ -306,7 +297,7 @@ if(!$(this).hasClass("fila_usuarios_not_selected") )
  
   var mail =`
         <div class="rows_mails" id="row-${id}">
-        <input type="hidden" value=" ${mail}" name="notify_mail[]" data-row="${id}">                      
+        <input type="hidden" value=" ${mail}" name="correo_send[]" data-row="${id}">                      
           <label id="btn_delete_mail-${id}" type="button" data-id="${id}" data-row="${id}" class="btn_delete_not_mail label label-default">
               ${mail} <span class="badge">x</span>
           </label>                                 
@@ -331,31 +322,129 @@ $("#row_mail_not").on("click",".btn_delete_not_mail",function(e){
     $("#btn_env_not").prop("disabled",false)
   }
 });
-$("#btn_crear_usuario_conciliacion").on("click",function(e){
+$("#btn_crear_usuario_conciliacion").on("click",async function(e){
   e.preventDefault();
-  var request = convertFormToJSON("myUserConciliacionesForm");
-  var data = [];
-  $("#myUserConciliacionesForm .insert_adv").each((index,obj)=>{          
-    data.push({
-      value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-      section : $(obj).attr("data-section"),
-      type : $(obj).attr("data-type"),
-      name :  $(obj).attr("data-name"),
-      option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-      value_is_other:$("#value_other_text-"+$(obj).val()).val(),
-      conciliacion_id:$("#conciliacion_id").val()            
-    }) ;         
-  }); 
-  request["data"] = (data);
-  console.log(request);
+  var errors = validateForm("myUserConciliacionesForm");
+        if(errors.length <=0){
+          var user_id = $("#myUserConciliacionesForm input[name='id']").val();
+          if(user_id!=''){
+            var request = {
+              "user_id":user_id,
+              "conciliacion_id":$("input[name='conciliacion_id']").val(),
+              "tipo_usuario":$("#myUserConciliacionesForm select[name='tipo_usuario_id']").val()
+            }; 
+            $("#wait").show();           
+           let response_ = await  conciliacionService.addUser(request);
+            window.location.reload(true); 
+          }else{
 
-})
+            var request = convertFormToJSON("myUserConciliacionesForm");
+            var data = [];
+            $("#myUserConciliacionesForm .input_user_ad").each((index,obj)=>{          
+              data.push({
+                value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
+                section : $(obj).attr("data-section"),
+                type : $(obj).attr("data-type"),
+                name :  $(obj).attr("data-name"),
+                option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
+                value_is_other:$("#value_other_text-"+$(obj).val()).val(),
+                conciliacion_id:$("#conciliacion_id").val()            
+              });         
+            }); 
+            request["data"] = (data); 
+            $("#wait").show();      
+            let response = await  userService.registrar(request);
+            if(response.errors){   
+              $("#wait").hide();                       
+              response.errors.forEach(error => {            
+                  toastr.error(error, "", {
+                      positionClass: "toast-top-right",
+                      timeOut: "4000",
+                  });          
+            });            
+            }else{        
+            var request = {
+              "user_id":response.user.id,
+              "conciliacion_id":$("input[name='conciliacion_id']").val(),
+              "tipo_usuario":$("#myUserConciliacionesForm select[name='tipo_usuario_id']").val()
+            };    
+            $("#wait").show();          
+           let response_ = await  conciliacionService.addUser(request);
+           
+          }
+      }
+  }
+});
+
+$("#table_list_user_asig").on("click",".btn_editar_usuario_conciliacion",async function(e){
+  let request = {
+    "tipodoc_id":$(this).attr('data-doc'),
+    "idnumber":$(this).attr('data-user'),
+    "view":"user_general_form",
+    "conciliacion_id":$("input[name='conciliacion_id']").val()
+ }
+ $("#wait").show();
+let response = await conciliacionService.editUser($(this).attr('data-user'),request);
+if(response.encontrado){
+     resetForm('myUserConciliacionesForm');
+     $("#user_gen_conciliacion_form").html(response.view);   
+     $("#myUserConciliacionesForm select[name='tipo_usuario_id']").val($(this).attr('data-type'))  ;
+     resetDisabledForm("myUserConciliacionesForm")
+    $("#myModal_conc_user_create").modal("show");    
+    $("#wait").hide();
+  }
+});
+
+
+$("#myFormNotificationSend").on("submit",async function(e){
+  e.preventDefault();
+  var errors = validateForm("myFormNotificationSend");
+  var formatVal = $("#content_notificacion_correo")
+  .summernote("code")
+  .trim();
+        if(errors.length <=0 && formatVal !="<p><br></p>" && formatVal !="" ){
+        $("#myFormNotificationSend input[name=cuerpo_correo]").val(formatVal);
+
+      //  var request = $("#myFormNotificationSend").serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
+        var request = convertFormToJSON("myFormNotificationSend");
+        request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
+        $("#wait").show();
+        let response = await conciliacionService.sendNotification(request);
+         let comentarios = await conciliacionService.getComentarios({"conciliacion_id":$("input[name='conciliacion_id']").val()})  ;
+         $("#table_list_comentarios tbody").html(comentarios.view);
+           $("#btn_cancelar_conc_not").hide();
+          $("#btn_conciliacion_notificacion").show();
+          $("#content_create_notification").hide();
+          $("#content_conc_notif").show(); 
+          e.preventDefault();
+          $("#wait").hide();
+       // window.location.reload(true)
+      
+  }
+  e.preventDefault();
+});
+
+$("#btn_conciliacion_notificacion").on("click",function(e){
+  e.preventDefault()
+  $(this).hide();
+  $("#btn_cancelar_conc_not").show();
+  $("#content_create_notification").show();
+  $("#content_conc_notif").hide();
+});
+$("#btn_cancelar_conc_not").on("click",function(e){
+  e.preventDefault()
+  $(this).hide();
+  $("#btn_conciliacion_notificacion").show();
+  $("#content_create_notification").hide();
+  $("#content_conc_notif").show();
+});
+
+
 getActas();
 getReportesForDestiny()
 });//fin document ready
 async function getReportesForDestiny(){
-  var request = {
-   
+  var request = {   
     'tabla_destino': "227",
     'status_id': $("#estado_conciliacion_id").val(),
   }
@@ -366,9 +455,12 @@ async function getReportesForDestiny(){
     var option = '<option value="">Seleccione...</option>';
          response.forEach(element => {
            option += `
-           <option value="${element.id}">${element.nombre_reporte}</option>
+              <option value="${element.id}">${element.nombre_reporte}</option>
            `;
          });
+         option += `
+         <option value="1">En blanco</option>
+      `;
          $("#categoria_notifica__id").html(option)
   }
  
@@ -408,9 +500,9 @@ function alertValidateUser(lastidnumber,form) {
                   "view":view,
                   "conciliacion_id":$("input[name='conciliacion_id']").val()
                }
+               $("#wait").show();
                 let response = await conciliacionService.editUser(idnumber,request);
-                $("#wait").show();
-                if(response.encontrado){
+              if(response.encontrado){
                     $("#"+content).html(response.view);      
                    
                 }else{

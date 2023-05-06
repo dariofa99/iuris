@@ -200,13 +200,13 @@
           @else
           Sin usuarios
           @endif --}}
-          {{  \Carbon\Carbon::parse($conciliacion->created_at)->format("d-m-Y") }}
+          {{  getSmallDateWithHour($conciliacion->created_at) }}
           <small>
             <i>({{  \Carbon\Carbon::parse($conciliacion->created_at)->diffForHumans() }})</i>
             </small>
         </td>
         <td>
-            <a href="/conciliaciones/{{$conciliacion->id}}/edit" class="btn btn-sm btn-primary">Abrir</a>
+            <a href="/conciliaciones/{{$conciliacion->id}}/edit" class="btn btn-sm btn-primary">Gestionar</a>
         </td>
     </tr>
     @endforeach

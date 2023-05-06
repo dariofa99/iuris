@@ -22,7 +22,7 @@ use App\Expediente;
 use App\Mail\RegConciliacionCorregir;
 use App\Mail\RegConciliacionSuccess;
 use App\Mail\VerifyPdfReportConciliacion;
-use App\Notifications\RespuestaRadicarConciliacion;
+use App\Notifications\NotificationsSummernote;
 use App\Notifications\SolicitudRadicarConciliacion;
 use App\PdfReporte;
 use App\PdfReporteDestino;
@@ -412,6 +412,13 @@ $estudiantes = $this->getEstudiantes();
         ]);
     }
 
+    public function getComentarios(Request $request){
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $view = view('myforms.conciliaciones.componentes.solicitud_comentarios_ajax',compact('conciliacion'))->render();
+        return response()->json([
+            'view'=>$view
+        ]);
+    }
     public function deleteComentario(Request $request){       
         $comentario = ConciliacionComentario::find($request->comentario_id)->delete();
         $conciliacion = Conciliacion::find($request->conciliacion_id);
@@ -676,7 +683,8 @@ $estudiantes = $this->getEstudiantes();
         $user =User::where(['idnumber'=>$idnumber,'tipodoc_id'=>$request->tipodoc_id])->first();
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         if($user){       
-          $user->roles;       
+          $user->roles;   
+              
           $view = view('myforms.conciliaciones.componentes.user_solicitante_form',compact('conciliacion','user'))->render();
           if($request->has("view")){
             $view = view('myforms.conciliaciones.componentes.'.$request->get("view"),compact('conciliacion','user'))->render();
@@ -714,9 +722,7 @@ $estudiantes = $this->getEstudiantes();
     public function addUser(Request $request){    
       
         $conciliacion = Conciliacion::find($request->conciliacion_id);
-      
-
-       try{
+        try{
         $user = $conciliacion->usuarios()->where([
             'tipo_usuario_id'=>$request->tipo_usuario,
             'user_id'=>$request->user_id,
@@ -727,8 +733,7 @@ $estudiantes = $this->getEstudiantes();
                 'estado_id'=>1
             ]);
         }
-      
-        
+        $conciliacion->usuarios;
         return response()->json($conciliacion,200);
 
        } catch (\Throwable $th) {
@@ -974,20 +979,34 @@ public function prueba(Request $request){
 }
 
 public function enviarCorreo(Request $request){
-    $conciliacion = Conciliacion::find($request->conciliacion_id);
+   // return response()->json($request->all());
+   
     if($request->has('correo_send')){
         $users = User::whereIn('email',$request->correo_send)->get();   
     }else{
         $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');       
     }
+    ConciliacionComentario::create([
+        'comentario'=>$request->reporte_id == 1 ? $request->cuerpo_correo : $request->asunto,
+        'user_id' => \Auth::user()->id,
+        'asunto'=>$request->asunto,
+        'reporte_id'=>$request->reporte_id,
+        'conciliacion_id'=>$request->conciliacion_id
+    ]);
+    $conciliacion = Conciliacion::find($request->conciliacion_id);   
+
     if($request->has('pivot_id') and $request->get('pivot_id')!='' and $request->get('pivot_id')!=null){
         $update = $conciliacion->usuarios()
         ->where('conciliacion_has_user.id',$request->pivot_id)->first();
         $update->pivot->estado_id = $request->user_estado_id;
         $update->pivot->save();
     }
-     Notification::send($users, new RespuestaRadicarConciliacion( $request->cuerpo_correo ,$conciliacion ));
+     Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo ,$conciliacion , $request->asunto ));
 
     return response()->json($users);
 }
+
+
+
+
 } 
