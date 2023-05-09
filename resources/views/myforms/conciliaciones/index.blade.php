@@ -201,9 +201,9 @@
           Sin usuarios
           @endif --}}
           {{  getSmallDateWithHour($conciliacion->created_at) }}
-          <small>
+          <p style="font-size: 14px"><small>
             <i>({{  \Carbon\Carbon::parse($conciliacion->created_at)->diffForHumans() }})</i>
-            </small>
+            </small></p>
         </td>
         <td>
             <a href="/conciliaciones/{{$conciliacion->id}}/edit" class="btn btn-sm btn-primary">Gestionar</a>

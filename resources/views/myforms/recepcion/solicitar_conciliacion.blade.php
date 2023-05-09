@@ -146,7 +146,11 @@ $pasos = [
                 <button type="button" data-step="{{(intval($paso)+1)}}" class="btn btn-success" data-type="{{$pasos[$paso-1]['tipo_usuario']}}"  id="{{$pasos[$paso-1]['id']}}">
                     Siguiente
                 </button>
-
+                @if(isset($conciliacion))
+                <a class="btn btn-success" id="btn_no_apoderado" style="display:none" href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso=4">
+                  Siguiente                
+                </a>
+                @endif
                 <a href="/login" class="btn btn-default">
                   Cancelar
                 </a>

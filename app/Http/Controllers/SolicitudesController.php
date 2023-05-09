@@ -48,6 +48,7 @@ class SolicitudesController extends Controller
     public function solicitar(Request $request)
     {         
        // $user = User::find(20351)  ;
+     
         return view('myforms.recepcion.solicitar_conciliacion');
     } 
 

@@ -1,8 +1,7 @@
 <div class="row">
     <div class="col-md-9">
         <form id="{{ ($myForm) }}" enctype="multipart/form-data">
-            <input name="reporte" type="hidden">
-   
+            <input name="reporte" type="hidden">   
             @if(isset($conciliacion))
             <input name="conciliacion_id" value="{{$conciliacion->id}}" type="hidden">
             <input name="status_id" value="{{ isset($estado) ? $estado : $conciliacion->status_id}}" type="hidden">
@@ -13,7 +12,7 @@
    
     <div class="col-md-5">
         <label> Seleccione una categoria </label>
-        <select name="categoria_id" id="categoria_id" class="form-control form-control-sm">  
+        <select required name="categoria_id" id="categoria_id" class="form-control form-control-sm">  
             <option value="">Seleccione...</option>            
             @forelse($types_categories_report as $key => $types_categorie)
                 <option value="{{$key}}">{{$types_categorie}}</option>
@@ -24,12 +23,12 @@
     
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-5">
             @if($view and $view=='update')  
            
             <label>Seleccionar formato</label>
             <select name="id" id="sel_reporte_id" required class="form-control">              
-                <option value="">Seleccione...</option>
+                <option value="">Primero seleccione una categoria...</option>
             </select>
       
             @endif 
@@ -45,6 +44,7 @@
             @endif
             </div>       
             @endif
+
         </div>
 
   
@@ -52,15 +52,31 @@
    
    
 </div>    
+<div  @if($view and $view=='update') style="border-top: 1px solid rgb(222, 220, 220);margin-top:2px" @endif>
 <div class="row">
     <div class="col-md-6">
-        <label> Nombre del formato </label>
+        <label> {{($view and $view=='update') ? "Cambiar" :""}} Nombre del formato </label>
         <input type="text" required class="form-control"  name="nombre_reporte"
          @if($view and $view=='update_temp' and $reporte)
          value="{{$reporte->nombre_reporte}}"
          @endif >
     
         </div>
+
+        @if($view and $view=='update')  
+        <div class="col-md-6">
+            <label> Cambiar categoria </label>
+            <select name="categorianew_id" id="categorianew_id" class="form-control form-control-sm">  
+                <option value="">Primero seleccione un formato ...</option>            
+                @forelse($types_categories_report as $key => $types_categorie)
+                    <option value="{{$key}}">{{$types_categorie}}</option>
+                @empty
+                <option value="">Sin formato</option>
+                @endforelse                        
+            </select>
+        </div>
+        @endif 
+
 </div>
    <div class="row">
        <div class="col-md-12">
@@ -73,6 +89,7 @@
         </div> 
        </div>
    </div>
+</div>
     <div class="row">
         <div class="col-md-7">
     <br>

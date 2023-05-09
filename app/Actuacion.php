@@ -85,6 +85,7 @@ class Actuacion extends Model
         ->withPivot('id','file_id','actuacion_id')->withTimestamps(); 
      }  
 
+    
 
 } 
  

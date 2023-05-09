@@ -101,21 +101,21 @@ $(document).ready(function () {
       notEdit(data_type,form)
     });
 
-    $("#myFormAsigReporte .select").on("change", function (e) {
+    $("#myFormAsigReporte .buscar_asignacion_re").on("change", function (e) {
       
       var tabla_destino = $("#myFormAsigReporte select[name=tabla_destino]").val();
      // var clave = $(this).attr("name");
       var status_id = $("#myFormAsigReporte select[name=status_id]").val();
-      if (tabla_destino != "" && status_id != "") {
+      if (tabla_destino != "") {
           var request = {
               tabla_destino: tabla_destino,
-              status_id:status_id
+              status_id:(status_id==null || status_id=="")  ? 1: status_id
               
           };
          // request[clave] =  status_id;
-          if(tabla_destino=="227"){
+          if(tabla_destino=="241"){//Formato predefinidos
             var categoria = $("#myFormAsigReporte select[name=categoria]").val();      
-            if (categoria != "" && status_id != "") {
+            if (categoria != "") {
               request['categoria'] =  categoria;
               editAsignacionReporte(request);
             }
@@ -135,32 +135,42 @@ $(document).ready(function () {
       let response = await conciliacionService.getReportesByCategory(request);
       $("#summernote_update").summernote("code", "");
       $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
+      $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
       if(response.errors && response.errors.length >0){
         response.errors.forEach(error => {            
           toastr.error(error, "", {
               positionClass: "toast-top-right",
               timeOut: "4000",
           });          
-        });    
+        });  
+        $("#summernote_update").summernote("code", "");
+        $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
+        $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
+        $("#myFormEditPdfReporte select[name='id']").val("");  
+        $("#sel_reporte_id").html("<option value=''>Primero seleccione una categoria...</option>");
       }else{
-        var option = '<option value="">Seleccione...</option>';
+        var option = '<option value="">Primero seleccione una categoria...</option>';
         response.forEach(element => {
           option += `
           <option value="${element.id}">${element.nombre_reporte}</option>
           `;
         });
         $("#sel_reporte_id").html(option)
-      }
-     
+      }     
+    }else{
+      $("#summernote_update").summernote("code", "");
+      $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
+      $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
+      $("#myFormEditPdfReporte select[name='id']").val("");
     }
   });
 
   $("#myFormAsigReporte select[name='tabla_destino']").on("change",async function(params) {
     var categoria = $(this).val();
-    if(categoria!=''){
+
+    if(categoria!=''){    
       var request = {
         'categoria_id':categoria,
-
       }
       let response = await conciliacionService.getReportesByCategory(request);
       if(response.errors && response.errors.length >0){
@@ -170,24 +180,31 @@ $(document).ready(function () {
               timeOut: "4000",
           });          
         });    
-      }else{
+       
+      }else{   
         var li = '';
         response.forEach(reporte => {
           li += `
           <li>
-            <input class="checks_reportes" type="checkbox" id="chk_reporte_${reporte.id}" value="${reporte.id}" name="reporte_id[]" >
+            <input class="checks_reportes" type="${categoria == 241 ? 'radio' : 'checkbox'}" id="chk_reporte_${reporte.id}" value="${reporte.id}" name="reporte_id[]" >
              ${reporte.nombre_reporte}
           </li>
           `;
         });
         $("#checks_reportes").html(li);
-         if(categoria=='226'){
-          $("#myFormAsigReporte select[name='categoria']").hide().prop("disabled",true);         
-        }else{
-          $("#myFormAsigReporte select[name='categoria']").show().prop("disabled",false);;         
-        } 
-      }
-     
+        $("#myFormAsigReporte select[name='status_id']").prop("disabled",false).show().val("");
+        $("#myFormAsigReporte select[name='status_id']").prev().show();
+        $("#myFormAsigReporte select[name='categoria']").show().prop("disabled",false).val("");
+        $("#myFormAsigReporte select[name='categoria']").prev().show()
+        if(categoria==241){
+          $("#myFormAsigReporte select[name='status_id']").prop("disabled",true).hide();
+          $("#myFormAsigReporte select[name='status_id']").prev().hide();
+        }
+        if(categoria=='226' || categoria==227){
+          $("#myFormAsigReporte select[name='categoria']").hide().prop("disabled",true);   
+          $("#myFormAsigReporte select[name='categoria']").prev().hide();      
+        }
+      }     
     }
   });
 

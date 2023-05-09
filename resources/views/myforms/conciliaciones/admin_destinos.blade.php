@@ -11,30 +11,32 @@
         @empty
         <option value="">Sin categoria</option>
         @endforelse  
+       
      </select> 
+     <input type="hidden" value="1" name="status_id">
      <label for="status_id">Estado donde mirar el formato</label>
-     <select name="status_id" required class="form-control select">
-        <option value="">Seleccione...</option>
+     <select name="status_id" required class="form-control buscar_asignacion_re">
+        <option value="">Primero seleccione una categoria...</option>
         @foreach($types_status as $key => $type_status)
         <option value="{{$key}}">{{$type_status}}</option>
         @endforeach
     </select>
-    <label for="categoria">Mensaje donde aplicar el formato</label>
-     <select style="display: none"  name="categoria" required class="form-control select">
+    <label style="display: none" for="categoria">Cuando aplicar el formato <small><i>(enviar correo electrónico)</i></small></label>
+     <select style="display: none"  name="categoria" required class="form-control buscar_asignacion_re">
          <option value="">Seleccione el mensaje</option>
-         <option value="mensaje_sol_conciliador">Mensaje para email de solicitud a conciliador</option>
-         <option value="mensaje_sol_asistente">Mensaje para email de solicitud a asistente</option>
-         <option value="mensaje_radicado">Mensaje para email radicado</option>
-         <option value="mensaje_rec_conciliador">Mensaje para email de recomendaciones conciliadores</option>
-         <option value="mensaje_rec_asistente">Mensaje para email de recomendaciones asistentes</option>
-         <option value="mensaje_notificarse">Mensaje para email de notificarse (Aceptar)</option>
-         <option value="mensaje_notificarse_cancelar">Mensaje para email de notificarse (No Aceptar)</option>
+         <option value="mensaje_sol_conciliador">Cuando se asigne a conciliador</option>
+         <option value="mensaje_sol_asistente">Cuando se asigne a asistente</option>
+         <option value="mensaje_radicado">Cuando se radique la conciliación</option>
+         <option value="mensaje_rec_conciliador">Cuando acepta el conciliador (email de recomendaciones) </option>
+         <option value="mensaje_rec_asistente">Cuando acepta el asistente (email de recomendaciones)</option>
+         <option value="mensaje_notificarse">Cuando el conciliador se notifique para Aceptar</option>
+         <option value="mensaje_notificarse_cancelar">Cuando el conciliador se notifique para No Aceptar</option>
      </select>
 
      
 
     </div>
-     <div class="col-md-4">
+     <div class="col-md-6">
      @if(isset($reportes))
      <h3>Seleccionar formatos</h3>     
      <ul id="checks_reportes">               

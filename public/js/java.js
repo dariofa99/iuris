@@ -2355,7 +2355,7 @@ return false;
             conciliacion_id: $("#conciliacion_id").val(),
         };
         getEstadosReportesPdf(request);*/
-
+ 
         var request = {
           //  conc_estado_id: $(this).attr("data-id"),
             tabla_destino: "226",
@@ -4951,6 +4951,7 @@ function editPdfReporte(id) {
             // $("#myModal_create_comentario").modal("hide");
             $("#myFormEditPdfReporte input[name=nombre_reporte]").val(res.nombre_reporte);
             $("#myFormEditPdfReporte select[name=categoria_id]").val(res.categoria_id);
+            $("#myFormEditPdfReporte select[name=categorianew_id]").val(res.categoria_id);
             if(res.configuraciones!=null){
                 $("#myFormEditPdfReporte input[name=top]").val(res.configuraciones.top);
                 $("#myFormEditPdfReporte input[name=right]").val(res.configuraciones.right);
@@ -5118,7 +5119,11 @@ function updatePdfReporte(request, id) {
                 positionClass: "toast-bottom-right",
                 timeOut: "1000",
             });
-            $("#myModal_create_comentario").modal("hide");
+          /*   $("#summernote_update").summernote("code", "");
+            $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
+            $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
+            $("#myFormEditPdfReporte select[name='id']").val(""); */  
+            //$("#sel_reporte_id").html("<option value=''>Primero seleccione una categoria...</option>")
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {

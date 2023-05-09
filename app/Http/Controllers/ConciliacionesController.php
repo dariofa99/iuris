@@ -65,7 +65,7 @@ class ConciliacionesController extends Controller
         $conciliaciones = Conciliacion::filter($request)
         ->where(function($query){
             if(!currentUser()->can('ver_all_conciliaciones')){
-                $query->whereHas('usuarios',function($query1){
+                return $query->whereHas('usuarios',function($query1){
                     $query1->where([
                         'user_id'=>auth()->user()->id,
                 ]);
@@ -181,9 +181,10 @@ class ConciliacionesController extends Controller
      */
     public function edit($id,Request $request)
     {
+    
         if(currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
-
-   
+$conciliacion = Conciliacion::find($id);
+if(!$conciliacion) return redirect("/conciliaciones");
 $cursando = TablaReferencia::where(['categoria'=>'cursando','tabla_ref'=>'turnos'])
 ->pluck('ref_nombre','id');
 
@@ -203,7 +204,7 @@ $estudiantes = $this->getEstudiantes();
     'cursos.ref_nombre as curso_nombre','rh.ref_nombre as horario_nombre','trnid_horario','rd.ref_nombre as dia_nombre','trnid_dia')
     ->orderBy('trnid_color','desc')->get();
  
-    $conciliacion = Conciliacion::find($id);
+   
     $numusers =  $conciliacion->usuarios->count();
     $audiencia = AudienciaConciliacion::where('id_conciliacion',$conciliacion->id)->first();
     $salaalterna = SalasAlternasConciliacion::where(['idnumber'=>\Auth::user()->idnumber,"id_conciliacion"=>$conciliacion->id])->first();

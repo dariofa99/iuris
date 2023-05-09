@@ -187,6 +187,7 @@ class PdfReportesController extends Controller
       //  return $request->all();
         $config = $this->setConfig($request);
         $request['configuraciones'] = json_encode($config);
+        $request['categoria_id'] = $request->has("categorianew_id") ? $request->get("categorianew_id"):$request->get("categoria_id");
         $co_reporte = PdfReporte::find($id); 
         $co_reporte->fill($request->all());
         $co_reporte->save();
