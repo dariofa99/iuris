@@ -323,6 +323,7 @@ class AudienciaController extends Controller
     public function calendarAudiencias() {
         //$audiencias = AudienciaConciliacion::All();
         $conciliaciones = Conciliacion::join('conciliacion_audiencias','conciliacion_audiencias.id_conciliacion','conciliaciones.id')->get();
+        
         return view('myforms.conciliaciones.agenda_audiencias',compact('conciliaciones'));
 
     }

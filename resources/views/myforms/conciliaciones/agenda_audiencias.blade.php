@@ -17,7 +17,6 @@ Agenda audiencias de conciliación
 
 
 
-
                  @include('modals.modal_calendar')
                  <!-- /modal -->
 
@@ -66,7 +65,8 @@ Agenda audiencias de conciliación
     /* initialize the calendar
      -----------------------------------------------------------------*/
     //Date for the calendar events (dummy data)
-    var colores = {'yellow': '#f39c12',
+    var colores = {
+      'yellow': '#f39c12',
       'gray': '#d2d6de',
       'blue': '#0073b7',
       'green':'#00a65a',
@@ -111,8 +111,8 @@ Agenda audiencias de conciliación
           end            : "{{ $conciliacion->fecha }} {{ date('H:i:s', strtotime($conciliacion->hora)) }}",
           allDay         : false,
           url            : '/conciliaciones/{{ 	$conciliacion->id_conciliacion }}/edit#menu4',
-          backgroundColor: colores.{{ $conciliacion->estado->color }},
-          borderColor    : colores.{{ $conciliacion->estado->color }}, 
+          backgroundColor: "{{ $conciliacion->estado->color }}",
+          borderColor    : "{{ $conciliacion->estado->color }}", 
           description    : 'Estado: {{ $conciliacion->estado->ref_nombre }}<br>Hora: {{ $conciliacion->hora }}',
         },
         @endforeach

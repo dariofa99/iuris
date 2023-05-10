@@ -95,14 +95,20 @@ function validateTypeDoc(form) {
 function convertFormToJSON(form) {
 	return $("#"+form)
 	  .serializeArray()
-	  .reduce(function (json, { name, value }) {
-		json[name] = value;
+	  .reduce(function (json, { name, value }) {		
+		if(name.split('')[name.length - 2] == '[' && name.split('')[name.length - 1] == ']'){
+			let _name = name.replace('[]', '');
+			if(json[_name]==undefined) json[_name] = []	;
+			json[_name].push(value);				
+		}else{
+			json[name] = value;
+		}					
 		return json;
 	  }, {});
   }
 
   function existeFecha(fecha){
-	console.log(fecha);
+	
 	try{        
 		fecha_limit = moment(fecha).format('YYYY');
 		var today = moment().format('YYYY')

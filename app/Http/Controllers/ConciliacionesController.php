@@ -1002,9 +1002,9 @@ public function enviarCorreo(Request $request){
         $update->pivot->estado_id = $request->user_estado_id;
         $update->pivot->save();
     }
-     Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo ,$conciliacion , $request->asunto ));
+    Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo ,$conciliacion , $request->asunto ));
 
-    return response()->json($users);
+    return response()->json([$users,$request->has('correo_send')]);
 }
 
 
