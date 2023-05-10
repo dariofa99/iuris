@@ -316,7 +316,7 @@ if(!$(this).hasClass("fila_usuarios_not_selected") )
         <div class="rows_mails" id="row-${id}">
         <input type="hidden" value="${mail}" name="correo_send[]" data-row="${id}">                      
           <label id="btn_delete_mail-${id}" type="button" data-id="${id}" data-row="${id}" class="btn_delete_not_mail label label-default">
-              ${mail} <span class="badge">x</span>
+              ${mail} <span style="cursor:pointer" class="badge">x</span>
           </label>                                 
       </div>`;
 
@@ -421,11 +421,8 @@ $("#myFormNotificationSend").on("submit",async function(e){
   .trim();
         if(errors.length <=0 && formatVal !="<p><br></p>" && formatVal !="" ){
         $("#myFormNotificationSend input[name=cuerpo_correo]").val(formatVal);
-
-      //  var request = $("#myFormNotificationSend").serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
         var request = convertFormToJSON("myFormNotificationSend");
-        request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
-        console.log(request);
+        request['conciliacion_id'] = $("input[name='conciliacion_id']").val();       
         $("#wait").show();
         let response = await conciliacionService.sendNotification(request);
          let comentarios = await conciliacionService.getComentarios({"conciliacion_id":$("input[name='conciliacion_id']").val()})  ;

@@ -181,25 +181,11 @@
             {{$conciliacion->categoria->ref_nombre}}
         </td>
         <td>
-            <span class="badge bg-{{$conciliacion->estado->color}}">{{$conciliacion->estado->ref_nombre}}</span> 
+            <span style="background-color: {{$conciliacion->estado->color}}" class="badge">{{$conciliacion->estado->ref_nombre}}</span> 
         </td>
         
-        <td>
-           
-         {{--  @if(count($conciliacion->usuarios()->whereIn('tipo_usuario_id',[203,204])
-         // ->where("conciliacion_has_user.estado_id",)
-          ->get())>0)
-          {{$conciliacion->usuarios()
-          ->whereIn('tipo_usuario_id',[203,204])
-          ->orderBy('conciliacion_has_user.created_at','desc')
-          ->first()->name}}
-          {{$conciliacion->usuarios()
-          ->whereIn('tipo_usuario_id',[203,204])
-          ->orderBy('conciliacion_has_user.created_at','desc')
-          ->first()->lastname}}
-          @else
-          Sin usuarios
-          @endif --}}
+        <td>           
+       
           {{  getSmallDateWithHour($conciliacion->created_at) }}
           <p style="font-size: 14px"><small>
             <i>({{  \Carbon\Carbon::parse($conciliacion->created_at)->diffForHumans() }})</i>

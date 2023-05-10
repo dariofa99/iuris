@@ -777,11 +777,11 @@ body{
 	font-size: 13px;
   }
   .fila_usuarios_not:hover{
-	background-color: #989898;
+	background-color: #a3beae;
 	
   }
   .fila_usuarios_not_selected{
-	background-color: #989898;
+	background-color: #aac8b6;
 	border-radius: 3px;
   }
   .img_carrousel img{
