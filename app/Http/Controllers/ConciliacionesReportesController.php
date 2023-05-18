@@ -481,10 +481,10 @@ class ConciliacionesReportesController extends Controller
                 }
             }
         }
-        $view = view('myforms.conciliaciones.componentes.form_personalized_values', compact('data', 'reporte'))->render();
+        $view =  view('myforms.conciliaciones.componentes.form_personalized_values', compact('data', 'reporte'))->render();
         $response = [];
         $response['render_view'] = $view;
-        return response()->json($response);
+        return response()->json([$data]);
     }
 
     public function insertPersonalizedReportValues(Request $request)

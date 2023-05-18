@@ -31,7 +31,7 @@
 <div class="row">
     <div class="col-md-12">
         Número: <strong>{{$conciliacion->num_conciliacion}}</strong><br>
-        <span class="badge bg-{{$conciliacion->estado->color}}"> 
+        <span style="background-color: {{$conciliacion->estado->color}}" class="badge"> 
             Estado: {{$conciliacion->estado->ref_nombre}}</span> 
     </div>    
 </div>

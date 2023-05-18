@@ -805,7 +805,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                   
            if($asignacion_caso!=null){
             $date = Carbon::now();
-            $days = $expediente->getDaysOrColorForClose('dias',true);
+            $days = $expediente->getDaysOrColorForClose('dias');
            
             if ($days<15 || $days ==="Evaluado por sistema" ||  $days === true) {
              
@@ -834,14 +834,16 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
               'asigexp_id'=>$expediente->expid,
               'asigest_id'=>$request['expidnumberest']
             ])
-            ->update(array('activo' => 0));           
+            ->update(['activo' => 0]);           
            }
+           $date = Carbon::now();
            $asignacion_caso->asigest_id = $request['expidnumberest'];
+           $asignacion_caso->fecha_asig = $date->format('Y-m-d H:i:s');
            $asignacion_caso->save();
         }               
        }
        $expediente->fill($request->all());
-      $expediente->save();
+       $expediente->save();
 
        if (!$request->ajax()) {
          Session::flash('message-success', 'Actualizado con éxito...!');
@@ -993,7 +995,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             $cambio_docidnumber = $asig->asig_docente->cambio_docidnumber;
             $asignar = true;
          } catch (\Throwable $th) {
-         $asignar = false;
+           $asignar = false;
        }        
         $expediente->expidnumberest = $request->new_user_id;
         $expediente->save();
@@ -1007,9 +1009,9 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             ->where([
               'activo'=>1,
               'asigexp_id'=>$request->expid,
-              'asigest_id'=>$request->new_user_id
+              //'asigest_id'=>$request->new_user_id
             ])
-            ->update(array('activo' => 0));        
+            ->update(['activo' => 0]);        
         $asignacion_caso = new AsignacionCaso();
         $asignacion_caso->anotacion=$anotacion;
         $asignacion_caso->asigest_id = $request['new_user_id'];
@@ -1153,7 +1155,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
               ->update(['expidnumberest' => $request->numberestnew_id[$key_1]]); 
             }
 
-            if($expediente->getAsignacion() and $expediente->getAsignacion()->asig_docente!==null){
+            if( isset($asignacion_caso) and $expediente->getAsignacion() and $expediente->getAsignacion()->asig_docente!==null){
               $old_asig = $expediente->getAsignacion()->asig_docente;
               $old_asig->activo = 0;
               $old_asig->save();
@@ -1400,7 +1402,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
     $historial = HistorialDatosCaso::where('hisdc_expidnumber',$exp)
     ->join('users', 'users.idnumber','=','historial_datos_casos.hisdc_idnumberest_id')
     ->join('asignacion_caso', 'asignacion_caso.asigexp_id','=','historial_datos_casos.hisdc_expidnumber')
-    ->select('hisdc_idnumberest_id','name','lastname','hisdc_datos_caso','historial_datos_casos.created_at','fecha_asig')
+    ->select('hisdc_idnumberest_id','name','lastname','hisdc_datos_caso','historial_datos_casos.created_at')
     ->where('hisdc_tipo_datos_caso',$tipo)
     ->orderBy('historial_datos_casos.id', 'DESC')
     ->get();

@@ -65,7 +65,8 @@ $pasos = [
      "title"=>"Asunto a conciliar",
      "message"=>"Resuma los hechos y pretensiones de la conciliación y suba los siguientes archivos en pdf.<br>Copia de documento de identidad - Pruebas que apoyen el proceso.",
      "view"=>"myforms.recepcion.frm_anexos"
-  ],
+  ]
+ 
 ]; 
   
   if(isset($conciliacion)){  

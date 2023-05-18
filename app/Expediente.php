@@ -11,7 +11,7 @@ use DB;
 use App\User;
 use App\Traits\AsigNotas;
 use App\AsigDocenteCaso;
-use App\Segmento;
+use App\Segmento; 
 use App\HistorialDatosCaso;
 
 class Expediente extends Model
@@ -371,6 +371,7 @@ class Expediente extends Model
         ->where('periodo_id',$periodo->id)
         ->orderBy('fecha_asig','desc')->first();  */
         $asig = $this->getAsignacion();
+        
         $response = [];
         $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
             ->where('sp.sede_id', session('sede')->id_sede)
@@ -527,7 +528,12 @@ class Expediente extends Model
     {
         $padresAct = DB::table('actuacions')
             ->join('revisiones_actuacion', 'actuacions.id', '=', 'revisiones_actuacion.parent_rev_actid')
-            ->where([['actestado_id', '<>', '136'], ['actestado_id', '<>', '138'], ['actestado_id', '<>', '139'], ['actidnumberest', $this->expidnumberest], ['actexpid', $this->expid]])
+            ->where([['actestado_id', '<>', '136'],
+             ['actestado_id', '<>', '138'], 
+             ['actestado_id', '<>', '139'], 
+             ['actestado_id', '<>',234],
+             ['actidnumberest', $this->expidnumberest],
+             ['actexpid', $this->expid]])
             ->select('actuacions.id')
             ->groupBy('actuacions.id')
             ->get();
@@ -544,7 +550,8 @@ class Expediente extends Model
                 DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre FROM actuacions, revisiones_actuacion
         WHERE actuacions.id = revisiones_actuacion.rev_actid
         AND parent_rev_actid = $actpa->id
-        AND actestado_id <> 136 AND actestado_id <> 138
+        AND actestado_id <> 136 AND actestado_id <> 138 
+        AND actestado_id <> 234
         ORDER BY rev_actid DESC LIMIT 1"),
             );
 
@@ -650,9 +657,9 @@ class Expediente extends Model
                             'tbl_org_id' => $actuacion->id,
                         ];
                         //
-                       // $actuacion->actestado_id = 139;
-                       // $actuacion->save();
-                       // $actuacion->asignarNotas($data);
+                        $actuacion->actestado_id = 139;
+                        $actuacion->save();
+                        $actuacion->asignarNotas($data);
                     }
                 }
             }
@@ -958,6 +965,7 @@ class Expediente extends Model
     {
         $historial = HistorialDatosCaso::where('hisdc_expidnumber', $this->expid)
             ->where('hisdc_tipo_datos_caso', $tipo)
+            ->where('hisdc_idnumberest_id', $this->expidnumberest)
             ->orderBy('id', 'DESC')
             ->first();
         if ($historial) {
@@ -967,6 +975,17 @@ class Expediente extends Model
         }
         return false;
     }
+
+    public function getDaysAfterAsig()
+    {
+        $asig = $this->getAsignacion();   
+        if ($asig) {
+            $fecha_ini = Carbon::now();
+            return $fecha_ini->diffInDays($asig->fecha_asig, false) * -1;
+        }
+        return 0;
+    }
+
     public function fechaVigente($fecha_db)
     {
         $meses = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];

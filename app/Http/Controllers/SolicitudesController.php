@@ -97,6 +97,7 @@ class SolicitudesController extends Controller
             }
         }else{
             Session::flash('message-danger', 'La solicitud ya fue enviada a revisión, pronto nos comunicaremos contigo.');
+            //return view("myforms.recepcion.frm_mensaje_estado_conciliacion"); 
             return redirect("/solicitudes/conciliacion/recepcion?paso=1");
         }
        

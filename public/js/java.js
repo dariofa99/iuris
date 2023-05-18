@@ -363,7 +363,7 @@ $(document).ready(function (e) {
             expidnumberest != "" &&
             expramaderecho_id != "" &&
             expestado != "" &&
-            exptipoproce_id != ""
+            exptipoproce_id != "" 
         ) {
             // var token = $("#token").val();
             var route = "/expedientes/coordinador/update/" + expediente_id;

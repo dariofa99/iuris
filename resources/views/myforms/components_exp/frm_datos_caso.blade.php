@@ -130,8 +130,14 @@
 						{!!Form::label('Hechos: ') !!}
 						</div>
 						<div class="col-md-6" style="padding-left: 0px; text-align:end;">
-						@if ($expediente->fechaHistorialDatosCaso(141))
-						Última actualización {{ $expediente->fechaHistorialDatosCaso(141) }} <a id="modalhcaso" data-name="{{ $expediente->expid }}"> Ver historial</a>
+						@if ($expediente->fechaHistorialDatosCaso(141)) 
+						Última actualización {{ $expediente->fechaHistorialDatosCaso(141) }}
+						 <a id="modalhcaso" data-name="{{ $expediente->expid }}"> Ver historial</a>
+						 @else
+						 Días despues de asignado 
+					   <span class="badge bg-{{$expediente->getDaysAfterAsig() > 5 ? 'red':'green'}}">
+							{{$expediente->getDaysAfterAsig()}}
+					   </span>
 						@endif
 						</div>
 					</div>
@@ -149,7 +155,14 @@
 								</div>
 								<div class="col-md-6" style="padding-left: 0px; text-align:end;">
 									@if ($expediente->fechaHistorialDatosCaso(142))
-									Última actualización {{ $expediente->fechaHistorialDatosCaso(142) }}  <a id="modalresestudiante" data-name="{{ $expediente->expid }}"> Ver historial</a>
+									Última actualización {{ $expediente->fechaHistorialDatosCaso(142) }}
+									  <a id="modalresestudiante" data-name="{{ $expediente->expid }}">
+										 Ver historial</a>
+										 @else
+										 Días despues de asignado:
+										 <span class="badge bg-{{$expediente->getDaysAfterAsig() > 5 ? 'red':'green'}}">
+											 {{$expediente->getDaysAfterAsig()}}
+										</span>
 									@endif
 								</div>
 							</div>

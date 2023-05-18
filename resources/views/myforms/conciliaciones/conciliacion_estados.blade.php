@@ -1,7 +1,8 @@
 <div class="row" >
     <div class="col-md-2">
      @if(currentUserInConciliacion($conciliacion->id,['autor','conciliador','asistente']) ||
-     currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('secretaria') || currentUser()->hasRole('docente') || currentUser()->hasRole('amatai'))
+     currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || 
+     currentUser()->hasRole('secretaria') || currentUser()->hasRole('docente') || currentUser()->hasRole('amatai'))
         <input type="button" value="Cambiar estado" class="btn btn-primary btn-block btn-sm" id="btn_cambiar_estado">
         <input type="button" value="Cancelar" style="display: none" class="btn btn-warning btn-block btn-sm" id="btn_cancelar_estado">
        

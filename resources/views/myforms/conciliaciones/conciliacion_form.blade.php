@@ -48,7 +48,7 @@ NO Aceptar
         <input type="hidden" id="estado_conciliacion_id" value="{{$conciliacion->estado_id}}">
     <div class="box_section">
         @include('myforms.conciliaciones.componentes.parte_solicitante',[     
-            'section'=>'parte_solicitante'
+            'section'=>'parte_solicitante' 
         ])    
         
     </div>

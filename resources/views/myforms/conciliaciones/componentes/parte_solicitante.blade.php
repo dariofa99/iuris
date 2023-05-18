@@ -4,7 +4,7 @@
 
 <div class="row" >
     <div class="col-md-12">
-        <h4 align="center"> <strong> PARTE SOLICITANTE</strong>
+        <h4 align="center"> <strong> PARTE SOLICITANTE {{$conciliacion->estado_id}}</strong>
           
 
            @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))

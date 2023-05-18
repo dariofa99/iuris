@@ -52,6 +52,7 @@
                     @if  ($expediente->exptipoproce_id =='1' and ($expediente->expestado_id !='2' ) and !currentUser()->hasRole("solicitante") )
                     <label class="pull-center badge-colors dis-block" style="border-radius:8px;border: 2px solid {{$expediente->getDaysOrColorForClose('color')}}; color : {{$expediente->getDaysOrColorForClose('color')}}">
                     {{$expediente->getDaysOrColorForClose('mensaje')}}  
+                   
                     </label>
                                 
                     @else         

@@ -16,9 +16,9 @@
         </button> 
 
         @if($user->pivot->estado_id==1)
-        <button type="button" data-user="{{$user->idnumber}}" data-pivot="{{$user->pivot->id}}" class="btn btn-warning btn-sm btn_sancionar_usuario_conciliacion">  
+     {{--    <button type="button" data-user="{{$user->idnumber}}" data-pivot="{{$user->pivot->id}}" class="btn btn-warning btn-sm btn_sancionar_usuario_conciliacion">  
             Sancionar
-        </button> 
+        </button>  --}}
         @else 
         <button type="button" data-user="{{$user->idnumber}}" data-pivot="{{$user->pivot->id}}" class="btn btn-warning btn-sm btn_quitsancion_usuario_conciliacion">  
             Quitar sanción

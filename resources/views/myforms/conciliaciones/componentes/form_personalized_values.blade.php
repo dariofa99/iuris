@@ -2,7 +2,7 @@
 <tr>
     <td>
        {{ getAditionalDataByShortName($item->short_name,'pdf_reportes')->name}}
-    </td>
+    </td> 
     <td>
         <input name="short_name[]"  value="{{$item->short_name}}" type="hidden">
   
