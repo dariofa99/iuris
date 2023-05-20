@@ -2,41 +2,32 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-<div class="col-md-4">
-    @include('msg.alerts')
-</div>
-    </div>
-    <div class="row justify-content-center">
-       
-       
-
-      <div class="col-md-5">
-            <div class="card">
-                <div class="card-header">
-                    <h1>
-                        Firmado correctamente
-                    </h1>
-
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-success" style="margin-bottom: 25px;">
+                <div class="panel-heading">
+                    <b>Atención!</b>
                 </div>
 
-                <div align="center" class="card-body">    
-               
-               <img style="width: 100px;height:100px" src="{{asset("/dist/img/checkbox.png")}}" alt="">
-                <hr>
-                <h3 align="justify">
-                    El documento será enviado a su correo electrónico cuando se concluya el proceso 
-                de firma de todas las personas solicitadas.</h3>
+                <div class="panel-body">
+                   <div class="row">
+                    <div class="col-md-2">
+                        <img style="width: 450px;height:410px" src="{{asset("/dist/img/revisando.jpg")}}" alt="">
+                    </div>
+                    <div class="col-md-10">
+                        <h3>
+                       
+                            La solicitud de conciliación esta en revisión. Debes estar atento a tu correo electrónico o número de 
+                            teléfono suministrado.   
+                            </h3> 
+                    </div>
+                   </div>
+                        
                 </div>
-        </div> 
+            </div>
+        </div>
+        
+        
     </div>
-
 </div>
 @endsection
-
-@push('scripts')
-
-
-
-
-@endpush

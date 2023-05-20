@@ -951,7 +951,7 @@ private function isActuacionEval($array,$fecha_asig,$fecha_fin){
 					if($dias_sin_act>31){
 						return [
 							true,
-							"Período evaluado desde la asignación: ".$fechaasig." hasta ".$fecha1.". ".$dias_sin_act." Días"				
+							"Período evaluado desde: <b>".$fecha1." hasta ".$fechafinalcorte.".</b> ".$dias_sin_act." Días"				
 						];
 					}// $dias_sin_act." *se evalua 795* ".$vacations_days_r;
 					

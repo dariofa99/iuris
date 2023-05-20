@@ -13,7 +13,7 @@
                <label> No existen comentarios para este caso </label>
                 @else
                 @foreach($expediente->asesorias_docente()->where(['estado'=>true])->get() as $asesoria)
-                @if((currentUser()->hasRole("estudiante") && $asesoria->apl_shared) || (currentUser()->hasRole("diradmin") || currentUser()->hasRole("docente") || currentUser()->hasRole("coordprac") || currentUser()->hasRole("amatai")))
+                @if((currentUser()->hasRole("estudiante") && $asesoria->apl_shared) || (currentUser()->hasRole("dirgral") || currentUser()->hasRole("diradmin") || currentUser()->hasRole("docente") || currentUser()->hasRole("coordprac") || currentUser()->hasRole("amatai")))
               
                 <div class="row">   
     
