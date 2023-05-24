@@ -1009,16 +1009,33 @@ class Expediente extends Model
 		->orderBy('actuacions.actfecha','desc')->first();
         $color = 'green';
         $dias = 0;
-        if($act)$dias = $this->difDays($act->actfecha,date('Y-m-d'));
+        if($act){
+            $dias = $this->difDays($act->actfecha,date('Y-m-d'));
+            $text =  "<b>Días transcurridos desde última actuación:</b>";
+        }else{
+            $dias = $this->getDaysAfterAsig();
+            $text =  "<b>Días transcurridos desde la asignación:</b>";
+        }
         if($dias>10) $color = 'orange';
         if($dias>20) $color = 'red';
         
 
-       $text =  "<b>Días transcurridos desde última actuación:</b> <span style='background-color:$color' class='pull-center badge'>$dias</span>";
+       $text .=  " <span style='background-color:$color' class='pull-center badge'>$dias</span>";
        
 
 
         return $text;
+    }
+
+    public function isValidOpen(){
+        $expediente_estado = $this->estados()
+        ->where('ref_estado_id',4)
+        ->orderBy('created_at','desc')->get();
+        $dias = $this->getDaysAfterAsig();
+        if($dias<=55){                     
+           return true;
+        }
+        return false;
     }
 
 }

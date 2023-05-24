@@ -24,8 +24,9 @@
 </div>
 		 
 	<div class="col-md-4" style="border-bottom: 1px solid rgb(233, 233, 233);padding-bottom:3px">
-		{!!($expediente->getDaysForNexAct())!!}
-		
+		@if($expediente->exptipoproce_id != '1')
+		{!!($expediente->getDaysForNexAct())!!} 
+		@endif
 	</div>
 	
 	

@@ -1094,7 +1094,8 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           ->orderBy('asignacion_caso.created_at','desc')
           ->get();
         foreach ($asignaciones_caso as $key => $asig) {
-            $asignaciones_caso_num = DB::table('asignacion_caso')->where('asigexp_id',$asig->asigexp_id)->count();
+            $asignaciones_caso_num = DB::table('asignacion_caso')
+            ->where('asigexp_id',$asig->asigexp_id)->count();
             $asig->numero =  $asignaciones_caso_num;        
 
         }  

@@ -674,6 +674,22 @@ $(document).ready(function (e) {
         return false;
     });
 
+    $("#btn_reabrir_caso").on("click",function(e){
+       
+       
+            $("#myModal_addnew_nota_final_expedientes").modal("show");
+            var request = {
+                'expid':$("#expediente_id").val()
+            };
+            //url = '/segmentos/change/state/'+id;
+           // abrir_caso(request);
+       
+    });
+
+    $("#btn_addnew_nota_exp").on("click",function(){
+        ingresarNewNotas();
+    })
+
     $("#table_list_model").on("click", ".btn_del_per", function () {
         var msj = confirm("¿Está seguro de eliminar el registro?");
         if (msj) {
@@ -8522,6 +8538,35 @@ function hideButtReasCaso() {
     $(".disabled-fun4").selectpicker("refresh");
 }
 
+function abrir_caso(request){
+    var route = "/estado/caso/volver/abrir";
+
+    $.ajax({
+        url: route,
+        headers: { "X-CSRF-TOKEN": token },
+        type: "POST",
+        datatype: "json",
+        data:request,
+        cache: false,
+        beforeSend: function (xhr) {
+            $("#wait").css("display", "block");
+            xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));
+        },
+        /*muestra div con mensaje de 'regristrado'*/
+        success: function (res) {
+           console.log(res);
+            $("#wait").css("display", "none");
+           
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert(
+                "Hubo un error con el servidor ERROR::" + thrownError,
+                textStatus
+            );
+        },
+    });
+}
+
 function reasigCaso() {
     var new_user_id = $("#numberest_id").val();
     var expid = $("#expid").val();
@@ -10522,3 +10567,61 @@ function copiarAlPortapapeles(id) {
     window.getSelection().removeRange(seleccion);
 }
 
+function ingresarNewNotas() {
+
+    errors = validateForm("myform_addnew_nota_final_expedientes");
+
+        var notaapl = $("#myform_addnew_nota_final_expedientes input[name=ntaaplicacion]").val()
+        var notacon = $("#myform_addnew_nota_final_expedientes input[name=ntaconocimiento]").val()
+        var notaet = $("#myform_addnew_nota_final_expedientes input[name=ntaetica]").val()
+
+        if(notaapl > 5 || notacon > 5 || notaet > 5){
+            toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+            errors = 1;
+        }
+        
+        if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
+            toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+            errors = 1;
+        }
+
+    if (errors <= 0) {
+        var data = $("#myform_addnew_nota_final_expedientes").serialize();
+        var route = "/estado/caso/volver/abrir";
+        $.ajax({
+            url: route,
+            headers: { "X-CSRF-TOKEN": token },
+            type: "POST",
+            datatype: "json",
+            //data:{'perid':perid,'orgntsid':orgntsid,'tpntid':tpntid,'segid':segid,'expid':expid,'ntaconocimiento':ntaconocimiento,'ntaaplicacion':ntaaplicacion,'ntaetica':ntaetica,'ntaconcepto':ntaconcepto},
+            data: data,
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(
+                    "X-CSRF-TOKEN",
+                    $("#token").attr("content")
+                );
+                $("#wait").css("display", "block");
+            },
+            /*muestra div con mensaje de 'regristrado'*/
+            success: function (res) {
+                ////console.log(res);
+                window.location.reload(true);
+                $("#wait").css("display", "none");
+            },
+            error: function (xhr, textStatus, thrownError) {
+                alert(
+                    "Hubo un error con el servidor ERROR::" + thrownError,
+                    textStatus
+                );
+                $("#wait").css("display", "none");
+            },
+        });
+    }
+}

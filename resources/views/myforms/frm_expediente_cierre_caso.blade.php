@@ -157,12 +157,20 @@ Registrado
 @if($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber or currentUser()->hasRole("estudiante") or currentUser()->hasRole("amatai") or currentUser()->hasRole("diradmin") or currentUser()->hasRole('dirgral'))
 
 <div class="col-md-12" align="right">
-@if((currentUser()->hasRole("estudiante") and ($expediente->getDaysOrColorForClose('dias')>=10 || $expediente->exptipoproce_id !=1 )and ($expediente->estado->id == 1 || $expediente->estado->id == 3)) || (currentUser()->hasRole("docente") and $expediente->estado->id == 4) || (currentUser()->hasRole("amatai")  or currentUser()->hasRole("diradmin") or currentUser()->hasRole('dirgral')))
+@if((currentUser()->hasRole("estudiante") and ($expediente->getDaysOrColorForClose('dias')>=10 || $expediente->exptipoproce_id !=1 )and ($expediente->estado->id == 1 || $expediente->estado->id == 3)) || 
+(currentUser()->hasRole("docente") and $expediente->estado->id == 4) 
+|| (currentUser()->hasRole("amatai")  or currentUser()->hasRole("diradmin") 
+or currentUser()->hasRole('dirgral')))
 		<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
 			Actualizar Solicitud de cierre 
 		</button>
 @endif
-
+@if($expediente->exptipoproce_id ==1 and ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and
+ $expediente->expestado_id==5 and $expediente->isValidOpen()) || (currentUser()->hasRole("diradmin") || currentUser()->hasRole("amatai")) )
+<button type="button" class="btn btn-warning btn-sm" id="btn_reabrir_caso">
+	Volver a evaluar caso
+</button>
+@endif
 </div>
 @endif
 
@@ -191,7 +199,7 @@ Registrado
 
 	<tr>
 		<td>
-			<label>Ultimo Comentario</label> 
+			<label>Último Comentario</label> 
 		</td>
 		<td>
 			<textarea name="" class="textareaLastComentario" readonly="readonly">{{ ($expediente->estados()->orderBy('created_at','desc')->first()->comentario) }}</textarea>
@@ -223,7 +231,7 @@ Registrado
 
 	<tr>
 		<td>
-			<label>Ultimo Comentario</label> 
+			<label>Último Comentario</label> 
 		</td>
 		<td>
 			<textarea name="" class="textareaLastComentario" readonly="readonly">Sin comentarios aún.</textarea>

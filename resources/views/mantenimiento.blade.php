@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>IURIS</title>
+        <title>{{ config('app.name', 'Iuris') }}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -93,7 +93,8 @@ animation: spin 5s infinite;
                     ¡LO SENTIMOS!
                 </div>
                 <p style="color:#000;font-weight: 600;font-size: 20px;">Estamos realizando mantenimiento.</p>
-                <p style="color:#000;font-weight: 600;font-size: 20px;" >IURIS estará disponible desde las 7:00 AM del -Miércoles- 11 de enero.</p>
+                <p style="color:#000;font-weight: 600;font-size: 20px;" >IURIS estará disponible en unos instantes.</p>
+                <a href="/login">Regresar</a>
 <p> <div id="wait"><img src="{{asset('img/logo2.png')}}" id="load" width="67" height="71" /></div>
 </p>
             </div>

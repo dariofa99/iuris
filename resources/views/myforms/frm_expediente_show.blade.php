@@ -53,8 +53,8 @@ Ver
 		  <li><a href="#tab_3" class="tab-btn-show-notas" data-toggle="tab">Cita o req. a solicitante</a></li> 
 		  @endif
 		  <li><a href="#tab_4" class="tab-btn-show-notas" data-toggle="tab">Cierre de caso</a></li>
-		  <li><a href="#tab_5" class="tab-btn-show-notas"  data-toggle="tab">Calificaciones</a>
-		  </li>
+		 {{--  <li><a href="#tab_5" class="tab-btn-show-notas"  data-toggle="tab">Calificaciones</a>
+		  </li> --}}
 		  @if( (count($expediente->asignaciones)>1 || (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('coordprac') or currentUser()->hasRole('dirgral'))) and $expediente->expestado_id!=2)
 		  <li>
 			  <a href="#tab_6" class="tab-btn-show-notas" data-toggle="tab">Reasignar Caso</a>
@@ -66,8 +66,8 @@ Ver
 		  @if(currentUser()->hasRole("solicitante"))
 		   <li class="active"><a href="#tab_8" data-toggle="tab">Caso</a><li>
  			@endif
-		   <li><a href="#tab_9" data-toggle="tab">Quejas</a>
-		  </li>
+		  {{--  <li><a href="#tab_9" data-toggle="tab">Quejas</a>
+		  </li> --}}
 		</ul> 
 		<!--Tab contnent-->
 		<div class="tab-content">
@@ -194,7 +194,7 @@ Ver
  @include('myforms.frm_calificacion_edit')
  @include('myforms.frm_modal_cambiar_docente_exp')
 
-
+ @include('myforms.frm_addnew_nota_final_expedientes')
 
 
  

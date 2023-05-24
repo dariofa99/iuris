@@ -7,6 +7,7 @@ use App\Expediente;
 use App\User;
 use DB;
 use App\EstadoCaso;
+use App\Periodo;
 use Session;
 use Carbon\Carbon;
 use App\Segmento;
@@ -176,7 +177,9 @@ class EstadosCasoController extends Controller
                     if ($request->new_expestado == 5){                       
                         $nota = $expediente->get_has_nota_final(); 
                         if(count($nota)<=0){
-                            $segmento = Segmento::where('estado', 1)->first();
+                            $segmento = Segmento::join('sede_segmentos as sg','sg.segmento_id','=','segmentos.id')			
+                            ->where('sg.sede_id',session('sede')->id_sede)
+                            ->where('estado',true)->first(); 
                             if($segmento){
                                 $data = [
                                     'ntaaplicacion'=>0,
@@ -237,6 +240,59 @@ class EstadosCasoController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function abrir_caso(Request $request)
+    {
+        $expediente = Expediente::where('expid',$request->expid)->first();
+        //return response()->json([$expediente->isValidOpen(),$expediente]);
+        if($expediente and ($expediente->expestado_id==5 and $expediente->isValidOpen())){
+               $segmento = Segmento::join('sede_segmentos as sg','sg.segmento_id','=','segmentos.id')			
+                ->where('sg.sede_id',session('sede')->id_sede)
+                ->where('estado',true)->first();  
+                if($segmento){
+                    $notas =  $expediente->notas()
+                    ->where(['estidnumber'=>$expediente->expidnumberest,
+                    'orgntsid'=>4,
+                    'tpntid'=>1,    
+                    'segid'=>$segmento->segmento_id])
+                    ->delete();
+
+                    $data = [
+                        'ntaaplicacion'=>$request->ntaaplicacion,
+                        'ntaconocimiento'=>$request->ntaconocimiento,
+                        'ntaetica'=>$request->ntaetica,
+                        'ntaconcepto'=>$request->ntaconcepto,
+                        'orgntsid'=>$request->orgntsid,
+                        'segid'=>$request->segid,
+                        'perid'=>$request->perid,
+                        'tpntid'=>$request->tpntid,
+                        'expidnumber'=>$request->expid,
+                        'estidnumber'=>$expediente->expidnumberest,
+                        'docidnumber'=>auth()->user()->idnumber, 
+                        'tbl_org_id'=>$expediente->id,
+                      ];
+                    $expediente->asignarNotas($data);
+                    $estadoCaso = New EstadoCaso();
+                    $estadoCaso->comentario = "Vencimiento de términos por parte del docente";
+                    $estadoCaso->useridnumber = auth()->user()->idnumber; 
+                    $estadoCaso->expidnumber = $request->expid;
+                    $estadoCaso->ref_estado_id = 2;
+                    $estadoCaso->ref_motivo_estado_id = 8;   
+                    $estadoCaso->save();
+                    $expediente->expestado_id = 2;
+                    $expediente->save();
+                    return response()->json("Si evaluad");
+                }else{
+                    return response()->json(["No evaluado"]);
+                }
+               
+                
+            
+        }
+        
+        return response()->json(["No se puede evaluar"]);
+
     }
 
     /**

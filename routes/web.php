@@ -259,7 +259,7 @@ Route::resource('expcierrecaso', 'ExpedienteCierreController');
 //estados caso
 Route::resource('estados/caso', 'EstadosCasoController');
 Route::post('/estado/search/', 'EstadosCasoController@search');
-
+Route::post('/estado/caso/volver/abrir', 'EstadosCasoController@abrir_caso');
 
 //Defensas de Oficio
 Route::resource('defensas/oficio', 'DefensaOficioController');

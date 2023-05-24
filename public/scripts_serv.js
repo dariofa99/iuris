@@ -3074,14 +3074,14 @@ $("#modalresestudiante").click(function(){
 	var tipo = "142"//respuesta estudiante
 	ConsultaHistorialDatosCaso(expid,tipo);
 
-	$("#mymodaljs").modal("show");
+	
 
 });
 
 function ConsultaHistorialDatosCaso(exp,tipo) { 
 	
 	var route = "/expedientes/historial/"+exp+"/"+tipo;
-	console.log(route);
+	$("#wait").show();
 	$.get(route, function(res){
 		if (res == "") {
 			$("#modal-conten-js").html('No hay información registrada');
@@ -3097,7 +3097,7 @@ function ConsultaHistorialDatosCaso(exp,tipo) {
                         <label title="C.C. ${value.hisdc_idnumberest_id}">`+value.name+' '+value.lastname+` </label>
                     </div> 
                     <div class="col-md-4">
-					<label>Días después de la asignación: ${fecha2.diff(fecha1, 'days')}</label>
+					<label>Días después de la asignación: ${fecha2.diff(fecha1, 'days') *-1}</label>
                     </div>
                 	<div class="col-md-1">
                                
@@ -3119,9 +3119,10 @@ function ConsultaHistorialDatosCaso(exp,tipo) {
 			});
 			
 			$("#modal-conten-js").html(inforhis);
-			
+			$("#mymodaljs").modal("show");
 			
 		}
 	});
+	$("#wait").hide();
 }
 
