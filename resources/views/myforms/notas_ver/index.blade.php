@@ -167,6 +167,42 @@ Notas
                                 <tr @if($nota['concepto_nota_id'] == '4') style="border-bottom: 2px solid black" @endif>
                                     
                                     <td>
+                                        @php
+                                            $texto = $nota['nota'];
+                                            $fecha_formateada = '';
+                                            $textoReemplazado = '';
+                                            $patron = "/\b(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\b/";
+                                            if (preg_match_all( $patron , $texto, $coincidencias)) {                                                
+                                                $fechas = $coincidencias[0];
+                                                $fechas_a = [];
+                                                foreach ($fechas as $fecha) {
+                                                    $fechas_a[] = getSmallDate($fecha);                                                  
+                                                }                                               
+                                               if(count($fechas_a)>0){
+                                                $reemplazo = function ($coincidencia) use (&$fechas_a) {
+                                                    // Obtener el índice actual del array de nuevos textos
+                                                    static $indice = 0;
+                                                    
+                                                    // Obtener el nuevo texto correspondiente al índice actual
+                                                    $nuevoTexto = $fechas_a[$indice];
+                                                    
+                                                    // Incrementar el índice para la próxima coincidencia
+                                                    $indice++;
+                                                    
+                                                    return $nuevoTexto;
+                                                };
+
+                                                $textoReemplazado = preg_replace_callback($patron, $reemplazo, $texto);
+
+                                               }
+                                               
+                                                
+                                               /*  $fecha = strtotime($coincidencias[0]);
+                                                $fecha_formateada = date("Y-m-d H:i:s", $fecha);
+                                                $textoReemplazado = str_replace($fecha_formateada, getSmallDate($fecha_formateada), $texto);
+                                                */ //echo $fecha_formateada  ;
+                                            }
+                                        @endphp
                                         {!! $nota['concepto_nota'] !!} 
                                     </td>
                                 
@@ -188,7 +224,7 @@ Notas
                                     @endphp
 
                                     <td  width="30%">
-                                        {!!$nota['nota']!!}
+                                        {!! $textoReemplazado == '' ? $nota['nota'] : $textoReemplazado !!}
                                     </td>
                                     <td>
                                         {{$nota['origen_nota']}}

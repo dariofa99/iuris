@@ -646,9 +646,9 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
     {
  //dd("#SS");
       if(currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
-      
-        //$expediente = AsignacionCaso::find($id)->expediente;
+        $url = '/expedientes/';
         $expediente = Expediente::where('expid',$id)->first();
+        if(!$expediente) return view('errors.error',compact('url'));
         $estudiante=$expediente->estudiante;
         $asignacion = $expediente->asignaciones()->where('asigest_id',$expediente->expidnumberest)
         ->where(['asigest_id'=>$expediente->expidnumberest,'activo'=>1])->first();
@@ -702,8 +702,6 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
 //dd("ss");
         if (currentUser()->hasRole("estudiante")) { 
          if (\Auth::user()->id != $estudiante->id) {
-          // dd($estudiante->name);
-         	$url = '/expedientes/';
            return view('errors.error',compact('url'));
          }
          if (($expediente->expestado_id =='2' OR $expediente->expestado_id =='5')) {
@@ -1121,7 +1119,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
 
      public function sustcasos(Request $request){
 
-     // dd($request->all()); 
+     
       $periodo = Periodo::where('estado',true)
       ->join('sede_periodos as sp','sp.periodo_id','=','periodo.id')
 		  ->where('sp.sede_id',session('sede')->id_sede)
