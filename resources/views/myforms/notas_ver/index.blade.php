@@ -195,12 +195,6 @@ Notas
                                                 $textoReemplazado = preg_replace_callback($patron, $reemplazo, $texto);
 
                                                }
-                                               
-                                                
-                                               /*  $fecha = strtotime($coincidencias[0]);
-                                                $fecha_formateada = date("Y-m-d H:i:s", $fecha);
-                                                $textoReemplazado = str_replace($fecha_formateada, getSmallDate($fecha_formateada), $texto);
-                                                */ //echo $fecha_formateada  ;
                                             }
                                         @endphp
                                         {!! $nota['concepto_nota'] !!} 

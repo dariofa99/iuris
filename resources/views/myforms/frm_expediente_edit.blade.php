@@ -6,7 +6,22 @@ Expedientes
 @include('myforms.components_exp.frm_datos_docente')
 @endif
 @endsection
+@push('styles')
+<style>
+	.swal2-textarea {
+		height: 150px !important; /* Altura deseada */	 	
+	 	font-size: 16px !important;
+	}
+	.swal2-styled {
+		color: #ffffff !important; /* Cambia el color del texto del botón a blanco */
+		font-size: 15px !important;
+	}
+	.swal2-validation-message{
+		font-size: 15px !important;
+	}
 
+  </style>
+@endpush
 @section('titulo_area')
 Editar
 @endsection
@@ -243,8 +258,13 @@ Editar
 
  
 
-
+ 
 
 
 
 @stop
+@push('scripts')
+<!-- aqui van los scripts de cada vista -->
+<script type="module"   src={{asset("js/expedientes.js")}}></script>
+
+@endpush

@@ -147,7 +147,7 @@
         Recuerda que estamos actualizando la plataforma, si presentas algún problema refresca el navegador
         con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles).
       </h4> 
-      <small><i>Fecha última act. (29-abril-2023)</i></small>
+      <small><i>Fecha última act. (04-junio-2023)</i></small>
       </div> 
 
 

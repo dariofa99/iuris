@@ -80,10 +80,8 @@ function validateForm(form){
 
 function validateTypeDoc(form) {
 	console.log($(form.target)[0].form);
-	var form = $(form.target)[0].form;
-	
+	var form = $(form.target)[0].form;	
 	var form = $(form).attr("id");
-	console.log(form);
 	if($("#"+form+" select[name='tipodoc_id']").val()==''){
         toastr.error("Primero selecciona un tipo de documento", "Atención!", {
         positionClass: "toast-top-right",
@@ -124,6 +122,7 @@ function convertFormToJSON(form) {
 }
 }
 function resetForm(form){
+	$("#"+form+" input[name='id']").val("").prop("disabled",false);
 	$("#"+form+" input[type='text']").val("").prop("disabled",false);
 	$("#"+form+" input[type='email']").val("").prop("disabled",false);
 	$("#"+form+" input[type='number']").val("").prop("disabled",false);

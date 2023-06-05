@@ -13,10 +13,11 @@
       <span class="logo-mini"><b>I</b>U</span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg">
-    <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Sis Image" style="height: 45px;"> 
-         {{-- <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
-        --}}   <b>
-        Iuris 
+    {{-- <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Sis Image" style="height: 45px;"> 
+     --}}     
+     <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
+       <b>
+        {{-- Iuris --}} 
         </b>
       </span>
     </a>

@@ -174,7 +174,6 @@ $(document).ready(function () {
           }) ;         
         }); 
         request["data"] = (data);
-        console.log(request);
         let response_ = await conciliacionService.addAditionalData(request);
         window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso="+5;
   

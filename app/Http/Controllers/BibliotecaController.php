@@ -149,12 +149,19 @@ class BibliotecaController extends Controller
     }
     public function bibliodowpdf($id){
       $biblioteca= Biblioteca::find($id);
-      $url = 'app/files_bibliotecas/'.$biblioteca->biblidocnomgen;
-      $rutaDeArchivo = storage_path($url);
-      $filename = currentUser()->id.'___'.$biblioteca->biblidocnomgen;
-      copy( $rutaDeArchivo, public_path("act_temp/".$filename));
+     
+      try {
+        $url = 'app/files_bibliotecas/'.$biblioteca->biblidocnomgen;
+        $rutaDeArchivo = storage_path($url);
+        $filename = currentUser()->id.'___'.$biblioteca->biblidocnomgen;
+       
+       copy( $rutaDeArchivo, public_path("act_temp/".$filename));
 
-                return redirect("act_temp/".$filename);
+      return redirect("act_temp/".$filename);
+      } catch (\ErrorException $e) {
+       echo "Ups! Algo salio mal.<br>". $e->getMessage();
+      }
+ 
     }
 
     

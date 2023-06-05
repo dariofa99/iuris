@@ -976,6 +976,7 @@ function llenarModalDetails(res){
 	
 	$("#actdocenrecomendac_det").val(res.actdocenrecomendac);
 
+	
 	//$("#myModal_act_details").modal('show');
 
 
@@ -1752,7 +1753,7 @@ var tabla= $("#datos_cierre_caso");
 /*.......................................................................................................................... */
 /*.......................................................................................................................... */
 
-$("#btn_exp_user_carga").click(function(){
+$("#btn_exp_user_carga_").click(function(){
 	$('#msg-success').hide();
 	var value= $("#btn_exp_user_carga").val();
 	var route = "/expuser/"+value+"/edit" ;	
@@ -1764,7 +1765,7 @@ $("#btn_exp_user_carga").click(function(){
 	
 		llenarModalUserEdit(res.user,res.aditional_view); 
 	});
-});
+}); 
 
 $(".btn_detalles_estudiante").click(function(){
 	$('#msg-success').hide();
@@ -3088,16 +3089,18 @@ function ConsultaHistorialDatosCaso(exp,tipo) {
 		} else {
 			var inforhis = "";
 			$(res).each(function(key, value){
-				var fecha1 = moment(value.fecha_asig);
-				var fecha2 = moment(value.created_at);
-								
+				var fecha1 = moment($("#expediente_fecha_asig").val()).startOf('day');
+				var fecha2 = moment(value.created_at).startOf('day');
+				var fecha =  fecha1.diff(fecha2, 'days') *-1;
 				inforhis+=	`
 				<div class="row">   
                     <div class="col-md-8">
                         <label title="C.C. ${value.hisdc_idnumberest_id}">`+value.name+' '+value.lastname+` </label>
                     </div> 
                     <div class="col-md-4">
-					<label>Días después de la asignación: ${fecha2.diff(fecha1, 'days') *-1}</label>
+					<label> Días después de la asignación: 
+					<span class="badge ${fecha > 5 ? 'bg-red':'bg-green'} ">  ${fecha} </span>
+					</label>
                     </div>
                 	<div class="col-md-1">
                                

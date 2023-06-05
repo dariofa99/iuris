@@ -14,7 +14,7 @@
                         {{$tipo}}
                     </option>
                     @endforeach
-                </select>
+                </select> 
             </div>
         </div>
 

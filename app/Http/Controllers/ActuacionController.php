@@ -637,7 +637,7 @@ function vacations(){
         case 136:
           $actuacion->actestado_id = 138;
           break;
-        case 139:
+        case 139: 
           $actuacion->actestado_id = 102;
           $today = Carbon::now();
           $new_limit = $today->addDays(10);
@@ -657,7 +657,11 @@ function vacations(){
       $actuacion->actuserupdated = currentUser()->idnumber;
     }
     
-
+    if($request->has('actdocenrecomendac')){
+      $actuacion->actdocenrecomendac = $request->actdocenrecomendac;
+      $actuacion->actdocenfechamod = date("Y-m-d");
+           
+    }
     $actuacion->save();
 
     return response()->json($actuacion->actestado_id);

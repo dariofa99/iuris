@@ -1,5 +1,7 @@
 <div class="row">
         <input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">        
+        <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig" name="expediente_id">        
+       
         @if(!currentUser()->hasRole("estudiante"))      
                         <div class="col-md-4">
                             <input type="hidden" name="oldexpidnumberest" id="oldexpidnumberest">
@@ -10,10 +12,11 @@
         
                           </div>
                         </div> 
-                        @if($expediente->estudiante->curso->id != 1)
+                       
                         <div class="col-md-2">                       
                             <div class="form-group">
                                 <label>Curso</label><br>
+                                @if($expediente->estudiante->curso->id != 1)
                                 {{  $expediente->estudiante->curso->ref_nombre  }}
                                 @if($expediente->estudiante->turno)                          
                                     <label style="margin-left:8px;" class="label {{ ($expediente->getColorTurno($expediente->estudiante->turno->color->ref_value)) }}">
@@ -21,9 +24,14 @@
                          
                                 </label>
                                 @endif
+                                @else
+                                <label style="margin-left:8px;" class="label bg-orange">
+                                   Sin curso asignado
+                                </label>
+                                @endif
                             </div>     
                         </div>
-                        @endif
+                       
                         @if($expediente->expfecha_res)
                         <div class="col-md-2">                        
                             <div class="form-group">
@@ -40,7 +48,7 @@
                         </div>
                         @endif
                        
-                        <div class="col-md-3 col-md-offset-3">
+                        <div class="col-md-4 ">
                                 <div class="pull-right" style="margin-top:20px;">
                                     @if((currentUser()->can('tomar_caso') and $expediente->getDocenteAsig()->name=='Sin asignar'))
                                         <a class="btn btn-primary" id="btnTomarCaso" ><i class="fa fa-check"> </i>
@@ -49,7 +57,7 @@
                                     @if(auth()->user()->can('editar_datos_caso'))
                                         <a class="btn btn-warning" id="btnEditar" ><i class="fa fa-edit"> </i>
                                         Editar</a>
-                                        <a class="btn btn-primary" id="btnActualizar"	style="display: none;">
+                                        <a class="btn btn-success" id="btnActualizar"	style="display: none;">
                                         <i class="fa  fa-check-circle"> </i>
                                         Actualizar</a>
                                         <a class="btn btn-danger" style="display: none;" id="btnCancelar">

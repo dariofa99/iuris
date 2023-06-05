@@ -963,16 +963,21 @@ class Expediente extends Model
     }
     public function fechaHistorialDatosCaso($tipo)
     {
-        $historial = HistorialDatosCaso::where('hisdc_expidnumber', $this->expid)
+        $asig = $this->getAsignacion();  
+        if($asig){
+            $historial = HistorialDatosCaso::where('hisdc_expidnumber', $this->expid)
             ->where('hisdc_tipo_datos_caso', $tipo)
             ->where('hisdc_idnumberest_id', $this->expidnumberest)
+            ->where('created_at','>=',$asig->fecha_asig)
             ->orderBy('id', 'DESC')
             ->first();
-        if ($historial) {
-            $his_fecha = $historial->created_at;
-            $his_fecha = $his_fecha->format('d-m-Y');
-            return $his_fecha;
+            if ($historial) {
+                $his_fecha = $historial->created_at;
+                $his_fecha = $his_fecha->format('d-m-Y');
+                return $his_fecha;
+            }
         }
+     
         return false;
     }
 

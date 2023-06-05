@@ -684,8 +684,7 @@ $estudiantes = $this->getEstudiantes();
         $user =User::where(['idnumber'=>$idnumber,'tipodoc_id'=>$request->tipodoc_id])->first();
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         if($user){       
-          $user->roles;   
-              
+          $user->roles;                 
           $view = view('myforms.conciliaciones.componentes.user_solicitante_form',compact('conciliacion','user'))->render();
           if($request->has("view")){
             $view = view('myforms.conciliaciones.componentes.'.$request->get("view"),compact('conciliacion','user'))->render();

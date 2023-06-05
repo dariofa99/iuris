@@ -12,9 +12,9 @@
                     <div class="input-group">
                         <div class="input-group-btn">
 						@if(currentUser()->hasRole('estudiante'))
-                        {!! Form::button('Editar', array('class'=>'btn btn-success','data-toggle'=>'modal', 'data-target'=>'#myModal_exp_user_edit', 'value'=>$expediente->solicitante->id , 'id'=>'btn_exp_user_carga',$disabled)) !!}
-                        @elseif(!currentUser()->hasRole('estudiante'))
-						{!! Form::button('Detalles', array('class'=>'btn btn-success','data-toggle'=>'modal', 'data-target'=>'#myModal_exp_user_details', 'value'=>$expediente->solicitante->id , 'id'=>'btn_exp_user_carga')) !!}
+                        {!! Form::button('Editar', array('class'=>'btn btn-success','data-toggle'=>'modal', 'data-target'=>'#myModal_exp_user_edit', 'value'=>$expediente->solicitante->idnumber , 'id'=>'btn_exp_user_carga','data-tipo_doc'=>$expediente->solicitante->tipodoc_id)) !!}
+                     	 @elseif(!currentUser()->hasRole('estudiante'))
+						{!! Form::button('Detalles', array('class'=>'btn btn-success','data-toggle'=>'modal', 'data-target'=>'#myModal_exp_user_details', 'value'=>$expediente->solicitante->idnumber , 'id'=>'btn_exp_user_details','data-tipo_doc'=>$expediente->solicitante->tipodoc_id)) !!}
                      	@endif
 						</div>
                         {!!Form::text('expidnumber', $expediente->solicitante->idnumber , ['class' => 'form-control', 'required' => 'required' , 'readonly' ] ); !!}
@@ -132,7 +132,7 @@
 						<div class="col-md-6" style="padding-left: 0px; text-align:end;">
 						@if ($expediente->fechaHistorialDatosCaso(141)) 
 						Última actualización {{ $expediente->fechaHistorialDatosCaso(141) }}
-						 <a id="modalhcaso" data-name="{{ $expediente->expid }}"> Ver historial</a>
+						 <a id="modalhcaso" data-name="{{ $expediente->expid }}" style="cursor: pointer"> Ver historial</a>
 						 @else
 						 Días despues de asignado 
 					   <span class="badge bg-{{$expediente->getDaysAfterAsig() > 5 ? 'red':'green'}}">

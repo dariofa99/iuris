@@ -12,13 +12,14 @@ use Session;
 use Validator;
 use Facades\App\Facades\NewPush;
 use App\Notifications\UserNotification;
-
+use App\Services\UsersService;
 
 class DefensaOficioController extends Controller
 {
-  public function __construct()
+  private $userService;
+  public function __construct(UsersService $userService)
   {
-      
+    $this->userService = $userService;
       //$this->middleware('permission:edit_usuarios',   ['only' => ['edit']]);
       $this->middleware('permission:crear_defensas_oficio',   ['only' => ['create']]);
   }
@@ -209,21 +210,13 @@ array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//e
                         ->withErrors($messages)
                         ->withInput();
         }
+         $request['idnumber'] = '00'.$ced;
+         $request['name'] = 'UserName';
+         $request['lastname'] = 'UserLastName';
+         $request['email'] = $ced.'user@correo.com';         
+         $user = $this->userService->store($request);
 
-
-         $user=User::create([
-            'idnumber'=>'00'.$ced,
-            'name'=>'Vacío',
-            'lastname'=>'Vacío',
-            'email'=>$ced.'user@correo.com',
-            'password'=>bcrypt('1234'),
-            'genero_id' => '6',
-            'estrato_id' => '9',
-            'estadocivil_id' =>'16',  
-            'tipodoc_id' => 1,             
-            'cursando_id'=>1
-         ]);
-        $user->roles()->attach(8); 
+         $user->roles()->attach(8); 
 
           $expediente = new Expediente();
           $expediente->expid = $request['expid'];

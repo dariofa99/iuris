@@ -193,7 +193,7 @@ Ver
  @include('myforms.frm_add_nota_final_expedientes')
  @include('myforms.frm_calificacion_edit')
  @include('myforms.frm_modal_cambiar_docente_exp')
-
+ @include('myforms.frm_modal_dinamyc_js')
  @include('myforms.frm_addnew_nota_final_expedientes')
 
 

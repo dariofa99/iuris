@@ -786,7 +786,6 @@ $(document).ready(function (e) {
         var request = {
             "id":id,
             "new_estado":$(this).attr("data-estado")
-
         }
 
         if (estado == 139) {
@@ -798,7 +797,37 @@ $(document).ready(function (e) {
             });
 
             return false;
-        } else {
+        } else if (request.new_estado == 136) {
+            request["actdocenrecomendac"] = '';
+            changeStateActuacion(request);
+            return false;
+        } else if (request.new_estado == 235){           
+            Swal.fire({
+                title: 'Anulando anexo',
+                input: 'textarea',
+                inputPlaceholder: '¿Por qué va anular el anexo?',
+                inputAttributes: {
+                    rows: 100,  // Número de filas del textarea
+                    cols: 500  // Número de columnas del textarea
+                  },
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Enviar',
+                confirmButtonClass: 'btn-success', 
+                allowEmpty: false, // Evita el valor vacío en el textarea
+                preConfirm: (text) => {
+                    if(text!==''){
+                        request["actdocenrecomendac"] = text;
+                        changeStateActuacion(request);
+                    }else{
+                        Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
+
+                    }
+                  
+                }
+              });
+            //
+        }else{
             changeStateActuacion(request);
         }
     });
@@ -2603,8 +2632,33 @@ return false;
 
     $("#form_expediente_edit").on("submit",function (e) {
         var request = $(this).serialize();
-        var id = $("#expediente_id").val()
-        console.log($("#expediente_id").val());
+        var id = $("#expediente_id").val();        
+        var textarea = document.getElementById('exp_hechos');
+        var contenido = textarea.value.trim();
+        var palabras = contenido.split(/\s+/);
+        if (palabras.length < 20) {
+            toastr.error("Los hechos deben tener al menos 20 palabras", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            }); 
+            e.preventDefault();
+            return
+        }
+        if($("#exptipoproce_id").val()!=3){
+            var textarea = document.getElementById('exp_resp_est');
+            var contenido = textarea.value.trim();
+            var palabras = contenido.split(/\s+/);
+            if (palabras.length < 20) {
+                toastr.error("La respuesta debe tener al menos 20 palabras", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                }); 
+                e.preventDefault();
+                return
+                // Realiza las acciones adicionales necesarias si el contenido es válido
+            }
+        }
+        
         expedienteUpdate(request,id)
         e.preventDefault();
     });

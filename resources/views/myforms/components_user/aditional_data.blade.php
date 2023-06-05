@@ -12,7 +12,7 @@
             $is_active = false;
             $option_id = 0 ;
             @endphp    
-        <select {{isset($disabled) ? $disabled : ''}} id="option_id-{{$reference->id}}" data-name="{{$reference->name}}" data-type="{{$reference->type_data_id}}" name="static_data[]"  data-section="{{$reference->section}}" class="form-control insert_adv data_input_select" data-id="{{$reference->id}}">
+        <select {{isset($disabled) ? $disabled : ''}} id="option_id-{{$reference->id}}" data-name="{{$reference->name}}" data-type="{{$reference->type_data_id}}" name="static_data[]"  data-section="{{$reference->section}}" class="form-control input_user_ad data_input_select" data-id="{{$reference->id}}">
             <option value="">Seleccione...</option>            
             @foreach ($reference->options as $opt)
                 @php

@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller 
 {
 
-  private $userService;
+  private $userService; 
 
   public function __construct(UsersService $userService)
   {
@@ -138,8 +138,7 @@ class UsersController extends Controller
         
    
           //$this->aditionalData($request,$user->id);
-          if($request->has('data') and is_array($request->data)){    
-                  
+        if($request->has('data') and is_array($request->data)){                     
             foreach ($request->data as $key => $rq) {
               $rq['user_id'] = $user->id; 
                $ref_data = ReferencesData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
@@ -335,7 +334,7 @@ private function aditionalData($request,$id){
  
       $email_request = false;
        $user = User::find($id);
-
+ 
 
        $messages = [
         'email.unique' => 'El :attribute  ya existe en otra cuenta.',
@@ -368,6 +367,15 @@ private function aditionalData($request,$id){
 
         $user->fill($request->all()); 
         $user->save();    
+        if($request->has('data') and is_array($request->data)){                     
+          foreach ($request->data as $key => $rq) {
+            $rq['user_id'] = $user->id; 
+             $ref_data = ReferencesData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
+              if($ref_data) {  
+                  $this->storeData($ref_data,$rq);
+              }
+          }
+      }
       if($request->get('id_rol')){
           $user->role()->sync($request['id_rol']);
         //dd($user->role()->sync($request['id_rol']));
@@ -411,7 +419,7 @@ private function aditionalData($request,$id){
           //$thumbnail = User::find($id);
           
           $user->image = $user->idnumber.'.jpg';
-     $user->save();
+          $user->save();
   }
 
         $asig=true;
@@ -439,7 +447,9 @@ private function aditionalData($request,$id){
 
        //$user->roles()->sync($request['idrol']);
 
-
+  if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+    return response()->json(['user'=>$user]);
+  }
        
        return Redirect::to('users/'.$user->id.'/edit');
     }
@@ -475,10 +485,15 @@ private function aditionalData($request,$id){
     public function findUser(Request $request){
       //  return  response()->json(['encontrado'=>$request->all()]);
       $user =User::where(['tipodoc_id'=>$request->tipodoc_id,'idnumber'=>$request->idnumber])->first();
-        if($user){
+      $response=[]; 
+      if($user){ 
           $user->roles;
-          //$view = view('myforms.user.componentes.user_form',compact('user'))->render();          
-          return response()->json(['encontrado'=>true,'user'=>$user]);   
+          if($request->has('view')){
+            $response['view'] = view($request->get('view'),compact('user'))->render(); 
+          }
+          $response['encontrado'] =true;
+          $response['user'] =$user;   
+          return response()->json($response);   
         }  
           return  response()->json(['encontrado'=>false]);
       }

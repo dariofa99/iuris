@@ -16,8 +16,7 @@ Listar Expedientes
 
 
 
-
-@include('myforms.frm_expediente_user_create')			
+		
 
 {!!Form::open(['route'=>'expedientes.store', 'method'=>'post','id'=>'myFormExpsStore'])!!}
   
@@ -168,4 +167,10 @@ Listar Expedientes
 
 {!!Form::close()!!}
 
+@include('myforms.frm_expediente_user_create')	
 @stop
+@push('scripts')
+<!-- aqui van los scripts de cada vista -->
+<script type="module"   src={{asset("js/expedientes.js")}}></script>
+
+@endpush

@@ -12,9 +12,9 @@ $(document).ready(function () {
     $("#myUserApoderadoForm").on("focus","input[name='idnumber']",validateTypeDoc);
     $("#myUserParteSolicitadaForm").on("focus","input[name='idnumber']",validateTypeDoc);
     $("#myUserRepLegalSolicitadaForm").on("focus","input[name='idnumber']",validateTypeDoc);
-    $("#myUserConciliacionesForm").on("focus","input[name='idnumber']",validateTypeDoc);
+    $("#user_gen_conciliacion_form").on("focus","#myUserConciliacionesForm input[name='idnumber']",validateTypeDoc);
     
-    $("#myUserConciliacionesForm").on("blur","input[name='idnumber']",async function() {      
+    $("#user_gen_conciliacion_form").on("blur","#myUserConciliacionesForm input[name='idnumber']",async function() {      
       var lastidnumber = $(this).val();
       alertValidateUser(lastidnumber,"myUserConciliacionesForm");
       $(this).val("");
@@ -387,7 +387,7 @@ $("#btn_crear_usuario_conciliacion").on("click",async function(e){
             };    
             $("#wait").show();          
            let response_ = await  conciliacionService.addUser(request);
-           
+           window.location.reload(true); 
           }
       }
   }
