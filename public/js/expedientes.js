@@ -1,5 +1,7 @@
 import {UserService} from '../js/services/users.js';
+import { ExpedientesService } from './services/expedientes.js';
 const userService = new UserService();
+const expedientesService = new ExpedientesService();
 $(document).on("ready",function () {
   $("#btn_exp_user_carga").on("click",async function(){
     let request = {
@@ -129,4 +131,47 @@ $("#content_user_exp_asig").on("click",'#actualizar_exp_us',async function(e){
 }
 });
 
- });
+$("#btn_cerrar_dr_caso").on("click",function(e){
+  
+  let request = {
+    expidnumber : $("#expid").val(),
+    ref_estado_id:2,
+    ref_motivo_estado_id:8
+  }
+  Swal.fire({
+    title: 'Cerrando caso',
+    input: 'textarea',
+    inputPlaceholder: '¿Por qué va a cerrar el caso?',
+    inputAttributes: {
+        rows: 100,  // Número de filas del textarea
+        cols: 500  // Número de columnas del textarea
+      },
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Cerrar caso',
+    confirmButtonClass: 'btn-success', 
+    allowEmpty: false, // Evita el valor vacío en el textarea
+    preConfirm: (text) => {      
+      if(text!==''){
+        $("#wait").show();
+        request["comentario"] = text;
+        let response = expedientesService.cerrarCaso(request);
+        toastr.success("Actualizado con éxito", "", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+      }); 
+        window.location.reload(true)
+    }else{
+        Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
+     
+    }
+    }
+  });
+  $("#wait").hide();
+   
+});
+
+
+
+
+});

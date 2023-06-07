@@ -109,7 +109,8 @@ if ($request['orgntsid']!=3) {
     if ($segmento) { 
       if($this->origen==1){
         $notas =  $this->notas()
-        ->where(['estidnumber'=>$this->expidnumberest,'orgntsid'=>$this->origen,'segid'=>$segmento->segmento_id])
+        ->where(['estidnumber'=>$this->expidnumberest,
+        'orgntsid'=>$this->origen,'segid'=>$segmento->segmento_id])
         ->get();
       //  dd($segmento->segmento_id,'si')  ;
       }else{
@@ -223,7 +224,7 @@ if ($request['orgntsid']!=3) {
                     'docevname'=>$n_concepto[0]['docevname'],
                     'estidnumber'=>$n_concepto[0]['estidnumber'],
                     'periodo'=>$n_concepto[0]['periodo'],
-                  'segmento'=>$n_concepto[0]['segmento'], 
+                    'segmento'=>$n_concepto[0]['segmento'], 
                   'segmento_id'=>$n_concepto[0]['segmento_id'], 
                   'created_at'=>$n_concepto[0]['created_at'], 
                   'updated_at'=>$n_concepto[0]['updated_at'],

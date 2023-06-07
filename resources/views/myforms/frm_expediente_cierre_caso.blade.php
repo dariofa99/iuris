@@ -171,6 +171,16 @@ or currentUser()->hasRole('dirgral')))
 	Volver a evaluar caso
 </button>
 @endif
+
+@if($expediente->expestado_id==1 and (currentUser()->hasRole("dirgral") || currentUser()->hasRole("amatai") ))
+
+<button type="button" class="btn btn-warning btn-sm" id="btn_cerrar_dr_caso">
+	Cerrar caso
+</button>
+
+@endif
+
+
 </div>
 @endif
 

@@ -178,7 +178,7 @@ class SegmentosController extends Controller
 // para los casos de seguimiento deben tener una actuacion o anexo 1 vez por mes
 //revisar cuantos dias pasaron para llenar hechos y respuesta colocar cero si se demoro más de 5 dias
 //revisar los casos de asesoria que estan abiertos pero requieren ser cerrados por el sistema
-		
+		 
 		$segmento = Segmento::find($id);
 		//dd($segmento); 
 		if($segmento->fecha_corte == null) {
@@ -222,19 +222,21 @@ class SegmentosController extends Controller
 		 expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id from expedientes
 		 join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid join `users` on expedientes.expidnumberest = users.idnumber join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
 		 where expedientes.expidnumberest = asignacion_caso.asigest_id and (expestado_id != 5 and expestado_id != 2) 
-		 
+		
 		 and asignacion_caso.activo = 1 and fecha_asig < '".$dateiniciocorte."' and sede_expedientes.sede_id=".session('sede')->id_sede ));
 		 
 	
-// and expedientes.expidnumberest = '1004215874'
+// and expedientes.expidnumberest = '1124862051'
 
 		 $docente_id = \Auth::user()->idnumber;
 		 $exps=[];
 		
-		 //return response()->json([$expedientes]);
+		 
 		foreach ($expedientes as $key => $expediente) {	
-			//$expediente = $expedientes[4];
-			if (($expediente->exptipoproce_id == 3 and $expediente->exphechos == 0) || ($expediente->exptipoproce_id != 3 and ($expediente->exphechos == 0 || $expediente->exprtaest == 0 ))) {
+			$expediente = $expedientes[2];
+			if (($expediente->exptipoproce_id == 3 and $expediente->exphechos == 0) 
+			|| ($expediente->exptipoproce_id != 3 and 
+			($expediente->exphechos == 0 || $expediente->exprtaest == 0 ))) {
 				//se registra un cero cuando no tiene informacion en datos del caso
 				$data = [ 
 					'ntaaplicacion'=>0,
@@ -250,13 +252,13 @@ class SegmentosController extends Controller
 					'docidnumber'=>$docente_id,
 					'tbl_org_id'=>$expediente->id,
 				  ]; 
-				  
+				  //return response()->json(["no"]); 
 				 $this->Asignotasnewdatos($data);
 				 
 			}else{
 				
 				//cuanto tiempo paso al llenar la informacion desde asignado el caso
-				$historial =
+				//$historial =
 				 $historial =  HistorialDatosCaso::where('hisdc_expidnumber',$expediente->expid)
 				//->join('users', 'users.idnumber','=','historial_datos_casos.hisdc_idnumberest_id')
 				//->join('asignacion_caso', 'asignacion_caso.asigexp_id','=','historial_datos_casos.hisdc_expidnumber')
@@ -264,9 +266,10 @@ class SegmentosController extends Controller
 				//->whereDate('fecha_asig', '>=', $dateiniciocorte)
 				->where('hisdc_idnumberest_id',$expediente->expidnumberest)
 				->orderBy('historial_datos_casos.created_at', 'ASC')
-				->first();				
-				
-
+				->first();		
+				//$expedientemodel = Expediente::where('expid', $expediente->expid)->first();		
+				//$notas =  $expedientemodel->get_notas();
+				//return response()->json(["s",$historial,$notas]);
 				if ($historial) {
 					$datehistor=Carbon::parse($historial->created_at);
 					$dateasig=Carbon::parse($expediente->fecha_asig);					

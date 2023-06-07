@@ -11,9 +11,18 @@ use App\Periodo;
 use Session;
 use Carbon\Carbon;
 use App\Segmento;
+use App\Services\EstadosCasoService;
 
 class EstadosCasoController extends Controller
 {
+
+    private $estadoCasoService;
+
+    public function __construct(EstadosCasoService $estadoCasoService)
+    {
+      $this->estadoCasoService = $estadoCasoService;     
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -336,12 +345,18 @@ class EstadosCasoController extends Controller
         $estadoCaso->user;
 
         return response()->json($estadoCaso);
+    }
 
+    public function cerrarCaso(Request $request)
+    {
+       // return response()->json($request->all());
+        $estadoCaso = $this->estadoCasoService->store($request);
+        if($estadoCaso){
+            $expediente = Expediente::where('expid',$request->expidnumber)->first();
+            $expediente->expestado_id = $request->ref_estado_id;
+            $expediente->save();
+        }
 
-
-
-
-
-
+        return response()->json($request->all());
     }
 }

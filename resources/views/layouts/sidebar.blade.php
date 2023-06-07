@@ -145,10 +145,10 @@
                   @endif
              --}}
              @if(currentUser()->hasRole("coordprac") || currentUser()->hasRole("diradmin") || currentUser()->hasRole("dirgral") || currentUser()->hasRole("amatai") || currentUser()->hasRole("secretaria")) 
-             <li><a href="/requerimientos">Requerimientos</a></li>
-            @endif
+              <li><a href="/requerimientos">Requerimientos</a></li>
+             @endif
 
-               @if(currentUser()->hasRole("diradmin") || currentUser()->hasRole("dirgral") || currentUser()->hasRole("amatai")) 
+            @if(currentUser()->hasRole("diradmin") || currentUser()->hasRole("dirgral") || currentUser()->hasRole("amatai")) 
              <li><a href="/autorizaciones">Autorizaciones</a></li>
             @endif
             
@@ -167,7 +167,7 @@
              @if(currentUser()->hasRole("amatai"))
              <li><a href="/expediactuacion">Actuaciones Pendientes</a></li>
             @endif
-             @if(currentUser()->hasRole("amatai") || currentUser()->hasRole("diradmin") || currentUser()->hasRole("estudiante"))
+             @if(currentUser()->hasRole("dirgral") || currentUser()->hasRole("amatai") || currentUser()->hasRole("diradmin") || currentUser()->hasRole("estudiante"))
              <li><a href="/notas/ver/estudiante">Ver Notas</a></li>
               @endif
            

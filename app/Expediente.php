@@ -13,6 +13,9 @@ use App\Traits\AsigNotas;
 use App\AsigDocenteCaso;
 use App\Segmento; 
 use App\HistorialDatosCaso;
+use App\Services\PeriodosService;
+use App\Services\SegmentosService;
+use Illuminate\Support\Facades\App;
 
 class Expediente extends Model
 {
@@ -67,15 +70,13 @@ class Expediente extends Model
         'expcierrecasonotadocen',
     ];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-
+   
+    public $periodoService;
+    public $segmentoService;
     public function __construct()
     {
-        // Carbon::setlocale('es');
+        $this->periodoService = App::make(PeriodosService::class);
+        $this->segmentoService = App::make(SegmentosService::class);
     }
 
     public function conciliaciones()
@@ -155,10 +156,7 @@ class Expediente extends Model
 
     public function asigDocente($asignacion_caso)
     {
-        $segmento = Segmento::where('estado', true)
-            ->join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
-            ->where('sg.sede_id', session('sede')->id_sede)
-            ->first();
+        $segmento = $this->segmentoService->getSegmentoActivo();
 
             $docente_unavi = $this->getDocentesByRama("UNAVI") ;
             $docente_unavi = $docente_unavi[0];
@@ -303,15 +301,12 @@ class Expediente extends Model
             ->select('users.id', 'users.idnumber')
             ->orderBy('users.created_at', 'desc')
             ->get()
-            ->toArray();
+            ->toArray(); 
     }
 
     private function getDocentesAsigByRama($tipoproce)
     {
-        $segmento = Segmento::where('estado', true)
-            ->join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
-            ->where('sg.sede_id', session('sede')->id_sede)
-            ->first();
+        $segmento = $this->segmentoService->getSegmentoActivo();
         return $asig_doc = DB::select(
             DB::raw(
                 "SELECT `docidnumber`, COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
@@ -372,12 +367,10 @@ class Expediente extends Model
         ->orderBy('fecha_asig','desc')->first();  */
         $asig = $this->getAsignacion();
         
-        $response = [];
-        $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-            ->where('sp.sede_id', session('sede')->id_sede)
-            ->where('estado', true)
-            ->first();
-        //    return  $asig;
+       // $response = [];
+        $periodo = $this->periodoService->getPeriodoActivo();
+        
+        
         try {
             
             $now = $now == null ? Carbon::now() : Carbon::parse($now);
@@ -598,15 +591,9 @@ class Expediente extends Model
             ->get();
 
         $hijos = []; 
-        $segmento = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
-            ->where('sg.sede_id', session('sede')->id_sede)
-            ->where('estado', true)
-            ->first();
+        $segmento = $this->segmentoService->getSegmentoActivo();
         if (count($padresAct) > 0) {
-            $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-            ->where('sp.sede_id', session('sede')->id_sede)
-            ->where('estado', true)
-            ->first();
+            $periodo = $this->periodoService->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")         
             ->where("periodo_id",$periodo->id)->get();
 
@@ -811,11 +798,7 @@ class Expediente extends Model
         $notas = $this->notas()
             ->where(['orgntsid' => 1])
             ->get();
-
-        $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-            ->where('sp.sede_id', session('sede')->id_sede)
-            ->where('estado', true)
-            ->first();
+        $periodo = $this->periodoService->getPeriodoActivo();
         $n_conocimiento = [];
         $n_etica = [];
         $n_aplicacion = [];
@@ -886,10 +869,7 @@ class Expediente extends Model
     function get_notas_caso($periodo = null)
     {
         //obtiene las notas de totales del caso//en todos los segmentos
-        $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-            ->where('sp.sede_id', session('sede')->id_sede)
-            ->where('estado', true)
-            ->first();
+        $periodo = $this->periodoService->getPeriodoActivo();
         $segmentos = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
             ->where('sg.sede_id', session('sede')->id_sede)
             ->where('perid', $periodo->periodo_id)
