@@ -1,13 +1,17 @@
 <?php
 namespace App\Repositories;
 
+use App\Mail\ConfirmarCorreo;
 use Illuminate\Http\Request;
 use App\Services\UsersService;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Mail;
 
 class UsersRepository extends BaseRepository implements UsersService{
    
@@ -16,9 +20,41 @@ class UsersRepository extends BaseRepository implements UsersService{
         parent::__construct($user);
     }
 
+    function getAllUsers($request,$relations = null, $perPage = 10):LengthAwarePaginator{
+       
+      $query = User::criterio($request->data_search,$request->criterio)
+      ->whereHas('sedes',function($query1){
+        $query1->where([
+            'sede_id'=>session('sede')->id_sede,
+        ]);
+      });
+      if(!empty($relations)){
+        $query = $this->applyFiltro($query,$relations);
+      }
+      
+      return $this->paginate($query, $perPage);
+
+
+   
+
+}
+
+protected function applyFiltro($query,$relations = [])
+{
+    return $query->with($relations);
+}
+
+protected function paginate($query, $perPage)
+{
+    $page = Paginator::resolveCurrentPage('page');
+    $results = $query->paginate($perPage, ['*'], 'page', $page);    
+    $results->appends(request()->except('page'));    
+    return $results;
+}
+
     public function store(Request $request) : User {
 
-        return User::create([
+      $user =  User::create([
         'active' => $request->has('active') ? $request['active'] : 0,
         'tipodoc_id' => $request->has('tipodoc_id') ? $request['tipodoc_id'] : 1, 
         'tipopers_id' => $request->has('tipopers_id') ? $request['tipopers_id'] : 237, 
@@ -42,6 +78,10 @@ class UsersRepository extends BaseRepository implements UsersService{
     ]);
 
       
+    if(session()->has('sede')){
+      $user->sedes()->attach(session('sede')->id_sede);
+    }
+    return $user;
   }
 
     public function getUsersByRoleName($role) : Array {
@@ -156,6 +196,40 @@ class UsersRepository extends BaseRepository implements UsersService{
         ->orderBy('users.created_at', 'desc')->get()->toArray();
         return $doceWithRama;
     }
+
+public function findUserWithFilter(Array $filter) : User {
+    $user = $this->model->whereHas('sedes',function($query1){
+      if($this->validateSede)$query1->where(['sede_id'=>session('sede')->id_sede]);                 
+  })->where($filter)->first();
+    
+    return $user;
+}
+
+public function addSede(User $user){
+  if($user){
+      if (!$user->sedes()->wherePivot('sede_id',session('sede')->id_sede)->exists()) {
+          $user->sedes()->attach(session('sede')->id_sede);
+          return true;  
+      }     
+  }
+  return false;   
+}
+
+public function changeSede(User $user){
+  $user->sedes()->sync(session('sede')->id_sede);
+  return true; 
+}
+
+public function update(User $user, Request $request) : User {
+    $user->fill($request->all()); 
+    $user->save();  
+    if($request->email!=$user->email){
+      $user->confirm_token = Str::random(50);
+      Mail::to($request->email)->send(new ConfirmarCorreo($user));   
+    }  
+  return $user;
+}
+
 }
 
 

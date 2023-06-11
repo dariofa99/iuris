@@ -129,6 +129,26 @@ class UsersController extends Controller
 
 
     if ($validator->fails()) {
+      $errors = $validator->errors();
+      if(count($errors->get('email'))>0 and count($errors->get('idnumber'))>0){
+        $user = $this->userService->findUserWithFilter(['email'=>$request->email,'idnumber'=>$request->email]);
+        return response()->json(['enocn' => $user ]);
+      }elseif(count($errors->get('email'))>0){
+        try {
+          $user = $this->userService->findUserWithFilter(['email'=>$request->email]);
+          return response()->json(['errors' => $user ]);
+        } catch (\Throwable $th) {
+          //throw $th;
+        }   
+      }else if(count($errors->get('idnumber'))>0){
+        try {
+          $user = $this->userService->findUserWithFilter(['idnumber'=>$request->email]);
+          return response()->json(['errors' => $user ]);
+        } catch (\Throwable $th) {
+          //throw $th;
+        }
+      }
+
         return response()->json(['errors' => $validator->errors()->all()]);
     }
     
@@ -150,9 +170,6 @@ class UsersController extends Controller
           //  $user = User::where('idnumber', '=', $request['idnumber'])->first();         
           $user->roles()->attach( $request->has('idrol') ? $request['idrol'] : 8); 
          
-          if(session()->has('sede')){
-            $user->sedes()->attach(session('sede')->id_sede);
-          }
         Session::flash('message-success', ' Registrado');
         if(Auth::guest()) Auth::login($user);
         return response()->json(['user' => $user]);
@@ -312,7 +329,10 @@ private function aditionalData($request,$id){
     {
       
         $user = User::find($id);
-       // dd($user->id);
+        if(!$user){
+          Session::flash('message-warning', "Ups! No se ha encontrado al usuario"); 
+          return redirect("/conciliaciones"); 
+      } 
         if ($user->id != Auth::user()->id and !currentUser()->can("edit_usuarios")) {
             return view('errors.error'); 
         }
@@ -332,15 +352,14 @@ private function aditionalData($request,$id){
     public function update(Request $request, $id)
     {
  
-      $email_request = false;
-       $user = User::find($id);
- 
-
+       $email_request = false;
+       $user = $this->userService->find($id); 
+      
        $messages = [
         'email.unique' => 'El :attribute  ya existe en otra cuenta.',
         'email.required' => 'El :attribute es requerido.',     
         'idnumber.unique' => 'El número de documento ya existe en otra cuenta.',   
-    ];
+      ];
     $validator = Validator::make($request->all(), [
       'email' => [
         'required',
@@ -353,20 +372,16 @@ private function aditionalData($request,$id){
                
 
                 if ($validator->fails()) {
+                  
+                    if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+                      return response()->json(['errors' => $validator->errors()->all()]);
+                    }
                     return redirect()->back()
                             ->withErrors($validator)
                             ->withInput();
                 }
-              //  dd($request->all());
-          if($request->email!=$user->email){
-            $user->confirm_token = (str_random(50));
-            Mail::to($request->email)->send(new ConfirmarCorreo($user)); 
-            $email_request = true; 
-            Session::flash('message-success', "Actualizado con éxito. Por favor confirma nuevamente tu cuenta de correo electrónico."); 
-          }
-
-        $user->fill($request->all()); 
-        $user->save();    
+             
+        $user = $this->userService->update($user,$request);
         if($request->has('data') and is_array($request->data)){                     
           foreach ($request->data as $key => $rq) {
             $rq['user_id'] = $user->id; 
@@ -376,21 +391,27 @@ private function aditionalData($request,$id){
               }
           }
       }
-      if($request->get('id_rol')){
-          $user->role()->sync($request['id_rol']);
-        //dd($user->role()->sync($request['id_rol']));
-      }
-      if($request->has('sede_id') and $request->get('sede_id')!=null){
-        $user->sedes()->sync($request->sede_id);
-      }
+    if($request->get('ramaderecho_id')){
+        $user->ramas_derecho()->sync($request['ramaderecho_id']);
+   
+    }
+    if($request->has('sede_id') and $request->get('sede_id')!=null){
+      $user->sedes()->sync($request['sede_id']);     
+    }
 
-      if($request->get('ramaderecho_id')){
-          $user->ramas_derecho()->sync($request['ramaderecho_id']);
-     
-      }
+    if($request->get('id_rol')){
+      $user->roles()->sync($request['id_rol']);
+    }
        
-       
+    if ((currentUser()->hasRole('estudiante') || $user->hasRole('estudiante'))  and (!$user->turno) ) {
+      $asigt = $user->asignarTurno($request);
+      return response()->json(['useraa' => $user]);
 
+   }
+   
+   if ((currentUser()->hasRole('estudiante')|| $user->hasRole('estudiante')) and (!$user->docente_asignado)) {
+       $asig = $user->asignarDocente($request);
+   }
 
 
       if($request->image!=''){
@@ -483,18 +504,45 @@ private function aditionalData($request,$id){
 
  
     public function findUser(Request $request){
-      //  return  response()->json(['encontrado'=>$request->all()]);
-      $user =User::where(['tipodoc_id'=>$request->tipodoc_id,'idnumber'=>$request->idnumber])->first();
-      $response=[]; 
+        //return  response()->json(['encontrado'=>$request->all()]);
+        $response=[]; 
+        $encontrado = false;
+        $sin_sede = false;
+        try {
+          $user = $this->userService->findUserWithFilter([
+            'tipodoc_id'=>$request->tipodoc_id,
+            'idnumber'=>$request->idnumber]);
+        } catch (\Throwable $th) {
+          $user = false;
+        }
+      
+     
       if($user){ 
-          $user->roles;
+        $encontrado = true;
+        } else{
+          try {
+            $sin_sede = true;
+            $response['sin_sede'] = true;
+            $user = $this->userService->setValidateSede(false)->findUserWithFilter([
+              'tipodoc_id'=>$request->tipodoc_id,
+              'idnumber'=>$request->idnumber]);
+          } catch (\Throwable $th) {
+            $user = false;
+          }        
+            if($user){ 
+              $encontrado = true;               
+            }
+          } 
+        if($encontrado){
+          $user->roles;       
           if($request->has('view')){
-            $response['view'] = view($request->get('view'),compact('user'))->render(); 
+            $response['view'] = view($request->get('view'),compact('user','sin_sede'))->render(); 
           }
-          $response['encontrado'] =true;
-          $response['user'] =$user;   
-          return response()->json($response);   
-        }  
+              $response['encontrado'] =true;
+              
+              $response['user'] = $user;   
+              return response()->json($response);  
+        }
           return  response()->json(['encontrado'=>false]);
       }
 
@@ -506,5 +554,28 @@ private function aditionalData($request,$id){
         }    
             return  response()->json(['encontrado'=>false]);
         }
+
+    public function addSede(Request $request){
+          $user = $this->userService->setValidateSede(false)->find($request->id);
+          if($user){
+            if($request->has('action')){
+              if($request->get('action')=='add'){
+                $add = $this->userService->addSede($user);
+              }
+              if($request->get('action')=='change'){
+                $add = $this->userService->changeSede($user);
+              }
+            }
+           
+            if($add){
+              if($request->has('view')){
+                $view = view($request->get('view'))->render(); 
+                return response()->json(['agregado'=>true,'user'=>$user,'view'=>$view]);
+              }
+              return response()->json(['agregado'=>true,'user'=>$user]);   
+            }       
+          }
+         return  response()->json(['agregado'=>false]);
+    }
 }
 

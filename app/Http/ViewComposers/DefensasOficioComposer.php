@@ -11,19 +11,40 @@ use App\ReqAsistencia;
 use App\Periodo;
 use App\RefAsignacionCaso;
 use App\MotivoAsigCaso;
+use App\Services\PeriodosService;
+use App\Services\SegmentosService;
 use DB;
-
-
-
+use Illuminate\Support\Facades\App;
 
 /**
 *  
 */
 class DefensasOficioComposer
 {
-	
+	public $periodoService;
+    public $segmentoService;
+    public function __construct()
+    {
+        $this->periodoService = App::make(PeriodosService::class);
+        $this->segmentoService = App::make(SegmentosService::class);
+    }
+
+
 	public function compose(View $view)
 	{
+
+		try {
+			// Código que puede generar un error
+			$periodo = $this->periodoService->getPeriodoActivo(); 
+			// Si no se produce ningún error, continuar con el flujo normal del programa
+			//echo "El resultado es: " . $resultado;
+		} catch (\TypeError $e) {
+			$periodo = null;
+			$mensajeError = "Ha ocurrido un error: " . $e->getMessage();
+		
+			// También puedes almacenar el mensaje de error en una variable para su posterior uso
+			// $mensajeError = $e->getMessage();
+		}
 
 		$reqasis = ReqAsistencia::all();
 		$rama_derecho = RamaDerecho::where('categoria','defensas')->pluck('ramadernombre','id');
@@ -32,9 +53,7 @@ class DefensasOficioComposer
 		$segmento = Segmento::join('sede_segmentos as sg','sg.segmento_id','=','segmentos.id')
 		->where('sg.sede_id',session('sede')->id_sede)
 		->where('estado',true)->first();
-		$periodo = Periodo::join('sede_periodos as sp','sp.periodo_id','=','periodo.id')
-		->where('sp.sede_id',session('sede')->id_sede)
-		->where('estado',true)->first();
+		
 		//$motivos_cierre = MotivoEstadoCaso::pluck('nombre_motivo','id');
 		$tipo_proceso = DB::table('ref_tipproceso')->select('ref_tipproceso','id')->get();
 		$motivos_cierre = MotivoEstadoCaso::all();

@@ -5,6 +5,8 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 $(document).ready(function (){
+
+	$('.is_tooltip').tooltip();
     $('.onlynumber').keyup(function (){
       this.value = (this.value + '').replace(/[^0-9]/g, '');
     });

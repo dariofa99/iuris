@@ -7,7 +7,7 @@
 @endsection
 @section('area_forms')
 
-@include('msg.success')
+@include('msg.alerts') 
 
 <div class="row">
     {!!Form::open(['route'=>'conciliaciones.index', 'method'=>'GET','id'=>'myformConcFilter'])!!}

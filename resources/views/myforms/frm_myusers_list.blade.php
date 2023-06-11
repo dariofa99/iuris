@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('area_forms')
 
-@include('msg.success')
+@include('msg.alerts')
 
 
 

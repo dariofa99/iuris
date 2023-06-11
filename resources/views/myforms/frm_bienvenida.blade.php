@@ -100,17 +100,18 @@
 @endif
 <div class="row">
     @foreach($sedes as $key => $sede)
+    
     <div class="col-md-3">
-        <form id="myFormCambiarSede-{{$sede->id}}" action="{{url('/change/sedes')}}" method="GET">
+        <form id="myFormCambiarSede-{{$sede->id_sede}}" action="{{url('/change/sedes')}}" method="GET">
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">{{$sede->nombre}}</div>
                 <div class="panel-body">
-                    <input type="hidden" name="sede_id" value="{{$sede->id}}">
+                    <input type="hidden" name="sede_id" value="{{$sede->id_sede}}">
                   <p>{{$sede->ubicacion}}</p>
                 </div>
               <div class="panel-footer">
-                  <button data-id="{{$sede->id}}" {{(session()->has('sede') and session()->get('sede')->id == $sede->id) ? 'disabled' : ''}} type="button" class="btn btn-success btn_change_sede">
+                  <button data-id="{{$sede->id_sede}}" {{(session()->has('sede') and session()->get('sede')->id_sede == $sede->id_sede) ? 'disabled' : ''}} type="button" class="btn btn-success btn_change_sede">
                     Seleccionar
                 </button>
               </div>

@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth']], function() {
 Route::resource('usuarios', 'UsersController');
 Route::get("usuarios/buscar/persona","UsersController@findUser");
 Route::get("usuarios/find/by/name","UsersController@findUserByNameOrLastNameAndRole");
+Route::post("usuarios/add/sede","UsersController@addSede");
 
 Route::post('mail', 'MailController@store')->name('mail.store');
 

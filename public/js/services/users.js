@@ -36,6 +36,7 @@ export class UserService{
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
             console.log(response);
+            $("#wait").hide()
             throw new Error(message);
         }
         const topics = await response.json();
@@ -163,6 +164,28 @@ export class UserService{
       return res;
 
   }
+
+  async addSede (request)  {
+    const response = await fetch(BASE_URL+'usuarios/add/sede', {
+        method: 'POST',
+        headers: {                
+            "Content-Type": "application/json",
+            //'Content-Type': 'application/x-www-form-urlencoded',
+            "Accept": "application/json", 
+            "X-Requested-With": "XMLHttpRequest",         
+            "X-CSRF-Token": $("#token").attr("content"),            
+        },            
+        body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        console.log(response);
+        throw new Error(message);
+    }
+    const topics = await response.json();
+    return topics;
+
+}
 }
 
 

@@ -27,14 +27,15 @@
 
                       
 
-                      <center><span class="pull-center badge bg-green">{{$user->display_name}}</span></center>
+                      <center><span class="pull-center badge bg-green">
+                        {{ (count($user->roles)>0) ? $user->roles[0]->display_name : "Sin rol"}}</span></center>
                       
 
 
                       
 
                     </td>
-                    <td>{{ $user->datecreated }}</td>
+                    <td>{{ getSmallDate($user->created_at) }}</td>
                     <td>
                       @if($user->active) 
                       <i class="fa fa-toggle-on switch-on btn_switch_estdoc" id="{{$user->id}}"></i>

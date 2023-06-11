@@ -47,6 +47,7 @@ class ComposerServiceProvider extends ServiceProvider
 
 
         View::composer([
+            'myforms.frm_myusers_gen_form',
             'myforms.frm_myusers_edit',
             'myforms.frm_myusers', 
             'myforms.frm_myusers_list', 

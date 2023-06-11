@@ -33,23 +33,39 @@ use PDF;
 use Str;
 use Storage;
 use App\SalasAlternasConciliacion;
+use App\Services\ConciliacionesService;
+use App\Services\PeriodosService;
+use App\Services\SegmentosService;
 use App\Services\UsersService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
 
 class ConciliacionesController extends Controller
 {
     use TraitPdf;
     private $userService;
+    private $conciliacionService;
 
-    public function __construct(UsersService $userService)
-    {
-      $this->userService = $userService;
-      $this->middleware('permission:ver_conciliaciones',   ['only' => ['index']]);
-      $this->middleware('auth',['except'=>['downloadFile']]);
+    public $periodoService;
+    public $segmentoService;
+   
+
+    public function __construct(
+        PeriodosService $periodoService,
+        SegmentosService $segmentoService,
+        UsersService $userService,
+        ConciliacionesService $conciliacionService    
+        ){
+        $this->periodoService = $periodoService;
+        $this->segmentoService = $segmentoService;
+        $this->userService = $userService;
+        $this->conciliacionService = $conciliacionService;
+        $this->middleware('permission:ver_conciliaciones',   ['only' => ['index']]);
+        $this->middleware('auth',['except'=>['downloadFile']]);
     }
 
     /**
@@ -62,19 +78,7 @@ class ConciliacionesController extends Controller
 
         if(currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
 
-        $conciliaciones = Conciliacion::filter($request)
-        ->where(function($query){
-            if(!currentUser()->can('ver_all_conciliaciones')){
-                return $query->whereHas('usuarios',function($query1){
-                    $query1->where([
-                        'user_id'=>auth()->user()->id,
-                ]);
-                
-                });
-            }       
-        })
-        ->orderBy('conciliaciones.created_at','desc')->paginate(10);
-       // $reporte = ConciliacionReporte::find(5); 
+        $conciliaciones =   $this->conciliacionService->getAllConciliaciones($request); // $reporte = ConciliacionReporte::find(5); 
        
        
         return view('myforms.conciliaciones.index',compact('conciliaciones'));
@@ -93,23 +97,19 @@ class ConciliacionesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $periodo = Periodo::where('estado','1')
-        ->first();
-        $conciliacion = Conciliacion::create([
-            //'fecha_radicado'=>Carbon::parse('1900-01-01 00:00:00'),
-            'num_conciliacion'=>"CCEAH-0-00-00",
-            'categoria_id'=>173,
-            'estado_id'=>174,
-            'periodo_id'=> $periodo->id,
-            'user_id'=>auth()->user()->id
-        ]);
+       try {
+        $periodo = $this->periodoService->getPeriodoActivo();
+        $request['periodo_id'] =  $periodo->id;
+        $conciliacion = $this->conciliacionService->store($request);
+       } catch (\Throwable $e) {
+        $mensajeError = "Ha ocurrido un error: " . $e->getMessage();
+        Session::flash('message-warning', $mensajeError);    
+        return redirect('/conciliaciones/');        
+       }
+       
 
-        $conciliacion->usuarios()->attach(auth()->user()->id,[
-            'tipo_usuario_id'=>199,
-            'estado_id'=>1
-        ]);
 
         return redirect('/conciliaciones/'.$conciliacion->id.'/edit');
     }
@@ -124,24 +124,17 @@ class ConciliacionesController extends Controller
     {
       //$conciliacion = Conciliacion::find(10);
        // return response()->json($conciliacion);
-
-        $periodo = Periodo::where('estado','1')
-        ->first();
-        $conciliacion = Conciliacion::create([
-            'token'=>str_replace("/", "", bcrypt(\Str::random(5))),
-            'num_conciliacion'=> strtoupper("CCEAH-0-00-00") ,//"CCEAH-0-00-00",
-            'num_solicitud'=> strtoupper("CCEAH-".Str::random(7)) ,//"CCEAH-0-00-00"
-            'categoria_id'=> $request->has('categoria_id') ? $request->get('categoria_id') : 173,
-            'estado_id'=>$request->has('estado_id') ? $request->get('estado_id') : 174,
-            'periodo_id'=> $periodo->id,
-            'user_id'=>auth()->user()->id
-        ]);
-
-        $conciliacion->usuarios()->attach(auth()->user()->id,[
-            'tipo_usuario_id'=> $request->has('tipo_usuario_id') ? $request->get('tipo_usuario_id') : 199,
-            'estado_id'=>1
-        ]);
-
+       try {
+        $periodo = $this->periodoService->getPeriodoActivo();
+        $request['periodo_id'] =  $periodo->id;
+        $conciliacion = $this->conciliacionService->store($request);
+       } catch (\Throwable $e) {
+        $mensajeError = "Ha ocurrido un error: " . $e->getMessage();
+        Session::flash('message-warning', $mensajeError);    
+        return response()->json(['errors'=>[
+            $mensajeError
+        ]]);       
+       } 
         if($request->has('solicitante_id')){
             $conciliacion->usuarios()->attach($request->get('solicitante_id'),[
                 'tipo_usuario_id'=>205,
@@ -183,26 +176,29 @@ class ConciliacionesController extends Controller
     {
     
         if(currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
-$conciliacion = Conciliacion::find($id);
-if(!$conciliacion) return redirect("/conciliaciones");
-$cursando = TablaReferencia::where(['categoria'=>'cursando','tabla_ref'=>'turnos'])
-->pluck('ref_nombre','id');
+            $conciliacion = $this->conciliacionService->find($id);            
+            if(!$conciliacion){
+                Session::flash('message-warning', "Ups! No se ha encontrado la conciliacion"); 
+                return redirect("/conciliaciones"); 
+            } 
+            $cursando = TablaReferencia::where(['categoria'=>'cursando','tabla_ref'=>'turnos'])
+            ->pluck('ref_nombre','id');
 
-$estudiantes = $this->getEstudiantes();
+            $estudiantes = $this->getEstudiantes();
 
 
-    $turnos = Turno::join('users','users.idnumber','=','turnos.trnid_estudent')
-    ->join('sede_usuarios','sede_usuarios.user_id','=','users.id')
-    ->join('sedes','sedes.id_sede','=','sede_usuarios.sede_id')
-    ->join('referencias_tablas as rc','rc.id','=','turnos.trnid_color')
-    ->join('referencias_tablas as rh','rh.id','=','turnos.trnid_horario')
-    ->join('referencias_tablas as cursos','cursos.id','=','users.cursando_id')
-    ->join('referencias_tablas as rd','rd.id','=','turnos.trnid_dia')
-    ->where('sedes.id_sede',session('sede')->id_sede)
-    ->select("turnos.id as id",'users.idnumber','users.cursando_id','users.id as estudiante_id','users.name','users.lastname',
-    'trnid_color','rc.ref_value as color_ref_value','rc.ref_nombre as color_nombre','cursos.id as curso_id',
-    'cursos.ref_nombre as curso_nombre','rh.ref_nombre as horario_nombre','trnid_horario','rd.ref_nombre as dia_nombre','trnid_dia')
-    ->orderBy('trnid_color','desc')->get();
+                $turnos = Turno::join('users','users.idnumber','=','turnos.trnid_estudent')
+                ->join('sede_usuarios','sede_usuarios.user_id','=','users.id')
+                ->join('sedes','sedes.id_sede','=','sede_usuarios.sede_id')
+                ->join('referencias_tablas as rc','rc.id','=','turnos.trnid_color')
+                ->join('referencias_tablas as rh','rh.id','=','turnos.trnid_horario')
+                ->join('referencias_tablas as cursos','cursos.id','=','users.cursando_id')
+                ->join('referencias_tablas as rd','rd.id','=','turnos.trnid_dia')
+                ->where('sedes.id_sede',session('sede')->id_sede)
+                ->select("turnos.id as id",'users.idnumber','users.cursando_id','users.id as estudiante_id','users.name','users.lastname',
+                'trnid_color','rc.ref_value as color_ref_value','rc.ref_nombre as color_nombre','cursos.id as curso_id',
+                'cursos.ref_nombre as curso_nombre','rh.ref_nombre as horario_nombre','trnid_horario','rd.ref_nombre as dia_nombre','trnid_dia')
+                ->orderBy('trnid_color','desc')->get();
  
    
     $numusers =  $conciliacion->usuarios->count();
@@ -257,12 +253,12 @@ $estudiantes = $this->getEstudiantes();
     {
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query){
             $query->where('is_copy', 1);
-    })->whereHas('temporales', function (Builder $query) use ($request){
-            $query->where("conciliacion_id",$request->conciliacion_id);
-    })->where(([
-            "status_id"=>$request->type_status_id,
-            "tabla_destino"=>"226"
-        ]))->get();
+            })->whereHas('temporales', function (Builder $query) use ($request){
+                    $query->where("conciliacion_id",$request->conciliacion_id);
+            })->where(([
+                    "status_id"=>$request->type_status_id,
+                    "tabla_destino"=>"226"
+                ]))->get();
 
         if(count($reportes)<=0){
             $data = PdfReporteDestino::whereHas('reporte', function (Builder $query){
@@ -936,7 +932,7 @@ public function storeSharedConcFiles(Request $request){
         return response()->json([
             'th'=>$th
         ]);
-    }   
+    }    
 
 }
 

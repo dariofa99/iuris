@@ -46,17 +46,14 @@ class MyusersController extends Controller
 
 
        //$users_list = $this->getUsers();
-       $criterio =  '';
-   
-        $users = $this->getUsers($request);
-       
-       $active_users='active';
-        
-       if ($request->ajax()) {
+       $criterio =  '';   
+        $users = $this->userService->getAllusers($request);// $this->getUsers($request);
+        $active_users='active';
+        if ($request->ajax()) {
         //return response()->json($users);
         return view('myforms.frm_myusers_list_ajax', compact('users'))->render();
        }
-     
+    
        return view('myforms.frm_myusers_list', compact('users', 'active_users','criterio'));
 
     }
@@ -192,8 +189,12 @@ class MyusersController extends Controller
     public function edit($id)
     {
       
-        $user = User::find($id);
-       // dd($user->id);
+        $user = $this->userService->find($id);
+
+         if(!$user){
+          Session::flash('message-warning', "Ups! No se ha encontró al usuario."); 
+          return redirect("/users"); 
+      } 
         if ($user->id != Auth::user()->id and !currentUser()->can("edit_usuarios")) {
             return view('errors.error'); 
         }
@@ -303,7 +304,6 @@ class MyusersController extends Controller
         
         if (currentUser()->hasRole('estudiante') and (!$user->docente_asignado)) {
             $asig = $user->asignarDocente($request);
-
         }
 
         if(!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
@@ -353,7 +353,7 @@ class MyusersController extends Controller
 
     function getUsers(Request $request){
        
-             $users= User::leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
+          $users= User::leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
            ->leftjoin('roles' , 'role_user.role_id','=','roles.id')
            ->leftjoin('sede_usuarios','sede_usuarios.user_id','=','users.id')
            ->leftjoin('sedes','sedes.id_sede','=','sede_usuarios.sede_id')

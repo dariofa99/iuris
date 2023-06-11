@@ -16,7 +16,7 @@ class PeriodosRepository extends BaseRepository implements PeriodosService{
     {
         parent::__construct($periodo);
     }
-    public function getPeriodoActivo(): Periodo
+    public function getPeriodoActivo(): Periodo 
     {
         $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
         ->where('sp.sede_id', session('sede')->id_sede)

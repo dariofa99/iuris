@@ -1775,7 +1775,7 @@ return false;
 
     $(".btn_change_sede").on("click", function (e) {
         var id = $(this).attr("data-id");
-        Swal.fire({
+        Swal.fire({ 
             title: "Esta seguro de seleccionar esta sede?",
             type: "info",
             showCancelButton: true,

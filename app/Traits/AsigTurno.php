@@ -20,7 +20,7 @@ public function asignarTurno($request){
         if ($horario[0] == '110') {$horario[1] = '111';} elseif ($horario[0] == '111') {$horario[1] = '110';}
         $consulta="`trnid_horario` = ".$horario[0]." OR `trnid_horario` = ".$horario[1];
     } elseif ($request->cursando_id == '116') {///// 5a
-        $horario=['119'];
+        $horario=['119']; 
         $consulta="`trnid_horario` = 119";
     } elseif ($request->cursando_id == '117') {///// 5b
         $horario=['118'];
@@ -121,7 +121,7 @@ public function asignarTurno($request){
             ->where('estado',true)->first();
             if ($periodo) {
               $turno = [
-                'trnid_estudent'=>currentUser()->idnumber,
+                'trnid_estudent'=>$this->idnumber,
                 'trnid_color'=>$trnid_color,
                 'trnid_horario'=>$trnid_horario,
                 'trnid_oficina'=>1,

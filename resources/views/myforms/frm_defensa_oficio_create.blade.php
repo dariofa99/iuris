@@ -28,8 +28,9 @@ Listar Expedientes
 @include('myforms.frm_expediente_user_create')			
 
 {!!Form::open(['route'=>'oficio.store', 'method'=>'post','id'=>'myFormExpsStore'])!!}
-
+@if($periodo!=null)
 {!!Form::hidden('periodo_id',$periodo->id) !!}
+@endif
 <div class="row">
 	<div class="col-md-4">
 		<div class="form-group">
@@ -86,8 +87,13 @@ Listar Expedientes
       <div class="row">
       	<div class="col-md-12">
 		<div class="form-group" align="right">
-			<br>
+			@if($periodo!=null)
 			<button class="btn btn-primary">Enviar</button>
+			@else
+			<button disabled type="button" class="btn btn-primary">No hay un periodo activo</button>
+				@endif
+			<br>
+			
 		</div>
 	</div>
       </div>

@@ -36,7 +36,7 @@ Editar
 
 @section('area_forms') 
 
-@include('msg.success') 
+@include('msg.alerts') 
 
 
 @php

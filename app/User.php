@@ -215,7 +215,11 @@ class User extends Authenticatable
                     break;
                 case 'rol':
 
-                   return $query->where('role_user.role_id',$data); 
+                return $query->whereHas('roles',function($query1) use ($data){
+                    $query1->where([
+                        'role_id'=>$data,
+                ]); 
+                }); 
                     break;    
                 
             }         

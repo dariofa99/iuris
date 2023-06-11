@@ -1,7 +1,7 @@
 <div class="content_aditional_data">
 @foreach($data as $key => $reference)
 
-<div class="col-md-6">
+<div class="col-md-{{isset($col)?$col:'6'}}">
     <div class="form-group">
         <label >
            {{$reference->name}}       

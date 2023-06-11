@@ -17,7 +17,7 @@ class Conciliacion extends Model
 
     protected $fillable = [
         'token',
-        'fecha_radicado',
+        'fecha_radicado', 
         'num_conciliacion',
         'num_solicitud',
         'auto_admisorio',
@@ -27,6 +27,14 @@ class Conciliacion extends Model
         'user_id'
         
     ];
+
+    public function sedes()
+    {
+        return $this->belongsToMany(Sede::class, 'sede_conciliaciones', 'conciliacion_id', 'sede_id')
+            ->withPivot('id', 'sede_id', 'conciliacion_id')
+            ->withTimestamps();
+    }
+    
 
     public function usuarios()
     {
