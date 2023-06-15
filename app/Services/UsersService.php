@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 
 interface UsersService {
     public function find(int $id);
@@ -17,11 +18,12 @@ interface UsersService {
     public function getDocentesByRama($rama):Array;
     public function getUsersByPermissionName($permission):Collection; 
     public function findUserByNameOrLastNameAndRole(String $name,$role):Array; 
-    public function findUserWithFilter(Array $filter):User;
+    public function findWithFilter(Array $filter):?Model;
     public function setValidateSede($status);
     public function addSede(User $user);
     public function changeSede(User $user);
     public function update(User $user,Request $request):User;
+    public function updateProfilePicture(User $user,Request $request):User;
     
    
 }

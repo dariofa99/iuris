@@ -15,7 +15,7 @@ $pasos = [
     "tipo_usuario"=>205,
     "visible"=>true,
     "title"=>"Solicitud",
-    "message"=>"Diligencia el siguiente formulario con la información de la persona que solicita la conciliación, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Los campos marcados con (*) son obligatorios.",
+    "message"=>"Diligencia el siguiente formulario con la información de la persona que solicita la conciliación, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud.Recuerda que solo los campos marcados con (*) son obligatorios.",
     "view"=>"myforms.recepcion.frm_parte_solicitante"
   ],
   1=>[

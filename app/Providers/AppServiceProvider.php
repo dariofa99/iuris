@@ -6,12 +6,16 @@ use App\Repositories\BaseRepository;
 use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
 use App\Repositories\PeriodosRepository;
+use App\Repositories\SedesRepository;
 use App\Repositories\SegmentosRepository;
+use App\Repositories\SolicitudesRepository;
 use App\Repositories\UsersRepository;
 use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
 use App\Services\PeriodosService;
+use App\Services\SedesService;
 use App\Services\SegmentosService;
+use App\Services\SolicitudesService;
 use App\Services\UsersService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -55,6 +59,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(            
             ConciliacionesService::class,
             ConciliacionesRepository::class,       
+        );
+        $this->app->bind(            
+            SolicitudesService::class,
+            SolicitudesRepository::class,       
+        );
+        $this->app->bind(            
+            SedesService::class,
+            SedesRepository::class,       
         );
         $this->app->bind(
             PeriodosService::class,

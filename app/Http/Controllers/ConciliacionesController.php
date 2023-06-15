@@ -28,9 +28,7 @@ use App\PdfReporte;
 use App\PdfReporteDestino;
 use App\Periodo;
 use App\Traits\PdfReport as TraitPdf;
-
 use PDF;
-use Str;
 use Storage;
 use App\SalasAlternasConciliacion;
 use App\Services\ConciliacionesService;
@@ -676,35 +674,41 @@ class ConciliacionesController extends Controller
 
     public function getUser(Request $request,$idnumber)
     {
-        //return $request->all();
-        $user =User::where(['idnumber'=>$idnumber,'tipodoc_id'=>$request->tipodoc_id])->first();
-        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        try {
+        $user = $this->userService->setValidateSede(false)
+        ->findWithFilter([
+            'tipodoc_id'=>$request->tipodoc_id,
+            'idnumber'=>$request->idnumber]);
+        $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
         if($user){       
-          $user->roles;                 
+          $user->roles;                  
           $view = view('myforms.conciliaciones.componentes.user_solicitante_form',compact('conciliacion','user'))->render();
           if($request->has("view")){
             $view = view('myforms.conciliaciones.componentes.'.$request->get("view"),compact('conciliacion','user'))->render();
            }
-          //$viewD = view('myforms.conciliaciones.componentes.user_detalles_form',compact('conciliacion','user'))->render();
-           return response()->json(['encontrado'=>true,'user'=>$user,'view'=>$view]);   
+          return response()->json(['encontrado'=>true,'user'=>$user,'view'=>$view]);   
         } 
         $view = view('myforms.conciliaciones.componentes.user_solicitante_form',compact('conciliacion'))->render();
+    } catch (\Throwable $th) {
+        return  response()->json(['encontrado'=>false,'errors'=>$th->getMessage()]);
+    
+    } 
           
-          return  response()->json(['encontrado'=>false,'view'=>$view]);
-    }
+        }
     public function getDetallesUser(Request $request,$idnumber)
     {
        // return $request->all();
-        $user =User::where(['idnumber'=>$idnumber])->first();       
+       $user = $this->userService->setValidateSede(false)
+        ->findWithFilter([           
+            'idnumber'=>$request->idnumber]);
+            
         if($user){       
             $conciliacion = Conciliacion::find($request->conciliacion_id);
           $user->roles;             
           $view = view('myforms.conciliaciones.componentes.user_detalles_form',compact('user','conciliacion'))->render();
            return response()->json(['encontrado'=>true,'user'=>$user,'view'=>$view]);   
         } 
-        //$view = view('myforms.conciliaciones.componentes.user_detalles_form',compact('user'))->render();
-          
-         return  response()->json(['encontrado'=>false]);
+        return  response()->json(['encontrado'=>false]);
     }
 
     public function deleteUser(Request $request){       
@@ -716,24 +720,18 @@ class ConciliacionesController extends Controller
     }
 
     public function addUser(Request $request){    
-      
-        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
+       
         try{
-        $user = $conciliacion->usuarios()->where([
-            'tipo_usuario_id'=>$request->tipo_usuario,
-            'user_id'=>$request->user_id,
-        ])->first();
-        if(!$user){
-            $conciliacion->usuarios()->attach($request->user_id,[
-                'tipo_usuario_id'=>$request->tipo_usuario,
-                'estado_id'=>1
-            ]);
-        }
-        $conciliacion->usuarios;
+            $conciliacion = $this->conciliacionService->addUser($conciliacion,$request);
+            $user = $this->userService->setValidateSede(false)->find($request->user_id);
+            $this->userService->addSede($user); 
+            $conciliacion->usuarios;
+
         return response()->json($conciliacion,200);
 
        } catch (\Throwable $th) {
-        return response()->json([],404);
+        return response()->json([$th->getMessage()],404);
        }
         
     }

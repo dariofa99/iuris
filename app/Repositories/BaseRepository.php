@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseRepository
@@ -9,6 +11,7 @@ class BaseRepository
     protected $validateSede;
     protected $model;
     private $relations;
+    public $query;
 
     //protected $connection = 'mysql';
     public function __construct(Model $model, array $relations = [])
@@ -18,22 +21,51 @@ class BaseRepository
         $this->validateSede = true;
     }
 
+    protected function applyValidateSede($query){
+        if($this->validateSede){
+            $this->query = $query->whereHas('sedes',function($query1){
+               $query1->where(['sede_id'=>session('sede')->id_sede]);                    
+            });
+        }
+    }
+    public function findWithFilter(array $filter) : ?Model {
+        $this->query =   $this->model;  
+        $this->applyValidateSede($this->query);   
+        $this->validateFilter($filter);
+        return $this->query->first();
+    }
+    protected function validateFilter(array $filter){
+        foreach ($filter as $column => $value) {
+            $date = \DateTime::createFromFormat('Y-m-d', $value);
+           if ($date instanceof \DateTime) {
+               $this->query =  $this->query->whereDate($column , $value);
+           }else{
+               $this->query = $this->query->where($column , $value);
+           }
+       } 
+    }
+
+    public function getWithFilter(Array $filter) : ?Collection {
+        $this->query = $this->model;  
+        $this->applyValidateSede($this->query);        
+        return $this->query->where($filter)->get();
+    }
+
     public function all()
     {
-        $query = $this->model;
+        $this->query = $this->model;
         if(!empty($this->relations)) {
-            $query = $query->with($this->relations);
+            $this->query = $this->query->with($this->relations);
         }
 
-        return $query->get();
+        return $this->query->get();
     }
 
     public function find(int $id){   
-       // $query =   $this->model;  
-        return $this->model->whereHas('sedes',function($query1){
-            if($this->validateSede)$query1->where(['sede_id'=>session('sede')->id_sede]);                    
-        })->find($id);
-    }
+        $this->query =   $this->model;  
+        $this->applyValidateSede($this->query);  
+        return $this->query->find($id);
+     }
 
 
 
@@ -51,9 +83,12 @@ class BaseRepository
         return $model;
     }
 
-    public function setValidateSede($validate = true)
+    public function setValidateSede($validate)
     {
         $this->validateSede = $validate;
         return $this;
     }
+
+    
+   
 }

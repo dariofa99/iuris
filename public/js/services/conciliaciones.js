@@ -139,7 +139,6 @@ export class ConciliacionService{
         }
         const topics = await response.json();
         return topics;
-
     }
 
     async deleteFile (id)  {

@@ -99,8 +99,7 @@
   </div>
 @endif
 <div class="row">
-    @foreach($sedes as $key => $sede)
-    
+    @foreach($sedes as $key => $sede)    
     <div class="col-md-3">
         <form id="myFormCambiarSede-{{$sede->id_sede}}" action="{{url('/change/sedes')}}" method="GET">
             <div class="panel panel-default">

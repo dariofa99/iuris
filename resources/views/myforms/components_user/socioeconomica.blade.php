@@ -1,5 +1,5 @@
 <div id="content_sin_secc_component">
-    <div class="row">
+   
         <div class="col-md-12">
             <h4>Información socio-económica</h4>
         </div>
@@ -35,4 +35,3 @@
             "data"=>getReferencesDataBySection("socio_economica",'users')
         ])
     </div>       
-</div>

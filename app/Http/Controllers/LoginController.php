@@ -90,9 +90,11 @@ class LoginController extends Controller
                     $sede = Sede::first();
                     Auth::user()->sedes()->attach($sede->id_sede);
                     session(["sede"=>$sede]);
+                  
                 }elseif(count(Sede::all())>1){
                     if(Auth::user()->hasRole("solicitante")){
-                        $solicitud=currentUser()->solicitudes()->whereIn('type_status_id',[162,165])->first();
+                        $solicitud=currentUser()->solicitudes()
+                        ->whereIn('type_status_id',[162,165])->first();
                         if($solicitud){
                             $sede = $solicitud->sedes()->first();
                             if($sede){

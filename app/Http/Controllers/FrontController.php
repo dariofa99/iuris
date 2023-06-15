@@ -6,6 +6,9 @@ use App\AudienciaConciliacion;
 use App\Conciliacion;
 use App\Periodo;
 use App\SalasAlternasConciliacion;
+use App\Services\SedesService;
+use App\Services\SolicitudesService;
+use App\Services\UsersService;
 use Illuminate\Http\Request;
 use App\Solicitud;
 use App\TablaReferencia;
@@ -18,6 +21,22 @@ use Illuminate\Support\Facades\DB;
 
 class FrontController extends Controller
 {
+
+    private $solicitudesService; 
+    private $sedesService; 
+    private $userService; 
+
+   public function __construct(
+        UsersService $userService,
+        SolicitudesService $solicitudesService,
+        SedesService $sedesService        
+        )
+    {
+        $this->userService = $userService;
+        $this->solicitudesService  = $solicitudesService; 
+        $this->sedesService  = $sedesService; 
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +44,7 @@ class FrontController extends Controller
      */
     public function index()
     {
-        //dd(auth()->user()->expedientes);
+       
         return view('front.index'); 
     }
 
@@ -194,20 +213,27 @@ class FrontController extends Controller
 
     public function solicitud_show($id)
     {   
-        $solicitud = Solicitud::find($id);   
-        if($solicitud and $solicitud->user->id == currentUser()->id){
-            if($solicitud and $solicitud->type_status_id==171){
-                $solicitud->type_status_id = 165;
-                $solicitud->save();
-                NewPush::channel('solicitudes_coord')
-                ->message(['solicitud_id'=>$id,'type_status_id'=>$solicitud->type_status_id,
-                'type_status'=>$solicitud->estado->ref_nombre])->publish();
+         try {             
+            $solicitud =  $this->solicitudesService->find($id);  
+           
+            if($solicitud->user->id == currentUser()->id){
+               /*  if($solicitud and $solicitud->type_status_id==171){
+                    $solicitud->type_status_id = 165;
+                    $solicitud->save();
+                    NewPush::channel('solicitudes_coord')
+                    ->message(['solicitud_id'=>$id,'type_status_id'=>$solicitud->type_status_id,
+                    'type_status'=>$solicitud->estado->ref_nombre])->publish();
+                } */
             }
-        $tur_aten=  Solicitud::whereIn('type_status_id',[155,156])
-        ->whereDate('created_at',date('Y-m-d'))
-        ->orderBy("turno", 'desc')->first();
-        return view('front.solicitudes.frm_edit_solicitud',compact('solicitud','tur_aten'));
-       }
+            $tur_aten=  Solicitud::whereIn('type_status_id',[155,156])
+            ->whereDate('created_at',date('Y-m-d'))
+            ->orderBy("turno", 'desc')->first();
+          
+            return view('front.solicitudes.frm_edit_solicitud',compact('solicitud','tur_aten'));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+      return redirect()->back();
        return view('errors.error'); 
    
     }

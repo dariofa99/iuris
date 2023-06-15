@@ -1,14 +1,26 @@
 import {UserService} from '../js/services/users.js';
 import {ConciliacionService} from '../js/services/conciliaciones.js';
+import { SolicitudesService } from './services/solicitudes.js';
 
 const userService = new UserService();
-const conciliacionService = new ConciliacionService()
-$(document).ready(function () {
-  
+const conciliacionService = new ConciliacionService();
+const solicitudesService = new SolicitudesService();
+$(function () {
+ 
     $("#btn_registrar_conc").on("click", async function(e) {
         e.preventDefault();
         var errors = validateForm("myFormParteSolicitante");
-        if(errors.length <=0){   
+        //console.log(errors)
+        if(errors.length <= 0){   
+          var request = convertFormToJSON("myFormParteSolicitante");
+          if(request.sede_id==''){
+            toastr.error("No hay una sede seleccionada", "Atención!", {
+              positionClass: "toast-top-right",
+              timeOut: "4000",
+           }); 
+          return false;
+          }
+          
           let timerInterval
           Swal.fire({
             title: 'Espere por favor!',
@@ -34,7 +46,6 @@ $(document).ready(function () {
           })
              
       //  var request = new FormData(document.getElementById("myFormParteSolicitante"));  
-        var request = convertFormToJSON("myFormParteSolicitante");
         var data = [];
         $(".input_user_ad").each((index,obj)=>{          
           data.push({
@@ -48,27 +59,17 @@ $(document).ready(function () {
           }) ;         
         }); 
         request["data"] = (data);
-
-        let response = await  userService.registrar(request);
-        if(response.errors){                          
+        let response = await  solicitudesService.solicitar(request);
+        if(response.errors){    
+          Swal.close();                      
             response.errors.forEach(error => {            
                 toastr.error(error, "", {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
                 });          
           });            
-        }else{        
-              
-                let request = {
-                    "solicitante_id":response.user.id,
-                    'estado_id':240,
-                    'mail_solicitante':true,
-                    'categoria_id':219
-                }
-                
-                let response_ =  await conciliacionService.registrar_conciliacion(request);
-                window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso=2";
-           
+        }else{    
+          window.location = "/solicitudes/recepcion/conciliacion/"+response.conciliacion.token+"/?id="+response.conciliacion.id+"&paso=2";
         }
     }else{
         toastr.error("Hay campos que son obligatorios", "Atención!", {
@@ -132,7 +133,7 @@ $(document).ready(function () {
           var request={};
           request["conciliacion_id"]  = $("#conciliacion_id").val();
           var data = [];
-          $(".input_user_ad").each((index,obj)=>{          
+          $(".insert_adv").each((index,obj)=>{          
             data.push({
               value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
               section : $(obj).attr("data-section"),
@@ -144,6 +145,7 @@ $(document).ready(function () {
             }) ;         
           }); 
           request["data"] = (data);
+          console.log(request);
         let response_ = await conciliacionService.addAditionalData(request);
         window.location = "/solicitudes/recepcion/conciliacion/"+response_.token+"/?id="+response_.id+"&paso="+6;
         }else{
@@ -417,6 +419,14 @@ $("#chk_not_parte_apoderado").on("change",function(e){
     $("#btn_no_apoderado").hide()
   }
 });
+
+$(".btn_change_sede").on("click",function(e){
+  $(".btn_change_sede ").removeClass("btn-danger")
+  .addClass('btn-primary').text("Seleccionar");
+  $(this).addClass("btn-danger").removeClass('btn-primary').text("Seleccionada");
+  $("#myFormParteSolicitante input[name='sede_id']").val($(this).attr('data-id'));
+});
+
 });//fin document ready
 
 async function addUserByStep(form,obj,step) {

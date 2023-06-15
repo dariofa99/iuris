@@ -17,7 +17,7 @@ class CreateSolicitudesTable extends Migration
             $table->increments('id');
             $table->string('number')->nullable(); 
             $table->string('idnumber')->nullable();    
-       
+            $table->string('email')->nullable();  
             $table->string('name')->nullable();  
             $table->string('lastname')->nullable(); 
             $table->string('tel1')->nullable();  
@@ -36,6 +36,9 @@ class CreateSolicitudesTable extends Migration
             
             $table->integer('estrato_id')->unsigned();
             $table->foreign('estrato_id')->references('id')->on('referencias_tablas');
+
+            $table->integer('tipopers_id')->unsigned();
+            $table->foreign('tipopers_id')->references('id')->on('referencias_tablas');
 
             $table->integer('tipodoc_id')->unsigned();
             $table->foreign('tipodoc_id')->references('id')->on('referencias_tablas'); //identificación 

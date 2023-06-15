@@ -38,7 +38,20 @@ Sede: {{($solicitud->sedes[0]->nombre)}}
 		<div class="tab-content">
 			<!--Tab pane tab_3-->
             <div class="tab-pane" id="tab_datos_gen">
-                    @include('front.solicitudes.frm_solicitud')
+                    {{-- @include('front.solicitudes.frm_solicitud') --}}
+                    @if(count($solicitud->conciliaciones)>0)
+                    @include('myforms.conciliaciones.conciliacion_form',[
+                        'conciliacion'=>$solicitud->conciliaciones[0]
+                    ]) 
+                    @else
+                    <hr>
+                    <div class="alert alert-info">
+                        <h3>
+                                <i class="fa fa-exclamation-circle"> </i> No tiene asignada una conciliación
+                        </h3>
+                    </div>
+                    @endif
+            
             </div>
                 <!--Tab pane tab_3-->
 

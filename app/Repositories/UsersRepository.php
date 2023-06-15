@@ -2,9 +2,12 @@
 namespace App\Repositories;
 
 use App\Mail\ConfirmarCorreo;
+use App\ReferencesData;
+use App\Sede;
 use Illuminate\Http\Request;
 use App\Services\UsersService;
 use App\User;
+use App\UserAditionalData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -12,8 +15,9 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
+use Intervention\Image\ImageManagerStatic as Image;
 
-class UsersRepository extends BaseRepository implements UsersService{
+class UsersRepository extends BaseRepository implements UsersService {
    
     public function __construct(User $user)
     {
@@ -21,22 +25,30 @@ class UsersRepository extends BaseRepository implements UsersService{
     }
 
     function getAllUsers($request,$relations = null, $perPage = 10):LengthAwarePaginator{
-       
-      $query = User::criterio($request->data_search,$request->criterio)
+     $query = User::criterio($request->data_search,$request->criterio)
       ->whereHas('sedes',function($query1){
         $query1->where([
             'sede_id'=>session('sede')->id_sede,
         ]);
+      })->where(function($query2){
+        if (!currentUser()->hasRole("amatai")) {
+          $query2->whereHas('roles',function($query3){
+            $query3->where('roles.id','<>',1);
+          });
+        }    
       });
       if(!empty($relations)){
         $query = $this->applyFiltro($query,$relations);
       }
-      
+      $query = $this->orderBy($query, 'created_at','DESC');
       return $this->paginate($query, $perPage);
+}
 
-
+protected function orderBy($query, $col,$type)
+{
+  return  $query->orderBy($col,$type);    
+     
    
-
 }
 
 protected function applyFiltro($query,$relations = [])
@@ -61,7 +73,7 @@ protected function paginate($query, $perPage)
         'idnumber' => $request['idnumber'],
         'name' => $request['name'],
         'lastname' => $request['lastname'],
-        'password' => $request->has('password') ? $request['password'] : bcrypt($request['idnumber']),
+        'password' => $request->has('password') ? bcrypt($request['password']) : ($request['idnumber']),
         'accesofvir' => $request->has('accesofvir') ? $request['accesofvir'] : '',
         'description' =>  $request->has('description') ?  $request['description'] : '',
         'codigo_estudiantil' => $request->has('codigo_estudiantil') ? $request['codigo_estudiantil'] : '',
@@ -77,10 +89,27 @@ protected function paginate($query, $perPage)
         'datecreated' => Carbon::now()->format('Y-m-d'),
     ]);
 
+      if($request->has('data') and is_array($request->data)){                     
+          foreach ($request->data as $key => $rq) {
+            $rq['user_id'] = $user->id; 
+            $ref_data = ReferencesData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
+              if($ref_data) {  
+                  $this->storeData($ref_data,$rq);
+              }
+          }
+      }
+      $user->roles()->attach( $request->has('idrol') ? $request['idrol'] : 8); 
+      if($request->has('sede_id')){
+        $sede = Sede::find($request->get('sede_id'));
+        session(["sede"=>$sede]);
+        $user->sedes()->attach(session('sede')->id_sede);
+      }else{
+        if(session()->has('sede')){
+          $user->sedes()->attach(session('sede')->id_sede);
+        }
+      }    
+     
       
-    if(session()->has('sede')){
-      $user->sedes()->attach(session('sede')->id_sede);
-    }
     return $user;
   }
 
@@ -197,13 +226,8 @@ protected function paginate($query, $perPage)
         return $doceWithRama;
     }
 
-public function findUserWithFilter(Array $filter) : User {
-    $user = $this->model->whereHas('sedes',function($query1){
-      if($this->validateSede)$query1->where(['sede_id'=>session('sede')->id_sede]);                 
-  })->where($filter)->first();
+
     
-    return $user;
-}
 
 public function addSede(User $user){
   if($user){
@@ -223,12 +247,82 @@ public function changeSede(User $user){
 public function update(User $user, Request $request) : User {
     $user->fill($request->all()); 
     $user->save();  
+    if($request->has('data') and is_array($request->data)){                     
+      foreach ($request->data as $key => $rq) {
+        $rq['user_id'] = $user->id; 
+         $ref_data = ReferencesData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
+          if($ref_data) {  
+              $this->storeData($ref_data,$rq);
+          }
+      }
+  }
     if($request->email!=$user->email){
       $user->confirm_token = Str::random(50);
       Mail::to($request->email)->send(new ConfirmarCorreo($user));   
     }  
   return $user;
 }
+
+public function updateProfilePicture(User $user, Request $request) : User {
+  if($request->image!=''){
+    //   $thumbnail = User::find($id);
+    $path = public_path().'/thumbnails/';
+
+    /*if ($thumbnail->image!='') {
+        //\File::delete($path.''.$thumbnail->idnumber.'.jpg');
+    }*/
+
+    // $file = \Input::file('image');
+     //Creamos una instancia de la libreria instalada   
+    // Image::configure(array('driver' => 'profile_files'));
+      $image = Image::make($request->image);
+     //Ruta donde queremos guardar las imagenes
+     
+
+     // Guardar Original
+     //$image->save($path.$file->getClientOriginalName());
+     // Cambiar de tamaño
+     $image->resize(215,215);
+     // Guardar
+     $image->save($path.''.$user->idnumber.'.jpg');
+     
+     //Guardamos nombre y nombreOriginal en la BD
+     //$thumbnail = User::find($id);
+     
+     $user->image = $user->idnumber.'.jpg';
+     $user->save();
+  }
+  return $user;
+}
+
+protected function storeData($ref_data,$request){
+
+  $data = UserAditionalData::where([
+      'reference_data_id'=>$ref_data->id,                
+      'user_id'=>$request['user_id']
+      ])->first();           
+
+
+  if($data){
+      $data->fill([                    
+          'value'=>$request["value"],
+          'reference_data_option_id'=>$request["option_id"],
+          'value_is_other'=>array_key_exists('value_is_other', $request) ? $request["value_is_other"] : "",
+      ]);
+      $data->save();
+  }else{
+    if(array_key_exists('option_id', $request) and $request["option_id"]!=null){
+      $data = UserAditionalData::create([
+        'reference_data_id'=>$ref_data->id,
+        'reference_data_option_id'=>$request["option_id"],
+        'user_id'=>$request["user_id"],
+        'value'=>$request["value"],
+        'value_is_other'=>array_key_exists('value_is_other', $request) ? $request["value_is_other"] : "",
+    ]);
+    }
+     
+  }
+} 
 
 }
 

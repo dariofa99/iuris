@@ -18,20 +18,20 @@ class ConciliacionesRepository extends BaseRepository implements ConciliacionesS
     public function store(Request $request): Conciliacion
     {
         $conciliacion = Conciliacion::create([
-            'token'=>$request->has('token') ? $request->get('token') : str_replace("/", "", bcrypt(Str::random(5))),
-            'num_conciliacion'=> $request->has('num_conciliacion') ? $request->get('num_conciliacion') : strtoupper("CCEAH-0-00-00") ,//"CCEAH-0-00-00",
-            'num_solicitud'=> $request->has('num_solicitud') ? $request->get('num_conciliacion') : strtoupper("CCEAH-".Str::random(7)) ,//"CCEAH-0-00-00"
-            'categoria_id'=> $request->has('categoria_id') ? $request->get('categoria_id') : 173,
-            'estado_id'=>$request->has('estado_id') ? $request->get('estado_id') : 174,
-            'periodo_id'=> $request->has('periodo_id') ? $request->get('periodo_id') : 1,
-            'user_id'=>$request->has('user_id') ? $request->get('user_id') : auth()->user()->id
+            'token'=>$request->has('token') ? $request->input('token') : str_replace("/", "", bcrypt(Str::random(5))),
+            'num_conciliacion'=> $request->has('num_conciliacion') ? $request->input('num_conciliacion') : strtoupper("CCEAH-0-00-00") ,//"CCEAH-0-00-00",
+            'num_solicitud'=> $request->has('num_solicitud') ? $request->input('num_conciliacion') : strtoupper("CCEAH-".Str::random(7)) ,//"CCEAH-0-00-00"
+            'categoria_id'=> $request->has('categoria_id') ? $request->input('categoria_id') : 173,
+            'estado_id'=>$request->has('estado_id') ? $request->input('estado_id') : 174,
+            'periodo_id'=> $request->has('periodo_id') ? $request->input('periodo_id') : 1,
+            'user_id'=>$request->has('user_id') ? $request->input('user_id') : auth()->user()->id
         ]);
         if(session()->has('sede')){
             $conciliacion->sedes()->attach(session('sede')->id_sede);
         }
         //autor
         $conciliacion->usuarios()->attach(auth()->user()->id,[
-            'tipo_usuario_id'=> $request->has('tipo_usuario_id') ? $request->get('tipo_usuario_id') : 199,
+            'tipo_usuario_id'=> $request->has('tipo_usuario_id') ? $request->input('tipo_usuario_id') : 199,
             'estado_id'=>1
         ]);
         return $conciliacion;
@@ -72,22 +72,20 @@ class ConciliacionesRepository extends BaseRepository implements ConciliacionesS
             return $results;
         }
 
-    
-
-      /*   $conciliaciones = Conciliacion::filter($request)
-        ->where(function($query){
-            if(!currentUser()->can('ver_all_conciliaciones')){
-                return $query->whereHas('usuarios',function($query1){
-                    $query1->where([
-                        'user_id'=>auth()->user()->id,
+        public function addUser(Conciliacion $conciliacion,Request $request):Conciliacion
+        {
+            $user = $conciliacion->usuarios()->where([
+                'tipo_usuario_id'=>$request->tipo_usuario,
+                'user_id'=>$request->user_id,
+            ])->first();
+            if(!$user){
+                $conciliacion->usuarios()->attach($request->user_id,[
+                    'tipo_usuario_id'=>$request->tipo_usuario,
+                    'estado_id'=>1
                 ]);
-                
-                });
-            }       
-        })
-        ->orderBy('conciliaciones.created_at','desc')->paginate(10); */
-     
-        //return $conciliaciones;
+            }
+            return $conciliacion;
+        }
     }
   
 

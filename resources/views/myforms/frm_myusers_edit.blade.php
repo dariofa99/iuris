@@ -1,4 +1,7 @@
 @extends('layouts.dashboard')
+@section('titulo_area')
+Rol de Usuario: <strong> {{$user->roles[0]->display_name}} </strong>
+@endsection
 @section('area_forms')
 
 @include('msg.alerts')
@@ -11,9 +14,6 @@
         </ul>
     </div>
 @endif
-
-<h4>Rol de Usuario: {{$user->roles[0]->display_name}} </h4>
-
 <ul class="nav nav-tabs">
 	<li class="active"><a data-toggle="tab" href="#home">Datos generales</a></li>
 	<li><a data-toggle="tab" href="#menu1">Información Identitaria</a></li>
@@ -36,7 +36,7 @@
 				@endif
 			 </div> 
 			 <div class="col-md-2">
-				@if(currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin')  )
+				@if(currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')  )
 				<div class="form-group" align="right">			
 					{!! Form::hidden('active', '0') !!}		
 					
@@ -45,6 +45,26 @@
 				</div> 
 				@endif
 			 </div>  
+
+			 <div class="col-md-4" >
+				<div align="center" class="pict_container_profile">
+					<div id="loader-container">
+						<div class="progress">
+							<div id="progress-bar" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 00%;">
+							  00%
+							</div>
+						  </div>
+					</div>
+					<img  class='img-circle img_profile' id="img_profile" src="{{ is_file(public_path('thumbnails/'.$user->image)) ? asset('thumbnails/'.$user->image ) : asset('thumbnails/default.jpg' )}}" alt="User">
+				</div>
+				<div align="center">
+					<input accept="image/*" style="display: none" id="file_picture" type="file"/>
+					<i id="update_profile_picture" style="font-size:18px;cursor:pointer;margin:2px" class="fa fa-camera"></i>
+				</div>
+				
+			</div>
+
+
 			@include('myforms.users.formulario_registro',[
 				'disabled'=>isset ($user) ? '' : '',
 				'col'=>4

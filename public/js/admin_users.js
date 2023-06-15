@@ -3,7 +3,8 @@ import {UserService} from './services/users.js';
 const userService = new UserService();
 
 $(document).on("ready",function () {
- 
+  let id = $("#myFormUserEdit input[name='idnumber']")
+  .prop("disabled",true).removeAttr('name');
 $("#registrar_gen_us").on("click",async function(e){
     var errors = validateForm("myFormUserCreate"); 
     if(errors.length<=0){        
@@ -127,7 +128,50 @@ $("#content_user_gen_form").on("blur","input[name='idnumber']",async function(e)
     $("#wait").hide();
   }
   });
-
+  $("#update_profile_picture").on("click",function(e) {
+    $("#file_picture").trigger("click");
+    
+  });
 
 });//////////////////////////////////////////////
           
+const fileInput = document.getElementById('file_picture');
+fileInput.addEventListener('change',async (event) => {
+  const file = event.target.files[0];
+  let id = $("#myFormUserEdit input[name='id']").val();
+  const body = new FormData();
+  body.append('image', file);
+  body.append('id', id);
+  try {
+    $("#loader-container").show().css({'display':'flex'})
+    const result = await userService.uploadFile(body)
+    .then((response) => {
+      $("#img_profile").attr("src","/thumbnails/"+response.user.image)
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',        
+        title:"Actualizado con éxito!",
+        showConfirmButton: false,
+        timer: 2500
+        });
+    })
+    .catch((error) => {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Ups! Algo fallo',
+        html:error,
+        showConfirmButton: false,
+        timer: 5500
+        });
+      console.error('Error al cargar el archivo:', error);
+    });
+  } catch (error) {
+    // Manejar el error
+    console.error(error);
+  } finally {
+    // Restablecer el estado de la barra de progreso
+    const result = userService.showProgress(0)
+    $("#loader-container").hide()
+  }
+});

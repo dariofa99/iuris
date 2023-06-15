@@ -184,8 +184,68 @@ export class UserService{
     }
     const topics = await response.json();
     return topics;
-
 }
+
+async updateProfilePicture (request)  {
+    try {
+        const response = await fetch(BASE_URL + 'usuarios/update/profile/picture', {
+          method: 'POST',
+          headers: {
+            
+            'X-CSRF-Token': $("#token").attr("content"),
+          },
+          body: request,
+        });
+  
+        if (!response.ok) {
+          const message = `An error has occurred: ${response.status}`;
+          throw new Error(message);
+        }
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+}
+
+async uploadFile(formData){
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', BASE_URL + 'usuarios/update/profile/picture', true);
+        xhr.setRequestHeader('X-CSRF-Token', $("#token").attr("content")); // Agrega la cabecera X-CSRF-Token
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+                const percentage = (event.loaded / event.total) * 100;
+                this.showProgress(percentage); 
+            }
+        });  
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            try {
+                const response = JSON.parse(xhr.responseText);
+                resolve(response);
+              } catch (error) {
+                reject(new Error('Error al analizar la respuesta JSON'));
+              }
+          } else {
+            reject(new Error(`Upload failed with status: ${xhr.status}`));
+          }
+        };  
+        xhr.onerror = () => {
+          reject(new Error('Upload failed'));
+        };   
+        xhr.send(formData);
+      });
+}
+
+showProgress(percentage) {
+    const progressDiv = document.getElementById('progress-bar');
+    progressDiv.textContent = `${parseInt(percentage)}%`;
+    progressDiv.style.width = `${parseInt(percentage)}%`;
+    console.log(percentage);
+  }
+
 }
 
 

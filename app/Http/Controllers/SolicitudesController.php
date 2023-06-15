@@ -12,17 +12,41 @@ use Carbon\Carbon;
 use Storage;
 use Facades\App\Facades\NewPush;
 use App\File;
+use App\Http\Requests\UserStoreRequest;
+use App\Mail\RegConciliacionSuccess;
+use App\Services\ConciliacionesService;
+use App\Services\PeriodosService;
+use App\Services\SedesService;
+use App\Services\SolicitudesService;
+use App\Services\UsersService;
 use Facades\App\Facades\NewChat;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Validator;
 use Illuminate\Validation\Rule;
 
 class SolicitudesController extends Controller
 {
-    public function __construct()
+    private $solicitudesService; 
+    private $sedesService; 
+    private $userService; 
+    private $conciliacionService;
+     public $periodoService;
+    
+   public function __construct(
+        UsersService $userService,
+        SolicitudesService $solicitudesService,
+        SedesService $sedesService  ,
+        PeriodosService  $periodoService,
+        ConciliacionesService $conciliacionService
+        )
     {
-        
+        $this->periodoService = $periodoService;
+        $this->conciliacionService  = $conciliacionService; 
+        $this->userService = $userService;
+        $this->solicitudesService  = $solicitudesService; 
+        $this->sedesService  = $sedesService; 
         $sede = Sede::find(1);       
         session(["sede"=>$sede]);
         $this->middleware('auth',['except' => ['registro','solicitar_store','store','waitRoom','userRegister','update','find','recepcion','solicitar','recepcion_conciliacion']]);
@@ -48,8 +72,8 @@ class SolicitudesController extends Controller
     public function solicitar(Request $request)
     {         
        // $user = User::find(20351)  ;
-     
-        return view('myforms.recepcion.solicitar_conciliacion');
+      // Session::forget('sede');
+       return view('myforms.recepcion.solicitar_conciliacion');
     } 
 
     public function recepcion_conciliacion(Request $request,$token)
@@ -58,20 +82,24 @@ class SolicitudesController extends Controller
         
         $conciliacion = Conciliacion::where("token",$token)->first();  
        
+       
         if($conciliacion and ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 176)){
             if($conciliacion and $request->paso !=1){ 
-                
+               
                 if($request->paso == 2){       
                     $user = $conciliacion->getUser(205);//solicitante
-                    Auth::login($user);               
+                    Auth::login($user);                                
                     //natural
                     if($user->tipopers_id != 238){
+                      
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
+                     
                     }
+
                 } 
                 if($request->paso > 2){       
-                    $user = $conciliacion->getUser(205);//solicitante
-                    if(Auth::user()->id != $user->id) Auth::logout();
+                    $user = $conciliacion->getUser(205);//solicitante                    
+                    if(Auth::guest() and Auth::user()->id != $user->id) Auth::logout();
                 } 
 
                 if(Auth::guest()) return redirect('login');
@@ -86,8 +114,7 @@ class SolicitudesController extends Controller
                      }
                 }   
                 if($request->paso == 6){
-                    $user = $conciliacion->getUser(197);//solicitado
-                   
+                    $user = $conciliacion->getUser(197);//solicitado                   
                     //natural
                     if($user->tipopers_id != 238){
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
@@ -178,33 +205,41 @@ class SolicitudesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-       // dd($request->all());
-      if($request->has('sede_id')){
-        if(!session('sede')){
-            $sede = Sede::find($request->sede_id);
-            session(["sede"=>$sede]);
-        }       
-    }
-        $solicitud = Solicitud::join('sede_solicitudes','sede_solicitudes.solicitud_id','=','solicitudes.id')
-        ->where("sede_id",session('sede')->id_sede)
-        ->whereDate('solicitudes.created_at',date('Y-m-d'))
-        ->orderBy("turno", 'desc')->first();
-        $turno = 1;
-        if($solicitud)$turno = $solicitud->turno + 1;       
+    public function store(UserStoreRequest $request)
+    {      
+        $this->sedesService->setSede($request);
+        $user = $this->userService->store($request);
+        if(Auth::guest()) Auth::login($user);
+        $turno  = $this->solicitudesService->getTurno();
         $request['turno'] = $turno;
-        $request['type_category_id'] = 153;
-        $request['type_status_id'] = 154;
-        $request['token'] = str_replace ('/', '', bcrypt(time()));
-         
+        $solicitud = $this->solicitudesService->store($request);
+        $periodo = $this->periodoService->getPeriodoActivo();
+        $request['periodo_id'] =  $periodo->id;
+        $request['solicitante_id'] =  $user->id;
+        $request['estado_id'] =  240;
+        $request['categoria_id'] =  219;        
+       
+        $conciliacion = $this->conciliacionService->store($request);
+        $conciliacion->usuarios()->attach($user->id,[
+            'tipo_usuario_id'=>205,
+            'estado_id'=>1
+        ]);
+        $solicitud->conciliaciones()->attach($conciliacion->id);
+        $response=[];
+        try {
+            Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
+            } catch (\Throwable $th) {
+                $response['errors'] = [$th->getMessage()];
+            }
+
+        
+        $response['conciliacion'] = $conciliacion;
+        return response()->json($response);// dd($request->all());
+
         $solicitud = Solicitud::create($request->all());
         $solicitud->number = $request->idnumber.''. $turno;
         $solicitud->save();
-        $pref = "0".$solicitud->id;
-        $pref = substr($pref,-2);
-        $solicitud->number = $request->idnumber.'-'. $pref;
-        $solicitud->save();
+      
 
         if($request->has('sede_id')){
             $solicitud->sedes()->attach($request->sede_id);

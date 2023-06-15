@@ -15,8 +15,7 @@ use App\MotivoAsigCaso;
 use DB;
 use App\Sede;
 use App\TablaReferencia;
-
-
+use Illuminate\Support\Facades\Auth;
 
 /**
 *  
@@ -36,7 +35,14 @@ class UsersComposer
 		->pluck('ref_nombre','id'); 
 
 		$sedes = Sede::all() ;
-		$roles = DB::table('roles')->where('id','<>',1)->pluck('display_name','id'); 
+		$roles = DB::table('roles')->where(function($query){
+			if(!Auth::guest() and !currentUser()->hasRole('amatai')){
+				return $query->where('id','<>',1);
+			}
+		}) 
+		
+		->pluck('display_name','id'); 
+		
         $estrato = DB::table('referencias_tablas')
 		->where(['tabla_ref'=>'users','categoria'=>'estrato'])
 		->pluck('ref_nombre','id'); 

@@ -12,7 +12,7 @@ class Solicitud extends Model
     public $disk = 'solicitud_files';
 
      protected $fillable = [
-        'number','idnumber', 'estrato_id','tipodoc_id','name','lastname','tel1','tiempo_espera',
+        'number','idnumber', 'email', 'estrato_id','tipodoc_id','name','lastname','tel1','tiempo_espera',
         'description','type_status_id','turno','type_category_id','token','mensaje','date_time'
     ];
 
@@ -46,5 +46,10 @@ class Solicitud extends Model
         ->withPivot('solicitud_id','exp_id')->withTimestamps(); 
      } 
   
+     public function conciliaciones(){
+        return $this->belongsToMany(Conciliacion::class,'solicitud_has_conc','solicitud_id','conciliacion_id')
+        ->withPivot('solicitud_id','conciliacion_id')
+        ->withTimestamps(); 
+     } 
   
 }

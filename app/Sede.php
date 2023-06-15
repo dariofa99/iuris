@@ -30,8 +30,16 @@ class Sede extends Model
     public function configuracions(){
         return $this->belongsToMany(Configuracion::class,'configuraciones_sede','sede_id','configuracion_id')
         ->withPivot('id','sede_id','configuracion_id')->withTimestamps(); 
-     } 
+     }  
 
+    public function peridos(){
+        return $this->belongsToMany(Periodo::class,'sede_periodos','sede_id','periodo_id')
+        ->withPivot('id','sede_id','periodo_id')->withTimestamps();
+    }
+
+    public function getActivePeriod(){
+        return $this->peridos()->where('periodo.estado',1)->first();
+    }
      
      
 }

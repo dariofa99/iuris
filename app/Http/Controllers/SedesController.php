@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Sede;
-use Auth;
+use App\Services\UsersService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SedesController extends Controller
 {
+
+    private $userService; 
+
+    public function __construct(UsersService $userService)
+    {
+      $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -135,7 +144,10 @@ class SedesController extends Controller
     public function changeSede(Request $request){
         $sede = Sede::find($request->sede_id);       
         session(["sede"=>$sede]);
-        Auth::user()->sedes()->sync($sede->id);
+        $user = Auth::user();
+        if (!$user->sedes()->wherePivot('sede_id',session('sede')->id_sede)->exists()) {
+            $add = $this->userService->addSede($user);
+        }
         if(auth()->user()->hasRole("solicitante")){
             return redirect()->to('oficina/solicitante');
         }

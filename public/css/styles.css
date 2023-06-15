@@ -787,5 +787,30 @@ body{
   .img_carrousel img{
 	border-radius: 5px;
   }
+
+  .pict_container_profile{
+	position: relative;
+  }
+  #loader-container{
+	display: none;
+	background-color: rgb(242, 233, 233);
+	opacity: 0.9;	
+	width: 165px;
+	height: 150px;
+	position: absolute;
+	align-items: center;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);	
+	align-items: end;
+	justify-content: center;
+	
+  }
+  .pict_container_profile img {
+	width: 145px;
+	height:145px;
+	margin:2px
+  }
+ 
   
   

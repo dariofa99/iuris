@@ -53,7 +53,7 @@
               <a href="{{ url('/oficina/solicitante/solicitud',$value->id) }}">
               {{ $value->number }} <small>({{ $value->estado->ref_nombre }})</small>
             </a>          
-        </li>  
+        </li>   
           @endforeach
          
              
@@ -127,7 +127,7 @@
 
 
 
-@if(currentUser()->can("crear_conciliaciones") and currentUser()->hasRole("solicitante"))           
+@if(currentUser()->can("crear_conciliaciones") || currentUser()->hasRole("solicitante"))           
         <li class="treeview">        
                   <a href="#">
                   <i class="fa fa-hand-paper-o" aria-hidden="true"></i>

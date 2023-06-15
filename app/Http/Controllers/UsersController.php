@@ -111,99 +111,25 @@ class UsersController extends Controller
           'email.required' => 'El :attribute es requerido.',
           'idnumber.required' => 'El número de documento es requerido.',
           'idnumber.unique' => 'El número de documento ya existe en otra cuenta.',
-      ];
+          ];
       $validator = Validator::make($request->all(), [
-           'name' => [
-              'required'
-          ],
-          'lastname' => [
-            'required'
-        ],
-          'email' => [
-                  'required','unique:users'
-          ],
-          'idnumber' => [
-            'required','unique:users'
-    ]
+          'name' => ['required'],
+          'lastname' => ['required'],
+          'email' => ['required','unique:users'],
+          'idnumber' => ['required','unique:users']
           ],$messages);
 
 
     if ($validator->fails()) {
-      $errors = $validator->errors();
-      if(count($errors->get('email'))>0 and count($errors->get('idnumber'))>0){
-        $user = $this->userService->findUserWithFilter(['email'=>$request->email,'idnumber'=>$request->email]);
-        return response()->json(['enocn' => $user ]);
-      }elseif(count($errors->get('email'))>0){
-        try {
-          $user = $this->userService->findUserWithFilter(['email'=>$request->email]);
-          return response()->json(['errors' => $user ]);
-        } catch (\Throwable $th) {
-          //throw $th;
-        }   
-      }else if(count($errors->get('idnumber'))>0){
-        try {
-          $user = $this->userService->findUserWithFilter(['idnumber'=>$request->email]);
-          return response()->json(['errors' => $user ]);
-        } catch (\Throwable $th) {
-          //throw $th;
-        }
-      }
-
-        return response()->json(['errors' => $validator->errors()->all()]);
+      return response()->json(['errors' => $validator->errors()->all()]);
     }
-    
- 
-        $user = $this->userService->store($request);
-      
-        
-   
-          //$this->aditionalData($request,$user->id);
-        if($request->has('data') and is_array($request->data)){                     
-            foreach ($request->data as $key => $rq) {
-              $rq['user_id'] = $user->id; 
-               $ref_data = ReferencesData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
-                if($ref_data) {  
-                    $this->storeData($ref_data,$rq);
-                }
-            }
-        }
-          //  $user = User::where('idnumber', '=', $request['idnumber'])->first();         
-          $user->roles()->attach( $request->has('idrol') ? $request['idrol'] : 8); 
-         
-        Session::flash('message-success', ' Registrado');
-        if(Auth::guest()) Auth::login($user);
-        return response()->json(['user' => $user]);
-        return Redirect::to('/users/create');
+    $user = $this->userService->store($request);
+    if(Auth::guest()) Auth::login($user);
+    return response()->json(['user' => $user]);
+       // return Redirect::to('/users/create');
     }
 
-    private function storeData($ref_data,$request){
 
-      $data = UserAditionalData::where([
-          'reference_data_id'=>$ref_data->id,                
-          'user_id'=>$request['user_id']
-          ])->first();           
-  
-
-      if($data){
-          $data->fill([                    
-              'value'=>$request["value"],
-              'reference_data_option_id'=>$request["option_id"],
-              'value_is_other'=>array_key_exists('value_is_other', $request) ? $request["value_is_other"] : "",
-          ]);
-          $data->save();
-      }else{
-        if(array_key_exists('option_id', $request) and $request["option_id"]!=null){
-          $data = UserAditionalData::create([
-            'reference_data_id'=>$ref_data->id,
-            'reference_data_option_id'=>$request["option_id"],
-            'user_id'=>$request["user_id"],
-            'value'=>$request["value"],
-            'value_is_other'=>array_key_exists('value_is_other', $request) ? $request["value_is_other"] : "",
-        ]);
-        }
-         
-      }
-  } 
 
 
 private function aditionalData($request,$id){
@@ -381,16 +307,8 @@ private function aditionalData($request,$id){
                             ->withInput();
                 }
              
-        $user = $this->userService->update($user,$request);
-        if($request->has('data') and is_array($request->data)){                     
-          foreach ($request->data as $key => $rq) {
-            $rq['user_id'] = $user->id; 
-             $ref_data = ReferencesData::where(['name'=>$rq['name'],'section'=>$rq['section']])->first();
-              if($ref_data) {  
-                  $this->storeData($ref_data,$rq);
-              }
-          }
-      }
+    $user = $this->userService->update($user,$request);
+  
     if($request->get('ramaderecho_id')){
         $user->ramas_derecho()->sync($request['ramaderecho_id']);
    
@@ -414,34 +332,7 @@ private function aditionalData($request,$id){
    }
 
 
-      if($request->image!=''){
-         //   $thumbnail = User::find($id);
-         $path = public_path().'/thumbnails/';
-
-         /*if ($thumbnail->image!='') {
-             //\File::delete($path.''.$thumbnail->idnumber.'.jpg');
-         }*/
- 
-         // $file = \Input::file('image');
-          //Creamos una instancia de la libreria instalada   
-         // Image::configure(array('driver' => 'profile_files'));
-           $image = Image::make($request->image);
-          //Ruta donde queremos guardar las imagenes
-          
- 
-          // Guardar Original
-          //$image->save($path.$file->getClientOriginalName());
-          // Cambiar de tamaño
-          $image->resize(215,215);
-          // Guardar
-          $image->save($path.''.$user->idnumber.'.jpg');
-          
-          //Guardamos nombre y nombreOriginal en la BD
-          //$thumbnail = User::find($id);
-          
-          $user->image = $user->idnumber.'.jpg';
-          $user->save();
-  }
+      
 
         $asig=true;
         $asigt = true;
@@ -455,15 +346,7 @@ private function aditionalData($request,$id){
 
         }
 
-        if(!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
-        if (!$asig and !$asigt) {          
-          //Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de DOCENTE y TURNO');
-        }elseif(!$asig){
-          //Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de DOCENTE');
-        }elseif (!$asigt) {
-          Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de TURNO');
-        }
-
+        
 
 
        //$user->roles()->sync($request['idrol']);
@@ -471,7 +354,15 @@ private function aditionalData($request,$id){
   if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
     return response()->json(['user'=>$user]);
   }
-       
+    if(!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
+    if (!$asig and !$asigt) {          
+      //Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de DOCENTE y TURNO');
+    }elseif(!$asig){
+      //Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de DOCENTE');
+    }elseif (!$asigt) {
+      Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de TURNO');
+    }
+
        return Redirect::to('users/'.$user->id.'/edit');
     }
 
@@ -509,21 +400,20 @@ private function aditionalData($request,$id){
         $encontrado = false;
         $sin_sede = false;
         try {
-          $user = $this->userService->findUserWithFilter([
+          $user = $this->userService->findWithFilter([
             'tipodoc_id'=>$request->tipodoc_id,
             'idnumber'=>$request->idnumber]);
         } catch (\Throwable $th) {
           $user = false;
         }
       
-     
       if($user){ 
         $encontrado = true;
         } else{
           try {
             $sin_sede = true;
             $response['sin_sede'] = true;
-            $user = $this->userService->setValidateSede(false)->findUserWithFilter([
+            $user = $this->userService->setValidateSede(false)->findWithFilter([
               'tipodoc_id'=>$request->tipodoc_id,
               'idnumber'=>$request->idnumber]);
           } catch (\Throwable $th) {
@@ -548,7 +438,6 @@ private function aditionalData($request,$id){
 
       public function findUserByNameOrLastNameAndRole(Request $request){
         $users = $this->userService->findUserByNameOrLastNameAndRole($request->name,$request->role);
-          
         if(count($users)>0){
           return response()->json(['encontrado'=>true,'users'=>$users]);
         }    
@@ -577,5 +466,21 @@ private function aditionalData($request,$id){
           }
          return  response()->json(['agregado'=>false]);
     }
+
+    public function uploadProfilePicture(Request $request){
+      try {
+        $user = $this->userService->find($request->id);
+        if($user){
+          $user = $this->userService->updateProfilePicture($user,$request);
+
+          return  response()->json(['user'=>$user]);
+
+        }
+      } catch (\Throwable $th) {
+        return  response()->json(['errors'=>$th]);
+      }
+      return  response()->json(['errors'=>false]);
+  }
+
 }
 

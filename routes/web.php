@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 Route::get('webservice','WebServicesController@index');
 
@@ -77,6 +78,7 @@ Route::resource('usuarios', 'UsersController');
 Route::get("usuarios/buscar/persona","UsersController@findUser");
 Route::get("usuarios/find/by/name","UsersController@findUserByNameOrLastNameAndRole");
 Route::post("usuarios/add/sede","UsersController@addSede");
+Route::post("usuarios/update/profile/picture","UsersController@uploadProfilePicture");
 
 Route::post('mail', 'MailController@store')->name('mail.store');
 
@@ -461,8 +463,8 @@ Route::group(['prefix' =>'oficina'], function() {
   Route::get('solicitante/conciliaciones/solicitud','FrontController@conciliaciones_solicitud')->name("front.conciliaciones.solicitud");
   Route::get('solicitante/conciliaciones/{id}/edit','FrontController@conciliacion_edit')->name("front.conciliacion.edit");
   Route::get('solicitante/conciliaciones/create','FrontController@conciliacion_store')->name("front.conciliacion.store");
-
   Route::resource('solicitante','FrontController');
+
   Route::get('solicitante/solicitud/{id}','FrontController@solicitud_show');
   
 
@@ -541,7 +543,8 @@ Auth::routes();
 Route::post('/login', 'LoginController@store')->name('login'); 
 Route::get('/login', function () {
         Auth::logout();
-       return view('myforms.login');
+       // Session::flush();
+        return view('myforms.login');
 });
 /* Route::get('/', function () {
   return redirect('/dashboard');
@@ -550,14 +553,14 @@ Route::get('/login', function () {
 Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 
 Route::get('/prueba', function () {
- // $user = User::find(1);
-  //Mail::to('darioj99@gmail.com')->send(new Firma($user));
+  $dateString = date('Y-m-d');
+  $date = DateTime::createFromFormat('Y-m-d', $dateString);
 
-  $expediente = Expediente::where('expid', '2023A-558')->first();
-  //
-  $expediente->setNotActLimit();
+  if ( $date instanceof \DateTime) {
+    dd( $date);
+  }
 
-  dd($expediente);
+  dd('no');
 
    return view('myforms.mails.solicitud_radicado_conciliacion',[
     'mensaje'=>"heols",
