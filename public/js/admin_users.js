@@ -22,6 +22,7 @@ $("#registrar_gen_us").on("click",async function(e){
         }) ;         
         }); 
         request["data"] = (data);
+        $("#wait").show();
         let response = await  userService.registrar(request);
         if(response.errors){                          
             response.errors.forEach(error => {            
@@ -40,7 +41,9 @@ $("#registrar_gen_us").on("click",async function(e){
                 timer: 1500
             }); 
         }
+        $("#wait").hide();
     }
+    $("#wait").hide();
 });
 $("#content_user_gen_form").on("blur","input[name='idnumber']",async function(e){
     var formulario =  $(this).closest('form');

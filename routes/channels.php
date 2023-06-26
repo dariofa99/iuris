@@ -11,6 +11,14 @@
 |
 */
 
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
+
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+Broadcast::channel('login', function ($user) {
+    $user->profile_image = url($user->image);
+    Log::info("Notification fire channel login: ".$user->id);
+    return  (int) auth()->user()->id === (int) $user->id ? $user : false;
+}); 

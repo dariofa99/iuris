@@ -10,7 +10,7 @@ use \App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\TablaReferencia; 
 use App\Mail\ConfirmarCorreo;
-use App\Services\UsersService;
+use App\Services\UsersService; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;

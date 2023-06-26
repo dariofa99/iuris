@@ -22,7 +22,7 @@ class BaseRepository
     }
 
     protected function applyValidateSede($query){
-        if($this->validateSede){
+        if($this->validateSede and method_exists($this->model, 'sedes')){
             $this->query = $query->whereHas('sedes',function($query1){
                $query1->where(['sede_id'=>session('sede')->id_sede]);                    
             });

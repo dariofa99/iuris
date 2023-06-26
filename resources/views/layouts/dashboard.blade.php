@@ -260,11 +260,6 @@ function getDateServer(){
 
 
 
-
-
-
-
-
 <!-- adicionales -->
 
 <!-- script aliases -->
@@ -306,8 +301,8 @@ function getDateServer(){
 
 <!-- NewPush -->
 <script>var tokendefault = '';</script>
-<script src="{{asset('plugins/new-push/io.js?v=3')}}"></script>
-<script src="{{asset('js/newpush.js?v=3')}}"></script>
+{{-- <script src="{{asset('plugins/new-push/io.js?v=3')}}"></script>
+<script src="{{asset('js/newpush.js?v=3')}}"></script> --}}
 {{-- <scriptsrc="asset('js/pushconnected.js?v=1')"></script>--}}
 
 <!-- /adicionales -->
@@ -347,6 +342,22 @@ function getDateServer(){
 
 
   document.addEventListener('DOMContentLoaded', function () {
+   
+/*     var channel = Echo.join('login');
+    channel.listen('.login-event', function(data) {    
+            
+            chat.render(data.room);           
+    }).here(users => {   
+       console.log(users);
+    }).joining(user => {
+console.log(user);
+        
+    }).leaving(user => {
+      
+        console.log(23);
+    }); */
+
+   
     var mySelect = $('#first-disabled2');
 
     $('#special').on('click', function () {
@@ -367,6 +378,23 @@ function getDateServer(){
      // $("#mymodalShowAlerts").modal("show")
     @endif
   });
+
+
+  $(document).ready(function () {
+  /*   var channel = Echo.join('login');
+    channel.listen('.login-event', function(data) {    
+            
+            chat.render(data.room);           
+    }).here(users => {   
+       console.log(users);
+    }).joining(user => {
+console.log(user);
+        
+    }).leaving(user => {
+      
+        console.log(23);
+    }); */
+  })
 
 </script>
 </body>

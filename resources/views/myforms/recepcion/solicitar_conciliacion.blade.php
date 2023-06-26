@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
 @push('styles')
-    <style>
-
-
-    </style>
+   
 @section('content')
 @php
 $paso = Request::has('paso') ? Request::get('paso') : 1;

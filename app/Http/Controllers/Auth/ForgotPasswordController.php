@@ -7,10 +7,8 @@ use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Mail;
-use Session;
-use Redirect;
-use App\User;
+use Illuminate\Support\Facades\Session;
+
 class ForgotPasswordController extends Controller
 {
     /*
@@ -34,28 +32,17 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request)
     {
-        $this->validate($request, ['email' => 'required|email']);
-
-       // dd($request->email);
-       /*  $mail = $request->email;
+         $this->validate($request, ['email' => 'required|email']);
         
-         Mail::send('myforms.admin.frm_mail_recovery',$request->all(),function($msj) use ($mail)
-         {
-            $msj->subject('Correo');
-            $msj->to($mail);
-        });
-
- 
-
-        Session::flash('Bien'); */
-        //return redirect()->back();
-
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
          $response = $this->broker()->sendResetLink(
             $request->only('email')
         );
+
+       // dd($this->validate($request, ['email' => 'required|email']));
+       
         return $response == Password::RESET_LINK_SENT
             ? $this->sendResetLinkResponse($request, $response)
             : $this->sendResetLinkFailedResponse($request, $response); 
@@ -74,7 +61,8 @@ class ForgotPasswordController extends Controller
                 'status' => trans($response)
             ]);
         }
-        return back()->with('status', trans($response));
+        Session::flash('message-warning', 'La solicitud se ha enviado con éxito!');
+        return back()->with('success', trans($response));
     }
 
     /**

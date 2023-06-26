@@ -122,32 +122,12 @@ Listar Expedientes
 	<div class="col-md-4">
 		<div class="form-group">
 			 
-				
-			{!!Form::hidden('exptipocaso_id', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('expdesccorta', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
 
-            {!!Form::hidden('expestado_id', 1, ['class' => 'form-control'] ); !!}
            @if($periodo)
 		   {!!Form::hidden('periodo_id', $periodo->id, ['class' => 'form-control'] ); !!}
 		   @endif
 
-            {!!Form::hidden('expdepto_id', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('expmunicipio_id', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('exptipovivien_id', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('expperacargo', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('expingremensual', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('expegremensual', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('exphechos', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('exprtaest', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-
-            {!!Form::hidden('expjuzoent', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('expnumproc', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('exppersondemandante', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('exppersondemandada', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-            {!!Form::hidden('exptipoactuacion', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-
-            {!!Form::hidden('expfechalimite', null, ['class' => 'form-control', 'required' => 'required' , 'value' => '0'] ); !!}
-		</div>
+    </div>
 	</div>
 
 <!-- /campos ocultos-->

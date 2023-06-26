@@ -125,6 +125,10 @@ $("#content_user_exp_asig").on("click",'#actualizar_exp_us',async function(e){
     resetForm('myFormUserEditExpediente');
     $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
     $("#myModal_exp_user_edit").modal("hide");
+    toastr.success("Actualizado con éxito", "", {
+      positionClass: "toast-top-right",
+      timeOut: "4000",
+  });  
 
   }
   $("#wait").hide();

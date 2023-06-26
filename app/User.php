@@ -13,6 +13,7 @@ use App\Traits\AsigNotasExt;
 
 use App\Notifications\MyResetPassword;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 
 class User extends Authenticatable
 {
@@ -395,6 +396,19 @@ class User extends Authenticatable
 
     }
 
+
+    public static function boot() {
+	    parent::boot();
+	    static::created(function($item) {
+	        Event::dispatch('user.created', $item);
+	    });
+	    static::updated(function($item) {
+            Event::dispatch('user.updated', $item);
+	    });
+	    static::deleted(function($item) {
+	        Event::dispatch('user.deleted', $item);
+	    });
+    }
 
     }
 

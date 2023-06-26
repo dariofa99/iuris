@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Event;
 use DB;
 use App\User;
 use App\Traits\AsigNotas;
-use App\AsigDocenteCaso;
 use App\Segmento; 
 use App\HistorialDatosCaso;
 use App\Services\PeriodosService;
@@ -38,7 +37,6 @@ class Expediente extends Model
     protected $fillable = [
         'expid',
         'expramaderecho_id',
-        'expfecha',
         'expidnumber',
         'expestado_id',
         'exptipoproce_id',
@@ -59,26 +57,35 @@ class Expediente extends Model
         'expjuzoent',
         'expnumproc',
         'exppersondemandante',
-        'exppersondemandada',
-        //'exptipoactuacion',
+        'exppersondemandada',      
         'expfechalimite',
-
-        'expidnumberdocen',
         'expfecha_res',
-        //'expcierrecasocpto',
-        'expcierrecasonotaest',
-        'expcierrecasonotadocen',
+     
     ];
 
    
-    public $periodoService;
+   /*  public $periodoService;
     public $segmentoService;
     public function __construct()
     {
+        
         $this->periodoService = App::make(PeriodosService::class);
         $this->segmentoService = App::make(SegmentosService::class);
     }
+ */
 
+    public static function boot() {
+        parent::boot();
+	    static::created(function($item) {
+	        Event::dispatch('expediente.created', $item);
+	    });
+	    static::updated(function($item) {
+            Event::dispatch('expediente.updated', $item);
+	    });
+	    static::deleted(function($item) {
+	        Event::dispatch('expediente.deleted', $item);
+	    });
+    } 
     public function conciliaciones()
     {
         return $this->belongsToMany(Conciliacion::class, 'conc_has_exp', 'exp_id', 'conciliacion_id')
@@ -154,7 +161,17 @@ class Expediente extends Model
             ->withTimestamps();
     }
 
-    public function asigDocente($asignacion_caso)
+    private function getPeriodoActivo(){
+        $service = App::make(PeriodosService::class);
+        return $service->getPeriodoActivo();
+    }
+
+    private function getSegmentoActivo(){
+        $service = App::make(SegmentosService::class);
+        return $service->getSegmentoActivo();
+    }
+
+   /*  public function asigDocente($asignacion_caso)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
 
@@ -234,8 +251,8 @@ class Expediente extends Model
 
         //dd($docentes,$asig_doc); 
     }
-
-    public function asigDocenteSeguimiento($asignacion_caso, $tipoproce)
+ */
+    /* public function asigDocenteSeguimiento($asignacion_caso, $tipoproce)
     {
         $asig_doc = $this->getDocentesAsigByRama($tipoproce);
 
@@ -283,9 +300,9 @@ class Expediente extends Model
                 break;
             }
         }
-    }
+    } */
 
-    private function getDocentesByRama($rama)
+  /*   private function getDocentesByRama($rama)
     {
         return $doceWithRama = DB::table('users')
             ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
@@ -302,9 +319,9 @@ class Expediente extends Model
             ->orderBy('users.created_at', 'desc')
             ->get()
             ->toArray(); 
-    }
+    } */
 
-    private function getDocentesAsigByRama($tipoproce)
+   /*  private function getDocentesAsigByRama($tipoproce)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
         return $asig_doc = DB::select(
@@ -326,7 +343,7 @@ class Expediente extends Model
          ",
             ),
         );
-    }
+    } */
     function getDocenteAsig()
     {
         $asig = $this->getAsignacion();
@@ -366,9 +383,7 @@ class Expediente extends Model
         ->where('periodo_id',$periodo->id)
         ->orderBy('fecha_asig','desc')->first();  */
         $asig = $this->getAsignacion();
-        
-       // $response = [];
-        $periodo = $this->periodoService->getPeriodoActivo();
+        $periodo = $this->getPeriodoActivo();
         
         
         try {
@@ -552,32 +567,8 @@ class Expediente extends Model
                 $hijos[] = $hijosAct;
             }
         }
-        // dd($hijos);
+      
         return $hijos;
-
-        /*  SELECT actuacions.`id` FROM actuacions, revisiones_actuacion
-        WHERE
-         actuacions.`id`= revisiones_actuacion.`parent_rev_actid` AND `actexpid` = '2019B-1'
-          AND  `actidnumberest` = ''
-         GROUP BY actuacions.`id`
-
-
-         SELECT actuacions.`id` FROM actuacions, revisiones_actuacion
-         WHERE actuacions.`id`= revisiones_actuacion.`parent_rev_actid`
-        AND `actexpid` = '2019B-1' AND actestado_id <> '136'
-          AND actestado_id <> '138' GROUP BY actuacions.`id`
-           AND  `actidnumberest` = ''
-         */
-
-        /* SELECT rev_actid, actestado_id FROM actuacions, revisiones_actuacion
-         WHERE actuacions.`id`= revisiones_actuacion.`rev_actid` AND parent_rev_actid = '8682'
-         ORDER BY rev_actid DESC LIMIT 1
-        
-         SELECT rev_actid, actestado_id FROM actuacions, revisiones_actuacion
-          WHERE actuacions.`id`= revisiones_actuacion.`rev_actid`
-           AND parent_rev_actid = '8682'
-           AND actestado_id <> '136' AND actestado_id <> '138'
-            ORDER BY rev_actid DESC LIMIT 1 */
     }
 
     public function setNotActLimit($date = null)
@@ -591,9 +582,9 @@ class Expediente extends Model
             ->get();
 
         $hijos = []; 
-        $segmento = $this->segmentoService->getSegmentoActivo();
+        $segmento = $this->getSegmentoActivo();
         if (count($padresAct) > 0) {
-            $periodo = $this->periodoService->getPeriodoActivo();
+            $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")         
             ->where("periodo_id",$periodo->id)->get();
 
@@ -732,34 +723,10 @@ class Expediente extends Model
                     }
                     break;
             }
-            //dd($criterio);
-            //$query->where('expid', $criterio);
-            /*$query->where(function ($queryor)use ($data,$criterio) {
-
-
-                $queryor->orwhere('expid','=', $criterio)
-                      ->orwhere('expidnumber','=', $criterio)
-                      ->orwhere('expidnumberest','=', $criterio)
-                      ->orwhere('exptipoproce','=', $criterio)
-                      ->orwhere('expestado','=', $criterio)
-                      ->orwhere('expfecha','=', $criterio);
-            });*/
+      
         }
     }
 
-    public function scopeCrit($query, $criterio, $value)
-    {
-        if (trim($criterio) != '') {
-            // dd($value);
-            //$query->where('expid', $criterio);
-            $query->where(function ($queryor) use ($criterio, $value) {
-                $queryor->orwhere($value, '=', $criterio);
-                //->orwhere('expidnumber','=', $criterio)
-                //->orwhere('expidnumberest','=', $criterio)
-                //->orwhere('exptipoproce','=', $criterio);
-            });
-        }
-    }
 
     public function scopeRangoFechas($query, $fechaini, $fechafin)
     {
@@ -779,26 +746,14 @@ class Expediente extends Model
             return $ids;
         }
     }
-    function getId($ids)
-    {
-        $year = date('Y');
-        $id = max($ids);
-        $oldYear = substr($this->expid, 0, -6);
-        dd($oldYear);
-        if ($oldYear != $year) {
-            $id = 0;
-        }
-        //dd($id);
-        $id_f = $year . 'B-' . ($id + 1);
-        return $id_f;
-    }
+
 
     function get_nota_prov($concepto)
     {
         $notas = $this->notas()
             ->where(['orgntsid' => 1])
             ->get();
-        $periodo = $this->periodoService->getPeriodoActivo();
+        $periodo = $this->getPeriodoActivo();
         $n_conocimiento = [];
         $n_etica = [];
         $n_aplicacion = [];
@@ -869,7 +824,7 @@ class Expediente extends Model
     function get_notas_caso($periodo = null)
     {
         //obtiene las notas de totales del caso//en todos los segmentos
-        $periodo = $this->periodoService->getPeriodoActivo();
+        $periodo = $this->getPeriodoActivo();
         $segmentos = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
             ->where('sg.sede_id', session('sede')->id_sede)
             ->where('perid', $periodo->periodo_id)
@@ -884,7 +839,6 @@ class Expediente extends Model
                 $nota_aplicacion = $this->get_nota_corte('aplicacion', $segmento->segmento_id);
                 $nota_etica = $this->get_nota_corte('etica', $segmento->segmento_id);
                 $nota_final = $this->get_nota_corte('final', $segmento->segmento_id);
-                //$tipo_nota = $segmento->
                 $notas[] = [
                     'segmento_id' => $segmento->segmento_id,
                     'segmento' => $segmento->segnombre,
@@ -918,23 +872,7 @@ class Expediente extends Model
     }
 
     ///Eventos
-    public static function boot()
-    {
-        parent::boot();
 
-        static::updated(function ($service_request) {
-            //dd($service_request);
-            Event::fire('expediente.updated', $service_request);
-        });
-
-        /* static::updated(function($service_request){
-                Event::fire('nat_general_request.updated',$service_request);
-        });
-
-        static::deleted(function($service_request){
-                Event::fire('nat_general_request.deleted',$service_request);
-        });*/
-    }
     //////////////////////////
     public function difDays($fecha_ini, $fecha_fin)
     {

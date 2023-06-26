@@ -18,7 +18,7 @@ class SolicitudesRepository extends BaseRepository implements SolicitudesService
      
      $solicitud = Solicitud::create([
         'tipodoc_id' => $request->has('tipodoc_id') ? $request['tipodoc_id'] : 1, 
-        'number' => $request->has('number') ? $request['number'] : 0,
+        'number' => $request->has('number') ? $request['number'] : time(),
         'idnumber' => $request->has('idnumber') ? $request['idnumber'] : 1, 
         'tipopers_id' => $request->has('tipopers_id') ? $request['tipopers_id'] : 237, 
         'name' => $request['name'],

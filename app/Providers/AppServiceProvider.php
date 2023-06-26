@@ -2,16 +2,22 @@
 
 namespace App\Providers;
 
+use App\Repositories\AsignacionCasosRepository;
+use App\Repositories\AsignacionDocenteCasosRepository;
 use App\Repositories\BaseRepository;
 use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
+use App\Repositories\ExpedientesRepository;
 use App\Repositories\PeriodosRepository;
 use App\Repositories\SedesRepository;
 use App\Repositories\SegmentosRepository;
 use App\Repositories\SolicitudesRepository;
 use App\Repositories\UsersRepository;
+use App\Services\AsignacionCasosService;
+use App\Services\AsignacionDocenteCasosService;
 use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
+use App\Services\ExpedientesService;
 use App\Services\PeriodosService;
 use App\Services\SedesService;
 use App\Services\SegmentosService;
@@ -19,7 +25,7 @@ use App\Services\SolicitudesService;
 use App\Services\UsersService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
+use GuzzleHttp\Client;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -44,6 +50,11 @@ class AppServiceProvider extends ServiceProvider
          $this->app->bind('nota',function(){
             return new \App\NotaExt();
         }); 
+   /*      $this->app->singleton('GuzzleHttp\Client',function(){
+            return new Client(
+                ['base_uri'=>'http://judex.udenar.edu.co/']
+            );
+        });  */
         $this->app->bind(            
             UsersService::class,
             UsersRepository::class,       
@@ -67,6 +78,18 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(            
             SedesService::class,
             SedesRepository::class,       
+        );
+        $this->app->bind(            
+            ExpedientesService::class,
+            ExpedientesRepository::class,       
+        );
+        $this->app->bind(            
+            AsignacionCasosService::class,
+            AsignacionCasosRepository::class,       
+        );
+        $this->app->bind(            
+            AsignacionDocenteCasosService::class,
+            AsignacionDocenteCasosRepository::class,       
         );
         $this->app->bind(
             PeriodosService::class,

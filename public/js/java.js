@@ -2636,7 +2636,7 @@ return false;
         var textarea = document.getElementById('exp_hechos');
         var contenido = textarea.value.trim();
         var palabras = contenido.split(/\s+/);
-        if (palabras.length < 20) {
+        if (palabras.length < 2) {
             toastr.error("Los hechos deben tener al menos 20 palabras", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
@@ -2648,7 +2648,7 @@ return false;
             var textarea = document.getElementById('exp_resp_est');
             var contenido = textarea.value.trim();
             var palabras = contenido.split(/\s+/);
-            if (palabras.length < 20) {
+            if (palabras.length < 2) {
                 toastr.error("La respuesta debe tener al menos 20 palabras", "", {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
@@ -4462,7 +4462,7 @@ function expedienteUpdate(request,id) {
 				type: 'success', 
 				timer: 2000,               
             });
-            window.location.reload(true)
+           // window.location.reload(true)
 		   
 
 		},

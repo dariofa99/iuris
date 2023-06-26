@@ -32,6 +32,7 @@ class ResetPasswordController extends Controller
      */
     public function reset(Request $request)
     {
+       
         $this->validate($request, $this->rules(), $this->validationErrorMessages());
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -60,11 +61,13 @@ class ResetPasswordController extends Controller
      */
     protected function sendResetResponse(Request $request,$response)
     {
+        
         if ($request->expectsJson()) {
             return response()->json([
                 'status' => trans($response)
             ]);
         }
+        
         return redirect($this->redirectPath())
             ->with('status', trans($response));
     }
@@ -78,6 +81,7 @@ class ResetPasswordController extends Controller
      */
     protected function sendResetFailedResponse(Request $request, $response)
     {
+      
         if ($request->expectsJson()) {
             return new JsonResponse(['email' => trans($response) ], 422);
         }
@@ -116,8 +120,6 @@ class ResetPasswordController extends Controller
     protected function resetPassword($user, $password){
         $user->password = $password;
         $user->save();
-        Session::flash('message-success', 'Ahora ya puedes iniciar sesión');
-               
-        //\Auth::login($user);
-    }
+        Session::flash('message-success', 'La contraseña se ha actualizado con éxito!');
+     }
 }

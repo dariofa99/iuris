@@ -3,38 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use Request;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Session;
-use Redirect;
 use Carbon\Carbon;
 use App\Expediente;
 use App\User;
 use App\Actuacion;
-use DB;
-use App\EstadoCaso;
 use App\AsignacionCaso;
 use App\AsigDocenteCaso;
 use App\Conciliacion;
+use App\Events\LoginEvent;
 use App\Periodo;
 use App\Segmento;
 use App\Solicitud;
 use App\HistorialDatosCaso;
 use Facades\App\Facades\NewPush;
 use App\Notifications\UserNotification;
+use App\Services\AsignacionCasosService;
+use App\Services\ExpedientesService;
+use App\Services\SolicitudesService;
 use App\Services\UsersService;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class ExpedienteController extends Controller
 {
 
   private $userService;
+  private $expedienteService ;
+  private $asignacionCasoService;
+  private $solicitudService;
 
-  public function __construct(UsersService $userService)
+  public function __construct(
+    AsignacionCasosService $asignacionCasoService,
+    SolicitudesService $solicitudService,
+    UsersService $userService,
+    ExpedientesService $expedienteService)
   {
+    $this->asignacionCasoService = $asignacionCasoService;
+    $this->solicitudService = $solicitudService;
     $this->userService = $userService;
+    $this->expedienteService = $expedienteService;
     $this->middleware('permission:ver_expedientes',   ['only' => ['create']]);
     $this->middleware('permission:sustituir_casos',   ['only' => ['replacecaso']]);
   }
@@ -82,7 +93,7 @@ array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//e
         AND expedientes.exptipoproce_id = 1
         AND expedientes.expestado_id != 2 
         AND asignacion_caso.activo = 1
-        AND `asigest_id` = ".\Auth::user()->idnumber."")
+        AND `asigest_id` = ".Auth::user()->idnumber."")
         );
           
           if (!empty($request->get('tipo_busqueda'))) {
@@ -177,7 +188,7 @@ array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//e
         AND expedientes.exptipoproce_id = 1
         AND expedientes.expestado_id != 2 
         AND asignacion_docente_caso.activo = 1
-        AND asignacion_docente_caso.docidnumber = ".\Auth::user()->idnumber."")
+        AND asignacion_docente_caso.docidnumber = ".Auth::user()->idnumber."")
         );
 
       // dd($count_colors);
@@ -190,7 +201,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
                 ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
-                ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
+                ->where('asignacion_docente_caso.docidnumber',Auth::user()->idnumber)
                 ->where('asignacion_caso.activo',1)
                 ->where('asignacion_docente_caso.activo',1)
                 ->where('sedes.id_sede',session('sede')->id_sede)
@@ -206,7 +217,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           ->where('asignacion_caso.activo',1)
           ->where('asignacion_docente_caso.activo',1)
           ->where('sedes.id_sede',session('sede')->id_sede)
-          ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
+          ->where('asignacion_docente_caso.docidnumber',Auth::user()->idnumber)
           ->count();
 
          
@@ -222,7 +233,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
             ->Criterio($request)  
-            ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
+            ->where('asignacion_docente_caso.docidnumber',Auth::user()->idnumber)
             ->where('asignacion_docente_caso.activo',1)
             ->where('sedes.id_sede',session('sede')->id_sede)
             ->orderBy(DB::raw("FIELD(expestado_id,'4','1','3','2','5')"))
@@ -234,7 +245,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                 ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
             ->Criterio($request)  
-            ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
+            ->where('asignacion_docente_caso.docidnumber',Auth::user()->idnumber)
             ->where('asignacion_docente_caso.activo',1)
             ->where('sedes.id_sede',session('sede')->id_sede)
             ->count();
@@ -281,7 +292,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                     ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                     ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
                     ->RangoFechas($request->dataIni,$request->dataFin)  
-                    ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber)
+                    ->where('asignacion_docente_caso.docidnumber',Auth::user()->idnumber)
                     ->where('asignacion_docente_caso.activo',1)
                     ->where('sedes.id_sede',session('sede')->id_sede)
                     ->orderBy(DB::raw("FIELD(expestado_id,'4','1','3','2','5')"))
@@ -293,7 +304,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                     ->leftjoin('sede_expedientes','sede_expedientes.expediente_id','=','expedientes.id')
                     ->leftjoin('sedes','sedes.id_sede','=','sede_expedientes.sede_id')
                     ->join('asignacion_docente_caso','asignacion_docente_caso.asig_caso_id','=','asignacion_caso.id')
-                    ->where('asignacion_docente_caso.docidnumber',\Auth::user()->idnumber) 
+                    ->where('asignacion_docente_caso.docidnumber',Auth::user()->idnumber) 
                     ->where('asignacion_docente_caso.activo',1)
                     ->where('sedes.id_sede',session('sede')->id_sede)
                     ->RangoFechas($request->dataIni,$request->dataFin)  
@@ -465,6 +476,118 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
     }
 
 
+   
+    
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+      
+      $res_day =Carbon::now();
+      $res_day = $res_day->addDays(7)->format('Y-m-d');
+      $date = Carbon::now();
+      $request['expfecha_res'] = $res_day ;
+        //Nuevo codigo para crear el id autoincrementable, servira para evaluar si alguien registro el que ya se tenia asignado en la vista
+     /*    $id = $this->getId();  
+        if ($request->expid == $id) {
+          $expId = $request->expid;
+          $bandera = false; 
+         }else{
+          $expId = $id;
+          $bandera = true;
+         }  */
+//
+        $expediente = $this->expedienteService->store($request);
+        $request['asigest_id'] = $request['expidnumberest'];
+        $request['asigexp_id'] = $expediente->expid;
+        $asignacion_caso = $this->asignacionCasoService->store($request);
+        $subRama = $asignacion_caso->expediente->rama_derecho->subrama;
+      if ($request['exptipoproce_id']==1 and $subRama!='UNAVI') {     
+        //solo para consultas de asesoria   
+        $this->expedienteService->asignarDocente($asignacion_caso);
+        }else{
+        $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+      }
+      if ($request->has('solicitud_id')) {     
+        //si viene desde solicitudes
+        $request['type_status_id'] = 162;
+        $request['type_category_id'] = 172;
+        $solicitud = $this->solicitudService->store($request);
+        $expediente->solicitudes()->attach($request->solicitud_id);  
+        NewPush::channel('solicitudes_send')->message([
+          'solicitud_id'=>$solicitud->id,
+          //'render'=>$render,             
+          ])->publish();      
+            
+      }else{
+        $user = $this->userService->findWithFilter(['idnumber'=>$expediente->expidnumber]);
+        $request['turno'] = 0;
+        $request['idnumber'] = $user->idnumber;
+        $request['name'] = $user->name;
+        $request['tel1'] = $user->tel1;
+        $request['lastname'] = $user->lastname;
+        $request['estrato_id'] = $user->estrato_id;
+        $request['tipodoc_id'] = $user->tipodoc_id;
+        $request['type_category_id'] = 166;
+        $request['type_status_id'] = 162;
+        $solicitud = $this->solicitudService->store($request);
+        $expediente->solicitudes()->attach($solicitud->id); 
+      }
+      $expedientes = $this->getExpEstu($request['expidnumberest']);
+      $numEx = count($expedientes);
+      $render = view('myforms.frm_expediente_list_ajax',compact('expedientes','numEx'))->render();
+      
+
+      $user = $expediente->estudiante;
+		  $user->notification = 'Nueva notificación de caso';
+		  $user->link_to = '/expedientes/'.$expediente->expid.'/edit';
+		  $user->mensaje = 'Se ha asignado un nuevo caso. Exp: '.$expediente->expid;     
+		  $user->notify(new UserNotification($user)); 
+      $notifications = view('layouts.notifications',compact('user'))->render();
+   /*    NewPush::channel('notifications_'.$request['expidnumberest']) 
+      ->message(['render'=>$render,'notifications'=>$notifications])
+      ->publish();   */  
+      if($request->ajax()){
+        return response()->json($expediente);
+      }
+       Session::flash('message-success', 'Creado con éxito...!');
+        return Redirect::to('expedientes');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $expediente = Expediente::where('expid',$id)->first();
+        $estudiante=$expediente->estudiante;
+        
+        //Agregue la funcion getusers Para poder usarla en el index
+        $user = $this->getUsers();
+        $active_expe='active';  
+
+        if (currentUser()->hasRole("estudiante")) {
+         if (Auth::user()->id != $estudiante->id) {
+           return view('errors.error');
+         }
+       } elseif(currentUser()->hasRole("solicitante")){
+        if (Auth::user()->idnumber != $expediente->expidnumber) {
+          return view('errors.error');
+        }
+       }
+
+       return view('myforms.frm_expediente_show', ['expediente'=>$expediente], compact('user', 'active_expe')  );
+    
+    }
+
     private function getId(){
       //Nuevo codigo para crear el id autoincrementable
           $year_act= Date('Y');
@@ -486,155 +609,6 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           $id = $year_act.$sem_act.'-'.($indice+1); 
          return $id;
     }
-    
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-    //  dd($request->all());
-      $res_day =Carbon::now();
-      $res_day = $res_day->addDays(7);
-      $date = Carbon::now();
-      
-        //Nuevo codigo para crear el id autoincrementable, servira para evaluar si alguien registro el que ya se tenia asignado en la vista
-        $id = $this->getId();  
-        if ($request->expid == $id) {
-          $expId = $request->expid;
-          $bandera = false; 
-         }else{
-          $expId = $id;
-          $bandera = true;
-         } 
-//dd($request['expramaderecho_id']);
-         $expediente = new Expediente($request->all());
-          $expediente->expid = $expId;
-          $expediente->expusercreated = currentUser()->idnumber;
-          $expediente->expuserupdated = currentUser()->idnumber;
-          $expediente->expidnumber = $request['expidnumber'];
-          $expediente->expidnumberest = $request['expidnumberest'];
-          $expediente->expramaderecho_id = $request['expramaderecho_id'];
-          $expediente->expestado_id = $request['expestado_id'];
-          $expediente->exptipoproce_id = $request['exptipoproce_id'];
-          $expediente->exptipocaso_id = 22;
-          $expediente->exptipovivien_id=90;
-          $expediente->expdepto_id=96;
-          $expediente->expmunicipio_id=24;
-          $expediente->expfecha_res	= $res_day->format('Y-m-d');
-          $expediente->expfecha =$date = $date->format('Y-m-d');
-          $expediente->save();
-      
-        $asignacion_caso = new AsignacionCaso();
-        $asignacion_caso->anotacion='asignado';
-        $asignacion_caso->asigest_id = $request['expidnumberest'];
-        $asignacion_caso->asiguser_id=currentUser()->idnumber;
-        $asignacion_caso->asigexp_id=$expId;
-        $asignacion_caso->fecha_asig= date('Y-m-d H:i:s');
-        $asignacion_caso->periodo_id=$request['periodo_id'];
-        $asignacion_caso->ref_asig_id=1;
-        $asignacion_caso->ref_mot_asig_id=1;
-        $asignacion_caso->save(); 
-
-        $subRama = $asignacion_caso->expediente->rama_derecho->subrama;
-
-      if ($request['exptipoproce_id']==1 and $subRama!='UNAVI') {     
-        //solo para consultas de asesoria   
-        $expediente->asigDocente($asignacion_caso);  // no tienen en cuenta la rama  del derecho
-        //$expediente->asigDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho        
-      }else{
-        $expediente->asigDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
-      }
-      if ($request->has('solicitud_id')) {     
-        //si viene desde solicitudes
-        $solicitud = Solicitud::find($request->solicitud_id);
-        $solicitud->type_status_id = 162;
-        $solicitud->type_category_id = 172;
-        $solicitud->save();
-        $expediente->solicitudes()->attach($request->solicitud_id);  
-        NewPush::channel('solicitudes_send')->message([
-          'solicitud_id'=>$solicitud->id,
-          //'render'=>$render,             
-          ])->publish();      
-            
-      }else{
-        $user = User::where('idnumber',$expediente->expidnumber)->first();
-        $solicitud = new Solicitud();
-        $solicitud->turno = 0;
-        $solicitud->idnumber = $user->idnumber;
-        $solicitud->name = $user->name;
-        $solicitud->tel1 = $user->tel1;
-        $solicitud->lastname = $user->lastname;
-        $solicitud->estrato_id = $user->estrato_id;
-        $solicitud->tipodoc_id = $user->tipodoc_id;
-        $solicitud->type_category_id = 166; 
-        $solicitud->type_status_id = 162;                
-        $solicitud->number = time();
-        $solicitud->save();
-        if(session()->has('sede')){
-        $solicitud->sedes()->attach(session('sede')->id_sede);  
-        }
-        $expediente->solicitudes()->attach($solicitud->id); 
-      }
-      if(session()->has('sede')){
-        $expediente->sedes()->attach(session('sede')->id_sede);
-      }
-      $expedientes = $this->getExpEstu($request['expidnumberest']);
-      $numEx = count($expedientes);
-      $render = view('myforms.frm_expediente_list_ajax',compact('expedientes','numEx'))->render();
-      
-
-      $user = $expediente->estudiante;
-		  $user->notification = 'Nueva notificación de caso';
-		  $user->link_to = '/expedientes/'.$expediente->expid.'/edit';
-		  $user->mensaje = 'Se ha asignado un nuevo caso. Exp: '.$expediente->expid;     
-		  $user->notify(new UserNotification($user)); 
-      $notifications = view('layouts.notifications',compact('user'))->render();
-      NewPush::channel('notifications_'.$request['expidnumberest']) 
-      ->message(['render'=>$render,'notifications'=>$notifications])
-      ->publish();    
-      if($request->ajax()){
-        return response()->json($expediente);
-      }
-       if($bandera){
-         Session::flash('message-info', 'Atención..! Registrado con el expediente No: '.$expId);
-       }else{
-        Session::flash('message-success', ' Registrado'); 
-       }
-        return Redirect::to('expedientes');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $expediente = Expediente::where('expid',$id)->first();
-        $estudiante=$expediente->estudiante;
-        
-        //Agregue la funcion getusers Para poder usarla en el index
-        $user = $this->getUsers();
-        $active_expe='active';  
-
-        if (currentUser()->hasRole("estudiante")) {
-         if (\Auth::user()->id != $estudiante->id) {
-           return view('errors.error');
-         }
-       } elseif(currentUser()->hasRole("solicitante")){
-        if (\Auth::user()->idnumber != $expediente->expidnumber) {
-          return view('errors.error');
-        }
-       }
-
-       return view('myforms.frm_expediente_show', ['expediente'=>$expediente], compact('user', 'active_expe')  );
-    
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -645,6 +619,8 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
     public function edit($id)
     {
  //dd("#SS");
+ broadcast(new LoginEvent(currentUser()))->toOthers();
+
       if(currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
         $url = '/expedientes/';
         $expediente = Expediente::where('expid',$id)->first();
@@ -680,7 +656,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
                   'tpntid'=>'1',
                   'expidnumber'=>$expediente->expid,
                   'estidnumber'=>$expediente->expidnumberest,
-                  'docidnumber'=>\Auth::user()->idnumber, 
+                  'docidnumber'=>Auth::user()->idnumber, 
                   'tbl_org_id'=>$expediente->id, 
                 ]; 
             $expediente->asignarNotas($data);
@@ -701,7 +677,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
         $active_expe='active';  
 //dd("ss");
         if (currentUser()->hasRole("estudiante")) { 
-         if (\Auth::user()->id != $estudiante->id) {
+         if (Auth::user()->id != $estudiante->id) {
            return view('errors.error',compact('url'));
          }
          if (($expediente->expestado_id =='2' OR $expediente->expestado_id =='5')) {
@@ -713,7 +689,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
             return redirect('/expedientes/'.$expediente->expid);
           }
        } elseif(currentUser()->hasRole("solicitante")){
-        if (\Auth::user()->idnumber != $expediente->expidnumber) {
+        if (Auth::user()->idnumber != $expediente->expidnumber) {
           $url = '/expedientes/';
           return view('errors.error',compact('url'));
         }
@@ -760,7 +736,12 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
 
      
 
-      $expediente = Expediente::find($id);
+      $expediente = $this->expedienteService->find($id);
+
+      $expediente = $this->expedienteService->update($expediente,$request);
+
+     // return response()->json($expediente); 
+
       //crea el registro en la tabla historialdatos caso
       if($request->has('exphechos') and $expediente->exphechos != $request['exphechos']){
         $historial=HistorialDatosCaso::insert([
@@ -770,7 +751,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           "hisdc_ndias"=>'1',
           "hisdc_estado"=>'2',
           "hisdc_idnumberest_id"=>$expediente->expidnumberest,
-          "hisdc_authuser_id"=>\Auth::user()->idnumber,
+          "hisdc_authuser_id"=>Auth::user()->idnumber,
           "created_at"=> Carbon::now(),
           "updated_at"=> Carbon::now()
         ]);
@@ -783,7 +764,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           "hisdc_ndias"=>'1',
           "hisdc_estado"=>'2',
           "hisdc_idnumberest_id"=>$expediente->expidnumberest,
-          "hisdc_authuser_id"=>\Auth::user()->idnumber,
+          "hisdc_authuser_id"=>Auth::user()->idnumber,
           "created_at"=> Carbon::now(),
           "updated_at"=> Carbon::now()
         ]);
@@ -793,8 +774,9 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
        $asignacion_caso =  AsignacionCaso::where('asigest_id',$request->oldexpidnumberest)
         ->where('asigexp_id',$expediente->expid)
         ->where('activo',1)
-        ->first();      
-        $expediente->expuserupdated = \Auth::user()->idnumber;
+        ->first();     
+
+        $expediente->expuserupdated = Auth::user()->idnumber;
        
        if($request->exptipoproce_id!=$expediente->exptipoproce_id){     
              
@@ -822,7 +804,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
        }
     
       
-       if (\Auth::user()->hasRole('diradmin') || \Auth::user()->hasRole('coordprac') || \Auth::user()->hasRole('amatai')) {
+       if (Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('coordprac') || Auth::user()->hasRole('amatai')) {
          if ($asignacion_caso!=null) {
            if($expediente->expidnumberest!=$request['expidnumberest']){
             // dd('');
@@ -840,8 +822,7 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
            $asignacion_caso->save();
         }               
        }
-       $expediente->fill($request->all());
-       $expediente->save();
+     $expediente = $this->expedienteService->update($expediente,$request);
 
        if (!$request->ajax()) {
          Session::flash('message-success', 'Actualizado con éxito...!');
@@ -1024,8 +1005,8 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
           $asignacion->docidnumber = $asig->asig_docente->docidnumber;
           $asignacion->asig_caso_id = $asignacion_caso->id;
           $asignacion->cambio_docidnumber = $cambio_docidnumber;	
-          $asignacion->user_created_id = \Auth::user()->idnumber;
-          $asignacion->user_updated_id = \Auth::user()->idnumber;
+          $asignacion->user_created_id = Auth::user()->idnumber;
+          $asignacion->user_updated_id = Auth::user()->idnumber;
           $asignacion->save();
         }       
         return $asignacion_caso->asig_docente;
@@ -1163,8 +1144,8 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
               $new_asig_doc->activo = 1;
               $new_asig_doc->docidnumber = $old_asig->docidnumber;
               $new_asig_doc->asig_caso_id =  $asignacion_caso->id;
-              $new_asig_doc->user_created_id = \Auth::user()->idnumber;
-              $new_asig_doc->user_updated_id = \Auth::user()->idnumber;
+              $new_asig_doc->user_created_id = Auth::user()->idnumber;
+              $new_asig_doc->user_updated_id = Auth::user()->idnumber;
               $new_asig_doc->save();
             }
 
@@ -1467,10 +1448,10 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
     $tokenjitsi = array(
       'context' => array(
                 'user'  => array(
-                        'avatar'  => url('/thumbnails/'.\Auth::user()->image),
-                        'name'  => \Auth::user()->name,
-                        'email' => \Auth::user()->email,
-                        'id'  => \Auth::user()->idnumber,
+                        'avatar'  => url('/thumbnails/'.Auth::user()->image),
+                        'name'  => Auth::user()->name,
+                        'email' => Auth::user()->email,
+                        'id'  => Auth::user()->idnumber,
                         ),
                 //'group' => 'a123-123-456-789',
 
@@ -1557,7 +1538,29 @@ if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
     return response()->json($response);
   }
 
-  public function pruebaasig(){
+  public function pruebaasig($id){
+
+    try {
+      $expediente = $this->expedienteService->findWithFilter([
+        'expid'=>$id
+      ]);
+    } catch (\Throwable $th) {
+      dd($th);
+    }
+    
+   /*  $relations = $expediente->relationLoaded('solicitudes');
+    dd(method_exists($expediente, 'sedes')); */
+
+    $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
+      'asigest_id'=>3030,
+      'asigexp_id'=>$expediente->expid,
+      'activo'=>1
+    ]);
+
+    $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
+
+    //$relations = $asignacion_caso->getRelations();
+    dd($expediente);
 
     $fecha_unix= strtotime("+1 hours");
     $tokenjitsi = array(

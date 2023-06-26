@@ -3,7 +3,10 @@
 <div class="col-md-8">
 <input type="hidden" id="tokenc" value="">
 <div class="embed-responsive embed-responsive-4by3" style=" height: 500px; "> 
- {!! \Facades\App\Facades\NewChat::room($expediente->solicitudes[0]->number)->render() !!} 
+    @include('content.chat.chat',
+    [
+      'token'=>$expediente->solicitudes[0]->number
+    ])
 </div> 
 </div>
 <div class="col-md-4">

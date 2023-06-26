@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <input type="hidden" name="sede_id">
     <label>
-        Selecciona una sede
+        Selecciona una sede*
     </label>
     </div>
     @foreach($sedes as $key => $sede)    

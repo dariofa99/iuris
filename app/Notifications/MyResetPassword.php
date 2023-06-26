@@ -41,12 +41,20 @@ class MyResetPassword extends Notification
      */
     public function toMail($notifiable)
 {
-    return (new MailMessage)
+
+    return (new MailMessage($notifiable))
+    ->subject("Recuperar contraseña")
+    ->view('myforms.mails.recovery_password',[
+            'token'=>$this->token,
+            //'url'=>url('/conciliaciones/'.$this->conciliacion->id.'/edit')
+    ]);
+
+   /*  return (new MailMessage)
         ->subject('Recuperar contraseña')
         ->greeting('Hola')
         ->line('Estás recibiendo este correo porque hiciste una solicitud de recuperacion de contraseña para tu cuenta.')
         ->action('Recuperar contraseña', url('password/reset', $this->token))
-        ->line('Si no realizaste esta solicitud, no se requiere realizar ninguna otra acción.');
+        ->line('Si no realizaste esta solicitud, no se requiere realizar ninguna otra acción.'); */
 } 
 
     /**

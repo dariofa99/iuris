@@ -552,18 +552,20 @@ Route::get('/login', function () {
 
 Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 
+Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
+
 Route::get('/prueba', function () {
-  $dateString = date('Y-m-d');
+/*   $dateString = date('Y-m-d');
   $date = DateTime::createFromFormat('Y-m-d', $dateString);
 
   if ( $date instanceof \DateTime) {
     dd( $date);
   }
 
-  dd('no');
+  dd('no'); */
 
-   return view('myforms.mails.solicitud_radicado_conciliacion',[
-    'mensaje'=>"heols",
+   return view('myforms.mails.recovery_password',[
+    'token'=>"heols",
     'url'=>url('/conciliaciones/1/edit')
 ]);;
    $doceWithRama = DB::table('users')

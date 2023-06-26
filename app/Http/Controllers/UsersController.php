@@ -12,7 +12,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use App\TablaReferencia; 
 use App\Mail\ConfirmarCorreo;
 use App\ReferenceDataOptions;
-use App\ReferencesData;
+use App\ReferencesData; 
 use App\Services\UsersService;
 use App\UserAditionalData;
 use Illuminate\Support\Facades\Auth;
@@ -254,7 +254,7 @@ private function aditionalData($request,$id){
     public function edit($id)
     {
       
-        $user = User::find($id);
+/*         $user = User::find($id);
         if(!$user){
           Session::flash('message-warning', "Ups! No se ha encontrado al usuario"); 
           return redirect("/conciliaciones"); 
@@ -266,8 +266,8 @@ private function aditionalData($request,$id){
         $active_users='active'; 
          
         return view('myforms.frm_myusers_edit', ['user'=>$user], compact('active_users')  );
-    }
-
+     */
+  }
     /**
      * Update the specified resource in storage.
      *
@@ -321,30 +321,15 @@ private function aditionalData($request,$id){
       $user->roles()->sync($request['id_rol']);
     }
        
-    if ((currentUser()->hasRole('estudiante') || $user->hasRole('estudiante'))  and (!$user->turno) ) {
-      $asigt = $user->asignarTurno($request);
-      return response()->json(['useraa' => $user]);
-
-   }
+    if ((currentUser()->hasRole('estudiante') and $user->hasRole('estudiante'))  and (!$user->turno) ) {
+      $user->asignarTurno($request);
+    }
    
-   if ((currentUser()->hasRole('estudiante')|| $user->hasRole('estudiante')) and (!$user->docente_asignado)) {
-       $asig = $user->asignarDocente($request);
+   if ((currentUser()->hasRole('estudiante') and $user->hasRole('estudiante')) and (!$user->docente_asignado)) {
+       $user->asignarDocente($request);
    }
 
 
-      
-
-        $asig=true;
-        $asigt = true;
-       
-        if (currentUser()->hasRole('estudiante') and (!$user->turno) ) {
-           $asigt = $user->asignarTurno($request);
-        }
-        
-        if (currentUser()->hasRole('estudiante') and (!$user->docente_asignado)) {
-            $asig = $user->asignarDocente($request);
-
-        }
 
         
 
@@ -355,15 +340,7 @@ private function aditionalData($request,$id){
     return response()->json(['user'=>$user]);
   }
     if(!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
-    if (!$asig and !$asigt) {          
-      //Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de DOCENTE y TURNO');
-    }elseif(!$asig){
-      //Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de DOCENTE');
-    }elseif (!$asigt) {
-      Session::flash('message-warning', 'Atención.! Consulta con el coordinador para la asignación de TURNO');
-    }
-
-       return Redirect::to('users/'.$user->id.'/edit');
+      return Redirect::to('users/'.$user->id.'/edit');
     }
 
     /**

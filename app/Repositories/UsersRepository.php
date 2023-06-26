@@ -210,7 +210,7 @@ protected function paginate($query, $perPage)
     }
 
     public function getDocentesByRama($rama): Array {
-      $doceWithRama = DB::table('users')
+      $doceWithRama = $this->model
        ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
        ->leftjoin('roles' , 'role_user.role_id','=','roles.id')
        ->leftjoin('user_has_ramasderecho' , 'user_has_ramasderecho.user_id','=','users.id')
@@ -225,6 +225,8 @@ protected function paginate($query, $perPage)
         ->orderBy('users.created_at', 'desc')->get()->toArray();
         return $doceWithRama;
     }
+
+   
 
 
     
