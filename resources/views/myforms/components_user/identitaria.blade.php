@@ -1,6 +1,4 @@
-<div id="content_sin_secc_component">
- 
-        <div class="col-md-12">
+       <div class="col-md-12">
             <h4>Información Identitaria</h4>
         </div>
        <div class="col-md-{{isset($col)?$col:'6'}}">
@@ -21,4 +19,3 @@
             "data"=>getReferencesDataBySection("enfoque_diferencial",'users')
         ])
          
-</div>

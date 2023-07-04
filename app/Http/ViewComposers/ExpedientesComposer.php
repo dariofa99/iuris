@@ -12,19 +12,29 @@ use App\Periodo;
 use App\RefAsignacionCaso;
 use App\MotivoAsigCaso;
 use App\ReferencesData;
+use App\Services\ReferenciasService;
 use DB;
-
+use Illuminate\Support\Facades\App;
 
 /**
 * 
 */
 class ExpedientesComposer
 {
+
+	private $referenciasService; 
+
+	public function __construct()
+	{
+	  $this->referenciasService = App::make(ReferenciasService::class);
+	}
+
 	
 	public function compose(View $view)
 	{
-
-	
+		$reframa_derecho = $this->referenciasService->getRamasDerechoForExpediente();
+		$estados = $this->referenciasService->getEstadosForExpediente();
+		$tipo_proceso = $this->referenciasService->getTipoProcesoForExpediente();;
 		//$tipo_archivo = TipoArchivo::pluck('tiparchinombre','id');
 		//$reqasis = DB::table('ref_reqasis')->select('reqid_refasis','ref_reqasistencia')->get();
 		$reqasis = ReqAsistencia::all();
@@ -39,7 +49,7 @@ class ExpedientesComposer
 		->where('sp.sede_id',session('sede')->id_sede)
 		->where('estado',true)->first();
 		//$motivos_cierre = MotivoEstadoCaso::pluck('nombre_motivo','id');
-		$tipo_proceso = DB::table('ref_tipproceso')->where('ref_tipproceso','<>','Defensa de oficio')->select('ref_tipproceso','id')->get();
+		
 		$motivos_cierre = MotivoEstadoCaso::all();
 		$estadosPluck = Estado::pluck('nombre_estado','id');
 		$motivo_asig = MotivoAsigCaso::pluck('nom_motivo','id');
@@ -59,7 +69,7 @@ class ExpedientesComposer
 		$tipvivienda = DB::table('referencias_tablas')->where(['tabla_ref'=>'expedientes','categoria'=>'exp_tipo_vivienda'])->pluck('ref_nombre','id');
 		$act_estados = DB::table('referencias_tablas')->where(['tabla_ref'=>'actuaciones','categoria'=>'act_estado'])->pluck('ref_nombre','id');
 		
-		$estados = Estado::all(); 
+		
 
 		$rdata_enf_dif = ReferencesData::where([
 			'section' => 'enfoque_diferencial', 
@@ -101,7 +111,7 @@ class ExpedientesComposer
 		->with(['rdata_discap'=>$rdata_discap])
 		->with(['rdata_gretnc'=>$rdata_gretnc])
 		->with(['segmento'=>$segmento])
-		//->with(['tipodoc'=>$tipodoc])
+		->with(['reframa_derecho'=>$reframa_derecho])
 		->with(['genero'=>$genero])
 		->with(['tipvivienda'=>$tipvivienda])
 		->with(['muncpios'=>$muncpios])

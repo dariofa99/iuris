@@ -9,6 +9,7 @@ use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
 use App\Repositories\ExpedientesRepository;
 use App\Repositories\PeriodosRepository;
+use App\Repositories\ReferenciasRepository;
 use App\Repositories\SedesRepository;
 use App\Repositories\SegmentosRepository;
 use App\Repositories\SolicitudesRepository;
@@ -19,6 +20,7 @@ use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
 use App\Services\PeriodosService;
+use App\Services\ReferenciasService;
 use App\Services\SedesService;
 use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
@@ -70,6 +72,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(            
             ConciliacionesService::class,
             ConciliacionesRepository::class,       
+        );
+        $this->app->bind(            
+            ReferenciasService::class,
+            ReferenciasRepository::class,       
         );
         $this->app->bind(            
             SolicitudesService::class,

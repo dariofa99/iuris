@@ -1,7 +1,5 @@
 <div class="row">
-        <input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">        
-        <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig" name="expediente_id">        
-       
+         
         @if(!currentUser()->hasRole("estudiante"))      
                         <div class="col-md-4">
                             <input type="hidden" name="oldexpidnumberest" id="oldexpidnumberest">

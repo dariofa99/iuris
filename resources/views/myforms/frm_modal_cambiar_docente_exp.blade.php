@@ -1,4 +1,4 @@
-@component('components.modal')
+@component('components.b4.modal_medium')
 	
 	@slot('trigger')
 		myModal_change_docente_exp
@@ -8,20 +8,23 @@
 	<label id="titulo_modal">Cambiando Docente:</label>	
 	@endslot
 
- 
+  @slot('footer')
+
+  @endslot
 	@slot('body')
 @include('msg.ajax.success')
 
 {!!Form::open([ 'id'=>'myform_change_docente_exp'])!!}
 <input type="hidden" id="tipo_cambio" name="tipo_cambio" value="0">
 	<div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
      <label>Seleccione el docente</label>
                 {!!Form::select('new_docente_id',[],null,[
-                       'class' =>'form-control',
-                         'required' => 'required',
+                       'class' =>'form-control selectpicker',
+                        'required' => 'required',
                         'id'=>'new_docente_id',
-                        'data-width'=>'500px',
+                        'data-width'=>'100%',
+                        'title'=>'Seleccione...',
                         'placeholder'=>'Seleccione...'] ); !!}                      
        
        

@@ -22,7 +22,7 @@ export class UserService{
         return topics;
 
     }
-    async findUserByIdnumber (request)  {
+    async findUser (request)  {
         const response = await fetch(BASE_URL+'usuarios/buscar/persona?'+ new URLSearchParams(request),{
             method: 'GET',
             headers: {        
@@ -43,6 +43,28 @@ export class UserService{
         return topics;
 
     }
+
+    async findUsersByIdnumber (request)  {
+      const response = await fetch(BASE_URL+'usuarios/buscar/persona/by/idnumber?'+ new URLSearchParams(request),{
+          method: 'GET',
+          headers: {        
+              "Content-Type": "application/json",
+              "Accept": "application/json", 
+              "X-Requested-With": "XMLHttpRequest",         
+              "X-CSRF-Token": $("#token").attr("content"),             
+          },            
+         
+      });
+      if (!response.ok) {
+          const message = `An error has occured: ${response.status}`;
+          console.log(response);
+          $("#wait").hide()
+          throw new Error(message);
+      }
+      const topics = await response.json();
+      return topics;
+
+  }
 
  async registrar (request)  {
         const response = await fetch(BASE_URL+'usuarios', {
@@ -165,6 +187,26 @@ export class UserService{
 
   }
 
+  async getUsersByRole (request)  {
+    const response = await fetch(BASE_URL+'usuarios/find/by/role?'+ new URLSearchParams(request),{
+        method: 'GET',
+        headers: {        
+            "Content-Type": "application/json",
+            "Accept": "application/json", 
+            "X-Requested-With": "XMLHttpRequest",         
+            "X-CSRF-Token": $("#token").attr("content"),             
+        },            
+       
+    });
+    if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;         
+        throw new Error(message);
+    }
+    const res = await response.json();
+    return res;
+
+}
+
   async addSede (request)  {
     const response = await fetch(BASE_URL+'usuarios/add/sede', {
         method: 'POST',
@@ -239,11 +281,13 @@ async uploadFile(formData){
       });
 }
 
+
+
 showProgress(percentage) {
     const progressDiv = document.getElementById('progress-bar');
     progressDiv.textContent = `${parseInt(percentage)}%`;
     progressDiv.style.width = `${parseInt(percentage)}%`;
-    console.log(percentage);
+   
   }
 
 }

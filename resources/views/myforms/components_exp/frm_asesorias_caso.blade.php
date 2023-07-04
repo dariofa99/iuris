@@ -87,8 +87,7 @@
 
         <input type="button" class="btn btn-success" value="Agregar Asesoría" data-toggle="modal" data-target="#myModal_add_asesoria_docente" >
         </div>						
-@include('myforms.frm_add_asesoria_docente')
-@include('myforms.frm_update_asesoria_docente')	
+
 @endif
 </div>
 <!--comentarios-->

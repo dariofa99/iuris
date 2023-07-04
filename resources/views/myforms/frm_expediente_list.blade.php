@@ -1,266 +1,185 @@
 @extends('layouts.dashboard')
 
+
+@push('styles')
+    <!-- aqui van los estilos de cada vista -->
+    <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+@endpush
+
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
+
 @section('titulo_general')
-@if(currentUser()->hasRole('solicitante'))
-    Casos
-  @else
-    Expedientes
-  @endif
+    @if (currentUser()->hasRole('solicitante'))
+        Casos
+    @else
+        Expedientes
+    @endif
 
 @endsection
 
 @section('titulo_area')
-  @if(currentUser()->hasRole('solicitante'))
-    Mis Casos
-  @else
-    Listar
-  @endif
+    @if (currentUser()->hasRole('solicitante'))
+        Mis Casos
+    @else
+        Listar
+    @endif
 @endsection
 
 
 
 
-@section('area_forms') 
+@section('area_forms')
 
-@include('msg.success')
-@include('msg.info') 
+    @include('msg.alerts')
+    <input type="hidden" value="{{$estados}}" id="ref_estados">
+    <input type="hidden" value="{{$tipo_proceso}}" id="ref_tipoproceso">
+    <input type="hidden" value="{{$reframa_derecho}}" id="ref_ramaderecho">
 
+    <div class="cd">
+        <div class="row">
+            <div class="col-md-10">
+                <form  action="{{ route('expedientes.index') }}" method="GET" id="myformExpFilter">
 
-@if(!currentUser()->hasRole('solicitante'))
-<div class="row"> 
+                   <div class="row">
+                    <div class="col-md-3">
+                        <span>Busqueda</span>
+                      <select name="tipo_busqueda" id='tipo_busqueda' class="form-control form-control-sm"
+                      placeholder="Seleccione..." required="required">
+                      <option value="">Seleccione...</option>
+                      @if (currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral') or currentUser()->hasRole('amatai'))
+                          <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'idnumber_doc' ? 'selected':''}} value="idnumber_doc">
+                              Casos por docente
+                          </option>
+                      @endif
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'codido_exp' ? 'selected':''}} value="codido_exp">
+                        Número de Expediente
+                      </option>
 
-@permission('crear-expedien')
-{{--------------------------------excel y nuevo expe--------------------------------------}}
+                      @if (!currentUser()->hasRole('estudiante'))
+                          <option value="solicitante_num" {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected':''}}>
+                            Documento de identificación (solicitante)
+                          </option>
+                      @endif
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'solicitante' ? 'selected':''}} value="solicitante">
+                        Nombre o apellidos (solicitante)</option>
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'estado' ? 'selected':''}} value="estado">
+                        Estado
+                      </option>
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'tipo_consulta' ? 'selected':''}}  value="tipo_consulta">Tipo de Consulta</option>
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'rama_derecho' ? 'selected':''}} value="rama_derecho">Rama del Derecho</option>
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'fecha_creacion' ? 'selected':''}} value="fecha_creacion">
+                          Fecha de Creación
+                        </option>
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'fecha_rango' ? 'selected':''}} value="fecha_rango">
+                        Rango Fechas
+                      </option>
+                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'all' ? 'selected':''}} value="all">
+                        Todo
+                      </option>
+                  </select>
+                    </div>
+                    <div class="col-md-5">
+                        <span>Ingrese un valor</span>
+                    {!! Form::select('data', [], null, [
+                        'class' => 'selectpicker select_data_users',
+                        'data-live-search' => 'true',
+                        'required' => 'required',
+                        'id' => 'select_data_users',
+                        'data-width' => '100%',
+                        'title'=>'Esperando tipo de busqueda',
+                        'data-live-search-placeholder' => 'Escriba un valor...'
+                    ]) !!}
 
- 
-<!--       <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Excel
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>{!! link_to('usuarios/importar', 'Importar')!!} {!! link_to('expedientes/create', 'Nuevo', $attributes = array('type'=>'button', 'class'=>'btn btn-primary'))!!}</li>
-         
-        </ul>
-      </div> -->    
-@endpermission
-
-  {!!Form::open(['route'=>'expedientes.index', 'method'=>'GET','id'=>'myformExpFilter'])!!}
-
- 
-  <div class="col-md-8"> 
-   
-    <table class="table-buscar-expe">
-   
-      <tr>
-        <td colspan=""><b>Busqueda</b></td>
-         @if(currentUser()->hasRole('docente'))
-         <td>
-         
-         <input type="checkbox" @if((isset($request['search_onlyMy_exp']) and $request['search_onlyMy_exp'] == 'on') || empty($request)) checked @endif name="search_onlyMy_exp" id="search_onlyMy_exp">Mis casos
-         </td>
-         @endif
-      </tr>
-      <tr>
-       <td width="35%">
-          <div class="form-grou">     
-            <select name="tipo_busqueda" id='tipo_busqueda' class="form-control" placeholder="Seleccione..." required="required">
-              <option value="">Seleccione...</option>
-              @if(currentUser()->hasRole("diradmin") OR currentUser()->hasRole("dirgral") OR currentUser()->hasRole("amatai"))
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'idnumber_doc' ) selected @endif  value="idnumber_doc">Casos por docente</option>
-              @endif
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'codido_exp' ) selected @endif  value="codido_exp">Número de Expediente</option>
-             
-              @if(!currentUser()->hasRole("estudiante"))
-              <option value="estudiante_num" @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'estudiante_num' ) selected @endif >Documento de identificación</option>
-             {{--  <option value="estudiante" @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'estudiante' ) selected @endif >Nombre Estudiante</option> --}}
-             
-              @endif
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'consultante' ) selected @endif value="consultante">Nombre o apellidos (consultante)</option> 
-
-            {{--  <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'consultante_num' ) selected @endif value="consultante_num">Buscar por Documento</option> --}}
-
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'estado' ) selected @endif  value="estado">Estado</option>
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'tipo_consulta' ) selected @endif  value="tipo_consulta">Tipo de Consulta</option>
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'rama_derecho' ) selected @endif  value="rama_derecho">Rama del Derecho</option>
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'fecha_creacion' ) selected @endif  value="fecha_creacion">Fecha de Creación</option>
-
-              <option @if(isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'fecha_rango' ) selected @endif  value="fecha_rango">Rango Fechas</option>
-              
-              <option @if((isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'all')) selected @endif value="all">Todo</option>
-              
-
-            </select>
-          
-            </div>
-        </td>
-        <td width="35%">
-
-@php
-  $disabled='';
-@endphp
-
-          @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'consultante_num'  || $request['tipo_busqueda'] == 'codido_exp' || $request['tipo_busqueda'] == 'estudiante_num'))
-     
-          <div id="input_text" class="inputs"  > 
+                    <input type="date" id="data" name="data" class="form-control form-control-sm" style="display: none">
                      
-                   {!!Form::text('data',null, ['class' => 'form-control input-search', 'required' => 'required','id'=>'input_data',$disabled] ); !!}
-                
-          </div>    
-          @else
-        
-          <div id="input_text" class="inputs" @if(isset($request) and (empty($request ) || (isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'all'))) style="display: block;" @else style="display: none;"  @endif>                       
-                   {!!Form::text('data',null, ['class' => 'form-control input-search', 'disabled' => 'disabled','id'=>'input_data','placeholder'=>'No de Documento'] ); !!}
-                
-          </div>
-          @endif
- 
-           <div id="input_select_users" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'estudiante')) style="display: block;" <?php $disb = '' ?> @else style="display: none;"  <?php $disb = 'disabled' ?> @endif>
-                <div class="input-group">
-                   {!!Form::select('data',[],null,['class' => ' input-search  selectpicker input-select disabled-fun1', 'data-live-search'=>'true', 'required' => 'required','id'=>'select_data_users', 'data-width'=>'500px', 'data-live-search-placeholder'=>'Escriba el nombre',$disb] ); !!}
-                </div> 
+
+                    <table width="100%" style="display: none;width:100% !important">
+                        <tr>
+                            <td>
+                                <span>Fecha inicio</span>
+                                <input type="date" name="dataIni" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                                <span>Fecha fin</span>
+                                <input type="date" name="dataFin" class="form-control form-control-sm">
+                            </td>
+                        </tr>
+                    </table>
+                       
+                       
+
+                    </div>
+                    <div class="col-md-4">
+                        <br>
+                      <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar
+                      </button>
+                      @if (currentUser()->hasRole('diradmin') ||
+                              currentUser()->hasRole('dirgral') ||
+                              currentUser()->hasRole('coordprac') ||
+                              currentUser()->hasRole('amatai'))
+                          <button type="button" id="btn_exp_bus_avz" class="btn btn-default"><i
+                                  class="fa fa-cogs"> </i> Avanzada </button>
+                      @endif
+                    </div>
+                   </div>
+
+                </form>
             </div>
- 
-            <div id="input_select_consultantes" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'consultante' || $request['tipo_busqueda'] == 'idnumber_doc')) style="display: block;" <?php $disb2 = '' ?> @else style="display: none;"  <?php $disb2 = 'disabled' ?> @endif>
-                <div class="input-group">
-                   {!!Form::select('data',[],null,['class' => ' input-search  selectpicker input-select disabled-fun2', 'data-live-search'=>'true', 'data-select-origen'=>'consultante', 'required' => 'required','id'=>'select_data_consultantes','data-width'=>'500px','data-live-search-placeholder'=>'Escriba el nombre',$disb2] ); !!}
-                </div>
-            </div>
 
-    
+            <div class="col-md-2">
+                <table style="text-align:right;width:100%;font-size:14px;">
+                    <tr>
+                        <td>
 
-          <div id="input_select_estado" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'estado')) style="display: block;" <?php $disabled = '' ?> @else style="display: none;"  <?php $disabled = 'disabled' ?> @endif> 
-                     <div class="input-group">
-                   {!!Form::select('data',[
-                    ''=>'Seleccione...',
-                   "1"=>"Abierto",
-                   "2"=>"Cerrado",
-                   "4"=>"En solicitud de cierre",
-                   "3"=>"Rechazado"
-                    ],null,['class' => 'form-control input-search', 'required' => 'required','id'=>'select_data_estado',$disabled] ); !!}              
-                </div>
-                </div>
+                            <label>No de Expedientes <span class="badge bg-blue" id="badgeCount">
+                                    {{ number_format($numEx, 0, '.', '.') }} </span></label>
 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
 
-                 <div id="input_select_tipo_consulta" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'tipo_consulta')) style="display: block;" <?php $disabled = '' ?> @else style="display: none;"  <?php $disabled = 'disabled' ?> @endif> 
-                     <div class="input-group">
-                  {!!Form::select('data',[
-                    ''=>'Seleccione...',
-                   "2"=>"Seguimiento",
-                   "1"=>"Asesoría",
-                   '3'=>'Defensa de Oficio'
-                   ],null,['class' => 'form-control input-search', 'required' => 'required','id'=>'select_data_tipo_consulta',$disabled] ); !!}                   
-                </div>
-                </div>
+                            @if (count($count_colors) > 0 and $count_colors != '')
+                                <div>
+                                    <label>Asesorías asignadas</label><br>
+                                    <span class="badge btn_search_color" id="green"
+                                        style="border:1px solid #2ECC71">{{ $count_colors[0]->verde === null ? 0 : $count_colors[0]->verde }}</span>
+                                    <span class="badge btn_search_color" id="amarillo"
+                                        style="border:1px solid #F4D03F">{{ $count_colors[0]->amarillo === null ? 0 : $count_colors[0]->amarillo }}</span>
+                                    <span class="badge btn_search_color" id="rojo"
+                                        style="border:1px solid #CB4335">{{ $count_colors[0]->rojo === null ? 0 : $count_colors[0]->rojo }}</span>
+                                    <span class="badge btn_search_color" id="gris"
+                                        style="border:1px solid gray">{{ $count_colors[0]->gris === null ? 0 : $count_colors[0]->gris }}</span>
+                                </div>
+                            @endif
+                        </td>
+                    </tr>
 
-                <div id="input_select_rama_derecho" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'rama_derecho')) style="display: block;" <?php $disabled = '' ?> @else style="display: none;"  <?php $disabled = 'disabled' ?> @endif> 
-                     <div class="input-group">
-                  {!!Form::select('data',$rama_derecho,null,['class' => 'form-control input-search', 'required' => 'required','id'=>'select_data_rama_derecho',$disabled] ); !!}                   
-                </div>
-                </div>
- 
-                <div id="input_date" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'fecha_creacion')) <?php $disabled = '' ; $fecha = '';  ?> style="display: block;"  @else style="display: none;" <?php $disabled = 'disabled' ?> @endif> 
-                     <div class="input-group">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  {!!Form::text('data',null,['id'=>'date_data','class' => 'form-control datepicker input-search', 'required' => 'required',$disabled] ); !!}
-                </div>
-                </div>
-
-                <div id="input_date_rango" class="inputs" @if(isset($request['tipo_busqueda']) and ($request['tipo_busqueda'] == 'fecha_rango')) <?php $disabled = '' ; $fecha = '';  ?> style="display: block;"  @else style="display: none;" <?php $disabled = 'disabled' ?> @endif> 
-                <table>
-                 
-                  <tr>
-                    <td>
-                      <div class="input-group">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  {!!Form::text('dataIni',null,['id'=>'date_data_inicio','class' => 'form-control datepicker input-search', 'required' => 'required',$disabled,'placeholder'=>'Desde'] ); !!}
-                </div>
-                    </td>
-                    <td>
-                      <div class="input-group">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  {!!Form::text('dataFin',null,['id'=>'date_data_final','class' => 'form-control datepicker input-search', 'required' => 'required',$disabled,'placeholder'=>'Hasta'] ); !!}
-                </div>
-                    </td>
-                  </tr>
                 </table>
-                          </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="table_list_model">
 
-        </td>
-        <td>
-          <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar </button>
-          @if(currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('coordprac') || currentUser()->hasRole('amatai'))
-          <button type="button" id="btn_exp_bus_avz" class="btn btn-default"><i class="fa fa-cogs"> </i> Avanzada </button>
-          @endif
-        </td>
-      </tr>
-      
-    </table>
+                    @include('myforms.frm_expediente_list_ajax')
 
-  </div>
-  {!!Form::close()!!}
-
-  <div class="col-md-4 dis-block">
-  <table style="text-align:right;width:100%;font-size:14px;"> 
-    <tr>
-      <td>
-     
-      <label >No de Expedientes <span class="badge bg-blue" id="badgeCount"> {{ number_format($numEx,0,'.','.') }} </span></label>
-  
-      </td>
-    </tr>
-     <tr>
-      <td>
-     
-    @if(count($count_colors)>0 and $count_colors!="")  
-   <div >
-   <label >Asesorías asignadas</label><br>
-   <span class="badge btn_search_color" id="green" style="border:1px solid #2ECC71">{{($count_colors[0]->verde===null ? 0 : $count_colors[0]->verde)}}</span>
-    <span class="badge btn_search_color" id="amarillo" style="border:1px solid #F4D03F">{{($count_colors[0]->amarillo === null ? 0 : $count_colors[0]->amarillo)}}</span>
-    <span class="badge btn_search_color" id="rojo" style="border:1px solid #CB4335">{{($count_colors[0]->rojo === null ? 0 : $count_colors[0]->rojo)}}</span>
-    <span class="badge btn_search_color" id="gris" style="border:1px solid gray">{{($count_colors[0]->gris === null ? 0 : $count_colors[0]->gris)}}</span>
-     </div>
-    
-   @endif
-   
-      </td>
-    </tr>
-  
-  </table>
-    
-     
-
-     
-  </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-</div>
-@endif
-<br>
 
-
-<div id='divc'>
- 
-<div class="row">
-  <div class="col-sm-12">
-   <div id="table_list_model">
-    
-    @include('myforms.frm_expediente_list_ajax')  
-
-   </div>
-  </div>
-</div>
-
-<div>
-@include('myforms.frm_modal_buscar_exp_avanzada')
-     @stop
+    @include('myforms.frm_modal_buscar_exp_avanzada')
+@stop
 @push('scripts')
-   <!-- aqui van los scripts de cada vista -->
-  <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
+    <!-- aqui van los scripts de cada vista -->
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
+
+    <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
 @endpush

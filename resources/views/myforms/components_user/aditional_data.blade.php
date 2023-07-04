@@ -1,4 +1,3 @@
-<div class="content_aditional_data">
 @foreach($data as $key => $reference)
 
 <div class="col-md-{{isset($col)?$col:'6'}}">
@@ -49,4 +48,3 @@
     </div>
 </div>
 @endforeach    
-</div>

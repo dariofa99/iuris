@@ -21,7 +21,8 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     private $usersService;
     private $asignacionDocenteCasoService;
     private $request;
-   public function __construct(Expediente $model,
+   public function __construct(
+    Expediente $model,
    AsignacionDocenteCasosService $asignacionDocenteCasoService
    )
     {
@@ -83,7 +84,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     {    
         $expediente->fill($request->all());
         $expediente->save();
-        Event::dispatch('expediente.updated', $expediente);
+       // Event::dispatch('expediente.updated', $expediente);
         return $expediente;
     }
     

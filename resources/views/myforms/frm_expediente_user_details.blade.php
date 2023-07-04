@@ -1,4 +1,4 @@
-@component('components.modal_dynamic_cols')
+@component('components.b4.modal_large')
 
 	@slot('cols')
 	col-md-8 col-md-offset-2
@@ -23,15 +23,18 @@ Registrado
 @include('msg.ajax.success')
 
 <form id="{{isset($user) ? 'myFormUserEditExpediente': 'myFormUserCreateExpediente'}}" method="POST">
-    @include('myforms.users.formulario_registro',[
-		'user'=>$expediente->solicitante
-	])
-    @include('myforms.components_user.identitaria',[
-		'user'=>$expediente->solicitante
-	])
-    @include('myforms.components_user.socioeconomica',[
-		'user'=>$expediente->solicitante
-	])
+	<div class="row">
+		@include('myforms.users.formulario_registro',[
+			'user'=>$expediente->solicitante
+		])
+		@include('myforms.components_user.identitaria',[
+			'user'=>$expediente->solicitante
+		])
+		@include('myforms.components_user.socioeconomica',[
+			'user'=>$expediente->solicitante
+		])
+	</div>
+   
 </form>
 
 

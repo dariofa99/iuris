@@ -90,75 +90,67 @@ $pasos = [
 @endphp
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
 
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header bg-success">
               <br>
               @include('myforms.recepcion.menu_buttons',[
                 'paso'=>$paso, 
                 'pasos'=>$pasos              
               ])
             </div>
-            <div class="panel-body">
-              <div class="content_message">
-                @include('myforms.recepcion.menu_mensaje',[
-                   'paso'=>$paso,
-                   'pasos'=>$pasos
-                ])
-              </div>
-              @include('msg.alerts')
-              @if($paso==1)             
-               @include('myforms.recepcion.frm_parte_solicitante')
-              @else
-               @if(isset($conciliacion))
-                <input type="hidden" value="{{$conciliacion->id}}" name="conciliacion_id" id="conciliacion_id">
-               @endif
-               @include($pasos[intval($paso)-1]['view'],[
-                  'conciliacion'=>$conciliacion,
-                  'tipo_usuario_id'=>$pasos[$paso-1]['tipo_usuario']
-               ])
+           <div class="card-body">
+            @include('msg.alerts')
+            @if($paso==1)             
+             @include('myforms.recepcion.frm_parte_solicitante')
+            @else
+             @if(isset($conciliacion))
+              <input type="hidden" value="{{$conciliacion->id}}" name="conciliacion_id" id="conciliacion_id">
+             @endif
+             @include($pasos[intval($paso)-1]['view'],[
+                'conciliacion'=>$conciliacion,
+                'tipo_usuario_id'=>$pasos[$paso-1]['tipo_usuario']
+             ])
 
-               
-              @endif
-               <div class="row">
+             
+            @endif
+           </div>
+           <div class="card-footer">
+            <div class="row">
 
-                <div class="col-md-12">
-                  @if($paso>2)                  
-                  @php
-                  $paso_an = $paso;
-                    if($paso==7){
-                      if(!$pasos[5]['visible']){
-                        $paso_an = 6;
-                      }else{
-                        
-                      }
+              <div class="col-md-12">
+                @if($paso>2)                  
+                @php
+                $paso_an = $paso;
+                  if($paso==7){
+                    if(!$pasos[5]['visible']){
+                      $paso_an = 6;
                     }
-                  @endphp
-                 <a href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso={{$paso_an-1}}">
-                   <i style="cursor: pointer" class="fa fa-chevron-circle-left"  aria-hidden="true"></i>
-                  </a>
-                   @endif
-
-                <button type="button" data-step="{{(intval($paso)+1)}}" class="btn btn-success" data-type="{{$pasos[$paso-1]['tipo_usuario']}}"  id="{{$pasos[$paso-1]['id']}}">
-                    Siguiente
-                </button>
-                @if(isset($conciliacion))
-                <a class="btn btn-success" id="btn_no_apoderado" style="display:none" href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso=4">
-                  Siguiente                
+                  }
+                @endphp
+               <a href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso={{$paso_an-1}}">
+                 <i style="cursor: pointer" class="fa fa-chevron-circle-left"  aria-hidden="true"></i>
                 </a>
-                @endif
-                <a href="/login" class="btn btn-default">
-                  Cancelar
-                </a>
+                 @endif
 
-                </div>
-               </div>
-            </div>
+              <button type="button" data-step="{{(intval($paso)+1)}}" class="btn btn-success" data-type="{{$pasos[$paso-1]['tipo_usuario']}}"  id="{{$pasos[$paso-1]['id']}}">
+                  Siguiente
+              </button>
+              @if(isset($conciliacion))
+              <a class="btn btn-success" id="btn_no_apoderado" style="display:none" href="/solicitudes/recepcion/conciliacion/{{$conciliacion->token}}?id={{Request::get('id')}}&paso=4">
+                Siguiente                
+              </a>
+              @endif
+              <a href="/login" class="btn btn-default">
+                Cancelar
+              </a>
+
+              </div>
+             </div>
+           </div>
           </div>
-
-
           </div>
         </div>
 </div>
@@ -171,6 +163,6 @@ $pasos = [
     <script type="module" src={{asset("js/users.js")}}></script>
     --}} 
     <script type="module"   src={{asset("js/recepcion_conciliacion.js")}}></script>
-
+ 
 
 @endpush

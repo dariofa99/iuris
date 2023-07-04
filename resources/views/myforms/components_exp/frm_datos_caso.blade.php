@@ -1,4 +1,8 @@
 {!!Form::model($expediente, ['route'=>['expedientes.update', $expediente->id], 'method'=>'PUT','id'=>'form_expediente_edit'])!!}
+<input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">        
+<input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig" name="fecha_asig">        
+      
+
 <div class="shadow">
 @include('myforms.components_exp.frm_datos_gen')
 

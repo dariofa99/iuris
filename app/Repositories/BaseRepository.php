@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class BaseRepository
 {
     protected $validateSede;
+    protected $withLike;
     protected $model;
     private $relations;
     public $query;
@@ -19,18 +20,19 @@ class BaseRepository
         $this->model = $model;
         $this->relations = $relations;
         $this->validateSede = true;
+        $this->withLike = true;
+        $this->query = $model;  
     }
 
-    protected function applyValidateSede($query){
+    protected function applyValidateSede(){
         if($this->validateSede and method_exists($this->model, 'sedes')){
-            $this->query = $query->whereHas('sedes',function($query1){
+            $this->query = $this->query->whereHas('sedes',function($query1){
                $query1->where(['sede_id'=>session('sede')->id_sede]);                    
             });
         }
     }
-    public function findWithFilter(array $filter) : ?Model {
-        $this->query =   $this->model;  
-        $this->applyValidateSede($this->query);   
+    public function findWithFilter(array $filter) : ?Model {     
+        $this->applyValidateSede();   
         $this->validateFilter($filter);
         return $this->query->first();
     }
@@ -38,32 +40,40 @@ class BaseRepository
         foreach ($filter as $column => $value) {
             $date = \DateTime::createFromFormat('Y-m-d', $value);
            if ($date instanceof \DateTime) {
-               $this->query =  $this->query->whereDate($column , $value);
+            if($this->withLike){
+                $this->query =  $this->query->whereDate($column ,"like", "%".$value."%");
+            }else{
+                $this->query =  $this->query->whereDate($column , $value);
+            }               
            }else{
-               $this->query = $this->query->where($column , $value);
+            if($this->withLike){
+                $this->query =  $this->query->where($column ,"like", "%".$value."%");
+            }else{
+                $this->query = $this->query->where($column , $value);
+            }  
+               
            }
        } 
     }
 
     public function getWithFilter(Array $filter) : ?Collection {
-        $this->query = $this->model;  
-        $this->applyValidateSede($this->query);        
-        return $this->query->where($filter)->get();
+       
+        $this->applyValidateSede();        
+        $this->validateFilter($filter);
+        return $this->query->get();
     }
 
     public function all()
     {
-        $this->query = $this->model;
-        if(!empty($this->relations)) {
+       $this->applyValidateSede();
+       if(!empty($this->relations)) {
             $this->query = $this->query->with($this->relations);
         }
-
         return $this->query->get();
     }
 
     public function find(int $id){   
-        $this->query =   $this->model;  
-        $this->applyValidateSede($this->query);  
+        $this->applyValidateSede();  
         return $this->query->find($id);
      }
 
@@ -72,7 +82,6 @@ class BaseRepository
     public function save(Model $model)
     {
         $model->save();
-
         return $model;
     }
 
@@ -89,6 +98,17 @@ class BaseRepository
         return $this;
     }
 
+    public function setValidateWithLike($validate)
+    {
+        $this->withLike = $validate;
+        return $this;
+    }
+
+    public function setRelations($relations=[])
+    {
+        $this->relations = $relations;
+        return $this;
+    }
     
    
 }

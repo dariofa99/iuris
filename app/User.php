@@ -205,7 +205,7 @@ class User extends Authenticatable
            
 
             switch ($criterio) { 
-                case 'idnumber':
+                case 'idnumber': 
                 return $query->where('users.idnumber',$data); 
                 break;
                 case 'name':

@@ -2410,73 +2410,7 @@ $("#btn_calificaciones_create").click(function(){
 });
 
 //carga el selector de estudiantes cuando se cambia el tipo de consulta para la asignacion automatica
-$("#exptipoproce_id2").change(function(){
-	var idconsul = $("#exptipoproce_id2").val();
-	var optionest = "";
 
-if (idconsul>=1) {
-
-
-				var prsimpes=0;
-				var prconplejas=0;
-				var colortext="\'label label-danger \'";
-				var colortext2="\'label label-danger \'";
-          var route = "/expedientes/selectconest/"+idconsul;
-          $("#wait").css("display", "block");
-          $.get(route, function(res){
-			if(res.error){
-				toastr.error('A ocurrido un error: '+res.error,'Error',
-				{"positionClass": "toast-top-right","timeOut":"50000"}); 
-			}else{			
-             if (res == "") {
-               $("#expidnumberest").append('<option value="000000" data-content="<span class=\'label label-danger \'>ERROR AL CARGAR LOS DATOS</span> ">ERROR AL CARGAR LOS DATOS</option>');//coloca una nueva opcion
-                $(".estselect1").selectpicker("refresh");//refresca el select
-                $("#wait").css("display", "none");
-                  } else {
-				$("#expidnumberest").find('option').remove().end();//elimina opciones existentes
-				var optionest = '';
-				$(res).each(function(key, value){
-					if (value.simples != 0) {
-					prsimpes=(value.simples_cerradas*100)/value.simples;
-					}
-					if (value.complejas != 0) {
-					prconplejas=(value.complejas_cerradas*100)/value.complejas;
-					}
-
-					if (prsimpes < 40) {
-						colortext="\'label label-success \'";
-					}
-					if (prsimpes >= 40 && prsimpes <= 60) {
-						colortext="\' label label-warning \'";
-					}
-					if (prsimpes > 60 ) {
-						colortext="\' label label-danger \'";
-					}
-					if (prconplejas < 40) {
-						colortext2="\' label label-success \'";
-					}
-					if (prconplejas >= 40 && prconplejas <= 60) {
-						colortext2="\' label label-warning \'";
-					}
-					if (prconplejas > 60 ) {
-						colortext2="\' label label-danger \'";
-					}
-				 	var nombre_com = value.name+' '+value.lastname;
-				 	optionest +='<option value="'+value.astid_estudent+'" data-content="'+nombre_com.toUpperCase()+' <span class='+colortext+'>A.'+value.simples+'</span> <span class='+colortext2+'>S.'+value.complejas+'</span>">'+value.name+' '+value.lastname+'</option>';
-                
-          		});
-          	//$("#expidnumberest").append('<option value="0000000" data-content="luis carlos <span class=\'label label-danger \'>S.11</span> ">luis carlos</option>');//coloca una nueva opcion
-				$("#expidnumberest").append(optionest);//coloca una nueva opcion
-				//$('#contencalendarid').append('<tr><td>'+parseInt(key+1)+'</td><td>'+value.name+' '+value.lastname+'</td><td>'+textcurso+'</td></tr>');
-				$(".estselect1").selectpicker("refresh");//refresca el select
-        }
-	}
-        $("#wait").css("display", "none");
-
-          });
-
-}
-});
 
 //carga la tabla de reporte asistencia estudiantes
 $("#reporasistencia_btn").click(function(){
@@ -2634,18 +2568,7 @@ $("#table-details-asistencia").append(datosasis);//coloca una nueva opcion
 });
 
 //guarda la busqueda de listar expediente para boton atras
-$('#table_list_model').on('click',"a.btn-edit-le",function(){
-	var url =window.location;
-// Check browser support
-if (typeof(Storage) !== "undefined") {
-    // Store
-    localStorage.setItem("dirreg", url);
-    // Retrieve
-} else {
 
-}
-
-});
 
 $("a.btn-atrasexed").click(function(){
 window.location.href = localStorage.getItem("dirreg");

@@ -76,6 +76,8 @@ $(function () {
             positionClass: "toast-top-right",
             timeOut: "4000",
         }); 
+
+        
     }
 
 

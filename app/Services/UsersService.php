@@ -17,8 +17,9 @@ interface UsersService {
     public function getEstudiantes():Array;
     public function getDocentesByRama($rama):Array;
     public function getUsersByPermissionName($permission):Collection; 
-    public function findUserByNameOrLastNameAndRole(String $name,$role):Array; 
+    public function findUserByNameOrLastNameAndRole(String $name,$role,$verify_status=false):Array; 
     public function findWithFilter(Array $filter):?Model;
+    public function getWithFilter(Array $filter):?Collection;
     public function setValidateSede($status);
     public function addSede(User $user);
     public function changeSede(User $user);

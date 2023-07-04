@@ -1,4 +1,4 @@
-<div class="pull-right" style="font-size:14px">
+<div style="float: left;font-size:14px">
 
 <input type="hidden" value="{{$expediente->getDocenteAsig()->idnumber}}" name="doc_id_number" id="doc_id_number">
 <input type="hidden" value="{{$expediente->getDocenteAsig()->name}} {{$expediente->getDocenteAsig()->lastname}}" name="doc_full_name" id="doc_full_name">
@@ -18,13 +18,15 @@ Docente:<i style="font-size:15px">
  @endif
 
  @if($expediente->getAsignacion()->asig_docente!==null and (currentUser()->idnumber == $expediente->getAsignacion()->asig_docente->cambio_docidnumber))
-<a href="#"  class="btn_change_doc_exp" id="btn_accept_change_doc_exp">Aceptar solicitud</a>
+<a href="#"  class="btn_change_doc_exp" id="btn_accept_change_doc_exp">
+    Aceptar solicitud</a>
 @endif
 
 @if($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
 
  @if($expediente->getAsignacion()->asig_docente!==null and $expediente->getAsignacion()->asig_docente->cambio_docidnumber!==null)
- <a href="#"  class="btn_change_doc_exp" id="btn_cancel_change_doc_exp">Cancelar solicitud</a>
+ <a href="#"  class="btn_change_doc_exp" id="btn_cancel_change_doc_exp">
+    Eliminar solicitud de cambio</a>
  
 @elseif($expediente->getDocenteAsig()->idnumber!='Sin asignar' and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
 <a href="#"  class="btn_change_doc_exp" id="btn_send_exp_change">Solicitar Cambio</a>

@@ -239,7 +239,7 @@ function FullName($criterio1, $criterio2)
 
 function active($url){
     // dd(($url));
-     return $url = request()->is($url) ? 'active' : '';
+     return $url === request()->is($url);
  }
 
 

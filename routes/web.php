@@ -76,7 +76,9 @@ Route::group(['middleware' => ['auth']], function() {
 //Nuevo usuarios
 Route::resource('usuarios', 'UsersController');
 Route::get("usuarios/buscar/persona","UsersController@findUser");
+Route::get("usuarios/buscar/persona/by/idnumber","UsersController@findUsersByIdNumber");
 Route::get("usuarios/find/by/name","UsersController@findUserByNameOrLastNameAndRole");
+Route::get("usuarios/find/by/role","UsersController@getUsersByRoleName");
 Route::post("usuarios/add/sede","UsersController@addSede");
 Route::post("usuarios/update/profile/picture","UsersController@uploadProfilePicture");
 
@@ -247,6 +249,9 @@ Route::get('expediente/casos/reasignados', 'ExpedienteController@casosreasig');
 Route::post('expedientes/anteriorestudiante/', 'ExpedienteController@anteriorEstudiante');
 Route::post('expedientes/buscarexpasig/', 'ExpedienteController@searchExpAsig'); 
 Route::post('expedientes/dar/baja', 'ExpedienteController@darBaja'); 
+Route::post('expedientes/cambiar/docente', 'ExpedienteController@cambiarDocente'); 
+
+
 
 Route::get('expediente/createstream/{id}', 'ExpedienteController@createStream'); 
 Route::get('expediente/sharestream/{id}', 'ExpedienteController@shareStream');  
@@ -483,7 +488,8 @@ Route::get('solicitudes/files/delete/{id}','SolicitudesController@deleteDocument
 Route::get('/', function () {
   return redirect('/dashboard');
 });
-
+//Referencias
+Route::get('obtener/estados/expedientes','ReferencesController@getEstadosForExpediente');
 
 
 });//fin middleware auth
@@ -650,7 +656,7 @@ Route::get('/prueba', function () {
  // NotaExt::message(); 
   // dd(N
 });
-
+Route::get('/pruebas/users', 'UsersController@pruebas');
 Route::get('/pruebas', function () {
   $periodo = Periodo::where('estado','1')
   ->first();

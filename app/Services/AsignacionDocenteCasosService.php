@@ -12,6 +12,7 @@ interface AsignacionDocenteCasosService {
     public function store(Request $request):AsigDocenteCaso;
     public function update(AsigDocenteCaso $expediente,Request $request):AsigDocenteCaso;
     public function find(int $id);
+    public function findWithFilter(Array $filter):?Model;
     /* public function getAllUsers(Request $request):LengthAwarePaginator;
     
     public function getUsersByRoleName(String $role):Array;
@@ -20,7 +21,7 @@ interface AsignacionDocenteCasosService {
     public function getDocentesByRama($rama):Array;
     public function getUsersByPermissionName($permission):Collection; 
     public function findUserByNameOrLastNameAndRole(String $name,$role):Array; 
-    public function findWithFilter(Array $filter):?Model;
+   
     public function setValidateSede($status);
     public function addSede(User $user);
     public function changeSede(User $user);

@@ -1,4 +1,4 @@
-@component('components.modal_dynamic_cols')
+@component('components.b4.modal_large')
 
 	@slot('cols')
 	col-md-8 col-md-offset-2

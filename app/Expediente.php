@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 use DB;
 use App\User;
 use App\Traits\AsigNotas;
-use App\Segmento; 
+use App\Segmento;
 use App\HistorialDatosCaso;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
@@ -57,14 +57,14 @@ class Expediente extends Model
         'expjuzoent',
         'expnumproc',
         'exppersondemandante',
-        'exppersondemandada',      
+        'exppersondemandada',
         'expfechalimite',
         'expfecha_res',
-     
+
     ];
 
-   
-   /*  public $periodoService;
+
+    /*  public $periodoService;
     public $segmentoService;
     public function __construct()
     {
@@ -74,18 +74,19 @@ class Expediente extends Model
     }
  */
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
-	    static::created(function($item) {
-	        Event::dispatch('expediente.created', $item);
-	    });
-	    static::updated(function($item) {
+        static::created(function ($item) {
+            Event::dispatch('expediente.created', $item);
+        });
+        static::updated(function ($item) {
             Event::dispatch('expediente.updated', $item);
-	    });
-	    static::deleted(function($item) {
-	        Event::dispatch('expediente.deleted', $item);
-	    });
-    } 
+        });
+        static::deleted(function ($item) {
+            Event::dispatch('expediente.deleted', $item);
+        });
+    }
     public function conciliaciones()
     {
         return $this->belongsToMany(Conciliacion::class, 'conc_has_exp', 'exp_id', 'conciliacion_id')
@@ -161,17 +162,19 @@ class Expediente extends Model
             ->withTimestamps();
     }
 
-    private function getPeriodoActivo(){
+    private function getPeriodoActivo()
+    {
         $service = App::make(PeriodosService::class);
         return $service->getPeriodoActivo();
     }
 
-    private function getSegmentoActivo(){
+    private function getSegmentoActivo()
+    {
         $service = App::make(SegmentosService::class);
         return $service->getSegmentoActivo();
     }
 
-   /*  public function asigDocente($asignacion_caso)
+    /*  public function asigDocente($asignacion_caso)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
 
@@ -302,7 +305,7 @@ class Expediente extends Model
         }
     } */
 
-  /*   private function getDocentesByRama($rama)
+    /*   private function getDocentesByRama($rama)
     {
         return $doceWithRama = DB::table('users')
             ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
@@ -321,7 +324,7 @@ class Expediente extends Model
             ->toArray(); 
     } */
 
-   /*  private function getDocentesAsigByRama($tipoproce)
+    /*  private function getDocentesAsigByRama($tipoproce)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
         return $asig_doc = DB::select(
@@ -377,86 +380,84 @@ class Expediente extends Model
         }
     }
 
-    function getDaysOrColorForClose($item = '',$now = null)
+    function getDaysOrColorForClose($item = '', $now = null)
     {
         /* $asig = $this->asignaciones()->where('asigest_id',$this->estudiante->idnumber)
         ->where('periodo_id',$periodo->id)
         ->orderBy('fecha_asig','desc')->first();  */
         $asig = $this->getAsignacion();
         $periodo = $this->getPeriodoActivo();
-        
-        
+
+
         try {
-            
+
             $now = $now == null ? Carbon::now() : Carbon::parse($now);
-            $vacaciones_text = DB::table("vacaciones_periodo")            
-            ->whereDate('fecha_fin','>=',$now)
-            ->where("periodo_id",$periodo->id)->first();
-            $fecha_asig = Carbon::parse($asig->fecha_asig); 
-            $fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);   
-                     
-            $_vacaciones = DB::table("vacaciones_periodo")            
-            ->whereDate('fecha_inicio','>=',$fecha_asig)
-            ->whereDate('fecha_fin','<=',$fecha_max)
-            ->where("periodo_id",$periodo->id)->first();
-           // return  $_vacaciones;
-             
-            if($_vacaciones){ 
+            $vacaciones_text = DB::table("vacaciones_periodo")
+                ->whereDate('fecha_fin', '>=', $now)
+                ->where("periodo_id", $periodo->id)->first();
+            $fecha_asig = Carbon::parse($asig->fecha_asig);
+            $fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);
+
+            $_vacaciones = DB::table("vacaciones_periodo")
+                ->whereDate('fecha_inicio', '>=', $fecha_asig)
+                ->whereDate('fecha_fin', '<=', $fecha_max)
+                ->where("periodo_id", $periodo->id)->first();
+            // return  $_vacaciones;
+
+            if ($_vacaciones) {
                 $fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
                 $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
                 $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
                 $fecha_max->addDays($days_vac);
-                $days = $now->diffInDays($fecha_max, false);                
-            }else{
-            $_vacaciones = DB::table("vacaciones_periodo")            
-            ->whereDate('fecha_inicio','<=',$fecha_max)
-            ->whereDate('fecha_fin','>=',$fecha_max)
-            ->where("periodo_id",$periodo->id)->first();
-                if($_vacaciones){
+                $days = $now->diffInDays($fecha_max, false);
+            } else {
+                $_vacaciones = DB::table("vacaciones_periodo")
+                    ->whereDate('fecha_inicio', '<=', $fecha_max)
+                    ->whereDate('fecha_fin', '>=', $fecha_max)
+                    ->where("periodo_id", $periodo->id)->first();
+                if ($_vacaciones) {
                     $fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
                     $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
-                    if($fecha_max >  $fecha_vaca_in and $fecha_max <  $fecha_vaca_fin){
+                    if ($fecha_max >  $fecha_vaca_in and $fecha_max <  $fecha_vaca_fin) {
                         $days_pas = $fecha_vaca_in->diffInDays($fecha_max, false);
                         $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
                         $days = $days_pas + $days_vac;
                         //dd($days,$fecha_asig,$days_pas,$days_vac );
-                        if($fecha_vaca_fin < $now){
+                        if ($fecha_vaca_fin < $now) {
                             $days = $fecha_vaca_fin->diffInDays($now, false);
-                            $days =   $days_pas - $days;                        
-                        }                   
-                    }                      
-                } else{
+                            $days =   $days_pas - $days;
+                        }
+                    }
+                } else {
                     $days = $now->diffInDays($fecha_max, false);
-                }              
-
+                }
             }
             $dias = $days;
             $mgs = $days . ' Días';
-            if($days >= 1)$color = '#DA443F !important';                          
-            if($days >= 10)$color = '#F4D03F !important';
-            if($days >= 20) $color = '#0CA418 !important';
-            if($days < 1){
+            if ($days >= 1) $color = '#DA443F !important';
+            if ($days >= 10) $color = '#F4D03F !important';
+            if ($days >= 20) $color = '#0CA418 !important';
+            if ($days < 1) {
                 $color = 'gray !important';
                 $mgs = "Evaluado por sistema";
             }
-           
+
             switch ($item) {
                 case 'color':
                     return $color;
                     break;
                 case 'mensaje':
-                    return $vacaciones_text ? "Vacaciones" : $mgs;                   
+                    return $vacaciones_text ? "Vacaciones" : $mgs;
                     break;
                 case 'dias':
                     return $dias;
                     break;
-                
+
                 default:
-                return "Sin argumento";
+                    return "Sin argumento";
                     break;
             }
             return "dias";
-
         } catch (\ErrorException $e) {
             return 'Error';
         }
@@ -536,12 +537,14 @@ class Expediente extends Model
     {
         $padresAct = DB::table('actuacions')
             ->join('revisiones_actuacion', 'actuacions.id', '=', 'revisiones_actuacion.parent_rev_actid')
-            ->where([['actestado_id', '<>', '136'],
-             ['actestado_id', '<>', '138'], 
-             ['actestado_id', '<>', '139'], 
-             ['actestado_id', '<>',234],
-             ['actidnumberest', $this->expidnumberest],
-             ['actexpid', $this->expid]])
+            ->where([
+                ['actestado_id', '<>', '136'],
+                ['actestado_id', '<>', '138'],
+                ['actestado_id', '<>', '139'],
+                ['actestado_id', '<>', 234],
+                ['actidnumberest', $this->expidnumberest],
+                ['actexpid', $this->expid]
+            ])
             ->select('actuacions.id')
             ->groupBy('actuacions.id')
             ->get();
@@ -567,7 +570,7 @@ class Expediente extends Model
                 $hijos[] = $hijosAct;
             }
         }
-      
+
         return $hijos;
     }
 
@@ -581,12 +584,12 @@ class Expediente extends Model
             ->groupBy('actuacions.id')
             ->get();
 
-        $hijos = []; 
+        $hijos = [];
         $segmento = $this->getSegmentoActivo();
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
-            $vacaciones = DB::table("vacaciones_periodo")         
-            ->where("periodo_id",$periodo->id)->get();
+            $vacaciones = DB::table("vacaciones_periodo")
+                ->where("periodo_id", $periodo->id)->get();
 
             foreach ($padresAct as $key => $actpa) {
                 $hijosAct = DB::select(
@@ -600,25 +603,26 @@ class Expediente extends Model
                     $percent = 100;
                     $date = Carbon::now()->format('Y-m-d');
                     $fecha_limit = Carbon::parse($hijosAct[0]->fecha_limit);
-                    if(count($vacaciones)>0){
+                    if (count($vacaciones) > 0) {
                         $days_vac = 0;
                         foreach ($vacaciones as $key => $vacacion) {
                             //if( $key==2) dd($fecha_limit ,  $key,$vacacion->fecha_fin); 
-                            if($vacacion->fecha_inicio <= $fecha_limit && $vacacion->fecha_fin >= $fecha_limit ||
-                            ($vacacion->fecha_inicio <= $fecha_limit && $vacacion->fecha_fin <= $fecha_limit)){                            
+                            if (
+                                $vacacion->fecha_inicio <= $fecha_limit && $vacacion->fecha_fin >= $fecha_limit ||
+                                ($vacacion->fecha_inicio <= $fecha_limit && $vacacion->fecha_fin <= $fecha_limit)
+                            ) {
                                 $inicio = Carbon::parse($vacacion->fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
-                                $fin = Carbon::parse($vacacion->fecha_fin);//moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
+                                $fin = Carbon::parse($vacacion->fecha_fin); //moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
                                 $days_vac =  $inicio->diffInDays($fin, false);
-                                $fecha_limit->addDays($days_vac);    
-                               //if( $key==2) dd($fecha_limit ,  $key);                                                     
+                                $fecha_limit->addDays($days_vac);
+                                //if( $key==2) dd($fecha_limit ,  $key);                                                     
                             }
                         }
-                                               
                     }
-                    
-                   
+
+
                     if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $fecha_limit < $date) {
-                        $hijos[] = $hijosAct;                        
+                        $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
                         $data = [
                             'ntaaplicacion' => 0,
@@ -650,24 +654,24 @@ class Expediente extends Model
 
     public function scopeCriterio($query, $request, $search_all_exp = false)
     {
-        if($request->tipo_busqueda=="adv"){
-           
-              //  dd($request->all());
-                return $query->Orwhere(['expidnumberest' => $request->expidnumberest])
+        if ($request->tipo_busqueda == "adv") {
+
+            //  dd($request->all());
+            return $query->Orwhere(['expidnumberest' => $request->expidnumberest])
                 ->where('exptipoproce_id', $request->exptipoproce_id)
                 ->where('expestado_id', $request->expestado_id);
 
-                if($request->estado_id){
-                    //return $query->where('expestado_id', $data);
-                }
-                //dd("dd00");
+            if ($request->estado_id) {
+                //return $query->where('expestado_id', $data);
+            }
+            //dd("dd00");
         }
 
         if (trim($request->data) != '') {
-           
+
             $data = $request->data;
             switch ($request->tipo_busqueda) {
-               
+
                 case 'codido_exp':
                     return $query->where('expid', 'like', '%' . $data);
                     break;
@@ -678,11 +682,9 @@ class Expediente extends Model
                 case 'idnumber_doc':
                     return $query->where('asignacion_docente_caso.docidnumber', $data);
                     break;
-                case 'consultante':
-                case 'consultante_num':
-                    //return $query->where('expidnumber', $data);
-                    return $query->Orwhere(['expidnumberest' => $data, 'expidnumber' => $data]);
-
+                case 'solicitante':
+                case 'solicitante_num':
+                    return $query->where('expidnumber', $data);
                     break;
                 case 'estado':
                     return $query->where('expestado_id', $data);
@@ -723,7 +725,6 @@ class Expediente extends Model
                     }
                     break;
             }
-      
         }
     }
 
@@ -881,27 +882,27 @@ class Expediente extends Model
     }
     public function fechaHistorialDatosCaso($tipo)
     {
-        $asig = $this->getAsignacion();  
-        if($asig){
+        $asig = $this->getAsignacion();
+        if ($asig) {
             $historial = HistorialDatosCaso::where('hisdc_expidnumber', $this->expid)
-            ->where('hisdc_tipo_datos_caso', $tipo)
-            ->where('hisdc_idnumberest_id', $this->expidnumberest)
-            ->where('created_at','>=',$asig->fecha_asig)
-            ->orderBy('id', 'DESC')
-            ->first();
+                ->where('hisdc_tipo_datos_caso', $tipo)
+                ->where('hisdc_idnumberest_id', $this->expidnumberest)
+                ->where('created_at', '>=', $asig->fecha_asig)
+                ->orderBy('id', 'DESC')
+                ->first();
             if ($historial) {
                 $his_fecha = $historial->created_at;
                 $his_fecha = $his_fecha->format('d-m-Y');
                 return $his_fecha;
             }
         }
-     
+
         return false;
     }
 
     public function getDaysAfterAsig()
     {
-        $asig = $this->getAsignacion();   
+        $asig = $this->getAsignacion();
         if ($asig) {
             $fecha_ini = Carbon::now();
             return $fecha_ini->diffInDays($asig->fecha_asig, false) * -1;
@@ -928,37 +929,37 @@ class Expediente extends Model
     public function getDaysForNexAct()
     {
         $act = $this->actuacion()
-		->where(['actusercreated'=>$this->expidnumberest])
-		->orderBy('actuacions.actfecha','desc')->first();
+            ->where(['actusercreated' => $this->expidnumberest])
+            ->orderBy('actuacions.actfecha', 'desc')->first();
         $color = 'green';
         $dias = 0;
-        if($act){
-            $dias = $this->difDays($act->actfecha,date('Y-m-d'));
+        if ($act) {
+            $dias = $this->difDays($act->actfecha, date('Y-m-d'));
             $text =  "<b>Días transcurridos desde última actuación:</b>";
-        }else{
+        } else {
             $dias = $this->getDaysAfterAsig();
             $text =  "<b>Días transcurridos desde la asignación:</b>";
         }
-        if($dias>10) $color = 'orange';
-        if($dias>20) $color = 'red';
-        
+        if ($dias > 10) $color = 'orange';
+        if ($dias > 20) $color = 'red';
 
-       $text .=  " <span style='background-color:$color' class='pull-center badge'>$dias</span>";
-       
+
+        $text .=  " <span style='background-color:$color' class='pull-center badge'>$dias</span>";
+
 
 
         return $text;
     }
 
-    public function isValidOpen(){
+    public function isValidOpen()
+    {
         $expediente_estado = $this->estados()
-        ->where('ref_estado_id',4)
-        ->orderBy('created_at','desc')->get();
+            ->where('ref_estado_id', 4)
+            ->orderBy('created_at', 'desc')->get();
         $dias = $this->getDaysAfterAsig();
-        if($dias<=55){                     
-           return true;
+        if ($dias <= 55) {
+            return true;
         }
         return false;
     }
-
 }

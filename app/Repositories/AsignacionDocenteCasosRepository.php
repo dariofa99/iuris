@@ -20,18 +20,11 @@ class AsignacionDocenteCasosRepository extends BaseRepository implements Asignac
             $this->model->docidnumber=$request->input('docidnumber') ;
             $this->model->activo= ($request->has('activo')) ? $request->input('activo') : 1;
             $this->model->cambio_docidnumber= $request->has('cambio_docidnumber') ? $request->input('cambio_docidnumber') : null ;
-            $this->model->asig_caso_id= $request->has('asig_caso_id')  ;
+            $this->model->asig_caso_id= $request->input('asig_caso_id')  ;
             $this->model->user_created_id= auth()->user()->idnumber;  ;
             $this->model->user_updated_id= auth()->user()->idnumber; ;
             $this->model->save();
-           /*  $asignacion = new AsigDocenteCaso();
-            $asignacion->docidnumber = $asig_doc[0]->docidnumber;
-            $asignacion->asig_caso_id = $asignacion_caso->id;
-            $asignacion->user_created_id = auth()->user()->idnumber;
-            $asignacion->user_updated_id = \Auth::user()->idnumber;
-            $asignacion->save(); */
-          
-            
+                  
         return $this->model;
     }
 
@@ -39,7 +32,6 @@ class AsignacionDocenteCasosRepository extends BaseRepository implements Asignac
     {    
         $expediente->fill($request->all());
         $expediente->save();
-        Event::dispatch('expediente.updated', $expediente);
         return $expediente;
     }
     

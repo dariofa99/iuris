@@ -278,8 +278,9 @@ private function aditionalData($request,$id){
     public function update(Request $request, $id)
     {
  
+     
        $email_request = false;
-       $user = $this->userService->find($id); 
+       $user = $this->userService->setValidateSede(false)->find($id); 
       
        $messages = [
         'email.unique' => 'El :attribute  ya existe en otra cuenta.',
@@ -372,7 +373,7 @@ private function aditionalData($request,$id){
 
  
     public function findUser(Request $request){
-        //return  response()->json(['encontrado'=>$request->all()]);
+        return  response()->json(['encontrado'=>$request->all()]);
         $response=[]; 
         $encontrado = false;
         $sin_sede = false;
@@ -414,12 +415,34 @@ private function aditionalData($request,$id){
       }
 
       public function findUserByNameOrLastNameAndRole(Request $request){
-        $users = $this->userService->findUserByNameOrLastNameAndRole($request->name,$request->role);
+        //return  response()->json(['encontrado'=>$request->all()]);
+        
+        $users = $this->userService->findUserByNameOrLastNameAndRole($request->name,
+        $request->role,
+        $request->has('validate_active')?$request->get('validate_active'):true);
         if(count($users)>0){
           return response()->json(['encontrado'=>true,'users'=>$users]);
         }    
             return  response()->json(['encontrado'=>false]);
         }
+
+        public function getUsersByRoleName(Request $request){
+          //return  response()->json(['encontrado'=>$request->all()]);
+      //    $users = $this->userService->getDocentes();
+         $users = $this->userService->getUsersByRoleName($request->role);
+          if(count($users)>0){
+            return response()->json(['encontrado'=>true,'users'=>$users]);
+          }    
+              return  response()->json(['encontrado'=>false]);
+          }
+
+        public function findUsersByIdNumber(Request $request){
+          $user = $this->userService->getWithFilter(['idnumber'=>$request->idnumber]);
+          if(($user)!==null){
+            return response()->json(['encontrado'=>true,'users'=>$user]);
+          }    
+              return  response()->json(['encontrado'=>false]);
+          }
 
     public function addSede(Request $request){
           $user = $this->userService->setValidateSede(false)->find($request->id);
@@ -458,6 +481,23 @@ private function aditionalData($request,$id){
       }
       return  response()->json(['errors'=>false]);
   }
+
+  public function pruebas(Request $request){
+    try {
+      $users = $this->userService->setValidateSede(false)
+      ->findUserByNameOrLastNameAndRole("User","solicitante");
+
+      /* $users = User::whereHas('roles', function ($query) {
+        return $query->where('roles.name', 'docente');
+    })->get(); */
+    dd($users);
+      return  response()->json($users);
+    } catch (\Throwable $th) {
+      dd($th);
+      return  response()->json(['errors'=>$th]);
+    }
+    return  response()->json(['errors'=>false]);
+}
 
 }
 

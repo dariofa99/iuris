@@ -1,4 +1,4 @@
-@component('components.modal')
+@component('components.b4.modal_medium')
 	
 	@slot('trigger')
 		myModal_add_asesoria_docente
@@ -9,7 +9,6 @@
 		Docente: {{ Auth::user()->name }} <br>
 		Fecha: {{ date('d-m-Y') }}
 	@endslot
-
  
 	@slot('body')
 
@@ -31,11 +30,11 @@ Registrado
 		<div class="pull-right">
 		{!!Form::label('Compartir con estudiante: ') !!}
 		<input type="checkbox" id="apl_shared" hidden="hidden" name="apl_shared" checked="true" value="1">
-		<i class="fa fa-toggle-on switch-on" id="switch" onclick="changeAplShared()"></i>
+		<i class="fa fa-toggle-on switch-on" id="switch_shared_asesoria_caso"></i>
 	</div>
 		 <div class="form-group">
 							{!!Form::label('Asesoría docente: ') !!}
-							{!!Form::textarea('asesoria_docente',  null , ['class' => 'form-control required','maxlength'=>'100000','id'=>'asesoria_docente' ]); !!}
+							{!!Form::textarea('asesoria_docente',  null , ['class' => 'form-control required','maxlength'=>'100000','id'=>'asesoria_docente','rows'=>'5' ]); !!}
 						</div>
 	</div>
 </div>

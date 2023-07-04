@@ -182,12 +182,7 @@ $(document).ready(function (e) {
     $(".select2_ramas").select2();
     // if(currentUrl=='/expedientes')  searchExpedientes();
 
-    $("#table_list_model").on("click", ".pagination a", function (e) {
-        e.preventDefault();
-        page = $(this).attr("href");
-        index_page(page);
-        window.history.pushState(null, "", page);
-    });
+    
 
     $("#content_list_solicitudesh").on("click", ".pagination a", function (e) {
         e.preventDefault();
@@ -316,10 +311,7 @@ $(document).ready(function (e) {
 
     reloadSearchExp();
     //Select que busca en expedientes
-    $("#tipo_busqueda").change(function () {
-        var value = $(this).val();
-        changeSelectSearchExp(value);
-    });
+
 
     $("#btnEditar").click(function () {
         showElement("btnActualizar");
@@ -370,7 +362,7 @@ $(document).ready(function (e) {
             $.ajax({
                 url: route,
                 headers: { "X-CSRF-TOKEN": token },
-                type: "POST",
+                type: "PUT",
                 datatype: "json",
                 data: {
                     expidnumberest: expidnumberest,
@@ -737,18 +729,7 @@ $(document).ready(function (e) {
         return false;
     });
 
-    $("#myformExpFilter").submit(function (e) {
-        e.preventDefault();
-        errors = validateForm("myformExpFilter");
-        if (errors.length <= 0) {
-            page = $(this).attr("action");
-            var data = $(this).serialize();
-            index_page(page, data);
-            window.history.pushState(null, "", page + "?" + data);
-            //return false;
-        }
-        return false;
-    });
+  
 
     $(".btn_cambiar_docente").on("click", function () {
         var id = getIdAttr($(this).attr("id"), "-");
@@ -3416,10 +3397,7 @@ return false;
         e.preventDefault();
     });
 
-    $("#btn_exp_bus_avz").on("click",function(e){
-        $("#mymodalBuscarExpAvanzadas").modal("show")
-
-    });
+  
    
 }); //Fin del document ready
 
@@ -7743,70 +7721,9 @@ function setFormToObject(form) {
     return dataObj;
 }
 
-function setFechaToHumans(fecha) {
-    var meses = {
-        "01": "Enero",
-        "02": "Febrero",
-        "03": "Marzo",
-        "04": "Abril",
-        "05": "Mayo",
-        "06": "Junio",
-        "07": "Julio",
-        "08": "Agosto",
-        "09": "Septiembre",
-        10: "Octubre",
-        11: "Noviembre",
-        12: "Diciembre",
-    };
-    var mes = getIdAttr(fecha, "-", 1);
-    var mes = meses[mes];
-    var dia = getIdAttr(fecha, "-", 2);
-    var año = getIdAttr(fecha, "-", 0);
-    var fecha = dia + " de " + mes + " del " + año;
-    return fecha;
-}
 
-function getIdAttr(id, separador, orientacion) {
-    ori = 1;
-    if (orientacion != null) {
-        ori = orientacion;
-    }
-    value = id.split(separador)[ori];
-    return value;
-}
 
-function showElement(element, attrib) {
-    if (attrib == null || attrib == "id") {
-        $("#" + element).show();
-    } else {
-        $("." + element).show();
-    }
-}
-function hideElement(element, attrib) {
-    if (attrib == null || attrib == "id") {
-        $("#" + element).hide();
-    } else {
-        $("." + element).hide();
-    }
-}
-function enabledInput(input, attrib) {
-    if (attrib == "id" || attrib == null) {
-        $("#" + input).prop("disabled", false);
-        $("#" + input).css({ background: "#FDFEFE" });
-    } else {
-        $("." + input).prop("disabled", false);
-        $("." + input).css({ background: "#FDFEFE" });
-    }
-}
-function disabledInput(input, attrib) {
-    if (attrib == "id" || attrib == null) {
-        $("#" + input).prop("disabled", true);
-        $("#" + input).css({ background: "#EAEDED" });
-    } else {
-        $("." + input).prop("disabled", true);
-        $("." + input).css({ background: "#EAEDED" });
-    }
-}
+
 //Funcion para contar caracteres de un input
 function validateNumChar(obj, num) {
     obj.value = obj.value.substring(0, num);
@@ -10041,31 +9958,7 @@ function deleteTurno(id) {
     });
 }
 
-function index_page(route, request) {
-    var route = route;
-    $.ajax({
-        url: route,
-        type: "GET",
-        datatype: "json",
-        data: request,
-        cache: false,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));
-            $("#wait").css("display", "block");
-        },
-        /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {
-            $("#table_list_model").html(res);
-            $("#wait").css("display", "none");
-        },
-        error: function (xhr, textStatus, thrownError) {
-            alert(
-                "Hubo un error con el servidor ERROR::" + thrownError,
-                textStatus
-            );
-        },
-    });
-}
+
 
 function index_pageSol(route, request) {
     var route = route;

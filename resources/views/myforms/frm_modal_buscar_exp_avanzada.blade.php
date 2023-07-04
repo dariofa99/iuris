@@ -4,7 +4,7 @@
 		mymodalBuscarExpAvanzadas
 	@endslot
 
-
+ 
 	@slot('title')
 		Busqueda avanzada
 	@endslot
@@ -13,17 +13,13 @@
 	@slot('body')
 
 
-@section('msg-contenido')
-
-@endsection
-@include('msg.ajax.success')
-<div class="row">
-    <div class="col-md-12 ">
+    
         <form id="myFormBsExpAdv" method="GET" action="{{route('expedientes.index')}}">
+            <div class="row">
             <input type="hidden" name="tipo_busqueda" value="adv">
             <div class="form-group col-md-12">
-                <label for="">Estudiante</label>
-                {!!Form::select('expidnumberest',[],null,['class' => 'selectpicker buscar_usuario', 'data-live-search'=>'true', 'data-select-origen'=>'estudiante', 'required' => 'required','id'=>'select_data_estudiantes','data-width'=>'500px','data-live-search-placeholder'=>'Escriba el nombre'] ); !!}
+                <label for="">Estudiante</label><br>
+                {!!Form::select('expidnumberest',[],null,['title'=>"Ingrese un nombre",'class' => 'selectpicker buscar_usuario', 'data-live-search'=>'true', 'data-select-origen'=>'estudiante', 'required' => 'required','id'=>'select_data_estudiantes','data-width'=>'100%','data-live-search-placeholder'=>'Escriba el nombre'] ); !!}
             
                  {{--  <input type="text" required class="form-control" name="expidnumberest" placeholder="Numero de identificación">
                 --}}
@@ -58,10 +54,10 @@
                 <button id="btn_desc_exp_us" type="button" class="btn btn-warning"><i class="fa fa-file-excel"> </i> Descargar </button>
         
             </div>
-
+        </div>
         </form>
-    </div>
-</div>
+
+
 
 	@endslot
 @endcomponent

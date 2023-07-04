@@ -7,10 +7,24 @@ use Illuminate\Http\Request;
 use App\Expediente;
 use App\AsignacionCaso;
 use App\Notifications\SolicitudDocenteCaso;
+use App\Services\AsignacionCasosService;
+use App\Services\AsignacionDocenteCasosService;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class AsigDocenteCasoController extends Controller
-{
+{ 
+
+    private $asigCasoService; 
+    private $asigDocenteCasoService; 
+
+  public function __construct(AsignacionCasosService $asigCasoService,
+  AsignacionDocenteCasosService $asigDocenteCasoService)
+  {
+    $this->asigCasoService = $asigCasoService;
+    $this->asigDocenteCasoService = $asigDocenteCasoService;
+  }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,19 +53,19 @@ class AsigDocenteCasoController extends Controller
      */
     public function store(Request $request)
     {
-        $asignacion_caso =  AsignacionCaso::where([
-            'asigest_id'=>$request->exp_idnumberest,
-            'asigexp_id'=>$request->expid
-        ])->first();
- //return response()->json(['error'=>$asignacion_caso]);
-          try {
-            $asignacion = new AsigDocenteCaso();
-            $asignacion->docidnumber = \Auth::user()->idnumber;
-            $asignacion->asig_caso_id = $asignacion_caso->id;
-            $asignacion->user_created_id = \Auth::user()->idnumber;
-            $asignacion->user_updated_id = \Auth::user()->idnumber;
-            $asignacion->save();
-            $user = \Auth::user();
+        $asignacion_caso = $this->asigCasoService->findWithFilter(
+            [
+                'asigest_id'=>$request->exp_idnumberest,
+                'asigexp_id'=>$request->expid
+            ]
+            );
+        
+        
+         try {
+            $request['docidnumber'] = Auth::user()->idnumber;
+            $request['asig_caso_id'] = $asignacion_caso->id;
+            $this->asigDocenteCasoService->store($request);
+            $user = Auth::user();
             $user->casos;
         return response()->json(count($user->casos));
               } catch (\ErrorException $e) {
