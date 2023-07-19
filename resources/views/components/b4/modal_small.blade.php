@@ -11,7 +11,7 @@
         {{$body}} 
       </div>
         <div class="modal-footer">
-        {{$footer}}         
+        {{isset($footer)?$footer:''}}         
       </div>
     </div>
   </div>

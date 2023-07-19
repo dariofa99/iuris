@@ -185,3 +185,4 @@ class AutorizacionesController extends Controller
         
     } 
 }
+ 

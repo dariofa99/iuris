@@ -34,97 +34,125 @@
 @section('area_forms')
 
     @include('msg.alerts')
-    <input type="hidden" value="{{$estados}}" id="ref_estados">
-    <input type="hidden" value="{{$tipo_proceso}}" id="ref_tipoproceso">
-    <input type="hidden" value="{{$reframa_derecho}}" id="ref_ramaderecho">
+    <input type="hidden" value="{{ $estados }}" id="ref_estados">
+    <input type="hidden" value="{{ $tipo_proceso }}" id="ref_tipoproceso">
+    <input type="hidden" value="{{ $reframa_derecho }}" id="ref_ramaderecho">
 
     <div class="cd">
         <div class="row">
             <div class="col-md-10">
-                <form  action="{{ route('expedientes.index') }}" method="GET" id="myformExpFilter">
-
-                   <div class="row">
-                    <div class="col-md-3">
-                        <span>Busqueda</span>
-                      <select name="tipo_busqueda" id='tipo_busqueda' class="form-control form-control-sm"
-                      placeholder="Seleccione..." required="required">
-                      <option value="">Seleccione...</option>
-                      @if (currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral') or currentUser()->hasRole('amatai'))
-                          <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'idnumber_doc' ? 'selected':''}} value="idnumber_doc">
-                              Casos por docente
-                          </option>
-                      @endif
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'codido_exp' ? 'selected':''}} value="codido_exp">
-                        Número de Expediente
-                      </option>
-
-                      @if (!currentUser()->hasRole('estudiante'))
-                          <option value="solicitante_num" {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected':''}}>
-                            Documento de identificación (solicitante)
-                          </option>
-                      @endif
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'solicitante' ? 'selected':''}} value="solicitante">
-                        Nombre o apellidos (solicitante)</option>
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'estado' ? 'selected':''}} value="estado">
-                        Estado
-                      </option>
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'tipo_consulta' ? 'selected':''}}  value="tipo_consulta">Tipo de Consulta</option>
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'rama_derecho' ? 'selected':''}} value="rama_derecho">Rama del Derecho</option>
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'fecha_creacion' ? 'selected':''}} value="fecha_creacion">
-                          Fecha de Creación
-                        </option>
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'fecha_rango' ? 'selected':''}} value="fecha_rango">
-                        Rango Fechas
-                      </option>
-                      <option {{Request::has('tipo_busqueda') and Request::get('tipo_busqueda') == 'all' ? 'selected':''}} value="all">
-                        Todo
-                      </option>
-                  </select>
+                <form action="{{ route('expedientes.index') }}" method="GET" id="myformExpFilter">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @if (currentUser()->hasRole('docente') || currentUser()->hasRole('docente_prueba'))
+                                <input type="checkbox" @if ((isset($request['search_onlyMy_exp']) and $request['search_onlyMy_exp'] == 'on') || empty($request)) checked @endif
+                                    name="search_onlyMy_exp" id="search_onlyMy_exp">
+                                Solo ver mis casos
+                            @endif
+                        </div>
                     </div>
-                    <div class="col-md-5">
-                        <span>Ingrese un valor</span>
-                    {!! Form::select('data', [], null, [
-                        'class' => 'selectpicker select_data_users',
-                        'data-live-search' => 'true',
-                        'required' => 'required',
-                        'id' => 'select_data_users',
-                        'data-width' => '100%',
-                        'title'=>'Esperando tipo de busqueda',
-                        'data-live-search-placeholder' => 'Escriba un valor...'
-                    ]) !!}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span>Busqueda</span>
+                            <select name="tipo_busqueda" id='tipo_busqueda' class="form-control form-control-sm"
+                                placeholder="Seleccione..." required="required">
+                                <option value="">Seleccione...</option>
+                                @if (currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral') or currentUser()->hasRole('amatai'))
+                                    <option
+                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'idnumber_doc' ? 'selected' : '') }}
+                                        value="idnumber_doc">
+                                        Casos por docente
+                                    </option>
+                                @endif
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'codido_exp' ? 'selected' : '') }}
+                                    value="codido_exp">
+                                    Número de Expediente
+                                </option>
 
-                    <input type="date" id="data" name="data" class="form-control form-control-sm" style="display: none">
-                     
+                                @if (!currentUser()->hasRole('estudiante'))
+                                    <option value="solicitante_num"
+                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected' : '') }}>
+                                        Documento de identificación (solicitante)
+                                    </option>
+                                @endif
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante' ? 'selected' : '') }}
+                                    value="solicitante">
+                                    Nombre o apellidos (solicitante)</option>
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estado' ? 'selected' : '') }}
+                                    value="estado">
+                                    Estado
+                                </option>
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'tipo_consulta' ? 'selected' : '') }}
+                                    value="tipo_consulta">Tipo de Consulta</option>
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'rama_derecho' ? 'selected' : '') }}
+                                    value="rama_derecho">Rama del Derecho</option>
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'fecha_creacion' ? 'selected' : '') }}
+                                    value="fecha_creacion">
+                                    Fecha de Creación
+                                </option>
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'fecha_rango' ? 'selected' : '') }}
+                                    value="fecha_rango">
+                                    Rango Fechas
+                                </option>
+                                <option
+                                    {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'all' ? 'selected' : '') }}
+                                    value="all">
+                                    Todo
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <span>Ingrese un valor</span>
+                            {!! Form::select('data', [], null, [
+                                'class' => 'selectpicker select_data_users',
+                                'data-live-search' => 'true',
+                                'required' => 'required',
+                                'id' => 'select_data_users',
+                                'data-width' => '100%',
+                                'title' => 'Esperando tipo de busqueda',
+                                'data-live-search-placeholder' => 'Escriba un valor...',
+                            ]) !!}
 
-                    <table width="100%" style="display: none;width:100% !important">
-                        <tr>
-                            <td>
-                                <span>Fecha inicio</span>
-                                <input type="date" name="dataIni" class="form-control form-control-sm">
-                            </td>
-                            <td>
-                                <span>Fecha fin</span>
-                                <input type="date" name="dataFin" class="form-control form-control-sm">
-                            </td>
-                        </tr>
-                    </table>
-                       
-                       
+                            <input type="date" id="data" name="data" class="form-control form-control-sm"
+                                style="display: none">
 
+
+                            <table width="100%" style="display: none;width:100% !important">
+                                <tr>
+                                    <td>
+                                        <span>Fecha inicio</span>
+                                        <input type="date" name="dataIni" class="form-control form-control-sm">
+                                    </td>
+                                    <td>
+                                        <span>Fecha fin</span>
+                                        <input type="date" name="dataFin" class="form-control form-control-sm">
+                                    </td>
+                                </tr>
+                            </table>
+
+
+
+                        </div>
+                        <div class="col-md-4">
+                            <br>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar
+                            </button>
+                            @if (currentUser()->hasRole('diradmin') ||
+                                    currentUser()->hasRole('dirgral') ||
+                                    currentUser()->hasRole('coordprac') ||
+                                    currentUser()->hasRole('amatai'))
+                                <button type="button" id="btn_exp_bus_avz" class="btn btn-default"><i class="fa fa-cogs">
+                                    </i> Avanzada </button>
+                            @endif
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <br>
-                      <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar
-                      </button>
-                      @if (currentUser()->hasRole('diradmin') ||
-                              currentUser()->hasRole('dirgral') ||
-                              currentUser()->hasRole('coordprac') ||
-                              currentUser()->hasRole('amatai'))
-                          <button type="button" id="btn_exp_bus_avz" class="btn btn-default"><i
-                                  class="fa fa-cogs"> </i> Avanzada </button>
-                      @endif
-                    </div>
-                   </div>
 
                 </form>
             </div>

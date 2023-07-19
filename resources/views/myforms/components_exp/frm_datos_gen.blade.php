@@ -6,22 +6,35 @@
                              <input type="hidden" name="exp_idnumberest" id="exp_idnumberest" value="{{$expediente->expidnumberest}}">
                           <div class="form-group"> 
                             <label>Estudiante asignado</label>
-                                {!!Form::select('expidnumberest',$user, null,  ['class' => 'form-control selectpicker disabled-fun3', 'data-live-search'=>'true','required' => 'required','disabled'=>'disabled','id'=>'expidnumberest' ])!!}
+                            <select data-live-search="true" name="expidnumberest" disabled required id="expidnumberest" class="required form-control disabled-fun3 selectpicker">
+                                @foreach($estudiantes as $key => $estudiante)
+                                    <option value="{{$estudiante['idnumber']}}">
+                                        {{$estudiante['full_name']}}
+                                    </option>
+                                @endforeach
+                            </select>
+                               {{--  {!!Form::select('expidnumberest',$estudiantes, null,
+                                  ['class' => 'form-control selectpicker disabled-fun3',
+                                   'data-live-search'=>'true','required' => 'required',
+                                   'disabled'=>'disabled','id'=>'expidnumberest'
+                                ])!!} --}}
         
                           </div>
                         </div> 
                        
-                        <div class="col-md-2">                       
+                        <div class="col-md-3">                       
                             <div class="form-group">
                                 <label>Curso</label><br>
                                 @if($expediente->estudiante->curso->id != 1)
+                                <label style="margin-left:8px; padding:2px 4px 2px 4px;border-radius:5px; font-size:13px" class="label {{ ($expediente->getColorTurno($expediente->estudiante->turno->color->ref_value)) }}">
+                                    
                                 {{  $expediente->estudiante->curso->ref_nombre  }}
                                 @if($expediente->estudiante->turno)                          
-                                    <label style="margin-left:8px;" class="label {{ ($expediente->getColorTurno($expediente->estudiante->turno->color->ref_value)) }}">
                                     {{ $expediente->getMjs($expediente->estudiante->turno->horario->ref_value) }} 
                          
-                                </label>
+                               
                                 @endif
+                            </label>
                                 @else
                                 <label style="margin-left:8px;" class="label bg-orange">
                                    Sin curso asignado
@@ -46,7 +59,7 @@
                         </div>
                         @endif
                        
-                        <div class="col-md-4 ">
+                        <div class="col-md-3 ">
                                 <div class="pull-right" style="margin-top:20px;">
                                     @if((currentUser()->can('tomar_caso') and $expediente->getDocenteAsig()->name=='Sin asignar'))
                                         <a class="btn btn-primary" id="btnTomarCaso" ><i class="fa fa-check"> </i>
@@ -77,12 +90,15 @@
         </div>
         <div class="col-sm-2">
         {!!Form::label('Fecha Expediente: ') !!}
-        <div class="input-group">
-              <div class="input-group-addon">
-            <i class="fa fa-calendar"></i>
-              </div>
-          {!!Form::text('expfecha',null, ['class' => 'form-control', 'required' => 'required','data-inputmask'=>"'alias': 'yyyy/mm/dd'" , 'data-mask', 'readonly' ] ); !!}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">
+                <i class="fa fa-calendar"></i>
+              </span>
             </div>
+            {!!Form::text('expfecha',null, ['class' => 'form-control', 'required' => 'required','data-inputmask'=>"'alias': 'yyyy/mm/dd'" , 'data-mask', 'readonly' ] ); !!}
+        </div>
+
             <!-- /.input group -->
         </div>
             <div class="col-md-4">

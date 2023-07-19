@@ -797,7 +797,7 @@ $(document).ready(function (e) {
                 confirmButtonClass: 'btn-success', 
                 allowEmpty: false, // Evita el valor vacío en el textarea
                 preConfirm: (text) => {
-                    if(text!==''){
+                    if(text!==''){ 
                         request["actdocenrecomendac"] = text;
                         changeStateActuacion(request);
                     }else{
@@ -985,15 +985,11 @@ return false;
         var msj = confirm("¿Esta seguro de cambiar las notas");
         if (msj) {
             $("#tipo_nota_id").attr("disabled", false);
-            $("#tipo_nota_id").val(
-                $("#btn_tipo_nota_update").attr("data-value")
-            );
+            $("#tipo_nota_id").val($("#btn_tipo_nota_update").attr("data-value"));
             $("#myModal_edit_notas").modal("hide");
             openCamNotas();
             var data = $("#myform_update_notas").serialize();
             updateNota(data, "refresh");
-
-            // console.log('hola', data);
         }
     });
 
@@ -1176,9 +1172,7 @@ return false;
         editCitacionEstudiante(id);
     });
 
-    $("#ct_forcitaest").on(
-        "submit",
-        "#myformCitarEstudianteEdit",
+    $("#ct_forcitaest").on("submit","#myformCitarEstudianteEdit",
         function (e) {
             var data = setFormToObject("myformCitarEstudianteEdit");
             var exp_id = $("#expid").val();
@@ -1191,8 +1185,7 @@ return false;
             updateCitacionEstudiante(data, data.id);
             e.preventDefault();
             return false;
-        }
-    );
+        });
 
     $("#btn_mod_expfecha_res").on("click", function (e) {
         data = {
@@ -1236,12 +1229,9 @@ return false;
             storeAutorizacion(request);
             e.preventDefault();
             return false;
-        }
-    );
+        });
 
-    $("#table_list_autorizaciones").on(
-        "click",
-        ".btn_editar_autorizacion",
+    $("#table_list_autorizaciones").on("click",".btn_editar_autorizacion",
         function (e) {
             var id = $(this).attr("data-id");
             editAutorizacion(id);
@@ -1274,10 +1264,7 @@ return false;
         }
     );
 
-    $("#content_list_autorizaciones").on(
-        "click",
-        ".btn_change_estado_autorizacion",
-        function (e) {
+    $("#content_list_autorizaciones").on("click",".btn_change_estado_autorizacion",function (e) {
             var id = $(this).attr("data-id");
 
             if ($(this).attr("data-estado") == 0) {
@@ -1286,8 +1273,7 @@ return false;
                 var request = { estado: 0, vista: "autorizaciones" };
             }
             changeStatusAutorizacion(request, id);
-        }
-    );
+        });
 
     $("#table_list_autorizaciones").on(
         "click",
@@ -1300,8 +1286,7 @@ return false;
                 var request = { estado: 0, vista: "expedientes" };
             }
             changeStatusAutorizacion(request, id);
-        }
-    );
+        });
 
     $("#myformSearchAutorizaciones").submit(function (e) {
         errors = validateForm("myformSearchAutorizaciones");
@@ -2622,7 +2607,7 @@ return false;
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             }); 
-            e.preventDefault();
+            e.preventDefault(); 
             return
         }
         if($("#exptipoproce_id").val()!=3){
@@ -4428,7 +4413,6 @@ function expedienteUpdate(request,id) {
 		datatype: 'json',
 		data: request,
 		 beforeSend: function(xhr){
-
       xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
 	  $("#wait").show();  
     },	
@@ -7614,7 +7598,8 @@ function llenarTablaListCitaciones(res) {
    <td>${element.fecha}</td>
    <td>${element.hora}</td><td>`;
         if (element.can_edit) {
-            row += `<button id="${element.id}" type="button" class="btn btn-primary btn_edit_citacion"> Cambiar </button>`;
+            row += `
+            <button id="${element.id}" type="button" class="btn btn-primary btn_edit_citacion"> Cambiar </button>`;
         }
         row += `</td></tr>`;
     });
@@ -10538,6 +10523,7 @@ function ingresarNewNotas() {
             errors = 1;
         }
 
+        
     if (errors <= 0) {
         var data = $("#myform_addnew_nota_final_expedientes").serialize();
         var route = "/estado/caso/volver/abrir";

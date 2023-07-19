@@ -6,11 +6,11 @@
 	@endslot
 
 	@slot('title')
-		Agregando Nota:: <h5>
+		Agregando Nota: <h5>
 			@if($periodo and $segmento)
-			<label class="label bg-blue" style="font-size: 16px;">{{ $periodo->prddes_periodo }}</label>
-
-			<label class="label bg-blue" style="font-size: 16px;">{{ $segmento->segnombre }}</label>
+			<span class="badge badge-primary">{{ $periodo->prddes_periodo }}</span>
+			<span class="badge badge-primary">{{ $segmento->segnombre }}</span>
+			
 			@else
 			<div class="alert alert-warning">
 				<i class="fa fa-info"> </i> Asegurese que esten activos el periodo y el segmento de corte!

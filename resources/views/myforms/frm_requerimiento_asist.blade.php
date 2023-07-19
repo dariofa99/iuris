@@ -1,4 +1,4 @@
-@component('components.modal_dynamic')
+@component('components.b4.modal_large')
 
 
   @slot('size')
@@ -71,16 +71,14 @@
       </td>
     </tr>
 
-    @if(currentUser()->hasRole("coordprac") || currentUser()->hasRole('diradmin'))
+    @if(currentUser()->hasRole("coordprac") 
+    || currentUser()->hasRole('diradmin') 
+    || currentUser()->hasRole('amatai'))
     <tr>
-
-
-
       <td>
         Asistencia
       </td>
       <td colspan="3">
-
         <select name="reqid_asistencia" id="reqid_asistencia" class="form-control required"> 
           <option value="1">Asistieron Ambos</option>
           @foreach($reqasis as $asis)          
@@ -99,7 +97,12 @@
     </tr>
   @endif
  
-  @if(currentUser()->hasRole("docente") || currentUser()->hasRole("amatai") || currentUser()->hasRole("diradmin") )
+  @if(currentUser()->hasRole("docente_prueba") 
+  || currentUser()->hasRole("docente") 
+  || currentUser()->hasRole("amatai") 
+  || currentUser()->hasRole("diradmin")
+  || currentUser()->hasRole("dirgral") )
+
   {!!Form::hidden('orgntsid',3, ['class' => 'form-control required','id'=>'orgntsid' ]); !!}
   {!!Form::hidden('tpntid',1, ['class' => 'form-control required','id'=>'tpntid' ]); !!}
   @if(isset($segmento)  and $segmento and isset($periodo) and $periodo)
@@ -146,17 +149,9 @@
 
     <tr>
       <td colspan="4">
-        <a class="btn btn-primary pull-right" onclick="updateRequerimiento()"> Guardar </a>
+        <a class="btn btn-primary pull-right" id="btn_update_requerimiento"> Guardar </a>
       </td>
     </tr>
-
-
-
-
-
-
-
-
 
 
 </table>

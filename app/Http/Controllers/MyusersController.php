@@ -526,7 +526,7 @@ public function confirm_email(Request $request,$token){
       }
 
 
-      public function findUser(Request $request){
+      public function findUserWithFilter(Request $request){
       $user =User::where(['tipodoc_id'=>$request->tipodoc_id,'idnumber'=>$request->idnumber])->first();
         if($user){
           $user->roles;

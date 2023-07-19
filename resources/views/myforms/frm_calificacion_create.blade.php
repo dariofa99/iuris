@@ -31,7 +31,7 @@
 			</tbody>
 		</table>
 		</div>
-		     @include("myforms.frm_modal_details_not_caso")         
+		       
 	</div>
 
 </div>	

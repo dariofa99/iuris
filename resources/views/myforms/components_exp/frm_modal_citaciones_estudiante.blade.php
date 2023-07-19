@@ -1,4 +1,4 @@
-@component('components.modal')
+@component('components.b4.modal_medium')
 	
 	@slot('trigger')
 		mymodalNuevaCitacion
@@ -17,10 +17,10 @@ Registrado
 @endsection
 @include('msg.ajax.success')
 
-<div class="row">
-    <div class="col-md-10 col-md-offset-1" id="ct_forcitaest">
+<div class="row justify-content-center">
+    <div class="col-md-12" id="ct_forcitaest">
         <form id="myformCitarEstudiante">
-        <input type="hidden" class="form-control" id="id" name="id">
+        <input type="hidden" class="form-control " id="id" name="id">
         <div class="form-row">
             <div class=" col-md-12">
                 <label for="fecha">Estudiante:</label>
@@ -34,20 +34,18 @@ Registrado
 <div class="form-row">
   <div class="form-group col-md-6">
     <label for="fecha">Fecha</label>
-    <input type="date" min="{{date('Y-m-d')}}" class="form-control" id="fecha" name="fecha">
+    <input type="date" min="{{date('Y-m-d')}}" class="form-control required" id="fecha" name="fecha">
   </div>
-  <div class="form-grou col-md-6">
+  <div class="form-group col-md-6">
     <label for="hora">Hora</label>
-    <div class="bootstrap-timepicker">
+  
             			   
 								<div class="input-group">
-									<input type="text" id="hora" name="hora" class="form-control timepicker" value="">
-									<div class="input-group-addon">
-										<i class="fa fa-clock-o"></i>
-									</div>
+									<input type="time" id="hora" name="hora" class="form-control required" value="">
+								
 								</div>
     
-   </div> 
+
 
 
    </div>
@@ -55,7 +53,7 @@ Registrado
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="motivo">Motivo</label>
-      <textarea name="motivo" id="motivo" class="form-control" rows="4"></textarea>
+      <textarea name="motivo" id="motivo" class="form-control required" rows="4"></textarea>
     </div>
   </div> 
 

@@ -10,7 +10,7 @@ class BaseRepository
 {
     protected $validateSede;
     protected $withLike;
-    protected $model;
+    public $model;
     private $relations;
     public $query;
 
@@ -20,62 +20,68 @@ class BaseRepository
         $this->model = $model;
         $this->relations = $relations;
         $this->validateSede = true;
-        $this->withLike = true;
-        $this->query = $model;  
+        $this->withLike = false;
+        $this->query = $model;
     }
 
-    protected function applyValidateSede(){
-        if($this->validateSede and method_exists($this->model, 'sedes')){
-            $this->query = $this->query->whereHas('sedes',function($query1){
-               $query1->where(['sede_id'=>session('sede')->id_sede]);                    
+    protected function applyValidateSede()
+    {
+        if($this->model!=null)$this->query = $this->model;
+        if ($this->validateSede and method_exists($this->model, 'sedes')) {
+            $this->query = $this->query->whereHas('sedes', function ($query1) {
+                $query1->where(['sede_id' => session('sede')->id_sede]);
             });
         }
     }
-    public function findWithFilter(array $filter) : ?Model {     
-        $this->applyValidateSede();   
+    public function findWithFilter(array $filter): ?Model
+    {
+       // $this->query = $this->model;
+        $this->applyValidateSede();
         $this->validateFilter($filter);
         return $this->query->first();
     }
-    protected function validateFilter(array $filter){
+    protected function validateFilter(array $filter)
+    {
         foreach ($filter as $column => $value) {
             $date = \DateTime::createFromFormat('Y-m-d', $value);
-           if ($date instanceof \DateTime) {
-            if($this->withLike){
-                $this->query =  $this->query->whereDate($column ,"like", "%".$value."%");
-            }else{
-                $this->query =  $this->query->whereDate($column , $value);
-            }               
-           }else{
-            if($this->withLike){
-                $this->query =  $this->query->where($column ,"like", "%".$value."%");
-            }else{
-                $this->query = $this->query->where($column , $value);
-            }  
-               
-           }
-       } 
+            if ($date instanceof \DateTime) {
+                if ($this->withLike) {
+                    $this->query =  $this->query->whereDate($column, "like", "%" . $value . "%");
+                } else {
+                    $this->query =  $this->query->whereDate($column, "=", $value);
+                }
+            } else {
+                if ($this->withLike) {
+                    $this->query =  $this->query->where($column, "like", "%" . $value . "%");
+                } else {
+                    $this->query = $this->query->where($column, "=", $value);
+                }
+            }
+        }
     }
 
-    public function getWithFilter(Array $filter) : ?Collection {
-       
-        $this->applyValidateSede();        
+    public function getWithFilter(array $filter): ?Collection
+    {
+        //$this->query = $this->model;
+        $this->applyValidateSede();
         $this->validateFilter($filter);
         return $this->query->get();
     }
 
     public function all()
     {
-       $this->applyValidateSede();
-       if(!empty($this->relations)) {
+        $this->applyValidateSede();
+        if (!empty($this->relations)) {
             $this->query = $this->query->with($this->relations);
         }
         return $this->query->get();
     }
 
-    public function find(int $id){   
-        $this->applyValidateSede();  
+    public function find(int $id)
+    {
+        $this->applyValidateSede();
         return $this->query->find($id);
-     }
+    }
 
 
 
@@ -92,7 +98,7 @@ class BaseRepository
         return $model;
     }
 
-    public function setValidateSede($validate)
+    public function setValidateSede(bool $validate)
     {
         $this->validateSede = $validate;
         return $this;
@@ -104,11 +110,9 @@ class BaseRepository
         return $this;
     }
 
-    public function setRelations($relations=[])
+    public function setRelations($relations = [])
     {
         $this->relations = $relations;
         return $this;
     }
-    
-   
 }

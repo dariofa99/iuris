@@ -4,6 +4,9 @@
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+    <style>
+
+    </style>
 @endpush
 
 @section('navbar')
@@ -15,11 +18,7 @@
     @if (currentUser()->hasRole('solicitante'))
         Casos
     @else
-      
-       
         @include('myforms.components_exp.frm_datos_docente')
-      
-       
     @endif
 
 @endsection
@@ -34,19 +33,17 @@
 
 
 @section('area_forms')
-@php
- if(!currentUser()->hasRole("estudiante")){
-	$disabled = 'disabled';
-
- }else{
- 	 	if($expediente->expestado_id =='1' OR $expediente->expestado_id =='3'){
-			$disabled = '';
- 		}else{
-			$disabled = 'disabled';
- 		}
-
- }
- @endphp
+    @php
+        if (!currentUser()->hasRole('estudiante')) {
+            $disabled = 'disabled';
+        } else {
+            if ($expediente->expestado_id == '1' or $expediente->expestado_id == '3') {
+                $disabled = '';
+            } else {
+                $disabled = 'disabled';
+            }
+        }
+    @endphp
     @include('msg.alerts')
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -85,14 +82,19 @@
                 Cierre de caso
             </a>
         </li>
-
-        <li class="nav-item">
-            <a class="nav-link urlactive" id="reasignar-tab" data-toggle="tab" href="#reasignar_caso" role="tab"
-                aria-controls="reasignar" aria-selected="false">
-                Reasignar Caso
-            </a>
-        </li>
-
+        @if (count($expediente->asignaciones) > 1 ||
+                (currentUser()->hasRole('amatai') or
+                    currentUser()->hasRole('diradmin') or
+                    currentUser()->hasRole('coordprac') or
+                    currentUser()->hasRole('dirgral')) and
+                $expediente->expestado_id != 2)
+            <li class="nav-item">
+                <a class="nav-link urlactive" id="reasignar-tab" data-toggle="tab" href="#reasignar_caso" role="tab"
+                    aria-controls="reasignar" aria-selected="false">
+                    Reasignar Caso
+                </a>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link urlactive" id="citaciones-tab" data-toggle="tab" href="#citaciones" role="tab"
                 aria-controls="citaciones" aria-selected="false">
@@ -101,8 +103,8 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link urlactive" id="autorizaciones-tab" data-toggle="tab" href="#autorizaciones"
-                role="tab" aria-controls="autorizaciones" aria-selected="false">
+            <a class="nav-link urlactive" id="autorizaciones-tab" data-toggle="tab" href="#autorizaciones" role="tab"
+                aria-controls="autorizaciones" aria-selected="false">
                 Autorizaciones
             </a>
         </li>
@@ -114,66 +116,65 @@
         <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
             <div class="row">
                 <div class="col-md-12 content_oficina_virtual" id="content_oficina_virtual">
-                    @include('myforms.components_exp.frm_oficina_virtual')
+                    {{-- @include('myforms.components_exp.frm_oficina_virtual') --}}
                 </div> <!-- /.md12-->
             </div>
         </div>
 
         <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
-            @include("myforms.components_exp.frm_datos_caso")
-			@include('myforms.components_exp.frm_modal_fechalimitres')
-			@include("myforms.components_exp.frm_asesorias_caso")
-			@include("myforms.components_exp.frm_notas_caso")
+            @include('myforms.components_exp.frm_datos_caso')
+            @include('myforms.components_exp.frm_asesorias_caso')
+            @include('myforms.components_exp.frm_notas_caso')
         </div>
 
-		<div class="tab-pane fade " id="act_data" role="tabpanel" aria-labelledby="act-data-tab">
-			<div id="frm_actuacion_create">
-				@include('myforms.frm_actuacion_create') 
-				@include('myforms.frm_actuacion_list')
-			</div>	
+        <div class="tab-pane fade " id="act_data" role="tabpanel" aria-labelledby="act-data-tab">
+            <div id="frm_actuacion_create">
+                @include('myforms.frm_actuacion_create')
+                @include('myforms.frm_actuacion_list')
+            </div>
         </div>
 
-		<div class="tab-pane fade " id="requerimientos" role="tabpanel" aria-labelledby="requerimientos-tab">
-			@if($expediente->exptipoproce_id=='2')
-				@include('myforms.frm_requerimiento_create')								
-					@else
-				Opción inactiva para Consulta simple
-			@endif	
+        <div class="tab-pane fade " id="requerimientos" role="tabpanel" aria-labelledby="requerimientos-tab">
+            @if ($expediente->exptipoproce_id == '2')
+                @include('myforms.frm_requerimiento_create')
+            @else
+                Opción inactiva para Consulta simple
+            @endif
         </div>
 
-		<div class="tab-pane fade " id="cierre_caso" role="tabpanel" aria-labelledby="cierre_caso-tab">
-			<div class="row">
-				<div class="col-md-12">	
-						@include('myforms.frm_expediente_cierre_caso')
-				</div> <!-- /.md12-->              
-		</div>
+        <div class="tab-pane fade " id="cierre_caso" role="tabpanel" aria-labelledby="cierre_caso-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('myforms.frm_expediente_cierre_caso')
+                </div> <!-- /.md12-->
+            </div>
         </div>
 
-		<div class="tab-pane fade " id="reasignar_caso" role="tabpanel" aria-labelledby="reasignar-tab">
-			<div class="row">
-				<div class="col-md-12">	
-						@include('myforms.components_exp.frm_reasignar_caso')	
-				</div> <!-- /.md12-->              
-			</div>
+        <div class="tab-pane fade " id="reasignar_caso" role="tabpanel" aria-labelledby="reasignar-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('myforms.components_exp.frm_reasignar_caso')
+                </div> <!-- /.md12-->
+            </div>
         </div>
-		<div class="tab-pane fade " id="citaciones" role="tabpanel" aria-labelledby="citaciones-tab">
-			<div class="row">
-				<div class="col-md-12">	
-						@include('myforms.components_exp.frm_citaciones_estudiante')
-				</div> <!-- /.md12-->              
-			</div>
+        <div class="tab-pane fade " id="citaciones" role="tabpanel" aria-labelledby="citaciones-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('myforms.components_exp.frm_citaciones_estudiante')
+                </div> <!-- /.md12-->
+            </div>
         </div>
-		<div class="tab-pane fade " id="autorizaciones" role="tabpanel" aria-labelledby="autorizaciones-tab">
-			<div class="row">
-				<div class="col-md-12">	
-					@include('myforms.components_exp.frm_autorizaciones')
-				</div> <!-- /.md12-->              
-			</div>
+        <div class="tab-pane fade " id="autorizaciones" role="tabpanel" aria-labelledby="autorizaciones-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('myforms.components_exp.frm_autorizaciones')
+                </div> <!-- /.md12-->
+            </div>
         </div>
 
     </div>
     @include('myforms.frm_add_asesoria_docente')
-    @include('myforms.frm_update_asesoria_docente')	
+    @include('myforms.frm_update_asesoria_docente')
     @include('myforms.frm_add_nota_final_expedientes')
     @include('myforms.frm_addnew_nota_final_expedientes')
     @include('myforms.frm_calificacion_edit')
@@ -182,19 +183,29 @@
     @include('myforms.frm_modal_dinamyc_js')
     @include('myforms.frm_modal_adm_documentos')
     @include('myforms.components_exp.frm_modal_create_notificacion')
-   @if(count($expediente->solicitudes)>0)
-    @include('myforms.components_exp.frm_modal_videollamada',['user_idnumber'=>$expediente->expidnumber])
-   @endif
-   @if(currentUser()->hasRole('estudiante'))
-   @include('myforms.frm_expediente_user_edit')
-   @elseif(!currentUser()->hasRole('estudiante')) 
-   @include('myforms.frm_expediente_user_details')
-   @endif
+    @include('myforms.components_exp.frm_modal_exp_edit_cierre_caso')
+    @include('myforms.frm_modal_details_not_caso')
+    @include('myforms.components_exp.frm_modal_fechalimitres')
+    @include('myforms.components_exp.frm_modal_show_details_estadocaso')
+    @include('myforms.components_exp.frm_modal_citaciones_estudiante')
+    @if (count($expediente->solicitudes) > 0)
+        @include('myforms.components_exp.frm_modal_videollamada', [
+            'user_idnumber' => $expediente->expidnumber,
+        ])
+    @endif
+    @if (currentUser()->hasRole('estudiante'))
+        @include('myforms.frm_expediente_user_edit')
+    @elseif(!currentUser()->hasRole('estudiante'))
+        @include('myforms.frm_expediente_user_details')
+    @endif
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
     <!-- Latest compiled and minified JavaScript -->
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-
+    <!-- InputMask -->
+    {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
+    {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
+    {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
     <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
 @endpush

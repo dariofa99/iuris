@@ -31,10 +31,7 @@ class UsersController extends Controller
   {
     $this->userService = $userService;
     $this->middleware('auth', ['except' => ['store', 'anotherMethod']]);
-
- 
-     // $this->middleware('permission:edit_usuarios',   ['only' => ['edit']]);
-      $this->middleware('permission:ver_usuarios',   ['only' => ['index']]);
+    $this->middleware('permission:ver_usuarios',   ['only' => ['index']]);
   }
  
     /**
@@ -372,46 +369,45 @@ private function aditionalData($request,$id){
     }
 
  
-    public function findUser(Request $request){
-        return  response()->json(['encontrado'=>$request->all()]);
-        $response=[]; 
-        $encontrado = false;
-        $sin_sede = false;
+    public function findUserWithFilter(Request $request){
+      $response=[]; 
+      $encontrado = false;
+      $sin_sede = false;
+      try {
+        $user = $this->userService->findWithFilter([
+          'tipodoc_id'=>$request->tipodoc_id,
+          'idnumber'=>$request->idnumber]);
+      } catch (\Throwable $th) {
+        $user = false;
+      }
+    
+    if($user){ 
+      $encontrado = true;
+      } else{
         try {
-          $user = $this->userService->findWithFilter([
+          $sin_sede = true;
+          $response['sin_sede'] = true;
+          $user = $this->userService->setValidateSede(false)->findWithFilter([
             'tipodoc_id'=>$request->tipodoc_id,
             'idnumber'=>$request->idnumber]);
         } catch (\Throwable $th) {
           $user = false;
-        }
-      
-      if($user){ 
-        $encontrado = true;
-        } else{
-          try {
-            $sin_sede = true;
-            $response['sin_sede'] = true;
-            $user = $this->userService->setValidateSede(false)->findWithFilter([
-              'tipodoc_id'=>$request->tipodoc_id,
-              'idnumber'=>$request->idnumber]);
-          } catch (\Throwable $th) {
-            $user = false;
-          }        
-            if($user){ 
-              $encontrado = true;               
-            }
-          } 
-        if($encontrado){
-          $user->roles;       
-          if($request->has('view')){
-            $response['view'] = view($request->get('view'),compact('user','sin_sede'))->render(); 
+        }        
+          if($user){ 
+            $encontrado = true;               
           }
-              $response['encontrado'] =true;
-              
-              $response['user'] = $user;   
-              return response()->json($response);  
+        } 
+      if($encontrado){
+        $user->roles;       
+        if($request->has('view')){
+          $response['view'] = view($request->get('view'),compact('user','sin_sede'))->render(); 
         }
-          return  response()->json(['encontrado'=>false]);
+            $response['encontrado'] =true;
+            
+            $response['user'] = $user;   
+            return response()->json($response);  
+      }
+        return  response()->json(['encontrado'=>false]);
       }
 
       public function findUserByNameOrLastNameAndRole(Request $request){
@@ -437,6 +433,7 @@ private function aditionalData($request,$id){
           }
 
         public function findUsersByIdNumber(Request $request){
+          
           $user = $this->userService->getWithFilter(['idnumber'=>$request->idnumber]);
           if(($user)!==null){
             return response()->json(['encontrado'=>true,'users'=>$user]);

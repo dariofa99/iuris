@@ -11,8 +11,6 @@ use App\Conciliacion;
 use App\ConciliacionEstado;
 use App\ConciliacionPdfTemporal;
 use App\Expediente; 
-use DB;
-use Storage;
 use Carbon\Carbon;
 use App\Segmento;
 use App\Notifications\UserNotification;
@@ -20,6 +18,9 @@ use App\PdfReporte;
 use App\PdfReporteDestino;
 use App\Periodo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ActuacionController extends Controller
 {
@@ -151,7 +152,7 @@ function vacations(){
   {
 
     //return response()->json($request->all()); 
-    if ($request->ajax()) {
+    if ($request->actexpid) {
 
 
       $expediente_id = $request->id_control_list;
@@ -205,7 +206,7 @@ function vacations(){
             'rev_actexpid' => $request['actexpid'],
             'parent_rev_actid' => $actuacion->id,
             //'rev_actid'=>$actuacion->id,
-          ]);
+          ]); 
         }
       }
       if ($actuacion->actestado_id == 140) {
@@ -315,7 +316,7 @@ function vacations(){
    */
   public function edit($id)
   {
-    $userSession = \Auth::user()->id_number;
+    $userSession = Auth::user()->id_number;
     $actuacion = Actuacion::find($id);
 
     $parentId = DB::table('revisiones_actuacion')
@@ -341,8 +342,8 @@ function vacations(){
    */
   public function update(Request $request, $id)
   {
-   //  return response()->json($request->all()); 
-    if ($request->ajax()) {
+    // return response()->json($request->all()); 
+   
       $actuacion = Actuacion::find($id);
       $actuacion->fill($request->all());
       $actuacion->actuserupdated = currentUser()->idnumber;
@@ -385,7 +386,7 @@ function vacations(){
       return response()->json(
         $actuacion->toArray()
       );
-    }
+    
   }
 
   /**
@@ -531,6 +532,7 @@ function vacations(){
     }
 
     if ($actuacion->actcategoria_id == 223 and count($actuacion->conciliaciones) > 0) {
+     
       if ($request['actestado_id'] == 102) $estado_id = 176;
       if ($request['actestado_id'] == 104) $estado_id = 177;
 

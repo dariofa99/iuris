@@ -1,4 +1,4 @@
-@component('components.modal_dynamic')
+@component('components.b4.modal_large')
 
 
   @slot('size')
@@ -198,9 +198,11 @@
         </div>
         
 				<div class="col-md-3">
-          @if(currentUser()->hasRole('docente') || currentUser()->hasRole('amatai'))
+          @if($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
 				<input type="hidden" value="{{$segmento->id}}" id="segmento_id"/>
-					<a style="cursor:pointer" id="btn_cam_nt_req"  >Cambiar Notas</a> 
+					<a class="btn btn-sm btn-warning" style="cursor:pointer" id="btn_cam_nt_req"  >
+            Cambiar Notas
+          </a> 
              <br>
 					@endif
 				</div>

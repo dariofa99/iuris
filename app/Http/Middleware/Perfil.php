@@ -21,7 +21,7 @@ class Perfil
 
         $user = \Auth::user();
         $user->role;
-        if ($user->role[0]['name']=='estudiante') {
+        if (count($user->role) > 0 and $user->role[0]['name']=='estudiante') {
 
             if (!$user->active) { 
                 \Auth::logout();
@@ -39,8 +39,8 @@ class Perfil
 
             $correo=explode("@", $user->email);
           if(isset($correo[1])){
-            if (($user->tel1=='' and $user->tel2 =='') || $user->tipodoc_id=='1' || $user->idnumber=='' || $user->name =='' || $user->lastname=='' || $user->fechanacimien=='' || $user->address==''  || $correo[1]=='mail.com' || $user->cursando_id=='1'  ) {
-            Session::flash('message-danger', 'Recuerda! Primero necesitamos que actualices tu información personal, Correo, contraseña y curso.');
+            if (($user->tel1=='' and $user->tel2 =='') || $user->tipodoc_id=='1' || $user->idnumber=='' || $user->name =='' || $user->lastname=='' || $user->fechanacimien=='' || $user->address==''  || $correo[1]=='mail.com' || $user->cursando_id=='1' || $user->genero_id=='5' || $user->genero_id=='1'  ) {
+            Session::flash('message-danger', 'Recuerda! Primero necesitamos que actualices tu información personal, como correo, contraseña y curso.');
             return redirect('users/'.$user->id.'/edit');
                         
            }elseif(Hash::check('udenarcj',$user->password)){

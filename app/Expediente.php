@@ -12,6 +12,7 @@ use App\User;
 use App\Traits\AsigNotas;
 use App\Segmento;
 use App\HistorialDatosCaso;
+use App\Services\ExpedientesService;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use Illuminate\Support\Facades\App;
@@ -119,6 +120,10 @@ class Expediente extends Model
     }
 
     public function actuacion()
+    {
+        return $this->hasMany(Actuacion::class, 'actexpid', 'expid');
+    }
+    public function actuaciones()
     {
         return $this->hasMany(Actuacion::class, 'actexpid', 'expid');
     }
@@ -347,17 +352,30 @@ class Expediente extends Model
             ),
         );
     } */
-    function getDocenteAsig()
+
+    public function getActuaciones($only)
+    {
+        $service = App::make(ExpedientesService::class);
+        return $service->getActuacions($this,$only);
+    }
+
+    function getDocenteAsig() 
     {
         $asig = $this->getAsignacion();
-        // dd($asig);
+        //**   dd($asig);
         try {
-            $docente = $asig
-                ->asig_docente()
-                ->where('asignacion_docente_caso.activo', 1)
-                ->first()->docente;
+            if ($asig) {
+                $docente = $asig
+                    ->asig_docente()
+                    ->where('asignacion_docente_caso.activo', 1)
+                    ->first()->docente;
 
-            return $docente;
+                return $docente;
+            }
+            $user = new User();
+            $user->name = 'Sin asignacion de caso';
+            $user->idnumber = '';
+            return $user;
         } catch (\ErrorException $e) {
             $user = new User();
             $user->name = 'Sin asignar';
@@ -962,4 +980,17 @@ class Expediente extends Model
         }
         return false;
     }
+
+    public function getCitas()
+        {
+            $asignacion = $this->getAsignacion();
+            $can_edit = false;
+            if ($asignacion->asig_docente !== null and $asignacion->asig_docente->docidnumber == auth()->user()->idnumber) {
+                $can_edit = true;
+            }
+            $asignacion->citaciones->each(function ($citacion) use ($can_edit) {
+                $citacion->can_edit = $can_edit;
+            });
+            return $asignacion->citaciones;
+        }
 }

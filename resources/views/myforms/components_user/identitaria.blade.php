@@ -4,7 +4,7 @@
        <div class="col-md-{{isset($col)?$col:'6'}}">
         <div class="form-group"> 
 			<label for="genero_id">Sexo*</label>
-			<select {{isset($disabled) ? $disabled : ''}} name="genero_id" id="genero_id" class="form-control required" required>
+			<select {{isset($disabled) ? $disabled : ''}} name="genero_id" id="genero_id" class="form-control form-control-sm required" required>
 				<option value="">Seleccione...</option>
 				@foreach($genero as $key => $tipo)
 				<option {{(isset($user) and $user->genero_id == $key) ? "selected":"" }} value="{{$key}}">{{$tipo}}</option>

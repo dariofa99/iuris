@@ -2,61 +2,75 @@ import { UserService } from './services/users.js';
 import { ExpedientesService } from './services/expedientes.js';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
-function init(){
-    if($("expid")){
-        var url = window.location.href;
-        var activeTab = url.substring(url.indexOf("#") + 1);
-        var elementoA = $("a[href='#"+activeTab+"']");      
-        if(activeTab) elementoA.click();
-    }
-}
+
 $(document).ready(function () {
-    init();
+    if ($("#expediente_id").val() != undefined) {
+        $(":input").inputmask();
+        set_tab();
+    }
+    $("#search_onlyMy_exp").on("change", async function () {
+        if ($("#search_onlyMy_exp").is(":checked")) {
+            $("#wait").show();
+            var page = "expedientes";
+            var data = {};
+            let res = await index_page(page, data);
+            $("#wait").hide();
+        } else {
+            var page = "expedientes";
+            var data = {
+                tipo_busqueda: 'all'
+            };
+            $("#wait").show();
+            let res = await index_page(page, data);
+            $("#wait").hide();
+
+        }
+
+    });
     $("#btnCancelar").click(function () {
         $("#btnActualizar").hide();
         $("#btnCancelar").hide();
         $("#btnEditar").show();
-        $(".disabled").prop('disabled',true);
+        $(".disabled").prop('disabled', true);
         $(".disabled-fun3").prop("disabled", true);
         $(".disabled-fun3").selectpicker("refresh");
     });
-    $("#btnActualizar").on("click",async function(e){
+    $("#btnActualizar").on("click", async function (e) {
         var form = convertFormToJSON("form_expediente_edit");
         var request = {
-            'id':form.expediente_id,
-            'expramaderecho_id':form.expramaderecho_id,
-            'exptipoproce_id':form.exptipoproce_id,
-            'expidnumberest':form.expidnumberest,
-            'oldexpidnumberest':form.oldexpidnumberest
+            'id': form.expediente_id,
+            'expramaderecho_id': form.expramaderecho_id,
+            'exptipoproce_id': form.exptipoproce_id,
+            'expidnumberest': form.expidnumberest,
+            'oldexpidnumberest': form.oldexpidnumberest
         }
         $("#wait").show()
-        let response = await expedientesService.update(form.expediente_id,request);
-        
+        let response = await expedientesService.update(request, form.expediente_id);
+
         toastr.success("Se actalizó con éxito", "", {
             positionClass: "toast-top-center",
             timeOut: "4000",
         });
-          window.location.reload(true);
+        window.location.reload(true);
 
     });
     $("#btnEditar").click(function () {
         $("#btnActualizar").show();
         $("#btnCancelar").show();
         $("#btnEditar").hide();
-        $(".disabled").prop("disabled",false);       
+        $(".disabled").prop("disabled", false);
         $(".disabled-fun3").prop("disabled", false);
         $(".disabled-fun3").selectpicker("refresh");
         if ($("#oldexpidnumberest").val() == "") {
             $("#oldexpidnumberest").val($("#expidnumberest").val());
         }
     });
-    $(".urlactive").on("click", function(){
-        let stateObj = {
-            foo: "nav",
-        }
-        history.pushState(stateObj, "menu", "edit"+$(this).attr("href"))
+
+    $("#btn_nueva_cita").on("click", function (e) {
+        e.preventDefault();
+        $("#mymodalNuevaCitacion").modal("show");
     });
-    // $(".buscar_usuario").selectpicker();
+
     $('#table_list_model').on('click', "a.btn-edit-le", function () {
         var url = window.location;
         // Check browser support
@@ -66,18 +80,22 @@ $(document).ready(function () {
             // Retrieve
         }
     });
-    $("a.btn-atrasexed").click(function(){
+    $("a.btn-atrasexed").click(function () {
         window.location.href = localStorage.getItem("dirreg");
-        });
-    $("#myformExpFilter").submit(function (e) {
+    });
+    $("#myformExpFilter").submit(async function (e) {
         e.preventDefault();
         var errors = validateForm("myformExpFilter");
         if (errors.length <= 0) {
-            var page = $(this).attr("action");
-            var data = $(this).serialize();
+            var data = convertFormToJSON("myformExpFilter");
+            var page = "expedientes";
+            $("#wait").show();
+            let res = await index_page(page, data);
+            $("#wait").hide();
+            /* 
             index_page(page, data);
             window.history.pushState(null, "", page + "?" + data);
-            //return false;
+             *///return false;
         }
         return false;
     });
@@ -162,6 +180,7 @@ $(document).ready(function () {
         var value = $(this).val();
         changeSelectSearchExp(value);
     });
+
 
     $('#myFormBsExpAdv').on('keyup', 'div.buscar_usuario input', async function (e) {
         let name = $(this).val();
@@ -264,21 +283,23 @@ $(document).ready(function () {
 
 
     $("#btn_exp_user_carga").on("click", async function () {
-        let request = {
-            "tipodoc_id": $(this).attr('data-tipo_doc'),
-            "idnumber": $(this).val(),
-            "view": "myforms.components_exp.frm_user_register"
-        }
+        /*  let request = {
+             "tipodoc_id": $(this).attr('data-tipo_doc'),
+             "idnumber": $(this).val(),
+             "view": "myforms.components_exp.frm_user_register"
+         } */
         $("#wait").show();
-        let response = await userService.findUser(request);
-        if (response.encontrado) {
-            $("#content_user_exp_asig").html(response.view);
-            toastr.success("Usuario encontrado", "", {
-                positionClass: "toast-top-center",
-                timeOut: "4000",
-            });
-            $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true);
-        }
+        /*  let response = await userService.findUserWithFilter(request);
+         if (response.encontrado) {
+             $("#content_user_exp_asig").html(response.view);
+             toastr.success("Usuario encontrado", "", {
+                 positionClass: "toast-top-center",
+                 timeOut: "4000",
+             });
+             $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true);
+         } */
+        $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true).removeAttr('name');
+
         $("#wait").hide()
     });
 
@@ -301,7 +322,7 @@ $(document).ready(function () {
                 "view": "myforms.components_exp.frm_user_register"
             }
             $("#wait").show();
-            let response = await userService.findUser(request);
+            let response = await userService.findUserWithFilter(request);
             if (response.encontrado) {
                 $("#content_user_exp_asig").html(response.view);
                 toastr.success("Usuario encontrado", "", {
@@ -354,24 +375,45 @@ $(document).ready(function () {
         }
     });
 
+
+    $("#myModal_exp_user_edit").on("click", '#btnActualizarUserEstudiante', async function (e) {
+        var errors = validateForm("myFormUserEditExpediente");
+        if (errors.length <= 0) {
+            var request = convertFormToJSON("myFormUserEditExpediente");
+            var data = userService.getAditionalDataByForm('myFormUserEditExpediente');
+            request["data"] = (data);
+            $("#wait").show();
+            let response = await userService.update(request);
+            if (response.errors) {
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+            } else {
+                $("#myModal_exp_user_edit").modal("hide");
+                toastr.success("Actualizado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+
+            }
+            $("#wait").hide();
+        } else {
+            toastr.error("Hay campos que son obligatorios", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+    });
+
     $("#content_user_exp_asig").on("click", '#actualizar_exp_us', async function (e) {
         var errors = validateForm("myFormUserEditExpediente");
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserEditExpediente");
-            var data = [];
-            $("#myFormUserEditExpediente .input_user_ad").each((index, obj) => {
-                data.push({
-                    value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-                    section: $(obj).attr("data-section"),
-                    type: $(obj).attr("data-type"),
-                    name: $(obj).attr("data-name"),
-                    option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-                    value_is_other: $("#value_other_text-" + $(obj).attr('data-id')).val(),
-
-                });
-            });
+            var data = userService.getAditionalDataByForm('myFormUserEditExpediente');
             request["data"] = (data);
-
             $("#wait").show();
             let response = await userService.update(request);
             if (response.errors) {
@@ -449,8 +491,8 @@ $(document).ready(function () {
             cancelButtonText: 'No, cancelar'
         }).then((result) => {
             if (result.value) {
-              var  form = convertFormToJSON("form_expediente_edit");
-             var   data = {
+                var form = convertFormToJSON("form_expediente_edit");
+                var data = {
                     exp_idnumberest: form.exp_idnumberest,
                     expid: form.expid,
                 };
@@ -463,11 +505,11 @@ $(document).ready(function () {
                 window.location.reload(true)
             }
         })
-      
+
         e.preventDefault();
     });
 
-    $("#myform_change_docente_exp").on("submit",async function (e) {
+    $("#myform_change_docente_exp").on("submit", async function (e) {
         e.preventDefault();
         let request = convertFormToJSON("myform_change_docente_exp");
         request['expid'] = $("#form_expediente_edit input[name='expediente_id']").val()
@@ -478,15 +520,15 @@ $(document).ready(function () {
             timeOut: "4000",
         });
         window.location.reload(true)
-     });
+    });
 
-    $("#btn_change_doc_exp").on("click",async function (e) {
+    $("#btn_change_doc_exp").on("click", async function (e) {
         e.preventDefault();
         $("#titulo_modal").text("Cambiando docente");
-        $("#myform_change_docente_exp>#tipo_cambio").val(1);       
+        $("#myform_change_docente_exp>#tipo_cambio").val(1);
 
-        let response = await userService.getUsersByRole({'role':'docente'});
-        if(response.encontrado){
+        let response = await userService.getUsersByRole({ 'role': 'docente' });
+        if (response.encontrado) {
             var opcion_busq = '';
             $("#new_docente_id").html('')
             $(response.users).each(function (key, value) {
@@ -507,7 +549,7 @@ $(document).ready(function () {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, eliminar!',
             cancelButtonText: 'No, cancelar'
-        }).then(async (result) => {            
+        }).then(async (result) => {
             if (result.value) {
                 var request = { tipo_cambio: 5 };
                 request['expid'] = $("#form_expediente_edit input[name='expediente_id']").val()
@@ -522,12 +564,12 @@ $(document).ready(function () {
         });
     });
 
-    $("#btn_send_exp_change").on("click",async function (e) {
+    $("#btn_send_exp_change").on("click", async function (e) {
         e.preventDefault();
         $("#titulo_modal").text("Solicitando cambio");
         $("#myform_change_docente_exp>#tipo_cambio").val(0);
-        let response = await userService.getUsersByRole({'role':'docente'});
-        if(response.encontrado){
+        let response = await userService.getUsersByRole({ 'role': 'docente' });
+        if (response.encontrado) {
             var opcion_busq = '';
             $("#new_docente_id").html('')
             $(response.users).each(function (key, value) {
@@ -548,7 +590,7 @@ $(document).ready(function () {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, eliminar!',
             cancelButtonText: 'No, cancelar'
-        }).then(async (result) => {            
+        }).then(async (result) => {
             if (result.value) {
                 var request = { tipo_cambio: 2 };
                 request['expid'] = $("#form_expediente_edit input[name='expediente_id']").val()
@@ -558,14 +600,14 @@ $(document).ready(function () {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
                 });
-              //  window.location.reload(true)
+                //  window.location.reload(true)
             }
         });
     });
     $("#btn_dar_baja_exp").on("click", function (e) {
         e.preventDefault();
         var request = {
-            "exp_id":$("#expid").val()
+            "exp_id": $("#expid").val()
         }
         Swal.fire({
             title: "Esta seguro de dar de baja el expediente?",
@@ -579,34 +621,1484 @@ $(document).ready(function () {
         }).then(async (result) => {
             if (result.value) {
                 $("#wait").show();
-               let response = await expedientesService.darDeBaja(request);
-               $("#wait").hide();              
-               Swal.fire({
-                title: response.message,
-                html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
-                type: "info",                    
-                confirmButtonColor: "#3085d6",                    
-                confirmButtonText: "OK",                    
-            }).then((result) => {
-                if (result.value) {
-                    window.location.reload(true)
-                }
-            });
+                let response = await expedientesService.darDeBaja(request);
+                $("#wait").hide();
+                Swal.fire({
+                    title: response.message,
+                    html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
+                    type: "info",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK",
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.reload(true)
+                    }
+                });
             }
         });
     });
 
-    $("#switch_shared_asesoria_caso").on("click",function(e){
-    var check = $("#apl_shared");
-    if (check.val() == "1") {
-        check.val(0);
-        $(this).removeClass('switch-on').addClass("switch-off");
-    } else if (check.val() == "0") {
-        check.val(1);
-        $(this).removeClass('switch-off').addClass("switch-on");
-    }
-    })
+    $("#switch_shared_asesoria_caso").on("click", function (e) {
+        var check = $("#apl_shared");
+        if (check.val() == "1") {
+            check.val(0);
+            $(this).removeClass('switch-on').addClass("switch-off");
+        } else if (check.val() == "0") {
+            check.val(1);
+            $(this).removeClass('switch-off').addClass("switch-on");
+        }
+    });
+
+    $("#myform_add_asesoria_docente").on("submit", async function (e) {
+        var errors = validateForm("myform_add_asesoria_docente");
+        if (errors <= 0) {
+            var request = {
+                'comentario': $("#asesoria_docente").val(),
+                'expid': $("#expid").val(),
+                'apl_shared': $("#apl_shared").val()
+            }
+            $("#wait").show();
+            let response = await expedientesService.addAsesoria(request);
+            toastr.success("Agregado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true)
+
+        }
+        e.preventDefault();
+    });
+    $(".btn_edit_asesoria_caso").on("click", async function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        $("#wait").show();
+        let response = await expedientesService.editAsesoria(id);
+        $("#myModal_update_asesoria_docente").modal("show");
+        $("#asesoria_docente_update").val(response.comentario);
+        $("#myModal_update_asesoria_docente input[name='id']").val(response.id);
+        $("#wait").hide();
+    });
+
+    $("#myform_update_asesoria_docente").on("submit", async function (e) {
+        var errors = validateForm("myform_update_asesoria_docente");
+        if (errors <= 0) {
+            var form = convertFormToJSON('myform_update_asesoria_docente');
+            var request = {
+                comentario: form.asesoria_docente_update,
+                id: form.id
+            }
+            $("#wait").show();
+            let response = await expedientesService.updateAsesoria(request, request.id);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true)
+        }
+        e.preventDefault();
+    });
+
+    $(".btn_delete_asesoria_caso").on("click", async function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        Swal.fire({
+            title: 'Esta seguro de eliminar el comentario del docente?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let response = await expedientesService.deleteAsesoria(id);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+        });
+    });
+
+    $(".chk_change_shared").on("click", async function (e) {
+        var id = $(this).attr('data-id');
+        var status = $(this).attr('data-status') == 0 ? 1 : 0;
+        var request = {
+            apl_shared: status,
+            id: id
+        }
+        $("#wait").show();
+        let response = await expedientesService.updateAsesoria(request, id);
+        toastr.success("Actualizado con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+        if (status) {
+            $("#switch_edit" + id)
+                .removeClass("switch-off")
+                .addClass("switch-on");
+        } else if (!status) {
+            $("#switch_edit" + id)
+                .removeClass("switch-on")
+                .addClass("switch-off");
+        }
+
+        $("#wait").hide();
+    });
+
+    $("#myformCreateActButton").on("click", async function (e) {
+        var errors = validateForm('myformCreateAct')
+        if (errors.length <= 0) {
+            const body = new FormData(document.getElementById('myformCreateAct'));
+            try {
+                $("#loader-container").show().css({ 'display': 'flex' })
+                $("#wait").show();
+                const result = await expedientesService.addActuacion(body)
+                    .then((response) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'success',
+                            title: "Actualizado con éxito!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        window.location.reload(true)
+                        e.preventDefault()
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'error',
+                            title: 'Ups! Algo fallo',
+                            html: error,
+                            showConfirmButton: false,
+                            timer: 5500
+                        });
+                        console.error('Error al cargar el archivo:', error);
+                        $("#wait").hide();
+                        e.preventDefault()
+                    });
+            } catch (error) {
+                // Manejar el error
+                $("#wait").hide();
+                console.error(error);
+                e.preventDefault()
+            } finally {
+                // Restablecer el estado de la barra de progreso
+                /*  const result = userService.showProgress(0)
+                 $("#loader-container").hide() */
+                $("#wait").hide();
+                e.preventDefault()
+            }
+        }
+        $("#wait").hide();
+        e.preventDefault();
+    });
+
+    $(".buscar_actuacion").on("click", async function (e) {
+        e.preventDefault();
+        var id = $(this).val();
+        var modal = $(this).attr('data-modal');
+        $("#wait").show();
+        let response = await expedientesService.getActuaciones(id);
+        llenarModalDetailsAct(response);
+        $(modal).modal("show");
+        $("#actfecha_edit").val(response.created_at);
+        $("#actnombre_edit").val(response.actnombre);
+        $("#actdescrip_edit").val(response.actdescrip);
+        $("#lbl_nom_archivo_est").text(response.actdocnompropio);
+        $("#idact").val(response.id);
+
+        $("#actnombre_cr").val(response.actnombre);
+        $("#actdescrip").val(response.actdescrip);
+        $("#myform_act_edit_docente input[name='actfecha']").val(response.created_at);
+        $("#parent_actuacion_id").val(response.parent.parent_rev_actid);
+        $("#act_id").val(response.id);
+        if (response.actestado_id == 102) {
+            $("#actestado option[value='" + response.actestado_id + "']").attr('selected', true);
+            $("#fecha_limit_doc").prop('disabled', false).val(response.fecha_limit);
+            $("#actdocenrecomendac").val(response.actdocenrecomendac);
+
+        }
+        if ($(this).attr('data-status') == '136') {
+            var label = 'Agregando Anexo a Actuación';
+            $("#actestado_id2").val(136);
+            $("#myformCreateCorreccionActButton").text('Agregar Anexo');
+            $("#lbl_tip_act").text('Motivo');
+            $("#lbl_type_actadd").text('Agregar Anexo');
+        }
+        $(".lab_id_act").text(label);
+        $("#wait").hide();
+    });
+
+    $("#myformEditActButton").on("click", async function (e) {
+        var errors = validateForm('myform_act_edit')
+        if (errors.length <= 0) {
+            const body = new FormData(document.getElementById('myform_act_edit'));
+            try {
+                var id = $("#idact").val();
+                $("#wait").show();
+                const result = await expedientesService.updateActuacion(body, id)
+                    .then((response) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'success',
+                            title: "Actualizado con éxito!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        window.location.reload(true)
+                        e.preventDefault()
+                    })
+                    .catch((error) => {
+                        /*  Swal.fire({
+                             position: 'top-end',
+                             icon: 'error',
+                             title: 'Ups! Algo fallo',
+                             html: error,
+                             showConfirmButton: false,
+                             timer: 5500
+                         }); */
+                        console.error('Error al cargar el archivo:', error);
+                        $("#wait").hide();
+                        e.preventDefault()
+                    });
+            } catch (error) {
+                // Manejar el error
+                $("#wait").hide();
+                console.error(error);
+                e.preventDefault()
+            } finally {
+                // Restablecer el estado de la barra de progreso
+                /*  const result = userService.showProgress(0)
+                 $("#loader-container").hide() */
+                $("#wait").hide();
+                e.preventDefault()
+            }
+        }
+        $("#wait").hide();
+        e.preventDefault();
+    });
+
+    $("#actestado").on("change", function () {
+        if ($(this).val() == "104") {
+            $(".addNotasAct").show();
+            $(".addNotasAct .required").prop("disabled", false);
+
+            $("#myform_act_edit_docente #fecha_limit_doc").prop(
+                "disabled",
+                true
+            );
+        } else if ($(this).val() == "234") {
+
+            $(".addNotasAct").hide();
+            $("#myform_act_edit_docente #fecha_limit_doc").prop(
+                "disabled",
+                true
+            );
+        } else {
+            $(".addNotasAct").hide();
+            $(".addNotasAct .required").prop("disabled", true);
+            $("#myform_act_edit_docente #fecha_limit_doc").prop(
+                "disabled",
+                false
+            );
+
+        }
+        if ($(this).val() == "") {
+
+            $(".addNotasAct").hide();
+            $(".addNotasAct .required").prop("disabled", true);
+            $("#myform_act_edit_docente #fecha_limit_doc").prop(
+                "disabled",
+                true
+            );
+        }
+    });
+
+    $("#btn_act_edit_docen").click(async function (e) {
+        e.preventDefault();
+        if ($("#actestado").val() != 104) {
+            $("#formAddNotas .form-control").removeClass('required');
+        }
+        var errors = validateForm('myform_act_edit_docente');
+        var notaapl = $("#myform_act_edit_docente input[name='ntaaplicacion']").val();
+        var notacon = $("#myform_act_edit_docente input[name='ntaconocimiento']").val();
+        var notaet = $("#myform_act_edit_docente input[name='ntaetica']").val();
+        var fecha_limit = $("#myform_act_edit_docente input[name='fecha_limit_doc']").val();
+        if (!existeFecha(fecha_limit) && $("#actestado").val() == 102) {
+            toastr.error("Por favor, verifíque que el año de fecha limite no sea inferior o superior a un año con respecto al año actual.", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+            errors = 1;
+        }
+        if (notaapl > 5 || notacon > 5 || notaet > 5) {
+            toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+            errors = 1;
+        }
+
+        if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
+            toastr.error("Por favor, verifíque que no haya notas con espacios o caracteres extraños", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+            errors = 1;
+        }
+        if (errors <= 0) {
+
+            try {
+                var id = $("#idact").val();
+                $("#wait").show();
+                const body = new FormData(document.getElementById('myform_act_edit_docente'));
+                let response = await expedientesService.updateActuacionDocente(body)
+                    .then((response) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'success',
+                            title: "Actualizado con éxito!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        window.location.reload(true)
+                        e.preventDefault()
+                    })
+                    .catch((error) => {
+                        /*  Swal.fire({
+                             position: 'top-end',
+                             icon: 'error',
+                             title: 'Ups! Algo fallo',
+                             html: error,
+                             showConfirmButton: false,
+                             timer: 5500
+                         }); */
+                        console.error('Error al cargar el archivo:', error);
+                        $("#wait").hide();
+                        e.preventDefault()
+                    });
+            } catch (error) {
+                // Manejar el error
+                $("#wait").hide();
+                console.error(error);
+                e.preventDefault()
+            } finally {
+                // Restablecer el estado de la barra de progreso
+                /*  const result = userService.showProgress(0)
+                 $("#loader-container").hide() */
+                $("#wait").hide();
+                e.preventDefault()
+            }
+        }
+    });
+
+    $("#myformCreateCorreccionActButton").on("click", async function (e) {
+        var errors = validateForm('myformAddActuacion')
+        if (errors.length <= 0) {
+            const body = new FormData(document.getElementById('myformAddActuacion'));
+            try {
+                $("#loader-container").show().css({ 'display': 'flex' })
+                $("#wait").show();
+                const result = await expedientesService.addActuacion(body)
+                    .then((response) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'success',
+                            title: "Actualizado con éxito!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        window.location.reload(true)
+                        e.preventDefault()
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'error',
+                            title: 'Ups! Algo fallo',
+                            html: error,
+                            showConfirmButton: false,
+                            timer: 5500
+                        });
+                        console.error('Error al cargar el archivo:', error);
+                        $("#wait").hide();
+                        e.preventDefault()
+                    });
+            } catch (error) {
+                // Manejar el error
+                $("#wait").hide();
+                console.error(error);
+                e.preventDefault()
+            } finally {
+                // Restablecer el estado de la barra de progreso
+                /*  const result = userService.showProgress(0)
+                 $("#loader-container").hide() */
+                $("#wait").hide();
+                e.preventDefault()
+            }
+        }
+        $("#wait").hide();
+        e.preventDefault();
+    });
+
+    $(".delete_act").on("click", function (e) {
+        e.preventDefault();
+        var id = $(this).val()
+        Swal.fire({
+            title: 'Esta seguro de eliminar la actuación?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let response = await expedientesService.deleteActuacion(id);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+        });
+    });
+
+    $(".btn_new_act").on("click", function () {
+        $("#actestado_id").val(101);
+        $("#lbl_title_fract").text("Crear Actuación");
+        $("#lbl_type_actuacion").text($(this).attr("data-titulo_modal"));
+        $("#myformCreateAct input[name=fecha_limit]")
+            .prop("disabled", false)
+            .show();
+        $("#myformCreateActButton").text("Crear actuación");
+        if ($(this).attr("id") == "btn_new_anex") {
+            $("#actestado_id").val(136);
+            $("#myformCreateAct input[name=fecha_limit]")
+                .prop("disabled", true)
+                .hide();
+            $("#myformCreateActButton").text("Crear anexo");
+            $("#lbl_title_fract").text("Crear Anexo");
+            $("#lbl_type_actuacion").text($(this).attr("data-titulo_modal"));
+        }
+        if ($(this).attr("id") == "btn_new_act_doct") {
+            $("#actestado_id").val(140);
+            $("#lbl_title_fract").text("Crear Actuación Docente");
+            $("#lbl_type_actuacion").text($(this).attr("data-titulo_modal"));
+        }
+    });
+
+    $("#tbl_ajax").on("click", ".btn_change_status", async function () {
+        var id = $(this).val();
+        var estado = $(this).attr("id");
+        var request = {
+            "id": id,
+            "new_estado": $(this).attr("data-estado")
+        }
+
+        if (estado == 139) {
+            var msj = alertify.confirm(
+                "¿Esta seguro de cambiar el estado?\nSe eliminaran las notas"
+            );
+            msj.set("onok", async function () {
+                $("#wait").show()
+                await expedientesService.changeStateActuacion(request);
+                toastr.success("Actualizado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                location.reload(true);
+            });
+
+            return false;
+        } else if (request.new_estado == 136) {
+            request["actdocenrecomendac"] = '';
+            $("#wait").show()
+            await expedientesService.changeStateActuacion(request);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            location.reload(true);
+            return false;
+        } else if (request.new_estado == 235) {
+            Swal.fire({
+                title: 'Anulando anexo',
+                input: 'textarea',
+                inputPlaceholder: '¿Por qué va anular el anexo?',
+                inputAttributes: {
+                    rows: 100,  // Número de filas del textarea
+                    cols: 500  // Número de columnas del textarea
+                },
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Enviar',
+                confirmButtonClass: 'btn-success',
+                allowEmpty: false, // Evita el valor vacío en el textarea
+                preConfirm: async (text) => {
+                    if (text !== '') {
+                        request["actdocenrecomendac"] = text;
+                        $("#wait").show()
+                        await expedientesService.changeStateActuacion(request);
+                        toastr.success("Actualizado con éxito", "", {
+                            positionClass: "toast-top-right",
+                            timeOut: "4000",
+                        });
+                        location.reload(true);
+                    } else {
+                        Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
+
+                    }
+
+                }
+            });
+        } else {
+            $("#wait").show()
+            await expedientesService.changeStateActuacion(request);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            location.reload(true);
+        }
+    });
+
+    $("#search_previous_act").on("click", function () {
+        if ($("#search_previous_act i").attr("class") == "fa fa-plus") {
+            $("#search_previous_act i").attr("class", "fa fa-minus");
+        } else {
+            $("#search_previous_act i").attr("class", "fa fa-plus");
+        }
+        $(".cont_act_prev").toggle();
+    });
+
+    $("#btn_enviar_req").on("click", async function (e) {
+        e.preventDefault();
+        var errors = validateForm('myform_req');
+        if (errors.length <= 0) {
+            var request = convertFormToJSON('myform_req');
+            $("#wait").show()
+            await expedientesService.storeRequerimiento(request);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            location.reload(true);
+        }
+    });
+    $(".btn_editar_req").on("click", async function (e) {
+        e.preventDefault();
+        let id = $(this).attr("data-id");
+        let modal = $(this).attr("data-modal");
+        $("#wait").show();
+        const response = await expedientesService.editRequerimiento(id);
+        llenarFormEditReq(response);
+        llenarModalDetailsReq(response);
+        llenarModalUpdateReq(response);
+        $(modal).modal("show");
+        $("#wait").hide();
+    });
+    $("#btn_act_req").on("click", async function (e) {
+        e.preventDefault();
+        var errors = validateForm('myform_req_edit');
+        if (errors.length <= 0) {
+            var id = $("#reqid").val();;
+            var request = convertFormToJSON('myform_req_edit');
+            $("#wait").show()
+            await expedientesService.updateRequerimiento(request, id);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            location.reload(true);
+        }
+    });
+    $("#btn_update_requerimiento").on("click", async function (e) {
+        e.preventDefault();
+        var errors = validateForm('myformUpdateReq');
+        if (errors.length <= 0) {
+            var id = $("#reqid").val();;
+            var request = convertFormToJSON('myformUpdateReq');
+            $("#wait").show()
+            await expedientesService.updateRequerimiento(request, id);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            location.reload(true);
+        }
+    });
+    $(".btn_delete_requerimiento").on("click", function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id')
+        Swal.fire({
+            title: 'Esta seguro de eliminar el requerimiento?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let response = await expedientesService.deleteRequerimiento(id);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+        });
+    });
+
+    $(".btn_cambiar_estado_requerimiento").on("click", function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        var reqentregado = ($(this).attr('data-estado') == 0) ? 1 : 0;
+        Swal.fire({
+            title: 'Esta seguro de cambiar el estado del requerimiento?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, cambiar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let request = {
+                    'reqentregado': reqentregado
+                }
+                let response = await expedientesService.updateRequerimiento(request, id);
+                toastr.success("Cambiado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+        });
+    });
+
+    $("#btn_cam_nt_req").on("click", async function () {
+        $("#myModal_req_details").modal("hide");
+        var actuacion_id = $("#req_id_det").val();
+        var request = {
+            "origen": 3
+        }
+        $("#wait").show();
+        let response = await expedientesService.getNotas(request, actuacion_id);
+        lleFormEditNotas(response, 3, actuacion_id);
+        $("#wait").hide();
+    });
+
+    $("#btns_edit_notas").on("click", "#btn_delete_notas", async function () {
+        Swal.fire({
+            title: 'Esta seguro de eliminar las notas?',
+            text: "Los cambios no podran ser revertidos!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#myModal_edit_notas").modal("hide");
+                openCamNotas();
+                let request = convertFormToJSON('myform_update_notas');
+                $("#wait").show();
+                let response = await expedientesService.deleteNotas(request);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true);
+            }
+        });
+    });
+
+    $("#btns_edit_notas").on("click", "#btn_cambiar_notas", function (e) {
+        e.preventDefault();
+        openCamNotas();
+    });
+    $("#btn_cancelar_notas").on("click", hideEditNotas);
+
+
+    $("#myform_update_notas").on('submit', async function (e) {
+        e.preventDefault();
+        var errors = validateForm('myform_update_notas')
+        errors = validarNotas(errors, 'myform_update_notas');
+        if (errors.length <= 0) {
+            var data = convertFormToJSON('myform_update_notas');
+            $("#wait").show();
+            await expedientesService.updateNotas(data);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true);
+            return false;
+        } else {
+
+        }
+
+    });
+
+    $("#form_expediente_edit").on("submit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("form_expediente_edit");
+        if (errors.length <= 0) {
+            var request = convertFormToJSON('form_expediente_edit');
+            var id = $("#expediente_id").val();
+            var textarea = document.getElementById('exp_hechos');
+            var contenido = textarea.value.trim();
+            var palabras = contenido.split(/\s+/);
+            if (palabras.length < 2) {
+                toastr.error("Los hechos deben tener al menos 100 palabras", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                e.preventDefault();
+                return
+            }
+            if ($("#exptipoproce_id").val() != 3) {
+                var textarea = document.getElementById('exp_resp_est');
+                var contenido = textarea.value.trim();
+                var palabras = contenido.split(/\s+/);
+                if (palabras.length < 2) {
+                    toastr.error("La respuesta debe tener al menos 100 palabras", "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                    e.preventDefault();
+                    return
+                }
+            }
+            $("#wait").show();
+            let response = await expedientesService.update(request, id);
+            $("#wait").hide();
+            Toast.fire({
+                title: 'Actualizado con éxito.',
+                type: 'success',
+                timer: 2000,
+            });
+        } else {
+            toastr.error("Hay campos que son obligatorios", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+    });
+
+    $("#myform_exp_edit_cierre_caso").on("submit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myform_exp_edit_cierre_caso");
+        if (errors.length <= 0) {
+            var request = convertFormToJSON('myform_exp_edit_cierre_caso');
+            request['expid'] = $("#expid").val();
+            request['hechos'] = $("#exp_hechos").val();
+            request['exp_resp_est'] = $("#exp_resp_est").val();
+            $("#wait").show();
+            let response = await expedientesService.storeEstadoCaso(request);
+            if (!response.guardado) {
+                $("#wait").hide();
+                toastr.error(response.mensaje, "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "8000",
+                });
+            } else {
+                toastr.success("Actualizado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true);
+            }
+            return false;
+        } else {
+            toastr.error("Hay campos que son obligatorios", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+
+    });
+    $("#btn_add_nota").on("click", async function () {
+        var errors = validateForm("myform_add_nota_final_expedientes");
+        errors = validarNotas(errors, 'myform_add_nota_final_expedientes');
+        if (errors.length <= 0) {
+            let request = convertFormToJSON("myform_add_nota_final_expedientes");
+            $("#wait").show();
+            let response = await expedientesService.storeNotas(request);
+            toastr.success("Notas agregadas con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true);
+        } else {
+            toastr.error("Hay campos que son obligatorios", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+    });
+
+    $("#btn_edit_nt_exp").on("click", async function () {
+        var actuacion_id = $("#form_expediente_edit #expediente_id").val();
+        var request = { "origen": 1 };
+        $("#wait").show();
+        let response = await expedientesService.getNotas(request, actuacion_id);
+        lleFormEditNotas(response, 1, actuacion_id);
+        $("#wait").hide();
+    });
+
+
+    $("#btns_edit_notas").on("click", "#btn_tipo_nota_update", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Esta seguro de cambiar las notas del caso?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, cambiar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#tipo_nota_id").attr("disabled", false);
+                $("#tipo_nota_id").val($("#btn_tipo_nota_update").attr("data-value"));
+                $("#myModal_edit_notas").modal("hide");
+                openCamNotas();
+                let request = convertFormToJSON('myform_update_notas');
+                $("#wait").show();
+                let response = await expedientesService.updateNotas(request);
+                toastr.success("Actualizado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true);
+            }
+        });
+
+    });
+
+    $("#modalhcaso").on("click", async function (e) {
+        e.preventDefault();
+        $("#modal-conten-js").html('');//limpia modal antes de mostrar
+        $("#mymodal-dinamyc-tittle").html("Hechos caso");
+        var expid = $(this).attr('data-name');
+        var tipo = "141"//hechos del caso
+        $("#wait").show();
+        let response = await expedientesService.getHistoryDataCase(expid, tipo);
+        fillModalHistoryDataCase(response);
+        $("#wait").hide();
+
+    });
+    $("#modalresestudiante").on("click", async function () {
+        $("#modal-conten-js").html('');//limpia modal antes de mostrar
+        $("#mymodal-dinamyc-tittle").html("Respuesta estudiante");
+        var expid = $(this).attr('data-name');
+        var tipo = "142"//respuesta estudiante
+        $("#wait").show();
+        let response = await expedientesService.getHistoryDataCase(expid, tipo);
+        fillModalHistoryDataCase(response);
+        $("#wait").hide();
+    });
+
+    $("#btn_mod_expfecha_res").on("click", async function (e) {
+        e.preventDefault();
+        var request = {
+            expfecha_res: $("#expfecha_res").val(),
+            exp_id: $("#expid").val(),
+            expediente_id: $("#expediente_id").val(),
+        };
+        $("#wait").show();
+        let response = await expedientesService.update(request, request.expediente_id);
+        $("#lbl_expfecha_res").text(request.expfecha_res);
+        $("#fechalimitres").modal("hide");
+        $("#wait").hide();
+        toastr.success("Actualizado con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+        e.preventDefault();
+    });
+
+    $("#btn_reabrir_caso").on("click", function (e) {
+        $("#myModal_addnew_nota_final_expedientes").modal("show");
+    });
+    $("#btn_addnew_nota_exp").on("click", async function () {
+        var errors = validateForm("myform_addnew_nota_final_expedientes");
+        errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes');
+        if (errors <= 0) {
+            var request = convertFormToJSON('myform_addnew_nota_final_expedientes');
+            $("#wait").show();
+            let response = await expedientesService.reabrirCaso(request);
+            toastr.success("Creado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true)
+        }
+    });
+
+    $("#myformCitarEstudiante").on("change", "#fecha", async function () {
+        var request = { expid: $("#expid").val(), fecha: $(this).val() };
+        if (request.expid !== undefined) {
+            $("#wait").show();
+            let res = await expedientesService.searchCitasForDay(request);
+            var li = "";
+            if (res.length <= 0) {
+                li += `<tr><td colspan="4">No se encontraron citas...</td> </tr>`;
+            } else {
+                res.forEach((element) => {
+                    li += `<tr>
+                                <td>${element.hora} </td> 
+                                <td>${element.motivo} </td> 
+                                <td>${element.asignacion.estudiante.name} ${element.asignacion.estudiante.lastname}</td> 
+                                <td>${element.asignacion.asigexp_id} </td>                            
+                            </tr>`;
+                });
+            }
+            $("#menu_details_citas").show();
+            $("#menu_details_citas tbody").html(li);
+            $("#wait").hide();
+        }
+    });
+    $("#mymodalNuevaCitacion").on("submit", "#myformCitarEstudiante", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myformCitarEstudiante");
+        if (errors <= 0) {
+            var request = convertFormToJSON("myformCitarEstudiante");
+            request.exp_id = $("#expid").val();
+            $("#wait").show();
+            let response = await expedientesService.storeCitacionEstudiante(request);
+            toastr.success("Creado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            $("#mymodalNuevaCitacion").modal("hide");
+            window.location.reload(true)
+        }
+        return false;
+        e.preventDefault();
+    });
+    $("#table_list_citaciones").on("click", ".btn_edit_citacion", async function () {
+        var id = $(this).attr("id");
+        $("#wait").show();
+        let response = await expedientesService.editCitacionEstudiante(id);
+        $("#myformCitarEstudiante").attr("id", "myformCitarEstudianteEdit");
+        $("#myformCitarEstudianteEdit #id").val(response.id);
+        $("#myformCitarEstudianteEdit #hora").val(response.hora);
+        $("#myformCitarEstudianteEdit #fecha").val(response.fecha_corta);
+        $("#myformCitarEstudianteEdit #motivo").val(response.motivo);
+        $("#mymodalNuevaCitacion").modal("show");
+        $("#wait").hide();
+    });
+    $("#ct_forcitaest").on("submit", "#myformCitarEstudianteEdit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myformCitarEstudianteEdit");
+        if (errors <= 0) {
+            var request = convertFormToJSON("myformCitarEstudianteEdit");
+            request.exp_id = $("#expid").val();
+            $("#wait").show();
+            await expedientesService.updateCitacionEstudiante(request, request.id);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true)
+
+            return false;
+        }
+    });
+    $("#btn_nueva_autorizacion").on("click", function () {
+        $("#myformEditAutorizacion").attr("id", "myformCreateAutorizacion");
+        $("#myformCreateAutorizacion button")
+            .removeClass("btn-warning")
+            .addClass("btn-primary")
+            .text("Crear").show();
+        resetForm('myformCreateAutorizacion');
+        $("#mymodalCreateAutorizacion").modal("show");
+    });
+
+
+    $("#mymodalCreateAutorizacion").on("submit", "#myformCreateAutorizacion", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myformCreateAutorizacion");
+        if (errors <= 0) {
+            var request = convertFormToJSON("myformCreateAutorizacion");
+            request.exp_id = $("#expid").val();
+            $("#wait").show();
+            let response = await expedientesService.storeAutorizacion(request);
+            $("#table_list_autorizaciones tbody").html(response.view);
+            $("#mymodalCreateAutorizacion").modal("hide");
+            $("#wait").hide();
+            toastr.success("Creado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+        return false;
+    });
+    $("#table_list_autorizaciones").on("click", ".btn_editar_autorizacion", async function (e) {
+        var id = $(this).attr("data-id");
+        $("#wait").show();
+        let res = await expedientesService.editAutorizacion(id);
+        $("#myformCreateAutorizacion").attr("id", "myformEditAutorizacion");
+        $("#myformEditAutorizacion input[name=id]").val(res.id);
+        $("#myformEditAutorizacion input[name=nombre_estudiante]").val(
+            res.nombre_estudiante
+        );
+        $("#myformEditAutorizacion input[name=num_identificacion]").val(
+            res.num_identificacion
+        );
+        $("#myformEditAutorizacion input[name=doc_expedicion]").val(
+            res.doc_expedicion
+        );
+        $("#myformEditAutorizacion input[name=num_carne]").val(
+            res.num_carne
+        );
+        $("#myformEditAutorizacion input[name=calidad_de]").val(
+            res.calidad_de
+        );
+        $("#myformEditAutorizacion input[name=tipo_proceso]").val(
+            res.tipo_proceso
+        );
+        $("#myformEditAutorizacion input[name=num_radicado]").val(
+            res.num_radicado
+        );
+        $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
+        $("#myformEditAutorizacion select[name=genero]").val(res.genero);
+        $("#myformEditAutorizacion button")
+            .removeClass("btn-primary")
+            .addClass("btn-warning")
+            .text("Actualizar").show();
+        resetDisabledForm('myformEditAutorizacion');
+        $("#mymodalCreateAutorizacion").modal("show");
+        $("#wait").hide();
+    });
+
+    $("#table_list_autorizaciones").on("click", ".btn_detalles_autorizacion", async function (e) {
+        var id = $(this).attr("data-id");
+        $("#wait").show();
+        let res = await expedientesService.editAutorizacion(id);
+        $("#myformCreateAutorizacion").attr("id", "myformEditAutorizacion");
+        //$("#myformEditAutorizacion input[name=id]").val(res.id);
+        $("#myformEditAutorizacion input[name=nombre_estudiante]").val(
+            res.nombre_estudiante
+        );
+        $("#myformEditAutorizacion input[name=num_identificacion]").val(
+            res.num_identificacion
+        );
+        $("#myformEditAutorizacion input[name=doc_expedicion]").val(
+            res.doc_expedicion
+        );
+        $("#myformEditAutorizacion input[name=num_carne]").val(
+            res.num_carne
+        );
+        $("#myformEditAutorizacion input[name=calidad_de]").val(
+            res.calidad_de
+        );
+        $("#myformEditAutorizacion input[name=tipo_proceso]").val(
+            res.tipo_proceso
+        );
+        $("#myformEditAutorizacion input[name=num_radicado]").val(
+            res.num_radicado
+        );
+        $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
+        $("#myformEditAutorizacion select[name=genero]").val(res.genero);
+        $("#myformEditAutorizacion button").hide();
+        disabledForm('myformEditAutorizacion')
+        $("#mymodalCreateAutorizacion").modal("show");
+        $("#wait").hide();
+    });
+
+    $("#mymodalCreateAutorizacion").on("submit", "#myformEditAutorizacion", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myformEditAutorizacion");
+        if (errors <= 0) {
+            var request = convertFormToJSON("myformEditAutorizacion");
+            $("#wait").show();
+            let res = await expedientesService.updateAutorizacion(request, request.id);
+            $("#table_list_autorizaciones tbody").html(res.view);
+            $("#mymodalCreateAutorizacion").modal("hide");
+            $("#myformEditAutorizacion")[0].reset();
+            $("#myformEditAutorizacion button").removeClass("btn-warning").addClass("btn-primary").text("Crear");
+            $("#myformEditAutorizacion").attr("id", "myformCreateAutorizacion");
+            $("#wait").hide();
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+    });
+    $("#table_list_autorizaciones").on("click", ".btn_eliminar_autorizacion", function (e) {
+        var id = $(this).attr("data-id");
+        Swal.fire({
+            title: 'Esta seguro de eliminar la autorización?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let res = await expedientesService.deleteAutorizacion(id);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                $("#table_list_autorizaciones tbody").html(res.view);
+                $("#wait").hide();
+            }
+        });
+    });
+    $("#table_list_autorizaciones").on("click", ".btn_change_estado_autorizacion", async function (e) {
+        var id = $(this).attr("data-id");
+        var request = { estado: $(this).attr("data-estado") == 0 ? 1 : 0, vista: "expedientes" };
+        $("#wait").show();
+        let res = await expedientesService.updateAutorizacion(request, id);
+        $("#table_list_autorizaciones tbody").html(res.view);
+        $("#wait").hide();
+        toastr.success("Actualizado con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+        return false;
+    });
+    $("#btnOpReasig").on("click", async function (e) {
+        e.preventDefault();
+        habilityButtReasCaso()
+    });
+    $("#btnReasignar").on("click", async function (e) {
+        e.preventDefault();
+        var request = {
+            new_user_id: $("#numberest_id").val(),
+            expid: $("#expid").val(),
+            anotacion: $("#anotacion").val(),
+            motivo_asig_id: $("#motivo_asig_id").val()
+        }
+        if ($("#expidnumberest").val() == request.new_user_id) {
+            toastr.error("No puede ser el mismo estudiante", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            return;
+        }
+        var errors = validateForm("cont_anotacion");
+        if (errors <= 0) {
+            $("#wait").show();
+            let res = await expedientesService.reasigCaso(request);
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true);
+        }
+    });
+    $("#btnCancReasig").on("click",function(e) {        
+        e.preventDefault();
+        hideButtReasCaso();
+    });
+    
 });//////////////////////////////////////////////
+function hideButtReasCaso() {
+    hideElement("btnReasignar");
+    hideElement("btnCancReasig");
+    hideElement("cont_anotacion");
+    showElement("btnOpReasig");
+    $(".disabled-fun4").prop("disabled", true);
+    $(".disabled-fun4").selectpicker("refresh");
+}
+function fillModalHistoryDataCase(response) {
+    if (response == "") {
+        $("#modal-conten-js").html('No hay información registrada');
+    } else {
+        var inforhis = "";
+        $(response).each(function (key, value) {
+            var fecha1 = moment($("#expediente_fecha_asig").val()).startOf('day');
+            var fecha2 = moment(value.created_at).startOf('day');
+            var fecha = fecha1.diff(fecha2, 'days') * -1;
+            inforhis += `
+            <div class="row">   
+                <div class="col-md-7">
+                    <label title="C.C. ${value.hisdc_idnumberest_id}">` + value.name + ' ' + value.lastname + ` </label>
+                </div> 
+                <div class="col-md-5">
+                <label> Días después de la asignación: 
+                <span class="badge ${fecha > 5 ? 'bg-red' : 'bg-green'} ">  ${fecha} </span>
+                </label>
+                </div>
+                <div class="col-md-1">
+                           
+                </div>                        
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="cont-text">                                     
+                        <textarea class="form-control textarea-asesorias-docente" readonly="" name="asesorias_docente" cols="50" rows="10">`+ value.hisdc_datos_caso + `</textarea>
+                    </div>                                        
+                    <div class="cont-fecha">
+                    <i>	`+ value.created_at + `</i>
+                </div>
+                </div>
+            </div><hr>`;
+
+
+
+        });
+        $("#modal-conten-js").html(inforhis);
+        $("#mymodaljs").modal("show");
+    }
+}
+function validarNotas(errors, form) {
+    var notaapl = $("#" + form + " input[name=ntaaplicacion]").val();
+    var notacon = $("#" + form + " input[name=ntaconocimiento]").val();
+    var notaet = $("#" + form + " input[name=ntaetica]").val();
+    if (notaapl > 5 || notacon > 5 || notaet > 5) {
+        toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors.push("1");
+    }
+    console.log(notaet, form);
+    if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
+        toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors.push("1");
+    }
+    return errors;
+}
+function openCamNotas() {
+    $("#myform_update_notas input[type='text']").prop("disabled", false);
+    $("#myform_update_notas #nota_concepto").prop("disabled", false);
+    $("#btn_cambiar_notas").hide();
+    $("#btn_update_notas").show();
+    $("#btn_cancelar_notas").show();
+}
+function lleFormEditNotas(res, origen, tbl_id) {
+    $("#myform_update_notas #nota_conocimiento").val(
+        res.nota_conocimiento
+    );
+    $("#myform_update_notas #nota_conocimientoid").val(
+        res.nota_conocimientoid
+    );
+
+    $("#myform_update_notas #nota_etica").val(res.nota_etica);
+    $("#myform_update_notas #nota_eticaid").val(res.nota_eticaid);
+
+    $("#myform_update_notas #nota_aplicacion").val(res.nota_aplicacion);
+    $("#myform_update_notas #nota_aplicacionid").val(
+        res.nota_aplicacionid
+    );
+
+    $("#myform_update_notas #nota_concepto").val(res.nota_concepto);
+    $("#myform_update_notas #nota_conceptoid").val(res.nota_conceptoid);
+    $("#myform_update_notas #lbl_nota_gen_caso").text(res.nota_final);
+
+    //$("#myform_update_notas input[name='tbl_org_id']").val(res.nota_conceptoid);
+    $("#myform_update_notas #origen").val(origen);
+    $("#myform_update_notas #tbl_org_id").val(tbl_id);
+    $("#myform_update_notas #lbldocevname").text(res.docevname);
+
+    $("#myModal_edit_notas #btns_edit_notas").hide();
+    $("#wait").css("display", "none");
+    if (res.encontrado) {
+        $("#myModal_edit_notas #lbl_periodo").text(res.periodo);
+        $("#myModal_edit_notas #lbl_segmento").text(res.segmento);
+        $("#myModal_edit_notas #lbl_tipo").text(res.tipo);
+        $("#myModal_edit_notas #tipo_nota_id").val(res.tipo_id);
+        var tipo = res.tipo_id == "1" ? "Parcial" : "Definitiva";
+        $("#btn_tipo_update").text("Cambiar notas a: " + tipo);
+        var tipo_id = res.tipo_id == "1" ? "2" : "1";
+
+        if (res.can_edit) {
+            if (origen == 1 && $("#expestado_id").val() == "4") {
+                $("#btn_tipo_update").attr("data-value", tipo_id);
+                $("#btn_tipo_update").show();
+                $("#btn_tipo_update").attr(
+                    "id",
+                    "btn_tipo_nota_update"
+                );
+            }
+
+            $("#myModal_edit_notas #btns_edit_notas").show();
+            $("#btn_cambiar").attr("id", "btn_cambiar_notas");
+            $("#btn_delete").attr("id", "btn_delete_notas");
+            $("#btn_update").attr("id", "btn_update_notas");
+        } else {
+            $("#btn_cambiar_notas").attr("id", "btn_cambiar");
+            $("#btn_delete_notas").attr("id", "btn_delete");
+            $("#btn_update_notas").attr("id", "btn_update");
+            //$("#btn_tipo_nota_update").attr('id', 'btn_update_tipo');
+        }
+        $("#myModal_edit_notas").modal("show");
+    }
+
+    if (origen == 3) {
+        $("#myModal_edit_notas .fil_nt_co input[type='text']")
+            .attr("type", "hidden")
+            .prop("disabled", true);
+        $("#myModal_edit_notas .fil_nt_co").hide();
+        // hideElement('btn_delete_notas');
+    } else {
+        $("#myModal_edit_notas .fil_nt_co input[type='hidden']")
+            .attr("type", "text")
+            .prop("disabled", false);
+        $("#myModal_edit_notas .fil_nt_co").show();
+        showElement("btn_delete_notas");
+        //if(origen == 2)   hideElement('btn_delete_notas');
+    }
+    hideEditNotas();
+}
+function hideEditNotas() {
+    $("#myform_update_notas input[type='text']").prop("disabled", true);
+    $("#myform_update_notas #nota_concepto").prop("disabled", true);
+    $("#btn_cambiar_notas").show();
+    $("#btn_update_notas").hide()
+    $("#btn_cancelar_notas").hide()
+
+}
+function llenarFormEditReq(res) {
+    $("#reqcreated_at").val(res.requerimiento.fecha_corta)
+    $("#reqid").val(res.requerimiento.id);
+    $("#reqfecha_ed").val(res.requerimiento.reqfecha);
+    $("#reqhora_ed").val(res.requerimiento.reqhora);
+    $("#reqmotivo").val(res.requerimiento.reqmotivo);
+    $("#reqdescrip").val(res.requerimiento.reqdescrip);
+}
+function llenarModalUpdateReq(res) {
+    $("#reqcreated_at").val(res.requerimiento.fecha_corta)
+    $("#req_id").val(res.requerimiento.id);
+    $("#lab_cod_exp").text(res.requerimiento.expediente.expid);
+    $("#lab_fech_crea").text(res.requerimiento.created_at);
+    $("#lab_ced_solic").text(res.requerimiento.expediente.solicitante.idnumber);
+    $("#lab_nom_solic").text(res.requerimiento.expediente.solicitante.name);
+    $("#lab_apell_solic").text(res.requerimiento.expediente.solicitante.lastname);
+    $("#lab_fech_cita").text(res.requerimiento.reqfecha);
+    $("#lab_hora_cita").text(res.requerimiento.reqhora);
+    $("#reqcomentario_est").val(res.requerimiento.reqcomentario_est);
+    $("#reqcomentario_coorprac").val(res.requerimiento.reqcomentario_coorprac);
+    $("#reqid_asistencia").val(res.requerimiento.reqid_asistencia);
+}
+
+function llenarModalDetailsReq(res) {
+    $("#cont_notas_req").hide()
+    $("#req_id_det").val(res.requerimiento.id);
+    $("#lab_cod_exp_det").text(res.requerimiento.expediente.expid);
+    $("#lab_fech_crea_det").text(res.requerimiento.created_at);
+    $("#lab_ced_solic_det").text(res.requerimiento.expediente.solicitante.idnumber);
+    $("#lab_nom_solic_det").text(res.requerimiento.expediente.solicitante.name);
+    $("#lab_apell_solic_det").text(res.requerimiento.expediente.solicitante.lastname);
+    $("#lab_fech_cita_det").text(res.requerimiento.reqfecha);
+    $("#lab_hora_cita_det").text(res.requerimiento.reqhora);
+    $("#lab_req_motivo_det").text(res.requerimiento.reqmotivo);
+    $("#lab_req_descrip_det").text(res.requerimiento.reqdescrip);
+    $("#lab_req_asistencia_det").text(res.requerimiento.req_asistencia.ref_reqasistencia);
+    $("#lab_req_comcoor_det").text(res.requerimiento.reqcomentario_coorprac);
+    $("#lab_req_comest_det").text(res.requerimiento.reqcomentario_est);
+    $("#btn_cam_nt_req").hide();
+    var segmento_id = $("#segmento_id").val();
+    $("#btn_cam_nt_req").hide();
+    if (res.requerimiento.notas_f.encontrado) {
+        $("#lbl_not_etireq").text(res.requerimiento.notas_f.nota_etica);
+        $("#ntaconcepto_req").text(res.requerimiento.notas_f.nota_concepto);
+        $("#cont_notas_req #lbldocevname").text(res.requerimiento.notas_f.docevname);
+        $("#cont_notas_req").show();
+        if (segmento_id && res.requerimiento.notas_f.segmento_id && res.requerimiento.notas_f.can_edit) {
+            $("#btn_cam_nt_req").show();
+        }
+    } else {
+        if (res.requerimiento.notas != null && res.requerimiento.notas != '') {
+            var notas = JSON.parse(res.requerimiento.notas);
+            $("#lbl_not_etireq").text(notas.ntaetica);
+            $("#ntaconcepto_req").text(notas.ntaconcepto);
+            $("#cont_notas_req").show();
+        }
+    }
+}
+
+function llenarModalDetailsAct(res) {
+    var name = res.user_created.name + " " + res.user_created.lastname
+    $("#fullnameest").val(name)
+    $("#actfecha_det").val(res.created_at);
+    $("#actnombre_det").val(res.actnombre);
+    $("#actdescrip_det").val(res.actdescrip);
+    $("#actestado_det").val(res.actestado_id);
+    if (res.actestado_id == 176) {//$("#actestado").attr('selected',true);
+        $("#actestado_det").prop('disabled', true).val(102);
+    }
+    $("#fecha_limit_d").val(res.fecha_limit);
+
+    $("#label_nombre_docente").text(res.docente_update.name + ' ' + res.docente_update.lastname);
+    var rutadescarga = "/actpdfdownload/" + res.id + "/estudiante";
+    if (res.actdocnompropio != '' && res.actdocruta != "" && res.actdocnompropio != null && res.actdocruta != null) {
+        $("#lab-nombre-est").html('<a href="' + rutadescarga + '" target="_blank">' + res.actdocnompropio + '</a>');
+    } else {
+        $("#lab-nombre-est").html('<i>Sin archivo</i>');
+
+    }
+
+    var rutadescarga = "/actpdfdownload/" + res.id + "/docente";
+    if (res.actdocnompropio_docente != '' && res.actdocnompropio_docente != null) {
+        $("#lab-nombre-doc").html('<a href="' + rutadescarga + '" target="_blank">' + res.actdocnompropio_docente + '</a>');
+    } else {
+        $("#lab-nombre-doc").html('<i>Sin archivo</i>');
+
+    }
+
+    var segmento_id = $("#segmento_id").val();
+
+    if (res.notas_f.encontrado) {
+        $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
+        $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);
+        $("#lbl_not_etiac").text(res.notas_f.nota_etica);
+        $("#ntaconcepto_text").val(res.notas_f.nota_concepto);
+        $("#cont_notas_ac #lbldocevname").text(res.notas_f.docevname);
+
+        /* showElement('cont_notas_ac'); */
+        console.log('ids', segmento_id, res.notas_f.segmento_id, res.notas_f.can_edit)
+        if (segmento_id == res.notas_f.segmento_id && res.notas_f.can_edit) {
+            /* showElement('btn_cam_nt_act'); */
+
+        }
+
+    } else {
+        if (res.notas != null && res.notas != '') {
+            var notas = JSON.parse(res.notas);
+            $("#lbl_not_conac").text(notas.ntaconocimiento);
+            $("#lbl_not_aplac").text(notas.ntaaplicacion);
+            $("#lbl_not_etiac").text(notas.ntaetica);
+            $("#ntaconcepto_text").val(notas.ntaconcepto);
+            /* showElement('cont_notas_ac'); */
+        }
+    }
+
+    $("#actuacion_id").val(res.id);
+
+    $("#actdocenrecomendac_det").val(res.actdocenrecomendac);
+
+}
+function habilityButtReasCaso() {
+    showElement("btnReasignar");
+    showElement("btnCancReasig");
+    showElement("cont_anotacion");
+    hideElement("btnOpReasig");
+
+    $(".disabled-fun4").prop("disabled", false);
+    $(".disabled-fun4").selectpicker("refresh");
+}
 
 async function changeSelectSearchExp(value) {
     var placeholder = "";
@@ -701,4 +2193,3 @@ async function changeSelectSearchExp(value) {
         default:
     }
 }
-

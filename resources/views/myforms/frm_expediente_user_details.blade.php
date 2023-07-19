@@ -33,8 +33,7 @@ Registrado
 		@include('myforms.components_user.socioeconomica',[
 			'user'=>$expediente->solicitante
 		])
-	</div>
-   
+	</div>   
 </form>
 
 

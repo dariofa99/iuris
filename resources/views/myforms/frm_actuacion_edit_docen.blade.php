@@ -1,9 +1,7 @@
-@component('components.modal_dynamic')
+@component('components.b4.modal_large')
 
 
-	@slot('size')
-		modal-dialog modal-lg
-	@endslot
+	
 	
 	@slot('trigger')
 		myModal_act_edit_docen
@@ -21,6 +19,8 @@
 	@include('msg.ajax.success')
 
 {!!Form::open([ 'id'=>'myform_act_edit_docente','files' => true])!!}
+<div class="row">
+
 	<input type="hidden" name="_token" value="{{csrf_token()}}" id="token"> 
 	<input type="hidden" name="idact" id="idact">
 	<div class="col-md-6">
@@ -31,11 +31,19 @@
 	</div>  
 	<div class="col-sm-6">
 		{!! Form::label('Fecha creación: ') !!}		  
-		<div class="input-group">
-		<div class="input-group-addon">
-		    <i class="fa fa-calendar"></i>
-		</div>
-		{!!Form::text('actfecha', fechaActual(), ['id'=>'actfecha', 'class' => 'form-control', 'required' => 'required','data-inputmask'=>"'alias': 'yyyy/mm/dd'" , 'data-mask', 'readonly' ] ); !!}
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+			  <span class="input-group-text" id="inputGroup-sizing-default">
+				<i class="fa fa-calendar"></i>
+			  </span>
+			</div>
+			{!! Form::text('actfecha', null, [
+				'class' => 'form-control',
+				'required' => 'required',
+				'data-inputmask' => "'alias': 'yyyy/mm/dd'",
+				'data-mask',
+				'readonly',
+			]) !!} 
 		</div>
 		 <!-- /.input group -->
 	</div>
@@ -78,12 +86,13 @@
 	</div>
 <div class="col-md-6">
 	 <div class="form-group"> 
+		<label>Subir archivo </label>
               <div class="con-btn">
 
-                {!!Form::file('actdocnomgen',['class'=>'inputfile','id'=>'actdocnomgen']) !!}
+                {!!Form::file('actdocnomgen',['class'=>'input','id'=>'actdocnomgen']) !!}
                 
-                <label for="actdocnomgen"> <i class="fa fa-upload"> </i> <span  id="label-upload"> Subir Archivo </span></label>
-                <label for="" id="lab_doc_file"><i></i></label> 
+                {{-- <label for="actdocnomgen"> <i class="fa fa-upload"> </i> <span  id="label-upload"> Subir Archivo </span></label>
+                <label for="" id="lab_doc_file"><i></i></label>  --}}
 
 
               </div>                 
@@ -127,7 +136,7 @@
 
 
 
-	 <div id="formAddNotas" class="addNotasAct" style="display: none">
+	 <div id="formAddNotas" class="addNotasAct row" style="display: none">
 	
 	 <div class="col-md-4">
 	{!!Form::hidden('orgntsid',2, ['class' => 'form-control required','id'=>'orgntsid' ]); !!}
@@ -189,6 +198,10 @@
 	@else
 	No existe un periodo o un segmento activo
 @endif
+
+	
+</div>
+
 	{!!Form::close()!!}
 
 

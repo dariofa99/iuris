@@ -20,7 +20,7 @@ interface UsersService {
     public function findUserByNameOrLastNameAndRole(String $name,$role,$verify_status=false):Array; 
     public function findWithFilter(Array $filter):?Model;
     public function getWithFilter(Array $filter):?Collection;
-    public function setValidateSede($status);
+    public function setValidateSede(bool $status);
     public function addSede(User $user);
     public function changeSede(User $user);
     public function update(User $user,Request $request):User;

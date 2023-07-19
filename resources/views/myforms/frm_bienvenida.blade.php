@@ -1,94 +1,80 @@
 @extends('layouts.dashboard')
 
 @push('styles')
-<!-- aqui van los estilos de cada vista -->
-
+    <!-- aqui van los estilos de cada vista -->
 @endpush
 
 @section('navbar')
-<!-- aqui va el menu de cada vista -->
-  @include('content.navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
 @endsection
 
-@section('content')
+@section('area_forms')
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Hola! {{ currentUser()->name }} {{ currentUser()->lastname }}
+            </h3>
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Dashboard v2</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v2</li>
-              </ol>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
-  
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-  
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title">Monthly Recap Report</h5>
-  
- 
+            <h4>
+                <p>
+                    Bienvenido a <strong>{{ config('app.name') }}
+                    </strong>!!
+                </p>
+            </h4>
+        </div>
+    </div>
+    @if (
+        (count($sedes) >= 2 and count(Auth::user()->sedes) <= 0) ||
+            auth()->user()->can('cambiar_sede'))
+        <div class="row">
+            @foreach ($sedes as $key => $sede)
+                <div class="col-md-4">
+                    <form id="myFormCambiarSede-{{ $sede->id_sede }}" action="{{ url('/change/sedes') }}" method="GET">
+                        <div class="card card-outline card-success">
+                            <!-- Default panel contents -->
+                            <div class="card-body">
+                                <input type="hidden" name="sede_id" value="{{ $sede->id_sede }}">
+                                <h6>{{ $sede->ubicacion }}</h6>
+                            </div>
+                            <div class="card-footer">
+                                <button data-id="{{ $sede->id_sede }}"
+                                    {{ (session()->has('sede') and session()->get('sede')->id_sede == $sede->id_sede) ? 'disabled' : '' }}
+                                    type="button" class="btn btn-success btn_change_sede">
+                                    Seleccionar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <div class="row">
-
-                  </div>
-                  <!-- /.row -->
-                </div>
-                <!-- ./card-body -->
-                <div class="card-footer">
-                  <div class="row">
-
-                  </div>
-                  <!-- /.row -->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-            </div>
-            <!-- /.col -->
-          </div>
-          <!-- /.row -->
-  
-          <!-- Main row -->
-          <div class="row">
-
-  
-            <div class="col-md-4">
-
-              <!-- /.info-box -->
-
-
-  
-
-  
-
-            </div>
-            <!-- /.col -->
-          </div>
-          <!-- /.row -->
-        </div><!--/. container-fluid -->
-      </section>
-      <!-- /.content -->
-
+            @endforeach
+        </div>
+    @endif
 @endsection
 
 @push('scripts')
-<!-- aqui van los scripts de cada vista -->
-
+    <!-- aqui van los scripts de cada vista -->
+    <script>
+        $(document).ready(function() {
+            $(".btn_change_sede").on("click", function(e) {
+                var id = $(this).attr("data-id");
+                Swal.fire({
+                    title: "Esta seguro de seleccionar esta sede?",
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, seleccionar!",
+                    cancelButtonText: "No, cancelar",
+                }).then((result) => {
+                    if (!result.value) {
+                        e.preventDefault();
+                        return false;
+                    } else {
+                        $("#myFormCambiarSede-" + id).submit();
+                    }
+                });
+            });
+        })
+    </script>
 @endpush
-

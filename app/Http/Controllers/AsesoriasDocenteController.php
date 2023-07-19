@@ -36,7 +36,7 @@ class AsesoriasDocenteController extends Controller
 
 	public function update(Request $request,$id){
 		$asesoria = AsesoriaDocente::find($id);
-		$asesoria->comentario = $request->comentario;
+		$asesoria->fill($request->all());
 		$asesoria->save();
 		return response()->json($asesoria);
 	}

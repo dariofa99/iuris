@@ -311,4 +311,10 @@ function getReferencesTableByCategory($category){
 
 }
 
+function getDiffDays($fecha_inicio,$fecha_fin){
+    $inicio = Carbon::parse($fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
+    $fin = Carbon::parse($fecha_fin); //moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
+    return  $inicio->diffInDays($fin, false);
+}
+
 ?>

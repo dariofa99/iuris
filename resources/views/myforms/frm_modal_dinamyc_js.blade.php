@@ -1,4 +1,4 @@
-@component('components.modal_dynamic')
+@component('components.b4.modal_large')
 
 	@slot('trigger')
 		mymodaljs

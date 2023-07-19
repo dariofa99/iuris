@@ -1047,7 +1047,7 @@ $("#btn_act_edit_docen").click(function(){
 		toastr.error("Por favor, verifíque que el año de fecha limite no sea inferior o superior a un año con respecto al año actual.", "", {
 			positionClass: "toast-top-right",
 			timeOut: "6000",
-		});
+		}); 
 		errors = 1;
 	}
 	if(notaapl > 5 || notacon > 5 || notaet > 5){
@@ -1400,7 +1400,10 @@ fechaActual = getFechaActual();
 			
 				}
  
-				if (res.userSession.name =='coordprac' || res.userSession.name =='amatai' || res.userSession.name =='diradmin' || res.userSession.name =='dirgral') {
+				if (res.userSession.name =='coordprac' 
+				|| res.userSession.name =='amatai' 
+				|| res.userSession.name =='diradmin' 
+				|| res.userSession.name =='dirgral') {
 				//		btns = btnAsistencia+""+btnDetalles;
 			 	 btnPrint='';	
 					btnAsistencia = "<button href='#' "+estadoBtn+" data-toggle='modal' OnClick='searchReq("+value.id+")' data-target='#myModal_req_asist'  class='btn btn-primary btn-block' role='button'>Asistencia</button>";
@@ -1452,7 +1455,7 @@ fechaActual = getFechaActual();
 /*
 	Buscar requerimiento para acualizarlo
 */
-function searchReq(id){
+function searchReq(id){ 
 	//
 	var route = "/requerimientos/"+id+"/edit" ;
 	var token = $("#token").val();
@@ -2989,7 +2992,7 @@ $("#modalhcaso").click(function(){
 	var tipo = "141"//hechos del caso
 	ConsultaHistorialDatosCaso(expid,tipo);
 	$("#mymodaljs").modal("show");
-	
+	 
 });
 $("#modalresestudiante").click(function(){
 	$("#modal-conten-js").html('');//limpia modal antes de mostrar

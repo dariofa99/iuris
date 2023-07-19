@@ -75,8 +75,8 @@ Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirm
 Route::group(['middleware' => ['auth']], function() {
 //Nuevo usuarios
 Route::resource('usuarios', 'UsersController');
-Route::get("usuarios/buscar/persona","UsersController@findUser");
-Route::get("usuarios/buscar/persona/by/idnumber","UsersController@findUsersByIdNumber");
+Route::get("usuarios/buscar/persona","UsersController@findUserWithFilter");
+Route::get("usuarios/get/by/idnumber","UsersController@getUsersByIdNumber");
 Route::get("usuarios/find/by/name","UsersController@findUserByNameOrLastNameAndRole");
 Route::get("usuarios/find/by/role","UsersController@getUsersByRoleName");
 Route::post("usuarios/add/sede","UsersController@addSede");
@@ -96,7 +96,7 @@ Route::get('dashboard/search', 'HomeController@search');
 
 Route::resource('users', 'MyusersController');
 Route::get('users/confirm/email/{token}', 'MyusersController@confirm_email');
-Route::get('users/find/us', 'MyusersController@findUser');
+Route::get('users/find/us', 'MyusersController@findUserWithFilter');
 Route::post('users/store', 'MyusersController@userStore');
 
 Route::group(['middleware' => ['confirm_email','perfil']], function() {
@@ -268,7 +268,7 @@ Route::resource('expcierrecaso', 'ExpedienteCierreController');
 Route::resource('estados/caso', 'EstadosCasoController');
 Route::post('/estado/search/', 'EstadosCasoController@search');
 Route::post('/estado/cerrar/caso', 'EstadosCasoController@cerrarCaso');
-Route::post('/estado/caso/volver/abrir', 'EstadosCasoController@abrir_caso');
+Route::post('/estado/caso/volver/abrir', 'EstadosCasoController@abrir_caso'); 
 
 //Defensas de Oficio
 Route::resource('defensas/oficio', 'DefensaOficioController');

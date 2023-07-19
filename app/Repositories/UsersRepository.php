@@ -21,11 +21,12 @@ use Intervention\Image\ImageManagerStatic as Image;
 class UsersRepository extends BaseRepository implements UsersService
 {
 
+
   private $verifyStatus;
   public function __construct(User $user)
   {
     parent::__construct($user);
-    $this->verifyStatus = true;
+    $this->model = $user;
   }
 
   function getAllUsers($request, $relations = null, $perPage = 10): LengthAwarePaginator
