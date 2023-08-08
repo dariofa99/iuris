@@ -1,4 +1,4 @@
-@if ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
+@if (!$readonly and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
     <div class="row">
         <div class="col-md-2">
             <input type="button" id="btn_nueva_cita" value="Nueva cita" class="btn-block btn btn-primary btn-sm">
@@ -24,7 +24,7 @@
                         <td>{{ $cita->fecha }}</td>
                         <td>{{ $cita->hora }}</td>
                         <td>
-                          @if(currentUser()->idnumber == $cita->user_created_id)
+                          @if(!$readonly and currentUser()->idnumber == $cita->user_created_id)
                           <button id="{{ $cita->id }}" type="button" class="btn-sm btn btn-warning btn_edit_citacion">
                             Cambiar
                         </button>

@@ -63,9 +63,10 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $this->model->exppersondemandada = $request->has('exppersondemandada') ? $request->input('exppersondemandada') : '';
         $this->model->expfechalimite = $request->has('expfechalimite') ? $request->input('expfechalimite') : null;
         $this->model->expfecha_res = $request->has('expfecha_res') ? $request->input('expfecha_res') : null;
+        $this->model->expfecha_res = $request->has('es_projuridico') ? $request->input('es_projuridico') : 0;       
         $this->model->expusercreated = currentUser()->idnumber;
         $this->model->expuserupdated = currentUser()->idnumber;
-        $this->model->save();
+        $this->model->save(); 
 
         if ($request->has('sede_id')) {
             $sede = Sede::find($request->get('sede_id'));

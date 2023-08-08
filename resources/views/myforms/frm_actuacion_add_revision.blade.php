@@ -16,8 +16,7 @@
             'files' => true,
         ]) !!}
         <div class="row">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
-
+           
             <input type="hidden" name="parent_actuacion_id" value="" id="parent_actuacion_id">
             <input type="hidden" name="act_id" value="" id="act_id">
             {!! Form::hidden('actestado_id', '101', ['id' => 'actestado_id2', 'class' => 'form-control', 'readonly']) !!}
@@ -37,18 +36,19 @@
             <div class="col-sm-6">
                 {!! Form::label('Fecha: ') !!}
 
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            <i class="fa fa-calendar"></i>
+                        </span>
                     </div>
                     {!! Form::text('actfecha', fechaActual(), [
                         'class' => 'form-control',
-                        'required' => 'required',
-                        'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                        'data-mask',
+                        'required' => 'required',                       
                         'readonly',
                     ]) !!}
                 </div>
+
                 <!-- /.input group -->
             </div>
             <div class="col-md-12">

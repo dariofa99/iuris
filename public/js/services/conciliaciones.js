@@ -103,7 +103,7 @@ export class ConciliacionService{
 
     }
 
-    async addHechosPretenciones (request)  {
+    async addHechosPretensiones (request)  {
         const response = await fetch(BASE_URL+'conciliaciones/hechos/pretenciones', {
             method: 'POST',
             headers: {        

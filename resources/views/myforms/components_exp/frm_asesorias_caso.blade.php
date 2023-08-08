@@ -20,15 +20,15 @@
                                 currentUser()->hasRole('docente') ||
                                 currentUser()->hasRole('coordprac') ||
                                 currentUser()->hasRole('amatai')))
-                        <div class="row justify-content-end">
+                        <div class="row">
 
-                            <div class="col-md-2">
-                                <label>{{ $asesoria->docente->name }}: </label>
+                            <div class="col-md-4">
+                                <label>{{ $asesoria->docente->name }} {{ $asesoria->docente->lastname }}: </label>
                             </div>
 
 
-                            @if ($asesoria->docente->idnumber == Auth::user()->idnumber)
-                            <div class="col-md-6"></div>
+                            @if (!$readonly and $asesoria->docente->idnumber == Auth::user()->idnumber)
+                            <div class="col-md-4"></div>
                                 <div class="col-md-4">                     
                                     <div class="tolls float-right ml-2">
                                         <div class="dropdown">
@@ -40,35 +40,16 @@
                                               <a style="cursor: pointer" class="dropdown-item btn_delete_asesoria_caso" data-id="{{ $asesoria->id }}">Eliminar</a>
                                              
                                             </div>
-                                          </div>
-
-                                      {{--   <div class="dropdown">
-                                            <button class=" btn btn-success dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-cog" title="Clic para Editar o Eliminar"></i>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <li><a onclick="editAsesoria({{ $asesoria->id }})">Editar</a></li>
-                                                <li><a onclick="deleteAsesoria({{ $asesoria->id }})">Eliminar</a></li>
-                                            </ul>
-                                        </div> --}}
+                                          </div>                                 
                                     </div>
                                     <div class="float-right" style="min-height: 25px;">
                                         <i>Compartir con estudiante: </i>
                                         <i data-id="{{ $asesoria->id }}" data-status="{{$asesoria->apl_shared}}"  class="fa fa-toggle-on {{$asesoria->apl_shared ? 'switch-on':'switch-off'}} chk_change_shared" id="switch_edit{{ $asesoria->id }}"></i>
-
-                                       {{--  @if ($asesoria->apl_shared)
-                                            <i  class="fa fa-toggle-on switch-on chk_change_shared" id="switch_edit{{ $asesoria->id }}"
-                                                onclick="updateAplShared({{ $asesoria->id }})"></i>
-                                        @else
-                                            <i class="fa fa-toggle-on switch-off chk_change_shared" id="switch_edit{{ $asesoria->id }}"
-                                                onclick="updateAplShared({{ $asesoria->id }})"></i>
-                                        @endif --}}
                                     </div>
                                 </div>
                             @elseif(!currentUser()->hasRole('estudiante'))
-                                <div class="col-md-2 col-md-offset-8">
-                                    <div class="pull-right">
+                                <div class="col-md-8">
+                                    <div style="float:right">
                                         @if ($asesoria->apl_shared)
                                             <i style="color: green" id="switch_edit{{ $asesoria->id }}">Compartido</i>
                                         @else
@@ -99,11 +80,13 @@
     </div>
 </div>
 <div class="row">
-    @if (currentUser()->hasRole('docente') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
+    @if (!$readonly and (currentUser()->hasRole('docente') 
+    || currentUser()->hasRole('amatai') ||
+     currentUser()->hasRole('diradmin')))
         <div class="col-md-6">
             <hr>
 
-            <input type="button" class="btn btn-success" value="Agregar Asesoría" data-toggle="modal"
+            <input type="button" class="btn btn-success btn-sm" value="Agregar Asesoría" data-toggle="modal"
                 data-target="#myModal_add_asesoria_docente">
         </div>
     @endif

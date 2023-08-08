@@ -188,16 +188,21 @@
     @include('myforms.components_exp.frm_modal_fechalimitres')
     @include('myforms.components_exp.frm_modal_show_details_estadocaso')
     @include('myforms.components_exp.frm_modal_citaciones_estudiante')
+    @include('myforms.frm_requerimiento_edit')
+    @include('myforms.frm_requerimiento_asist')
+    @include('myforms.frm_requerimiento_details')
+    @include('myforms.components_exp.frm_modal_create_requerimiento')
+    @include('myforms.components_exp.frm_modal_create_actuacion')
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
             'user_idnumber' => $expediente->expidnumber,
         ])
-    @endif
-    @if (currentUser()->hasRole('estudiante'))
+    @endif  
         @include('myforms.frm_expediente_user_edit')
-    @elseif(!currentUser()->hasRole('estudiante'))
+ 
         @include('myforms.frm_expediente_user_details')
-    @endif
+ 
+
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->

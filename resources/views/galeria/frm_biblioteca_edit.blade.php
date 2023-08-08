@@ -1,4 +1,4 @@
-@component('components.modal')
+@component('components.b4.modal_medium')
 	
 	@slot('trigger')
 		myModal_act_edit_doc
@@ -11,15 +11,15 @@
  
 	@slot('body')
 
-<div class="row">
-		<div class="col-md-10 col-md-offset-1">
-		<div id="contenedo">
+<div class="row justify-content-center">
+		<div class="col-md-12">
+		<div id="content">
       {!!Form::open(['route'=>['biblioteca.update'], 'method'=>'POST', 'id'=>'myformUpdateBiblioteca' , 'files' => true])!!}
           <input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
           <input type="hidden" name="biblioteca_id" value="" id="biblioteca_id">
 
         <div class="row"> 
-          <div class="col-md-4">
+          <div class="col-md-12">
             <div class="form-group">
                   <label for="biblinombre">Nombre archivo</label>
                   {!!Form::text('biblinombre',null, ['id' => 'biblinombre', 'class' => 'form-control required','placeholder'=>'Nombre','required' ]) !!}
@@ -28,7 +28,7 @@
           </div>
 
 
-          <div class="col-md-4">
+          <div class="col-md-12">
             <div class="form-group">
                   <label for="bibliid_ramaderecho">Rama del Derecho</label>
                   {!!Form::select('bibliid_ramaderecho',$rama_derecho,null,['id' => 'bibliid_ramaderecho_id', 'class' => 'form-control required','required' ]) !!}
@@ -36,7 +36,7 @@
           </div>
 
 
-          <div class="col-md-4">
+          <div class="col-md-12">
             <div class="form-group">
                   <label for="bibliid_tipoarchivo">Tipo de Archivo</label>
                   {!!Form::select('bibliid_tipoarchivo',$tipo_archivo,null,['id' => 'bibliid_tipoarchivo_id', 'class' => 'form-control required','required' ]) !!}
@@ -44,7 +44,7 @@
           </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="form-group">
                   <label for="biblidescrip">Descripción</label>
                 {!!Form::textarea('biblidescrip',null, ['id' => 'biblidescrip', 'class' => 'form-control required','placeholder'=>'Descripción...','rows'=>4,'required' ]) !!}
@@ -55,7 +55,7 @@
           </div>
 
            <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="form-group"> 
               <div class="con-btn">
 
@@ -74,7 +74,7 @@
           </div>           
                 
                 
-                <input type="button" class="btn btn-success" value="Actualizar" onclick="updateBiblioteca()">
+                <input type="submit" class="btn btn-success" value="Actualizar">
 {!!Form::close()!!}
  
 
@@ -82,9 +82,9 @@
 	</div>
 	</div>
 	
-<div class="modal-footer">
+{{-- <div class="modal-footer">
         <button type="button" class="btn btn-warning" data-dismiss="modal">Cancelar</button>
-      </div>
+      </div> --}}
 
 
 	@endslot

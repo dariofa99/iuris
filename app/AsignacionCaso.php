@@ -21,6 +21,7 @@ class AsignacionCaso extends Model
     protected $fillable = [
 							'anotacion',
 							'asigest_id',
+                            'procesojud_id',
 							'asiguser_id',
 							'asigexp_id',
                             'periodo_id',
@@ -71,5 +72,22 @@ public function estudianteact()
         return $this->hasMany(Autorizacion::class, 'asig_caso_id', 'id');
     }
 
+    public function procesosJudiciales()
+    {
+        return $this->hasMany(ProcesoJudicialExpediente::class, 'asig_caso_id', 'id');
+    }
+
+    public function estadoProcJudicial()
+    {
+        return $this->belongsTo(TablaReferencia::class, 'procesojud_id', 'id');
+    }
+
+    public function estadosProcJudCount()
+    {
+        $esprocesos = $this->procesosJudiciales()
+        ->where('estado_id', '=', $this->procesojud_id)->get();
+
+        return count($esprocesos);
+    }
 
 }

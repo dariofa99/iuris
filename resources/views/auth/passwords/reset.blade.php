@@ -4,16 +4,16 @@
 
 <div class="container">
 
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-success" style="margin-bottom: 25px;">
-          <div class="panel-heading">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card" style="margin-bottom: 25px;">
+          <div class="card-header bg-green">
             @include('msg.alerts')
               <b>Actualizar contraseña.</b>
           </div>
   
-          <div class="panel-body">
-            <form class="form-horizontal" method="POST" action="{{ route('password.request') }}">
+          <div class="card-body">
+            <form class="form-horizontal" id="myFormResetPassword" method="POST" action="{{ route('password.request') }}">
                 {{ csrf_field() }}
 
                 <input type="hidden" name="token" value="{{ $token }}">
@@ -68,11 +68,16 @@
       </div>
     </div>
     </div>
-
-
-
-  
-  
-
-
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+           
+            $("#myFormResetPassword").on("submit", function(e) {
+               // e.preventDefault();
+                $("#wait").show()
+            });
+         
+        });
+    </script>
+@endpush

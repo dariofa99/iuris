@@ -8,6 +8,9 @@ Docente:<i style="font-size:15px">
  </i> 
  
  <br>
+ @if(!$readonly)
+    
+
  @if((currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')) and $expediente->getDocenteAsig()->name!='Sin asignar')
  <a href="#" class="btn_change_doc_exp" data-lastname="{{Auth::user()->lastname}}" data-name="{{Auth::user()->name}}" data-idnumber="{{Auth::user()->idnumber}}" id="btn_change_doc_exp">
  Cambiar</a>
@@ -45,7 +48,7 @@ Asignar
 Dar de baja
 </a>
 @endif
-
+@endif
 </div>
 
 <!--currentUser()->casos()->where([['cambio_docidnumber','<>',null],['asig_caso_id','=',$expediente->getAsignacion()->id]])->get()-->

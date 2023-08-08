@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Requerimiento;
 use App\Expediente;
+use App\Nota;
 use App\Segmento;
 use PDF;
 use DB;
 use App\ReqAsistencia;
+use App\Services\RequerimientosService;
 use Illuminate\Support\Facades\Auth;
 
 class RequerimientoController extends Controller
 {
 
-    public function __construct()
+    private $requerimientosService;
+    public function __construct(RequerimientosService $requerimientosService)
     {
-
+        $this->requerimientosService = $requerimientosService;
         //$this->middleware('permission:edit_usuarios',   ['only' => ['edit']]);
         //$this->middleware('permission:ver_requerimientos',   ['only' => ['index']]);
     }
@@ -97,8 +100,17 @@ class RequerimientoController extends Controller
             );
         }
         //get-----
+
+        $requerimientos = $this->requerimientosService->index($request);
+     
+       // $notas =  Nota::where(['orgntsid' => 3, 'tbl_org_id' => 1])->get();
+
         $reqasis = ReqAsistencia::all();
         $active_expe = 'active';
+        return view('myforms.frm_requerimiento_list', compact('requerimientos', 'reqasis', 'request', 'active_expe'));
+
+
+
         $requerimientos = Requerimiento::orderby('reqfecha', 'desc')
             ->join('ref_reqasis', 'ref_reqasis.reqid_refasis', '=', 'requerimientos.reqid_asistencia')
             ->join('expedientes', 'expedientes.expid', '=', 'requerimientos.reqexpid')
@@ -286,12 +298,12 @@ class RequerimientoController extends Controller
      */
     public function update(Request $request, $id)
     {
-       //   return response()->json($request->all());  
+        //   return response()->json($request->all());  
 
         $requerimiento = Requerimiento::find($id);
         $requerimiento->fill($request->all());
         if (isset($request->ntaetica) and isset($request->ntaconcepto)) {
-            $data = [            
+            $data = [
                 'ntaetica' => $request->ntaetica,
                 'ntaconcepto' => $request->ntaconcepto,
                 'orgntsid' => $request->orgntsid,
@@ -305,7 +317,7 @@ class RequerimientoController extends Controller
             ];
             $requerimiento->asignarNotas($data);
             $requerimiento->evaluado = 1;
-          //  $requerimiento->notas = json_encode($data);
+            //  $requerimiento->notas = json_encode($data);
         }
         $requerimiento->save();
         return response()->json($requerimiento);

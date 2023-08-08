@@ -812,5 +812,10 @@ body{
 	margin:2px
   }
  
-  
+  .help-block{
+	display: block;
+	padding: 4px;
+	border-radius: 5px;
+	margin-top: 3px !important;
+  }
   

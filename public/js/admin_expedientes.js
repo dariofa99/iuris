@@ -23,9 +23,7 @@ $(document).ready(function () {
             $("#wait").show();
             let res = await index_page(page, data);
             $("#wait").hide();
-
         }
-
     });
     $("#btnCancelar").click(function () {
         $("#btnActualizar").hide();
@@ -46,13 +44,11 @@ $(document).ready(function () {
         }
         $("#wait").show()
         let response = await expedientesService.update(request, form.expediente_id);
-
         toastr.success("Se actalizó con éxito", "", {
             positionClass: "toast-top-center",
             timeOut: "4000",
         });
         window.location.reload(true);
-
     });
     $("#btnEditar").click(function () {
         $("#btnActualizar").show();
@@ -128,8 +124,9 @@ $(document).ready(function () {
                     { "positionClass": "toast-top-right", "timeOut": "50000" });
             } else {
                 if (response == "") {
+                    $(".estselect1").selectpicker("destroy");//refresca el select
                     $("#expidnumberest").append('<option value="000000" data-content="<span class=\'label label-danger \'>ERROR AL CARGAR LOS DATOS</span> ">ERROR AL CARGAR LOS DATOS</option>');//coloca una nueva opcion
-                    $(".estselect1").selectpicker("refresh");//refresca el select
+
                     $("#wait").css("display", "none");
                 } else {
                     $("#expidnumberest").find('option').remove().end();//elimina opciones existentes
@@ -181,11 +178,153 @@ $(document).ready(function () {
         changeSelectSearchExp(value);
     });
 
+    $("#btn_act_proc_jur").on("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: '¿Esta seguro de marcar el caso como proceso judicial?',
+            type: 'info',
+            text: "Recuerde que solo el Director general podra revertir los cambios.",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Si, marcar',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                const body = new FormData();
+                body.append('expid', $("#expediente_id").val());
+                body.append('estado_id', 245);
+                body.append('comentario', "Solicitud de docente");
+                let response = await expedientesService.storeProcJudicial(body);
+                toastr.success("Se actalizó con éxito", "", {
+                    timeOut: "4000",
+                });
+                // $("#wait").hide();
+                window.location.reload(true);
+            }
+        });
 
+    });
+    $("#btn_ges_judexp").on("click", function (e) {
+        e.preventDefault();
+        var estado = $(this).attr("data-estado");
+        $(".datos_genpj").hide();
+        $(".datos_genpj input,select").prop("disabled", true);
+        $(".content_detalles_exprocju").html("");
+        $(".content_formulario_exprocju").show();
+        if (estado == 245) {
+            $("#input_estado_id").remove()
+            $("#myFormGestionProcJudicialExp").append($('<input>', {
+                type: 'hidden',
+                name: 'estado_id',
+                value: 246,
+                id: "input_estado_id"
+            }));
+            $("#row_fileproex").show().find('input').prop("disabled", false)
+                .prop("required", true).addClass("required");;
+            $("#row_comentarioproex").show().find('textarea').prop("disabled", false)
+                .prop("required", true).addClass("required").val("Demanda presentada por estudiante.");;
+        }
+        if (estado == 244) {//subsanacion
+            $("#input_estado_id").remove()
+            $("#myFormGestionProcJudicialExp").append($('<input>', {
+                type: 'hidden',
+                name: 'estado_id',
+                value: 246,
+                id: "input_estado_id"
+            }));
+            $("#row_fileproex").show().find('input').prop("disabled", false)
+                .prop("required", true).addClass("required");;
+            $("#row_comentarioproex").show().find('textarea').prop("disabled", false)
+                .prop("required", true).addClass("required").val("Subsanación de demanda presentada por estudiante.");;
+        }
+        if (estado == 246) {
+            $("#row_estadoid").show().find('select').prop("disabled", false)
+                .prop("required", true).addClass("required");;
+        }
+        if (estado == 247) {
+            $("#input_estado_id").remove()
+            $("#myFormGestionProcJudicialExp").append($('<input>', {
+                type: 'hidden',
+                name: 'estado_id',
+                value: 246,
+                id: "input_estado_id"
+            }));
+            $("#row_fileproex").show().find('input').prop("disabled", false)
+                .prop("required", true).addClass("required");;
+            $("#row_comentarioproex").show().find('textarea').prop("disabled", false)
+                .prop("required", true).addClass("required").val("Respuesta de demanda rechazada presentada por estudiante.");;
+        }
+
+        $("#myModal_gestion_judicial").modal("show");
+    });
+
+    $("#pj_estadoid").on("change", function (e) {
+        e.preventDefault();
+        $(".datos_genpj").hide();
+        $(".datos_genpj input").prop("disabled", true);
+        $("#row_estadoid").show();
+        $("#row_fileproex").show().find('input').prop("disabled", false)
+            .prop("required", true).addClass("required");;
+        $("#row_comentarioproex").show().find('textarea').prop("disabled", false)
+            .prop("required", true).addClass("required")
+        if ($(this).val() == 244) {//Autoinadmisorio
+            $("#row_fechaauto").show();
+            $("#row_fechaauto input").prop("disabled", false).prop("required", true).addClass("required");
+            $("#row_fechaauto #lbl_fechaprocju").text("Fecha de inadmisorio");
+            $("#row_comentarioproex").show().find('textarea').val("Inadmisorio presentado por estudiante.");;
+
+        }
+        if ($(this).val() == 243) {//Autoadmisorio
+
+            $("#row_fechahoaudiencia").show().find('input').prop("disabled", false)
+                .prop("required", true).addClass("required");;
+            $("#row_comentarioproex").show().find('textarea').val("Autoadmisorio presentado por estudiante.");;
+        }
+
+        if ($(this).val() == 247) {//Rechazado
+
+
+            $("#row_comentarioproex").show().find('textarea').val("Proceso rechazado presentado por estudiante.");;
+        }
+
+    });
+
+    $("#fecha_proj").on("change", function (e) {
+        e.preventDefault();
+        var fecha_ini = $(this).val();
+        var dias = calcularProximosDiasHabiles(fecha_ini, 5);
+        $("#row_fechaauto").show();
+        $("#row_fechaauto input").prop("disabled", false).prop("required", true).addClass("required");
+        $("#row_fechaauto #lbl_fechaprocju").text("Fecha de inadmisorio");
+        $("#lbl_fechaaproxprcj").text(dias[dias.length - 1]);
+    });
+
+    $(".btn_detallesprjex").on("click", async function (e) {
+        e.preventDefault(); //
+        var id = $(this).attr('data-id');
+        $("#wait").show();
+        let response = await expedientesService.editExpProcJudicial(id);
+        if (response.view) {
+            $(".content_detalles_exprocju").html(response.view);
+            $("#myModal_gestion_judicial").modal('show');
+            $(".content_formulario_exprocju").hide();
+            var fecha_ini = response.procjudi.fecha;
+            if (fecha_ini != null) {
+                var dias = calcularProximosDiasHabiles(fecha_ini, 5);
+                $("#row_fechaauto #lbl_fechaprocju").text("Fecha de inadmisorio");
+                $("#lbl_fechaaproxprcj").text(dias[dias.length - 1]);
+            }
+
+
+        }
+        $("#wait").hide();
+
+    });
     $('#myFormBsExpAdv').on('keyup', 'div.buscar_usuario input', async function (e) {
         let name = $(this).val();
         if (name.length >= 3) {
-
             $('div.buscar_usuario li.no-results').text('Buscando...');
             const response = await userService.findUserByNameOrLastNameAndRole({ 'name': name, 'role': 'estudiante' })
             if (response.encontrado) {
@@ -215,7 +354,6 @@ $(document).ready(function () {
             if (name.length >= 3) {
                 $('div.select_data_users li.no-results').text('Buscando...');
                 var role = '';
-
                 if (opselected == 'idnumber_doc') role = 'docente';
                 if (opselected == 'solicitante') role = 'solicitante';
                 if (opselected == 'solicitante_num') role = 'solicitante_num';
@@ -225,7 +363,6 @@ $(document).ready(function () {
                         "idnumber": $(this).val(),
                         "validate_active": 0
                     }
-                    // $("#wait").show();
                     response = await userService.findUsersByIdnumber(request);
                 } else {
                     let request = {
@@ -255,7 +392,6 @@ $(document).ready(function () {
                 $('div.select_data_users li.no-results').text('Ingresa más caracteres...');
             }
         }
-
     });
 
     $("#btn_desc_exp_us").on("click", function (e) {
@@ -272,34 +408,87 @@ $(document).ready(function () {
                 timeOut: "4000",
             });
         }
-
-
     });
 
     $("#btn_exp_bus_avz").on("click", function (e) {
-        $("#mymodalBuscarExpAvanzadas").modal("show")
+        $("#mymodalBuscarExpAvanzadas").modal("show");
+    });
 
+    $("#myFormGestionProcJudicialExp").on("submit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm('myFormGestionProcJudicialExp');
+        var archivo = $('#fileid')[0].files[0];
+        if (archivo != null && archivo != undefined) {
+            var extension = archivo.name.split('.').pop().toLowerCase();
+            if (extension !== 'pdf') {
+                Swal.fire({
+                    position: 'top-end',
+                    type: 'error',
+                    title: 'Ups! El archivo no es pdf',
+                    showConfirmButton: false,
+                    timer: 5500
+                });
+                return;
+            }
+        }
+
+
+        if (errors.length <= 0) {
+            const body = new FormData(document.getElementById('myFormGestionProcJudicialExp'));
+            body.append('expid', $("#expediente_id").val());
+            try {
+                $("#loader-container").show().css({ 'display': 'flex' })
+                $("#wait").show();
+                const result = await expedientesService.storeProcJudicial(body)
+                    .then((response) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'success',
+                            title: "Actualizado con éxito!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                         window.location.reload(true);
+                        e.preventDefault()
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            type: 'error',
+                            title: 'Ups! Algo fallo',
+                            html: error,
+                            showConfirmButton: false,
+                            timer: 5500
+                        });
+                        console.error('Error al cargar el archivo:', error);
+                        $("#wait").hide();
+                        e.preventDefault()
+                    });
+            } catch (error) {
+                // Manejar el error
+                $("#wait").hide();
+                console.error(error);
+                e.preventDefault()
+            } finally {
+                // Restablecer el estado de la barra de progreso
+                const result = expedientesService.showProgress(0)
+                const progressDiv = document.getElementById('progressbarwait');
+                $(progressDiv).hide();
+                $("#wait").hide();
+                e.preventDefault()
+            }
+        } else {
+            toastr.error("Hay campos que son obligatorios!", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
     });
 
 
     $("#btn_exp_user_carga").on("click", async function () {
-        /*  let request = {
-             "tipodoc_id": $(this).attr('data-tipo_doc'),
-             "idnumber": $(this).val(),
-             "view": "myforms.components_exp.frm_user_register"
-         } */
         $("#wait").show();
-        /*  let response = await userService.findUserWithFilter(request);
-         if (response.encontrado) {
-             $("#content_user_exp_asig").html(response.view);
-             toastr.success("Usuario encontrado", "", {
-                 positionClass: "toast-top-center",
-                 timeOut: "4000",
-             });
-             $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true);
-         } */
         $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true).removeAttr('name');
-
         $("#wait").hide()
     });
 
@@ -476,7 +665,46 @@ $(document).ready(function () {
         $("#wait").hide();
 
     });
+    $("#myFormExpsStore").on("submit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm('myFormExpsStore');
+        if (errors.length <= 0) {
+            var request = convertFormToJSON('myFormExpsStore');
+            $("#wait").show();
+            var response = await expedientesService.store(request);
+            resetForm('myFormExpsStore')
+            $("#wait").hide();
+            Swal.fire({
+                title: 'El caso se ha creado con éxito!',
+                type: 'success',
+                text: "¿Qué desea hacer?",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ver el nuevo expediente',
+                cancelButtonText: 'Quedarme en esta página'
+            }).then(async (result) => {
+                if (result.value) {
+                    $("#wait").show();
+                    window.location = '/expedientes/' + response.expid + '/edit';
+                } else {
+                    if (result.dismiss === Swal.DismissReason.cancel || result.dismiss === Swal.DismissReason.overlay) {
+                        // El usuario hizo clic en el botón cancel o fuera del swal
+                        window.location.reload(true)
 
+                    } else {
+                        // El usuario hizo clic en el botón confirmar
+                        window.location.reload(true)
+                    }
+                }
+            });
+        } else {
+            toastr.error("Hay campos que son obligatorios", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+    });
     $("#btnTomarCaso").on("click", function (e) {
         //cabecera = '<h1><i class="fa fa-info"> </i> Atención </h1>';
 
@@ -969,14 +1197,6 @@ $(document).ready(function () {
                         e.preventDefault()
                     })
                     .catch((error) => {
-                        /*  Swal.fire({
-                             position: 'top-end',
-                             icon: 'error',
-                             title: 'Ups! Algo fallo',
-                             html: error,
-                             showConfirmButton: false,
-                             timer: 5500
-                         }); */
                         console.error('Error al cargar el archivo:', error);
                         $("#wait").hide();
                         e.preventDefault()
@@ -1804,11 +2024,11 @@ $(document).ready(function () {
             window.location.reload(true);
         }
     });
-    $("#btnCancReasig").on("click",function(e) {        
+    $("#btnCancReasig").on("click", function (e) {
         e.preventDefault();
         hideButtReasCaso();
     });
-    
+
 });//////////////////////////////////////////////
 function hideButtReasCaso() {
     hideElement("btnReasignar");

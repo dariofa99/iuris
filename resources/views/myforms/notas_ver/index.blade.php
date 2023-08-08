@@ -10,15 +10,15 @@ Notas
     @if(isset($user) and $user!=null) {{$user->name}} {{$user->lastname}}  @endif
 </h3>
 @endsection
-
-@section('area_buttons')
-
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
 @endsection
  
 
 @section('area_forms') 
 
-@include('msg.success') 
+@include('msg.alerts') 
 
 <form action="/notas/ver/estudiante" method="GET" id="myFormBuscarNotas">
     @if(auth()->user()->can('ver_notas_estudiante'))
@@ -26,7 +26,7 @@ Notas
     
     <div class="col-md-4"> 
 
-            <input required type="text" value="{{Request::get('idnumber')}}" class="form-control form-control-sm" name="idnumber">      
+            <input placeholder="Ingrese un número de documento" required type="text" value="{{Request::get('idnumber')}}" class="form-control form-control-sm" name="idnumber">      
     </div>
     
 </div>
@@ -45,19 +45,22 @@ Notas
             </select>   
     </div>  
     <div class="col-md-2">  
-        Periodo:  
-            <select class="form-control" name="segid" >                
-                @foreach($periodos as $key => $segmento)                
-                    <option @if(Request::has('segid') and Request::get('segid')==$segmento->id) selected @endif value="{{$segmento->segmento_id}}">{{$segmento->prddes_periodo}}</option>
-                @endforeach
-                <option value="">Ver todos</option>
+        Periodo <small>Activo</small>:
+            <select class="form-control" name="perid" >                
+                @foreach($periodos as $key => $periodo)                
+                    <option @if(Request::has('perid') and Request::get('perid')==$periodo->id) selected @endif value="{{$periodo->id}}">
+                        {{$periodo->prddes_periodo}}</option>
+                @endforeach              
             </select>    
             </div>   
             <div class="col-md-2">  
         Corte:  
+      
             <select class="form-control" name="segid" >               
                 @foreach($segmentos as $key => $segmento)                
-                    <option @if(Request::has('segid') and Request::get('segid')==$segmento->id) selected @endif value="{{$segmento->segmento_id}}">{{$segmento->segnombre}}</option>
+                    <option @if((Request::has('segid') and Request::get('segid') == $segmento->id)
+                        || ($segmentoAct->id == $segmento->id and !Request::has('segid'))
+                        ) selected @endif value="{{$segmento->id}}">{{$segmento->segnombre}}</option>
                 @endforeach
                 <option value="">Ver todos</option>  
             </select> 

@@ -65,7 +65,7 @@ body {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 100px; /* Set the fixed height of the footer here */
+  min-height: 100px; /* Set the fixed height of the footer here */
   /*line-height: 30px;  */
   background-color: #191d36 !important;
 }

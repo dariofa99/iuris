@@ -1,4 +1,4 @@
-@component('components.modal')
+@component('components.b4.modal_medium')
 
     @slot('trigger')
         myModal_edit_notas
@@ -60,18 +60,14 @@
                             <tr>
                                 <th colspan="2">
                                     <label for="">Evaluado por: <i id="lbldocevname"> </i></label>
-
                                 </th>
-
                             </tr>
                             <tr>
                                 <th>
-
                                     @if ($periodo and $segmento)
                                         <label id="lbl_periodo">
                                             {{ $periodo->prddes_periodo }}
                                         </label>
-
                                         --
                                         <label id="lbl_segmento">
                                             {{ $segmento->segnombre }}
@@ -135,8 +131,7 @@
             </div>
         </div>
         <div class="row" id="btns_edit_notas" style="display:none">
-            @if (
-                $periodo and
+            @if ($periodo and
                     $segmento and
                     $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                         currentUser()->hasRole('amatai') ||
@@ -152,7 +147,7 @@
                         <a style="display:none" class="btn btn-warning btn-sm mb-1" id="btn_cancelar_notas">X</a>
                     </div>
 
-                    @if ($expediente->expestado_id != '5')
+                    @if ($expediente->expestado_id != '5' and $expediente->expestado_id != '2')
                         <div class="btn-group">
                             <a class="btn btn-primary btn-sm mb-1" id="btn_cambiar_notas">
                                 Cambiar notas

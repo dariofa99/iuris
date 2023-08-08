@@ -102,6 +102,27 @@ function getMonthAndYear($date){
     return $fecha;
 }
 
+function getMessagesForPro($estado,$expid){
+    $messages = [
+        243 =>  "Esta recibiendo este correo porque se presentó el <b>autoadmisorio</b> del proceso jurídico asignado en el 
+        expediente No. ".$expid." en ".config("app.name")."."  ,     
+        244 =>  "Esta recibiendo este correo porque se presentó el <b>autoinadmisorio</b> del proceso jurídico asignado en el 
+        expediente No. ".$expid." en ".config("app.name")."."  ,  
+        245 =>  "Esta recibiendo este correo porque se <b>habilitó como proceso jurídico</b> el 
+        expediente No. ".$expid." en ".config("app.name")."."  ,
+        246 =>  "Esta recibiendo este correo porque se <b>presentó la demanda</b> del proceso jurídico asignado en el 
+        expediente No. ".$expid." en ".config("app.name")."."  ,
+        247 =>  "Esta recibiendo este correo porque se <b>rechazó la demanda</b> del proceso jurídico asignado en el 
+        expediente No. ".$expid." en ".config("app.name")."."  ,
+        001 =>  "Esta recibiendo este correo porque se <b>presentó la subsanación</b> de demanda del proceso jurídico asignado en el 
+        expediente No. ".$expid." en ".config("app.name")."."  ,
+    ];
+
+    return isset($messages[$estado]) ? $messages[$estado]:"Estado no encontrado";
+
+ 
+}
+
 function fechaActual()
 {       
 

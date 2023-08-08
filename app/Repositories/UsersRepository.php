@@ -46,11 +46,11 @@ class UsersRepository extends BaseRepository implements UsersService
     if (!empty($relations)) {
       $query = $this->applyFiltro($query, $relations);
     }
-    $query = $this->orderBy($query, 'created_at', 'DESC');
-    return $this->paginate($query, $perPage);
+    $query = $this->orderiBy($query, 'created_at', 'DESC');
+    return $this->paginateS($query, $perPage);
   }
 
-  protected function orderBy($query, $col, $type)
+  protected function orderiBy($query, $col, $type)
   {
     return  $query->orderBy($col, $type);
   }
@@ -60,7 +60,7 @@ class UsersRepository extends BaseRepository implements UsersService
     return $query->with($relations);
   }
 
-  protected function paginate($query, $perPage)
+  protected function paginateS($query, $perPage)
   {
     $page = Paginator::resolveCurrentPage('page');
     $results = $query->paginate($perPage, ['*'], 'page', $page);
@@ -113,8 +113,6 @@ class UsersRepository extends BaseRepository implements UsersService
         $user->sedes()->attach(session('sede')->id_sede);
       }
     }
-
-
     return $user;
   }
 
@@ -125,7 +123,7 @@ class UsersRepository extends BaseRepository implements UsersService
     $users = $this->query->with('roles')->whereHas('roles', function ($query) use ($role) {
       return $query->where('roles.name', $role);
     })
-    ->where(function ($query) {
+      ->where(function ($query) {
         if ($this->verifyStatus) {
           return $query->where('users.active', true);
         }
@@ -135,8 +133,8 @@ class UsersRepository extends BaseRepository implements UsersService
         'users.idnumber',
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
       )->get();
-      return $users->toArray();
-   /*  $user = $this->model->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
+    return $users->toArray();
+    /*  $user = $this->model->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
       ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
       ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
       ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
@@ -155,9 +153,6 @@ class UsersRepository extends BaseRepository implements UsersService
       )
       ->orderBy('users.created_at', 'desc')->get();
  */
-
-
-    
   }
 
   public function findUserByNameOrLastNameAndRole($name, $role, $verify_status = false): array

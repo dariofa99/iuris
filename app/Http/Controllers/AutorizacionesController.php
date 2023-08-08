@@ -6,13 +6,27 @@ use Illuminate\Http\Request;
 
 use App\Autorizacion;
 use App\AsignacionCaso;
+use App\Services\AutorizacionesService;
+use App\Services\ExpedientesService;
+use Illuminate\Support\Facades\Auth;
 use PDF;
 class AutorizacionesController extends Controller
 {
-    public function __construct()
-    {        
-          $this->middleware('permission:ver_autorizaciones',   ['only' => ['index']]);
+    private $autorizacionesService;
+    private $segmentosService;
+    private $expedienteService;
+
+    public function __construct(
+        ExpedientesService $expedienteService,
+        AutorizacionesService $autorizacionesService
+
+      
+    ) {
+        $this->middleware('permission:ver_autorizaciones',   ['only' => ['index']]);
+        $this->expedienteService = $expedienteService;
+        $this->autorizacionesService = $autorizacionesService;
     }
+  
 
     /**
      * Display a listing of the resource.
@@ -21,11 +35,7 @@ class AutorizacionesController extends Controller
      */
     public function index(Request $request)
     {
-        $autorizaciones = Autorizacion::join('sede_autorizaciones as sa','sa.autorizacion_id','=','autorizaciones.id')
-        ->where('sa.sede_id',session('sede')->id_sede)
-        ->search($request)
-        ->orderBy('autorizaciones.created_at','desc')->paginate(100);
-       // dd($autorizaciones);
+        $autorizaciones = $this->autorizacionesService->index($request);
         if($request->ajax()){
             return view('myforms.frm_autorizaciones_list_ajax',compact('autorizaciones'))->render();
         }   
@@ -50,17 +60,19 @@ class AutorizacionesController extends Controller
      */
     public function store(Request $request)
     {
-       // return response()->json($request->all());
+        
         $autorizacion = new Autorizacion($request->all());
-        $autorizacion->user_solicitante_id = \Auth::user()->id;
-        $autorizacion->user_aprobo_id = \Auth::user()->id;
-        $autorizacion->asig_caso_id = \Auth::user()->asig_caso()->where(['asigexp_id'=>$request->exp_id,'activo'=>1])->first()->id;
+        $autorizacion->user_solicitante_id = Auth::user()->id;
+        $autorizacion->user_aprobo_id = Auth::user()->id;
+        $autorizacion->asig_caso_id = Auth::user()->asig_caso()->where(['asigexp_id'=>$request->exp_id,'activo'=>1])->first()->id;
         $autorizacion->save();      
-        $asignacion = AsignacionCaso::find($autorizacion->asig_caso_id);
+        $expediente = $this->expedienteService->findWithFilter([
+            'expid' => $request->exp_id           
+        ]);
         if(session()->has('sede')){
             $autorizacion->sedes()->attach(session('sede')->id_sede);
           }     
-        $view = view('myforms.components_exp.frm_autorizaciones_ajax',compact('asignacion'))->render();
+        $view = view('myforms.components_exp.frm_autorizaciones_ajax',compact('expediente'))->render();
         
         return response()->json(['view'=>$view]);
     }
@@ -97,11 +109,10 @@ class AutorizacionesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //return $request->all();
-        $autorizacion =  Autorizacion::find($id);
+        
+        $autorizacion =  $this->autorizacionesService->find($id);
         $autorizacion->fill($request->all());
-        $autorizacion->save();
-
+        $autorizacion->save();       
         if($request->has('estado')){
             if($request->estado==1){
                 $autorizacion->fecha_autorizado = date('Y-m-d');
@@ -110,25 +121,19 @@ class AutorizacionesController extends Controller
                 $autorizacion->fecha_autorizado = null;
             }
             $autorizacion->save();
-        }
+        } 
 
-        $asignacion = AsignacionCaso::find($autorizacion->asig_caso_id);
-
-
-
-
+        $expediente = $this->expedienteService->findWithFilter([
+            'expid' => $autorizacion->asignacion->asigexp_id       
+        ]);
         if($request->has('estado') and $request->vista == 'autorizaciones'){
-            $autorizaciones = Autorizacion::join('sede_autorizaciones as sa','sa.autorizacion_id','=','autorizaciones.id')
-            ->where('sa.sede_id',session('sede')->id_sede)
-            ->orderBy('autorizaciones.created_at','desc')->paginate(100);
+            $autorizaciones = $this->autorizacionesService->index($request);     
             $view = view('myforms.frm_autorizaciones_list_ajax',compact('autorizaciones'))->render();
         }else{
-            $view = view('myforms.components_exp.frm_autorizaciones_ajax',compact('asignacion'))->render();
+            $view = view('myforms.components_exp.frm_autorizaciones_ajax',compact('expediente'))->render();
        
-        }
-         
-        return response()->json(['view'=>$view]);
-   
+        }         
+        return response()->json(['view'=>$view]);   
     }
 
     /**

@@ -170,7 +170,7 @@
              @if(currentUser()->hasRole("dirgral") || currentUser()->hasRole("amatai") || currentUser()->hasRole("diradmin") || currentUser()->hasRole("estudiante"))
              <li><a href="/notas/ver/estudiante">Ver Notas</a></li>
               @endif
-           
+            
           </ul>
         </li>
 @endif

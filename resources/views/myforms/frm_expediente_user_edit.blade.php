@@ -1,9 +1,6 @@
 @component('components.b4.modal_large')
 
-    @slot('cols')
-        col-md-8 col-md-offset-2
-    @endslot
-
+  
     @slot('trigger')
         myModal_exp_user_edit
     @endslot
@@ -18,7 +15,8 @@
             Registrado
         @endsection
         @include('msg.ajax.success')
-		<form id="{{isset($user) ? 'myFormUserEditExpediente': 'myFormUserCreateExpediente'}}" method="POST">
+	
+		<form id="myFormUserEditExpediente" method="POST">
 			<div class="row">
 				@include('myforms.users.formulario_registro',[
 					'user'=>$expediente->solicitante

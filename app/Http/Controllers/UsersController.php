@@ -285,9 +285,7 @@ private function aditionalData($request,$id){
         'idnumber.unique' => 'El número de documento ya existe en otra cuenta.',   
       ];
     $validator = Validator::make($request->all(), [
-      'email' => [
-        'required',
-          Rule::unique('users')->ignore($user->id)        
+      'email' => ['required',Rule::unique('users')->ignore($user->id)        
       ],
       'idnumber' => [
                         Rule::unique('users')->ignore($user->id)    

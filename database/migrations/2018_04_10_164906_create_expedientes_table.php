@@ -69,7 +69,9 @@ class CreateExpedientesTable extends Migration
 
              $table->date('expfechalimite')->nullable();
              //eliminados $table->string('expcierrecasocpto',2)->default('0');
-            $table->string('expcierrecasonotaest',500)->nullable();
+           
+
+           
             $table->string('expcierrecasonotadocen', 500)->nullable();
             $table->string('expidnumberdocen', 12)->nullable();
             $table->date('expfecha_res')->nullable();

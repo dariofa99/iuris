@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Event;
 use DB;
 use App\User;
 use App\Traits\AsigNotas;
+use App\Traits\UploadFile;
 use App\Segmento;
 use App\HistorialDatosCaso;
 use App\Services\ExpedientesService;
@@ -22,6 +23,8 @@ class Expediente extends Model
     use Notifiable;
     use ColorTurnos;
     use AsigNotas;
+    use UploadFile;
+    
     /**
      * The database table used by the model.
      *
@@ -29,6 +32,7 @@ class Expediente extends Model
      */
     protected $table = 'expedientes';
     private $origen = 1;
+    private $disk = 'exp_files';
 
     /**
      * The attributes that are mass assignable.
@@ -60,7 +64,7 @@ class Expediente extends Model
         'exppersondemandante',
         'exppersondemandada',
         'expfechalimite',
-        'expfecha_res',
+        'expfecha_res'
 
     ];
 
@@ -112,6 +116,13 @@ class Expediente extends Model
     public function asignaciones()
     {
         return $this->hasMany(AsignacionCaso::class, 'asigexp_id', 'expid');
+    }
+
+    public function asignacion()
+    {
+        return $this->hasOne(AsignacionCaso::class, 'asigexp_id', 'expid')
+        ->where('asigest_id', '=', $this->expidnumberest)
+        ->where('activo', '=', 1);
     }
 
     public function requerimientos()

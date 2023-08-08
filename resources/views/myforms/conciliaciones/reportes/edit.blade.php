@@ -1,73 +1,147 @@
 @extends('layouts.dashboard')
 @push('styles')
-<!-- aqui van los estilos de cada vista -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <!-- aqui van los estilos de cada vista -->
+    <link href="{{ asset('/plugins/summernote-0.8/summernote-bs4.min.css') }}" rel="stylesheet">
 
-<style>
-            .container-meet {
-                /*position: relative;
-                border:1px red  solid;*/
-                width: 100%;
-                height:600px;
-                
-            }
-            .toolbox {
-               /* position: absolute;*/
-                bottom: 0px;
-                border:1px black solid;
-                width: 100%;
-                height:30px;
-            }
-            #jitsi-meet-conf-container{
-                width: 100%;
-                height:570px;
-            }
-        </style>
+    <style>
+        .container-meet {
+            /*position: relative;
+                                border:1px red  solid;*/
+            width: 100%;
+            height: 600px;
+
+        }
+
+        .toolbox {
+            /* position: absolute;*/
+            bottom: 0px;
+            border: 1px black solid;
+            width: 100%;
+            height: 30px;
+        }
+
+        #jitsi-meet-conf-container {
+            width: 100%;
+            height: 570px;
+        }
+    </style>
 @endpush
 @section('titulo_area')
 
-            
+
+@endsection
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
 @endsection
 @section('area_forms')
 
-@include('msg.success')
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#menu5">Nuevo formato</a></li>
-            <li><a data-toggle="tab" href="#menu6">Actualizar formatos existentes</a></li>
-            <li><a data-toggle="tab" href="#menu7">Administrar destinos</a></li>
-        </ul>
-          
-          <div class="tab-content" id="reporte">
-            <div id="menu5" class="tab-pane fade in active">
-                @include('myforms.conciliaciones.reportes',[
-                    'view'=>'store',
-                    'mySummernote'=>'summernote_store',
-                    'myForm'=>'myFormCreatePdfReporte',
-                ])
-            </div>
-            <div id="menu6" class="tab-pane fade">
-                @include('myforms.conciliaciones.reportes',[
-                    'view'=>'update',
-                    'mySummernote'=>'summernote_update',
-                    'myForm'=>'myFormEditPdfReporte',
-                ])
-            </div>
+    @include('msg.success')
 
-            <div id="menu7" class="tab-pane fade">
-                @include('myforms.conciliaciones.admin_destinos')
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active urlactive" id="custom-tabs-four-home-tab" data-toggle="pill"
+                                href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home"
+                                aria-selected="true">Nuevo formato</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link urlactive" id="custom-tabs-four-profile-tab" data-toggle="pill"
+                                href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile"
+                                aria-selected="false">Actualizar formatos existentes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link urlactive" id="custom-tabs-four-messages-tab" data-toggle="pill"
+                                href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages"
+                                aria-selected="false">Administrar destinos</a>
+                        </li>
 
-          </div>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                        <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel"
+                            aria-labelledby="custom-tabs-four-home-tab">
+                        @include('myforms.conciliaciones.reportes', [
+                                'view' => 'store',
+                                'mySummernote' => 'summernote_store',
+                                'myForm' => 'myFormCreatePdfReporte',
+                            ]) 
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
+                            aria-labelledby="custom-tabs-four-profile-tab">
+                            @include('myforms.conciliaciones.reportes', [
+                                'view' => 'update',
+                                'mySummernote' => 'summernote_update',
+                                'myForm' => 'myFormEditPdfReporte',
+                            ])
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel"
+                            aria-labelledby="custom-tabs-four-messages-tab">
+                            @include('myforms.conciliaciones.admin_destinos')
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
     </div>
-</div>
-@include('myforms.conciliaciones.componentes.modal_create_categoria')
+
+    @include('myforms.conciliaciones.componentes.modal_create_categoria')
 @stop
 
 @push('scripts')
-<!-- aqui van los scripts de cada vista -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>    
-<script type="module"   src={{asset("js/admin_conciliacion.js")}}></script>
-
-@endpush 
+    <!-- aqui van los scripts de cada vista -->
+    <script src="{{ asset('plugins/summernote-0.8/summernote.min.js') }}"></script>
+    <script type="module" src={{ asset('js/admin_reportespdf.js') }}></script>
+    <script>
+        $(document).ready(function() {
+            set_tab();
+            var summernote = $(".summernote");           
+            items_delete = [];
+            summernote.summernote({
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    //['table', ['table']],
+                    ['insert', ['link']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                ],
+                height: 527,
+                /*  popover: {
+                     image: [
+                         [
+                             "image",
+                             ["resizeFull", "resizeHalf", "resizeQuarter", "resizeNone"],
+                         ],
+                         ["float", ["floatLeft", "floatRight", "floatNone"]],
+                         ["remove", ["removeMedia"]],
+                     ],
+                     link: [["link", ["linkDialogShow", "unlink"]]],
+                     table: [
+                         [
+                             "add",
+                             ["addRowDown", "addRowUp", "addColLeft", "addColRight"],
+                         ],
+                         ["delete", ["deleteRow", "deleteCol", "deleteTable"]],
+                     ],
+                     air: [
+                         ["color", ["color"]],
+                         ["font", ["bold", "underline", "clear"]],
+                         ["para", ["ul", "paragraph"]],
+                         ["table", ["table"]],
+                         ["insert", ["link"]],
+                     ],
+                 }, */
+                // maxHeight:460
+            });
+        });
+    </script>
+@endpush

@@ -18,6 +18,9 @@ class CreateAsignacionCasoTable extends Migration
             $table->string('anotacion');
             $table->boolean('activo')->default(1);
 
+            $table->integer('procesojud_id')->unsigned(); // 
+            $table->foreign('procesojud_id')->references('id')->on('referencias_tablas'); //identificación 
+
             $table->string('asigest_id',12);
             $table->foreign('asigest_id')->references('idnumber')->on('users');
 

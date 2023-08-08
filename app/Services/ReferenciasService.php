@@ -13,4 +13,5 @@ interface ReferenciasService {
     public function getEstadosForExpediente();
     public function getRamasDerechoForExpediente();
     public function getTipoProcesoForExpediente();
+    public function getReferenciasByFilter($filter);
 }

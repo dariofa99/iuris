@@ -68,6 +68,11 @@ return [
             'url' => 'app/conciliacion_files',
         ],
 
+        'exp_procjfiles' => [
+            'driver' => 'local',
+            'root' => storage_path('app/exp_procjfiles'),
+            'url' => 'app/exp_procjfiles',
+        ],
         'reportes_files' => [
             'driver' => 'local',
             'root' => public_path('app/conciliacion_files'),

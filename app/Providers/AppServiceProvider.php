@@ -4,23 +4,31 @@ namespace App\Providers;
 
 use App\Repositories\AsignacionCasosRepository;
 use App\Repositories\AsignacionDocenteCasosRepository;
+use App\Repositories\AutorizacionesRepository;
 use App\Repositories\BaseRepository;
+use App\Repositories\BibliotecasRepository;
 use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
 use App\Repositories\ExpedientesRepository;
 use App\Repositories\PeriodosRepository;
+use App\Repositories\ProcesoJudicialExpRepository;
 use App\Repositories\ReferenciasRepository;
+use App\Repositories\RequerimientosRepository;
 use App\Repositories\SedesRepository;
 use App\Repositories\SegmentosRepository;
 use App\Repositories\SolicitudesRepository;
 use App\Repositories\UsersRepository;
 use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
+use App\Services\AutorizacionesService;
+use App\Services\BibliotecasService;
 use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
 use App\Services\PeriodosService;
+use App\Services\ProcesoJudicialExpService;
 use App\Services\ReferenciasService;
+use App\Services\RequerimientosService;
 use App\Services\SedesService;
 use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
@@ -74,6 +82,10 @@ class AppServiceProvider extends ServiceProvider
             ConciliacionesRepository::class,       
         );
         $this->app->bind(            
+            BibliotecasService::class,
+            BibliotecasRepository::class,       
+        );
+        $this->app->bind(            
             ReferenciasService::class,
             ReferenciasRepository::class,       
         );
@@ -96,6 +108,18 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(            
             AsignacionDocenteCasosService::class,
             AsignacionDocenteCasosRepository::class,       
+        );
+        $this->app->bind(            
+            AutorizacionesService::class,
+            AutorizacionesRepository::class,       
+        );
+        $this->app->bind(            
+            ProcesoJudicialExpService::class,
+            ProcesoJudicialExpRepository::class,       
+        );
+        $this->app->bind(            
+            RequerimientosService::class,
+            RequerimientosRepository::class,       
         );
         $this->app->bind(
             PeriodosService::class,

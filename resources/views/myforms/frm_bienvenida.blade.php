@@ -26,7 +26,7 @@
     </div>
     @if (
         (count($sedes) >= 2 and count(Auth::user()->sedes) <= 0) ||
-            auth()->user()->can('cambiar_sede'))
+            auth()->user()->can('cambiar_sede_'))
         <div class="row">
             @foreach ($sedes as $key => $sede)
                 <div class="col-md-4">

@@ -3,8 +3,6 @@
     'method' => 'POST',
     'id' => 'form_expediente_edit',
 ]) !!}
-<input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">
-<input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig" name="fecha_asig">
 <div class="shadow">
     @include('myforms.components_exp.frm_datos_gen')
 </div>
@@ -16,13 +14,14 @@
             <label class="lab-ast-req" title="Campo obligatorio"> * </label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    @if (currentUser()->hasRole('estudiante'))
+
+                    @if (currentUser()->hasRole('estudiante') and !$readonly)
                         <button value="{{ $expediente->solicitante->idnumber }}" data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button" id="btn_exp_user_carga"
                             style="background-color: green" class="btn btn-success" data-toggle='modal'
                             data-target='#myModal_exp_user_edit'>
                             Editar
                         </button>
-                    @elseif(!currentUser()->hasRole('estudiante'))
+                    @elseif(!currentUser()->hasRole('estudiante') || $readonly)
                         <button value="{{ $expediente->solicitante->idnumber }}" data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button" id="btn_exp_user_carga"
                             style="background-color: green" class="btn btn-success" data-toggle='modal'
                             data-target='#myModal_exp_user_details'>

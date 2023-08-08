@@ -26,7 +26,6 @@ class CreateAutorizacionesTable extends Migration
             $table->date('fecha_autorizado')->nullable();
             $table->string('genero')->nullable();
             $table->boolean('estado')->default(0);
-
             $table->integer('asig_caso_id')->unsigned();
             $table->foreign('asig_caso_id')->references('id')->on('asignacion_caso');
             $table->integer('user_solicitante_id')->unsigned();

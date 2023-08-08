@@ -322,6 +322,7 @@ public function calendario($tipo)
 
 
     $active_calendar='active';
+    
     return view('myforms.frm_calendariogen', compact('active_calendar', 'events','docentes','tipo'));
 
 

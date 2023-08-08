@@ -66,4 +66,11 @@
             </div>
         </div>
 
+        <div class="col-md-{{isset($col)?$col:'6'}}">
+            <div class="form-group has-feedback"><label for="name">Otro telefóno*</label>
+                <input {{isset($disabled) ? $disabled : ''}} id='tel2' value="{{(isset($user)) ? $user->tel2:"" }}" name='tel1' required type="text" class="form-control form-control-sm onlynumber required"  data-toggle="tooltip" title="Número de contacto"  placeholder="Número de contacto" maxlength="10" >
+                
+            </div>
+        </div>
+
       

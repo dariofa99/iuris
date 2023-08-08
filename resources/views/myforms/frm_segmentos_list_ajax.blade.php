@@ -29,17 +29,17 @@
 
 						</td>
 						<td>
-							<input type="radio" @if($segmento->estado) checked="true"  @endif name="radio_state_segmen" id="radio_state_segmento-{{ $segmento->id }}" class="radio_state_segmento" value="{{$segmento->act_fc}}">
+							<input data-id="{{$segmento->id}}" type="radio" @if($segmento->estado) checked="true"  @endif name="radio_state_segmen" id="radio_state_segmento-{{ $segmento->id }}" class="radio_state_segmento" value="{{$segmento->act_fc}}">
 							
 						</td>
 						 
 						<td>
 
-						<button type="button" id="segmento_id-{{$segmento->id}}" class="btn btn-primary btn_edit_seg">
+						<button data-id="{{$segmento->id}}" type="button" id="segmento_id-{{$segmento->id}}" class="btn btn-primary btn_edit_seg">
 							Editar
 						</button>
 
-						<button type="button" id="segmento_id-{{$segmento->id}}" class="btn btn-danger btn_del_seg">
+						<button data-id="{{$segmento->id}}" type="button" id="segmento_id-{{$segmento->id}}" class="btn btn-danger btn_del_seg">
 							Eliminar
 						</button>
 						

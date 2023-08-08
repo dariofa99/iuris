@@ -8,7 +8,7 @@ use App\Traits\AsigNotas;
 class Requerimiento extends Model
 {
     use AsigNotas;
-       /**
+    /**
      * The database table used by the model.
      *
      * @var string
@@ -22,51 +22,66 @@ class Requerimiento extends Model
      * @var array
      */
     protected $fillable = [
-'userSession',
-    					    'reqid',       
-				            'reqexpid',
-				            'reqidsolicitan',
-				            'reqidest',
-				            'reqidmotivo',
-				            'reqmotivo',
-				            'reqdescrip',
-				            'reqfecha',
-                            'reqhora',
-                            'reqid_asistencia',
-                            'reqcomentario_est',
-                            'reqcomentario_coorprac',
-                            'reqentregado',
-				            'evaluado',
-                            'notas',
-				            //'reqestado',
-				            'requsercreated',
-				            'requserupdated'
+        'userSession',
+        'reqid',
+        'reqexpid',
+        'reqidsolicitan',
+        'reqidest',
+        'reqidmotivo',
+        'reqmotivo',
+        'reqdescrip',
+        'reqfecha',
+        'reqhora',
+        'reqid_asistencia',
+        'reqcomentario_est',
+        'reqcomentario_coorprac',
+        'reqentregado',
+        'evaluado',
+        'notas',
+        //'reqestado',
+        'requsercreated',
+        'requserupdated'
 
-             			   ];
-    public function expediente(){
-    return $this->belongsTo(Expediente::class, 'reqexpid','expid');
-   }  
-
-   public function req_asistencia(){
-    return $this->belongsTo(ReqAsistencia::class, 'reqid_asistencia','reqid_refasis');
-   } 
- 
-   function getFechaCorta($date){
-        $fecha = substr($date,0,11);
-        return $fecha;
-       // dd($fecha);
-   }
-
-   public function scopeCriterio($query ,$data,$criterio)
+    ];
+    public function expediente()
     {
-           if (trim($data) != '')
-        {
+        return $this->belongsTo(Expediente::class, 'reqexpid', 'expid');
+    }
 
-            switch ($criterio) { 
+    public function req_asistencia()
+    {
+        return $this->belongsTo(ReqAsistencia::class, 'reqid_asistencia', 'reqid_refasis');
+    }
+
+    public function reqAsistencia()
+    {
+        return $this->belongsTo(ReqAsistencia::class, 'reqid_asistencia', 'reqid_refasis');
+    }
+
+    function getFechaCorta($date)
+    {
+        $fecha = substr($date, 0, 11);
+        return $fecha;
+        // dd($fecha);
+    }
+
+    public function scopeCriterio($query, $request)
+    {
+        $data = $request->data;
+        $criterio = $request->tipo_busqueda;
+        if (trim($data) != '') {
+
+            switch ($criterio) {
                 case 'codido_exp':
-                   return $query->where('reqexpid', $data); 
+                    return $query->where('reqexpid', $data);
                     break;
-                case 'estudiante':
+                case 'fecha_creacion':
+                    return $query->whereDate('requerimientos.created_at', $data);
+                    break;
+                case 'fecha_cita':
+                    return $query->where('reqfecha', $data);
+                    break;
+                    /*   case 'estudiante':
                 case 'estudiante_num':
                     return $query->where('expidnumberest', $data); 
                     break;
@@ -85,25 +100,8 @@ class Requerimiento extends Model
                     break; 
                 case 'fecha_cita':
                     return $query->where('reqfecha', $data); 
-                    break;                
-            }           
-                     
+                    break;  */
+            }
         }
-
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

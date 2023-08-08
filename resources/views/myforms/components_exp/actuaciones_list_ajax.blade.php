@@ -26,7 +26,7 @@
          </td>
          <td>
              <span class="badge badge-success" style="background-color: {{ $actuacion->estado->color }} !important">
-                 {{ $actuacion->estado->ref_nombre }} {{ $actuacion->actestado_id }}
+                 {{ $actuacion->estado->ref_nombre }}
              </span>
 
          </td>
@@ -43,6 +43,9 @@
                  href="{{ url('/actpdfdownload/' . $actuacion->id . '/estudiante') }}">{{ $actuacion->actdocnompropio }}</a>
          </td>
          <td width="14%">
+            @if(!$readonly)
+                
+           
              @if ($actuacion->actestado_id != 136 and $actuacion->actestado_id != 138)
                  <button type='button' value="{{ $actuacion->id }}" data-modal="#myModal_act_add_revision"
                      class='btn btn-block btn-default btn-sm buscar_actuacion' style='color:#777'
@@ -55,7 +58,7 @@
                      $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
                  <button type="button" value="{{ $actuacion->id }}"
                      class="btn btn-default btn-block btn-sm btn_change_status" style="color:#777">
-                     Revisado
+                     Marcar revisado
                  </button>
 
                  <button type='button' data-estado='235' value="{{ $actuacion->id }}"
@@ -89,7 +92,7 @@
 
              @if (
                  $actuacion->actestado_id == 102 and
-                     count($actuacion->getHijos($actuacion)) <= 0 and
+                     (count($actuacion->getHijos($actuacion)) <= 0 || !$hayactuaciones) and
                      $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
                  <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $actuacion->id }}"
                      class='btn btn-warning btn-sm btn-block buscar_actuacion'>
@@ -121,6 +124,7 @@
                      Eliminar
                  </button>
              @endif
+             @endif
              <button data-modal="#myModal_act_details" type='button' value="{{ $actuacion->id }}"
                  class='btn btn-success btn-sm buscar_actuacion btn-block'> Detalles
              </button>
@@ -138,28 +142,31 @@
                  </td>
                  <td>
                      <span class="badge badge-success" style="background-color: {{ $hijo->estado->color }} !important">
-                         {{ $hijo->estado->ref_nombre }} {{ $hijo->actestado_id }}
+                         {{ $hijo->estado->ref_nombre }} 
                      </span>
                  </td>
                  <td>
-                    @if ($hijo->fecha_limit != '' and  $hijo->actestado_id == 102 and $ultima_id == $hijo->id )
-                    {{ getDiffDays(date('Y-m-d'), $hijo->fecha_limit) }} Días
-                @else
-                    {{ getSmallDate($hijo->actfecha) }} 
-                @endif
+                     @if ($hijo->fecha_limit != '' and $hijo->actestado_id == 102 and $ultima_id == $hijo->id)
+                         {{ getDiffDays(date('Y-m-d'), $hijo->fecha_limit) }} Días
+                     @else
+                         {{ getSmallDate($hijo->actfecha) }}
+                     @endif
                  </td>
                  <td>
                      <a target="_blank"
                          href="{{ url('/actpdfdownload/' . $hijo->id . '/estudiante') }}">{{ $hijo->actdocnompropio }}</a>
                  </td>
                  <td>
+                    @if(!$readonly)
+    
 
                      @if (
                          $hijo->actestado_id == 136 and
-                             $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
+                             $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber 
+                             || currentUser()->hasRole('amatai'))
                          <button type="button" value="{{ $hijo->id }}"
                              class="btn btn-default btn-block btn-sm btn_change_status" style="color:#777">
-                             Revisado
+                             Marcar revisado
                          </button>
 
                          <button type='button' data-estado='235' value="{{ $hijo->id }}"
@@ -192,7 +199,8 @@
                          </button>
                      @endif
                      @if (
-                         $hijo->actestado_id == 102 and $ultima_id == $hijo->id and
+                         $hijo->actestado_id == 102 and
+                             $ultima_id == $hijo->id and
                              $haycorrecciones and
                              $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
                          <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $hijo->id }}"
@@ -217,6 +225,7 @@
                              class='btn btn-danger btn-block btn-sm delete_act'>
                              Eliminar
                          </button>
+                     @endif
                      @endif
                      <button data-modal="#myModal_act_details" type='button' value="{{ $hijo->id }}"
                          class='btn btn-success btn-sm buscar_actuacion btn-block'>

@@ -89,8 +89,8 @@ class SegmentosController extends Controller
 			$segmento->sedes()->attach(session('sede')->id_sede);
 		}
 		$segmentos = $this->getSegmentos();
-		return view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
-		//return response()->json($segmento);
+		$view = view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
+		return response()->json($view);
 	} 
 
 
@@ -105,7 +105,8 @@ class SegmentosController extends Controller
 		$segmento->fill($request->all());
 		$segmento->save();
 		$segmentos = $this->getSegmentos();
-		return view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
+		$view = view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
+		return response()->json($view);
 		
 	}
 
@@ -128,7 +129,8 @@ class SegmentosController extends Controller
 
 
 		$segmentos = $this->getSegmentos();
-		return view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
+		$view = view('myforms.frm_segmentos_list_ajax',compact('segmentos'))->render();
+		return response()->json($view);
 
 		
 	}

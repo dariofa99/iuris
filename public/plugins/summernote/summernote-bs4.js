@@ -12,7 +12,7 @@
   typeof define === 'function' && define.amd ? define(['jquery'], factory) :
   (global = global || self, factory(global.jQuery));
 }(this, function ($$1) { 'use strict';
-
+ 
   $$1 = $$1 && $$1.hasOwnProperty('default') ? $$1['default'] : $$1;
 
   var Renderer = /** @class */ (function () {

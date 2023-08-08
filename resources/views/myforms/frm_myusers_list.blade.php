@@ -1,4 +1,8 @@
 @extends('layouts.dashboard')
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
 @section('area_forms')
 
 @include('msg.alerts')

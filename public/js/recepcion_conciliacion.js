@@ -241,7 +241,7 @@ $("#myModalCreateConcHechosPretenciones").on("submit",'#myformCreateHechoPretenc
   var request = convertFormToJSON("myformCreateHechoPretencion");
   request['conciliacion_id'] = $("#conciliacion_id").val()
   e.preventDefault()
-  const response = await conciliacionService.addHechosPretenciones(request);
+  const response = await conciliacionService.addHechosPretensiones(request);
   
    if (response.view || response.view == "") {
     $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);

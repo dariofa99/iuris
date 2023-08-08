@@ -55,7 +55,13 @@
 .li.complete .status h4 {
   color: #e8df64;
 }
-
+.help-block{
+  border-bottom: 0.5px solid #d37974;
+  display: block;
+  margin: 4px;
+  padding: 3px;
+  border-radius: 2px;
+}
 @media (min-device-width: 320px) and (max-device-width: 700px) {
   .timeline {
     list-style-type: none;
@@ -79,19 +85,13 @@
   }
 }
 
-
-/* button {
-  position: absolute;
-  width: 100px;
-  min-width: 100px;
-  padding: 20px;
-  margin: 20px;
-  font-family: "Titillium Web", sans serif;
-  border: none;
-  color: white;
-  font-size: 16px;
-  text-align: center;
-} */
+#wait{
+	z-index: 200000;
+}
+#load{
+animation: spin 5s linear infinite;
+}
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 
 #toggleButton {
   position: absolute;

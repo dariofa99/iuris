@@ -38,17 +38,18 @@
  --}}
                              </td>
                              <td>
-                                 <div>
-                                     <a class="btn btn-warning" id="btnOpReasig"><i
-                                             class="fa fa-edit"> </i>
-                                         Reasignar</a>
-                                     <a class="btn btn-primary" id="btnReasignar" style="display: none;">
-                                         <i class="fa  fa-check-circle"> </i>
-                                         Actualizar</a>
-                                     <a class="btn btn-danger" style="display: none;" id="btnCancReasig">
-                                         <i class="fa  fa-remove"> </i>
-                                         Cancelar</a>
-                                 </div>
+                                 @if (!$readonly)
+                                     <div>
+                                         <a class="btn btn-warning" id="btnOpReasig"><i class="fa fa-edit"> </i>
+                                             Reasignar</a>
+                                         <a class="btn btn-primary" id="btnReasignar" style="display: none;">
+                                             <i class="fa  fa-check-circle"> </i>
+                                             Actualizar</a>
+                                         <a class="btn btn-danger" style="display: none;" id="btnCancReasig">
+                                             <i class="fa  fa-remove"> </i>
+                                             Cancelar</a>
+                                     </div>
+                                 @endif
                              </td>
                          </tr>
                          <tr>

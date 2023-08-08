@@ -14,8 +14,20 @@
                     <div class="input-group">
         
                             <div class="input-group-btn">
-        
-                              {!! Form::button('Editar', array($disabled,'class'=>'btn btn-success','data-toggle'=>'modal', 'data-target'=>'#myModal_exp_user_edit', 'value'=>$expediente->solicitante->id , 'id'=>'btn_exp_user_carga')) !!}
+                                @if (currentUser()->hasRole('estudiante') and !$readonly)
+                                <button value="{{ $expediente->solicitante->idnumber }}" data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button" id="btn_exp_user_carga"
+                                    style="background-color: green" class="btn btn-success" data-toggle='modal'
+                                    data-target='#myModal_exp_user_edit'>
+                                    Editar
+                                </button>
+                            @elseif(!currentUser()->hasRole('estudiante') || $readonly)
+                                <button value="{{ $expediente->solicitante->idnumber }}" data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button" id="btn_exp_user_carga"
+                                    style="background-color: green" class="btn btn-success" data-toggle='modal'
+                                    data-target='#myModal_exp_user_details'>
+                                    Detalles
+                                </button> 
+                            @endif
+                              
                             </div>
                         <!-- /btn-group -->
                         {!!Form::text('expidnumber', $expediente->solicitante->idnumber , [$disabled,'class' => 'form-control', 'required' => 'required' , 'readonly' ] ); !!}
@@ -102,7 +114,7 @@
 			<div class="col-md-12" align="right">
 		    	<div class="form-group" >
                   <br/>
-                    <button id="btn-enviar-dataEst" class="btn btn-primary btn-lg" {{ $disabled }} disabled>
+                    <button id="btn-enviar-dataEst" class="btn btn-primary btn-lg">
                         <i class="fa fa-save"> </i> Guardar Datos del Caso
                     </button>
 				</div>

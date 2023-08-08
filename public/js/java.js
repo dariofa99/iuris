@@ -60,7 +60,7 @@ $(document).ready(function (e) {
         }, */
         // maxHeight:460
     });
-    $(".item_con").on("mousedown", function (params) {
+    $(".item_con").on("mousedown", function (e) {
         var space = "&nbsp;";
         var mySummernote = $(this).attr("data-summernote");
         var clasehechopre ='';
@@ -5170,7 +5170,7 @@ function updatePdfReporte(request, id) {
 
 function storePdfReporte(request) {
     var route = "/pdf/reportes";
-    $.ajax({
+    $.ajax({ 
         url: route,
         type: "POST",
         datatype: "json",
@@ -7783,7 +7783,7 @@ function createBiblioteca() {
                     );
                     $("#wait").css("display", "block");
                 },
-            });
+            }); 
         } else {
             showElement("label-alert", "class");
         }
@@ -9513,7 +9513,7 @@ function llenarTablaDetailsAsignaciones(res) {
 }
 function create_periodo(request) {
     var route = "/periodos";
-    $.ajax({
+    $.ajax({ 
         url: route,
         type: "POST",
         datatype: "json",

@@ -148,7 +148,7 @@ Route::get('/change/sedes',"SedesController@changeSede");
 //Route::get('/change/sedes/cambiar/{sede_id}',"SedesController@changeSede");//->name('change.sede');
  
 //Rutas bibliotecas
-Route::resource('bibliotecas', 'BibliotecaController');
+Route::resource('bibliotecas', 'BibliotecaController'); 
 Route::get('bibliotecas/inactivas/view', 'BibliotecaController@showBibliotecaOff')->name('biblioteca.inactivas');
 Route::get('bibliotecas/pdf/{id}', 'BibliotecaController@bibliodowpdf')->name('biblioteca.pdf');
 Route::get('bibliotecas/change/{id}', 'BibliotecaController@change')->name('biblioteca.change');
@@ -232,6 +232,8 @@ Route::get('excel/exp/user/download/', 'ExcelController@descargarExpUser');
 Route::resource('asignaciones', 'AsignacionesController');
 Route::post('asignaciones/update/{id}', 'AsignacionesController@updateDocenteAsignado');
 
+//Files
+Route::get('file/download/{id}', 'FilesController@download')->name('file.download');  
 
 
 //Expedientes
@@ -250,6 +252,9 @@ Route::post('expedientes/anteriorestudiante/', 'ExpedienteController@anteriorEst
 Route::post('expedientes/buscarexpasig/', 'ExpedienteController@searchExpAsig'); 
 Route::post('expedientes/dar/baja', 'ExpedienteController@darBaja'); 
 Route::post('expedientes/cambiar/docente', 'ExpedienteController@cambiarDocente'); 
+Route::post('expedientes/store/proceso/judicial', 'ExpedienteController@storeProcJudicial'); 
+Route::post('expedientes/cambiar/proceso/judicial', 'ExpedienteController@cambiarProcesoJuridico'); 
+Route::get('expedientes/proceso/judicial/{id}/edit', 'ExpedienteController@editExpProcJudicial'); 
 
 
 
@@ -329,12 +334,12 @@ Route::post('asesorias/change/shared', 'AsesoriasDocenteController@changeShared'
 
 //Segmentos
 Route::resource('segmentos', 'SegmentosController');
-Route::get('segmentos/change/state/{id}','SegmentosController@changeState');
+Route::post('segmentos/change/state/{id}','SegmentosController@changeState');
 Route::get('segmentos/change/fc','SegmentosController@change_state_segfc');
 Route::get('segmentos/close/{id}','SegmentosController@closeSegmento');
 //Periodos
 Route::resource('periodos', 'PeriodosController');
-Route::get('periodos/change/state/{id}','PeriodosController@changeState');
+Route::post('periodos/change/state/{id}','PeriodosController@changeState');
 Route::post('periodos/buscar/segmentos/{id}','PeriodosController@searchSegmentos');
 
 //Auditoria
@@ -430,7 +435,7 @@ Route::resource('config_roles', 'ConfigRoleController');
 //////////////Calendario
 
 //Calendario
-Route::get('horarios/{id}', 'HorarioController@calendario');
+Route::get('horarios/{id}', 'HorarioController@calendario')->name('horarios.index');
 Route::resource('horarios', 'HorarioController');
 
 //ReferencesData
@@ -455,7 +460,8 @@ Route::get('prueba/expedienteasig','ExpedienteController@pruebaasig');
 Route::get('prueba/citas','CitacionEstudiantesController@citasAutomatic');
 Route::get('prueba/citas/correo','CitacionEstudiantesController@listCorreoCitasGen');
 Route::get('/mail/html', function () {
-  return view('myforms.mails.frm_citacion_estudiante_gen');
+  $mensaje = getMessagesForPro(245,"aad2012"); 
+  return view('myforms.mails.frm_notificaciones_procjudexp',compact('mensaje'));
 
 });
 

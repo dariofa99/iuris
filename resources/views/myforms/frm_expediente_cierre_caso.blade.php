@@ -1,44 +1,56 @@
-@if (
-    $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber or
-        currentUser()->hasRole('estudiante') or
-        currentUser()->hasRole('amatai') or
-        currentUser()->hasRole('diradmin') or
-        currentUser()->hasRole('dirgral'))
-
-    <div class="col-md-12" align="right">
-        @if (
-            (currentUser()->hasRole('estudiante') and
-                $expediente->getDaysOrColorForClose('dias') >= 10 || $expediente->exptipoproce_id != 1 and
-                $expediente->estado->id == 1 || $expediente->estado->id == 3) ||
-                ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and $expediente->estado->id == 4) ||
-                (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral')))
-            <button type="button" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
-                data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
-                Actualizar Solicitud de cierre
-            </button>
-        @endif
-        
-        @if (
-            $expediente->exptipoproce_id == 1 and
-                ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and
-                    $expediente->expestado_id == 5 and
-                    $expediente->isValidOpen()) ||
-                    (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')))
-            <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_reabrir_caso">
-                Volver a evaluar y cerrar caso
-            </button>
-        @endif
-
-        @if ($expediente->expestado_id == 1 and currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
-            <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_cerrar_dr_caso">
-                Cerrar caso
-            </button>
-        @endif
+@if (!$readonly)
 
 
-    </div>
+    @if (
+        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber or
+            currentUser()->hasRole('estudiante') or
+            currentUser()->hasRole('amatai') or
+            currentUser()->hasRole('diradmin') or
+            currentUser()->hasRole('dirgral'))
+
+        <div class="col-md-12" align="right">
+            @if (
+                (currentUser()->hasRole('estudiante') and
+                    $expediente->getDaysOrColorForClose('dias') >= 10 || $expediente->exptipoproce_id != 1 and
+                    $expediente->estado->id == 1 || $expediente->estado->id == 3) ||
+                    ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and $expediente->estado->id == 4) ||
+                    (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral')))
+
+                @if ($expediente->getDocenteAsig()->idnumber == 'Sin asignar')
+                    <button disabled type="button" class="btn btn-danger btn-sm mb-2" 
+                         id="btn_trigger_exp_edit_cierre_caso">
+                        Debe solicitar la asignación del docente
+                    </button>
+                @else
+                    <button type="button" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
+                        data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
+                        Actualizar Solicitud de cierre
+                    </button>
+                @endif
+
+            @endif
+
+            @if (
+                $expediente->exptipoproce_id == 1 and
+                    ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and
+                        $expediente->expestado_id == 5 and
+                        $expediente->isValidOpen()) ||
+                        (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')))
+                <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_reabrir_caso">
+                    Volver a evaluar y cerrar caso
+                </button>
+            @endif
+
+            @if ($expediente->expestado_id == 1 and currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
+                <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_cerrar_dr_caso">
+                    Cerrar caso
+                </button>
+            @endif
+
+
+        </div>
+    @endif
 @endif
-
 <div class="col-md-12">
 
     @if (count($expediente->estados) > 0)
@@ -176,20 +188,20 @@
                                 <span title="Fecha en la que se envió la solicitud">
                                     {{ getSmallDateWithHour($estado->created_at) }}</span>
                                 <span title="Números de días después de la asignación" style="display: block">
-                                   
-                                        <small>
-                                            <i>
-                                                ({{ $expediente->difDays($expediente->asignaciones[0]->fecha_asig, $estado->created_at) }}
-                                                días despues de asignado)
-                                            </i>
 
-                                        </small>
-                                  
+                                    <small>
+                                        <i>
+                                            ({{ $expediente->difDays($expediente->asignaciones[0]->fecha_asig, $estado->created_at) }}
+                                            días despues de asignado)
+                                        </i>
+
+                                    </small>
+
                             </td>
                             <td>
-                                <button class="btn btn-success">
+                               {{--  <button class="btn btn-success">
                                     Detalles
-                                </button>
+                                </button> --}}
                             </td>
 
                         </tr>
@@ -199,6 +211,3 @@
         </div>
     </div> <!-- /.md12-->
 </div> <!-- /.row -->
-
-
-

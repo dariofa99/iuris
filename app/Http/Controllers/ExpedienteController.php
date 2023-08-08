@@ -17,18 +17,21 @@ use App\Segmento;
 use App\Solicitud;
 use App\HistorialDatosCaso;
 use App\Notifications\SolicitudDocenteCaso;
+use App\Notifications\SolicitudEstudiantesProcesosJuricosExp;
 use Facades\App\Facades\NewPush;
 use App\Notifications\UserNotification;
 use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
+use App\Services\ProcesoJudicialExpService;
 use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
 use App\Services\UsersService;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -41,6 +44,7 @@ class ExpedienteController extends Controller
   private $solicitudService;
   private $asignacionDocenteCasoService;
   private $segmentosService;
+  private $procjucicialService;
 
   public function __construct(
     AsignacionCasosService $asignacionCasoService,
@@ -49,7 +53,8 @@ class ExpedienteController extends Controller
     ExpedientesService $expedienteService,
     AsignacionDocenteCasosService $asignacionDocenteCasoService,
     EstadosCasoService $estadoCasoService,
-    SegmentosService $segmentosService
+    SegmentosService $segmentosService,
+    ProcesoJudicialExpService $procjucicialService
   ) {
     $this->asignacionCasoService = $asignacionCasoService;
     $this->solicitudService = $solicitudService;
@@ -58,6 +63,7 @@ class ExpedienteController extends Controller
     $this->expedienteService = $expedienteService;
     $this->asignacionDocenteCasoService = $asignacionDocenteCasoService;
     $this->segmentosService = $segmentosService;
+    $this->procjucicialService = $procjucicialService;
     $this->middleware('permission:ver_expedientes',   ['only' => ['create']]);
     $this->middleware('permission:sustituir_casos',   ['only' => ['replacecaso']]);
   }
@@ -525,6 +531,9 @@ class ExpedienteController extends Controller
       return response()->json($expediente);
     }
     Session::flash('message-success', 'Creado con éxito...!');
+    if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+      return response()->json($expediente);
+    }
     return Redirect::to('expedientes');
   }
 
@@ -541,21 +550,16 @@ class ExpedienteController extends Controller
     $expediente = $this->expedienteService->findWithFilter([
       'expid' => $id
     ]);
+
     if (!$expediente) return view('errors.error', compact('url'));
+
+
     $estudiante = $expediente->estudiante;
-    $asignacion = $expediente->asignaciones()->where('asigest_id', $expediente->expidnumberest)
-      ->where(['asigest_id' => $expediente->expidnumberest, 'activo' => 1])->first();
+
     if (currentUser()->hasRole("estudiante")) {
+
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));
-      }
-      if (($expediente->expestado_id == '2' or $expediente->expestado_id == '5')) {
-        //	Session::flash('message-success', 'Actualizado con éxito...!');
-        return redirect('/expedientes/' . $expediente->expid);
-      }
-      if (($expediente->expestado_id == '4')) {
-        Session::flash('message-success', 'Actualizado con éxito...!');
-        return redirect('/expedientes/' . $expediente->expid);
       }
     } elseif (currentUser()->hasRole("solicitante")) {
       if (Auth::user()->idnumber != $expediente->expidnumber) {
@@ -563,36 +567,19 @@ class ExpedienteController extends Controller
         return view('errors.error', compact('url'));
       }
     }
-    if ($expediente->expestado_id == '2' and currentUser()->hasRole("docente")) {
+    /* if ($expediente->expestado_id == '2' and currentUser()->hasRole("docente")) {
       return redirect('/expedientes/' . $expediente->expid);
-    }
+    } */
+    //dd($expediente);
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
-    dd($estudiantes);
     return view(
-      'myforms.frm_expediente_edit',
-      compact('expediente', 'asignacion','estudiantes')
+      'myforms.frm_expediente_show',
+      [
+        'expediente' => $expediente,
+        'estudiantes' => $estudiantes,
+        'readonly' => true
+      ]
     );
-
-
-
-    $expediente = Expediente::where('expid', $id)->first();
-    $estudiante = $expediente->estudiante;
-
-    //Agregue la funcion getusers Para poder usarla en el index
-    $user = $this->getUsers();
-    $active_expe = 'active';
-
-    if (currentUser()->hasRole("estudiante")) {
-      if (Auth::user()->id != $estudiante->id) {
-        return view('errors.error');
-      }
-    } elseif (currentUser()->hasRole("solicitante")) {
-      if (Auth::user()->idnumber != $expediente->expidnumber) {
-        return view('errors.error');
-      }
-    }
-
-    return view('myforms.frm_expediente_show', ['expediente' => $expediente], compact('user', 'active_expe'));
   }
 
   private function getId()
@@ -630,9 +617,6 @@ class ExpedienteController extends Controller
    */
   public function edit(Request $request, $id)
   {
-    //dd("#SS");
-    //broadcast(new LoginEvent(currentUser()))->toOthers();
-
     if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
     $url = '/expedientes/';
     $expediente = $this->expedienteService->findWithFilter([
@@ -678,7 +662,7 @@ class ExpedienteController extends Controller
     }
     //Agregue la funcion getusers Para poder usarla en el index
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
-   
+
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));
@@ -697,13 +681,13 @@ class ExpedienteController extends Controller
         return view('errors.error', compact('url'));
       }
     }
-    if ($expediente->expestado_id == '2' and currentUser()->hasRole("docente")) {
+    if ($expediente->expestado_id == '2' and !currentUser()->hasRole("amatai")) {
       return redirect('/expedientes/' . $expediente->expid);
     }
-
+    $readonly = false;
     return view(
       'myforms.frm_expediente_edit',
-      compact('estudiantes', 'expediente', 'asignacion')
+      compact('estudiantes', 'expediente', 'asignacion', 'readonly')
     );
   }
 
@@ -764,7 +748,6 @@ class ExpedienteController extends Controller
         "updated_at" => Carbon::now()
       ]);
     }
-
 
     $asignacion_caso = $this->asignacionCasoService->findWithFilter([
       'asigest_id' => $request->oldexpidnumberest,
@@ -847,20 +830,6 @@ class ExpedienteController extends Controller
   public function listarActuaciones(Request $request)
   {
 
-
-    /* $users = User::where('id', currentUser()->id)
-        ->get(['id', 'name', 'lastname' ,'idrol']);
-
-
-     foreach ($users as $user) 
-     {
-       $idrol=$user->idrol;
-     }*/
-    //dd($idrol);
-
-
-    //dd($request->all());
-    //validacion fechas en caso que aun no envien variables get
     if (empty($request->get('tipo_busqueda'))) {
 
       $criterio = '';
@@ -1020,6 +989,33 @@ class ExpedienteController extends Controller
 
     $user = $this->getUsers();
 
+
+    return view('myforms.frm_expediente_replace', compact('user'));
+  }
+
+  public function cambiarProcesoJuridico(Request $request)
+  {
+
+    $expediente = $this->expedienteService->find($request->expid);
+    $asignacion_caso = $this->asignacionCasoService->findWithFilter([
+      'asigest_id' => $expediente->expidnumberest,
+      'activo' => 1,
+      'asigexp_id' => $expediente->expid,
+    ]);
+    $request['procesojud_id'] = 245;
+    $request['asig_caso_id'] = $asignacion_caso->id;
+    $asignacion_caso = $this->asignacionCasoService->update($asignacion_caso, $request);
+    $request['estado_id'] = 245;
+    $request['comentario'] = "Solicitado por docente";
+    $procjudi = $this->procjucicialService->store($request);
+
+
+
+    return response()->json([
+      $expediente,
+      $asignacion_caso,
+      $procjudi
+    ]);
 
     return view('myforms.frm_expediente_replace', compact('user'));
   }
@@ -1521,16 +1517,6 @@ class ExpedienteController extends Controller
         'user_id' => auth()->user()->id,
         'actuacion_id' => $actuacion->id
       ]);
-
-      /* $asignacion = $expediente->asignaciones()
-      ->where(['asigest_id'=>$expediente->expidnumberest,'activo'=>1])
-      ->orderBy("created_at",'desc')->first();
-      if($asignacion){
-        $docente = User::where("idnumber",$asignacion->asig_docente->docidnumber)->first();
-        $conciliacion->usuarios()->attach($docente ->id,[
-          'tipo_usuario_id'=>221
-        ]);
-      }   */
     }
     $response = [
       "expediente" => $expediente,
@@ -1587,46 +1573,49 @@ class ExpedienteController extends Controller
     $jwt = JWT::encode($tokenjitsi, 'c6x@JKCixAr*4sPO@XjXlb1b^', 'HS256');
 
     echo $jwt;
-
-
-
-
-
-    /*
-
-$consul1 = DB::select(
-  DB::raw("SELECT expedientes.id, expedientes.expid, expedientes.expramaderecho_id, expedientes.expestado_id
-  FROM 
-  expedientes 
-  WHERE 
-  expedientes.expestado_id IN (1,3,4)
-   ")
-  );
-  
-foreach ($consul1 as $key => $value) {
- 
-  $expediente= Expediente::where('expid',"$value->expid")->first();
-  if($expediente->getDocenteAsig()->idnumber=='Sin asignar'){ 
-    $asignacion_caso =  AsignacionCaso::where('asigexp_id',$expediente->expid)
-    ->where('activo',1)
-    ->orderBy('id','DESC')
-    ->limit(1)
-    ->first();   
-    
-    if($expediente->exptipoproce_id==1){        
-
-      $expediente->asigDocente($asignacion_caso); 
-      echo $expediente->expid." ase<br>";
-            
-    }else if($expediente->exptipoproce_id==2 OR $expediente->exptipoproce_id==3){
-      $expediente->asigDocenteSeguimiento($asignacion_caso,$expediente->exptipoproce_id); 
-      echo $expediente->expid." seg<br>";
-        
-    
-    }
   }
 
-}*/
+  public function storeProcJudicial(Request $request)
+  {
+    // return response()->json($request->all());
+    $expediente = $this->expedienteService->find($request->expid);
+    $asignacion_caso = $expediente->asignacion;;
+    $estado_caso_old = $asignacion_caso->procesojud_id;
+    $request['procesojud_id'] = $request->estado_id;
+    $asignacion_caso = $this->asignacionCasoService->update($asignacion_caso, $request);
+    $request['estado_id'] = $asignacion_caso->procesojud_id;
+    $request['asig_caso_id'] = $asignacion_caso->id;
+    $procjudi = $this->procjucicialService->store($request);
+    if ($request->has('fileprocjud') and $request->fileprocjud != '') {
+      $procjudi = $this->procjucicialService->saveFile($procjudi, $request);
+    }
+
+
+
+
+    $user = $this->userService->findWithFilter([
+      'email' => 'darioj99@gmail.com',
+    ]);
+    if ($estado_caso_old == 244 and $request->estado_id == 246) {
+      $mensaje = getMessagesForPro(001, $expediente->expid);
+    } else {
+      $mensaje = getMessagesForPro($asignacion_caso->procesojud_id, $expediente->expid);
+    }
+
+    Notification::send($user, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $expediente));
+
+    return response()->json($request->all());
+  }
+
+  public function editExpProcJudicial(Request $request, $id)
+  {
+    $procjudi = $this->procjucicialService->find($id);
+
+    $view = view("myforms.components_exp.frm_detalles_exprocjudicial", compact('procjudi'))->render();
+    return response()->json([
+      'view' => $view,
+      'procjudi' => $procjudi
+    ]);
   }
 
   public function cambiarDocente(Request $request)

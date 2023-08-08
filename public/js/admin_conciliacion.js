@@ -6,7 +6,7 @@ const userService = new UserService();
 const conciliacionService = new ConciliacionService();
 const formatosService = new FormatosService();
 $(document).ready(function () {
- 
+ // $(".summernote").summernote();
     $("#myUserSolicitanteForm").on("focus","input[name='idnumber']",validateTypeDoc);
     $("#myUserRepLegalForm").on("focus","input[name='idnumber']",validateTypeDoc);
     $("#myUserApoderadoForm").on("focus","input[name='idnumber']",validateTypeDoc);
@@ -126,44 +126,7 @@ $(document).ready(function () {
       }
   });
 
-  $("#myFormEditPdfReporte select[name='categoria_id']").on("change",async function(params) {
-    var categoria = $(this).val();
-    if(categoria!=''){
-      var request = {
-        'categoria_id':categoria
-      }
-      let response = await conciliacionService.getReportesByCategory(request);
-      $("#summernote_update").summernote("code", "");
-      $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
-      $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
-      if(response.errors && response.errors.length >0){
-        response.errors.forEach(error => {            
-          toastr.error(error, "", {
-              positionClass: "toast-top-right",
-              timeOut: "4000",
-          });          
-        });  
-        $("#summernote_update").summernote("code", "");
-        $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
-        $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
-        $("#myFormEditPdfReporte select[name='id']").val("");  
-        $("#sel_reporte_id").html("<option value=''>Primero seleccione una categoria...</option>");
-      }else{
-        var option = '<option value="">Primero seleccione una categoria...</option>';
-        response.forEach(element => {
-          option += `
-          <option value="${element.id}">${element.nombre_reporte}</option>
-          `;
-        });
-        $("#sel_reporte_id").html(option)
-      }     
-    }else{
-      $("#summernote_update").summernote("code", "");
-      $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
-      $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
-      $("#myFormEditPdfReporte select[name='id']").val("");
-    }
-  });
+
 
   $("#myFormAsigReporte select[name='tabla_destino']").on("change",async function(params) {
     var categoria = $(this).val();

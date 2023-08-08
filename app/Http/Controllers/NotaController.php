@@ -17,15 +17,24 @@ use App\Periodo;
 use App\Segmento;
 use Excel;
 use App\Exports\NotasExport;
+use App\Services\PeriodosService;
+use App\Services\SegmentosService;
 use App\Services\UsersService;
 
 class NotaController extends Controller
 {
     private $userService;
+    private $periodosService;
+    private $segmentosService;
 
-    public function __construct(UsersService $userService)
-    {
+    public function __construct(
+        UsersService $userService,
+        PeriodosService $periodosService,
+        SegmentosService $segmentosService
+    ) {
         $this->userService = $userService;
+        $this->periodosService = $periodosService;
+        $this->segmentosService = $segmentosService;
     }
 
 
@@ -33,6 +42,7 @@ class NotaController extends Controller
     {
 
         $periodos = Periodo::all();
+
         return view('report.notas.frm_notas_list', compact('periodos'));
     }
 
@@ -43,6 +53,8 @@ class NotaController extends Controller
      */
     public function notas_ver(Request $request)
     {
+        $segmentoAct = $this->segmentosService->getSegmentoActivo();
+
         // $user = User::where('idnumber',3030)->first();
         if (currentUser()->hasRole("estudiante")) {
             $user = User::where('idnumber', auth()->user()->idnumber)->first();
@@ -54,7 +66,7 @@ class NotaController extends Controller
         $notas = [];
         if (isset($user)) {
             $notas = $user->getNotas($request);
-            return view("myforms.notas_ver.index", compact('user', 'notas'));
+            return view("myforms.notas_ver.index", compact('user', 'notas','segmentoAct'));
         } else {
             //$user = User::where('idnumber',3030)->first();
             $request->session()->flash('message-success', 'No se encontró el estudiante!');
@@ -62,7 +74,7 @@ class NotaController extends Controller
 
 
         // dd($notas);
-        return view("myforms.notas_ver.index", compact('notas'));
+        return view("myforms.notas_ver.index", compact('notas', 'segmentoAct'));
     }
 
     /**

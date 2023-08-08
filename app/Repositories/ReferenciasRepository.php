@@ -6,6 +6,7 @@ use App\Estado;
 use App\RamaDerecho;
 use App\RefTipoProceso;
 use App\Services\ReferenciasService;
+use App\TablaReferencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -41,6 +42,12 @@ class ReferenciasRepository extends BaseRepository implements ReferenciasService
     public function getTipoProcesoForExpediente(){
         $this->query = new RefTipoProceso();
         $ramas =  $this->all();
+        return $ramas ;
+    }
+
+    public function getReferenciasByFilter($filter){
+        $this->query = new TablaReferencia();
+        $ramas =  $this->getWithFilter($filter);
         return $ramas ;
     }
     

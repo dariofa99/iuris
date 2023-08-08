@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\Paginator;
 
 class BaseRepository
 {
@@ -26,7 +27,7 @@ class BaseRepository
 
     protected function applyValidateSede()
     {
-        if($this->model!=null)$this->query = $this->model;
+       // if ($this->model != null) $this->query = $this->model;
         if ($this->validateSede and method_exists($this->model, 'sedes')) {
             $this->query = $this->query->whereHas('sedes', function ($query1) {
                 $query1->where(['sede_id' => session('sede')->id_sede]);
@@ -35,12 +36,12 @@ class BaseRepository
     }
     public function findWithFilter(array $filter): ?Model
     {
-       // $this->query = $this->model;
+        if ($this->model != null) $this->query = $this->model;
         $this->applyValidateSede();
         $this->validateFilter($filter);
         return $this->query->first();
     }
-    protected function validateFilter(array $filter)
+    public function validateFilter(array $filter)
     {
         foreach ($filter as $column => $value) {
             $date = \DateTime::createFromFormat('Y-m-d', $value);
@@ -58,11 +59,12 @@ class BaseRepository
                 }
             }
         }
+        return $this;
     }
 
     public function getWithFilter(array $filter): ?Collection
     {
-        //$this->query = $this->model;
+        if ($this->model != null) $this->query = $this->model;
         $this->applyValidateSede();
         $this->validateFilter($filter);
         return $this->query->get();
@@ -70,6 +72,7 @@ class BaseRepository
 
     public function all()
     {
+
         $this->applyValidateSede();
         if (!empty($this->relations)) {
             $this->query = $this->query->with($this->relations);
@@ -77,9 +80,31 @@ class BaseRepository
         return $this->query->get();
     }
 
+    public function orderBy($col, $type)
+    {
+        $this->query = $this->query->orderBy($col, $type);
+        return  $this;
+    }
+
+    public function paginate($perPage)
+    {
+       
+        $page = Paginator::resolveCurrentPage('page');
+        $this->applyValidateSede();
+        if (!empty($this->relations)) $this->query = $this->query->with($this->relations);
+        $results = $this->query->paginate($perPage, ['*'], 'page', $page);
+        $results->appends(request()->except('page'));
+        return $results;
+    }
+
     public function find(int $id)
     {
+        if ($this->model != null) $this->query = $this->model;
         $this->applyValidateSede();
+        if (!empty($this->relations)) {
+            $this->query = $this->query->with($this->relations);
+        }
+
         return $this->query->find($id);
     }
 

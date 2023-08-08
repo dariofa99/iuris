@@ -15,6 +15,7 @@ use App\Services\AsignacionDocenteCasosService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
 use App\Services\SegmentosService;
+use Illuminate\Support\Facades\Auth;
 
 class EstadosCasoController extends Controller
 {
@@ -62,24 +63,18 @@ class EstadosCasoController extends Controller
     public function store(Request $request)
     {
 
-        if ($request->ajax()) {
-            //  return response()->json(($request->all()));
-            $expediente = Expediente::where('expid', $request->expid)->first();
+        if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+
+            $expediente = $this->expedienteService->findWithFilter([
+                'expid' => $request->expid
+            ]);
             $estudiante_id = $expediente->estudiante->idnumber;
             $date = Carbon::now()->format('Y-m-d');
             $acts =  $expediente->verifyNotAct($date);
             $reqs =  $expediente->verifyNotReq($date);
-
-            $user_id = \Auth::user()->idnumber;
-
-            // return response()->json($acts);  
-
-            $estadoCaso = new EstadoCaso();
-            $estadoCaso->comentario = $request->comentario;
-            $estadoCaso->useridnumber = $user_id;
-            $estadoCaso->expidnumber = $request->expid;
-            $estadoCaso->ref_estado_id = $request->new_expestado;
-            $estadoCaso->ref_motivo_estado_id = $request->motivo_estado;
+            $request['expidnumber'] = $request->expid;
+            $request['ref_estado_id'] = $request->new_expestado;
+            $request['ref_motivo_estado_id'] = $request->motivo_estado;
             $expediente->expestado_id = $request->new_expestado;
             $role = '';
             if (!currentUser()->hasRole('estudiante')) $role = 'docente';
@@ -97,7 +92,9 @@ class EstadosCasoController extends Controller
                             return response()->json(($response));
                         }
                         if ($nota['tipo_id'] == 1 || count($expediente->get_has_nota_final()) > 0) {
-                            $estadoCaso->save();
+
+
+                            $estadoCaso = $this->estadoCasoService->store($request);
                             $expediente->save();
                             $response = [
                                 'mensaje' => 'El Caso fue actualizo con éxito',
@@ -134,21 +131,32 @@ class EstadosCasoController extends Controller
             } else {
 
                 if (currentUser()->hasRole('estudiante')) {
-                    $expediente->exphechos = $request->hechos;
-                    $expediente->exprtaest = $request->exp_resp_est;
+                    if ($expediente->exptipoproce_id != 3 and (empty($expediente->exphechos) || empty($expediente->exprtaest))) {
+                        $response = [
+                            'mensaje' => 'El Caso NO tiene información en hechos o en respuesta del estudiante',
+                            'guardado' => false,
+                            'exp' => $expediente,
+                            'role' => $role,
+                        ];
+                        return response()->json($response);
+                    } elseif ($expediente->exptipoproce_id == 3 and empty($expediente->exphechos)) {
+                        $response = [
+                            'guardado' => false,
+                            'mensaje' => 'No se puede cerrar el caso porque no se han descrito los hechos del caso',
+                            'exp' => $expediente,
+                            'role' => $role,
+                        ];
+                        return response()->json(($response));
+                    }
                     if ($expediente->exptipoproce_id ==  1) {
                         if ($expediente->expestado_id != 5 and $expediente->expestado_id != 2) {
-
                             if ($expediente->getDocenteAsig()->name == 'Sin asignar') {
-
                                 $asignacion_caso = $expediente->getAsignacion();
                                 $expediente->asigDocente($asignacion_caso);
                             }
                         }
                     }
                 }
-                // dd($reqs);
-
                 if ((count($acts) > 0 || count($reqs) > 0) and $request->new_expestado == 4) {
                     if ($expediente->exptipoproce_id != 1) {
                         $mensaje = '';
@@ -162,7 +170,7 @@ class EstadosCasoController extends Controller
                         ];
                         return response()->json(($response));
                     } else {
-                        $estadoCaso->save();
+                        $estadoCaso = $this->estadoCasoService->store($request);
                         $expediente->save();
                         $response = [
                             'mensaje' => 'El Caso fue actualizo con éxito',
@@ -187,9 +195,7 @@ class EstadosCasoController extends Controller
                     if ($request->new_expestado == 5) {
                         $nota = $expediente->get_has_nota_final();
                         if (count($nota) <= 0) {
-                            $segmento = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
-                                ->where('sg.sede_id', session('sede')->id_sede)
-                                ->where('estado', true)->first();
+                            $segmento = $this->segmentosService->getSegmentoActivo();
                             if ($segmento) {
                                 $data = [
                                     'ntaaplicacion' => 0,
@@ -202,7 +208,7 @@ class EstadosCasoController extends Controller
                                     'tpntid' => '1',
                                     'expidnumber' => $expediente->expid,
                                     'estidnumber' => $expediente->expidnumberest,
-                                    'docidnumber' => \Auth::user()->idnumber,
+                                    'docidnumber' => Auth::user()->idnumber,
                                     'tbl_org_id' => $expediente->id,
                                 ];
                                 $expediente->asignarNotas($data);
@@ -216,9 +222,7 @@ class EstadosCasoController extends Controller
                             }
                         }
                     }
-
-
-                    $estadoCaso->save();
+                    $estadoCaso = $this->estadoCasoService->store($request);
                     $expediente->save();
                     $response = [
                         'mensaje' => 'El Caso fue actualizo con éxito',
@@ -247,10 +251,10 @@ class EstadosCasoController extends Controller
 
     public function abrir_caso(Request $request)
     {
-       
+
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->expid
-          ]);
+        ]);
         if ($expediente and ($expediente->expestado_id == 5 and $expediente->isValidOpen())) {
             $segmento = $this->segmentosService->getSegmentoActivo();
             if ($segmento) {

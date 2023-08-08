@@ -22,6 +22,48 @@ export class ExpedientesService {
 
     }
 
+    async store(request) {
+        const response = await fetch(BASE_URL + 'expedientes', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+
+    }
+
+    async defensasOfiStore(request) {
+        const response = await fetch(BASE_URL + 'defensas/oficio', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+
+    }
+
     async cerrarCaso(request) {
         const response = await fetch(BASE_URL + 'estado/cerrar/caso', {
             method: 'POST',
@@ -42,6 +84,7 @@ export class ExpedientesService {
         return topics;
 
     }
+
 
     async getStudentsCases(idconsul) {
         const response = await fetch(BASE_URL + 'expedientes/selectconest/' + idconsul, {
@@ -647,7 +690,7 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
     }
-    async updateCitacionEstudiante(request,id) {
+    async updateCitacionEstudiante(request, id) {
         const response = await fetch(BASE_URL + 'citaciones/estudiante/' + id, {
             method: 'PUT',
             headers: {
@@ -666,7 +709,7 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
     }
-    async storeAutorizacion(request){
+    async storeAutorizacion(request) {
         const response = await fetch(BASE_URL + 'autorizaciones', {
             method: 'POST',
             headers: {
@@ -683,9 +726,9 @@ export class ExpedientesService {
             throw new Error(message);
         }
         const topics = await response.json();
-        return topics;        
+        return topics;
     }
-    async editAutorizacion(id){
+    async editAutorizacion(id) {
         const response = await fetch(BASE_URL + "autorizaciones/" + id + "/edit", {
             method: 'GET',
             headers: {
@@ -703,7 +746,7 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
     }
-    async updateAutorizacion(request,id){
+    async updateAutorizacion(request, id) {
         const response = await fetch(BASE_URL + 'autorizaciones/' + id, {
             method: 'PUT',
             headers: {
@@ -718,11 +761,11 @@ export class ExpedientesService {
             const message = `An error has occured: ${response.status}`;
             console.log(response);
             throw new Error(message);
-        }   
+        }
         const topics = await response.json();
         return topics;
     }
-    async deleteAutorizacion(id){
+    async deleteAutorizacion(id) {
         const response = await fetch(BASE_URL + "autorizaciones/" + id, {
             method: 'DELETE',
             headers: {
@@ -740,9 +783,9 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
 
-    
+
     }
-    async reasigCaso(request){
+    async reasigCaso(request) {
         const response = await fetch(BASE_URL + 'expedientes/reasigcaso ', {
             method: 'POST',
             headers: {
@@ -759,7 +802,81 @@ export class ExpedientesService {
             throw new Error(message);
         }
         const topics = await response.json();
-        return topics;        
+        return topics;
+    }
+
+    async cambiarProcesoJuridico(request) {
+        const response = await fetch(BASE_URL + 'expedientes/cambiar/proceso/judicial ', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+    
+    async storeProcJudicial(formData) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', BASE_URL + 'expedientes/store/proceso/judicial', true);
+            xhr.setRequestHeader('X-CSRF-Token', $("#token").attr("content")); // Agrega la cabecera X-CSRF-Token
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentage = (event.loaded / event.total) * 100;
+                    this.showProgress(percentage); 
+                }
+            });
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (error) {
+                        reject(new Error('Error al analizar la respuesta JSON'));
+                    }
+                } else {
+                    reject(new Error(`Upload failed with status: ${xhr.status}`));
+                }
+            };
+            xhr.onerror = () => {
+                reject(new Error('Upload failed'));
+            };
+            xhr.send(formData);
+        });
+    }
+
+    async editExpProcJudicial(id) {
+        const response = await fetch(BASE_URL + "expedientes/proceso/judicial/"+id+"/edit", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;           
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+    showProgress(percentage) {
+        const progressDiv = document.getElementById('progressbarwait');
+        $(progressDiv).show();
+        progressDiv.textContent = `${parseInt(percentage)}%`;
+        progressDiv.style.width = `${parseInt(percentage)}%`;
     
     }
 }
