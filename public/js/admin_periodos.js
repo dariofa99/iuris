@@ -2,8 +2,7 @@ import { PeriodosService } from "./services/periodos.js";
 const periodoService = new PeriodosService();
 
 
-$(document).ready(function () {
- 
+$(document).ready(function () { 
     $("#btn_create_periodo").on("click", function () {
         $("#myModal_create_periodo").modal("show");
     });

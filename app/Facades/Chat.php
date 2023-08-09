@@ -19,7 +19,7 @@ class Chat extends GuzzleHttpRequest
     public $room;
     public $httpGuzzle;
     protected $view ='content.resources.iframe_chat';
-    
+     
     public function __construct(){
         parent::__construct(config()->get('chat.domain'));
         $this->key=config()->get('chat.connection.key');   ; 

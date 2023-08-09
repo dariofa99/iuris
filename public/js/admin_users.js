@@ -133,7 +133,7 @@ $(document).ready(function () {
           timer: 1500
         });
       }
-      $("#wait").hide();
+      window.location.reload();
     } else {
       toastr.error("Revisa en los demas formularios que no hayan campos obligatorios sin registrar", "", {
         positionClass: "toast-top-right",
@@ -185,14 +185,78 @@ $(document).ready(function () {
     }
   });
 
-  $(".show_password").on("mousedown",function (e) {
+  $(".show_password").on("mousedown", function (e) {
     e.preventDefault();
     $("input[name='password']").attr("type", "text");
   });
-  $(".show_password").on("mouseup",function (e) {
+  $(".show_password").on("mouseup", function (e) {
     e.preventDefault();
     $("input[name='password']").attr("type", "password");
   });
+
+  $("#myFormRegisterStudent").on("submit", async function (e) {
+    e.preventDefault();
+    var request = convertFormToJSON("myFormRegisterStudent");
+    $("#wait").show();
+    var response = await userService.findUserByJson(request);
+    if (response) {
+      console.log(response);
+      var user = response.find((user) => (user.cedula == request.idnumber && user.cod_alumno == request.codigo_estudiantil));
+      if (user != undefined) {
+        let timerInterval
+        Swal.fire({
+          title: 'Registrando!',
+          html: 'Se esta registrando al estudiante<br><b>'+user.nombres+" "+user.apellidos+"</b>",
+          timer: 10000,
+          timerProgressBar: true,
+          allowOutsideClick: false,
+          didOpen: async () => {
+            Swal.showLoading()
+            //const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+              //b.textContent = Swal.getTimerLeft()
+            }, 100);
+
+            request['idrol'] = 6;
+            request['active'] = 1;
+            request['name'] = user.nombres;
+            request['lastname'] = user.apellidos;
+            request['password'] = 'udenarcj'
+            let response = await userService.registrar(request);
+            if(response.errors && response.errors.length>0){
+              response.errors.forEach(error => {
+                toastr.error(error, "", {
+                  positionClass: "toast-top-right",
+                  timeOut: "4000",
+                });
+              });
+              Swal.close();
+            }else if(response.user && response.user.id!=undefined){
+              window.location = "/expedientes"
+            }
+            //console.log(userRe);
+           // window.location = "/expedientes"
+
+          },
+          willClose: () => {
+            clearInterval(timerInterval)
+          }
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('I was closed by the timer')
+          }
+        })
+      } else {      
+          toastr.error("Si creés que esto es un error comunícate con el administrador.", "Ups! Al parecer no estas matriculado.", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+          });
+      }
+    }
+    $("#wait").hide();
+
+  })
 
 });//////////////////////////////////////////////
 

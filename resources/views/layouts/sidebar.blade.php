@@ -121,9 +121,9 @@
 
                     </ul>
                 </li>
-                @if (currentUser()->can('ver_conciliaciones'))
+                @if (currentUser()->can('ver_conciliaciones_'))
                     <li
-                        class="nav-item has-treeview {{ (!Route::is('users.index') and !Route::is('users.edit') and !Route::is('users.create')) ?: 'menu-open' }}">
+                        class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Conciliaciones

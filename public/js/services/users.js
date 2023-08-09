@@ -308,6 +308,20 @@ export class UserService {
     return data;
   }
 
+  async findUserByJson(request) {
+    const response = await fetch(BASE_URL + 'recursos/matriculados.json');
+    if (!response.ok) {
+      $("#wait").hide()
+      const message = `An error has occured: ${response.status}`;
+      console.log(response);
+      $("#wait").hide()
+      throw new Error(message);
+    }
+    $("#wait").hide()
+    const topics = await response.json();
+    return topics;
+
+  }
 
 }
 

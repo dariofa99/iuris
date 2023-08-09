@@ -78,7 +78,7 @@
         </div>
         <!-- /.col -->
         <div class="col-md-9">
-            <form id="myFormUserEdit">
+            <form id="myFormUserEdit" autocomplete="off">
                 <div class="card card-tabs">
                     <div class="card-header p-2">
                         <ul class="nav nav-tabs" role="tablist">

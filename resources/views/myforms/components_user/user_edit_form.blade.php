@@ -52,17 +52,16 @@
     ])
 
     <div class="col-md-6">
-
+<label for="password">Contraseña</label>
        <div class="form-group">
-        {!! Form::label('Contraseña: ') !!}
+        
             <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="basic-addon1" style="cursor: pointer;"
-              onmousedown="showPassword('password')" onmouseup="showPassword('password')">
+              <span class="input-group-text show_password" id="basic-addon1" style="cursor: pointer;">
                 <i class="fa fa-eye"></i>
             </span>
             </div>
-            {!! Form::password('password', ['class' => 'form-control form-control-sm', 'id' => 'password', isset($user) ? '' : '']) !!}
+            {!! Form::password('password', ['class' => 'form-control form-control-sm', 'autocomplete'=>"nope", 'id' => 'password']) !!}
          </div>
         </div> 
     </div>

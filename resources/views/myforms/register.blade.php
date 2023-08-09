@@ -1,142 +1,103 @@
 @extends('layouts.app')
 
+@push('styles')
+    <style>
+
+    </style>
+@endpush
+
 @section('content')
-<div class="login-box">
-  
-  
-  <div class="container">
+
+
+
     <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card" style="margin-bottom: 25px;">
-          <div class="card-header"><b>Registro solo para estudiantes matriculados.</b></div>
-            <div class="card-body">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Registro de estudiantes matrículados
+                </div>
+                <div class="card-body">
+                    <form action="webservice" method="post" autocomplete="off" id="myFormRegisterStudent">
+                        {!! csrf_field() !!}
+                        @if (count($sedes) >= 2)
+                            {!! Form::label('Seleccione una sede*') !!}
+                            <div class="form-group">
+                                <select name="sede_id" id="sede_id" class="form-control required" required>
+                                    <option value="">Seleccione...</option>
+                                    @foreach ($sedes as $key => $sede)
+                                        <option value="{{ $sede->id_sede }}">{{ $sede->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @elseif(count($sedes) == 1)
+                            <input type="hidden" name="sede_id" value="{{ $sedes[0]->id_sede }}">
+                        @endif
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <span class="nav-icon fa fa-id-badge"></span>
+                                </span>
+                            </div>
+                            <input id='codigo_estudiantil' name='codigo_estudiantil' type="number" autocomplete="off" class="form-control"
+                                placeholder="Código estudiantil" value="{{ old('codigo') }}" required>
+
+                        </div>
+                        @if ($errors->has('codigo_estudiantil'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('codigo_estudiantil') }}</strong>
+                            </span>
+                        @endif
 
 
-    
-    @include('msg.danger')
-    
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <span class="nav-icon fa fa-id-card"></span>
+                                </span>
+                            </div>
+                            <input id='idnumber' name='idnumber' type="number" autocomplete="off" class="form-control"
+                                placeholder="Número de cédula" value="{{ old('idnumber') }}" required>
 
-    <form action="webservice" method="post" autocomplete="nope" id="myform">
-      {!! csrf_field() !!}
-
-      @if(count($sedes)>=2) 
-<div class="row">
-  <div class="col-md-12">
-    <div class="form-group">
-      {!!Form::label('Seleccione una sede') !!}
-      <select name="sede_id" id="sede_id" class="form-control required" required>
-        <option value="">Seleccione...</option>
-        @foreach($sedes as $key => $sede)
-        <option value="{{$sede->id_sede}}">{{$sede->nombre}}</option>
-        @endforeach
-      </select>
-    </div>
-  
-  </div>  
-</div>
-@elseif(count($sedes)==1)
-<input type="hidden" name="sede_id" value="{{$sedes[0]->id_sede}}">
-@endif
+                        </div>
+                        @if ($errors->has('idnumber'))
+                            <span class="hel-block">
+                                <strong>{{ $errors->first('idnumber') }}</strong>
+                            </span>
+                        @endif
 
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group has-feedback {{ $errors->has('codigo') ? ' has-error' : '' }}">
-        <input id='codigo' name='codigo' type="text" autocomplete="off" class="form-control" placeholder="Código estudiantil" value="{{ old('codigo') }}" required>
-        <span class="nav-icon fa fa-id-badge form-control-feedback"></span>
-      </div>
-      @if ($errors->has('codigo'))
-             <span class="help-block">
-              <strong>{{ $errors->first('codigo') }}</strong>
-                </span>
-                @endif
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <span class="nav-icon fa fa-envelope"></span>
+                                </span>
+                            </div>
+                            <input id='email' name='email' type="email" class="form-control" placeholder="Email"
+                                required value="{{ old('email') }}">
+                        </div>
+                        @if ($errors->has('email'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
+
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <button type="submit" class="btn btn-primary btn-block btn-flat">Registrar</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
         </div>
-      </div> 
-    
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group{{ $errors->has('idnumber') ? ' has-error' : '' }} has-feedback ">
-        <input id='idnumber' name='idnumber' type="text" autocomplete="off" class="form-control" placeholder="Número de cédula" value="{{ old('idnumber') }}" required>
-        <span class="nav-icon fa fa-id-card form-control-feedback"></span>
-      </div>
-                  @if ($errors->has('idnumber'))
-             <span class="help-block">
-              <strong>{{ $errors->first('idnumber') }}</strong>
-                </span>
-                @endif
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} has-feedback ">
-        <input id='email' name='email' type="email" class="form-control" placeholder="Email" required value="{{ old('email') }}">
-        <span class="nav-icon fa fa-envelope form-control-feedback"></span>
-        @if ($errors->has('email'))
-             <span class="help-block">
-              <strong>{{ $errors->first('email') }}</strong>
-                </span>
-      @endif
-      </div>
-      
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-      <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} has-feedback ">
-        <input id='password' name='password' type="password" class="form-control" placeholder="Contraseña" required >
-        <span class="nav-icon fa fa-unlock-alt form-control-feedback"></span>
-        @if ($errors->has('password'))
-             <span class="help-block">
-              <strong>{{ $errors->first('password') }}</strong>
-              </span>
-      @endif
-      </div>
-      
-        </div>
-        
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group has-feedback">
-        <input id="password-confirm" placeholder="Confirmar contraseña" type="password" class="form-control" name="password_confirmation" required>
-        <span class="nav-icon fa fa-unlock-alt form-control-feedback"></span>
-      </div>
-
-        </div>
-        
-      </div>
-
-      <div class="row">
-        <div class="col-md-6 offset-md-3">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Registrar</button>
-        </div>
-      </div>
-  
-    <hr>
-        <div class="row">
-          <div class="col-md-12">
-            <a href="/password/reset">Olvide mi contraseña...</a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <a href="/login">Iniciar sesión...</a>
-          </div>
-        </div>
-
-
-    </form>
-    <br>
-   
     </div>
 
-  </div>
 
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 @endsection
+@push('scripts')
+    <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
+    <script type="module" src={{ asset('js/admin_users.js') }}></script>
+@endpush

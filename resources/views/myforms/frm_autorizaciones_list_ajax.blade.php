@@ -45,19 +45,19 @@
                 </td>
                 <td>
                     <a href="/expedientes/{{ $autorizacion->asignacion->asigexp_id }}/edit"
-                        class="btn btn-info btn-sm btn_detalles_autorizacion">
+                        class="btn btn-info btn-sm btn-block btn_detalles_autorizacion">
                         Ir al caso</a>
 
                     @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
                         <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
-                            class="btn btn-{{ $autorizacion->estado ? 'default' : 'warning' }} btn-sm btn_change_estado_autorizacion">
+                            class="btn btn-{{ $autorizacion->estado ? 'default' : 'warning' }} btn-sm btn-block btn_change_estado_autorizacion">
                             {{ $autorizacion->estado ? 'Quitar Autorizado' : 'Autorizar' }}
                         </button>
                     @endif
 
                     @if ($autorizacion->estado)
                         <a href="/autorizaciones/descargar/{{ $autorizacion->autorizacion_id }}" target="_blank"
-                            class="btn btn-warning mt-1 btn-sm btn_print_autorizacion">
+                            class="btn btn-warning btn-block mt-1 btn-sm btn_print_autorizacion">
                             Descargar</a>
                     @endif
                 </td>

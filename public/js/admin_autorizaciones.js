@@ -8,12 +8,13 @@ $(document).ready(function () {
         var request = { estado: $(this).attr("data-estado") == 0 ? 1 : 0, vista: "expedientes",'vista':'autorizaciones' };
         $("#wait").show();
         let res = await expedientesService.updateAutorizacion(request, id);
-        $("#content_list_autorizaciones").html(res.view);
+        //$("#content_list_autorizaciones").html(res.view);
         $("#wait").hide();
         toastr.success("Actualizado con éxito", "", {
             positionClass: "toast-top-right",
             timeOut: "4000",
         });
+        window.location.reload();
         return false;
     });
 });

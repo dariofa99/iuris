@@ -28,7 +28,10 @@ class WebServicesController extends Controller
         //1085924683 cedula de prueba
         //2110522222 codigo de pruebas
         $user = User::where('idnumber',$request->idnumber)->first();
+        $users = DB::connection('prueba')
+        ->select("select cedula from akademico.consultoriosj");
 
+        dd($users);
         if(!$user || $user==null){
             $users = DB::connection('prueba')
             ->select("select cedula from akademico.consultoriosj

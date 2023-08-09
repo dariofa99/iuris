@@ -32,7 +32,7 @@ class CreateExpedienteProcesosTable extends Migration
 
         Schema::create('expprocesos_has_files', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('expproc_id')->unsigned();
+            $table->bigInteger('expproc_id')->unsigned();
             $table->foreign('expproc_id')->references('id')->on('expediente_procesos')
             ->onDelete('cascade')->onUpdate('cascade'); 
             $table->integer('file_id')->unsigned();

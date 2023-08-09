@@ -73,9 +73,9 @@
 
                         </h5>
                         <div class="text-center my-4">
-                            <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-warning">
+                           {{--  <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-warning">
                                 Solicitar
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>

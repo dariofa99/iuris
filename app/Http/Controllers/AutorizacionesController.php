@@ -108,7 +108,7 @@ class AutorizacionesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    { 
         
         $autorizacion =  $this->autorizacionesService->find($id);
         $autorizacion->fill($request->all());
