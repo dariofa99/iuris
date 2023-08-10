@@ -326,7 +326,7 @@ $(document).ready(function () {
         let name = $(this).val();
         if (name.length >= 3) {
             $('div.buscar_usuario li.no-results').text('Buscando...');
-            const response = await userService.findUserByNameOrLastNameAndRole({ 'name': name, 'role': 'estudiante' })
+            const response = await userService.findUserWithFilterByNameOrLastNameAndRole({ 'name': name, 'role': 'estudiante' })
             if (response.encontrado) {
                 $("#select_data_estudiantes").find('option').remove().end();//elimina opciones existentes
                 $(".buscar_usuario").selectpicker('render');
@@ -350,13 +350,14 @@ $(document).ready(function () {
             opcion_busq = '<option value="' + name + '">' + name + '</option>';
             $("#select_data_users").html(opcion_busq);
             $(".select_data_users").selectpicker("refresh")
-        } else if (opselected != '' && (opselected == 'solicitante' || opselected == 'idnumber_doc')) {
+        } else if (opselected != '' && (opselected == 'estudiante' || opselected == 'solicitante' || opselected == 'idnumber_doc')) {
             if (name.length >= 3) {
                 $('div.select_data_users li.no-results').text('Buscando...');
                 var role = '';
                 if (opselected == 'idnumber_doc') role = 'docente';
                 if (opselected == 'solicitante') role = 'solicitante';
                 if (opselected == 'solicitante_num') role = 'solicitante_num';
+                if (opselected == 'estudiante') role = 'estudiante';
                 let response;
                 if (role == 'solicitante_num') {
                     let request = {
@@ -369,8 +370,8 @@ $(document).ready(function () {
                         'name': name,
                         'role': role
                     }
-                    if (role == 'solicitante') request['validate_active'] = 0;
-                    response = await userService.findUserByNameOrLastNameAndRole(request);
+                    if (role == 'solicitante' || role == 'estudiante') request['validate_active'] = 0;
+                    response = await userService.findUserWithFilterByNameOrLastNameAndRole(request);
 
                 }
                 if (response.encontrado) {
@@ -448,7 +449,7 @@ $(document).ready(function () {
                             showConfirmButton: false,
                             timer: 2500
                         });
-                         window.location.reload(true);
+                        window.location.reload(true);
                         e.preventDefault()
                     })
                     .catch((error) => {
@@ -2337,6 +2338,12 @@ async function changeSelectSearchExp(value) {
         case "solicitante":
             $("#myformExpFilter select[name='data']").prop("disabled", false).selectpicker('show');
             $("#select_data_users").attr('title', 'Ingrese el nombre de un solicitante');
+            $('#select_data_users').selectpicker('destroy').html('').selectpicker();
+
+            break;
+        case "estudiante":
+            $("#myformExpFilter select[name='data']").prop("disabled", false).selectpicker('show');
+            $("#select_data_users").attr('title', 'Ingrese el nombre de un estudiante');
             $('#select_data_users').selectpicker('destroy').html('').selectpicker();
 
             break;

@@ -71,6 +71,12 @@
                                 </option>
 
                                 @if (!currentUser()->hasRole('estudiante'))
+                                    <option value="estudiante"
+                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante' ? 'selected' : '') }}>
+                                        Nombre o apellidos (estudiante)
+                                    </option>
+                                @endif
+                                @if (!currentUser()->hasRole('estudiante'))
                                     <option value="solicitante_num"
                                         {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected' : '') }}>
                                         Documento de identificación (solicitante)
@@ -111,7 +117,7 @@
                         <div class="col-md-5">
                             <span>Ingrese un valor</span>
                             {!! Form::select('data', [], null, [
-                                'class' => 'selectpicker select_data_users',
+                                'class' => 'form-control form-control-sm selectpicker select_data_users',
                                 'data-live-search' => 'true',
                                 'required' => 'required',
                                 'id' => 'select_data_users',
@@ -142,13 +148,13 @@
                         </div>
                         <div class="col-md-4">
                             <br>
-                            <button type="submit" class="btn btn-success"><i class="fa fa-search"> </i> Buscar
+                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-search"> </i> Buscar
                             </button>
                             @if (currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral') ||
                                     currentUser()->hasRole('coordprac') ||
                                     currentUser()->hasRole('amatai'))
-                                <button type="button" id="btn_exp_bus_avz" class="btn btn-default"><i class="fa fa-cogs">
+                                <button type="button" id="btn_exp_bus_avz" class="btn btn-sm btn-default"><i class="fa fa-cogs">
                                     </i> Avanzada </button>
                             @endif
                         </div>
@@ -209,5 +215,5 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 
-    <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
+    <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
 @endpush

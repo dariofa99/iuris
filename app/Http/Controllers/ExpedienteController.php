@@ -441,6 +441,7 @@ class ExpedienteController extends Controller
 
     if ($request->ajax()) {
       $request = $request->all();
+     // return response()->json($expedientes);
       $view = view('myforms.frm_expediente_list_ajax', compact('expedientes', 'active_expe', 'numEx', 'request', 'count_colors'))->render();
       return response()->json($view);
     }

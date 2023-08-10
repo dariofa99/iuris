@@ -24,7 +24,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label>Curso</label><br>
-                @if ($expediente->estudiante->curso->id != 1)
+                @if ($expediente->estudiante->curso->id != 1 and $expediente->estudiante->turno)
                     <label style="margin-left:8px; padding:2px 4px 2px 4px;border-radius:5px; font-size:13px"
                         class="label {{ $expediente->getColorTurno($expediente->estudiante->turno->color->ref_value) }}">
 

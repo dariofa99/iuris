@@ -28,7 +28,7 @@
                          <td>
                              <div @if (currentUser()->hasRole('docente')) class="textcor" @endif>
                                  {{ FullName($expediente->solicitante->name, $expediente->solicitante->lastname) }}
-                             </div>
+                              </div>
                          </td>
                      @endif
                      @if (!currentUser()->hasRole('estudiante'))
@@ -56,7 +56,7 @@
 
                              </label>
                          @else
-                             {{ \Carbon\Carbon::parse($expediente->getAsignacion()->fecha_asig)->diffForHumans() }}
+                            {{--  {{ \Carbon\Carbon::parse($expediente->getAsignacion()->fecha_asig)->diffForHumans() }} --}}
                          @endif
 
 

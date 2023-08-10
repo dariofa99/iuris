@@ -12,7 +12,7 @@ $(document).ready(function () {
     var errors = validateForm("myFormUserCreate");
     if (errors.length <= 0) {
       var request = convertFormToJSON("myFormUserCreate");
-      var data = [];
+      var data = []; 
       $(".input_user_ad").each((index, obj) => {
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
