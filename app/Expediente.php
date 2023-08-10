@@ -396,7 +396,7 @@ class Expediente extends Model
     }
 
     function getAsignacion()
-    {
+    { 
         $asig = $this->asignaciones()
             ->where('asigest_id', $this->estudiante->idnumber)
             ->where('activo', 1)

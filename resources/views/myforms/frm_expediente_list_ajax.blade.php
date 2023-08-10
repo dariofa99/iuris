@@ -28,7 +28,7 @@
                          <td>
                              <div @if (currentUser()->hasRole('docente')) class="textcor" @endif>
                                  {{ FullName($expediente->solicitante->name, $expediente->solicitante->lastname) }}
-                              </div>
+                             </div>
                          </td>
                      @endif
                      @if (!currentUser()->hasRole('estudiante'))
@@ -56,7 +56,11 @@
 
                              </label>
                          @else
-                            {{--  {{ \Carbon\Carbon::parse($expediente->getAsignacion()->fecha_asig)->diffForHumans() }} --}}
+                             @if ($expediente->getAsignacion() == null)
+                                 Se debe revisar la asignación
+                             @else
+                                 {{ \Carbon\Carbon::parse($expediente->getAsignacion()->fecha_asig)->diffForHumans() }}
+                             @endif
                          @endif
 
 
@@ -64,9 +68,6 @@
 
                      </td>
                      <td>
-
-
-
 
                          @if ($expediente->expestado_id == '1')
                              <span class="pull-center badge bg-green dis-block">
@@ -158,20 +159,24 @@
                              @elseif(
                                  !currentUser()->hasRole('estudiante') and ($expediente->expestado_id == '1' or $expediente->expestado_id == '4') or
                                      $expediente->expestado_id == '3')
-                                 @if ($expediente->exptipoproce_id == '3')
-                                     {!! link_to_route(
-                                         'oficio.edit',
-                                         $title = 'Editar',
-                                         $parameters = $expediente->expid,
-                                         $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                     ) !!}
+                                 @if ($expediente->getAsignacion() == null)
+                                     Se debe revisar la asignación
                                  @else
-                                     {!! link_to_route(
-                                         'expedientes.edit',
-                                         $title = 'Editar',
-                                         $parameters = $expediente->expid,
-                                         $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                     ) !!}
+                                     @if ($expediente->exptipoproce_id == '3')
+                                         {!! link_to_route(
+                                             'oficio.edit',
+                                             $title = 'Editar',
+                                             $parameters = $expediente->expid,
+                                             $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
+                                         ) !!}
+                                     @else
+                                         {!! link_to_route(
+                                             'expedientes.edit',
+                                             $title = 'Editar',
+                                             $parameters = $expediente->expid,
+                                             $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
+                                         ) !!}
+                                     @endif
                                  @endif
                              @else
                                  @if ($expediente->exptipoproce_id == '3')
@@ -213,9 +218,9 @@
                          <button type="button" class="btn btn-block mt-1 btn-success btn-sm" data-toggle="modal"
                              data-target="#myModal-{{ $expediente->id }}">Detalles</button>
                          <!-- Modal -->
-                        @include('myforms.frm_modal_detalles_expedientes',[
-                          'expediente'=>$expediente
-                        ])
+                         @include('myforms.frm_modal_detalles_expedientes', [
+                             'expediente' => $expediente,
+                         ])
                      </td>
                  </tr>
              @endforeach
