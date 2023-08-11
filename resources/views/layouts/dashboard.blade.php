@@ -121,7 +121,7 @@ if (!isset($modo_nav_crl)) {
     <!-- wait  es la barra de carga de la pagina-->
     @include('layouts.wait')
     <!-- ./wait  es la barra de carga de la pagina-->
-
+    @include('myforms.frm_modal_show_alerts')
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
@@ -137,7 +137,7 @@ if (!isset($modo_nav_crl)) {
     <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('plugins/moment/locale/es-us.js') }}"></script>
 
- 
+
 
     <script src="{{ asset('dist/js/demo.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -147,7 +147,7 @@ if (!isset($modo_nav_crl)) {
 
     <script src={{ asset('js/config.js?v=1') }}></script>
     {!! Html::script('js/application.js?v=1') !!}
- 
+
 
     <script>
         //para que funcionen los tooltip

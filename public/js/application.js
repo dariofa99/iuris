@@ -5,11 +5,13 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 $(document).ready(function () {
-    $("#table_list_model").on("click", ".pagination a", function (e) {
+    $("#table_list_model").on("click", ".pagination a",async  function (e) {
         e.preventDefault();
-        page = $(this).attr("href");
-        index_page(page);
-        window.history.pushState(null, "", page);
+        var page = $(this).attr("href");
+        $("#wait").show();
+        await index_pagination(page);
+        $("#wait").hide();
+       // window.history.pushState(null, "", page);
     });
     $('.is_tooltip').tooltip();
     $('.onlynumber').keyup(function () {
@@ -243,6 +245,29 @@ function setFechaToHumans(fecha) {
     var fecha = dia + " de " + mes + " del " + año;
     return fecha;
 }
+async function index_pagination(route) {
+    const page = route;
+    const response = await fetch(page, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-Token": $("#token").attr("content"),
+        },
+
+    });
+    if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        console.log(response);
+        throw new Error(message);
+    }
+    const topics = await response.json();
+    $("#table_list_model").html(topics);
+    window.history.pushState(null, "", route);
+    return topics;
+}
+
 async function index_page(route, request) {
     const page = BASE_URL + route + "?" + new URLSearchParams(request);
     const response = await fetch(page, {

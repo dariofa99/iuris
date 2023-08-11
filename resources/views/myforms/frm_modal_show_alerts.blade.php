@@ -1,4 +1,4 @@
-@component('components.modal_dynamic')
+@component('components.b4.modal_large')
 
 	@slot('trigger')
 		mymodalShowAlerts
@@ -19,7 +19,7 @@
 Registrado
 @endsection
 @include('msg.ajax.success')
-<div id='modal-content'>
+<div id='modal-show-alerts-content'>
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">

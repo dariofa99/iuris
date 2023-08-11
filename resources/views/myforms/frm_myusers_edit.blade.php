@@ -156,5 +156,21 @@
 @stop
 @push('scripts')
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-    <script type="module"   src={{asset("js/admin_users.js")}}></script>
+    <script type="module" src={{ asset('js/admin_users.js') }}></script>
+    <script>
+        @if ($user->turno == null)
+            var message = '<h5>Estimado estudiante para el registro del curso tenga en cuenta lo siguiente:</h5>';
+            message += '<b><div class="alert alert-warning" style="font-size:18px">';
+            message += '<ul>';
+            message += '<li>Para cursar consultorios 1 en la jornada de la mañana debe marcar la opción 4B.</li>';
+            message += '<li>Para cursar consultorios 1 en la jornada de la tarde debe marcar la opción 4A.</li>';
+            message += '<li>Para cursar consultorios 2 en la jornada de la mañana debe marcar la opción 5B.</li>';
+            message += '<li>Para cursar consultorios 2 en la jornada de la tarde debe marcar la opción 5A.</li>';
+            message += '</div></b>';
+
+
+            $("#modal-show-alerts-content").html(message);
+            $("#mymodalShowAlerts").modal("show")
+        @endif
+    </script>
 @endpush

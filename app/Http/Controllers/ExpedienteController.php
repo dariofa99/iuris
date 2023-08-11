@@ -24,6 +24,7 @@ use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
+use App\Services\PeriodosService;
 use App\Services\ProcesoJudicialExpService;
 use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
@@ -45,8 +46,10 @@ class ExpedienteController extends Controller
   private $asignacionDocenteCasoService;
   private $segmentosService;
   private $procjucicialService;
+  private $periodosService;
 
   public function __construct(
+    PeriodosService $periodosService,
     AsignacionCasosService $asignacionCasoService,
     SolicitudesService $solicitudService,
     UsersService $userService,
@@ -56,6 +59,7 @@ class ExpedienteController extends Controller
     SegmentosService $segmentosService,
     ProcesoJudicialExpService $procjucicialService
   ) {
+    $this->periodosService = $periodosService;
     $this->asignacionCasoService = $asignacionCasoService;
     $this->solicitudService = $solicitudService;
     $this->userService = $userService;
@@ -441,7 +445,7 @@ class ExpedienteController extends Controller
 
     if ($request->ajax()) {
       $request = $request->all();
-     // return response()->json($expedientes);
+      // return response()->json($expedientes);
       $view = view('myforms.frm_expediente_list_ajax', compact('expedientes', 'active_expe', 'numEx', 'request', 'count_colors'))->render();
       return response()->json($view);
     }
@@ -936,7 +940,12 @@ class ExpedienteController extends Controller
 
   public function reasigcaso(Request $request)
   {
-    $expediente = Expediente::where('expid', $request->expid)->first();
+    $expediente = $this->expedienteService->findWithFilter([
+      'expid' => $request->expid,
+    ]);
+    $periodo_act = $this->periodosService->getPeriodoActivo();   
+
+    if (!$periodo_act) return response() - json(['errors' => ["No hay un periodo activo"]]);
     $asig = $expediente->asignaciones()
       ->where('asigest_id', $expediente->estudiante->idnumber)
       ->where('activo', 1)->first();
@@ -964,25 +973,20 @@ class ExpedienteController extends Controller
         //'asigest_id'=>$request->new_user_id
       ])
       ->update(['activo' => 0]);
-    $asignacion_caso = new AsignacionCaso();
-    $asignacion_caso->anotacion = $anotacion;
-    $asignacion_caso->asigest_id = $request['new_user_id'];
-    $asignacion_caso->asiguser_id = currentUser()->idnumber;
-    $asignacion_caso->asigexp_id = $request->expid;
-    $asignacion_caso->periodo_id = $request['periodo_id'];
-    $asignacion_caso->ref_asig_id = 2;
-    $asignacion_caso->ref_mot_asig_id = $request['motivo_asig_id'];
-    $asignacion_caso->save();
+    $request['anotacion'] = $anotacion;
+    $request['asigest_id'] = $request['new_user_id'];
+    $request['asigexp_id'] = $expediente->expid;
+    $request['ref_mot_asig_id'] =$request['motivo_asig_id'];
+    $request['ref_asig_id'] = 2;
+    $request['periodo_id'] = 7;// $periodo_act->id;
+    $asignacion_caso = $this->asignacionCasoService->store($request);
     if ($asignar) {
-      $asignacion = new AsigDocenteCaso();
-      $asignacion->docidnumber = $asig->asig_docente->docidnumber;
-      $asignacion->asig_caso_id = $asignacion_caso->id;
-      $asignacion->cambio_docidnumber = $cambio_docidnumber;
-      $asignacion->user_created_id = Auth::user()->idnumber;
-      $asignacion->user_updated_id = Auth::user()->idnumber;
-      $asignacion->save();
+      $request['docidnumber'] = $asig->asig_docente->docidnumber;
+      $request['asig_caso_id'] = $asignacion_caso->id;
+      $request['cambio_docidnumber'] = $cambio_docidnumber;
+      $asignacion = $this->asignacionDocenteCasoService->store($request);
     }
-    return $asignacion_caso->asig_docente;
+    return response()->json($asignacion_caso->asig_docente);
   }
 
   public function replacecaso(Request $request)

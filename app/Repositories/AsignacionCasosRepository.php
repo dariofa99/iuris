@@ -15,7 +15,7 @@ class AsignacionCasosRepository extends BaseRepository implements AsignacionCaso
         parent::__construct($model);
     }
     public function store(Request $request) : AsignacionCaso
-    {
+    { 
         
         $this->model->anotacion = ($request->has('anotacion')) ? $request->input('anotacion') : 'asignado';
         $this->model->activo = ($request->has('activo')) ? $request->input('activo') : 1;

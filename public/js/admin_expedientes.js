@@ -95,12 +95,12 @@ $(document).ready(function () {
         }
         return false;
     });
-    $("#myFormBsExpAdv").submit(function () {
+    $("#myFormBsExpAdv").submit(async function () {
         var errors = validateForm("myFormBsExpAdv");
         if (errors.length <= 0) {
-            var page = $(this).attr("action");
+            var page = "expedientes";
             var data = $(this).serialize();
-            index_page(page, data);
+            let res = await index_page(page, data);
             window.history.pushState(null, "", page + "?" + data);
             $("#mymodalBuscarExpAvanzadas").modal("hide")
             //return false;
@@ -2022,7 +2022,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-            window.location.reload(true);
+           // window.location.reload(true);
         }
     });
     $("#btnCancReasig").on("click", function (e) {
