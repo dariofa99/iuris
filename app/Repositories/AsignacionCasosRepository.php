@@ -24,7 +24,7 @@ class AsignacionCasosRepository extends BaseRepository implements AsignacionCaso
         $this->model->asiguser_id = currentUser()->idnumber;
         $this->model->asigexp_id = ($request->has('asigexp_id')) ? $request->input('asigexp_id') : null;
         $this->model->fecha_asig = date('Y-m-d H:i:s');
-        $this->model->periodo_id = ($request->has('periodo_id'));
+        $this->model->periodo_id = ($request->input('periodo_id'));
         $this->model->ref_asig_id = ($request->has('ref_asig_id')) ? $request->input('ref_asig_id') : 1;
         $this->model->ref_mot_asig_id = ($request->has('ref_mot_asig_id')) ? $request->input('ref_mot_asig_id') : 1;
         $this->model->save(); 

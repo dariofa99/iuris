@@ -2022,7 +2022,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-           // window.location.reload(true);
+           window.location.reload(true);
         }
     });
     $("#btnCancReasig").on("click", function (e) {

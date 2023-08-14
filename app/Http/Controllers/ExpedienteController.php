@@ -978,7 +978,7 @@ class ExpedienteController extends Controller
     $request['asigexp_id'] = $expediente->expid;
     $request['ref_mot_asig_id'] =$request['motivo_asig_id'];
     $request['ref_asig_id'] = 2;
-    $request['periodo_id'] = 7;// $periodo_act->id;
+    $request['periodo_id'] = $periodo_act->id;
     $asignacion_caso = $this->asignacionCasoService->store($request);
     if ($asignar) {
       $request['docidnumber'] = $asig->asig_docente->docidnumber;

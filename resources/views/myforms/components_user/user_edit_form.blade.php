@@ -18,7 +18,7 @@
                 <input value="1" type="checkbox" {{ $user->active == '1' ? 'checked' : '' }} name="active"
                     id="active">
                 {!! Form::label('Usuario Activo ') !!}
-            </div>
+            </div> 
         @endif
     </div>
     @include('myforms.users.formulario_registro', [
@@ -93,6 +93,7 @@
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
                     'required' => 'required',
+                    'disabled' => 'disabled',
                 ]) !!}
             </div>
         </div>

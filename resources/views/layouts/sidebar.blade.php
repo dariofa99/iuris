@@ -58,7 +58,7 @@
                 <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
-                    <a href="/casos" class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder"></i>
                         <p>
                             Expedientes
