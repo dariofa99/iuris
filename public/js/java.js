@@ -1059,7 +1059,7 @@ return false;
     });
 
     $("#btn_asig_exp_doc").on("click", function (e) {
-        e.preventDefault();
+        e.preventDefault(); 
         $("#titulo_modal").text("Asignando docente");
         $("#myform_change_docente_exp>#tipo_cambio").val(4);
         var name = $(this).attr("data-name");

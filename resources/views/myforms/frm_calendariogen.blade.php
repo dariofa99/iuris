@@ -63,7 +63,7 @@
 
 
 
-
+@include('modals.modal_calendar')
 
 @stop
 @push('scripts')
@@ -159,25 +159,26 @@
 
                 },
                 eventClick: function(calEvent, jsEvent, view) {
-                    //console.log(calEvent.start);
+                    
                     infoEvent = calEvent;
-
+                   
                     if (calEvent.modal == "turnosest") {
 
                         datemodalcalendarest(calEvent.clbd, calEvent.hrbd, calEvent.datev);
+                        console.log(calEvent.modal);
                         $('#mymodal').modal('show');
                     } else if (calEvent.modal == "turnosdoc") {
 
                         datemodalcalendardoc(calEvent.clbd, calEvent.hrbd, calEvent.datev, calEvent
                             .registableasis);
-
+                            console.log(calEvent.modal);
                         $('#mymodaldoc').modal('show');
                     }
                     // change the border color just for fun
                     //$(this).css('border-color', 'red');
                 },
                 dayClick: function(date, jsEvent, view) {
-                    //alert('Clicked on: ' + date.format());
+                    
                     // change the day's background color just for fun
                     @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                         var dataasisdoc = {};
@@ -261,9 +262,9 @@
             <button type="button" id="button_insert_asisdoc" data-asisdoc = "` + dataasisdoc + `" class="btn btn-primary">Guardar cambios</button>
           </div>
         `);
-                        $('.timepicker').timepicker({
+                       /*  $('.timepicker').timepicker({
                             showInputs: false
-                        });
+                        }); */
 
                         $('.fc-day').css('background-color', '#fff');
                         $(this).css('background-color', '#ededed');

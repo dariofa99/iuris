@@ -158,7 +158,7 @@
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
     <script type="module" src={{ asset('js/admin_users.js') }}></script>
     <script>
-        @if ( $user->hasRole('estudiante'))
+        @if ( currentUser()->hasRole('estudiante') and $user->turno ==null)
             var message = '<h5>Estimado estudiante para el registro del curso tenga en cuenta lo siguiente:</h5>';
             message += '<b><div class="alert alert-warning" style="font-size:18px">';
             message += '<ul>';
@@ -169,7 +169,7 @@
             message += '</div></b>';
 
             var message = `<h5>Estimado estudiante debido a cambios de horario se habilitará la 
-                asignación del curso en el transcurso de los próximos días.</h5>`;
+                asignación del curso en el transcurso de esta semana.</h5>`;
            
 
             $("#modal-show-alerts-content").html(message);

@@ -32,11 +32,11 @@ class Perfil
         return redirect()->back();
       }
 
-      if ($user->turno == null) {
+      /* if ($user->turno == null) {
             
         Session::flash('message-danger', 'Recuerda! Primero necesitamos que actualices tu curso');
         return redirect('users/' . $user->id . '/edit');
-      }
+      } */
 
       if ($user->codigo_estudiantil == 0 || $user->codigo_estudiantil == "") {
        

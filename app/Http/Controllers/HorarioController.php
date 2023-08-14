@@ -19,7 +19,7 @@ use App\AsistenciaDocentes;
 use App\User;
 use DB;
 
-
+ 
 
 class HorarioController extends Controller
 {

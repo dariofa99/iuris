@@ -121,8 +121,8 @@ class Expediente extends Model
     public function asignacion()
     {
         return $this->hasOne(AsignacionCaso::class, 'asigexp_id', 'expid')
-        ->where('asigest_id', '=', $this->expidnumberest)
-        ->where('activo', '=', 1);
+        ->where('asigest_id', $this->estudiante->idnumber)
+        ->where('activo', 1);
     }
 
     public function requerimientos()

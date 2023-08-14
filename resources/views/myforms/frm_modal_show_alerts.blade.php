@@ -10,7 +10,13 @@
 	@slot('title')
 		<h3>Información importante!</h3>
 	@endslot
+  @push('styles')
+  <!-- aqui van los estilos de cada vista -->
+  <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+  <style>
 
+  </style>
+@endpush
  
 	@slot('body')
 

@@ -24,7 +24,7 @@ class AsignacionDocenteCasosRepository extends BaseRepository implements Asignac
             $this->model->user_created_id= auth()->user()->idnumber;  ;
             $this->model->user_updated_id= auth()->user()->idnumber; ;
             $this->model->save();
-                  
+                   
         return $this->model;
     }
 

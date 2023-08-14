@@ -33,6 +33,28 @@ $(document).ready(function () {
         $(".disabled-fun3").prop("disabled", true);
         $(".disabled-fun3").selectpicker("refresh");
     });
+
+
+    $("#btn_asig_exp_doc").on("click", async function (e) {
+        e.preventDefault();
+        $("#titulo_modal").text("Asignando docente");
+        $("#myform_change_docente_exp>#tipo_cambio").val(4);
+        $("#myform_change_docente_exp input[type='submit']").val("Asignar docente");
+        var name = $(this).attr("data-name");
+        var lastname = $(this).attr("data-lastname");
+        var idnumber = $(this).attr("data-idnumber");
+        var option =
+            '<option value="' +
+            idnumber +
+            '">' +
+            name.toUpperCase() +
+            " " +
+            lastname.toUpperCase() +
+            "</option>";
+        let response = await userService.getUsersByRole({ 'role': 'docente' });
+        abrirModalDocentes(response.users, option);
+    });
+
     $("#btnActualizar").on("click", async function (e) {
         var form = convertFormToJSON("form_expediente_edit");
         var request = {
@@ -744,18 +766,26 @@ $(document).ready(function () {
         request['expid'] = $("#form_expediente_edit input[name='expediente_id']").val()
         $("#wait").show();
         let response = await expedientesService.gestionDocente(request);
-        toastr.success("Actualizado con éxito", "", {
-            positionClass: "toast-top-right",
-            timeOut: "4000",
-        });
-        window.location.reload(true)
+        if(response.errors && response.errors.length>0) {
+            toastr.error(errors[0], "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }else{
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            window.location.reload(true)
+        }
+     
     });
 
     $("#btn_change_doc_exp").on("click", async function (e) {
         e.preventDefault();
         $("#titulo_modal").text("Cambiando docente");
         $("#myform_change_docente_exp>#tipo_cambio").val(1);
-
+        $("#myform_change_docente_exp input[type='submit']").val("Cambiar docente");
         let response = await userService.getUsersByRole({ 'role': 'docente' });
         if (response.encontrado) {
             var opcion_busq = '';
@@ -797,6 +827,7 @@ $(document).ready(function () {
         e.preventDefault();
         $("#titulo_modal").text("Solicitando cambio");
         $("#myform_change_docente_exp>#tipo_cambio").val(0);
+        $("#myform_change_docente_exp input[type='submit']").val("Solicitar cambio");
         let response = await userService.getUsersByRole({ 'role': 'docente' });
         if (response.encontrado) {
             var opcion_busq = '';
@@ -1580,7 +1611,7 @@ $(document).ready(function () {
             var textarea = document.getElementById('exp_hechos');
             var contenido = textarea.value.trim();
             var palabras = contenido.split(/\s+/);
-            if (palabras.length < 2) {
+            if (palabras.length < 100) {
                 toastr.error("Los hechos deben tener al menos 100 palabras", "", {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
@@ -1592,7 +1623,7 @@ $(document).ready(function () {
                 var textarea = document.getElementById('exp_resp_est');
                 var contenido = textarea.value.trim();
                 var palabras = contenido.split(/\s+/);
-                if (palabras.length < 2) {
+                if (palabras.length < 100) {
                     toastr.error("La respuesta debe tener al menos 100 palabras", "", {
                         positionClass: "toast-top-right",
                         timeOut: "4000",
@@ -1603,11 +1634,10 @@ $(document).ready(function () {
             }
             $("#wait").show();
             let response = await expedientesService.update(request, id);
-            $("#wait").hide();
-            Toast.fire({
-                title: 'Actualizado con éxito.',
-                type: 'success',
-                timer: 2000,
+            window.location.reload();
+            toastr.success("Se actualizó con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
             });
         } else {
             toastr.error("Hay campos que son obligatorios", "", {
@@ -2022,7 +2052,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-           window.location.reload(true);
+            window.location.reload(true);
         }
     });
     $("#btnCancReasig").on("click", function (e) {
@@ -2319,6 +2349,25 @@ function habilityButtReasCaso() {
 
     $(".disabled-fun4").prop("disabled", false);
     $(".disabled-fun4").selectpicker("refresh");
+}
+
+function abrirModalDocentes(res, option) {
+    var options = "";
+    $("#new_docente_id").selectpicker('destroy');;;
+    options = '<option value="">Seleccione...</option>';
+    for (var i = res.length - 1; i >= 0; i--) {
+        if ($("#doc_id_number").val() != res[i].idnumber)
+            options +=
+                '<option value="' +
+                res[i].idnumber +
+                '">' +
+                res[i].full_name.toUpperCase() +
+                "</option>";
+    }
+    $("#new_docente_id").html(options);
+    if (option != "") $("#myform_change_docente_exp #new_docente_id").append($(option));
+    $("#myModal_change_docente_exp").modal("show");
+    $("#new_docente_id").selectpicker('refresh');;;
 }
 
 async function changeSelectSearchExp(value) {

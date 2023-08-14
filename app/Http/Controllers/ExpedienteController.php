@@ -1626,10 +1626,10 @@ class ExpedienteController extends Controller
   public function cambiarDocente(Request $request)
   {
     $expediente = $this->expedienteService->find($request->expid);
-    $asig = $expediente->asignaciones()
-      ->where('asigest_id', $expediente->estudiante->idnumber)
-      ->where('activo', 1)
-      ->first();
+    $asig = $expediente->asignacion;  
+    if($asig==null) return response()->json(['errors' => [
+      'No hay una asignacion activa'
+    ]]);
     $asig_doc =  $this->asignacionDocenteCasoService->findWithFilter([
       'asig_caso_id' => $asig->id,
       'activo' => 1
@@ -1638,7 +1638,7 @@ class ExpedienteController extends Controller
       $request['cambio_docidnumber'] = $request->new_docente_id;
       $notify = $this->userService->findWithFilter([
         'idnumber' => $request->new_docente_id
-      ]);
+      ]); 
       $notify->expid = $expediente->expid;
       $notify->notify(new SolicitudDocenteCaso($notify));
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
@@ -1649,6 +1649,11 @@ class ExpedienteController extends Controller
     } elseif ($request->tipo_cambio == 2) {
       $request['cambio_docidnumber'] = null;
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
+    } elseif ($request->tipo_cambio == 4) {
+      $request['docidnumber'] = $request->new_docente_id;
+      $request['asig_caso_id'] = $asig->id;    
+      $asignacion = $this->asignacionDocenteCasoService->store($request);
+      return response()->json(['agregado' => 1]);
     } elseif ($request->tipo_cambio == 5) {
       $del = $expediente->getAsignacion()->asig_docente->delete();
       return response()->json(['eliminado' => 1]);
