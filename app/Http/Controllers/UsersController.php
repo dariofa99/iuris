@@ -423,7 +423,13 @@ private function aditionalData($request,$id){
         public function getUsersByRoleName(Request $request){
           //return  response()->json(['encontrado'=>$request->all()]);
       //    $users = $this->userService->getDocentes();
-         $users = $this->userService->getUsersByRoleName($request->role);
+          if($request->has('active') and ($request->input('active')===true or $request->input('active')==1)){
+            $users = $this->userService->verifyStatus(true)
+            ->getUsersByRoleName($request->role);
+          }else{
+            $users = $this->userService->getUsersByRoleName($request->role);
+          }
+         
           if(count($users)>0){
             return response()->json(['encontrado'=>true,'users'=>$users]);
           }    

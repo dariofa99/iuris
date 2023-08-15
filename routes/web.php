@@ -567,9 +567,9 @@ Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
-  $user = User::where('idnumber',3030)->first();
+  $user = User::with('curso')->where('idnumber',3030)->first();
   $request = ['cursando_id' => 114];
- // $user->asignarTurno($request);
+  //$user->asignarTurno($request);
   $user->cursando_id = 114;
   //$user->save();
 

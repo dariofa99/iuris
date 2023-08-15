@@ -29,6 +29,14 @@ class UsersRepository extends BaseRepository implements UsersService
     $this->model = $user;
   }
 
+
+  ////////
+  public function verifyStatus($verifyStatus){
+    $this->verifyStatus = $verifyStatus;
+    return $this;
+  }
+
+
   function getAllUsers($request, $relations = null, $perPage = 10): LengthAwarePaginator
   {
     $query = User::criterio($request->data_search, $request->criterio)
@@ -120,17 +128,23 @@ class UsersRepository extends BaseRepository implements UsersService
   {
 
     $this->applyValidateSede();
-    $users = $this->query->with('roles')->whereHas('roles', function ($query) use ($role) {
+    $users = $this->query->with(['roles','curso'])->whereHas('roles', function ($query) use ($role) {
       return $query->where('roles.name', $role);
     })
       ->where(function ($query) {
         if ($this->verifyStatus) {
           return $query->where('users.active', true);
         }
+      })
+      ->where(function ($query) {
+        if (!currentUser()->hasRole('amatai')) {
+          return $query->where('users.idnumber','<>', 3030);
+        }
       })->select(
         'users.active',
         'users.id',
         'users.idnumber',
+        'users.cursando_id',
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
       )->get();
     return $users->toArray();

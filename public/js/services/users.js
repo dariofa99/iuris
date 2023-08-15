@@ -199,7 +199,6 @@ export class UserService {
         "X-Requested-With": "XMLHttpRequest",
         "X-CSRF-Token": $("#token").attr("content"),
       },
-
     });
     if (!response.ok) {
       const message = `An error has occured: ${response.status}`;
@@ -207,7 +206,6 @@ export class UserService {
     }
     const res = await response.json();
     return res;
-
   }
 
   async addSede(request) {

@@ -15,8 +15,8 @@
 
 
         <div class="row">
-            <div class="col-md-12">
-                <table id="tbl_turnos_list" class="table table-bordered table-striped dataTable" role="grid">
+            <div class="col-md-12 table-responsive">
+                <table style="min-width: 990px !important" id="tbl_turnos_list" class="table" role="grid">
 
                     <thead>
                         <tr>
@@ -66,7 +66,7 @@
             <h3>Horarios docente</h3>
         @endslot
 
-
+ 
 
         @slot('body')
         <div class="body" id="turnosdoc">

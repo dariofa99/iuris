@@ -153,7 +153,7 @@ class User extends Authenticatable
     public function curso(){           
     
        // return $this->hasMany('App\Turno','trnid_estudent','idnumber');
-        return $this->hasOne('App\TablaReferencia', 'id', 'cursando_id');
+        return $this->belongsTo(TablaReferencia::class,'cursando_id');
 
     }
 

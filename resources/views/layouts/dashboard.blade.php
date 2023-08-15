@@ -156,6 +156,7 @@ if (!isset($modo_nav_crl)) {
             $('[data-toggle="tooltip"]').tooltip();
             $("#wait").hide()
         });
+        
     </script>
     <!-- PAGE PLUGINS -->
     @stack('scripts')

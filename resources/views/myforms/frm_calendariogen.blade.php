@@ -2,9 +2,8 @@
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/fullcalendar/fullcalendar.min.css') }}">
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+  
 @endpush
 @section('navbar')
     <!-- aqui va el menu de cada vista -->
@@ -70,7 +69,10 @@
     <!-- aqui van los scripts de cada vista -->
     <!-- Latest compiled and minified JavaScript -->
     {!! Html::script('plugins/fullcalendar/fullcalendar.min.js') !!}
-
+    {!! Html::script('plugins/fullcalendar/dist/locale/es.js') !!}
+    <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
+    
+    <script type="module" src={{ asset('js/admin_horarios.js') }}></script>
 
     <!-- Page specific script -->
     <script>
@@ -208,46 +210,20 @@
                   <select class="form-control" id="select_doc_horario_calendar">
                     <option value="0">Seleccione...</option>
                     @foreach ($docentes as $docente)
-                    <option value="{{ $docente->idnumber }}">{{ $docente->full_name }}</option>
-                    @endforeach
-                    <option>3</option>
-                    <option>4</option>
+                    <option value="{{ $docente['idnumber'] }}">{{ $docente['full_name'] }}</option>
+                    @endforeach                    
                   </select>
                 </div>
               </div>
             </div>
           <div class="row">
             <div class="col-sm-6">
-              <div class="bootstrap-timepicker">
-                <div class="form-group">
-                  <label>Hora inicio:</label>
-                  <div class="input-group">
-                    <input type="text" id="inicio_insert_asisdoc" class="form-control timepicker">
+                <input type="time" id="inicio_insert_asisdoc" class="form-control timepicker">
 
-                    <div class="input-group-addon">
-                      <i class="fa fa-clock-o"></i>
-                    </div>
-                  </div>
-                    <!-- /.input group -->
-                </div>
-                  <!-- /.form group -->
-              </div>
             </div>
             <div class="col-sm-6">
-              <div class="bootstrap-timepicker">
-                <div class="form-group">
-                  <label>Hora fin:</label>
-                  <div class="input-group">
-                    <input type="text" id="fin_insert_asisdoc" class="form-control timepicker">
+              <input type="time" id="fin_insert_asisdoc" class="form-control timepicker">
 
-                    <div class="input-group-addon">
-                      <i class="fa fa-clock-o"></i>
-                    </div>
-                  </div>
-                    <!-- /.input group -->
-                </div>
-                  <!-- /.form group -->
-              </div>
             </div>
           </div>
           
@@ -453,14 +429,14 @@
                                         '" value="' + value.idnumber +
                                         '" name="idnumberestasis[]"></td>' +
                                         '<td>' + value.ref_nombre + '</td>' +
-                                        '<td><select class="form-control required" id="idasisestasis' +
+                                        '<td><select class="form-control form-control-sm required" id="idasisestasis' +
                                         key + '" name="idasisestasis[]">' +
                                         '<option value="121">Asistió</option>' +
                                         '<option value="122">Falta simple</option>' +
                                         '<option value="123">Falta doble</option>' +
                                         '<option value="124">Permiso sin falta</option>' +
                                         '</select></td>' +
-                                        '<td><select class="form-control required" id="idlugarestasis' +
+                                        '<td><select class="form-control  form-control-sm required" id="idlugarestasis' +
                                         key + '" name="idlugarestasis[]"  >' +
                                         '<option value="130">Consultorios</option>' +
                                         '<option value="131">C.J. Virtuales</option>' +
@@ -468,9 +444,9 @@
                                         '<option value="133">Externo</option>' +
                                         '<option value="134">Otro</option>' +
                                         '</select></td>' +
-                                        '<td><textarea class="form-control required" required rows="1" id="comentarioestasis' +
+                                        '<td><textarea class="form-control  form-control-sm required" required rows="1" id="comentarioestasis' +
                                         key +
-                                        '" name="comentarioestasis[]" style="height: 35px;min-height: 33px;max-height: 150px;"></textarea></td>' +
+                                        '" name="comentarioestasis[]" style="height: 33px;min-height: 33px;max-height: 150px;"></textarea></td>' +
                                         '</tr>');
 
                                     if (typeof value.astid_tip_asist === "undefined") {
@@ -816,27 +792,10 @@
 
             var v_users = [];
 
-            $("#addest").click(function() {
-                //console.log(v_users)
-                if (v_users.length <= 0) {
-                    getEstudiantes();
-                } else {
-                    llenarDatos();
-                }
-
-            });
+     /* 
 
 
-            function get_curso(obj) {
-                var idnumber = $(obj).val();
-                var id = $(obj).attr('id');
-                var numero = getIdAttr(id, '-', 1);
-                $(v_users).each(function(key, value) {
-                    if (value.idnumber == idnumber) {
-                        $("#lbl_ref_c-" + numero).text(value.ref_nombre_curso);
-                    }
-                });
-            }
+           
 
             function getEstudiantes() {
                 var route = "/students/get";
@@ -851,7 +810,7 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    /*muestra div con mensaje de 'regristrado'*/
+                    
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
                         //$("#wait").css("display", "block");
@@ -876,67 +835,12 @@
                         $("#wait").css("display", "block");
                     }
                 });
-            }
+            } */
 
-            function llenarDatos() {
-                var idest = $("#tbl_turnos_list .lbl_index").length;
-                idestu = idest + 1;
-                $('#contencalendarid').append('<tr id="row_' + idest + '">' +
-                    '<td><span class="lbl_index" id="lbl_index-' + idest + '">' + idestu +
-                    '</span><input type="hidden" name="idasis[]"></td>' +
-                    '<td><select class="form-control required selectpicker estselectest2 select_users" onChange="get_curso(this);" data-live-search="true" id="idnumberestasis-' +
-                    idest + '" name="idnumberestasis[]" required>' +
-                    '<option value="">Seleccione el estudiante...</option>' +
-                    '</select></td>' +
-                    '<td><span id="lbl_ref_c-' + idest + '"></span></td>' +
-                    '<td><select class="form-control required" id="idasisestasis' + idest +
-                    '" name="idasisestasis[]">' +
-                    '<option value="125">Reposición</option>' +
-                    '<option value="126">Falta reposición</option>' +
-                    '<option value="127">Turno extenporaneo</option>' +
-                    '<option value="128">Turno fijo</option>' +
-                    '</select></td>' +
-                    '<td><select class="form-control required" id="idlugarestasis' + idest +
-                    '" name="idlugarestasis[]"  >' +
-                    '<option value="130">Consultorios</option>' +
-                    '<option value="131">C.J. Virtuales</option>' +
-                    '<option value="132">Of. Desplazados</option>' +
-                    '<option value="133">Externo</option>' +
-                    '<option value="134">Otro</option>' +
-                    '</select></td>' +
-                    '<td><textarea class="form-control required" rows="1" id="comentarioestasis' + idest +
-                    '" name="comentarioestasis[]" style="height: 35px;min-height: 33px;max-height: 150px;" required>.</textarea>' +
-                    '</td>' +
-                    '<td><button class="btn btn-danger btn_delete_row" type="button" id="btn_delete_row-' +
-                    idest + '"><i class="fa fa-minus-circle"></i></button></td>' +
-                    '</tr>');
-                var option = '';
-                $(v_users).each(function(key, value) {
-                    option += '<option value="' + value.idnumber + '">' + value.full_name.toUpperCase() +
-                        '</option>';
-                });
-                $("#idnumberestasis-" + idest).append(option); //coloca una nueva opcion
-                $(".estselectest2").selectpicker("refresh"); //refresca el select
-                $('#idestlistcal').val(''); //borra contenido contador lista estudiantes calendario
-                $('#idestlistcal').val(parseInt(idest +
-                    1)); //coloca el contador de la lista de estudiantes calendario
-            }
+         
+        
 
-            //Envia formulario
-
-            $("#myFormCalendar").submit(function() {
-                var data = $(this).serialize();
-                errors = validateForm('myFormCalendar');
-                if (errors.length <= 0) {
-                    //store_asistencia(data);
-                    // console.log(data);
-                }
-
-
-                //return false;
-
-
-            });
+         
 
             $("#tbl_turnos_list").on('click', '.btn_delete_row', function() {
                 var id = getIdAttr($(this).attr('id'), '-');
@@ -974,24 +878,24 @@
 
             /////store
 
-            function store_asistencia(data) {
+           /*  function store_asistencia(data) {
 
                 var route = "/horarios";
                 $.ajax({
                     url: route,
                     type: 'POST',
-                    datatype: 'json',
+                    datatype: 'json', 
                     data: data,
                     cache: false,
                     contentType: false,
                     processData: false,
-                    /*muestra div con mensaje de 'regristrado'*/
+                   
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-                        //$("#wait").css("display", "block");
+                        $("#wait").css("display", "block");
                     },
                     success: function(res) {
-
+                        $("#wait").css("display", "none");
                         // console.log(res);
 
                     },
@@ -1001,7 +905,7 @@
                     }
                 });
 
-            }
+            } */
 
             function parImpar(numero) {
                 if (numero % 2 == 0) {
