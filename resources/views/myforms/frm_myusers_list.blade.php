@@ -3,101 +3,87 @@
     <!-- aqui va el menu de cada vista -->
     @include('content.navbar')
 @endsection
+@push('styles')
+    <!-- aqui van los estilos de cada vista -->
+    <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+  
+@endpush
 @section('area_forms')
 
-@include('msg.alerts')
+    @include('msg.alerts')
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="btn-group" role="group" aria-label="...">
+
+                {!! link_to('users/create', 'Nuevo', $attributes = ['type' => 'button', 'class' => 'btn btn-default']) !!}
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <form method='GET' id="myFormSearchUsers" style="width: 100%; float:r">
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <select class="form-control" name="criterio" id="criterio">
+                                <option>Seleccione...</option>
+                                <option @if ($criterio == 'idnumber') selected @endif value="idnumber">No de Documento
+                                </option>
+                                <option @if ($criterio == 'name') selected @endif value="name">Nombres</option>
+                                <option @if ($criterio == 'rol') selected @endif value="rol">Rol</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                      <input type="hidden" value="{{$roles}}" id="rolesapi">
+                        <div class="form-group">
+                            {!! Form::select('data_search',[], null, [
+                                'class' => 'form-control selectpicker select_data_users',
+                                'data-live-search' => 'true',
+                                'required' => 'required',
+                                'id' => 'select_data_users',
+                                'title'=>"Esperando busqueda",
+                                "data-no-results-text"=>"No hay resultados coincidentes"
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
 
 
+                        <a href="/users" id="btn_seeall" class="btn btn-default">Ver Todo</a>
+                    </div>
 
-{!!Form::model(Request::all(),['route'=>'users.index', 'method'=>'GET','id'=>'myFormSearch'])!!}
+                </div>
+            </form>
+        </div>
 
-<div class="row">
- <div class="col-sm-2">
-    <div class="btn-group" role="group" aria-label="...">     
-     {{--  <div class="btn-group" role="group">
-        <ul class="dropdown-menu">
-          <li>{!! link_to('usuarios/importar', 'Importar')!!}</li>
-         
-        </ul>
-      </div> --}}
-      {!! link_to('users/create', 'Nuevo', $attributes = array('type'=>'button', 'class'=>'btn btn-default'))!!}
     </div>
-  </div>
 
 
-              {{--   <div class="col-sm-2">
 
-                 <div class="input-group">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  {!!Form::text('fechaini', '2012-12-12', ['class' => 'form-control', 'required' => 'required','data-inputmask'=>"'alias': 'yyyy/mm/dd'" , 'data-mask'] ); !!}
-                </div>
-                <!-- /.input group -->
-                </div>
-            
-              <!-- /.form group -->
 
-              <div class="col-sm-2">
-              <!-- Date mm/dd/yyyy -->
-              <div class="form-group">
-                <div class="input-group">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input type="text" class="form-control" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask value="2018-12-12"
-                  >
-                </div> 
-                <!-- /.input group -->
-              </div>
-              <!-- /.form group -->
-              </div> --}}
-<div class="col-md-1 col-md-offset-3">
-  Busqueda
-</div>
-              <div class="col-md-2">
-                <div class="form-group">
-                <select class="form-control" name="criterio" id="criterio">
-                    <option>Seleccione...</option>
-                    <option @if($criterio=='idnumber') selected @endif value="idnumber">No de Documento</option>
-                    <option @if($criterio=='name') selected @endif value="name">Nombres</option>
-                    <option @if($criterio=='rol') selected @endif value="rol">Rol</option>
-                </select>
+
+
+
+    <br>
+
+
+    <div id='divc'>
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="table_list_model">
+                    @include('myforms.frm_myusers_list_ajax')
                 </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">  
-                  <div id="documento" @if($criterio=='idnumber' || $criterio=='name' ) style="display: block;" @else style="display: none;"  @endif>
-                    {!!Form::text('data_search', null, ['class' => 'form-control', 'id'=>'data_search'] ); !!}
-                  </div>          
-                  <div id="roles" @if($criterio=='rol') style="display: block;" @else style="display: none;"  @endif>
-                      {!!Form::select('data_search',$roles, null,  ['class' => 'form-control selectpicker disabled-fun', 'data-live-search'=>'true','required' => 'required','id'=>'rol','disabled'])!!}
-                  </div>           
-                </div>
-              </div>
-              <div class="col-md-2">                
-                  <button type="submit"  class="btn btn-primary">Buscar</button>
-                  <a href="/users" id="btn_seeall" class="btn btn-default">Ver Todo</a>
-              </div>
 
             </div>
-{!!Form::close()!!}
+        </div>
 
-
-
-
-<br>
-
-
-<div id='divc'>
-<div class="row">
-  <div class="col-sm-12">
-    <div id="table_list_model"> 
-      @include('myforms.frm_myusers_list_ajax')
-    </div>
-    
-  </div>
-</div>
-
-<div>
-              @stop
+        <div>
+        @stop
+        @push('scripts')
+            <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
+            <script type="module" src={{ asset('js/admin_users.js') }}></script>
+        @endpush

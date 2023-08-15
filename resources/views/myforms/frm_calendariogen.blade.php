@@ -33,45 +33,45 @@
 
 
 
-@include('modals.modal_calendar')
-<!-- /modal -->
+    @include('modals.modal_calendar')
+    <!-- /modal -->
 
 
 
 
 
-<div class="row">
+    <div class="row">
 
-    <!-- /.col -->
-    <div class="col-md-12">
-        <div class="box box-primary">
-            <div class="box-body no-padding" style="margin: 5px 5px 5px 5px;">
-                <!-- THE CALENDAR -->
-                <div id="calendar"></div>
+        <!-- /.col -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body no-padding" style="margin: 5px 5px 5px 5px;">
+                    <!-- THE CALENDAR -->
+                    <div id="calendar"></div>
+                </div>
+                <!-- /.box-body -->
             </div>
-            <!-- /.box-body -->
+            <!-- /. box -->
         </div>
-        <!-- /. box -->
+        <!-- /.col -->
     </div>
-    <!-- /.col -->
-</div>
-<!-- /.row -->
-<div id="calendaridlist"></div>
+    <!-- /.row -->
+    <div id="calendaridlist"></div>
 
-<input type="hidden" id="idestlistcal" value="">
+    <input type="hidden" id="idestlistcal" value="">
 
 
 
 
-@include('modals.modal_calendar')
+    @include('modals.modal_calendar')
 
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
     <!-- Latest compiled and minified JavaScript -->
     {!! Html::script('plugins/fullcalendar/fullcalendar.min.js') !!}
-    
-  
+
+
     <!-- Page specific script -->
     <script>
         $(function() {
@@ -159,28 +159,29 @@
 
                 },
                 eventClick: function(calEvent, jsEvent, view) {
-                    
+
                     infoEvent = calEvent;
-                   
+
                     if (calEvent.modal == "turnosest") {
 
                         datemodalcalendarest(calEvent.clbd, calEvent.hrbd, calEvent.datev);
-                        console.log(calEvent.modal);
+
                         $('#mymodal').modal('show');
                     } else if (calEvent.modal == "turnosdoc") {
 
                         datemodalcalendardoc(calEvent.clbd, calEvent.hrbd, calEvent.datev, calEvent
                             .registableasis);
-                            console.log(calEvent.modal);
+
                         $('#mymodaldoc').modal('show');
                     }
                     // change the border color just for fun
                     //$(this).css('border-color', 'red');
                 },
                 dayClick: function(date, jsEvent, view) {
-                    
+
                     // change the day's background color just for fun
-                    @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
+                    @if ((currentUser()->hasRole('amatai') ||
+                     currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')) and $tipo == 'docentes')
                         var dataasisdoc = {};
                         var dateevent = date.format();
                         dataasisdoc.fecha = dateevent;
@@ -262,13 +263,18 @@
             <button type="button" id="button_insert_asisdoc" data-asisdoc = "` + dataasisdoc + `" class="btn btn-primary">Guardar cambios</button>
           </div>
         `);
-                       /*  $('.timepicker').timepicker({
-                            showInputs: false
-                        }); */
+                        /*  $('.timepicker').timepicker({
+                             showInputs: false
+                         }); */
 
                         $('.fc-day').css('background-color', '#fff');
                         $(this).css('background-color', '#ededed');
-                        $('#mymodaldoc').modal('show');
+                        if ($('#mymodaldoc').length > 0) {
+                            // El elemento con el ID 'miElemento' existe
+                            // Puedes realizar acciones en consecuencia 
+                            $('#mymodaldoc').modal('show');
+                        }
+                       
                     @endif
                 }
             })
@@ -415,7 +421,7 @@
                                     .cursando_id == 114 || value.cursando_id == 115) {
 
                                     var idparimpar = parImpar(parseInt(key +
-                                    1)); //1 par, 0 impar
+                                        1)); //1 par, 0 impar
                                     if (parimparweek == 1) {
                                         if (idparimpar == 1) {
                                             estadoturno = "Presencial"
@@ -494,16 +500,16 @@
                                 @else
 
                                     $('#contencalendarid').append('<tr><td>' + parseInt(key +
-                                        1) + '</td><td>' + value.name + ' ' + value
+                                            1) + '</td><td>' + value.name + ' ' + value
                                         .lastname + '</td><td>' + value.ref_nombre +
                                         ' (Asiste: ' + estadoturno + ') </td></tr>');
                                 @endif
 
                             });
                             $('#idestlistcal').val(
-                            ''); //borra contenido contador lista estudiantes calendario
+                                ''); //borra contenido contador lista estudiantes calendario
                             $('#idestlistcal').val(parseInt(parseInt(
-                            numid))); //coloca el contador de la lista de estudiantes calendario
+                                numid))); //coloca el contador de la lista de estudiantes calendario
 
                         }
 
@@ -516,7 +522,7 @@
                     error: function(xhr, textStatus, thrownError) {
                         $("#wait").css("display", "none");
                         alert("Hubo un error con el servidor ERROR:: este es" + thrownError,
-                        textStatus);
+                            textStatus);
                     }
 
                 });
@@ -913,7 +919,7 @@
                 $(".estselectest2").selectpicker("refresh"); //refresca el select
                 $('#idestlistcal').val(''); //borra contenido contador lista estudiantes calendario
                 $('#idestlistcal').val(parseInt(idest +
-                1)); //coloca el contador de la lista de estudiantes calendario
+                    1)); //coloca el contador de la lista de estudiantes calendario
             }
 
             //Envia formulario

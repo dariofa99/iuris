@@ -12,7 +12,7 @@ $(document).ready(function () {
     var errors = validateForm("myFormUserCreate");
     if (errors.length <= 0) {
       var request = convertFormToJSON("myFormUserCreate");
-      var data = []; 
+      var data = [];
       $(".input_user_ad").each((index, obj) => {
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
@@ -94,6 +94,72 @@ $(document).ready(function () {
       });
     }
   });
+
+  $("#criterio").on("change", function () {
+    var valor = $(this).val();
+    console.log(valor);
+    $(".selectpicker").selectpicker("refresh");
+    switch (valor) {
+      case "name":
+        $("#myFormSearchUsers select[name='data_search']").prop("disabled", false).selectpicker('show');
+        $("#select_data_users").attr('title', 'Ingrese el nombre de usuario');
+        $('#select_data_users').selectpicker('destroy').html('').selectpicker();
+        break;
+      case "idnumber":
+        $("#myFormSearchUsers select[name='data_search']").prop("disabled", false).selectpicker('show');
+        $("#select_data_users").attr('title', 'Ingrese el número de documento');
+        $('#select_data_users').selectpicker('destroy').html('').selectpicker();
+        break;
+      case "rol":
+        var ref_estados = JSON.parse($("#myFormSearchUsers input[id='rolesapi']").val());
+        console.log(ref_estados);
+        $(".select_data_users").selectpicker('render');
+        var opcion_busq = '';
+        for (const key in ref_estados) {
+          if (ref_estados.hasOwnProperty(key)) {
+            const value = ref_estados[key];
+            if (key != 1) {
+              opcion_busq += '<option value="' + key + '">' + value + '</option>';
+            }
+
+          }
+        }
+
+        $("#select_data_users").append(opcion_busq);
+        $(".select_data_users").selectpicker("refresh");
+
+        break;
+    }
+  });
+
+  $('#myFormSearchUsers').on('keyup', 'div.select_data_users input', async function (e) {
+    let name = $(this).val();
+
+    var opselected = $("#myFormSearchUsers select[name='criterio']").val();
+    if (opselected != '' && (opselected == 'name' || opselected == 'idnumber')) {
+      $('div.select_data_users li.no-results').text('Buscando...');
+      $(".select_data_users").selectpicker('render');//refresca el select
+      if (opselected == 'idnumber') {
+        if (isNaN(name)) {
+          $('div.select_data_users li.no-results').text('Debe ser númerico');
+        } else {
+          var opcion_busq = '<option value="' + name + '">' + name + '</option>';
+          $("#select_data_users").html(opcion_busq);
+        }
+      } else {
+
+        var opcion_busq = '<option value="' + name + '">' + name + '</option>';
+        $("#select_data_users").html(opcion_busq);
+
+      }
+      $(".select_data_users").selectpicker("refresh")
+    } else {
+      $('div.select_data_users li.no-results').text('Ingrese un tipo de busqueda');
+      var roles = $("#myFormSearchUsers select[name='rolesapi']").val();
+      console.log(roles);
+    }
+  });
+
 
   $("#btn_actualizar_usuario").on("click", async function (e) {
 
@@ -206,7 +272,7 @@ $(document).ready(function () {
         let timerInterval
         Swal.fire({
           title: 'Registrando!',
-          html: 'Se esta registrando al estudiante<br><b>'+user.nombres+" "+user.apellidos+"</b>",
+          html: 'Se esta registrando al estudiante<br><b>' + user.nombres + " " + user.apellidos + "</b>",
           timer: 10000,
           timerProgressBar: true,
           allowOutsideClick: false,
@@ -223,7 +289,7 @@ $(document).ready(function () {
             request['lastname'] = user.apellidos;
             request['password'] = 'udenarcj'
             let response = await userService.registrar(request);
-            if(response.errors && response.errors.length>0){
+            if (response.errors && response.errors.length > 0) {
               response.errors.forEach(error => {
                 toastr.error(error, "", {
                   positionClass: "toast-top-right",
@@ -231,11 +297,11 @@ $(document).ready(function () {
                 });
               });
               Swal.close();
-            }else if(response.user && response.user.id!=undefined){
+            } else if (response.user && response.user.id != undefined) {
               window.location = "/expedientes"
             }
             //console.log(userRe);
-           // window.location = "/expedientes"
+            // window.location = "/expedientes"
 
           },
           willClose: () => {
@@ -247,11 +313,11 @@ $(document).ready(function () {
             console.log('I was closed by the timer')
           }
         })
-      } else {      
-          toastr.error("Si creés que esto es un error comunícate con el administrador.", "Ups! Al parecer no estas matriculado.", {
-            positionClass: "toast-top-right",
-            timeOut: "4000",
-          });
+      } else {
+        toastr.error("Si creés que esto es un error comunícate con el administrador.", "Ups! Al parecer no estas matriculado.", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+        });
       }
     }
     $("#wait").hide();
