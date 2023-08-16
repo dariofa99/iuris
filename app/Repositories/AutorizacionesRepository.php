@@ -23,7 +23,7 @@ class AutorizacionesRepository extends BaseRepository implements AutorizacionesS
             $query->whereIn('expestado_id',[1,3,4]);
         })->search($request);  
         $autorizaciones = $this->query->orderBy('autorizaciones.created_at','desc')
-        ->paginate(20);
+        ->paginate(20); 
         
         return $autorizaciones;
     }

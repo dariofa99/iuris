@@ -6,8 +6,30 @@ $(document).ready(function () {
   set_tab();
   $(".select2_ramas").selectpicker();
   $(".select2_ramas").selectpicker("refresh");
-  let id = $("#myFormUserEdit input[name='idnumber']")
-    .prop("disabled", true).removeAttr('name');
+  $("#myFormUserEdit input[name='idnumber']").prop("disabled", true).removeAttr('name');
+ 
+ 
+  $("#table_list_model").on("click", ".btn_switch_estdoc", async function (e) {
+    e.preventDefault();
+    var id = $(this).attr("id");
+    var email = $("#useremail-"+id).text().trim();
+    var estado = $(this).attr('data-estado') == 0 ? 1 : 0;
+    let request = {
+      'id':id,
+      'active':estado,
+      'email':email
+    }
+    $("#wait").show();
+    let response = await userService.update(request);
+    var path = window.location.href;  
+    await index_pagination(path);
+    toastr.success("Usuario actualizado con éxito", "", {      
+      timeOut: "4000",
+    });
+    $("#wait").hide()
+    //changeStateUser(id);
+  });
+
   $("#registrar_gen_us").on("click", async function (e) {
     var errors = validateForm("myFormUserCreate");
     if (errors.length <= 0) {

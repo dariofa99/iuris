@@ -638,29 +638,35 @@ class ExpedienteController extends Controller
           $notas =  $expediente->get_has_nota_final();
           if (count($notas) <= 0) {
             $segmento = $this->segmentosService->getSegmentoActivo();
-            $data = [
-              'ntaaplicacion' => 0,
-              'ntaconocimiento' => 0,
-              'ntaetica' => 0,
-              'ntaconcepto' => 'Evaluado por el sistema - Tiempo 30 días agotado',
-              'orgntsid' => '1',
-              'segid' => $segmento->id,
-              'perid' => $segmento->perid,
-              'tpntid' => '1',
-              'expidnumber' => $expediente->expid,
-              'estidnumber' => $expediente->expidnumberest,
-              'docidnumber' => Auth::user()->idnumber,
-              'tbl_org_id' => $expediente->id,
-            ];
-            $expediente->asignarNotas($data);
-            $expediente->expestado_id = 5;
-            $expediente->save();
-
-            $request['comentario'] = 'Evaluado por el sistema - Tiempo 30 días agotado';
-            $request['expidnumber'] = $expediente->expid;
-            $request['ref_estado_id'] = $expediente->expestado_id;
-            $request['ref_motivo_estado_id'] = 12;
-            $estado_caso = $this->estadoCasoService->store($request);
+            if($segmento){
+              $data = [
+                'ntaaplicacion' => 0,
+                'ntaconocimiento' => 0,
+                'ntaetica' => 0,
+                'ntaconcepto' => 'Evaluado por el sistema - Tiempo 30 días agotado',
+                'orgntsid' => '1',
+                'segid' => $segmento->id,
+                'perid' => $segmento->perid,
+                'tpntid' => '1',
+                'expidnumber' => $expediente->expid,
+                'estidnumber' => $expediente->expidnumberest,
+                'docidnumber' => Auth::user()->idnumber,
+                'tbl_org_id' => $expediente->id,
+              ];
+              $expediente->asignarNotas($data);
+              $expediente->expestado_id = 5;
+              $expediente->save();
+  
+              $request['comentario'] = 'Evaluado por el sistema - Tiempo 30 días agotado';
+              $request['expidnumber'] = $expediente->expid;
+              $request['ref_estado_id'] = $expediente->expestado_id;
+              $request['ref_motivo_estado_id'] = 12;
+              $estado_caso = $this->estadoCasoService->store($request);
+            }else{
+              Session::flash('message-danger', 'Atención! No hay un segmento activo');
+       
+            }
+       
           }
         }
       }

@@ -18,7 +18,7 @@ class SegmentosRepository extends BaseRepository implements SegmentosService{
     {
         parent::__construct($segmento);
     }
-    public function getSegmentoActivo(): Segmento
+    public function getSegmentoActivo(): ?Segmento
     {
       $segmento = Segmento::where('estado', true)
         ->join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')

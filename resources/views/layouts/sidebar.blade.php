@@ -22,10 +22,13 @@
                 </a>
             </div>
             <div class="info">
+               <small>
                 <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
                     title="Ingresar a perfil">{{ Auth::user()->name }}</a>
+                </small> 
+
                 @if (currentUser()->turno)
-                    <span title="Color del turno"
+                    <span style="width: 20px; height:20px; border-radius:10px" title="Color del turno"
                         class="badge {{ currentUser()->getColorTurno(currentUser()->turno->color->ref_value) }}">.</span>
                 @else
                 @endif

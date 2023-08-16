@@ -286,7 +286,7 @@ $(document).ready(function (e) {
         e.preventDefault();
         id = $(this).attr("id");
         changeStateUser(id);
-    });
+    }); 
 
     $("#table_list_model").on("click", ".btn_edit_per", function () {
         var id = getIdAttr($(this).attr("id"), "-", 1);

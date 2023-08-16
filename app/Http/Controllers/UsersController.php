@@ -56,10 +56,11 @@ class UsersController extends Controller
        
        $active_users='active';
         
-       if ($request->ajax()) {
-        //return response()->json($users);
-        return view('myforms.frm_myusers_list_ajax', compact('users'))->render();
-       }
+       if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+        $view = view('myforms.frm_myusers_list_ajax', compact('users'))->render();
+       
+        return response()->json($view);
+        }
      
        return view('myforms.frm_myusers_list', compact('users', 'active_users','criterio'));
 

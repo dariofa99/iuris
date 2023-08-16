@@ -21,7 +21,7 @@
                   <tr role="row" class="odd" id="{{ $user->idnumber }}">
                     <td>{{ $user->idnumber }}</td>
                     <td>{{ $user->name }} {{ $user->lastname }}</td>
-                    <td>{{ $user->email }}</td>
+                    <td id="useremail-{{ $user->id }}">{{ $user->email }}</td>
                     <td>{{ $user->tel1 }}</td>
                     <td>
 
@@ -38,20 +38,20 @@
                     <td>{{ getSmallDate($user->created_at) }}</td>
                     <td>
                       @if($user->active) 
-                      <i class="fa fa-toggle-on switch-on btn_switch_estdoc" id="{{$user->id}}"></i>
+                      <i class="fa fa-toggle-on switch-on btn_switch_estdoc" data-estado="{{$user->active}}" id="{{$user->id}}"></i>
                         @else
-                      <i class="fa fa-toggle-on switch-off btn_switch_estdoc" id="{{$user->id}}"></i>
+                      <i class="fa fa-toggle-on switch-off btn_switch_estdoc" data-estado="{{$user->active}}" id="{{$user->id}}"></i>
                       @endif
                     </td>
  
-                    <td>{!! link_to_route('users.edit', $title = 'Editar', $parameters = $user->id, $attributes = ['class'=>'btn btn-primary btn-sm']) !!}
+                    <td>{!! link_to_route('users.edit', $title = 'Editar', $parameters = $user->id, $attributes = ['class'=>'btn btn-primary btn-block btn-sm']) !!}
   
-                    <a onclick='return confirm("¿Está seguro de eliminar el registro..?")' href="{{ route('users.destroy',$user->id) }}" >
-                      <button disabled="" class="btn btn-danger btn-sm">
+                   {{--  <a onclick='return confirm("¿Está seguro de eliminar el registro..?")' href="{{ route('users.destroy',$user->id) }}" >
+                      <button disabled="" class="btn btn-block btn-danger btn-sm">
                          Eliminar
                       </button>
 
-                   </a>
+                   </a> --}}
 
                       
                     </td>

@@ -102,10 +102,10 @@
                     @php $num=0 @endphp
                     <option value="">Seleccione</option>
                     @while ($num <= 9)
-                        <option value="{{ $num }}">{{ $num }}</option>
+                        <option {{$expediente->expperacargo != $num ?:"selected"}} value="{{ $num }}">{{ $num }}</option>
                         @php $num++ @endphp
                     @endwhile
-                    <option value="10">10 o más</option>
+                    <option {{$expediente->expperacargo != 10 ?:"selected"}}  value="10">10 o más</option>
                 </select>
             </div>
         </div>
