@@ -567,13 +567,25 @@ Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
-  $user = User::with('curso')->where('idnumber',3030)->first();
-  $request = ['cursando_id' => 114];
+ 
+  $estu = DB::select("SELECT est.idnumber, concat(est.name,' ',est.lastname) as name,
+   roles.name FROM `users` as est JOIN role_user on role_user.user_id = est.id 
+   join roles on roles.id = role_user.role_id WHERE est.active = '1' and roles.id = 6 limit 100");
+
+foreach ($estu as $key => $est) {
+  $user = User::with('curso')->where('idnumber',$est->idnumber)->first();
+  $tr = strval(rand(114, 117));
+  $request = ['cursando_id' => $tr];
+  $user->asignarTurno($request);
+  $user->cursando_id = $tr;
+  $user->save();
+}
+ 
   //$user->asignarTurno($request);
   $user->cursando_id = 114;
   //$user->save();
-
-  dd($user);
+  $h1 = strval(rand(114, 117));
+  dd($h1);
 /*   $dateString = date('Y-m-d');
   $date = DateTime::createFromFormat('Y-m-d', $dateString);
 

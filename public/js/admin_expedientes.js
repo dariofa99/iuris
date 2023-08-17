@@ -2376,7 +2376,7 @@ async function changeSelectSearchExp(value) {
     $("#myformExpFilter select[name='data']").prop("disabled", true).selectpicker('hide');
     $("#myformExpFilter table").hide();
     $("#select_data_users").selectpicker('refresh');;;
-
+    $("#myformExpFilter input[name='search_onlyMy_exp']").prop("disabled", false).show();
     switch (value) {
         case "idnumber_doc":
             $("#myformExpFilter select[name='data']").prop("disabled", false).selectpicker('show');

@@ -61,7 +61,7 @@ trait AsigTurno
                 ->where('id', '<>', 120)
                 ->inRandomOrder()
                 ->get();
-            //    dd($cupos);
+            //    
             if (isset($cupos_color_total[0])) {
                 if (count($cupos_color_total) < 5) {
                     foreach ($colores_total as $key1 => $colorest_id) {
@@ -81,7 +81,7 @@ trait AsigTurno
             } else {
                 $colores = $colores_total;
             }
-
+            dd($cupos,$cupos_color_total,$horario);
             if (isset($cupos[0])) {
                 if ((count($horario) == 1 && count($cupos) == 5) || 
                  (count($horario) == 2 && count($cupos) == 10)) {

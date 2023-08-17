@@ -98,7 +98,7 @@ class RequerimientoController extends Controller
             return response()->json(
                 $data
             );
-        }
+        } 
         //get-----
 
         $requerimientos = $this->requerimientosService->index($request);

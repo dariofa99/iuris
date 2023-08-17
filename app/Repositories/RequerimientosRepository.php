@@ -15,7 +15,7 @@ class RequerimientosRepository extends BaseRepository implements RequerimientosS
 
     public function index(Request $request){
       
-        $requerimientos = $this->model::orderBy('reqfecha', 'asc')
+        $requerimientos = $this->model::orderBy('reqfecha', 'desc')
                 /* ->join('ref_reqasis', 'ref_reqasis.reqid_refasis', '=', 'requerimientos.reqid_asistencia')
                 ->join('expedientes', 'expedientes.expid', '=', 'requerimientos.reqexpid')
                 ->join('sede_expedientes as se', 'se.expediente_id', '=', 'expedientes.id') */

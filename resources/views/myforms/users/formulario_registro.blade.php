@@ -47,14 +47,14 @@
         </div>
        <div class="col-md-{{isset($col)?$col:'6'}}">
             <div class="form-group has-feedback"><label for="name">Dirección para notificaciones*</label>
-                <input {{isset($disabled) ? $disabled : ''}} id='address' value="{{(isset($user)) ? $user->address:"" }}" name='address' required type="text" class="form-control form-control-sm required"  data-toggle="tooltip" title="Dirección de residencia"  placeholder="Dirección de residencia" maxlength="20" >
+                <input {{isset($disabled) ? $disabled : ''}} id='address' value="{{(isset($user)) ? $user->address:"" }}" name='address' required type="text" class="form-control form-control-sm required"  data-toggle="tooltip" title="Dirección de residencia"  placeholder="Dirección de residencia" maxlength="200" >
                 
             </div>
         </div>
 
         <div class="col-md-{{isset($col)?$col:'6'}}">
             <div class="form-group has-feedback"><label for="name">Correo electrónico*</label>
-                <input {{isset($disabled) ? $disabled : ''}} id='email' name='email' value="{{(isset($user)) ? $user->email:"" }}" required type="email" class="form-control form-control-sm required validate_email"  data-toggle="tooltip" title="Correo electrónico"  placeholder="Correo electrónico" maxlength="50" >
+                <input {{isset($disabled) ? $disabled : ''}} id='email' name='email' value="{{(isset($user)) ? $user->email:"" }}" required type="email" class="form-control form-control-sm required validate_email"  data-toggle="tooltip" title="Correo electrónico"  placeholder="Correo electrónico" maxlength="200" >
                 
             </div>
         </div>

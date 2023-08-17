@@ -191,7 +191,7 @@ class ExpedienteController extends Controller
       }
 
       //$numEx = count($expedientes);
-    } elseif (currentUser()->hasRole("docente")) {
+    } elseif (currentUser()->hasRole("docente")) { //Docentes
       $count_colors = DB::select(
         DB::raw("SELECT SUM(IF(DATEDIFF(NOW(), `fecha_asig`)<=10,1,0)) AS verde, 
         SUM(IF(DATEDIFF(NOW(), `fecha_asig`)<=20,IF(DATEDIFF(NOW(), `fecha_asig`)>10,1,0),0)) AS amarillo, 
@@ -212,7 +212,7 @@ class ExpedienteController extends Controller
       // $numEx= Expediente::count();
 
 
-      if ((!$request->all()) || (!$request->get('tipo_busqueda'))) {
+      if ((!$request->get('tipo_busqueda'))) {
 
         $expedientes = Expediente::join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
           ->leftjoin('sede_expedientes', 'sede_expedientes.expediente_id', '=', 'expedientes.id')
@@ -655,8 +655,7 @@ class ExpedienteController extends Controller
               ];
               $expediente->asignarNotas($data);
               $expediente->expestado_id = 5;
-              $expediente->save();
-  
+              $expediente->save();  
               $request['comentario'] = 'Evaluado por el sistema - Tiempo 30 días agotado';
               $request['expidnumber'] = $expediente->expid;
               $request['ref_estado_id'] = $expediente->expestado_id;

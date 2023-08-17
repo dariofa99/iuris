@@ -26,7 +26,7 @@
 
                     <option @if (isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'fecha_creacion') selected @endif value="fecha_creacion">Fecha
                         de Creación</option>
-
+ 
                     <option @if (isset($request['tipo_busqueda']) and $request['tipo_busqueda'] == 'fecha_cita') selected @endif value="fecha_cita">Fecha de
                         Cita</option>
                 </select>
