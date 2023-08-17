@@ -284,7 +284,7 @@ class RequerimientoController extends Controller
         $requerimiento->notas_f = $requerimiento->get_notas();
         $requerimiento->fecha_corta = getSmallDate($requerimiento->created_at);
         $data = [
-            'requerimiento' => $requerimiento,
+            'requerimiento' => $requerimiento,          
         ];
         return response()->json($data);
     }

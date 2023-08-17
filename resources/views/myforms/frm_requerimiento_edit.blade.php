@@ -33,12 +33,10 @@
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
-                    {!! Form::text('reqcreated_at', date('Y-m-d'), [
+                    {!! Form::date('reqcreated_at', null, [
                         'class' => 'form-control form-control-sm',
                         'required' => 'required',
-                        'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                        'data-mask',
-                        'readonly',
+                        'readonly','disabled',
                         'id' => 'reqcreated_at',
                     ]) !!}
                 </div>
@@ -96,8 +94,7 @@
                         'class' => 'form-control form-control-sm',
                         'id' => 'reqfecha_ed',
                         'required' => 'required',
-                        'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                        'data-mask',
+                        
                     ]) !!}
                 </div>
                 <!-- /.input group -->

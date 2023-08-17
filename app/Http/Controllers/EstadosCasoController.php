@@ -72,6 +72,7 @@ class EstadosCasoController extends Controller
             $date = Carbon::now()->format('Y-m-d');
             $acts =  $expediente->verifyNotAct($date);
             $reqs =  $expediente->verifyNotReq($date);
+           // return response()->json(count($reqs));
             $request['expidnumber'] = $request->expid;
             $request['ref_estado_id'] = $request->new_expestado;
             $request['ref_motivo_estado_id'] = $request->motivo_estado;
@@ -87,7 +88,7 @@ class EstadosCasoController extends Controller
                                 'mensaje' => 'El Caso NO tiene notas asignadas',
                                 'guardado' => false,
                                 'exp' => $expediente,
-                                'role' => $role,
+                                'role' => $role, 
                             ];
                             return response()->json(($response));
                         }
@@ -119,7 +120,7 @@ class EstadosCasoController extends Controller
                     }
                 } else {
                     $mensaje = '';
-                    if (count($reqs) > 0) $mensaje .= 'Hay ' . count($reqs) . ' requerimientos que requieren ser revisados <br>';
+                    if (count($reqs) > 0) $mensaje .= 'Hay ' . count($reqs) . ' requerimientos que requieren ser entregados <br>';
                     if (count($acts) > 0) $mensaje .= 'Hay ' . count($acts) . ' actuaciones que requieren ser revisadas';
 
                     $response = [

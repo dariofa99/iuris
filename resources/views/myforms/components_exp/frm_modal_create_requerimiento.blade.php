@@ -144,11 +144,7 @@
              <div class="col-md-12">
                  <div class="form-group">
                      {!! Form::label('Descripción: ') !!}
-                     {!! Form::textarea(
-                         'reqdescrip',
-                         "Por medio de la presente me permito requerirlo para seguir	con el asunto radicado bajo el código: {$expediente->expid} que Usted presentó ante Consultorios Jurídicos de la Universidad Nariño. Por lo anterior, le solicito asistir a las instalaciones de Consultorios Jurídicos ubicados en la Calle 19 con Carrera 22 esquina, en la fecha indicada. En caso de no presentarse a esta citación se procederá al cierre y archivo del caso, advirtiéndole que Usted podrá acercarse nuevamente a presentar su asunto y será designado a un nuevo estudiante.	",
-                     
-                         ['class' => 'form-control required', 'maxlength' => '700'],
+                     {!! Form::textarea('reqdescrip',null,['class' => 'form-control required', 'maxlength' => '900'],
                      ) !!}
                  </div>
              </div>

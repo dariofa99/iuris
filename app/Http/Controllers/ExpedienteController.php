@@ -876,7 +876,7 @@ class ExpedienteController extends Controller
 
 
 
-
+ 
         $expedientes = DB::table('expedientes as e')
           ->join('users as s', 'e.expidnumberest', '=', 's.idnumber')
           ->join('users as c', 'e.expidnumber', '=', 'c.idnumber')

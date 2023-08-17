@@ -32,7 +32,7 @@
              <th>Hora Cita</th>
              <th>Asistencia</th>
              <th>Estado</th>
-             <th>Evaluado</th>
+             {{-- <th>Evaluado</th> --}}
              <th>Acción</th>
          </tr>
      </thead>
@@ -74,9 +74,9 @@
                  <td>
                     {{ $req->reqentregado ? 'Entregado' : 'Sin entregar' }}
                 </td>
-                 <td>
+                {{--  <td>
                      {{ $label }}
-                 </td>
+                 </td> --}}
                 
                  <td>
                     @if(!$readonly)

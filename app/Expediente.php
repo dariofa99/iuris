@@ -551,12 +551,11 @@ class Expediente extends Model
         }
         $reqs = DB::table('requerimientos')
             ->where([
-                'evaluado' => false,
+                'reqentregado' => false,
                 'reqidest' => $this->expidnumberest,
                 'reqexpid' => $this->expid,
-                ['reqfecha', '<=', $date],
             ])
-            ->select('requerimientos.id')
+             ->select('requerimientos.id')
             ->get();
 
         return $reqs;

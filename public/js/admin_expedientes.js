@@ -2222,7 +2222,7 @@ function hideEditNotas() {
 
 }
 function llenarFormEditReq(res) {
-    $("#reqcreated_at").val(res.requerimiento.fecha_corta)
+    $("#reqcreated_at").val(moment(res.requerimiento.created_at, "YYYY-MM-DD").format("YYYY-MM-DD"))
     $("#reqid").val(res.requerimiento.id);
     $("#reqfecha_ed").val(res.requerimiento.reqfecha);
     $("#reqhora_ed").val(res.requerimiento.reqhora);
@@ -2230,7 +2230,7 @@ function llenarFormEditReq(res) {
     $("#reqdescrip").val(res.requerimiento.reqdescrip);
 }
 function llenarModalUpdateReq(res) {
-    $("#reqcreated_at").val(res.requerimiento.fecha_corta)
+    $("#reqcreated_at").val(moment(res.requerimiento.created_at, "YYYY-MM-DD").format("YYYY-MM-DD"))
     $("#req_id").val(res.requerimiento.id);
     $("#lab_cod_exp").text(res.requerimiento.expediente.expid);
     $("#lab_fech_crea").text(res.requerimiento.created_at);
