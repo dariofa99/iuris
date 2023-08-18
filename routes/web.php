@@ -568,17 +568,21 @@ Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
  
-  $estu = DB::select("SELECT est.idnumber, concat(est.name,' ',est.lastname) as name,
-   roles.name FROM `users` as est JOIN role_user on role_user.user_id = est.id 
-   join roles on roles.id = role_user.role_id WHERE est.active = '1' and roles.id = 6 limit 100");
+  $estu = DB::select("SELECT est.id, est.idnumber, concat(est.name,' ',est.lastname) as name,
+   roles.name as role FROM `users` as est JOIN role_user on role_user.user_id = est.id 
+   join roles on roles.id = role_user.role_id WHERE (roles.id = 6 or roles.id = 8)
+   and est.id > 18649
+   order by est.id asc limit 34");
+
+//dd($estu);
 
 foreach ($estu as $key => $est) {
   $user = User::with('curso')->where('idnumber',$est->idnumber)->first();
-  $tr = strval(rand(114, 117));
+  $tr = 116;//strval(rand(114, 117));
   $request = ['cursando_id' => $tr];
   $user->asignarTurno($request);
   $user->cursando_id = $tr;
-  $user->save();
+ $user->save();
 }
  
   //$user->asignarTurno($request);

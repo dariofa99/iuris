@@ -3,9 +3,10 @@
 namespace App\Traits;
 
 use App\Turno;
-use DB;
+
 use App\Periodo;
 use App\Asigna_docen_est;
+use Illuminate\Support\Facades\DB;
 
 trait AsigTurno
 {
@@ -15,7 +16,7 @@ trait AsigTurno
         $consulta = "";
         $horario = [];
         if ($request['cursando_id'] == '114') { ///// 4a
-            $h1 = strval(rand(112, 113));//2-4..4-6
+            $h1 = strval(rand(112, 113)); //2-4..4-6
             $horario = [$h1, ''];
             if ($horario[0] == '112') {
                 $horario[1] = '113';
@@ -24,7 +25,7 @@ trait AsigTurno
             }
             $consulta = "`trnid_horario` = " . $horario[0] . " OR `trnid_horario` = " . $horario[1];
         } elseif ($request['cursando_id'] == '115') { ///// 4b
-            $h1 = strval(rand(110, 111));//8-10 - 10-12
+            $h1 = strval(rand(110, 111)); //8-10 - 10-12
             $horario = [$h1, ''];
             if ($horario[0] == '110') {
                 $horario[1] = '111';
@@ -40,15 +41,15 @@ trait AsigTurno
             $consulta = "`trnid_horario` = 118";
         }
 
-       // dd($request['cursando_id']);
-
         if ($consulta != "") {
             $cupos = DB::select(
                 DB::raw("SELECT CONCAT(`trnid_horario`,'_',`trnid_color`) AS 'hc',
-             COUNT(CONCAT(`trnid_horario`,'_',`trnid_color`)) AS 'chc' FROM `turnos`
+             COUNT(CONCAT(`trnid_horario`,'_',`trnid_color`)) AS 'chc',refcolor.ref_nombre as color, refhora.ref_nombre as hora
+              FROM `turnos`
+                join referencias_tablas as refcolor on refcolor.id = turnos.trnid_color
+                join referencias_tablas as refhora on refhora.id = turnos.trnid_horario
               WHERE $consulta AND `trnid_color`<> 120 GROUP BY hc ORDER BY chc ASC")
             );
-          
             $cupos_color_total = DB::table('turnos')
                 ->select('trnid_color as id')
                 ->where('trnid_color', '<>', 120)
@@ -61,7 +62,6 @@ trait AsigTurno
                 ->where('id', '<>', 120)
                 ->inRandomOrder()
                 ->get();
-            //    
             if (isset($cupos_color_total[0])) {
                 if (count($cupos_color_total) < 5) {
                     foreach ($colores_total as $key1 => $colorest_id) {
@@ -80,11 +80,12 @@ trait AsigTurno
                 }
             } else {
                 $colores = $colores_total;
-            }
-            dd($cupos,$cupos_color_total,$horario);
+            }          
             if (isset($cupos[0])) {
-                if ((count($horario) == 1 && count($cupos) == 5) || 
-                 (count($horario) == 2 && count($cupos) == 10)) {
+                if ((count($horario) == 1 && count($cupos) == 5) ||
+                    (count($horario) == 2 && count($cupos) == 10)
+                ) {
+
                     foreach ($cupos as $key => $value) {
                         if ($cupos[0]->chc != $value->chc) {
                             unset($cupos[$key]);
@@ -151,7 +152,7 @@ trait AsigTurno
 
                 ];
 
-                 $this->createTurno($turno);
+                $this->createTurno($turno);
                 return true;
             }
             return false;

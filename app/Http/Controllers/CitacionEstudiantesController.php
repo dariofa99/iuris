@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Mail;
-use Session;
-use Redirect;
 use App\Notifications\CitacionEstudiantes;
 use App\Notifications\CitacionEstudiantesQueve;
 use App\Expediente;
 use App\CitacionEstudiantes as Citacion;
 use App\Services\ExpedientesService;
-use DB;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CitacionEstudiantesController extends Controller
 {
@@ -187,7 +184,7 @@ class CitacionEstudiantesController extends Controller
     {
 
         $citas = Citacion::whereDate('fecha_corta', $request->fecha)
-            ->where('docidnumber', \Auth::user()->idnumber)->get();
+            ->where('docidnumber', Auth::user()->idnumber)->get();
         $citas->each(function ($asignacion) {
             $asignacion->asignacion->estudiante;
         });

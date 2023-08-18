@@ -22,25 +22,35 @@
                 </a>
             </div>
             <div class="info">
-               <small>
-                <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
-                    title="Ingresar a perfil">{{ Auth::user()->name }}</a>
-                </small> 
+                <small>
+                    <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
+                        title="Ingresar a perfil">{{ Auth::user()->name }}</a>
+
+
+                </small>
 
                 @if (currentUser()->turno)
                     <span style="width: 20px; height:20px; border-radius:10px" title="Color del turno"
                         class="badge {{ currentUser()->getColorTurno(currentUser()->turno->color->ref_value) }}">.</span>
                 @else
                 @endif
+                <br>
+                <small>
+                    <a>
+                        @if (currentUser()->hasRole('estudiante') and currentUser()->turno != null)
+                         Horario: {{ currentUser()->turno->horario->ref_nombre }}
+                        @endif
+                    </a>
+<br>
+                    <a href="{{ route('logout.index') }}">
+                        <i class="fas fa-sign-out-alt"></i>
+    
+                        {{ __('Salir') }}
+                    </a>
+                </small>
 
 
-
-                <a href="{{ route('logout.index') }}">
-                    <br>
-                    <i class="fas fa-sign-out-alt"></i>
-
-                    {{ __('Salir') }}
-                </a>
+                
 
 
             </div>
@@ -125,8 +135,7 @@
                     </ul>
                 </li>
                 @if (currentUser()->can('ver_conciliaciones_'))
-                    <li
-                        class="nav-item has-treeview">
+                    <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Conciliaciones
@@ -259,6 +268,7 @@
                         </ul>
                     </li>
                 @endif
+                
             </ul>
             </li>
             </ul>

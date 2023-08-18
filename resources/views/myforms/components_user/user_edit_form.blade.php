@@ -92,8 +92,7 @@
                 {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
-                    'required' => 'required',
-                    'disabled' => 'disabled',
+                    'required' => 'required',                    
                 ]) !!}
             </div>
         </div>
