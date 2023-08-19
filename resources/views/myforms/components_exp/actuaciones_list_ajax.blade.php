@@ -8,7 +8,7 @@
                  if ($hijo->actestado_id == '102') {
                      $haycorrecciones = true;
                      $hayactuaciones = true;
-                     $ultima_id = $hijo->id;
+                     $ultima_id = $hijo->id; 
                  }
                  if ($hijo->actestado_id == '101' || $hijo->actestado_id == '104' || $hijo->actestado_id == '234') {
                      $haycorrecciones = false;
@@ -26,7 +26,7 @@
          </td>
          <td>
              <span class="badge badge-success" style="background-color: {{ $actuacion->estado->color }} !important">
-                 {{ $actuacion->estado->ref_nombre }}
+                 {{ $actuacion->estado->ref_nombre }} 
              </span>
 
          </td>
@@ -109,9 +109,10 @@
              @endif
 
              @if (
-                 $actuacion->actestado_id == 102 and
+                 ($actuacion->actestado_id == 102 || $actuacion->actestado_id == 140) and
                      count($actuacion->getHijos($actuacion)) <= 0 || $haycorrecciones and
-                     $expediente->expidnumberest == currentUser()->idnumber || currentUser()->hasRole('amatai'))
+                     ($expediente->expidnumberest == currentUser()->idnumber ||
+                     currentUser()->hasRole('amatai')))
                  <button data-modal="#myModal_act_add_revision" type='button' value="{{ $actuacion->id }}"
                      class='btn btn-warning btn-sm btn-block buscar_actuacion' data-titulo_modal='Nueva actuación'>
                      Ag. Corrección </button>

@@ -31,7 +31,8 @@ class UsersRepository extends BaseRepository implements UsersService
 
 
   ////////
-  public function verifyStatus($verifyStatus){
+  public function verifyStatus($verifyStatus)
+  {
     $this->verifyStatus = $verifyStatus;
     return $this;
   }
@@ -109,7 +110,7 @@ class UsersRepository extends BaseRepository implements UsersService
         if ($ref_data) {
           $this->storeData($ref_data, $rq);
         }
-      } 
+      }
     }
     $user->roles()->attach($request->has('idrol') ? $request['idrol'] : 8);
     if ($request->has('sede_id')) {
@@ -128,7 +129,7 @@ class UsersRepository extends BaseRepository implements UsersService
   {
 
     $this->applyValidateSede();
-    $users = $this->query->with(['roles','curso'])->whereHas('roles', function ($query) use ($role) {
+    $users = $this->query->with(['roles', 'curso'])->whereHas('roles', function ($query) use ($role) {
       return $query->where('roles.name', $role);
     })
       ->where(function ($query) {
@@ -138,7 +139,7 @@ class UsersRepository extends BaseRepository implements UsersService
       })
       ->where(function ($query) {
         if (!currentUser()->hasRole('amatai')) {
-          return $query->where('users.idnumber','<>', 3030);
+          return $query->where('users.idnumber', '<>', 3030);
         }
       })->select(
         'users.active',
@@ -148,25 +149,6 @@ class UsersRepository extends BaseRepository implements UsersService
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
       )->get();
     return $users->toArray();
-    /*  $user = $this->model->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
-      ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
-      ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-      ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-      ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
-      ->where('roles.name', $role)
-      ->where('users.active', true)
-      ->where('sedes.id_sede', session('sede')->id_sede)
-      ->select(
-        'users.active',
-        'users.id',
-        'ref_nombre',
-        'users.idnumber',
-        DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
-        'role_user.role_id',
-        'roles.display_name'
-      )
-      ->orderBy('users.created_at', 'desc')->get();
- */
   }
 
   public function findUserByNameOrLastNameAndRole($name, $role, $verify_status = false): array
@@ -190,30 +172,6 @@ class UsersRepository extends BaseRepository implements UsersService
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
       )->get();
     return $users->toArray();
-    /*   $users = $this->model->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
-      ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
-      ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-      ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-      ->orWhere(function ($query) use ($name) {
-        return $query->orWhere('users.lastname', 'like', "%{$name}%")
-          ->orWhere('users.name', 'like', "%{$name}%");
-      })
-      ->where('roles.name', $role)
-      ->where(function($query) use($verify_status){
-        if($verify_status){
-          return $query->where('users.active',true);
-        }
-      })      
-      ->where('sedes.id_sede', session('sede')->id_sede)
-      ->select(
-        'users.active',
-        'users.id',       
-        'users.idnumber',
-        DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
-        'role_user.role_id',
-        'roles.display_name'
-      )
-      ->orderBy('users.created_at', 'desc')->get();  */
   }
 
   public function getUsersByPermissionName($permission): Collection

@@ -3,15 +3,15 @@ const segmentosService = new SegmentosService();
 
 
 $(document).ready(function () {
- 
-    $("#btn_create_periodo").on("click", function () {
-        $("#myModal_create_periodo").modal("show");
-    });
-    $("#myform_create_periodo").on("submit", async function (e) {
+
+ $("#btn_create_segmento").on("click", function () {
+    $("#myModal_create_segmento").modal("show");
+});
+    $("#myform_create_segmento").on("submit", async function (e) {
         e.preventDefault();
-       var errors = validateForm("myform_create_periodo");
+       var errors = validateForm("myform_create_segmento");
         if (errors.length <= 0) {
-            var data = convertFormToJSON("myform_create_periodo");
+            var data = convertFormToJSON("myform_create_segmento");
             let response = await segmentosService.store(data);
             if (response.errors) {
                 response.errors.forEach(error => {
@@ -26,7 +26,7 @@ $(document).ready(function () {
                     timeOut: "4000",
                 });
                 $("#table_list_model").html(response);
-                $("#myModal_create_periodo").modal("hide");
+                $("#myModal_create_segmento").modal("hide");
             }
            
         }else{

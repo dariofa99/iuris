@@ -91,7 +91,10 @@ if (!isset($modo_nav_crl)) {
             <input type="hidden" id="inputHash" value="{{ sha1(Auth::user()->id) }}">
             <input type="hidden" id="connectedData"
                 value='{"ver_conectados_chat":"{{ Auth::user()->can('ver_conectados_chat') ? 'true' : 'false' }}","role":"{{ Auth::user()->roles[0]->name }}","username":"{{ Auth::user()->name }}","idusuario":"{{ Auth::user()->id }}","correo":"{{ Auth::user()->email }}","imagen":"{{ asset(auth()->user()->image) }}"}'>
-
+            
+               <input type="hidden" id="authdata"
+                value="{{ Auth::user() }}">
+ 
             <div style="min-height: 450px;" class="card card-success card-outline">
                 <div class="card-header">
                     @yield('titulo_area')

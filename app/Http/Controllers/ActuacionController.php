@@ -10,7 +10,7 @@ use App\Actuacion;
 use App\Conciliacion;
 use App\ConciliacionEstado;
 use App\ConciliacionPdfTemporal;
-use App\Expediente; 
+use App\Expediente;
 use Carbon\Carbon;
 use App\Segmento;
 use App\Notifications\UserNotification;
@@ -34,22 +34,27 @@ class ActuacionController extends Controller
   public function actpdfdownload($id, $user_doc)
   {
     array_map('unlink', glob(public_path('act_temp/' . currentUser()->id . '___*'))); //elimina los archivos que el 
+    try {
+      $actuacion = Actuacion::find($id);
+      if ($user_doc == 'docente') {
+        $url = 'app/files_actuaciones/' . $actuacion->actdocnomgen_docente;
+        $rutaDeArchivo = storage_path($url);
+        $filename = currentUser()->id . '___' . $actuacion->actdocnompropio_docente;
+        $filedes = $actuacion->actdocnompropio_docente;
+      }
+      if ($user_doc == 'estudiante') {
+        $url = 'app/files_actuaciones/' . $actuacion->actdocnomgen;
+        $rutaDeArchivo = storage_path($url);
+        $filename = currentUser()->id . '___' . $actuacion->actdocnompropio;
+        $filedes = $actuacion->actdocnompropio;
+      }
 
-    $actuacion = Actuacion::find($id);
-    if ($user_doc == 'docente') {
-      $url = 'app/files_actuaciones/' . $actuacion->actdocnomgen_docente;
-      $rutaDeArchivo = storage_path($url);
-      $filename = currentUser()->id . '___' . $actuacion->actdocnompropio_docente;
-      $filedes = $actuacion->actdocnompropio_docente;
+      copy($rutaDeArchivo, public_path("act_temp/" . $filename));
+    } catch (\Throwable $th) {
+      //echo "Ups! Parece que el archivo ya no se encuentra en el servidor";;
+     // return;
     }
-    if ($user_doc == 'estudiante') {
-      $url = 'app/files_actuaciones/' . $actuacion->actdocnomgen;
-      $rutaDeArchivo = storage_path($url);
-      $filename = currentUser()->id . '___' . $actuacion->actdocnompropio;
-      $filedes = $actuacion->actdocnompropio;
-    }
-    //dd($rutaDeArchivo);
-    copy($rutaDeArchivo, public_path("act_temp/" . $filename));
+
 
     return redirect("act_temp/" . $filename);
 
@@ -73,58 +78,58 @@ class ActuacionController extends Controller
   }
 
 
-function vacations(){
-
-}
+  function vacations()
+  {
+  }
 
 
   public function index(Request $request)
   {
     $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-    ->where('sp.sede_id', session('sede')->id_sede)
-    ->where('estado', true)
-    ->first();
+      ->where('sp.sede_id', session('sede')->id_sede)
+      ->where('estado', true)
+      ->first();
     $now = Carbon::now();
     $expediente = Expediente::where('expid', $request->id_control_list)->first();
     //
     $expediente->setNotActLimit();
     $actuaciones = $this->getActuacionesExp($request->id_control_list, 0);
-    
-    $vacaciones = DB::table("vacaciones_periodo")         
-            ->where("periodo_id",$periodo->id)->get();
 
-    $vacaciones_text = DB::table("vacaciones_periodo")            
-            ->whereDate('fecha_fin','>=',$now)
-            ->where("periodo_id",$periodo->id)->first();
+    $vacaciones = DB::table("vacaciones_periodo")
+      ->where("periodo_id", $periodo->id)->get();
+
+    $vacaciones_text = DB::table("vacaciones_periodo")
+      ->whereDate('fecha_fin', '>=', $now)
+      ->where("periodo_id", $periodo->id)->first();
 
     return response()->json([
-      "actuaciones"=>$actuaciones,
-      "vacaciones_text"=> $vacaciones_text ? $vacaciones : false,
-      "vacaciones"=> count($vacaciones) > 0 ? $vacaciones : false
-    ]); 
+      "actuaciones" => $actuaciones,
+      "vacaciones_text" => $vacaciones_text ? $vacaciones : false,
+      "vacaciones" => count($vacaciones) > 0 ? $vacaciones : false
+    ]);
   }
 
   public function get_act_ant(Request $request)
   {
     $now = Carbon::now();
     $periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-    ->where('sp.sede_id', session('sede')->id_sede)
-    ->where('estado', true)
-    ->first();
-    $vacaciones = DB::table("vacaciones_periodo")         
-            ->where("periodo_id",$periodo->id)->get();
+      ->where('sp.sede_id', session('sede')->id_sede)
+      ->where('estado', true)
+      ->first();
+    $vacaciones = DB::table("vacaciones_periodo")
+      ->where("periodo_id", $periodo->id)->get();
 
-    $vacaciones_text = DB::table("vacaciones_periodo")            
-            ->whereDate('fecha_fin','>=',$now)
-            ->where("periodo_id",$periodo->id)->first();
+    $vacaciones_text = DB::table("vacaciones_periodo")
+      ->whereDate('fecha_fin', '>=', $now)
+      ->where("periodo_id", $periodo->id)->first();
 
     $actuaciones = $this->getActuacionesExp($request->id_control_list, 1);
-    
+
     return response()->json([
-      "actuaciones"=>$actuaciones,
-      "vacaciones_text"=> $vacaciones_text ? $vacaciones : false,
-      "vacaciones"=> count($vacaciones) > 0 ? $vacaciones : false
-    ]); 
+      "actuaciones" => $actuaciones,
+      "vacaciones_text" => $vacaciones_text ? $vacaciones : false,
+      "vacaciones" => count($vacaciones) > 0 ? $vacaciones : false
+    ]);
     //return response()->json($actuaciones);
   }
 
@@ -206,7 +211,7 @@ function vacations(){
             'rev_actexpid' => $request['actexpid'],
             'parent_rev_actid' => $actuacion->id,
             //'rev_actid'=>$actuacion->id,
-          ]); 
+          ]);
         }
       }
       if ($actuacion->actestado_id == 140) {
@@ -343,50 +348,49 @@ function vacations(){
   public function update(Request $request, $id)
   {
     // return response()->json($request->all()); 
-   
-      $actuacion = Actuacion::find($id);
-      $actuacion->fill($request->all());
-      $actuacion->actuserupdated = currentUser()->idnumber;
+
+    $actuacion = Actuacion::find($id);
+    $actuacion->fill($request->all());
+    $actuacion->actuserupdated = currentUser()->idnumber;
 
 
-      if ($request->file('actdocnomgen') != '') {
-        if ($actuacion->actdocruta != '') {
-          Storage::delete($actuacion->actdocruta);
-        }
-        $docum = $request->file('actdocnomgen');
-        $nombre_arch = $docum->getClientOriginalName();
-        $nombre_arch = htmlentities($nombre_arch);
-        $nombre_arch = preg_replace('/\&(.)[^;]*;/', '\\1', $nombre_arch);
-        $file_name = preg_replace('([^A-Za-z0-9. ])', '', $nombre_arch);
-        $actdocnompropio = $file_name;
-        $file_name = md5($file_name) . '.' . $request->file('actdocnomgen')->extension();
-        $file_route = time() . "_" . $file_name;
-        //$file_route= time()."_".$docum->getClientOriginalName();
-        Storage::disk('files_actuaciones')
-          ->put($file_route, file_get_contents($docum->getRealPath()));
-        $actdocnomgen = $file_route;
-        $actdocruta = Storage::disk('files_actuaciones')->url($file_route);
-
-        $actuacion->actdocnomgen = $actdocnomgen;
-        $actuacion->actdocnompropio = $actdocnompropio;
-        $actuacion->actdocruta = $actdocruta;
+    if ($request->file('actdocnomgen') != '') {
+      if ($actuacion->actdocruta != '') {
+        Storage::delete($actuacion->actdocruta);
       }
-      $actuacion->save();
+      $docum = $request->file('actdocnomgen');
+      $nombre_arch = $docum->getClientOriginalName();
+      $nombre_arch = htmlentities($nombre_arch);
+      $nombre_arch = preg_replace('/\&(.)[^;]*;/', '\\1', $nombre_arch);
+      $file_name = preg_replace('([^A-Za-z0-9. ])', '', $nombre_arch);
+      $actdocnompropio = $file_name;
+      $file_name = md5($file_name) . '.' . $request->file('actdocnomgen')->extension();
+      $file_route = time() . "_" . $file_name;
+      //$file_route= time()."_".$docum->getClientOriginalName();
+      Storage::disk('files_actuaciones')
+        ->put($file_route, file_get_contents($docum->getRealPath()));
+      $actdocnomgen = $file_route;
+      $actdocruta = Storage::disk('files_actuaciones')->url($file_route);
 
-      if ($actuacion->actcategoria_id == 223 and count($actuacion->conciliaciones) > 0) {
-      }
+      $actuacion->actdocnomgen = $actdocnomgen;
+      $actuacion->actdocnompropio = $actdocnompropio;
+      $actuacion->actdocruta = $actdocruta;
+    }
+    $actuacion->save();
 
-      /*  if (currentUser()->hasRole("docente")){
+    if ($actuacion->actcategoria_id == 223 and count($actuacion->conciliaciones) > 0) {
+    }
+
+    /*  if (currentUser()->hasRole("docente")){
                         //$actuacion= Actuacion::find($id);
                         $actuacion-> fill(['actdocenrevisa'=>currentUser()->idnumber]);
                         $actuacion-> save();
             } */
 
-      return response()->json($request->all());
-      return response()->json(
-        $actuacion->toArray()
-      );
-    
+    return response()->json($request->all());
+    return response()->json(
+      $actuacion->toArray()
+    );
   }
 
   /**
@@ -503,7 +507,7 @@ function vacations(){
     $actuacion->actdocruta_docente = $actdocruta;
     if ($request['fecha_limit_doc'] != '') $actuacion->fecha_limit = $request['fecha_limit_doc'];
     $actuacion->actuserupdated = currentUser()->idnumber;
-   
+
     $expediente  = Expediente::where('expid', $request->actexpid)->first();
 
 
@@ -532,86 +536,85 @@ function vacations(){
     }
 
     if ($actuacion->actcategoria_id == 223 and count($actuacion->conciliaciones) > 0) {
-     
+
       if ($request['actestado_id'] == 102) $estado_id = 176;
       if ($request['actestado_id'] == 104) $estado_id = 177;
 
       if ($request['actestado_id'] == 102 || $request['actestado_id'] == 104) {
         $conciliacion = Conciliacion::find($actuacion->conciliaciones[0]->id);
         $actuacion->actestado_id = $estado_id;
-        if($estado_id!= $conciliacion->estado_id){        
-        $estado = ConciliacionEstado::create([
-          'concepto' => "Creado por docente",
-          'type_status_id' => $estado_id,
-          'user_id' => currentUser()->id,
-          'conciliacion_id' => $conciliacion->id
-        ]);
-        $conciliacion->estado_id = $estado->type_status_id;
-        $conciliacion->save();
+        if ($estado_id != $conciliacion->estado_id) {
+          $estado = ConciliacionEstado::create([
+            'concepto' => "Creado por docente",
+            'type_status_id' => $estado_id,
+            'user_id' => currentUser()->id,
+            'conciliacion_id' => $conciliacion->id
+          ]);
+          $conciliacion->estado_id = $estado->type_status_id;
+          $conciliacion->save();
 
 
-        $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
-          $query->where('is_copy', 1);
-        })->whereHas('temporales', function (Builder $query) use ($conciliacion) {
-          $query->where("conciliacion_id", $conciliacion->id);
-        })->where(([
-          "status_id" => $estado->type_status_id,
-          "tabla_destino" => "conciliaciones"
-        ]))->get();
+          $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+            $query->where('is_copy', 1);
+          })->whereHas('temporales', function (Builder $query) use ($conciliacion) {
+            $query->where("conciliacion_id", $conciliacion->id);
+          })->where(([
+            "status_id" => $estado->type_status_id,
+            "tabla_destino" => "conciliaciones"
+          ]))->get();
 
-        if (count($reportes) <= 0) {
-          $data = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
-            $query->where('is_copy', 0);
-          })
-            ->where([
-              "status_id" => $estado->type_status_id,
-              "tabla_destino" => "conciliaciones"
-            ])->get();
+          if (count($reportes) <= 0) {
+            $data = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+              $query->where('is_copy', 0);
+            })
+              ->where([
+                "status_id" => $estado->type_status_id,
+                "tabla_destino" => "conciliaciones"
+              ])->get();
 
 
-          $data->each(function ($data) use ($estado, $conciliacion) {
-            //  $reporte_or = PdfReporte::find($reporte->id);
-            $copy_reporte = PdfReporte::create(
-              [
-                'reporte' => $data->reporte->reporte,
-                'report_keys' => $data->reporte->report_keys,
-                'nombre_reporte' => $data->reporte->nombre_reporte,
-                'configuraciones' => $data->reporte->configuraciones,
-                'is_copy' => 1
-              ]
-            );
-            $reporDest = PdfReporteDestino::create([
-              "status_id" => $estado->type_status_id,
-              "tabla_destino" => "conciliaciones",
-              "reporte_id" => $copy_reporte->id
-            ]);
-            $co_pdf = ConciliacionPdfTemporal::create([
-              'reporte_pdf_id' => $copy_reporte->id,
-              'status_id' => $estado->type_status_id,
-              'parent_reporte_pdf_id' => $data->reporte->id,
-              'conciliacion_id' => $conciliacion->id
-            ]);
-
-            $file_en = $data->reporte->files()->where('seccion', 'encabezado')->first();
-            if ($file_en) {
-              $data->reporte->files()->attach($file_en, [
-                'seccion' => 'encabezado',
-                'configuracion' => $file_en->pivot->configuracion
+            $data->each(function ($data) use ($estado, $conciliacion) {
+              //  $reporte_or = PdfReporte::find($reporte->id);
+              $copy_reporte = PdfReporte::create(
+                [
+                  'reporte' => $data->reporte->reporte,
+                  'report_keys' => $data->reporte->report_keys,
+                  'nombre_reporte' => $data->reporte->nombre_reporte,
+                  'configuraciones' => $data->reporte->configuraciones,
+                  'is_copy' => 1
+                ]
+              );
+              $reporDest = PdfReporteDestino::create([
+                "status_id" => $estado->type_status_id,
+                "tabla_destino" => "conciliaciones",
+                "reporte_id" => $copy_reporte->id
               ]);
-            }
-
-            $file_pie = $data->reporte->files()->where('seccion', 'pie')->first();
-            if ($file_pie) {
-              $data->reporte->files()->attach($file_pie, [
-                'seccion' => 'pie',
-                'configuracion' => $file_pie->pivot->configuracion
+              $co_pdf = ConciliacionPdfTemporal::create([
+                'reporte_pdf_id' => $copy_reporte->id,
+                'status_id' => $estado->type_status_id,
+                'parent_reporte_pdf_id' => $data->reporte->id,
+                'conciliacion_id' => $conciliacion->id
               ]);
-            }
-          });
+
+              $file_en = $data->reporte->files()->where('seccion', 'encabezado')->first();
+              if ($file_en) {
+                $data->reporte->files()->attach($file_en, [
+                  'seccion' => 'encabezado',
+                  'configuracion' => $file_en->pivot->configuracion
+                ]);
+              }
+
+              $file_pie = $data->reporte->files()->where('seccion', 'pie')->first();
+              if ($file_pie) {
+                $data->reporte->files()->attach($file_pie, [
+                  'seccion' => 'pie',
+                  'configuracion' => $file_pie->pivot->configuracion
+                ]);
+              }
+            });
+          }
+          $actuacion->actestado_id = $estado->type_status_id;
         }
-        $actuacion->actestado_id = $estado->type_status_id;
-      }
-     
       }
     }
     $actuacion->actdocenfechamod = date("Y-m-d H:i:s");
@@ -630,16 +633,16 @@ function vacations(){
   public function revisiones(Request $request, $id)
   {
 
-//return response()->json([$request->all()]);
+    //return response()->json([$request->all()]);
     $actuacion = Actuacion::find($id);
-    if($request->has("new_estado")){
+    if ($request->has("new_estado")) {
       $actuacion->actestado_id = $request->get("new_estado");
-    }else{
+    } else {
       switch ($actuacion->actestado_id) {
         case 136:
           $actuacion->actestado_id = 138;
           break;
-        case 139: 
+        case 139:
           $actuacion->actestado_id = 102;
           $today = Carbon::now();
           $new_limit = $today->addDays(10);
@@ -658,11 +661,10 @@ function vacations(){
       }
       $actuacion->actuserupdated = currentUser()->idnumber;
     }
-    
-    if($request->has('actdocenrecomendac')){
+
+    if ($request->has('actdocenrecomendac')) {
       $actuacion->actdocenrecomendac = $request->actdocenrecomendac;
       $actuacion->actdocenfechamod = date("Y-m-d");
-           
     }
     $actuacion->save();
 

@@ -27,6 +27,6 @@ class EstadoCaso extends Model
     }
 
     public function motivo(){
-        return $this->belongsTo(MotivoEstadoCaso::class, 'ref_motivo_estado_id', 'id');
+        return $this->belongsTo(MotivoEstadoCaso::class, 'ref_motivo_estado_id');
     }
 }

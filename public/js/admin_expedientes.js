@@ -786,13 +786,18 @@ $(document).ready(function () {
         $("#titulo_modal").text("Cambiando docente");
         $("#myform_change_docente_exp>#tipo_cambio").val(1);
         $("#myform_change_docente_exp input[type='submit']").val("Cambiar docente");
+        $("#wait").show();
         let response = await userService.getUsersByRole({ 'role': 'docente' });
+        $("#wait").hide();
         if (response.encontrado) {
             var opcion_busq = '';
             $("#new_docente_id").html('')
             $(response.users).each(function (key, value) {
                 opcion_busq += '<option value="' + value.idnumber + '">' + value.full_name + '</option>';
             });
+            var userauth = JSON.parse($("#authdata").val())
+            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name +' '+userauth.lastname +'</option>'
+         
             $("#new_docente_id").html(opcion_busq).selectpicker("refresh");;
             $("#myModal_change_docente_exp").modal("show");
         }
@@ -802,7 +807,7 @@ $(document).ready(function () {
         e.preventDefault();
         Swal.fire({
             title: 'Esta seguro de eliminar la asignación del docente?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -828,16 +833,55 @@ $(document).ready(function () {
         $("#titulo_modal").text("Solicitando cambio");
         $("#myform_change_docente_exp>#tipo_cambio").val(0);
         $("#myform_change_docente_exp input[type='submit']").val("Solicitar cambio");
+        $("#wait").show();
         let response = await userService.getUsersByRole({ 'role': 'docente' });
+        $("#wait").hide();
         if (response.encontrado) {
             var opcion_busq = '';
             $("#new_docente_id").html('')
             $(response.users).each(function (key, value) {
                 opcion_busq += '<option value="' + value.idnumber + '">' + value.full_name + '</option>';
             });
+            var userauth = JSON.parse($("#authdata").val())
+            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name +' '+userauth.lastname +'</option>'
+         
             $("#new_docente_id").html(opcion_busq).selectpicker("refresh");;
             $("#myModal_change_docente_exp").modal("show");
         }
+    });
+
+    $("#btn_accept_change_doc_exp").on("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: '¿Está seguro de Aceptar la solicitud de cambio?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, cambiar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                var request = { tipo_cambio: 3 };
+                request['expid'] = $("#form_expediente_edit input[name='expediente_id']").val()
+                $("#wait").show();
+                let response = await expedientesService.gestionDocente(request);
+                toastr.success("Asignado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+        });
+
+      /*   var confirm = alertify.confirm(
+            "¿Está seguro de <b>Aceptar</b> la solicitud de cambio?"
+        );
+        confirm.set("onok", function () {
+            var data = { tipo_cambio: 3 };
+            var exp_id = $("#expediente_id").val();
+            changeDocenteExp(data, exp_id);
+        }); */
     });
 
     $("#btn_cancel_change_doc_exp").on("click", function (e) {

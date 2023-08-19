@@ -34,23 +34,25 @@
                         class="badge {{ currentUser()->getColorTurno(currentUser()->turno->color->ref_value) }}">.</span>
                 @else
                 @endif
+                @if (currentUser()->hasRole('estudiante') and currentUser()->turno != null)
+                    <br>
+                    <small>
+                        <a>
+
+                            Horario: {{ currentUser()->turno->horario->ref_nombre }}
+
+                        </a>
+                @endif
                 <br>
-                <small>
-                    <a>
-                        @if (currentUser()->hasRole('estudiante') and currentUser()->turno != null)
-                         Horario: {{ currentUser()->turno->horario->ref_nombre }}
-                        @endif
-                    </a>
-<br>
-                    <a href="{{ route('logout.index') }}">
-                        <i class="fas fa-sign-out-alt"></i>
-    
-                        {{ __('Salir') }}
-                    </a>
+                <a href="{{ route('logout.index') }}">
+                    <i class="fas fa-sign-out-alt"></i>
+
+                    {{ __('Salir') }}
+                </a>
                 </small>
 
 
-                
+
 
 
             </div>
@@ -268,7 +270,7 @@
                         </ul>
                     </li>
                 @endif
-                
+
             </ul>
             </li>
             </ul>

@@ -1,13 +1,10 @@
 <div class="row">
     @if (count($expediente->solicitudes) > 0)
-    
-        <div class="col-md-8">
-            <input type="hidden" id="tokenc" value="">
-            <div class="embed-responsive embed-responsive-4by3" style=" height: 500px; ">
-                {{-- @include('content.chat.chat', [
+   
+        <div class="col-md-8">           
+            @include('content.chat.chat', [
                     'token' => $expediente->solicitudes[0]->number,
-                ]) --}}
-            </div>
+                ])
         </div>
         <div class="col-md-4">
             <button class="btn btn-success btn-sm btn-block" id="btn_adm_documentos">Documentos</button>

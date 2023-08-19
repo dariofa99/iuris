@@ -31,13 +31,9 @@ class Chat extends GuzzleHttpRequest
         if(Auth::user()->image != "" and is_file(public_path('thumbnails/'.currentUser()->image))) $this->imagen=Auth::user()->image; 
        
     }
-
     
     public function render(){
-         //  dd((openssl_get_cert_locations()));
         $data = $this->get('/applications/'.$this->getBcryptData(),$this->data());
-        //dd($data); 
-
         return view($this->view,compact('data'));
     }
 

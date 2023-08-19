@@ -62,4 +62,4 @@
 @stop
 @push('scripts')
     <script type="module"   src={{asset("js/admin_segmentos.js")}}></script>
-@endpush
+@endpush 

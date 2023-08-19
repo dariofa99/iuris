@@ -315,11 +315,10 @@ class UsersController extends Controller
     if ($request->get('id_rol')) {
       $user->roles()->sync($request['id_rol']);
     }
-
+    $user = $this->userService->update($user, $request);
     if ((currentUser()->hasRole('estudiante') 
     and $user->hasRole('estudiante'))  
-    and (!$user->turno)) {
-      $user = $this->userService->update($user, $request);
+    and (!$user->turno)) {      
       $user->asignarTurno($request);
     }elseif($request->has('cursando_id') and $user->turno ){
       $request['cursando_id'] = $user->cursando_id;
@@ -442,7 +441,8 @@ class UsersController extends Controller
     }
 
     if (count($users) > 0) {
-      return response()->json(['encontrado' => true, 'users' => $users]);
+      $auth = auth()->user();
+      return response()->json(['encontrado' => true, 'users' => $users,'auth'=>$auth]);
     }
     return  response()->json(['encontrado' => false]);
   }

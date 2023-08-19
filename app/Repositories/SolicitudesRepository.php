@@ -18,7 +18,7 @@ class SolicitudesRepository extends BaseRepository implements SolicitudesService
      
      $solicitud = Solicitud::create([
         'tipodoc_id' => $request->has('tipodoc_id') ? $request['tipodoc_id'] : 1, 
-        'number' => $request->has('number') ? $request['number'] : time(),
+        'number' => $request->has('number') ? $request->input('number') : time(), 
         'idnumber' => $request->has('idnumber') ? $request['idnumber'] : 1, 
         'tipopers_id' => $request->has('tipopers_id') ? $request['tipopers_id'] : 237, 
         'name' => $request['name'],
@@ -34,10 +34,10 @@ class SolicitudesRepository extends BaseRepository implements SolicitudesService
         'type_category_id' =>  $request->has('type_category_id') ? $request['type_category_id'] :153,
         'estrato_id' =>  $request->has('estrato_id') ? $request['estrato_id'] : 1      
      ]);
-     $pref = "0".$solicitud->id;
+     /* $pref = "0".$solicitud->id;
      $pref = substr($pref,-2);
-     $solicitud->number = $request->idnumber.'-'. $pref;
-     $solicitud->save();
+     $solicitud->number = $request->idnumber.'-'. $pref; */
+    // $solicitud->save();
      if($request->has('sede_id')){
         $sede = Sede::find($request->get('sede_id'));
         session(["sede"=>$sede]);

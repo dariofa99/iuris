@@ -65,17 +65,15 @@
                     <div class="card-header">
                         <b>Solicitudes de conciliación.</b>
                     </div>
-                    <div class="card-body">
-                     
+                    <div class="card-body">                     
                         <h5>  El centro de conciliación le ofrece la facilidad de solicitar
                             conciliaciones de manera virtual. <br>
-
-
                         </h5>
                         <div class="text-center my-4">
                            {{--  <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-warning">
                                 Solicitar
                             </a> --}}
+                           
                         </div>
                     </div>
                 </div>

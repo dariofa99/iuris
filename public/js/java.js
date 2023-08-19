@@ -587,7 +587,7 @@ $(document).ready(function (e) {
     });
 
     $("#btn_add_nota").on("click", function () {
-        ingresarNotas();
+        ingresarNotas(); 
     });
 
     $("#btn_create_segmento").on("click", function () {

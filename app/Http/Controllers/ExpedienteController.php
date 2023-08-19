@@ -463,12 +463,13 @@ class ExpedienteController extends Controller
   {
     $active_expe = 'active';
 
-    $users = $this->getusers();
+    // $users = $this->userService->verifyStatus(true)->getUsersByRoleName('estudiante');
+
 
     $id = $this->getId();
 
-    //  dd($user);
-    return view('myforms.frm_expediente_create', compact('users', 'active_expe', 'id'));
+    // dd($users);
+    return view('myforms.frm_expediente_create', compact('active_expe', 'id'));
   }
 
 
@@ -484,6 +485,7 @@ class ExpedienteController extends Controller
   public function store(Request $request)
   {
 
+    //  return response()->json($request->all());
     $res_day = Carbon::now();
     $res_day = $res_day->addDays(7)->format('Y-m-d');
     $date = Carbon::now();
@@ -514,6 +516,7 @@ class ExpedienteController extends Controller
       $user = $this->userService->findWithFilter(['idnumber' => $expediente->expidnumber]);
       $request['turno'] = 0;
       $request['idnumber'] = $user->idnumber;
+      $request['number'] = time();
       $request['name'] = $user->name;
       $request['tel1'] = $user->tel1;
       $request['lastname'] = $user->lastname;
@@ -532,9 +535,7 @@ class ExpedienteController extends Controller
     $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
     $user->mensaje = 'Se ha asignado un nuevo caso. Exp: ' . $expediente->expid;
     $user->notify(new UserNotification($user));
-    if ($request->ajax()) {
-      return response()->json($expediente);
-    }
+
     Session::flash('message-success', 'Creado con éxito...!');
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       return response()->json($expediente);
@@ -638,7 +639,7 @@ class ExpedienteController extends Controller
           $notas =  $expediente->get_has_nota_final();
           if (count($notas) <= 0) {
             $segmento = $this->segmentosService->getSegmentoActivo();
-            if($segmento){
+            if ($segmento) {
               $data = [
                 'ntaaplicacion' => 0,
                 'ntaconocimiento' => 0,
@@ -655,17 +656,15 @@ class ExpedienteController extends Controller
               ];
               $expediente->asignarNotas($data);
               $expediente->expestado_id = 5;
-              $expediente->save();  
+              $expediente->save();
               $request['comentario'] = 'Evaluado por el sistema - Tiempo 30 días agotado';
               $request['expidnumber'] = $expediente->expid;
               $request['ref_estado_id'] = $expediente->expestado_id;
               $request['ref_motivo_estado_id'] = 12;
               $estado_caso = $this->estadoCasoService->store($request);
-            }else{
+            } else {
               Session::flash('message-danger', 'Atención! No hay un segmento activo');
-       
             }
-       
           }
         }
       }
@@ -876,7 +875,7 @@ class ExpedienteController extends Controller
 
 
 
- 
+
         $expedientes = DB::table('expedientes as e')
           ->join('users as s', 'e.expidnumberest', '=', 's.idnumber')
           ->join('users as c', 'e.expidnumber', '=', 'c.idnumber')
@@ -948,7 +947,7 @@ class ExpedienteController extends Controller
     $expediente = $this->expedienteService->findWithFilter([
       'expid' => $request->expid,
     ]);
-    $periodo_act = $this->periodosService->getPeriodoActivo();   
+    $periodo_act = $this->periodosService->getPeriodoActivo();
 
     if (!$periodo_act) return response() - json(['errors' => ["No hay un periodo activo"]]);
     $asig = $expediente->asignaciones()
@@ -981,7 +980,7 @@ class ExpedienteController extends Controller
     $request['anotacion'] = $anotacion;
     $request['asigest_id'] = $request['new_user_id'];
     $request['asigexp_id'] = $expediente->expid;
-    $request['ref_mot_asig_id'] =$request['motivo_asig_id'];
+    $request['ref_mot_asig_id'] = $request['motivo_asig_id'];
     $request['ref_asig_id'] = 2;
     $request['periodo_id'] = $periodo_act->id;
     $asignacion_caso = $this->asignacionCasoService->store($request);
@@ -1262,11 +1261,12 @@ class ExpedienteController extends Controller
     } elseif ($horahoy == "16" or $horahoy == "17") {
       $horaconsul = "16:00:00";
     }
+
     $fechaconsul = $fechahoy . " " . $horaconsul;
 
     if ($horaconsul == "" or $texcon == 3) {
-      /*
-             $estudiantes= DB::table('users')
+
+      /*   $estudiantes= DB::table('users')
               //->join('expedientes', 'expedientes.expidnumberest', '=', 'asistencia.astid_estudent')
               ->leftJoin('expedientes', 'users.idnumber', '=', 'expedientes.expidnumberest'  )
               ->join('role_user', 'users.id', '=', 'role_user.user_id'  )
@@ -1277,15 +1277,20 @@ class ExpedienteController extends Controller
               ->groupBy('astid_estudent')
               ->orderBy($consultex)
               ->orderBy($consultex2)
-              ->get();
-*/
+              ->get(); */
     } else {
 
 
       $estudiantes_fil = DB::table('asistencia')
         ->leftJoin('expedientes',  'asistencia.astid_estudent', '=', 'expedientes.expidnumberest')
         //->join('users', 'users.idnumber', '=', 'asistencia.astid_estudent'  )
-        ->select('asistencia.astid_estudent', DB::raw('SUM(IF(expedientes.exptipoproce_id = 1, 1, 0)) AS simples'), DB::raw('SUM(IF(expedientes.exptipoproce_id = 2, 1, 0)) as complejas'), DB::raw('SUM(IF(expedientes.exptipoproce_id = 1 AND expedientes.expestado_id = 2, 1, 0)) AS simples_cerradas'), DB::raw('SUM(IF(expedientes.exptipoproce_id = 2 AND expedientes.expestado_id = 2, 1, 0)) as complejas_cerradas'))
+        ->select(
+          'asistencia.astid_estudent',
+          DB::raw('SUM(IF(expedientes.exptipoproce_id = 1, 1, 0)) AS simples'),
+          DB::raw('SUM(IF(expedientes.exptipoproce_id = 2, 1, 0)) as complejas'),
+          DB::raw('SUM(IF(expedientes.exptipoproce_id = 1 AND expedientes.expestado_id = 2, 1, 0)) AS simples_cerradas'),
+          DB::raw('SUM(IF(expedientes.exptipoproce_id = 2 AND expedientes.expestado_id = 2, 1, 0)) as complejas_cerradas')
+        )
         ->where('expfecha', '>=', $fecha_in)
         ->where('astfecha', '=', $fechaconsul)
         ->where('astid_lugar', '=', '130')
@@ -1319,6 +1324,7 @@ class ExpedienteController extends Controller
 
       $estudiantes_com = array();
       $estudiantes_exp = array();
+
       foreach ($estudiantes_asis as $key => $est_inv) {
 
         $estudiantes_com[$key] = [
@@ -1328,14 +1334,18 @@ class ExpedienteController extends Controller
           "complejas" => "0",
           "complejas_cerradas" => "0",
           "simples" => "0",
-          "simples_cerradas" => "0"
+          "simples_cerradas" => "0",
+
         ];
       }
 
       foreach ($estudiantes_fil as $key_fil => $est_inv_fil) {
         foreach ($estudiantes_asis as $key => $est_inv) {
           if ($est_inv->astid_estudent == $est_inv_fil->astid_estudent) {
+
+
             unset($estudiantes_com[$key]);
+
             $estudiantes_exp[$key_fil] = [
               "astid_estudent" => $est_inv->astid_estudent,
               "name" => $est_inv->name,
@@ -1343,7 +1353,8 @@ class ExpedienteController extends Controller
               "complejas" => $est_inv_fil->complejas,
               "complejas_cerradas" => $est_inv_fil->complejas_cerradas,
               "simples" => $est_inv_fil->simples,
-              "simples_cerradas" => $est_inv_fil->simples_cerradas
+              "simples_cerradas" => $est_inv_fil->simples_cerradas,
+
             ];
             break;
           }
@@ -1359,6 +1370,7 @@ class ExpedienteController extends Controller
         //->join('expedientes', 'expedientes.expidnumberest', '=', 'asistencia.astid_estudent')
         ->leftJoin('expedientes', 'users.idnumber', '=', 'expedientes.expidnumberest')
         ->join('role_user', 'users.id', '=', 'role_user.user_id')
+        ->join('turnos', 'users.idnumber', '=', 'turnos.trnid_estudent')
         ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
         ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
         ->where('sedes.id_sede', session('sede')->id_sede)
@@ -1380,9 +1392,7 @@ class ExpedienteController extends Controller
         ->get();
     }
 
-    return response()->json(
-      $estudiantes
-    );
+    return response()->json($estudiantes);
   }
   public function historialDatosCaso($exp, $tipo)
   {
@@ -1631,8 +1641,8 @@ class ExpedienteController extends Controller
   public function cambiarDocente(Request $request)
   {
     $expediente = $this->expedienteService->find($request->expid);
-    $asig = $expediente->asignacion;  
-    if($asig==null) return response()->json(['errors' => [
+    $asig = $expediente->asignacion;
+    if ($asig == null) return response()->json(['errors' => [
       'No hay una asignacion activa'
     ]]);
     $asig_doc =  $this->asignacionDocenteCasoService->findWithFilter([
@@ -1643,7 +1653,7 @@ class ExpedienteController extends Controller
       $request['cambio_docidnumber'] = $request->new_docente_id;
       $notify = $this->userService->findWithFilter([
         'idnumber' => $request->new_docente_id
-      ]); 
+      ]);
       $notify->expid = $expediente->expid;
       $notify->notify(new SolicitudDocenteCaso($notify));
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
@@ -1654,9 +1664,17 @@ class ExpedienteController extends Controller
     } elseif ($request->tipo_cambio == 2) {
       $request['cambio_docidnumber'] = null;
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
+    } elseif ($request->tipo_cambio == 3) {
+      $asig_doc->activo = 0;
+      $request['activo'] = 1;
+      $request['docidnumber'] = auth()->user()->idnumber;
+      $request['asig_caso_id'] = $asig_doc->asig_caso_id;
+      $asignacion = $this->asignacionDocenteCasoService->store($request);
+      $asig_doc->user_updated_id = Auth::user()->idnumber;
+      $asig_doc->save();
     } elseif ($request->tipo_cambio == 4) {
       $request['docidnumber'] = $request->new_docente_id;
-      $request['asig_caso_id'] = $asig->id;    
+      $request['asig_caso_id'] = $asig->id;
       $asignacion = $this->asignacionDocenteCasoService->store($request);
       return response()->json(['agregado' => 1]);
     } elseif ($request->tipo_cambio == 5) {

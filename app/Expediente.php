@@ -972,7 +972,7 @@ class Expediente extends Model
         if ($dias > 20) $color = 'red';
 
 
-        $text .=  " <span style='background-color:$color' class='pull-center badge'>$dias</span>";
+        $text .=  " <span style='background-color:$color;color:#ffffff' class='pull-center badge'>$dias</span>";
 
 
 

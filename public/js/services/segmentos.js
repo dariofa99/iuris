@@ -1,6 +1,6 @@
 class SegmentosService {
     async store(request) {
-        const response = await fetch(BASE_URL + 'periodos', {
+        const response = await fetch(BASE_URL + 'segmentos', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
