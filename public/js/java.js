@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    alert("js")
     //detecta url y activa el tab correspondiente
     var url = window.location.href;
     var activeTab = url.substring(url.indexOf("#") + 1);
@@ -2398,7 +2399,7 @@ return false;
         e.preventDefault();
     });
 
-
+ 
 
 
 

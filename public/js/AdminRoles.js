@@ -101,7 +101,7 @@ class AdminRoles {
             },
             error: function (xhr, textStatus, thrownError) {
             }
-        });
+        }); 
     }
 
     storePermission(request){

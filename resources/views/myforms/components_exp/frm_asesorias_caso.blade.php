@@ -62,9 +62,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="cont-text">
-                                    {!! Form::textarea('asesorias_docente', $asesoria->comentario, [
+                                    {!! Form::textarea('asesorias_docente', $asesoria->comentario, 
+                                    [
                                         'class' => 'form-control textarea-asesorias-docente',
                                         'readonly',
+                                        'rows'=>'7'
                                     ]) !!}
                                 </div>
                                 <div class="cont-fecha">

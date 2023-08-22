@@ -2327,6 +2327,7 @@ function llenarModalDetailsReq(res) {
 function llenarModalDetailsAct(res) {
     var name = res.user_created.name + " " + res.user_created.lastname
     $("#fullnameest").val(name)
+    $("#myform_act_edit_docen input[name='actfecha']").val(res.created_at)
     $("#actfecha_det").val(res.created_at);
     $("#actnombre_det").val(res.actnombre);
     $("#actdescrip_det").val(res.actdescrip);
@@ -2362,11 +2363,10 @@ function llenarModalDetailsAct(res) {
         $("#ntaconcepto_text").val(res.notas_f.nota_concepto);
         $("#cont_notas_ac #lbldocevname").text(res.notas_f.docevname);
 
-        /* showElement('cont_notas_ac'); */
+         showElement('cont_notas_ac'); 
         console.log('ids', segmento_id, res.notas_f.segmento_id, res.notas_f.can_edit)
         if (segmento_id == res.notas_f.segmento_id && res.notas_f.can_edit) {
-            /* showElement('btn_cam_nt_act'); */
-
+             showElement('btn_cam_nt_act'); 
         }
 
     } else {
@@ -2376,7 +2376,7 @@ function llenarModalDetailsAct(res) {
             $("#lbl_not_aplac").text(notas.ntaaplicacion);
             $("#lbl_not_etiac").text(notas.ntaetica);
             $("#ntaconcepto_text").val(notas.ntaconcepto);
-            /* showElement('cont_notas_ac'); */
+            showElement('cont_notas_ac');
         }
     }
 

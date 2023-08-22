@@ -136,7 +136,7 @@
 
                     </ul>
                 </li>
-                @if (currentUser()->can('ver_conciliaciones_'))
+                @if (currentUser()->can('ver_conciliaciones'))
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
@@ -265,6 +265,11 @@
                             <li class="nav-item ml-3">
                                 <a href="{{ route('segmentos.index') }}" class="nav-link">
                                     <p>Cortes</p>
+                                </a>
+                            </li>
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('roles.admin') }}" class="nav-link">
+                                    <p>Roles y permisos</p>
                                 </a>
                             </li>
                         </ul>

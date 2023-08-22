@@ -4,12 +4,12 @@
     @endslot
 
     @slot('title')
-       <small>
-		Agregando Asesoría <br>
-        Docente: {{ Auth::user()->name }} <br>
-        Fecha: {{ date('d-m-Y') }}    
-		</small> 
-		@endslot
+        <small>
+            Agregando Asesoría <br>
+            Docente: {{ Auth::user()->name }} <br>
+            Fecha: {{ date('d-m-Y') }}
+        </small>
+    @endslot
     @slot('body')
         @section('msg-contenido')
             Registrado
@@ -17,7 +17,7 @@
         @include('msg.ajax.success')
 
         {!! Form::open(['id' => 'myform_add_asesoria_docente']) !!}
-        
+
         <input type="hidden" value="{{ $expediente->id }}" id="idact2">
 
 
@@ -32,9 +32,9 @@
                     {!! Form::label('Asesoría docente: ') !!}
                     {!! Form::textarea('asesoria_docente', null, [
                         'class' => 'form-control required',
-                        'maxlength' => '500',
+                        'maxlength' => '1000',
                         'id' => 'asesoria_docente',
-                        'rows' => '5',
+                        'rows' => '7',
                     ]) !!}
                 </div>
             </div>
@@ -42,12 +42,12 @@
 
         <div class="row">
             <div class="col-md-6">
-                <input type="submit" class="btn btn-primary" value="Enviar" >
-         </div>
+                <input type="submit" class="btn btn-primary" value="Enviar">
+            </div>
         </div>
 
 
-         {!! Form::close() !!}
+        {!! Form::close() !!}
     @endslot
 @endcomponent
 <!-- /modal -->

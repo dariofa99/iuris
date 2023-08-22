@@ -140,7 +140,7 @@ $(document).ready(function () {
             $("#wait").hide();
     });
 
-    $("#myFormEditPdfReporte").on("submit", function (e) {  
+    $("#myFormEditPdfReporte").on("submit",async function (e) {  
         e.preventDefault();    
         var request = serializeSummernotePdf(
             "myFormEditPdfReporte",
@@ -149,20 +149,32 @@ $(document).ready(function () {
         var id = $("#myFormEditPdfReporte select[name=id]").val();
         if(id==undefined)id = $("#myFormEditPdfReporte input[name=id]").val();     
         $("#wait").show();
-        let response = formatosService.updatePdfReporte(request, id);
+        let response = await formatosService.updatePdfReporte(request, id);
         toastr.success("Actualizado con éxito", "", {
             positionClass: "toast-top-right",
             timeOut: "4000",
         }); 
         $("#wait").hide();       
-    });
+    }); 
 
-    $(".btn_generate_pdf_preview").on("click", function (e) {
+    $(".btn_generate_pdf_preview").on("click",async function (e) {
         e.preventDefault();
+       // alert(55)
         var myForm = $(this).attr("data-form");
         var mySummernote = $(this).attr("data-summernote");       
         var request = serializeSummernotePdf(myForm, mySummernote);
-       // if (request) createPdfPreview(request);
+
+        if (request){
+            $("#wait").show();
+            let response = await formatosService.createPdfPreview(request);
+            var a = document.createElement("a");
+            a.target = "_blank";
+            a.href = response.url;
+            a.click();
+            $("#wait").hide();
+        } 
+       
+        // if (request) createPdfPreview(request);
     });
 
     $(".selec_confi_av").on("click",function (e) {

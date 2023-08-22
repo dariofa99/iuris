@@ -1610,21 +1610,27 @@ class ExpedienteController extends Controller
       $procjudi = $this->procjucicialService->saveFile($procjudi, $request);
     }
 
-
-
-
-    $user = $this->userService->findWithFilter([
-      'email' => 'darioj99@gmail.com',
-    ]);
+    $users = $this->userService->getUsersByPermissionName('rec_mail_procjuridicoexp'); 
     if ($estado_caso_old == 244 and $request->estado_id == 246) {
       $mensaje = getMessagesForPro(001, $expediente->expid);
     } else {
       $mensaje = getMessagesForPro($asignacion_caso->procesojud_id, $expediente->expid);
     }
+    if(count($users)>0){
+      Notification::send($users, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $expediente));
+      $response=[
+        'errors'=>[$users]
+      ];
+    }else{
+      $response=[
+        'errors'=>[
+          'No hay usuarios para enviar correo electrónico'
+        ]
+      ];
+    }
+    
 
-    Notification::send($user, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $expediente));
-
-    return response()->json($request->all());
+    return response()->json($response);
   }
 
   public function editExpProcJudicial(Request $request, $id)

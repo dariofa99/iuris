@@ -175,7 +175,7 @@ class UsersRepository extends BaseRepository implements UsersService
   }
 
   public function getUsersByPermissionName($permission): Collection
-  {
+  { 
 
     $users = User::join('role_user as ru', 'users.id', '=', 'ru.user_id')
       ->join('roles', 'roles.id', '=', 'ru.role_id')

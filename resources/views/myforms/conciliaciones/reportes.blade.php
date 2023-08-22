@@ -131,7 +131,7 @@
 
 
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5"> 
                     <br>
                     <div class="input-group pull-right">
                         <span class="input-group-addon bg-orange" id="basic-addon1">

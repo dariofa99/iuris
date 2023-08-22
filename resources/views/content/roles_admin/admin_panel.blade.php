@@ -14,7 +14,7 @@ Editar
 	<a href="#" class="btn-atrasexed pull-right btn bg-gray" style="color:#777"><i class="fa fa-backward"></i> Atrás</a>
 </div>
 @endsection
- 
+  
 
 @section('area_forms') 
 
@@ -63,6 +63,8 @@ Editar
 
 @push('scripts')
 <!-- aqui van los scripts de cada vista -->
+<script src={{ asset('js/admin_roles.js') }}></script>
+   
 <script type="text/javascript">
 (function(){
  getRolesPermissions();
