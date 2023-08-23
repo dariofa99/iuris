@@ -42,7 +42,7 @@
         <div class="tab-pane fade show active" id="estasig_tab" role="tabpanel" aria-labelledby="estasig-tab">
           @include("myforms.turnos.estudiantes_asignados")
         </div>
-    </div>
+    </div> 
 
     @include('myforms.frm_modal_asig_turno_est')
     @include('myforms.frm_modal_detail_reporasistencia')

@@ -366,33 +366,50 @@ $(document).ready(function () {
 
     $('#myformExpFilter').on('keyup', 'div.select_data_users input', async function (e) {
         let name = $(this).val();
+        var role = '';
+        let request = {}
         var opselected = $("#myformExpFilter select[name='tipo_busqueda']").val();
-        if (opselected != '' && (opselected == 'codido_exp' || opselected == 'solicitante_num')) {
-            $(".select_data_users").selectpicker('render');//refresca el select
-            opcion_busq = '<option value="' + name + '">' + name + '</option>';
-            $("#select_data_users").html(opcion_busq);
-            $(".select_data_users").selectpicker("refresh")
+        if (opselected == 'idnumber_doc') role = 'docente';
+        if (opselected == 'solicitante' || opselected == 'solicitante_num') role = 'solicitante';
+        if (opselected == 'estudiante' || opselected == 'estudiante_num') role = 'estudiante';
+        
+        if (opselected != '' && (opselected == 'codido_exp' 
+        || opselected == 'solicitante_num' || opselected == 'estudiante_num')) {
+
+            if (e.which === 13) {
+                $(".select_data_users").val(name).trigger("change");
+                $(".select_data_users").selectpicker("refresh");
+                $("#myformExpFilter").trigger("submit")
+                console.log("Valor seleccionado:sss " + name);
+            } else {
+                $(".select_data_users").selectpicker('render');//refresca el select
+                var opcion_busq = '<option value="' + name + '">' + name + '</option>';
+                $("#select_data_users").html(opcion_busq);
+                $(".select_data_users").selectpicker("refresh");
+            }
+
+
+
+
+
+
         } else if (opselected != '' && (opselected == 'estudiante' || opselected == 'solicitante' || opselected == 'idnumber_doc')) {
             if (name.length >= 3) {
                 $('div.select_data_users li.no-results').text('Buscando...');
-                var role = '';
-                if (opselected == 'idnumber_doc') role = 'docente';
-                if (opselected == 'solicitante') role = 'solicitante';
-                if (opselected == 'solicitante_num') role = 'solicitante_num';
-                if (opselected == 'estudiante') role = 'estudiante';
+
                 let response;
                 if (role == 'solicitante_num') {
                     let request = {
                         "idnumber": $(this).val(),
-                        "validate_active": 0
+                        "active": 0
                     }
-                    response = await userService.findUsersByIdnumber(request);
+                    response = await userService.getUsersByIdnumber(request);
                 } else {
                     let request = {
                         'name': name,
                         'role': role
                     }
-                    if (role == 'solicitante' || role == 'estudiante') request['validate_active'] = 0;
+                    if (role == 'solicitante' || role == 'estudiante') request['active'] = 0;
                     response = await userService.findUserWithFilterByNameOrLastNameAndRole(request);
 
                 }
@@ -766,19 +783,19 @@ $(document).ready(function () {
         request['expid'] = $("#form_expediente_edit input[name='expediente_id']").val()
         $("#wait").show();
         let response = await expedientesService.gestionDocente(request);
-        if(response.errors && response.errors.length>0) {
+        if (response.errors && response.errors.length > 0) {
             toastr.error(errors[0], "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-        }else{
+        } else {
             toastr.success("Actualizado con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
             window.location.reload(true)
         }
-     
+
     });
 
     $("#btn_change_doc_exp").on("click", async function (e) {
@@ -796,8 +813,8 @@ $(document).ready(function () {
                 opcion_busq += '<option value="' + value.idnumber + '">' + value.full_name + '</option>';
             });
             var userauth = JSON.parse($("#authdata").val())
-            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name +' '+userauth.lastname +'</option>'
-         
+            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name + ' ' + userauth.lastname + '</option>'
+
             $("#new_docente_id").html(opcion_busq).selectpicker("refresh");;
             $("#myModal_change_docente_exp").modal("show");
         }
@@ -843,8 +860,8 @@ $(document).ready(function () {
                 opcion_busq += '<option value="' + value.idnumber + '">' + value.full_name + '</option>';
             });
             var userauth = JSON.parse($("#authdata").val())
-            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name +' '+userauth.lastname +'</option>'
-         
+            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name + ' ' + userauth.lastname + '</option>'
+
             $("#new_docente_id").html(opcion_busq).selectpicker("refresh");;
             $("#myModal_change_docente_exp").modal("show");
         }
@@ -874,14 +891,14 @@ $(document).ready(function () {
             }
         });
 
-      /*   var confirm = alertify.confirm(
-            "¿Está seguro de <b>Aceptar</b> la solicitud de cambio?"
-        );
-        confirm.set("onok", function () {
-            var data = { tipo_cambio: 3 };
-            var exp_id = $("#expediente_id").val();
-            changeDocenteExp(data, exp_id);
-        }); */
+        /*   var confirm = alertify.confirm(
+              "¿Está seguro de <b>Aceptar</b> la solicitud de cambio?"
+          );
+          confirm.set("onok", function () {
+              var data = { tipo_cambio: 3 };
+              var exp_id = $("#expediente_id").val();
+              changeDocenteExp(data, exp_id);
+          }); */
     });
 
     $("#btn_cancel_change_doc_exp").on("click", function (e) {
@@ -2363,10 +2380,10 @@ function llenarModalDetailsAct(res) {
         $("#ntaconcepto_text").val(res.notas_f.nota_concepto);
         $("#cont_notas_ac #lbldocevname").text(res.notas_f.docevname);
 
-         showElement('cont_notas_ac'); 
+        showElement('cont_notas_ac');
         console.log('ids', segmento_id, res.notas_f.segmento_id, res.notas_f.can_edit)
         if (segmento_id == res.notas_f.segmento_id && res.notas_f.can_edit) {
-             showElement('btn_cam_nt_act'); 
+            showElement('btn_cam_nt_act');
         }
 
     } else {
@@ -2440,6 +2457,11 @@ async function changeSelectSearchExp(value) {
             $('#select_data_users').selectpicker('destroy').html('').selectpicker();
 
             break;
+        case "estudiante_num":
+            $("#myformExpFilter select[name='data']").prop("disabled", false).selectpicker('show');
+            $("#select_data_users").attr('title', 'Ingrese el número de documento de un estudiante');
+            $('#select_data_users').selectpicker('destroy').html('').selectpicker();
+            break
         case "solicitante_num":
             $("#myformExpFilter select[name='data']").prop("disabled", false).selectpicker('show');
             $("#select_data_users").attr('title', 'Ingrese el número de documento de un consultante');

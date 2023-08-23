@@ -71,12 +71,15 @@
                                 </option>
 
                                 @if (!currentUser()->hasRole('estudiante'))
+                                    <option value="estudiante_num"
+                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante_num' ? 'selected' : '') }}>
+                                        Documento de identificación (estudiante)
+                                    </option>
                                     <option value="estudiante"
                                         {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante' ? 'selected' : '') }}>
                                         Nombre o apellidos (estudiante)
                                     </option>
-                                @endif
-                                @if (!currentUser()->hasRole('estudiante'))
+                               
                                     <option value="solicitante_num"
                                         {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected' : '') }}>
                                         Documento de identificación (solicitante)
@@ -154,7 +157,8 @@
                                     currentUser()->hasRole('dirgral') ||
                                     currentUser()->hasRole('coordprac') ||
                                     currentUser()->hasRole('amatai'))
-                                <button type="button" id="btn_exp_bus_avz" class="btn btn-sm btn-default"><i class="fa fa-cogs">
+                                <button type="button" id="btn_exp_bus_avz" class="btn btn-sm btn-default"><i
+                                        class="fa fa-cogs">
                                     </i> Avanzada </button>
                             @endif
                         </div>

@@ -129,7 +129,8 @@ class UsersRepository extends BaseRepository implements UsersService
   {
 
     $this->applyValidateSede();
-    $users = $this->query->with(['roles', 'curso'])->whereHas('roles', function ($query) use ($role) {
+    $users = $this->query->with(['roles', 'curso'])
+    ->whereHas('roles', function ($query) use ($role) {
       return $query->where('roles.name', $role);
     })
       ->where(function ($query) {
@@ -184,7 +185,7 @@ class UsersRepository extends BaseRepository implements UsersService
       //->where('users.type_status_id','<>',15)
       ->where('permissions.name', $permission)
       ->select("users.id", 'users.email', 'users.name')
-      ->get();
+      ->get(); 
 
     return $users;
   }

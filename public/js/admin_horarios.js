@@ -49,7 +49,7 @@ $(document).ready(function () {
     });
 
     $("#addest").click(async function () {
-        //console.log(v_users)
+        //console.log(v_users) 
         if (v_users.length <= 0) {
             let response = await usersSerice.getUsersByRole({ 'role': 'estudiante', 'active': 1 });
             if (response.encontrado) {
@@ -135,3 +135,4 @@ function llenarDatos() {
     $('#idestlistcal').val(parseInt(idest +
         1)); //coloca el contador de la lista de estudiantes calendario
 }
+

@@ -136,10 +136,10 @@
 
                     </ul>
                 </li>
-                @if (currentUser()->can('ver_conciliaciones'))
+                @if (currentUser()->can('ver_conciliaciones_'))
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fa fa-handshake"></i>
                             <p>Conciliaciones
                                 <i class="fas fa-angle-left right"></i>
                             </p>

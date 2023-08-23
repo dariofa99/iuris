@@ -71,27 +71,27 @@
                         No. Documento
                     </th>
 
-                    <th width="20%">
+                    <th>
                         Estudiante
                     </th>
 
-                    <th width="15%">
+                    <th width="11%">
                         Color
                     </th>
-                    <th>
+                    <th width="8%">
                         Curso
                     </th>
-                    <th>
+                    <th width="11%">
                         Horario
                     </th>
-                    <th>
+                    <th width="10%">
                         Oficina
                     </th>
-                    <th>
+                    <th width="13%">
                         Dia
                     </th>
                     @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
-                        <th>
+                        <th width="11%">
                             Acciones
                         </th>
                     @endif
@@ -179,21 +179,23 @@
                             </td>
                             @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                 <td>
-                                    <a style="display: none;" class="btn btn-success btn_updatecolor"
-                                        id="btnUpdatecolor_{{ $turno->id }}"><i class="fa fa-check-square"> </i>
+                                    <a style="display: none;" class="btn btn-success  btn-block btn-sm btn_updatecolor"
+                                        data-id="{{ $turno->id }}" id="btnUpdatecolor_{{ $turno->id }}">
+                                        <i class="fa fa-check-square"> </i>
                                         Actualizar</a>
 
-                                    <a style="display: none;" class="btn btn-warning"
+                                    <a style="display: none;"
+                                        class="btn btn-block btn-sm btn-warning btn_cancelupdcolor"
                                         id="btn_hideupdatecolor{{ $turno->id }}"
-                                        onclick="hideEditColor({{ $turno->id }})"><i class="fa fa-close"> </i></a>
+                                        data-id="{{ $turno->id }}">Cancelar</a>
 
-                                    <a class="btn btn-primary btn_habilityupdatecolor" data-id="{{ $turno->id }}"
-                                        id="btn_habilityupdatecolor{{ $turno->id }}">
+                                    <a class="btn btn-primary  btn-block btn-sm btn_habilityupdatecolor"
+                                        data-id="{{ $turno->id }}" id="btn_habilityupdatecolor{{ $turno->id }}">
                                         <i class="fa fa-edit"></i>Editar</a>
 
-                                    <a class="btn btn-danger btn_delete_turno"
-                                        id="btn_delete_turno-{{ $turno->id }}"><i class="fa fa-edit">
-                                        </i>Eliminar</a>
+                                    <a class="btn btn-danger  btn-block btn-sm btn_delete_turno"
+                                        data-id="{{ $turno->id }}" id="btn_delete_turno-{{ $turno->id }}">
+                                        <i class="fa fa-edit"></i>Eliminar</a>
 
                                 </td>
                             @endif

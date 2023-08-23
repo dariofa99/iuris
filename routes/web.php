@@ -213,7 +213,7 @@ Route::resource('docentes/casos','AsigDocenteCasoController');
 Route::get('turnos/asistencia', 'TurnosController@reporasistencia');
 Route::get('turnos/asistencia/detalles/{idnum}', 'TurnosController@reporAsistenciaDetalles');
 Route::resource('turnos','TurnosController');
-Route::post('turnos/delete/all','TurnosController@deleteAllTurnos');
+Route::delete('turnos/delete/all','TurnosController@deleteAllTurnos');
 Route::get('turnos/descargar/curso','TurnosController@descargarTurnosExcel');
 
 //Excel usuarios

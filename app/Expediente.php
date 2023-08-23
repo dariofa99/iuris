@@ -705,7 +705,7 @@ class Expediente extends Model
                     break;
                 case 'estudiante':
                 case 'estudiante_num':
-                    return $query->Orwhere(['expidnumberest' => $data, 'expidnumber' => $data]);
+                    return $query->where(['expidnumberest' => $data]);
                     break;
                 case 'idnumber_doc':
                     return $query->where('asignacion_docente_caso.docidnumber', $data);

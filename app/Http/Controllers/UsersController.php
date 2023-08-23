@@ -421,7 +421,7 @@ class UsersController extends Controller
     $users = $this->userService->findUserByNameOrLastNameAndRole(
       $request->name,
       $request->role,
-      $request->has('validate_active') ? $request->get('validate_active') : true
+      $request->has('active') ? $request->get('active') : true
     );
     if (count($users) > 0) {
       return response()->json(['encontrado' => true, 'users' => $users]);
@@ -447,8 +447,15 @@ class UsersController extends Controller
     return  response()->json(['encontrado' => false]);
   }
 
-  public function findUsersByIdNumber(Request $request)
+  public function getUsersByIdNumber(Request $request)
   {
+
+    if ($request->has('active') and ($request->input('active') === true or $request->input('active') == 1)) {
+        $user = $this->userService
+        ->getWithFilter(['idnumber' => $request->idnumber,'active' => 1]);
+    } else {
+      $user = $this->userService->getWithFilter(['idnumber' => $request->idnumber]);
+    }
 
     $user = $this->userService->getWithFilter(['idnumber' => $request->idnumber]);
     if (($user) !== null) {
