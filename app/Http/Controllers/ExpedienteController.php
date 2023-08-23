@@ -16,6 +16,7 @@ use App\Periodo;
 use App\Segmento;
 use App\Solicitud;
 use App\HistorialDatosCaso;
+use App\Jobs\ProcessEmailSendPJ;
 use App\Notifications\SolicitudDocenteCaso;
 use App\Notifications\SolicitudEstudiantesProcesosJuricosExp;
 use Facades\App\Facades\NewPush;
@@ -1457,9 +1458,9 @@ class ExpedienteController extends Controller
       'exp' => $fecha_unix
     );
     $jwt = JWT::encode($tokenjitsi, 'c6x@JKCixAr*4sPO@XjXlb1b^', 'HS256');
-    NewPush::channel('stream' . $id)
+    /* NewPush::channel('stream' . $id)
       ->message(['sol_id' => $id . "?jwt=" . $jwt])->publish();
-  }
+ */  }
 
   public function createStream($id)
   {
@@ -1609,28 +1610,12 @@ class ExpedienteController extends Controller
     if ($request->has('fileprocjud') and $request->fileprocjud != '') {
       $procjudi = $this->procjucicialService->saveFile($procjudi, $request);
     }
+    $expediente->setRelations([]);
+    ProcessEmailSendPJ::dispatch($expediente, $request->estado_id)
+    ->onConnection('database')->onQueue('emails');;
 
-    $users = $this->userService->getUsersByPermissionName('rec_mail_procjuridicoexp'); 
-    if ($estado_caso_old == 244 and $request->estado_id == 246) {
-      $mensaje = getMessagesForPro(001, $expediente->expid);
-    } else {
-      $mensaje = getMessagesForPro($asignacion_caso->procesojud_id, $expediente->expid);
-    }
-    if(count($users)>0){
-      Notification::send($users, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $expediente));
-      $response=[
-        'errors'=>[$users]
-      ];
-    }else{
-      $response=[
-        'errors'=>[
-          'No hay usuarios para enviar correo electrónico'
-        ]
-      ];
-    }
-    
 
-    return response()->json($response);
+    return response()->json($expediente);
   }
 
   public function editExpProcJudicial(Request $request, $id)
@@ -1713,10 +1698,10 @@ class ExpedienteController extends Controller
         if (currentUser()->hasRole('docente')) {
           $new_asig_doc =  new AsigDocenteCaso();
           $new_asig_doc->activo = 1;
-          $new_asig_doc->docidnumber = \Auth::user()->idnumber;
+          $new_asig_doc->docidnumber = Auth::user()->idnumber;
           $new_asig_doc->asig_caso_id =  $asig_doc->asig_caso_id;
-          $new_asig_doc->user_created_id = \Auth::user()->idnumber;
-          $new_asig_doc->user_updated_id = \Auth::user()->idnumber;
+          $new_asig_doc->user_created_id = Auth::user()->idnumber;
+          $new_asig_doc->user_updated_id = Auth::user()->idnumber;
           $new_asig_doc->save();
         }
       } elseif ($request->tipo_cambio == 4) {
@@ -1725,15 +1710,15 @@ class ExpedienteController extends Controller
         $new_asig_doc->activo = 1;
         $new_asig_doc->docidnumber = $request->new_docente_id;
         $new_asig_doc->asig_caso_id =  $asig->id;
-        $new_asig_doc->user_created_id = \Auth::user()->idnumber;
-        $new_asig_doc->user_updated_id = \Auth::user()->idnumber;
+        $new_asig_doc->user_created_id = Auth::user()->idnumber;
+        $new_asig_doc->user_updated_id = Auth::user()->idnumber;
         $new_asig_doc->save();
       } elseif ($request->tipo_cambio == 5) {
         $del = $expediente->getAsignacion()->asig_docente->delete();
         return response()->json(['eliminado' => 1]);
       }
 
-      $asig_doc->user_updated_id = \Auth::user()->idnumber;
+      $asig_doc->user_updated_id = Auth::user()->idnumber;
       $asig_doc->save();
     } catch (\Throwable $th) {
       return response()->json(['error' => $th->getMessage()]);

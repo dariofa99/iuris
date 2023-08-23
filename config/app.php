@@ -161,8 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        App\Providers\ComposerServiceProvider::class,
-
+      
         /*
          * Package Service Providers...
          */
@@ -180,7 +179,9 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
+
     ],
 
     /*

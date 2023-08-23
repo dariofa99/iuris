@@ -17,8 +17,8 @@
                     (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral')))
 
                 @if ($expediente->getDocenteAsig()->idnumber == 'Sin asignar')
-                    <button disabled type="button" class="btn btn-danger btn-sm mb-2" 
-                         id="btn_trigger_exp_edit_cierre_caso">
+                    <button disabled type="button" class="btn btn-danger btn-sm mb-2"
+                        id="btn_trigger_exp_edit_cierre_caso">
                         Debe solicitar la asignación del docente
                     </button>
                 @else
@@ -41,7 +41,9 @@
                 </button>
             @endif
 
-            @if ($expediente->expestado_id == 1 and currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
+            @if (
+                $expediente->expestado_id == 1 and
+                    currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
                 <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_cerrar_dr_caso">
                     Cerrar caso
                 </button>
@@ -199,7 +201,7 @@
 
                             </td>
                             <td>
-                               {{--  <button class="btn btn-success">
+                                {{--  <button class="btn btn-success">
                                     Detalles
                                 </button> --}}
                             </td>

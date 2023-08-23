@@ -62,42 +62,38 @@
                 </div>
             </div>
         @endif
-
-        @if (
-            $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                $expediente->asignacion->procesojud_id == 1 and
-                $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                    (currentUser()->hasRole('diradmin') ||
-                        currentUser()->hasRole('dirgral') ||
-                        currentUser()->hasRole('amatai')))
-            <div class="col-md-3 ">
-                <a href="#" id="btn_act_proc_jur" class="btn btn-warning btn_act_proc_jur">
+        <div class="col-md-3 ">
+            @if (
+                $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+                    $expediente->asignacion->procesojud_id == 1 and
+                    $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        (currentUser()->hasRole('diradmin') ||
+                            currentUser()->hasRole('dirgral') ||
+                            currentUser()->hasRole('amatai')))
+                <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur">
                     Activar como proceso jurídico
                 </a>
-            </div>
-        @endif
 
-        @if (!$readonly)
-            <div class="col-md-3 ">
-                <div class="pull-right" style="margin-top:20px;">
-                    @if (currentUser()->can('tomar_caso') and $expediente->getDocenteAsig()->name == 'Sin asignar')
-                        <a class="btn btn-primary" id="btnTomarCaso"><i class="fa fa-check"> </i>
-                            Tomar Caso</a>
-                    @endif
-                    @if (auth()->user()->can('editar_datos_caso'))
-                        <a class="btn btn-warning" id="btnEditar"><i class="fa fa-edit"> </i>
-                            Editar</a>
-                        <a class="btn btn-success" id="btnActualizar" style="display: none;">
-                            <i class="fa  fa-check-circle"> </i>
-                            Actualizar</a>
-                        <a class="btn btn-danger" style="display: none;" id="btnCancelar">
-                            <i class="fa  fa-remove"> </i>
-                            Cancelar</a>
-                    @endif
-                </div>
-            </div>
-        @endif
-        <hr>
+                @if (!$readonly)
+                    <div class="pull-right" style="margin-top:1px;">
+                        @if (currentUser()->can('tomar_caso') and $expediente->getDocenteAsig()->name == 'Sin asignar')
+                            <a class="btn btn-sm btn-primary" id="btnTomarCaso"><i class="fa fa-check"> </i>
+                                Tomar Caso</a>
+                        @endif
+                        @if (auth()->user()->can('editar_datos_caso'))
+                            <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
+                                Editar</a>
+                            <a class="btn btn-success btn-sm" id="btnActualizar" style="display: none;">
+                                <i class="fa  fa-check-circle"> </i>
+                                Actualizar</a>
+                            <a class="btn btn-danger btn-sm" style="display: none;" id="btnCancelar">
+                                <i class="fa  fa-remove"> </i>
+                                Cancelar</a>
+                        @endif
+                    </div>
+                @endif
+            @endif
+        </div>
     @endif
 </div>
 

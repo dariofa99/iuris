@@ -139,9 +139,9 @@ class UsersRepository extends BaseRepository implements UsersService
         }
       })
       ->where(function ($query) {
-        if (!currentUser()->hasRole('amatai')) {
-          return $query->where('users.idnumber', '<>', 3030);
-        }
+        //if (!currentUser()->hasRole('amatai')) {
+          return $query->where('users.idnumber', '<>', 30030);
+        //}
       })->select(
         'users.active',
         'users.id',

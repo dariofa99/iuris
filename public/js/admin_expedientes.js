@@ -204,7 +204,7 @@ $(document).ready(function () {
         e.preventDefault();
         Swal.fire({
             title: '¿Esta seguro de marcar el caso como proceso judicial?',
-            type: 'info',
+            icon: 'info',
             text: "Recuerde que solo el Director general podra revertir los cambios.",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -222,7 +222,7 @@ $(document).ready(function () {
                 toastr.success("Se actalizó con éxito", "", {
                     timeOut: "4000",
                 });
-                // $("#wait").hide();
+                 $("#wait").hide();
                 window.location.reload(true);
             }
         });
@@ -463,7 +463,7 @@ $(document).ready(function () {
             if (extension !== 'pdf') {
                 Swal.fire({
                     position: 'top-end',
-                    type: 'error',
+                    icon: 'error',
                     title: 'Ups! El archivo no es pdf',
                     showConfirmButton: false,
                     timer: 5500
@@ -483,7 +483,7 @@ $(document).ready(function () {
                     .then((response) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'success',
+                            icon: 'success',
                             title: "Actualizado con éxito!",
                             showConfirmButton: false,
                             timer: 2500
@@ -494,7 +494,7 @@ $(document).ready(function () {
                     .catch((error) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'error',
+                            icon: 'error',
                             title: 'Ups! Algo fallo',
                             html: error,
                             showConfirmButton: false,
@@ -716,7 +716,7 @@ $(document).ready(function () {
             $("#wait").hide();
             Swal.fire({
                 title: 'El caso se ha creado con éxito!',
-                type: 'success',
+                icon: 'success',
                 text: "¿Qué desea hacer?",
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -751,7 +751,7 @@ $(document).ready(function () {
         Swal.fire({
             title: 'Esta seguro de tomar el caso?',
             text: "Se asignará automaticamente!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -905,7 +905,7 @@ $(document).ready(function () {
         e.preventDefault();
         Swal.fire({
             title: 'Esta seguro de eliminar la solicitud del docente?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -933,7 +933,7 @@ $(document).ready(function () {
         Swal.fire({
             title: "Esta seguro de dar de baja el expediente?",
             text: "Se asignará un docente de pruebas!",
-            type: "info",
+            icon: "info",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
@@ -947,7 +947,7 @@ $(document).ready(function () {
                 Swal.fire({
                     title: response.message,
                     html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
-                    type: "info",
+                    icon: "info",
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "OK",
                 }).then((result) => {
@@ -1024,7 +1024,7 @@ $(document).ready(function () {
         var id = $(this).attr('data-id');
         Swal.fire({
             title: 'Esta seguro de eliminar el comentario del docente?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -1080,7 +1080,7 @@ $(document).ready(function () {
                     .then((response) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'success',
+                            icon: 'success',
                             title: "Actualizado con éxito!",
                             showConfirmButton: false,
                             timer: 2500
@@ -1091,7 +1091,7 @@ $(document).ready(function () {
                     .catch((error) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'error',
+                            icon: 'error',
                             title: 'Ups! Algo fallo',
                             html: error,
                             showConfirmButton: false,
@@ -1165,7 +1165,7 @@ $(document).ready(function () {
                     .then((response) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'success',
+                            icon: 'success',
                             title: "Actualizado con éxito!",
                             showConfirmButton: false,
                             timer: 2500
@@ -1281,7 +1281,7 @@ $(document).ready(function () {
                     .then((response) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'success',
+                            icon: 'success',
                             title: "Actualizado con éxito!",
                             showConfirmButton: false,
                             timer: 2500
@@ -1320,7 +1320,7 @@ $(document).ready(function () {
                     .then((response) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'success',
+                            icon: 'success',
                             title: "Actualizado con éxito!",
                             showConfirmButton: false,
                             timer: 2500
@@ -1331,7 +1331,7 @@ $(document).ready(function () {
                     .catch((error) => {
                         Swal.fire({
                             position: 'top-end',
-                            type: 'error',
+                            icon: 'error',
                             title: 'Ups! Algo fallo',
                             html: error,
                             showConfirmButton: false,
@@ -1363,7 +1363,7 @@ $(document).ready(function () {
         var id = $(this).val()
         Swal.fire({
             title: 'Esta seguro de eliminar la actuación?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -1551,7 +1551,7 @@ $(document).ready(function () {
         var id = $(this).attr('data-id')
         Swal.fire({
             title: 'Esta seguro de eliminar el requerimiento?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -1576,7 +1576,7 @@ $(document).ready(function () {
         var reqentregado = ($(this).attr('data-estado') == 0) ? 1 : 0;
         Swal.fire({
             title: 'Esta seguro de cambiar el estado del requerimiento?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -1614,7 +1614,7 @@ $(document).ready(function () {
         Swal.fire({
             title: 'Esta seguro de eliminar las notas?',
             text: "Los cambios no podran ser revertidos!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -1774,7 +1774,7 @@ $(document).ready(function () {
         e.preventDefault();
         Swal.fire({
             title: 'Esta seguro de cambiar las notas del caso?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -2054,7 +2054,7 @@ $(document).ready(function () {
         var id = $(this).attr("data-id");
         Swal.fire({
             title: 'Esta seguro de eliminar la autorización?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
