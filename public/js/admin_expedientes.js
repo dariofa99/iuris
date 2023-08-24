@@ -667,7 +667,6 @@ $(document).ready(function () {
     });
 
     $("#btn_cerrar_dr_caso").on("click", function (e) {
-
         let request = {
             expidnumber: $("#expid").val(),
             ref_estado_id: 2,
@@ -675,10 +674,11 @@ $(document).ready(function () {
         }
         Swal.fire({
             title: 'Cerrando caso',
+            text: "No se asignarán notas!",
             input: 'textarea',
             inputPlaceholder: '¿Por qué va a cerrar el caso?',
             inputAttributes: {
-                rows: 100,  // Número de filas del textarea
+                rows: 90,  // Número de filas del textarea
                 cols: 500  // Número de columnas del textarea
             },
             showCancelButton: true,

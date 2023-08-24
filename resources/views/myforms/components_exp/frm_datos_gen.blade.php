@@ -63,6 +63,16 @@
             </div>
         @endif
         <div class="col-md-3 ">
+            @if (auth()->user()->can('editar_datos_caso'))
+                <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
+                    Editar</a>
+                <a class="btn btn-success btn-sm" id="btnActualizar" style="display: none;">
+                    <i class="fa  fa-check-circle"> </i>
+                    Actualizar</a>
+                <a class="btn btn-danger btn-sm" style="display: none;" id="btnCancelar">
+                    <i class="fa  fa-remove"> </i>
+                    Cancelar</a>
+            @endif
             @if (
                 $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                     $expediente->asignacion->procesojud_id == 1 and
@@ -80,16 +90,7 @@
                             <a class="btn btn-sm btn-primary" id="btnTomarCaso"><i class="fa fa-check"> </i>
                                 Tomar Caso</a>
                         @endif
-                        @if (auth()->user()->can('editar_datos_caso'))
-                            <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
-                                Editar</a>
-                            <a class="btn btn-success btn-sm" id="btnActualizar" style="display: none;">
-                                <i class="fa  fa-check-circle"> </i>
-                                Actualizar</a>
-                            <a class="btn btn-danger btn-sm" style="display: none;" id="btnCancelar">
-                                <i class="fa  fa-remove"> </i>
-                                Cancelar</a>
-                        @endif
+
                     </div>
                 @endif
             @endif

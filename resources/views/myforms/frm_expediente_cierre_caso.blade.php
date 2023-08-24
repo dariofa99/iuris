@@ -42,8 +42,9 @@
             @endif
 
             @if (
-                $expediente->expestado_id == 1 and
-                    currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
+                ($expediente->expestado_id != 2 and $expediente->expestado_id != 5) and
+                    currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') 
+                    || currentUser()->hasRole('diradmin'))
                 <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_cerrar_dr_caso">
                     Cerrar caso
                 </button>
@@ -58,7 +59,6 @@
     @if (count($expediente->estados) > 0)
         <div class="box-body table-responsive no-padding">
             <table id="tbl_cierre_caso" class="table table-bordered table-striped dataTable dataTable" role="grid">
-
                 <tr>
                     <td width="15%">
                         <label>Estado del Caso</label>
