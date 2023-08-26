@@ -142,7 +142,8 @@ class TurnosDocentesController extends Controller
 
     public function updateinfo(Request $request)
     {
-        foreach ($request->mydata as $key => $info) { //recibe el json y se dispone a ver las actividades a realizar
+        //
+        foreach ($request->all() as $key => $info) { //recibe el json y se dispone a ver las actividades a realizar
             if ($info['accion'] == 'eliminar') {
                 $turnos_doc = turnos_docentes::where('trnd_hora_inicio',$info['hora_i'])
                     ->where('trnd_hora_fin',$info['hora_f'])
@@ -167,7 +168,7 @@ class TurnosDocentesController extends Controller
                 }
             }  
         } 
-        
+        return response()->json($request->all());
     }
 
     /**

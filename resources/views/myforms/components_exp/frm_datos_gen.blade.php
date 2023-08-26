@@ -1,8 +1,9 @@
 <div class="row">
     <input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">
+   @if($expediente->getAsignacion())
     <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig"
         name="fecha_asig">
-
+  @endif
     @if (!currentUser()->hasRole('estudiante'))
         <div class="col-md-4">
             <input type="hidden" name="oldexpidnumberest" id="oldexpidnumberest">
@@ -63,6 +64,9 @@
             </div>
         @endif
         <div class="col-md-3 ">
+            
+            @if($expediente->asignacion)
+            
             @if (auth()->user()->can('editar_datos_caso'))
                 <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
                     Editar</a>
@@ -73,14 +77,14 @@
                     <i class="fa  fa-remove"> </i>
                     Cancelar</a>
             @endif
-            @if (
-                $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+            
+            @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                     $expediente->asignacion->procesojud_id == 1 and
                     $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                         (currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
                             currentUser()->hasRole('amatai')))
-                <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur">
+                <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur mt-1">
                     Activar como proceso jurídico
                 </a>
 
@@ -90,9 +94,11 @@
                             <a class="btn btn-sm btn-primary" id="btnTomarCaso"><i class="fa fa-check"> </i>
                                 Tomar Caso</a>
                         @endif
-
                     </div>
                 @endif
+            @endif
+            @else
+            Error en la asignación
             @endif
         </div>
     @endif

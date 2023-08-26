@@ -1,4 +1,5 @@
-@foreach ($expediente->getAsignacion()->autorizaciones as $autorizacion)
+@if($expediente->asignacion)
+@foreach ($expediente->asignacion->autorizaciones as $autorizacion)
     <tr>
         <td>
             {{ $autorizacion->nombre_estudiante }}
@@ -16,15 +17,21 @@
             </span>
         </td>
         <td>
-            @if (!$readonly)
-                @if (!$autorizacion->estado and currentUser()->id == $autorizacion->user_solicitante_id)
+            @if (!isset($readonly) || (isset($readonly) and !$readonly))
+                @if (!$autorizacion->estado 
+                and (currentUser()->id == $autorizacion->user_solicitante_id
+                or currentUser()->hasRole('diradmin')
+                || currentUser()->hasRole('dirgral') 
+                || currentUser()->hasRole('amatai')))
                     <button data-id="{{ $autorizacion->id }}"
                         class="btn btn-primary btn-sm btn_editar_autorizacion">Editar</button>
                     <button data-id="{{ $autorizacion->id }}"
                         class="btn btn-danger btn-sm btn_eliminar_autorizacion">Eliminar</button>
                 @endif
 
-                @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
+                @if (currentUser()->hasRole('diradmin')
+                || currentUser()->hasRole('dirgral') 
+                || currentUser()->hasRole('amatai'))
                     <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
                         class="btn btn-{{ $autorizacion->estado ? 'default' : 'warning' }} btn-sm btn_change_estado_autorizacion">
                         {{ $autorizacion->estado ? 'Quitar Autorizado' : 'Autorizar' }}
@@ -41,3 +48,4 @@
         </td>
     </tr>
 @endforeach
+@endif

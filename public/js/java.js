@@ -9334,7 +9334,7 @@ function asigTurnoEst() {
 
     var route = "/turnos";
     $.ajax({
-        url: route,
+        url: route, 
         type: "POST",
         datatype: "json",
         data: {

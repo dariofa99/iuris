@@ -4,6 +4,7 @@ var dias = [];
 var checks_bd = [];
 var horas = [];
 $(document).ready(function () {
+	set_tab();
 	$(".btn_habilityupdatecolor").on("click", function (e) {
 		e.preventDefault();
 		var id = $(this).attr("data-id");
@@ -93,8 +94,8 @@ $(document).ready(function () {
 				window.location.reload(true);
 			}
 		});
-		
-		
+
+
 	});
 
 	$("#select_doc_horario").change(function () {
@@ -126,10 +127,10 @@ $(document).ready(function () {
 			horas.push(id_time);
 		}
 	});
-	$("#guardar_horario_doc").click(function () {
+	$("#guardar_horario_doc").click(async function () {
 		var mydata = [];
 		var docidmunber = $("#select_doc_horario").val();
-		console.log(dias);
+		//console.log(dias);
 		if (dias.length > 0) { // insertar o eliminar dias
 			$(dias).each(function (key, value) {
 				var v_info_id = value.split("_");
@@ -208,6 +209,15 @@ $(document).ready(function () {
 		}
 		console.log(mydata);
 		if (mydata.length > 0) { //comprueba si hay informacion para guardar
+			let res = await horariosService.updateTurnosDocente(mydata);
+			consultar_horario(docidmunber);
+			Toast.fire({
+				title: 'Actualizado con éxito.',
+				icon: 'success',
+				timer: 2000,
+			});
+			
+/* 			
 			var route = "/turnos/acdocentes";
 			//var token = $("#token").val();
 			$.ajax({
@@ -239,7 +249,7 @@ $(document).ready(function () {
 					alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
 				}
 
-			});
+			}); */
 		} else {
 			Toast.fire({
 				title: 'No se han hecho cambios.',
@@ -274,7 +284,110 @@ $(document).ready(function () {
 
 	});
 
+	$("#asistencia-tab").on("click", async function () {
+		$("#wait").show();
 
+		let res = await horariosService.getReporteAsistenciaDocente();
+		var datosasis = "";
+		$("#contenrepasistenciadoc").html('');
+		if (res != "") {
+			$(res.docentes).each(function (key, value) {
+				var asistencias = 0;
+				var permisos = 0;
+				var reposiciones = 0;
+				var datasistencias = res.asistencia.find(datosasis => datosasis.docidnumber === value.idnumber);
+				var datapermisos = res.permisos.find(datosper => datosper.docidnumber === value.idnumber);
+				var datareposiciones = res.reposicion.find(datosrepo => datosrepo.docidnumber === value.idnumber);
+				if (datasistencias) { asistencias = datasistencias.asistencia; }
+				if (datapermisos) { permisos = datapermisos.permisos; }
+				if (datareposiciones) { reposiciones = datareposiciones.reposicion; }
+
+
+				datosasis += '<tr>' +
+					'<td>' + parseInt(key + 1) + '</td>' +
+					'<td>' + value.idnumber + '</td>' +
+					'<td>' + value.full_name + '</td>' +
+					'<td>' + round(asistencias / 60) + '</td>' +
+					'<td>' + round(permisos / 60) + '</td>' +
+					'<td>' + round(reposiciones / 60) + '</td>' +
+					'<td>' + parseInt(parseInt(round(permisos / 60)) - parseInt(round(reposiciones / 60))) + '</td>' +
+					'</tr>';
+
+
+			});
+			$("#contenrepasistenciadoc").append(datosasis);//coloca una nueva opcion
+		}
+		$("#wait").hide();
+
+
+
+
+
+		/* 	var route = "/turnos/docentes/reporte/asis";
+			$("#wait").css("display", "block");
+			$.get(route, function (res) {
+				console.log(res);
+				if (res == "") {
+					$("#contenrepasistenciadoc").append('');//coloca una nueva opcion
+	
+					$("#wait").css("display", "none");
+				} else {
+					//$("#expidnumberest").find('option').remove().end();//elimina opciones existentes
+					var datosasis = "";
+					$(res.docentes).each(function (key, value) {
+						var asistencias = 0;
+						var permisos = 0;
+						var reposiciones = 0;
+						var datasistencias = res.asistencia.find(datosasis => datosasis.docidnumber === value.idnumber);
+						var datapermisos = res.permisos.find(datosper => datosper.docidnumber === value.idnumber);
+						var datareposiciones = res.reposicion.find(datosrepo => datosrepo.docidnumber === value.idnumber);
+						if (datasistencias) { asistencias = datasistencias.asistencia; }
+						if (datapermisos) { permisos = datapermisos.permisos; }
+						if (datareposiciones) { reposiciones = datareposiciones.reposicion; }
+	
+	
+						datosasis += '<tr>' +
+							'<td>' + parseInt(key + 1) + '</td>' +
+							'<td>' + value.idnumber + '</td>' +
+							'<td>' + value.full_name + '</td>' +
+							'<td>' + round(asistencias / 60) + '</td>' +
+							'<td>' + round(permisos / 60) + '</td>' +
+							'<td>' + round(reposiciones / 60) + '</td>' +
+							'<td>' + parseInt(parseInt(round(permisos / 60)) - parseInt(round(reposiciones / 60))) + '</td>' +
+							'</tr>';
+	
+	
+					});
+					$("#contenrepasistenciadoc").append(datosasis);//coloca una nueva opcion
+				}
+				$("#wait").css("display", "none");
+	
+			}); */
+
+
+	});
+
+	$("#table_list_model").on("click", ".btn_asig_turno", function (e) {
+        e.preventDefault();
+        var idnumber = ($(this).attr("data-idnumber"));
+        $("#label_idnumber_estToAsig").text(idnumber);
+        $("#est_idnumber").val(idnumber);
+        $("#myModal_asig_turno_estudiante").modal("show");
+    });
+	
+    $("#btn_asig_turno_est").on("click",async function(e) {
+		e.preventDefault();
+		var request = convertFormToJSON('myform_asig_turno_est');
+		$("#wait").show();
+		let response = await horariosService.asigTurnoEst(request);
+		toastr.success("Se actualizó con éxito", "", {
+            positionClass: "toast-top-center",
+            timeOut: "4000",
+        });
+		window.location.reload(true);
+		console.log(request);
+		//asigTurnoEst();
+	});
 
 });/////////////////////////////////////////////////////
 function habilityEditColor(turno_id) {

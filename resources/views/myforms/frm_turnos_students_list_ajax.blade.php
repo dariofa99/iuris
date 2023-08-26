@@ -30,7 +30,7 @@
 							{{$estudiante->cursando }}
 						</td>
 						<td>
-							<a class="btn btn-primary btn_asig_turno"  id="estudiante_{{$estudiante->idnumber}}">Asignar Turno</a>
+							<a class="btn btn-primary btn_asig_turno" data-idnumber="{{$estudiante->idnumber}}"  id="estudiante_{{$estudiante->idnumber}}">Asignar Turno</a>
 						</td>
 						
 					</tr>

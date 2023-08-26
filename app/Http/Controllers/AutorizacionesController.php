@@ -60,15 +60,15 @@ class AutorizacionesController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $autorizacion = new Autorizacion($request->all());
-        $autorizacion->user_solicitante_id = Auth::user()->id;
-        $autorizacion->user_aprobo_id = Auth::user()->id;
-        $autorizacion->asig_caso_id = Auth::user()->asig_caso()->where(['asigexp_id'=>$request->exp_id,'activo'=>1])->first()->id;
-        $autorizacion->save();      
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->exp_id           
         ]);
+        $asignacion = $expediente->asignacion;       
+        $autorizacion = new Autorizacion($request->all());
+        $autorizacion->user_solicitante_id = Auth::user()->id;
+        $autorizacion->user_aprobo_id = Auth::user()->id;
+        $autorizacion->asig_caso_id = $asignacion->id;
+        $autorizacion->save();          
         if(session()->has('sede')){
             $autorizacion->sedes()->attach(session('sede')->id_sede);
           }     
@@ -146,8 +146,12 @@ class AutorizacionesController extends Controller
     {
         $autorizacion =  Autorizacion::find($id);
         $autorizacion->delete();    
-        $asignacion = AsignacionCaso::find($autorizacion->asig_caso_id);
-        $view = view('myforms.components_exp.frm_autorizaciones_ajax',compact('asignacion'))->render();
+        //$asignacion = AsignacionCaso::find($autorizacion->asig_caso_id);
+
+        $expediente = $this->expedienteService->findWithFilter([
+            'expid' => $autorizacion->asignacion->asigexp_id       
+        ]);
+        $view = view('myforms.components_exp.frm_autorizaciones_ajax',compact('expediente'))->render();
         
         return response()->json(['view'=>$view]);
     }

@@ -1,4 +1,9 @@
- @if (!$readonly and currentUser()->hasRole('estudiante'))
+ @if (!$readonly and 
+ (currentUser()->hasRole('estudiante')
+  or currentUser()->hasRole('diradmin')
+  or currentUser()->hasRole('dirgral')
+  or currentUser()->hasRole('amatai')))
+  
      <div class="row">
          <div class="col-md-3">
              <button class="btn btn-primary btn-block btn-sm" id="btn_nueva_autorizacion">

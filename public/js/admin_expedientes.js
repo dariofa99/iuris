@@ -56,21 +56,28 @@ $(document).ready(function () {
     });
 
     $("#btnActualizar").on("click", async function (e) {
-        var form = convertFormToJSON("form_expediente_edit");
-        var request = {
-            'id': form.expediente_id,
-            'expramaderecho_id': form.expramaderecho_id,
-            'exptipoproce_id': form.exptipoproce_id,
-            'expidnumberest': form.expidnumberest,
-            'oldexpidnumberest': form.oldexpidnumberest
+        var errors = validateForm("form_expediente_edit");
+        if(errors.length <= 0) {
+            var form = convertFormToJSON("form_expediente_edit");
+            var request = {
+                'id': form.expediente_id,
+                'expramaderecho_id': form.expramaderecho_id,
+                'exptipoproce_id': form.exptipoproce_id,
+                'expidnumberest': form.expidnumberest,
+                'oldexpidnumberest': form.oldexpidnumberest
+            }
+            $("#wait").show()
+            let response = await expedientesService.update(request, form.expediente_id);
+            toastr.success("Se actalizó con éxito", "", {                
+                timeOut: "4000",
+            });
+            window.location.reload(true);
+        }else{
+            toastr.error("Hay campos que son obligatorios", "", {                
+                timeOut: "4000",
+            });
         }
-        $("#wait").show()
-        let response = await expedientesService.update(request, form.expediente_id);
-        toastr.success("Se actalizó con éxito", "", {
-            positionClass: "toast-top-center",
-            timeOut: "4000",
-        });
-        window.location.reload(true);
+      
     });
     $("#btnEditar").click(function () {
         $("#btnActualizar").show();

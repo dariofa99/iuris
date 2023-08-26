@@ -2460,7 +2460,7 @@ $("#contenrepasistencia").append(datosasis);//coloca una nueva opcion
 });
 //reporte asistencia docentes
 $("#reporasistencia_doc_btn").click(function(){
-	$("#contenrepasistenciadoc").html('');
+	$("#contenrepasistenciadoc").html(''); 
 var route = "/turnos/docentes/reporte/asis";
 $("#wait").css("display", "block");
 $.get(route, function(res){

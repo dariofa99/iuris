@@ -1,6 +1,3 @@
-@if (!$readonly)
-
-
     @if (
         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber or
             currentUser()->hasRole('estudiante') or
@@ -53,7 +50,7 @@
 
         </div>
     @endif
-@endif
+
 <div class="col-md-12">
 
     @if (count($expediente->estados) > 0)

@@ -24,7 +24,7 @@ class Expediente extends Model
     use ColorTurnos;
     use AsigNotas;
     use UploadFile;
-    
+
     /**
      * The database table used by the model.
      *
@@ -121,8 +121,8 @@ class Expediente extends Model
     public function asignacion()
     {
         return $this->hasOne(AsignacionCaso::class, 'asigexp_id', 'expid')
-        ->where('asigest_id', $this->estudiante->idnumber)
-        ->where('activo', 1);
+            ->where('asigest_id', $this->estudiante->idnumber)
+            ->where('activo', 1);
     }
 
     public function requerimientos()
@@ -367,10 +367,10 @@ class Expediente extends Model
     public function getActuaciones($only)
     {
         $service = App::make(ExpedientesService::class);
-        return $service->getActuacions($this,$only);
+        return $service->getActuacions($this, $only);
     }
 
-    function getDocenteAsig() 
+    function getDocenteAsig()
     {
         $asig = $this->getAsignacion();
         //**   dd($asig);
@@ -396,7 +396,7 @@ class Expediente extends Model
     }
 
     function getAsignacion()
-    { 
+    {
         $asig = $this->asignaciones()
             ->where('asigest_id', $this->estudiante->idnumber)
             ->where('activo', 1)
@@ -555,7 +555,7 @@ class Expediente extends Model
                 'reqidest' => $this->expidnumberest,
                 'reqexpid' => $this->expid,
             ])
-             ->select('requerimientos.id')
+            ->select('requerimientos.id')
             ->get();
 
         return $reqs;
@@ -992,8 +992,10 @@ class Expediente extends Model
     }
 
     public function getCitas()
-        {
-            $asignacion = $this->getAsignacion();
+    {
+        $asignacion = $this->getAsignacion();
+        try {
+           
             $can_edit = false;
             if ($asignacion->asig_docente !== null and $asignacion->asig_docente->docidnumber == auth()->user()->idnumber) {
                 $can_edit = true;
@@ -1002,5 +1004,8 @@ class Expediente extends Model
                 $citacion->can_edit = $can_edit;
             });
             return $asignacion->citaciones;
+        } catch (\Throwable $th) {
+            return [];
         }
+    }
 }
