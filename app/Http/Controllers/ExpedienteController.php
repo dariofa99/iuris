@@ -489,7 +489,7 @@ class ExpedienteController extends Controller
     //  return response()->json($request->all());
     $res_day = Carbon::now();
     $res_day = $res_day->addDays(7)->format('Y-m-d');
-    $date = Carbon::now();
+    $date = Carbon::now(); 
     $request['expfecha_res'] = $res_day;
     $expediente = $this->expedienteService->store($request);
     $request['asigest_id'] = $request['expidnumberest'];
@@ -772,19 +772,19 @@ class ExpedienteController extends Controller
           if ($asignacion_caso != null) {
             $date = Carbon::now();
             $days = $expediente->getDaysOrColorForClose('dias');
-
-            if ($days < 15 || $days === "Evaluado por sistema" ||  $days === true) {
+            $this->expedienteService->asignarDocente($asignacion_caso);
+            /* if ($days < 15 || $days === "Evaluado por sistema" ||  $days === true) {
 
               $asignacion_caso->fecha_asig = $date->subDays(15)->format('Y-m-d');
-            }
-            $expediente->asigDocente($asignacion_caso); // no tiene en cuenta la rama del derecho  
+            } */
+            // no tiene en cuenta la rama del derecho  
             //$expediente->asigDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho  
           }
         }
       } else if ($request->exptipoproce_id == 2) {
         if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar') {
           $asignacion_caso->asig_docente()->delete();
-          $expediente->asigDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);     // si tiene en cuenta la rama del derecho     
+          $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);     // si tiene en cuenta la rama del derecho     
         }
       }
     }

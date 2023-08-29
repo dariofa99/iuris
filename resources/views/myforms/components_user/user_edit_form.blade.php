@@ -89,10 +89,11 @@
         <div class="col-md-6">
             <div class="form-group">
                 {!! Form::label('Año Cursando ') !!}
-                {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
+                {!! Form::select('cursandosa_id', $cursando, $user->cursando_id, [
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
-                    'required' => 'required',                    
+                    'required' => 'required',    
+                    'disabled' => 'disabled',                
                 ]) !!}
             </div>
         </div>
@@ -101,7 +102,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('Año Cursando') !!}
-                    {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
+                    {!! Form::select('cursandosa_id', $cursando, $user->cursando_id, [
                         'placeholder' => 'Selecciona...',
                         'class' => 'form-control form-control-sm',
                         'disabled' => 'disabled',

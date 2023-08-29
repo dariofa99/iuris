@@ -4905,36 +4905,7 @@ function getPdfReportesConciliacion(request) {
     });
 }
 
-function editAsignacionReporte(request) {
-    var route = "/pdf/reportes/editar/asignacion";
-    $.ajax({
-        url: route,
-        type: "GET",
-        datatype: "json",
-        data: request,
-        cache: false,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));
-            $("#wait").show();
-        },
-        /*muestra div con mensaje de 'regristrado'*/
-        success: function (response) {
-            $(".checks_reportes").prop("checked", false);
-            response.forEach((element) => {
-                $("#chk_reporte_" + element.reporte_id).prop("checked", true);
-            });
-           
-            $("#wait").hide();
-        },
-        error: function (xhr, textStatus, thrownError) {
-            /* alert(
-                "Hubo un error con el servidor ERROR::" + thrownError,
-                textStatus
-            ); */
-            $("#wait").hide();
-        },
-    });
-}
+
 
 function asignarReporte(request) {
     var route = "/pdf/reportes/asignar";

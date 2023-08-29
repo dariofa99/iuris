@@ -51,7 +51,7 @@ class BaseRepository
                 } else {
                     $this->query =  $this->query->whereDate($column, "=", $value);
                 }
-            } else {
+            } else { 
                 if ($this->withLike) {
                     $this->query =  $this->query->where($column, "like", "%" . $value . "%");
                 } else {

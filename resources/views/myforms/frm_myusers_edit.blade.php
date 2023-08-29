@@ -159,27 +159,20 @@
     <script type="module" src={{ asset('js/admin_users.js') }}></script>
     <script>
         @if (currentUser()->hasRole('estudiante') and $user->turno == null)
-            var message = `<div class="alert alert-info" style="font-size:18px">
+            var message = `<div class="alert alert-danger" style="font-size:18px">
             <h4>Estimado estudiante para el registro del curso tenga en cuenta lo siguiente:</h4>
-            <h4>
-                <ul>
-                    <li>Para cursar consultorios 1 en la jornada de la mañana debe marcar la opción 4B.</li>
-                    <li>Para cursar consultorios 1 en la jornada de la tarde debe marcar la opción 4A.</li>
-                    <li>Para cursar consultorios 2 en la jornada de la mañana debe marcar la opción 5B.</li>
-                    <li>Para cursar consultorios 2 en la jornada de la tarde debe marcar la opción 5A.</li>
-                </ul>
-            </h4>
             <h3>
-                Recuerda que estamos actualizando la plataforma, si presentas algún problema refresca el navegador
-        con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
-        <i> <small> Últ. Act 17/08/2023</small></i>
-                </h3>           
+               Fecha de matrícula vencida!
+            </h3>
+            <h4>
+              Comunícate con el director
+                </h4>           
             </div>`;
-        
+
 
             /*   var message = `<h5>Estimado estudiante debido a cambios de horario se habilitará la 
           asignación del curso en el transcurso de esta semana.</h5>`;
-              */
+                  */
 
             $("#modal-show-alerts-content").html(message);
             $("#mymodalShowAlerts").modal("show")

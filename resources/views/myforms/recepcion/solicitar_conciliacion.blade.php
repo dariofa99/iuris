@@ -96,12 +96,19 @@ $pasos = [
           <div class="card">
             <div class="card-header bg-success">
               <br>
+             
               @include('myforms.recepcion.menu_buttons',[
                 'paso'=>$paso, 
                 'pasos'=>$pasos              
               ])
             </div>
            <div class="card-body">
+            <div class="content_message">
+              @include('myforms.recepcion.menu_mensaje',[
+                 'paso'=>$paso,
+                 'pasos'=>$pasos
+              ])
+            </div>
             @include('msg.alerts')
             @if($paso==1)             
              @include('myforms.recepcion.frm_parte_solicitante')

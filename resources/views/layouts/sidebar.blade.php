@@ -136,7 +136,7 @@
 
                     </ul>
                 </li>
-                @if (currentUser()->can('ver_conciliaciones_'))
+                @if (currentUser()->can('ver_conciliaciones'))
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-handshake"></i>
@@ -146,7 +146,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item ml-3">
-                                <a href="{{ route('users.index') }}" class="nav-link">
+                                <a href="{{ url('/conciliaciones') }}" class="nav-link">
 
                                     <p>Listar</p>
                                 </a>

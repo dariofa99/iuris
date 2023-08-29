@@ -994,7 +994,7 @@ class Expediente extends Model
     public function getCitas()
     {
         $asignacion = $this->getAsignacion();
-        try {
+        try { 
            
             $can_edit = false;
             if ($asignacion->asig_docente !== null and $asignacion->asig_docente->docidnumber == auth()->user()->idnumber) {

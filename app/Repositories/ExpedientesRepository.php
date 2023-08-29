@@ -96,46 +96,77 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
         $docente_unavi = $this->usersService->getDocentesByRama("UNAVI");
+        if ($docente_unavi){
+            $asig_doc = DB::select(
+              DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
+              JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
+              JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
+              JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
+              JOIN sede_usuarios ON sede_usuarios.user_id = users.id
+              WHERE expedientes.exptipoproce_id = '1' AND users.active=1
+              AND users.idnumber != '" . $docente_unavi[0]['idnumber'] . "'
+              AND users.active_asignacion=1 AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
+              GROUP BY `docidnumber` ORDER BY num_casos ASC")
+          );
+
+          $docentes = DB::table('users')
+          ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
+          ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
+          ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
+          ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
+          ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
+          ->where('role_id', '4')
+          ->where('users.active', true)
+          ->where('users.idnumber', '<>', $docente_unavi[0]['idnumber'])
+          ->where('users.active_asignacion', true)
+          ->where('sedes.id_sede', session('sede')->id_sede)
+          ->select(
+              'users.active',
+              'users.id',
+              'ref_nombre',
+              'users.idnumber',
+              DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
+              'role_user.role_id',
+              'roles.display_name'
+          )
+          ->orderBy('users.created_at', 'desc')->get();
 
 
+          }else{
+            $asig_doc = DB::select(
+              DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
+              JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
+              JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
+              JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
+              JOIN sede_usuarios ON sede_usuarios.user_id = users.id
+              WHERE expedientes.exptipoproce_id = '1' AND users.active=1
+              AND users.active_asignacion=1 AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
+              GROUP BY `docidnumber` ORDER BY num_casos ASC")
+          );
 
+          $docentes = DB::table('users')
+          ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
+          ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
+          ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
+          ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
+          ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
+          ->where('role_id', '4')
+          ->where('users.active', true)
+          ->where('users.active_asignacion', true)
+          ->where('sedes.id_sede', session('sede')->id_sede)
+          ->select(
+              'users.active',
+              'users.id',
+              'ref_nombre',
+              'users.idnumber',
+              DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
+              'role_user.role_id',
+              'roles.display_name'
+          )
+          ->orderBy('users.created_at', 'desc')->get();
+          }
 
-        $asig_doc = DB::select(
-            DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
-            JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
-            JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
-            JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
-            JOIN periodo ON asignacion_caso.periodo_id = periodo.id
-            JOIN segmentos ON periodo.id = segmentos.perid
-            JOIN sede_usuarios ON sede_usuarios.user_id = users.id
-            WHERE expedientes.exptipoproce_id = '1' AND users.active=1
-            AND users.idnumber != '" . $docente_unavi[0]['idnumber'] . "'
-            AND users.active_asignacion=1 AND segmentos.id = $segmento->segmento_id
-            AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
-            GROUP BY `docidnumber` ORDER BY num_casos ASC")
-        );
-
-        $docentes = DB::table('users')
-            ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
-            ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
-            ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
-            ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-            ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-            ->where('role_id', '4')
-            ->where('users.active', true)
-            ->where('users.idnumber', '<>', $docente_unavi[0]['idnumber'])
-            ->where('users.active_asignacion', true)
-            ->where('sedes.id_sede', session('sede')->id_sede)
-            ->select(
-                'users.active',
-                'users.id',
-                'ref_nombre',
-                'users.idnumber',
-                DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
-                'role_user.role_id',
-                'roles.display_name'
-            )
-            ->orderBy('users.created_at', 'desc')->get();
+     
 
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {

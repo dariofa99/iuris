@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
 use App\Traits\UploadFile;
 class Solicitud extends Model
 {
@@ -12,8 +11,10 @@ class Solicitud extends Model
     public $disk = 'solicitud_files';
 
      protected $fillable = [
-        'number','idnumber', 'email', 'estrato_id','tipodoc_id','name','lastname','tel1','tiempo_espera',
-        'description','type_status_id','turno','type_category_id','token','mensaje','date_time'
+        'number','idnumber', 'email','tipopers_id',
+        'estrato_id','tipodoc_id','name','lastname','tel1',
+        'tiempo_espera','description','type_status_id','turno',
+        'type_category_id','token','mensaje','date_time'
     ];
 
     public function estado()

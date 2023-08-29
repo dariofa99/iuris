@@ -1,54 +1,57 @@
 @extends('layouts.dashboard')
 @push('styles')
-<!-- aqui van los estilos de cada vista -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-{!! Html::style('/css/jitsi.css?v=2')!!}
+    <!-- aqui van los estilos de cada vista -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    {!! Html::style('/css/jitsi.css?v=2') !!}
 
-<style>
-            .container-meet {
-                /*position: relative;
-                border:1px red  solid;*/
-                width: 100%;
-                height:600px;
-                margin-bottom: 30px;
-                text-align: center;
-            }
-            .toolbox {
-               /* position: absolute;*/
-                bottom: 0px;
-                /*border:1px black solid;*/
-                width: 100%;
-                height:50px;
-                background-color: rgb(71, 71, 71);
-            }
-            #jitsi-meet-conf-container{
-                width: 100%;
-                height:570px;
-            }
-        </style>
+    <style>
+        .container-meet {
+            /*position: relative;
+                    border:1px red  solid;*/
+            width: 100%;
+            height: 600px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .toolbox {
+            /* position: absolute;*/
+            bottom: 0px;
+            /*border:1px black solid;*/
+            width: 100%;
+            height: 50px;
+            background-color: rgb(71, 71, 71);
+        }
+
+        #jitsi-meet-conf-container {
+            width: 100%;
+            height: 570px;
+        }
+    </style>
 @endpush
 @section('titulo_area')
-<div class="row">
-    <div class="col-md-12">
-        Número: <strong>{{$conciliacion->num_conciliacion}}</strong><br>
-        <span style="background-color: {{$conciliacion->estado->color}}" class="badge"> 
-            Estado: {{$conciliacion->estado->ref_nombre}}</span> 
-    </div>    
-</div>
-            
-            
+    <div class="row">
+        <div class="col-md-12">
+            Número: <strong>{{ $conciliacion->num_conciliacion }}</strong><br>
+            <span style="background-color: {{ $conciliacion->estado->color }}" class="badge">
+                Estado: {{ $conciliacion->estado->ref_nombre }}</span>
+        </div>
+    </div>
+
+
 @endsection
 @section('area_buttons')
-<label class="pull-right" >
-    
-    Fecha radicado:
+    <label class="pull-right">
 
-    @if($conciliacion->fecha_redicado != '0000-00-00') {{$conciliacion->fecha_radicado}}
-   
-    
-    @else --- @endif
+        Fecha radicado:
 
-</label>
+        @if ($conciliacion->fecha_redicado != '0000-00-00')
+            {{ $conciliacion->fecha_radicado }}
+        @else
+            ---
+        @endif
+
+    </label>
 
 
 
@@ -56,148 +59,78 @@
 
 @section('area_forms')
 
-@include('msg.success')
+    @include('msg.success')
 
- 
- 
-{{-- {{dd(currentUser()->conciliaciones()
-->where(['conciliacion_id'=>$conciliacion->id,'tipo_usuario_id'=>203])->get())}} --}} 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-tabs">
-            @if(currentUser()->can('ver_form_conciliacion') 
-            || (currentUserInConciliacion($conciliacion->id,['conciliador','asistente','autor'])))
-            <li class="active">
-                <a class="urlactive" data-toggle="tab" href="#home">
-                    <i class="fa fa-folder"></i> Información de Solicitud</a>
-            
-            </li>
-            @endif
-            
-            @if( currentUser()->can('ver_documentos_conciliacion') ||
-             (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
-            and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
-            $conciliacion->getUser(203)->pivot->estado_id == 230
-            ))
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-            <li>
-               
-                <a class="urlactive" data-toggle="tab" href="#documentos">
-                    <i class="fa fa-file-archive"></i>
-                    Documentos </a>
-            </li>
-            @endif
-            
-            @if((currentUser()->can('ver_comentarios_conciliacion'))
-            || ((currentUserInConciliacion($conciliacion->id,['autor'])))
-            || ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id 
-            and $conciliacion->getUser(203)->pivot->estado_id == 230)
-            )
-         
-         <li>
-            <a class="urlactive" data-toggle="tab" href="#menu1"> 
-                <i class="fa fa-bell"></i>
-                Notificaciones</a>
-        </li>
-
-         @endif
-        
-         @if(((currentUser()->can('ver_estados_conciliacion')))
-         || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and (
-            ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
-             and $conciliacion->getUser(203)->pivot->estado_id == 230)))) 
-         || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['autor']))
-         )
-            <li><a class="urlactive" data-toggle="tab" href="#menu2">  <i class="fa fa-tasks"></i>
-                Estado de la solicitud</a></li>
-        @endif
-        
-{{-- 
-        <li>
-            <a class="urlactive" data-toggle="tab" href="#menu7">Actas</a>
-        </li> --}}
-
-        @if((currentUser()->can('ver_asignaciones_conciliacion'))
-        || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) 
-        and (( $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
-             and $conciliacion->getUser(203)->pivot->estado_id == 230)))))
-       
-            <li><a class="urlactive" data-toggle="tab" href="#menu3">  <i class="fa fa-users"></i>
-                Usuarios</a></li>
-            @endif
-
-            @if($audiencia!='' || (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and ( 
-            ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
-             and $conciliacion->getUser(203)->pivot->estado_id == 230)))
-            || currentUser()->can('ver_audiencia_conciliacion'))
-
-            <li><a class="urlactive" data-toggle="tab" href="#menu4"> 
-                <i class="fa fa-university"></i>
+                @if(currentUser()->can('ver_form_conciliacion') 
+                || (currentUserInConciliacion($conciliacion->id,['conciliador','asistente','autor'])))
+                <li class="nav-item">
+                    <a class="nav-link active urlactive" id="info-tab" data-toggle="tab" href="#info_tab" role="tab"
+                        aria-controls="chat_tab" aria-selected="false">
+                        Información de Solicitud
+                    </a>
+                </li>
+                @endif
 
 
-                Audiencia</a></li>
-            @endif
+                @if( currentUser()->can('ver_documentos_conciliacion') ||
+                (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
+               and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
+               $conciliacion->getUser(203)->pivot->estado_id == 230
+               ))
+                <li class="nav-item">
+                    <a class="nav-link urlactive" id="documentos-tab" data-toggle="tab" href="#documentos_tab" role="tab"
+                        aria-controls="documentos_tab" aria-selected="false">
+                        Documentos
+                    </a>
+                </li>
+                @endif
+                @if((currentUser()->can('ver_comentarios_conciliacion'))
+                || ((currentUserInConciliacion($conciliacion->id,['autor'])))
+                || ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id 
+                and $conciliacion->getUser(203)->pivot->estado_id == 230)
+                )
+                <li class="nav-item">
+                    <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
+                        role="tab" aria-controls="notificaciones" aria-selected="false">
+                        Notificaciones
+                    </a>
+                </li>
+                @endif
+                @if(((currentUser()->can('ver_estados_conciliacion')))
+                || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and (
+                   ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
+                    and $conciliacion->getUser(203)->pivot->estado_id == 230)))) 
+                || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['autor']))
+                )
+                <li class="nav-item">
+                    <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
+                        role="tab" aria-controls="notificaciones" aria-selected="false">
+                        Estado de la solicitud
+                    </a>
+                </li>
+                @endif
+            </ul>
 
-            @if((currentUser()->can('act_conciliacion'))
-            || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and
-             currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar'])
-             and currentUser()->conciliaciones()->where([
-                'conciliacion_id'=>$conciliacion->id
-             ])->first()->pivot->estado_id != 231
-             ))
-           {{--  <li>
-                <a class="urlactive" data-toggle="tab" href="#menu5">Notas</a>
-            </li> --}}
-            @endif
-            @if(((currentUser()->can('act_conciliacion')))
-            || ($conciliacion->getUser(199)->pivot and
-             $conciliacion->getUser(199)->hasRole('estudiante') and
-             (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))))
-             @if(count($conciliacion->expedientes)<=0) 
-              {{-- <li><a class="urlactive" data-toggle="tab" href="#menu6">Expediente</a></li> --}}
-              @endif
-           @endif
+            <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
 
-       
-
-          </ul>
-
-          <div class="tab-content">
-            <div id="documentos" class="tab-pane fade">
-                @include('myforms.conciliaciones.documentos')
-              </div>
-
-            <div id="home" class="tab-pane fade in active">
-              @include('myforms.conciliaciones.conciliacion_form') 
-             {{--  @include('myforms.conciliaciones.conciliacion_informacion') --}}
-
-            </div>
-            <div id="menu1" class="tab-pane fade">
-                @include('myforms.conciliaciones.conciliacion_comentarios')
-            </div>
-            <div id="menu2" class="tab-pane fade">
-                @include('myforms.conciliaciones.conciliacion_estados')
-            </div>
-            <div id="menu3" class="tab-pane fade">
-              @include('myforms.conciliaciones.conciliacion_asignaciones')
-          </div>
-          <div id="menu4" class="tab-pane fade">
-              @include('myforms.conciliaciones.conciliacion_audiencia')
-          </div>
-          <div id="menu5" class="tab-pane fade"> 
-            @include('myforms.conciliaciones.conciliacion_notas')
-          </div>
-          <div id="menu6" class="tab-pane fade">
-            @include('myforms.conciliaciones.conciliacion_expediente')
-          </div>
-
-          <div id="menu7" class="tab-pane fade">
-            @include('myforms.conciliaciones.formatos_actas')
-          </div>
-
-          </div>
+                <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
+                    
+                </div>                
+                
+                <div class="tab-pane fade " id="autorizaciones" role="tabpanel" aria-labelledby="autorizaciones-tab">
+                    
+                </div>
+                    </div>
+                    
+        </div>
     </div>
-</div>
+
+
+
     @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
     @include('myforms.conciliaciones.componentes.modal_reportes_pdf_estados')
     @include('myforms.conciliaciones.componentes.modal_create_document')
@@ -211,23 +144,22 @@
     @include('myforms.conciliaciones.componentes.modal_edit_notas')
     @include('myforms.conciliaciones.componentes.modal_reportes_archivos_compartidos')
     @include('myforms.conciliaciones.componentes.modal_respuestas_asignaciones')
-    
+
 @stop
 
 @push('scripts')
-<!-- aqui van los scripts de cada vista -->
-<script type="module"   src={{asset("js/admin_conciliacion.js")}}></script>
+    <!-- aqui van los scripts de cada vista -->
+    <script type="module" src={{ asset('js/admin_conciliacion.js') }}></script>
 
-{!! Html::script('js/audiencia_conciliacion.js?v=1')!!}
-<script src="https://meet.jit.si/external_api.js"></script>
-{!! Html::script('js/config_jitsi.js?v=3')!!}
-@include('myforms.conciliaciones.script')
-<script>
-     var request = 
-        {
-            "conciliacion_id":$("#conciliacion_id").val()
+    {{-- {!! Html::script('js/audiencia_conciliacion.js?v=1')!!} --}}
+    <script src="https://meet.jit.si/external_api.js"></script>
+    {{-- {!! Html::script('js/config_jitsi.js?v=3')!!} --}}
+    {{-- @include('myforms.conciliaciones.script') --}}
+    <script>
+        var request = {
+            "conciliacion_id": $("#conciliacion_id").val()
         }
-     descargarAllPdfConcEstado(request)
-     getColorTurno($("#audiencia_fecha").val())
-</script>
+        //  descargarAllPdfConcEstado(request)
+        //  getColorTurno($("#audiencia_fecha").val())
+    </script>
 @endpush

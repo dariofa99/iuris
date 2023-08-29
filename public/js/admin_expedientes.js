@@ -51,7 +51,7 @@ $(document).ready(function () {
             " " +
             lastname.toUpperCase() +
             "</option>";
-        let response = await userService.getUsersByRole({ 'role': 'docente' });
+        let response = await userService.getUsersByRole({ 'role': 'docente','active':1 });
         abrirModalDocentes(response.users, option);
     });
 
@@ -753,8 +753,7 @@ $(document).ready(function () {
         }
     });
     $("#btnTomarCaso").on("click", function (e) {
-        //cabecera = '<h1><i class="fa fa-info"> </i> Atención </h1>';
-
+        e.preventDefault();
         Swal.fire({
             title: 'Esta seguro de tomar el caso?',
             text: "Se asignará automaticamente!",
@@ -781,7 +780,7 @@ $(document).ready(function () {
             }
         })
 
-        e.preventDefault();
+       
     });
 
     $("#myform_change_docente_exp").on("submit", async function (e) {
@@ -811,7 +810,7 @@ $(document).ready(function () {
         $("#myform_change_docente_exp>#tipo_cambio").val(1);
         $("#myform_change_docente_exp input[type='submit']").val("Cambiar docente");
         $("#wait").show();
-        let response = await userService.getUsersByRole({ 'role': 'docente' });
+        let response = await userService.getUsersByRole({ 'role': 'docente','active':1 });
         $("#wait").hide();
         if (response.encontrado) {
             var opcion_busq = '';
@@ -858,7 +857,7 @@ $(document).ready(function () {
         $("#myform_change_docente_exp>#tipo_cambio").val(0);
         $("#myform_change_docente_exp input[type='submit']").val("Solicitar cambio");
         $("#wait").show();
-        let response = await userService.getUsersByRole({ 'role': 'docente' });
+        let response = await userService.getUsersByRole({ 'role': 'docente','active':1 });
         $("#wait").hide();
         if (response.encontrado) {
             var opcion_busq = '';
@@ -978,6 +977,7 @@ $(document).ready(function () {
     });
 
     $("#myform_add_asesoria_docente").on("submit", async function (e) {
+        e.preventDefault();
         var errors = validateForm("myform_add_asesoria_docente");
         if (errors <= 0) {
             var request = {
@@ -994,7 +994,7 @@ $(document).ready(function () {
             window.location.reload(true)
 
         }
-        e.preventDefault();
+        
     });
     $(".btn_edit_asesoria_caso").on("click", async function (e) {
         e.preventDefault();
