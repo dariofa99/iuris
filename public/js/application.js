@@ -119,8 +119,7 @@ function validateForm(form) {
     return errors
 }
 
-function validateTypeDoc(form) {
-    console.log($(form.target)[0].form);
+function validateTypeDoc(form) {    
     var form = $(form.target)[0].form;
     var form = $(form).attr("id");
     if ($("#" + form + " select[name='tipodoc_id']").val() == '') {

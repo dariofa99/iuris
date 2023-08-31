@@ -79,8 +79,9 @@
                         <label>Último Comentario</label>
                     </td>
                     <td>
-                        <textarea name="" class="textareaLastComentario" readonly="readonly">{{ $expediente->estados()->orderBy('created_at', 'desc')->first()->comentario }}</textarea>
-                    </td>
+                        <textarea name="txtcomenta" rows="4" class="form-control form-control-sm " readonly="readonly">{{ $expediente->estados()->orderBy('created_at', 'desc')->first()->comentario }}</textarea>
+           
+                               </td>
                 </tr>
             </table>
         </div>
@@ -108,10 +109,10 @@
 
                 <tr>
                     <td>
-                        <label>Último Comentario</label>
+                        <label>Último Comentarios</label>
                     </td>
                     <td>
-                        <textarea name="" class="textareaLastComentario" readonly="readonly">Sin comentarios aún.</textarea>
+                        <textarea name="txtcomenta" rows="3" class="form-control form-control-sm " readonly="readonly">Sin comentarios aún.</textarea>
                     </td>
                 </tr>
             </table>
@@ -140,19 +141,20 @@
                         Motivo
                     </th>
                     <th>
-                        Fecha
+                        Comentario
                     </th>
                     <th>
-                        Acciones
+                        Fecha
                     </th>
                 </thead>
                 <tbody>
 
 
-                    @foreach ($expediente->estados()->orderBy('created_at', 'desc')->get() as $estado)
+                    @foreach ($expediente->estados()->orderBy('created_at', 'desc')->get() as $key => $estado)
+                    @if($key !=0)
                         <tr>
                             <td>
-                                {{ $estado->user->name }}
+                                {{ $estado->user->name }}  {{ $estado->user->lastname }}
                             </td>
                             <td>
                                 {{ $estado->user->role()->first()->display_name }}
@@ -184,6 +186,12 @@
                                 {{ $estado->motivo->nombre_motivo }}
                             </td>
                             <td>
+                                {{-- <button data-id="{{$estado->id}}" class="btn btn-success btn-sm btn-block btn_detalles_estado_caso">
+                                    Detalles
+                                </button>  --}}
+                                {{$estado->comentario}}
+                            </td>
+                            <td>
                                 <span title="Fecha en la que se envió la solicitud">
                                     {{ getSmallDateWithHour($estado->created_at) }}</span>
                                 <span title="Números de días después de la asignación" style="display: block">
@@ -197,13 +205,10 @@
                                     </small>
 
                             </td>
-                            <td>
-                                {{--  <button class="btn btn-success">
-                                    Detalles
-                                </button> --}}
-                            </td>
+                          
 
                         </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>

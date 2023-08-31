@@ -343,6 +343,26 @@ export class ConciliacionService{
         return topics;
     }
 
+    async storeAudiencia(request)  {
+        const response = await fetch(BASE_URL+"conciliacion/audiencia/create", {
+            method: 'POST',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            },            
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }       
+        const topics = await response.json();
+        return topics;
+    }
+
     async getComentarios (request)  {
         const response = await fetch(BASE_URL+"conciliaciones/get/comentarios?"+ new URLSearchParams(request), {
             method: 'GET',
@@ -363,6 +383,43 @@ export class ConciliacionService{
         return topics;
     }
 
+    async storeConciliacionEstado(formData) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', BASE_URL + 'conciliaciones/insert/estado', true);
+            xhr.setRequestHeader('X-CSRF-Token', $("#token").attr("content")); // Agrega la cabecera X-CSRF-Token
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentage = (event.loaded / event.total) * 100;
+                    this.showProgress(percentage); 
+                }
+            });
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (error) {
+                        reject(new Error('Error al analizar la respuesta JSON'));
+                    }
+                } else {
+                    reject(new Error(`Upload failed with status: ${xhr.status}`));
+                }
+            };
+            xhr.onerror = () => {
+                reject(new Error('Upload failed'));
+            };
+            xhr.send(formData);
+
+        });
+    }
+    showProgress(percentage) {
+        const progressDiv = document.getElementById('progressbarwait');
+        $(progressDiv).show();
+        progressDiv.textContent = `${parseInt(percentage)}%`;
+        progressDiv.style.width = `${parseInt(percentage)}%`;
+    
+    }
 }
 
 

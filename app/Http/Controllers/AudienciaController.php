@@ -133,7 +133,7 @@ class AudienciaController extends Controller
             $audiencia->hora = $request->hora;
             $audiencia->save();
 
-        return $state;
+        return response()->json($state);
     }
 
     public function getSalaAlternaAudciencia(Request $request, $code){

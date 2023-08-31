@@ -1,11 +1,11 @@
 $(document).ready(function(){
     var idcon =$("#activar_salas_alternas_audiencia").attr("data-id")
-    socket.on('LIuOgI52dWJxe0ZMRoomAlterConciliacionDisabled'+idcon, function(data){
+  /*   socket.on('LIuOgI52dWJxe0ZMRoomAlterConciliacionDisabled'+idcon, function(data){
         //deshabilita la entrada a salas alterna en las audiencias de conciliacion
        //console.log('desactiva el acceso a las salas alternas')
        $( "#btm_access_room_alter"+idcon).css("display","none");
        $("#btm_access_room_alter"+idcon).removeAttr('onclick');
-    });
+    }); */
     getDatosAsigEstConciliacion(idcon)
 
 
@@ -98,6 +98,7 @@ function getColorTurno(value){
         }
         var daysemcolor= day+y;
         if (daysemcolor > 4) {daysemcolor=daysemcolor-5;}
+      
         $( "#audiencia_label_color_day" ).css("background-color", daycolors[daysemcolor])
                                         .html(namecolors[daysemcolor]);
 }

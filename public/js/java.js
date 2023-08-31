@@ -5480,7 +5480,7 @@ function storeConciliacionComentario(request) {
 }
 
 function storeConciliacionEstado(request) {
-    var route = "/conciliaciones/insert/estado";
+    var route = "/conciliaciones/insert/estado"; 
     $.ajax({
         url: route,
         type: "POST",

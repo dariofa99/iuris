@@ -38,7 +38,7 @@ $user = $conciliacion->getUser(196);
                 <i class="fa fa-plus"> </i> {{$user->idnumber!=null ? 'Actualizar' : 'Agregar'}} 
             </button>
          </div>
-         <div id="user_apoderado_form">
+         <div id="user_apoderado_form" style="width: 100%">
             @include('myforms.conciliaciones.componentes.user_apoderado_form')
          </div>
     </div>

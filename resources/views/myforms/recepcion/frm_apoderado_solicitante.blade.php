@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" id="content_apoderado_solicitud">
     @include('myforms.conciliaciones.componentes.formulario_apoderado',
     [
         "disabled"=>(!Request::has('id') || $user->idnumber!=null) ? "disabled" : ''    ])

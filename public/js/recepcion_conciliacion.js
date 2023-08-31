@@ -412,11 +412,11 @@ $("#btn_solicitar_conciliacion").on("click",function (e) {
 });
 $("#chk_not_parte_apoderado").on("change",function(e){
   if($(this).is(":checked")){
-    $("#content_apoderado_solicitud").hide();
+    $("#content_apoderado_solicitud input,select").prop("disabled",true);
     $("#btn_registrar_apod_sol").hide();
     $("#btn_no_apoderado").show()
   }else{
-    $("#content_apoderado_solicitud").show();
+    $("#content_apoderado_solicitud input,select").prop("disabled",false);
     $("#btn_registrar_apod_sol").show();
     $("#btn_no_apoderado").hide()
   }

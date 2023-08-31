@@ -128,7 +128,7 @@ export class UserService {
               "tipodoc_id": $("#" + form + " select[name='tipodoc_id']").val(),
               "idnumber": idnumber
             }
-            let response = await this.getUsersByIdnumber(request);
+            let response = await this.findUserWithFilter(request);
             if (response.encontrado) {
               $("#" + form + " input[name='id']").remove();
               $("#" + form).append($('<input>', {

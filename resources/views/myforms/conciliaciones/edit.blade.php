@@ -5,6 +5,13 @@
     {!! Html::style('/css/jitsi.css?v=2') !!}
 
     <style>
+        .input_time{
+            display: block !important;
+            border: none !important;
+            font-size: 25px !important;
+            width: 100% !important;
+            background-color: rgb(255, 255, 255) !important;
+        }
         .container-meet {
             /*position: relative;
                     border:1px red  solid;*/
@@ -29,12 +36,17 @@
         }
     </style>
 @endpush
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
+
 @section('titulo_area')
     <div class="row">
         <div class="col-md-12">
             Número: <strong>{{ $conciliacion->num_conciliacion }}</strong><br>
             <span style="background-color: {{ $conciliacion->estado->color }}" class="badge">
-                Estado: {{ $conciliacion->estado->ref_nombre }}</span>
+                Estado: {{ $conciliacion->estado->ref_nombre }} {{ $conciliacion->estado->id }}</span>
         </div>
     </div>
 
@@ -82,7 +94,7 @@
                $conciliacion->getUser(203)->pivot->estado_id == 230
                ))
                 <li class="nav-item">
-                    <a class="nav-link urlactive" id="documentos-tab" data-toggle="tab" href="#documentos_tab" role="tab"
+                    <a class="nav-link urlactive" id="documentos-tab" data-toggle="tab" href="#documentos" role="tab"
                         aria-controls="documentos_tab" aria-selected="false">
                         Documentos
                     </a>
@@ -107,24 +119,67 @@
                 || ($conciliacion->getUser(199)->pivot and $conciliacion->getUser(199)->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['autor']))
                 )
                 <li class="nav-item">
-                    <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
-                        role="tab" aria-controls="notificaciones" aria-selected="false">
+                    <a class="nav-link urlactive" id="estados-tab" data-toggle="tab" href="#estado"
+                        role="tab" aria-controls="estado" aria-selected="false">
                         Estado de la solicitud
                     </a>
                 </li>
                 @endif
+
+                @if((currentUser()->can('ver_asignaciones_conciliacion'))
+        || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) 
+        and (( $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
+             and $conciliacion->getUser(203)->pivot->estado_id == 230)))))
+       
+       <li class="nav-item">
+        <a class="nav-link urlactive" id="usuario-tab" data-toggle="tab" href="#usuarios"
+            role="tab" aria-controls="estado" aria-selected="false">
+            Usuarios
+        </a>
+    </li>
+
+
+          
+            @endif
+
+            @if($audiencia!='' || (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and ( 
+            ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
+             and $conciliacion->getUser(203)->pivot->estado_id == 230)))
+            || currentUser()->can('ver_audiencia_conciliacion'))
+
+                <li class="nav-item">
+                    <a class="nav-link urlactive" id="audiencia-tab" data-toggle="tab" href="#audiencia"
+                        role="tab" aria-controls="audiencia" aria-selected="false">
+                        Audiencia
+                    </a>
+                </li>
+            @endif
+
+            
+
             </ul>
 
             <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
 
-                <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
-                    
+                <div class="tab-pane fade show active" id="info_tab" role="tabpanel" aria-labelledby="info-tab">
+                    @include('myforms.conciliaciones.conciliacion_form')
                 </div>                
-                
-                <div class="tab-pane fade " id="autorizaciones" role="tabpanel" aria-labelledby="autorizaciones-tab">
-                    
+                <div class="tab-pane fade " id="estado" role="tabpanel" aria-labelledby="estado-tab">
+                    @include('myforms.conciliaciones.conciliacion_estados')
                 </div>
-                    </div>
+                <div class="tab-pane fade " id="documentos" role="tabpanel" aria-labelledby="documentos-tab">
+                    @include('myforms.conciliaciones.documentos')
+                </div>
+                <div class="tab-pane fade " id="notificaciones" role="tabpanel" aria-labelledby="notificaciones-tab">
+                    @include('myforms.conciliaciones.conciliacion_comentarios')
+                </div>              
+                <div class="tab-pane fade " id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+                    @include('myforms.conciliaciones.conciliacion_asignaciones')
+                </div>
+                <div class="tab-pane fade " id="audiencia" role="tabpanel" aria-labelledby="audiencia-tab">
+                    @include('myforms.conciliaciones.conciliacion_audiencia')
+                </div>
+            </div>
                     
         </div>
     </div>

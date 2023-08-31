@@ -3,7 +3,7 @@
            
            <input type="hidden" id="prdfecha_inicio" value="{{$periodo->prdfecha_inicio}}" >
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <h4 class="box-title">
         <label>
             Fecha Audiencia 
@@ -22,20 +22,11 @@
         <h4 class="box-title">
         <label>
             Hora audiencia
-        </label>
-        @if ($audiencia != "")
-       
-        <span class="edit_audiencia_existe">
-            <h4>{{$audiencia->hora}}</h4>
-        </span>
-        @endif
-        <div class="bootstrap-timepicker edit_audiencia" style="min-width:118px;max-width:118px; @if ($audiencia != '') display:none; @endif">
+        </label>      
+        <div class="bootstrap-timepicker" style=" @if ($audiencia != '') display:block; @endif">
             <div class="form-group">
 				<div class="input-group">
-					<input type="text" id="audiencia_hora" class="form-control timepicker" value="${h_i}">
-					<div class="input-group-addon">
-						<i class="fa fa-clock-o"></i>
-				    </div>
+					<input type="time" id="audiencia_hora" {{$audiencia!=null?'disabled':''}} value="{{$audiencia!=null?$audiencia->hora:''}}" class="form-control form-control-sm {{$audiencia==null?:'input_time'}}">					
 				</div>
                 <!-- /.input group -->
             </div>
@@ -50,7 +41,11 @@
             Color día
         </label>
         <div>
-            <label id="audiencia_label_color_day" class="label dis-block color-amarillo audiencia_label_color_day" style="background-color: #ffffff"></label>
+            <label id="audiencia_label_color_day" class="label dis-block color-amarillo audiencia_label_color_day" style="background-color: #ffffff">
+              <span style="color: rgb(53, 52, 52) !important">
+                {{$audiencia!=null?:'Seleccione una fecha'}}
+                </span> 
+            </label>
         </div>
         </h4>
     </div>
@@ -141,7 +136,7 @@
 </div>
 
 <div class="iniciar_videollamada" style="display:none;">
-    @include('myforms.conciliaciones.conciliacion_audiencia_chat')
+    {{-- @include('myforms.conciliaciones.conciliacion_audiencia_chat') --}}
 </div>
 
 @if(((currentUser()->can('act_conciliacion')))
