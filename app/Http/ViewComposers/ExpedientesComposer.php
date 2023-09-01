@@ -13,7 +13,9 @@ use App\Periodo;
 use App\RefAsignacionCaso;
 use App\MotivoAsigCaso;
 use App\ReferencesData;
+use App\Services\PeriodosService;
 use App\Services\ReferenciasService;
+use App\Services\SegmentosService;
 use DB;
 use Illuminate\Support\Facades\App;
 
@@ -24,15 +26,21 @@ class ExpedientesComposer
 {
 
 	private $referenciasService;
+	private $segmentosService;
+	private $periodosService;
 
 	public function __construct()
 	{
+		
 		$this->referenciasService = App::make(ReferenciasService::class);
+		$this->segmentosService = App::make(SegmentosService::class);
+		$this->periodosService = App::make(PeriodosService::class);
 	}
 
 
 	public function compose(View $view)
 	{
+		
 		$reframa_derecho = $this->referenciasService->getRamasDerechoForExpediente();
 		$estados = $this->referenciasService->getEstadosForExpediente();
 		$tipo_proceso = $this->referenciasService->getTipoProcesoForExpediente();;
@@ -49,13 +57,12 @@ class ExpedientesComposer
 			->pluck('ramadernombre', 'id');
 
 		$cptonota = Cptonota::pluck('cpntnombre', 'id');
-		$segmento = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
-			->where('sg.sede_id', session('sede')->id_sede)
-			->where('estado', true)->first();
-		$periodo = Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
+		$segmento = $this->segmentosService->getSegmentoActivo();
+		$periodo = $this->periodosService->getPeriodoActivo();;
+		/*   Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
 			->where('sp.sede_id', session('sede')->id_sede)
 			->where('estado', true)->first();
-		//$motivos_cierre = MotivoEstadoCaso::pluck('nombre_motivo','id');
+		 *///$motivos_cierre = MotivoEstadoCaso::pluck('nombre_motivo','id');
 
 		$motivos_cierre = MotivoEstadoCaso::all();
 		$estadosPluck = Estado::pluck('nombre_estado', 'id');
@@ -63,9 +70,12 @@ class ExpedientesComposer
 		/* $tipodoc = DB::table('referencias_tablas')
 		->where(['tabla_ref'=>'users','categoria'=>'tipo_doc'])
 		->where('ref_nombre','<>','Sin definir')->get(); */
-		$genero = DB::table('referencias_tablas')
+		$genero = $this->referenciasService->getReferenciasByFilter(
+			['tabla_ref' => 'users', 'categoria' => 'genero']
+		);
+		/* DB::table('referencias_tablas')
 			->where(['tabla_ref' => 'users', 'categoria' => 'genero'])
-			->where('ref_nombre', '<>', 'Sin definir')->get();
+			->where('ref_nombre', '<>', 'Sin definir')->get(); */
 		$estcivil = DB::table('referencias_tablas')
 			->where(['tabla_ref' => 'users', 'categoria' => 'estado_civil'])
 			->where('ref_nombre', '<>', 'Sin definir')->get();

@@ -36,6 +36,8 @@ use App\Services\UsersService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Session;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -56,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \Carbon\Carbon::setlocale('es');
+        Session::forget('sede');
         Schema::defaultStringLength(191);
          $this->app->bind('nota',function(){
             return new \App\NotaExt();
