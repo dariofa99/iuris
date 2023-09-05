@@ -2183,23 +2183,7 @@ return false;
         $("#myModal_create_comentario").modal("show");
     });
    
-    $(".btn_delete_usuario_conciliacion").on("click", function (e) {
-        var data_pivot = $(this).attr("data-pivot");
-        var request = {'pivot':data_pivot}
-        Swal.fire({
-            title: "Esta seguro de eliminar la asignación?",
-            type: "warning", 
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, eliminar!",
-            cancelButtonText: "No, cancelar",
-        }).then((result) => {
-            if (result.value) {
-                deleteConciliacionUser(request);
-            }
-        });
-    });
+    
     $(".btn_sancionar_usuario_conciliacion").on("click", function (e) {
         var data_pivot = $(this).attr("data-pivot");
         var request = {'pivot':data_pivot,'estado_id':224}
@@ -4469,7 +4453,7 @@ function sancionarConciliacionUser(request) {
 	});
 }
 
-function deleteConciliacionUser(request) {
+function deleteConciliacionUser(request) { 
     var route = "/conciliacion/delete/user" ;
 	//var token = $("#token").val();
 	$.ajax({

@@ -89,16 +89,16 @@
         <div class="col-md-6">
             <div class="form-group">
                 {!! Form::label('Año Cursando ') !!}
-                {!! Form::select('cursandosa_id', $cursando, $user->cursando_id, [
+                {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
                     'required' => 'required',    
-                    'disabled' => 'disabled',                
+                                    
                 ]) !!}
             </div>
         </div>
     @else
-        @if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('amatai'))
+        @if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('Año Cursando') !!}

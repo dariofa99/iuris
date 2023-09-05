@@ -13,6 +13,7 @@ trait AsigTurno
 
     public function asignarTurno($request)
     {
+      
         $consulta = "";
         $horario = [];
         if ($request['cursando_id'] == '114') { ///// 4a
@@ -140,6 +141,7 @@ trait AsigTurno
                 ->where('sp.sede_id', session('sede')->id_sede)
                 ->where('estado', true)->first();
             if ($periodo) {
+                
                 $turno = [
                     'trnid_estudent' => $this->idnumber,
                     'trnid_color' => $trnid_color,
@@ -151,7 +153,7 @@ trait AsigTurno
                     'trnuserupdated' => currentUser()->idnumber,
 
                 ];
-
+               
                 $this->createTurno($turno);
                 return true;
             }

@@ -162,16 +162,37 @@
             var message = `<div class="alert alert-danger" style="font-size:18px">
             <h4>Estimado estudiante para el registro del curso tenga en cuenta lo siguiente:</h4>
             <h3>
-               Fecha de matrícula vencida!
-            </h3>
+            <ul>
+            <li>
+             Para cursar consultorios 1 en la jornada de la mañana seleccione 4B
+
+            </li>
+             <li>
+             Para cursar consultorios 1 en la jornada de la tarde seleccione 4A
+
+            </li>
+             <li>
+             Para cursar consultorios 2 en la jornada de la mañana seleccione 5B
+
+            </li>
+             <li>
+             Para cursar consultorios 2 en la jornada de la tarde seleccione 5A
+
+            </li>
+            </ul>
+                          </h3>
             <h4>
-              Comunícate con el director
+            Recuerde refrescar el navegador con las teclas CTRL + F5 o SHIFT + F5
+              
                 </h4>           
             </div>`;
 
 
             /*   var message = `<h5>Estimado estudiante debido a cambios de horario se habilitará la 
           asignación del curso en el transcurso de esta semana.</h5>`;
+                 
+                 Comunícate con el director
+                 
                   */
 
             $("#modal-show-alerts-content").html(message);

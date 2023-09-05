@@ -697,7 +697,7 @@ class ConciliacionesController extends Controller
         }
     public function getDetallesUser(Request $request,$idnumber)
     {
-       // return $request->all();
+       // return $request->all(); 
        $user = $this->userService->setValidateSede(false)
         ->findWithFilter([           
             'idnumber'=>$request->idnumber]);

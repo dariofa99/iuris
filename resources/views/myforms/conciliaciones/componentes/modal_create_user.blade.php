@@ -1,4 +1,4 @@
-@component('components.b4.modal_medium')
+@component('components.b4.modal_large')
 
 
 

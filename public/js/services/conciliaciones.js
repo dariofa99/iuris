@@ -82,6 +82,26 @@ export class ConciliacionService{
         return topics;
     }
 
+    async getDetallesUser (request,idnumber)  {
+        const response = await fetch(BASE_URL+"conciliacion/detalles/user/"+idnumber+"?"+ new URLSearchParams(request), {
+            method: 'GET',
+            headers: {        
+                "Content-Type": "application/json",
+                "Accept": "application/json", 
+                "X-Requested-With": "XMLHttpRequest",         
+                "X-CSRF-Token": $("#token").attr("content"),             
+            }         
+           
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
     async addAditionalData (request)  {
         const response = await fetch(BASE_URL+'conciliaciones/insert/data', {
             method: 'POST',

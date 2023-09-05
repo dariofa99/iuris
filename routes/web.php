@@ -569,13 +569,20 @@ Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
  
+  $user = User::where('idnumber',3030)->first();
+  $request = ['cursando_id' => 115];
+  $user->asignarTurno($request);
+
+
+  dd($user);
+
   $estu = DB::select("SELECT est.id, est.idnumber, concat(est.name,' ',est.lastname) as name,
    roles.name as role FROM `users` as est JOIN role_user on role_user.user_id = est.id 
    join roles on roles.id = role_user.role_id WHERE (roles.id = 6 or roles.id = 8)
    and est.id > 18649
    order by est.id asc limit 34");
 
-//dd($estu);
+//
 
 foreach ($estu as $key => $est) {
   $user = User::with('curso')->where('idnumber',$est->idnumber)->first();

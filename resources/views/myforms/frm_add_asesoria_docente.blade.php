@@ -32,7 +32,7 @@
                     {!! Form::label('Asesoría docente: ') !!}
                     {!! Form::textarea('asesoria_docente', null, [
                         'class' => 'form-control required',
-                        'maxlength' => '1000',
+                        'maxlength' => '1500',
                         'id' => 'asesoria_docente',
                         'rows' => '7',
                     ]) !!}

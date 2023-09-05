@@ -9,12 +9,12 @@ $(document).ready(function () {
   if ($("#conciliacion_id").val() != undefined) {
     set_tab();
     var date = $("#audiencia_fecha").val()
-    var color = getColorTurno(date);   
-    if(color.namecolors !=undefined && color.daycolors!=undefined){
-    
+    var color = getColorTurno(date);
+    if (color.namecolors != undefined && color.daycolors != undefined) {
+
       $("#audiencia_label_color_day").css("background-color", color.daycolors)
-      .html(color.namecolors);
-    } 
+        .html(color.namecolors);
+    }
 
   }
   $("#myUserSolicitanteForm").on("focus", "input[name='idnumber']", validateTypeDoc);
@@ -24,11 +24,11 @@ $(document).ready(function () {
   $("#myUserRepLegalSolicitadaForm").on("focus", "input[name='idnumber']", validateTypeDoc);
   $("#user_gen_conciliacion_form").on("focus", "#myUserConciliacionesForm input[name='idnumber']", validateTypeDoc);
 
-  $("#user_gen_conciliacion_form").on("blur", "#myUserConciliacionesForm input[name='idnumber']", async function () {
-    var lastidnumber = $(this).val();
-    alertValidateUser(lastidnumber, "myUserConciliacionesForm");
-    $(this).val("");
-  });
+  /*  $("#user_gen_conciliacion_form").on("blur", "#myUserConciliacionesForm input[name='idnumber']", async function () {
+     var lastidnumber = $(this).val();
+     alertValidateUser(lastidnumber, "myUserConciliacionesForm");
+     $(this).val("");
+   }); */
 
   $("#myUserRepLegalSolicitadaForm").on("blur", "input[name='idnumber']", async function () {
     var lastidnumber = $(this).val();
@@ -56,6 +56,30 @@ $(document).ready(function () {
     $(this).val("");
   });
 
+  $("#user_gen_conciliacion_form").on("blur", "input[name='idnumber']", async function (e) {
+    var formulario = $(this).closest('form');
+    var formularioId = formulario.attr('id');
+    $("#" + formularioId + " input[name='email']").val($(this).val() + "@mail.com")
+    if ($(this).val() != '') {
+      let request = {
+        "tipodoc_id": $("#" + formularioId + " select[name='tipodoc_id']").val(),
+        "idnumber": $(this).val(),
+        "view": "myforms.conciliaciones.componentes.user_general_form"
+      }
+      $("#wait").show();
+      let response = await userService.findUserWithFilter(request);
+      if (response.encontrado) {
+        $("#user_gen_conciliacion_form").html(response.view);
+        toastr.success("Usuario encontrado", "", {
+          positionClass: "toast-top-center",
+          timeOut: "4000",
+        });
+        $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true);
+      }
+      $("#wait").hide()
+    }
+
+  });
 
   $(".btn_asinar_usuario_conciliacion").on("click", function (e) {
     var data_type = $(this).attr("data-type");
@@ -112,13 +136,13 @@ $(document).ready(function () {
   });
 
   $("#btm_cancel_date_audiencia").on('click', function () {
-    $(this).css("display","none")
-    $("#btm_edit_date_audiencia").css("display","block")
-    $(".edit_audiencia").css("display","none")
-    $(".edit_audiencia_existe").css("display","block");
-    $("#audiencia_hora").addClass("input_time").prop("disabled",true)
+    $(this).css("display", "none")
+    $("#btm_edit_date_audiencia").css("display", "block")
+    $(".edit_audiencia").css("display", "none")
+    $(".edit_audiencia_existe").css("display", "block");
+    $("#audiencia_hora").addClass("input_time").prop("disabled", true)
 
-})
+  })
 
   $("#myformCreateEstado select[name=type_status_id]").on("change", async function (e) {
     if ($(this).val() != "") {
@@ -286,6 +310,10 @@ $(document).ready(function () {
         };
         $("#wait").show();
         let response_ = await conciliacionService.addUser(request);
+        toastr.success("Agregado correctamente!", "", {
+          positionClass: "toast-bottom-right",
+          timeOut: "4000",
+        });
         window.location.reload(true);
       } else {
 
@@ -321,10 +349,65 @@ $(document).ready(function () {
           };
           $("#wait").show();
           let response_ = await conciliacionService.addUser(request);
+          toastr.success("Agregado correctamente!", "", {
+            positionClass: "toast-bottom-right",
+            timeOut: "4000",
+          });
           window.location.reload(true);
         }
       }
     }
+  });
+
+  $(".btn_delete_usuario_conciliacion").on("click", function (e) {
+    var data_pivot = $(this).attr("data-pivot");
+    var request = { 'pivot': data_pivot }
+    Swal.fire({
+      title: "Esta seguro de eliminar la asignación?",
+      html: "<h3>Solo se eliminará al usuario de la conciliación</h3>",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar!",
+      cancelButtonText: "No, cancelar",
+    }).then(async (result) => {
+      if (result.value) {
+        $("#wait").show();
+        await conciliacionService.deleteConciliacionUser(request);
+        toastr.success("Usuario eliminado con éxito", "", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+        });
+        window.location.reload(true);
+      }
+    });
+  });
+
+  $(".btn_detalles_us_con").on("click",async function (e) {
+    var data_type = $(this).attr("data-type");
+    $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
+    $("#myModal_conc_user_create input[name=section]").val($(this).attr('data-section'));
+    var request = {
+      'conciliacion_id': $("#conciliacion_id").val(),
+      'data_type': data_type,
+      'section': $(this).attr('data-section')
+    }
+    if ($(this).attr('data-user') != undefined) {
+      request['idnumber'] = $(this).attr('data-user');
+      request['tipodoc_id'] = $("#myModal_conc_user_create select[name=tipodoc_id]").val();
+      request['is_edit'] = true;
+    } else {
+      request['idnumber'] = '0';
+      request['tipodoc_id'] = 1;
+    }
+    $("#wait").show();
+   let res = await conciliacionService.getDetallesUser(request, request.idnumber);
+    $("#content_detalles_user").html(res.view)
+    $("#myModal_conc_user_detalles").modal("show");
+    $("#wait").hide();
+    
+    // $("#myModal_conc_user_create").modal("show"); 
   });
 
   $("#table_list_user_asig").on("click", ".btn_editar_usuario_conciliacion", async function (e) {
@@ -495,15 +578,15 @@ function alertValidateUser(lastidnumber, form) {
   var view = $("#" + form).attr("data-view");
   var content = $("#" + form).attr("data-content");
   if (lastidnumber != '' && $("#" + form + " select[name='tipodoc_id']").val() != '') {
-    
- 
-   Swal.fire({
+
+
+    Swal.fire({
       title: 'Vuelve a ingresar el número de documento',
       input: 'text',
       inputAttributes: {
         autocapitalize: 'off',
         className: 'form-control',
-        
+
       },
       showCancelButton: true,
       confirmButtonText: 'Validar',
@@ -541,7 +624,7 @@ function alertValidateUser(lastidnumber, form) {
 
       },
       allowOutsideClick: () => !Swal.isLoading()
-    }); 
+    });
   }
 }
 

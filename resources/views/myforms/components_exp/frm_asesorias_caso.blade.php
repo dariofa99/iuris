@@ -66,7 +66,7 @@
                                     [
                                         'class' => 'form-control textarea-asesorias-docente',
                                         'readonly',
-                                        'rows'=>'7'
+                                        'rows'=>'8'
                                     ]) !!}
                                 </div>
                                 <div class="cont-fecha">
@@ -84,7 +84,8 @@
 <div class="row">
     @if (!$readonly and (currentUser()->hasRole('docente') 
     || currentUser()->hasRole('amatai') ||
-     currentUser()->hasRole('diradmin')))
+     currentUser()->hasRole('diradmin') ||
+     currentUser()->hasRole('dirgral')))
         <div class="col-md-6">
             <hr>
 

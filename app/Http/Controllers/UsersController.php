@@ -303,7 +303,7 @@ class UsersController extends Controller
         ->withInput();
     }
 
-    
+
 
     if ($request->get('ramaderecho_id')) {
       $user->ramas_derecho()->sync($request['ramaderecho_id']);
@@ -316,11 +316,13 @@ class UsersController extends Controller
       $user->roles()->sync($request['id_rol']);
     }
     $user = $this->userService->update($user, $request);
-    if ((currentUser()->hasRole('estudiante') 
-    and $user->hasRole('estudiante'))  
-    and (!$user->turno)) {      
+
+    if ((currentUser()->hasRole('estudiante')
+        and $user->hasRole('estudiante'))
+      and ($user->turno === null)
+    ) {
       $user->asignarTurno($request);
-    }elseif($request->has('cursando_id') and $user->turno ){
+    } elseif ($request->has('cursando_id') and $user->turno) {
       $request['cursando_id'] = $user->cursando_id;
       $user = $this->userService->update($user, $request);
     }
@@ -329,12 +331,6 @@ class UsersController extends Controller
       $user->asignarDocente($request);
     }
 
-
-
-
-
-
-    //$user->roles()->sync($request['idrol']);
 
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       return response()->json(['user' => $user]);
@@ -442,7 +438,7 @@ class UsersController extends Controller
 
     if (count($users) > 0) {
       $auth = auth()->user();
-      return response()->json(['encontrado' => true, 'users' => $users,'auth'=>$auth]);
+      return response()->json(['encontrado' => true, 'users' => $users, 'auth' => $auth]);
     }
     return  response()->json(['encontrado' => false]);
   }
@@ -451,8 +447,8 @@ class UsersController extends Controller
   {
 
     if ($request->has('active') and ($request->input('active') === true or $request->input('active') == 1)) {
-        $user = $this->userService
-        ->getWithFilter(['idnumber' => $request->idnumber,'active' => 1]);
+      $user = $this->userService
+        ->getWithFilter(['idnumber' => $request->idnumber, 'active' => 1]);
     } else {
       $user = $this->userService->getWithFilter(['idnumber' => $request->idnumber]);
     }
