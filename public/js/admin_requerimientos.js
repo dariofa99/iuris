@@ -277,7 +277,7 @@ function llenarModalDetailsReq(res) {
         if (segmento_id && res.requerimiento.notas_f.segmento_id && res.requerimiento.notas_f.can_edit) {
             $("#btn_cam_nt_req").show();
         }
-    } else {
+    } else { 
         if (res.requerimiento.notas != null && res.requerimiento.notas != '') {
             var notas = JSON.parse(res.requerimiento.notas);
             $("#lbl_not_etireq").text(notas.ntaetica);

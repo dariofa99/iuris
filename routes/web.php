@@ -135,6 +135,7 @@ dd($upadte);
 });
 
 Route::get('home',function(){
+ // dd("dd");
   return view('myforms.frm_bienvenida');
 });
 /* Route::get('/dashboard', function () {

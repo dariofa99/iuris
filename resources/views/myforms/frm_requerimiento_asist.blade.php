@@ -106,7 +106,7 @@
                         {!! Form::hidden('segid', $segmento->id, ['class' => 'form-control required', 'id' => 'segid']) !!}
                         {!! Form::hidden('perid', $periodo->id, ['class' => 'form-control required', 'id' => 'perid']) !!}
                     @endif
-                    <tr>
+                 {{--    <tr>
                         <td>
                             Nota Ética
                         </td>
@@ -122,7 +122,7 @@
                         <td colspan="3">
                             <textarea name="ntaconcepto" id="com_docente" rows="5" class="form-control required"></textarea>
                         </td>
-                    </tr>
+                    </tr> --}}
                 @endif
 
                 @if (currentUser()->hasRole('estudiante'))

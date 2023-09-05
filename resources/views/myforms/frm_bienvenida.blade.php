@@ -23,9 +23,9 @@
                 </p>
             </h4>
         </div>
-    </div>
+    </div> 
     @if (
-        (count($sedes) >= 2 and count(Auth::user()->sedes) <= 0) ||
+        (isset($sedes) and count($sedes) >= 2 and count(Auth::user()->sedes) <= 0) ||
             auth()->user()->can('cambiar_sede_'))
         <div class="row">
             @foreach ($sedes as $key => $sede)

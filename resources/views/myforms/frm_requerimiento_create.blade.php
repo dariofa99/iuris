@@ -5,7 +5,7 @@
          id="btn_modal_req">Nueva cita/requerimiento</button>
  @endif
 
- 
+
 
 
 
@@ -43,7 +43,6 @@
                      $estadoBtn = '';
                      $label = currentUser()->hasRole('estudiante') ? 'Comentar' : 'Evaluar';
                      $label = currentUser()->hasRole('coordprac') ? 'Asistencia' : $label;
-                     
                  } else {
                      $estadoBtn = 'disabled';
                      $label = 'Evaluado';
@@ -72,51 +71,51 @@
                      {{ $req->req_asistencia->ref_reqasistencia }}
                  </td>
                  <td>
-                    {{ $req->reqentregado ? 'Entregado' : 'Sin entregar' }}
-                </td>
-                {{--  <td>
+                     {{ $req->reqentregado ? 'Entregado' : 'Sin entregar' }}
+                 </td>
+                 {{--  <td>
                      {{ $label }}
                  </td> --}}
-                
+
                  <td>
-                    @if(!$readonly)
-                 
-                     @if (currentUser()->hasRole('estudiante') and !$req->reqentregado)
-                         <a href='#' data-id="{{ $req->id }}" data-modal='#myModal_req_edit'
-                             class='btn btn-primary btn-sm btn-block btn_editar_req' role='button'>
-                             Editar
-                         </a>
+                     @if (!$readonly)
+                         @if (
+                             (currentUser()->hasRole('estudiante') and !$req->reqentregado) ||
+                                 (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')))
+                             <a href='#' data-id="{{ $req->id }}" data-modal='#myModal_req_edit'
+                                 class='btn btn-primary btn-sm btn-block btn_editar_req' role='button'>
+                                 Editar
+                             </a>
 
 
-                         <a href='#' data-id="{{ $req->id }}"
-                             class='btn btn-danger btn_delete_requerimiento btn-sm btn-block' role='button'>
-                             Eliminar
-                         </a>
+                             <a href='#' data-id="{{ $req->id }}"
+                                 class='btn btn-danger btn_delete_requerimiento btn-sm btn-block' role='button'>
+                                 Eliminar
+                             </a>
+                         @endif
+
+                         @if (currentUser()->hasRole('coordprac') ||
+                                 currentUser()->hasRole('amatai') ||
+                                 (currentUser()->hasRole('estudiante') and $expediente->expidnumberest == currentUser()->idnumber) ||
+                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
+                             <button href='#' {{ $estadoBtn }} data-id="{{ $req->id }}"
+                                 data-modal='#myModal_req_asist' class='btn btn-info btn-sm btn-block btn_editar_req'
+                                 role='button'>
+                                 {{ $label }}
+                             </button>
+                         @endif
+
+                         @if (
+                             !$req->evaluado and
+                                 currentUser()->hasRole('amatai') || currentUser()->hasRole('secretaria') || currentUser()->hasRole('coordprac'))
+                             <a href='#' data-id="{{ $req->id }}" data-estado="{{ $req->reqentregado }}"
+                                 class='btn btn-primary btn-sm btn-block btn_cambiar_estado_requerimiento'
+                                 role='button'>
+                                 {{ $req->reqentregado ? 'Marcar como no entregado' : 'Marcar como entregado' }}
+                             </a>
+                         @endif
                      @endif
 
-                     @if (currentUser()->hasRole('coordprac') 
-                     || currentUser()->hasRole('amatai') 
-                     || (currentUser()->hasRole('estudiante') and $expediente->expidnumberest  == currentUser()->idnumber )
-					 || ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber))
-                         <button href='#' {{ $estadoBtn }} data-id="{{ $req->id }}"
-                             data-modal='#myModal_req_asist' class='btn btn-info btn-sm btn-block btn_editar_req'
-                             role='button'>
-                             {{ $label }}
-                         </button>
-                     @endif
-
-                     @if (!$req->evaluado and (currentUser()->hasRole('amatai') ||
-                             currentUser()->hasRole('secretaria') ||
-                             currentUser()->hasRole('coordprac')))
-                         <a href='#' data-id="{{ $req->id }}" data-estado="{{ $req->reqentregado }}"
-                             class='btn btn-primary btn-sm btn-block btn_cambiar_estado_requerimiento' role='button'>
-                             {{ $req->reqentregado ? 'Marcar como no entregado' : 'Marcar como entregado' }}
-                         </a>
-                     @endif
-
-       
-                     @endif
-                     
                      <a href="{{ url('/reqpdfgen', $req->id) }}" target='_blank'
                          class='btn btn-warning btn-sm btn-block' role='button'>
                          Imprimir

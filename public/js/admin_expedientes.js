@@ -384,10 +384,13 @@ $(document).ready(function () {
         || opselected == 'solicitante_num' || opselected == 'estudiante_num')) {
 
             if (e.which === 13) {
+               
                 $(".select_data_users").val(name).trigger("change");
                 $(".select_data_users").selectpicker("refresh");
-                $("#myformExpFilter").trigger("submit")
-                console.log("Valor seleccionado:sss " + name);
+                $("#myformExpFilter").trigger("submit");
+                $(".select_data_users").selectpicker("toggle").close();
+              
+             
             } else {
                 $(".select_data_users").selectpicker('render');//refresca el select
                 var opcion_busq = '<option value="' + name + '">' + name + '</option>';

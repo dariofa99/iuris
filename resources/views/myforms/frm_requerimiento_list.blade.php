@@ -85,7 +85,7 @@
                                 <th>Hora Cita</th>
                                 <th>Asistencia</th>
                                 <th>Estado</th>
-                                <th>Evaluado</th>
+                                {{-- <th>Evaluado</th> --}}
                                 <th>Acción</th>
                             </tr>
                         </thead>
@@ -134,14 +134,17 @@
                                         @endif
 
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         {{ $req->evaluado == 0 ? 'Sin evaluar' : 'Evaluado' }}
-                                    </td>
+                                    </td> --}}
                                     <td>
 
                                         @if (
                                             !$req->evaluado and
-                                                currentUser()->hasRole('amatai') || currentUser()->hasRole('secretaria') || currentUser()->hasRole('coordprac'))
+                                                currentUser()->hasRole('amatai') 
+                                                || currentUser()->hasRole('secretaria') 
+                                                || currentUser()->hasRole('coordprac')
+                                                || currentUser()->hasRole('diradmin'))
                                             <a href='#' data-id="{{ $req->id }}"
                                                 data-estado="{{ $req->reqentregado }}"
                                                 class='btn  {{ $req->reqentregado ? 'btn-danger' : 'btn-primary' }}  btn-sm btn-block btn_cambiar_estado_requerimiento'
@@ -157,8 +160,9 @@
                                         </a>
                                         @if (currentUser()->hasRole('coordprac') ||
                                                 currentUser()->hasRole('amatai') ||
-                                                (currentUser()->hasRole('estudiante') and $expediente->expidnumberest == currentUser()->idnumber) ||
-                                                $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
+                                                currentUser()->hasRole('diradmin')
+                                                || (currentUser()->hasRole('estudiante') and $req->expediente->expidnumberest == currentUser()->idnumber) ||
+                                                $req->expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
                                             <button href='#' {{ $estadoBtn }} data-id="{{ $req->id }}"
                                                 data-modal='#myModal_req_asist'
                                                 class='btn btn-info btn-sm btn-block btn_editar_req' role='button'>
