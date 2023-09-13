@@ -384,7 +384,7 @@ $(document).ready(function () {
     });
   });
 
-  $(".btn_detalles_us_con").on("click",async function (e) {
+  $(".btn_detalles_us_con").on("click", async function (e) {
     var data_type = $(this).attr("data-type");
     $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
     $("#myModal_conc_user_create input[name=section]").val($(this).attr('data-section'));
@@ -402,11 +402,11 @@ $(document).ready(function () {
       request['tipodoc_id'] = 1;
     }
     $("#wait").show();
-   let res = await conciliacionService.getDetallesUser(request, request.idnumber);
+    let res = await conciliacionService.getDetallesUser(request, request.idnumber);
     $("#content_detalles_user").html(res.view)
     $("#myModal_conc_user_detalles").modal("show");
     $("#wait").hide();
-    
+
     // $("#myModal_conc_user_create").modal("show"); 
   });
 
@@ -461,6 +461,10 @@ $(document).ready(function () {
     $(this).hide();
     $("#btn_cancelar_conc_not").show();
     $("#content_create_notification").show();
+    $("#myFormNotificationSend select[name=reporte_id]").val('');
+    $("#myFormNotificationSend input[name=asunto]").val('');
+    $("#myFormNotificationSend div[id=row_mail_not]").html('');
+    $("#content_notificacion_correo").summernote("code", "");
     $("#content_conc_notif").hide();
   });
   $("#btn_cancelar_conc_not").on("click", function (e) {
@@ -471,6 +475,154 @@ $(document).ready(function () {
     $("#content_conc_notif").show();
   });
 
+  $("#table_list_comentarios").on("click", ".btn_edit_com_con", async function (e) {
+    var request = {
+      comentario_id: $(this).attr("data-id"),
+      conciliacion_id: $("#conciliacion_id").val(),
+    };
+    $("#wait").show();
+    let response = await conciliacionService.editConciliacionComentario(request);
+    $("#myformCreateComentario").attr("id", "myformEditComentario");
+    $("#myformEditComentario input[name=comentario_id]").val(response.id);
+    $("#myformEditComentario input[name=compartido]").prop("checked", false);
+    if (response.compartido == 1) $("#myformEditComentario input[name=compartido]").prop("checked", true);
+    $("#myformEditComentario div[id=comentario]").html(response.comentario);
+    $("#myformEditComentario div[id=asunto]").html(response.asunto);
+    $("#myModal_create_comentario .modal-title").text("Detalles");
+    $("#myModal_create_comentario").modal("show");
+    $("#wait").hide();
+
+  });
+
+  $("#table_list_estudiantes_aud").on("click", ".btn_asignar_estudiante_audiencia", async function (e) {
+    var idnumber = $(this).attr("data-id");
+    $("#wait").show();
+    let response = await conciliacionService.getRolesEstudentAudiencia();
+    var li = '<option value="">Seleccione...</option>';
+    response.rollist.forEach(element => {
+      li += '<option value="' + element.id + '" ' + true + '>' + element.ref_nombre + '</option>'
+    });
+    $("#label_rol_est_conciliacion" + idnumber).hide();
+    $("#btn_habilityEditRol_Est" + idnumber).hide();
+    $("#select_rol_est_conciliacion" + idnumber).show();
+    $("#btn_hide_edit_rol_conciliacion_est" + idnumber).show();
+    $("#btn_UpdateRol_est" + idnumber).show();
+
+    $("#select_rol_est_conciliacion" + idnumber).html(li);
+    $("#wait").hide();
+
+    /*    (response.rollist, function (key, value) {
+         stateoption = ""
+         if (idrol == value.id) { stateoption = "selected" }
+         $("#select_rol_est_conciliacion"+idnumber).append('<option value="' + value.id + '" '+ stateoption +'>' + value.ref_nombre + '</option>');
+     }); */
+  });
+
+  $("#table_list_estudiantes_aud").on("click", '.btn_hide_edit_rol_conciliacion_est', function (e) {
+    var idnumber = $(this).attr("data-id");
+    $("#label_rol_est_conciliacion" + idnumber).show();
+    $("#btn_habilityEditRol_Est" + idnumber).show();
+    $("#select_rol_est_conciliacion" + idnumber).hide();
+    $("#btn_hide_edit_rol_conciliacion_est" + idnumber).hide();
+    $("#btn_UpdateRol_est" + idnumber).hide();
+
+  });
+
+  $("#table_list_estudiantes_aud").on("click", '.btn_update_rol_est', async function (e) {
+    var idnumber = $(this).attr("data-id");
+    var idrol = $("#select_rol_est_conciliacion" + idnumber).val()
+    var idconciliacion = $("#select_rol_est_conciliacion" + idnumber).attr('data-id')
+    var textselect = $('select[id="select_rol_est_conciliacion' + idnumber + '"] option:selected').text()
+    var email_categoria = '';
+    if (idrol == 203) {//conciliador
+      email_categoria = 'mensaje_sol_conciliador'
+    }
+
+    if (idrol == 204) {//asistente
+      email_categoria = 'mensaje_sol_asistente'
+    }
+
+
+    if (idrol == '') {
+      Toast.fire({
+        title: 'Error en la asignación, contactar al administrador.',
+        type: 'danger',
+        timer: 5000,
+      });
+      return false;
+    }
+    $("#wait").css("display", "block");
+    let res = await conciliacionService.updateUserConciliacion({
+      id: idnumber,
+      idrol: idrol,
+      idconciliacion: idconciliacion,
+      categoria: email_categoria,
+      tabla_destino: 241
+    })
+    if (res.state == 1 || res.state == true) {
+      Toast.fire({
+        title: 'La asignación se ha actualizado con exito.',
+        type: 'success',
+        timer: 5000,
+      });
+      if (res.action == 'delete') {
+        $("#label_rol_est_conciliacion" + idnumber).html('sin asignar')
+          .css({ "font-weight": "100", "font-size": "13px" });
+        $("#btn_habilityEditRol_Est" + idnumber).attr("data-state", "")
+        $("#label_num_conciliacion_est" + idnumber).html($("#label_num_conciliacion_est" + idnumber).html() - 1)
+          .css("font-weight", "100");
+      } else {
+        $("#label_rol_est_conciliacion" + idnumber).html(textselect)
+          .removeAttr("style");
+        $("#btn_habilityEditRol_Est" + idnumber).attr("data-state", idrol)
+        if (res.action == 'insert') {
+          $("#label_num_conciliacion_est" + idnumber).html(parseInt($("#label_num_conciliacion_est" + idnumber).html()) + 1)
+            .removeAttr("style");
+        }
+
+      }
+      // window.location.reload(true)
+    } else {
+      Toast.fire({
+        title: 'Error en la asignación, contactar al administrador.',
+        type: 'danger',
+        timer: 5000,
+      });
+    }
+    //location.reload();
+    $("#wait").css("display", "none");
+
+  });
+
+  $("#table_list_comentarios").on(
+    "click",
+    ".btn_delete_com_con",
+    function (e) {
+      var request = {
+        comentario_id: $(this).attr("data-id"),
+        conciliacion_id: $("#conciliacion_id").val(),
+      };
+      Swal.fire({
+        title: "Esta seguro de eliminar el comentario?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, eliminar!",
+        cancelButtonText: "No, cancelar",
+      }).then(async (result) => {
+        if (result.value) {
+          $("#wait").show();
+          let response = await conciliacionService.deleteConciliacionComentario(request);
+          if (response.view || response.view == "") {
+            $("#table_list_comentarios tbody").html(response.view);
+          }
+          $("#wait").hide();
+
+        }
+      });
+    }
+  );
 
   $("#btm_edit_date_audiencia").on('click', function () {
     $(this).css("display", "none")
@@ -493,8 +645,7 @@ $(document).ready(function () {
     var hora = $("#audiencia_hora").val()
     if (fecha != "" & hora != "" & id != "") {
       var request = {
-        id: id, fecha:
-          fecha, hora: hora
+        id: id, fecha: fecha, hora: hora
       }
       $("#wait").show();
       await conciliacionService.storeAudiencia(request);

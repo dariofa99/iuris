@@ -7,7 +7,7 @@
 
     @slot('title')
         Editar
-    @endslot
+    @endslot 
 
 
     @slot('body')
@@ -16,7 +16,7 @@
         @endsection
         @include('msg.ajax.success')
 	
-		<form id="myFormUserEditExpediente" method="POST">
+		<form id="myFormUserEditForExpediente" method="POST">
 			<div class="row">
 				@include('myforms.users.formulario_registro',[
 					'user'=>$expediente->solicitante
@@ -30,7 +30,7 @@
 			</div>   
 			<div class="row">
 				<div class="col-md-4">
-					<button id="btnActualizarUserEstudiante" type="button" class="btn btn-primary btn-sm btn-block">Actualizar datos</button>
+					<button id="btnActualizarUserForEstudiante" type="button" class="btn btn-primary btn-sm btn-block">Actualizar datos</button>
 				</div>
 			</div>
 		</form>

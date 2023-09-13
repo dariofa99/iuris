@@ -26,7 +26,7 @@
     </div> 
     @if (
         (isset($sedes) and count($sedes) >= 2 and count(Auth::user()->sedes) <= 0) ||
-            auth()->user()->can('cambiar_sede_'))
+            auth()->user()->can('cambiar_sede'))
         <div class="row">
             @foreach ($sedes as $key => $sede)
                 <div class="col-md-4">
@@ -41,7 +41,8 @@
                                 <button data-id="{{ $sede->id_sede }}"
                                     {{ (session()->has('sede') and session()->get('sede')->id_sede == $sede->id_sede) ? 'disabled' : '' }}
                                     type="button" class="btn btn-success btn_change_sede">
-                                    Seleccionar
+                                    
+                                    {{ (session()->has('sede') and session()->get('sede')->id_sede == $sede->id_sede) ? 'Seleccionada' : 'Seleccionar' }}
                                 </button>
                             </div>
                         </div>

@@ -108,6 +108,14 @@
                 Autorizaciones
             </a>
         </li>
+        @if ($expediente->asignacion->procesojud_id != 1)
+            <li class="nav-item">
+                <a class="nav-link urlactive" id="judicial-tab" data-toggle="tab" href="#judicial" role="tab"
+                    aria-controls="judicial" aria-selected="false">
+                    Judicial
+                </a>
+            </li>
+        @endif
 
     </ul>
 
@@ -116,13 +124,13 @@
         <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
             <div class="row">
                 <div class="col-md-12 content_oficina_virtual" id="content_oficina_virtual">
-                    {{-- @include('myforms.components_exp.frm_oficina_virtual') --}}
+                    @include('myforms.components_exp.frm_oficina_virtual')
                 </div> <!-- /.md12-->
             </div>
         </div>
 
         <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
-            @include("myforms.components_exp.frm_datos_caso_dofi") 
+            @include('myforms.components_exp.frm_datos_caso_dofi')
             @include('myforms.components_exp.frm_asesorias_caso')
             @include('myforms.components_exp.frm_notas_caso')
         </div>
@@ -171,7 +179,15 @@
                 </div> <!-- /.md12-->
             </div>
         </div>
-
+        @if ($expediente->asignacion->procesojud_id != 1)
+            <div class="tab-pane fade " id="judicial" role="tabpanel" aria-labelledby="judicial-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        @include('myforms.components_exp.frm_judicial_data')
+                    </div> <!-- /.md12-->
+                </div>
+            </div>
+        @endif
     </div>
     @include('myforms.frm_add_asesoria_docente')
     @include('myforms.frm_update_asesoria_docente')
@@ -193,15 +209,17 @@
     @include('myforms.frm_requerimiento_details')
     @include('myforms.components_exp.frm_modal_create_requerimiento')
     @include('myforms.components_exp.frm_modal_create_actuacion')
+    @include('myforms.components_exp.frm_modal_gestion_judicial')
+
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
             'user_idnumber' => $expediente->expidnumber,
         ])
     @endif
     @if (currentUser()->hasRole('estudiante'))
-       @include('myforms.frm_expediente_user_edit',[
-            'user' => $expediente->solicitante
-        ]) 
+        @include('myforms.frm_expediente_user_edit', [
+            'user' => $expediente->solicitante,
+        ])
     @elseif(!currentUser()->hasRole('estudiante'))
         @include('myforms.frm_expediente_user_details')
     @endif
@@ -215,5 +233,5 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
-    <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
+    <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
 @endpush

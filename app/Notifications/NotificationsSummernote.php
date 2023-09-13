@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use Illuminate\Support\Facades\Auth;
 
 class NotificationsSummernote extends Notification
 {
@@ -64,11 +64,11 @@ class NotificationsSummernote extends Notification
      * @return array
      */
     public function toDatabase($notifiable)
-    {      
+    {       
         return [
-           'type_notification'=>'Respuesta de radicado conciliación',
+           'type_notification'=>'summernote_notification',
            'link_to'=>'/conciliaciones/'.$this->conciliacion->id.'/edit',
-           'mensaje'=>auth()->user()->name.' '.auth()->user()->lastname
+           'mensaje'=>$this->asunto
         ];
     }
 }

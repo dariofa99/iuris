@@ -51,13 +51,13 @@ $(document).ready(function () {
             " " +
             lastname.toUpperCase() +
             "</option>";
-        let response = await userService.getUsersByRole({ 'role': 'docente','active':1 });
+        let response = await userService.getUsersByRole({ 'role': 'docente', 'active': 1 });
         abrirModalDocentes(response.users, option);
     });
 
     $("#btnActualizar").on("click", async function (e) {
         var errors = validateForm("form_expediente_edit");
-        if(errors.length <= 0) {
+        if (errors.length <= 0) {
             var form = convertFormToJSON("form_expediente_edit");
             var request = {
                 'id': form.expediente_id,
@@ -68,16 +68,16 @@ $(document).ready(function () {
             }
             $("#wait").show()
             let response = await expedientesService.update(request, form.expediente_id);
-            toastr.success("Se actalizó con éxito", "", {                
+            toastr.success("Se actalizó con éxito", "", {
                 timeOut: "4000",
             });
             window.location.reload(true);
-        }else{
-            toastr.error("Hay campos que son obligatorios", "", {                
+        } else {
+            toastr.error("Hay campos que son obligatorios", "", {
                 timeOut: "4000",
             });
         }
-      
+
     });
     $("#btnEditar").click(function () {
         $("#btnActualizar").show();
@@ -229,7 +229,7 @@ $(document).ready(function () {
                 toastr.success("Se actalizó con éxito", "", {
                     timeOut: "4000",
                 });
-                 $("#wait").hide();
+                $("#wait").hide();
                 window.location.reload(true);
             }
         });
@@ -379,29 +379,24 @@ $(document).ready(function () {
         if (opselected == 'idnumber_doc') role = 'docente';
         if (opselected == 'solicitante' || opselected == 'solicitante_num') role = 'solicitante';
         if (opselected == 'estudiante' || opselected == 'estudiante_num') role = 'estudiante';
-        
-        if (opselected != '' && (opselected == 'codido_exp' 
-        || opselected == 'solicitante_num' || opselected == 'estudiante_num')) {
+
+        if (opselected != '' && (opselected == 'codido_exp'
+            || opselected == 'solicitante_num' || opselected == 'estudiante_num')) {
 
             if (e.which === 13) {
-               
+
                 $(".select_data_users").val(name).trigger("change");
                 $(".select_data_users").selectpicker("refresh");
                 $("#myformExpFilter").trigger("submit");
-                $(".select_data_users").selectpicker("toggle").close();
-              
-             
+                $(".select_data_users").selectpicker("toggle");
+
+
             } else {
                 $(".select_data_users").selectpicker('render');//refresca el select
                 var opcion_busq = '<option value="' + name + '">' + name + '</option>';
                 $("#select_data_users").html(opcion_busq);
                 $(".select_data_users").selectpicker("refresh");
             }
-
-
-
-
-
 
         } else if (opselected != '' && (opselected == 'estudiante' || opselected == 'solicitante' || opselected == 'idnumber_doc')) {
             if (name.length >= 3) {
@@ -615,11 +610,12 @@ $(document).ready(function () {
     });
 
 
-    $("#myModal_exp_user_edit").on("click", '#btnActualizarUserEstudiante', async function (e) {
-        var errors = validateForm("myFormUserEditExpediente");
+    $("#myModal_exp_user_edit").on("click", '#btnActualizarUserForEstudiante', async function (e) {
+        var errors = validateForm("myFormUserEditForExpediente");
+        console.log(errors)
         if (errors.length <= 0) {
-            var request = convertFormToJSON("myFormUserEditExpediente");
-            var data = userService.getAditionalDataByForm('myFormUserEditExpediente');
+            var request = convertFormToJSON("myFormUserEditForExpediente");
+            var data = userService.getAditionalDataByForm('myFormUserEditForExpediente');
             request["data"] = (data);
             $("#wait").show();
             let response = await userService.update(request);
@@ -783,7 +779,7 @@ $(document).ready(function () {
             }
         })
 
-       
+
     });
 
     $("#myform_change_docente_exp").on("submit", async function (e) {
@@ -813,7 +809,7 @@ $(document).ready(function () {
         $("#myform_change_docente_exp>#tipo_cambio").val(1);
         $("#myform_change_docente_exp input[type='submit']").val("Cambiar docente");
         $("#wait").show();
-        let response = await userService.getUsersByRole({ 'role': 'docente','active':1 });
+        let response = await userService.getUsersByRole({ 'role': 'docente', 'active': 1 });
         $("#wait").hide();
         if (response.encontrado) {
             var opcion_busq = '';
@@ -860,7 +856,7 @@ $(document).ready(function () {
         $("#myform_change_docente_exp>#tipo_cambio").val(0);
         $("#myform_change_docente_exp input[type='submit']").val("Solicitar cambio");
         $("#wait").show();
-        let response = await userService.getUsersByRole({ 'role': 'docente','active':1 });
+        let response = await userService.getUsersByRole({ 'role': 'docente', 'active': 1 });
         $("#wait").hide();
         if (response.encontrado) {
             var opcion_busq = '';
@@ -997,7 +993,7 @@ $(document).ready(function () {
             window.location.reload(true)
 
         }
-        
+
     });
     $(".btn_edit_asesoria_caso").on("click", async function (e) {
         e.preventDefault();

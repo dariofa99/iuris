@@ -7,6 +7,7 @@ use App\Repositories\AsignacionDocenteCasosRepository;
 use App\Repositories\AutorizacionesRepository;
 use App\Repositories\BaseRepository;
 use App\Repositories\BibliotecasRepository;
+use App\Repositories\ConciliacionComentariosRepository;
 use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
 use App\Repositories\ExpedientesRepository;
@@ -17,11 +18,13 @@ use App\Repositories\RequerimientosRepository;
 use App\Repositories\SedesRepository;
 use App\Repositories\SegmentosRepository;
 use App\Repositories\SolicitudesRepository;
+use App\Repositories\TurnosRepository;
 use App\Repositories\UsersRepository;
 use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\AutorizacionesService;
 use App\Services\BibliotecasService;
+use App\Services\ConciliacionComentarioService;
 use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
@@ -32,6 +35,7 @@ use App\Services\RequerimientosService;
 use App\Services\SedesService;
 use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
+use App\Services\TurnosService;
 use App\Services\UsersService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -72,6 +76,16 @@ class AppServiceProvider extends ServiceProvider
             UsersService::class,
             UsersRepository::class,       
         );
+
+        $this->app->bind(            
+            ConciliacionComentarioService::class,
+            ConciliacionComentariosRepository::class,       
+        );
+        $this->app->bind(            
+            TurnosService::class,
+            TurnosRepository::class,       
+        );
+
         $this->app->bind(            
             EstadosCasoService::class,
             EstadosCasoRepository::class,       

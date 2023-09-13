@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Session;
-use Redirect;
-use DB;
 use App\Turno;
 use App\TablaReferencia;
 use App\Conciliacion;
@@ -16,15 +13,29 @@ use App\PdfReporte;
 use App\PdfReporteDestino;
 use App\SalasAlternasConciliacion;
 use App\Sede;
+use App\Services\ConciliacionesService;
+use App\Services\UsersService;
 use Facades\App\Facades\NewPush;
-use App\User;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Traits\PdfReport as TraitPdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
 class AudienciaController extends Controller
 {
     use TraitPdf;
+    private $userService;
+    private $conciliacionService;
+
+    public function __construct(UsersService $userService,ConciliacionesService $conciliacionService)
+    {
+      $this->userService = $userService;
+      $this->conciliacionService = $conciliacionService;
+    }
+
     public function getSalasAudiencia(Request $request,$id,$cont){
         $conciliacion = Conciliacion::find($id);
         $numusers=$conciliacion->usuarios->count();
@@ -50,9 +61,9 @@ class AudienciaController extends Controller
                 $salasalternas->token_access = $access_token;
                 $salasalternas->save();
 
-                NewPush::channel($socketroom.$value)
+                /* NewPush::channel($socketroom.$value)
                 ->message(["room"=>$request->rooms[$key],"id_conciliacion"=>$request->id['id_conciliacion'],"url"=>$request->root()."/audiencia"."/salaalaterna"."/".$access_token])
-                ->publish();
+                ->publish(); */
 
             }
         }
@@ -196,13 +207,17 @@ class AudienciaController extends Controller
 
     public function postConciliacionEstRolUpate(Request $request){
         //$request->idrol
-
-        $user = User::where('idnumber',$request->id)->first();
+      //  return response()->json("ss");
+        $user = $this->userService->findWithFilter([
+            'idnumber'=>$request->id
+        ]);
+         //User::where('idnumber',$request->id)->first();
         $state = '0';
         $action = '';
-        $conciliacion = Conciliacion::find($request->idconciliacion);
+        $conciliacion = $this->conciliacionService->find($request->idconciliacion);
+        // Conciliacion::find($request->idconciliacion);
         $conciliacion_has_user = DB::table('conciliacion_has_user')->where([
-            'conciliacion_id' => $request->idconciliacion,
+            'conciliacion_id' => $conciliacion->id,
             'user_id' => $user->id,
            
         ])->first();
@@ -227,13 +242,7 @@ class AudienciaController extends Controller
                     'conciliacion_id' => $request->idconciliacion,
                     'user_id' => $user->id,
                     'estado_id'=>229
-                ]);
-              /*   $insert_conciliacion_has_user = DB::table('conciliacion_has_user')->insert([
-                    'tipo_usuario_id' => $request->idrol,
-                    'conciliacion_id' => $request->idconciliacion,
-                    'user_id' => $user->id,
-                    'estado_id'=>229
-                ]); */
+                ]);          
                 $state = 1;
                 $action = 'insert';
             }
@@ -241,15 +250,11 @@ class AudienciaController extends Controller
         //$users = User::whereIn('email',$request->correo_send)->get();
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 0);
-        })
-            /* ->whereHas('temporales', function (Builder $query) use ($request) {
-                $query->where('conciliacion_id', $request->conciliacion_id);
-            }) */
-            //    ->with('users')
-            ->where('tabla_destino','=','conciliaciones_email')
+        })  
+            ->where('tabla_destino','=',$request->tabla_destino)
             ->where('categoria',$request->categoria)
             ->get();
-         //   return response()->json($request->all());
+      //     return response()->json($reportes);
         
         if(count($reportes) > 0 AND $request->idrol=='203') $reporte = PdfReporte::find($reportes[0]->reporte_id);
         if(count($reportes) > 0 AND $request->idrol=='204') $reporte = PdfReporte::find($reportes[0]->reporte_id);

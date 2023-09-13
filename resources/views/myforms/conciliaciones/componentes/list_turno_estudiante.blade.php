@@ -1,7 +1,7 @@
 
         <div class="col-md-12">
             <div class="box-body table-responsive no-padding">
-                <table class="normal-table table-list-est-tur">
+                <table class="normal-table table-list-est-tur" id="table_list_estudiantes_aud">
                     <thead>
                         <th width="10%">
                             No. Documento
@@ -31,34 +31,40 @@
                         @foreach($turnos as $turno)
                           <tr>
                             <td>
-                                {{$turno->idnumber }}
+                                {{$turno->estudiante->idnumber }}
                             </td>
 
                             <td align="left">
-                                <input type="hidden" value="{{$turno->estudiante_id}}" id="estudiante_id{{$turno->id}}">
-                                {{$turno->name }} {{$turno->lastname }}
+                                <input type="hidden" value="{{$turno->estudiante->id}}" id="estudiante_id{{$turno->id}}">
+                                {{$turno->estudiante->name }} {{$turno->estudiante->lastname }}
                             </td>
                             <td>
-                            <label> {{$turno->curso_nombre}} </label>
+                            <label> {{$turno->estudiante->curso->ref_nombre}} </label>
                             </td>
                             <td>
-                            <label class="label dis-block {{$turno->getColorTurno($turno->color_ref_value) }}">{{$turno->horario_nombre }}</label>
+                            <label class="label dis-block {{$turno->getColorTurno($turno->color->ref_value) }}">{{$turno->horario->ref_nombre }}</label>
                             </td>
                             <td>
-                                <label id="label_num_conciliacion_est{{$turno->idnumber}}" style="font-weight: 100;"> 0 </label>
+                                <label id="label_num_conciliacion_est{{$turno->estudiante->idnumber}}" style="font-weight: 100;"> 
+                                {{(count($turno->estudiante->conciliaciones))}}
+                                 </label>
                             </td>
-                            <td>
-                                <label id="label_rol_est_conciliacion{{$turno->idnumber}}" style="font-weight: 100; font-size: 13px;"> sin asignar </label>
-                                <select class="form-control input-select" name="select" id="select_rol_est_conciliacion{{$turno->idnumber}}" data-id="{{$conciliacion->id}}" style="display: none;">
-                                    <option value="000">Eliminar asignación</option>
-
+                            <td width="15%">
+                                <label id="label_rol_est_conciliacion{{$turno->estudiante->idnumber}}" style="font-weight: 100; font-size: 13px;">
+                                
+                                
+                                 sin asignar 
+                                 
+                                 </label>
+                                <select class="form-control form-control-sm input-select" name="select" id="select_rol_est_conciliacion{{$turno->estudiante->idnumber}}" data-id="{{$conciliacion->id}}" style="display: none;">
+                                    <option value="000"></option>
                                 </select>
                             </td>
                             @if(currentUser()->hasRole('amatai') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('diradmin') || currentUser()->hasRole("dirgral") || (currentUser()->hasRole('estudiante') and currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar'])))
                             <td>
-                                <a style="display: none;" class="btn btn-success" id="btn_UpdateRol_est{{$turno->idnumber}}" onclick="Updaterolest_conciliacion('{{$turno->idnumber}}')"><i class="fa fa-check-square"> </i> Actualizar</a>
-                                <a style="display: none;" class="btn btn-warning" id="btn_hide_edit_rol_conciliacion_est{{$turno->idnumber}}" onclick="hideupdaterolest('{{$turno->idnumber}}')"><i class="fa fa-close"> </i> Cancelar</a>
-                                <a class="btn btn-primary" id="btn_habilityEditRol_Est{{$turno->idnumber}}" data-state="" onclick="editRolEstudentAudiencia('{{$turno->idnumber}}')"><i class="fa fa-edit"> </i>Editar</a>
+                                <a style="display: none;" class="btn btn-success btn-sm btn-block btn_update_rol_est" id="btn_UpdateRol_est{{$turno->estudiante->idnumber}}" data-id="{{$turno->estudiante->idnumber}}"><i class="fa fa-check-square"> </i> Actualizar</a>
+                                <a style="display: none;" class="btn btn-sm btn-block btn-warning btn_hide_edit_rol_conciliacion_est" data-id="{{$turno->estudiante->idnumber}}" id="btn_hide_edit_rol_conciliacion_est{{$turno->estudiante->idnumber}}"><i class="fa fa-close"> </i> Cancelar</a>
+                                <a class="btn btn-primary  btn-sm btn-block btn_asignar_estudiante_audiencia" id="btn_habilityEditRol_Est{{$turno->estudiante->idnumber}}" data-id="{{$turno->estudiante->idnumber}}" data-state=""><i class="fa fa-edit"> </i>Editar</a>
                             </td> 
                             @endif
                         </tr>

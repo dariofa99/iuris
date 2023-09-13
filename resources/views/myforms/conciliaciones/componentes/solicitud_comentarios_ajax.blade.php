@@ -1,17 +1,17 @@
-@foreach($conciliacion->comentarios as $key => $comentario)
+@foreach($conciliacion->comentarios()->orderBy('created_at','desc')->get() as $key => $comentario)
 @if(currentUser()->id == $comentario->user_id || $comentario->compartido ==  1)
 
 <tr>
-   <td>{{$comentario->comentario}}</td>
+   <td>{!! trim(strip_tags($comentario->asunto)) !!}</td>
    <td>{{$comentario->user->name}} {{$comentario->user->lastname}}</td>
    <td>{{getSmallDateWithHour($comentario->created_at)}}</td>
    <td>
        @if(currentUser()->id == $comentario->user_id || currentUser()->hasRole('amatai'))
-       <button class="btn btn-danger btn-sm btn_delete_com_con" data-id="{{$comentario->id}}">Eliminar</button>
+       <button class="btn btn-danger btn-sm btn-block btn_delete_com_con" data-id="{{$comentario->id}}">Eliminar</button>
        
       
       
-      <button class="btn btn-primary btn-sm btn_edit_com_con" data-id="{{$comentario->id}}">Editar</button>
+      <button class="btn btn-success btn-sm btn_edit_com_con btn-block" data-id="{{$comentario->id}}">Detalles</button>
         @endif
            </td>
 </tr>

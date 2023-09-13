@@ -5,7 +5,7 @@
         myModal_exp_user_edit
     @endslot
 
-    @slot('title')
+    @slot('title') 
         Registro de usuario. <small><i><strong>
                     Los campos marcados con asterisco(*) son obligatorios.</strong></i></small>
     @endslot

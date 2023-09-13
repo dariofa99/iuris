@@ -16,7 +16,7 @@ class CreateConciliacionesComentariosTable extends Migration
         Schema::create('conciliaciones_comentarios', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('asunto')->nullable(); 
-            $table->string('comentario')->nullable(); 
+            $table->longText('comentario')->nullable(); 
             $table->boolean('compartido')->default(0);          
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')

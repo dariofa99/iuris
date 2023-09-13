@@ -135,8 +135,7 @@ dd($upadte);
 });
 
 Route::get('home',function(){
- // dd("dd");
-  return view('myforms.frm_bienvenida');
+  return redirect('/dashboard');
 });
 /* Route::get('/dashboard', function () {
   if(auth()->user()->hasRole("solicitante")){
@@ -361,7 +360,7 @@ Route::post('conciliaciones/insert/data', 'ConciliacionesController@insertData')
 Route::post('conciliaciones/generate/documents', 'ConciliacionesController@generateDocuments'); 
 Route::post('conciliaciones/insert/estado', 'ConciliacionesController@insertEstado'); 
 Route::post('conciliaciones/insert/comentario', 'ConciliacionesController@insertComentario'); 
-Route::get('conciliaciones/delete/comentario', 'ConciliacionesController@deleteComentario'); 
+Route::delete('conciliaciones/delete/comentario', 'ConciliacionesController@deleteComentario'); 
 Route::get('conciliaciones/edit/comentario', 'ConciliacionesController@editComentario');
 Route::post('conciliaciones/update/comentario', 'ConciliacionesController@updateComentario'); 
 Route::post('conciliaciones/store/anexo', 'ConciliacionesController@storeAnexo');

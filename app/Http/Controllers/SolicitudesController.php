@@ -99,7 +99,7 @@ class SolicitudesController extends Controller
                 } 
                 if($request->paso > 2){       
                     $user = $conciliacion->getUser(205);//solicitante                    
-                    if(Auth::guest() and Auth::user()->id != $user->id) Auth::logout();
+                    if(Auth::guest() and Auth::user() and Auth::user()->id != $user->id) Auth::logout();
                 } 
 
                 if(Auth::guest()) return redirect('login');

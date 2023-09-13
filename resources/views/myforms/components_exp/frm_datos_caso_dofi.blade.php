@@ -124,4 +124,4 @@
     </div>
 <!--cont_data_req-->
 {!!Form::close()!!}
-@include('myforms.frm_expediente_user_edit')
+

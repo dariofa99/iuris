@@ -5371,7 +5371,7 @@ function editConciliacionEstado(request) {
             $("#wait").hide();
         },
     });
-}
+} 
 
 function deleteConciliacionComentario(request) {
     var route = "/conciliaciones/delete/comentario";

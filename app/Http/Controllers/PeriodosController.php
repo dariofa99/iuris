@@ -65,17 +65,13 @@ class PeriodosController extends Controller
 
 	public function store(Request $request)
 	{
-		$messages = [
-			'prdfecha_inicio.unique' => 'La fecha de inicio ya existe.',
-			'prdfecha_fin.unique' => 'La fecha de fin ya existe.',
-		];
-		$validator = Validator::make($request->all(), [
-			'prdfecha_inicio' => ['required', 'unique:periodo'],
-			'prdfecha_fin' => ['required', 'unique:periodo']
-		], $messages);
-		if ($validator->fails()) {
+		$periodo = $this->periodosService->findWithFilter([
+			'prdfecha_inicio'=>$request->prdfecha_inicio,
+			'prdfecha_fin'=>$request->prdfecha_fin
+		]);
+		if ($periodo) {
 			if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
-				return response()->json(['errors' => $validator->errors()->all()]);
+				return response()->json(['errors' => ["El periodo registrado ya existe"]]);
 			}
 		}
 		$periodo = $this->periodosService->store($request);

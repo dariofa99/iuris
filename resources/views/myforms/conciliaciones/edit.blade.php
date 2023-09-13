@@ -190,7 +190,7 @@
     @include('myforms.conciliaciones.componentes.modal_reportes_pdf_estados')
     @include('myforms.conciliaciones.componentes.modal_create_document')
     {{-- @include('myforms.conciliaciones.componentes.modal_create_estado') --}}
-    @include('myforms.conciliaciones.componentes.modal_create_comentario')
+    @include('myforms.conciliaciones.componentes.modal_detalles_notificaciones')
     @include('myforms.conciliaciones.componentes.modal_create_user')
     @include('myforms.conciliaciones.componentes.modal_create_estado_pretension')
     @include('myforms.conciliaciones.componentes.modal_detalles_user')
@@ -201,8 +201,10 @@
     @include('myforms.conciliaciones.componentes.modal_respuestas_asignaciones')
 
 @stop
-
+ 
 @push('scripts')
+  <script src="{{ asset('plugins/summernote-0.8/summernote.min.js') }}"></script>
+  
     <!-- aqui van los scripts de cada vista -->
     <script type="module" src={{ asset('js/admin_conciliacion.js') }}></script>
 

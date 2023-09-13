@@ -154,7 +154,7 @@ class UsersRepository extends BaseRepository implements UsersService
 
   public function findUserByNameOrLastNameAndRole($name, $role, $verify_status = false): array
   {
-    $this->applyValidateSede();
+    $this->applyValidateSede(); 
     $users = $this->query->with('roles')->whereHas('roles', function ($query) use ($role) {
       return $query->where('roles.name', $role);
     })

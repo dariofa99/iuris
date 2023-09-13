@@ -100,7 +100,8 @@ class User extends Authenticatable
     public function conciliaciones()
     {
        return $this->belongsToMany(Conciliacion::class,'conciliacion_has_user','user_id','conciliacion_id')
-       ->withPivot('user_id','tipo_usuario_id','conciliacion_id','estado_id','id')->withTimestamps();
+       ->withPivot('user_id','tipo_usuario_id','conciliacion_id','estado_id','id')
+       ->withTimestamps();
     } 
 
     public function estado_civil()

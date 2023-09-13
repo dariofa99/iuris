@@ -89,7 +89,7 @@
                 <div id="content_notificacion_correo" class="summernote required">
                         
                 </div>
-                <div>
+                <div class="mt-2">
                     <button disabled id="btn_env_not" class="btn btn-primary">Enviar notificación</button>
                 </div>
             </form>
@@ -108,7 +108,7 @@
         <table class="table" id="table_list_comentarios">
             <thead>
                 <th>
-                    Comentario
+                    Asunto
                 </th>
                 <th>
                     Creado por

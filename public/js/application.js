@@ -5,13 +5,13 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 $(document).ready(function () {
-    $("#table_list_model").on("click", ".pagination a",async  function (e) {
+    $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
         var page = $(this).attr("href");
         $("#wait").show();
         await index_pagination(page);
         $("#wait").hide();
-       // window.history.pushState(null, "", page);
+        // window.history.pushState(null, "", page);
     });
     $('.is_tooltip').tooltip();
     $('.onlynumber').keyup(function () {
@@ -66,11 +66,11 @@ $(".urlactive").on("click", function () {
     var target = $(this).attr("href")
     var url = window.location.href;
     url = url.split("#")[0] + target;
-    history.pushState({}, "",url)
+    history.pushState({}, "", url)
 });
 
 function set_tab() {
-    var url = window.location.href;   
+    var url = window.location.href;
     var activeTab = url.substring(url.indexOf("#") + 1);
     var elementoA = $("a[href='#" + activeTab + "']");
     if (activeTab) elementoA.click();
@@ -92,34 +92,36 @@ function round(num, decimales = 1) {
 //Funcion para validar un formulario
 function validateForm(form) {
     var errors = [];
-   
+
     $("#" + form + " .required").each(function (index, obj) {
 
-        if ($(this).attr('disabled') != 'disabled') {
-          
-            if ($(this).is("input, select, textarea") && !$(this).is("div") && $(this).val() == '') {
-                console.log($(this));
-                errors.push('El campo ' + $(this).attr('name') + ' es obligatorio');
-                $(this).css({ 'background': '#EC7063', 'border': '1px solid #EAEDED', 'color': "black" }).addClass("placeholdercolor");
-                $(this).attr('placeholder', 'Este campo es obligatorio');                //
-                if ($(this).hasClass("selectpicker")) {                   
-                    $(this).selectpicker("setStyle","btn-danger")
-                    .selectpicker();
+        if ($(obj).attr('disabled') != 'disabled') {
+            if ($(obj).is("input, select, textarea") && !$(this).is("div") && $(this).val() == '') {
+                console.log($(obj));
+                var inputElement = $(obj);
+                $(obj).show().css({"background":"red"});
+                errors.push('El campo ' + $(obj).attr('name') + ' es obligatorio');
+                $(obj).css({ 'background': '#EC7063', 'border': '1px solid #EAEDED', 'color': "black" }).addClass("placeholdercolor");
+                $(obj).attr('placeholder', 'Este campo es obligatorio');                //
+                if ($(this).hasClass("selectpicker")) {
+                    $(this).selectpicker("setStyle", "btn-danger")
+                        .selectpicker();
                 }
             } else if ($(this).is("input, select, textarea") && !$(this).is("div") && $(this).val() != '') {
-                $(this).css({ 'background': '#fff', 'border': '1px solid #EAEDED' }).removeClass("placeholdercolor");
+                $(this).css({ 'background': '#fff', 'border': '1px solid #EAEDED' })
+                .removeClass("placeholdercolor");
                 if ($(this).hasClass("selectpicker")) {
-                 $(this).selectpicker('refresh');
+                    $(this).selectpicker('refresh');
                 }
             }
         }
-
+          
     });
     errors = [... new Set(errors)];
     return errors
 }
 
-function validateTypeDoc(form) {    
+function validateTypeDoc(form) {
     var form = $(form.target)[0].form;
     var form = $(form).attr("id");
     if ($("#" + form + " select[name='tipodoc_id']").val() == '') {
@@ -301,197 +303,197 @@ async function index_page(route, request) {
     window.history.pushState(null, "", page);
     return topics;
 }
-function calcularProximosDiasHabiles(fechaActual,n) {
+function calcularProximosDiasHabiles(fechaActual, n) {
     var fechaActual = moment(fechaActual); // Fecha actual  
     var proximosDiasHabiles = [];
     while (proximosDiasHabiles.length < n) {
-      fechaActual.add(1, 'days'); // Agregar un día a la fecha actual
-      if (esDiaHabil(fechaActual)) {
-        proximosDiasHabiles.push(fechaActual.format('YYYY-MM-DD'));
-      }
-    }  
+        fechaActual.add(1, 'days'); // Agregar un día a la fecha actual
+        if (esDiaHabil(fechaActual)) {
+            proximosDiasHabiles.push(fechaActual.format('YYYY-MM-DD'));
+        }
+    }
     return proximosDiasHabiles;
-  }
-  function esDiaHabil(fecha) {
+}
+function esDiaHabil(fecha) {
     // Verificar si es fin de semana (sábado o domingo)
     if (fecha.day() === 0 || fecha.day() === 6) {
-      return false;
-    }  
+        return false;
+    }
     // Verificar si es un feriado o día no laborable específico de Colombia
     // Aquí deberías agregar la lógica para verificar los días no laborables
     // Puedes tener una lista de feriados y días festivos en un array o cualquier otra estructura de datos.
     var feriados = getFestivos();
     var valid = true;
-     feriados.filter(function (feriado) {
+    feriados.filter(function (feriado) {
         //console.log(moment(feriado.date).format('YYYY-MM-DD 00:00:00'));
-            if (moment(feriado.date).format('YYYY-MM-DD 00:00:00') == fecha.format("YYYY-MM-DD 00:00:00")) {
-               valid = false;
-            }     
-      });
-      return valid;
-   
-  }
+        if (moment(feriado.date).format('YYYY-MM-DD 00:00:00') == fecha.format("YYYY-MM-DD 00:00:00")) {
+            valid = false;
+        }
+    });
+    return valid;
+
+}
 function getFestivos() {
     return [
         {
-        "date": "2023-01-01 00:00:00",
-        "start": "2023-01-01T05:00:00.000Z",
-        "end": "2023-01-02T05:00:00.000Z",
-        "name": "Año Nuevo",
-        "type": "public",
-        "rule": "01-01"
+            "date": "2023-01-01 00:00:00",
+            "start": "2023-01-01T05:00:00.000Z",
+            "end": "2023-01-02T05:00:00.000Z",
+            "name": "Año Nuevo",
+            "type": "public",
+            "rule": "01-01"
         },
         {
-        "date": "2023-01-09 00:00:00",
-        "start": "2023-01-09T05:00:00.000Z",
-        "end": "2023-01-10T05:00:00.000Z",
-        "name": "Día de los Reyes Magos",
-        "type": "public",
-        "rule": "monday after 01-06"
+            "date": "2023-01-09 00:00:00",
+            "start": "2023-01-09T05:00:00.000Z",
+            "end": "2023-01-10T05:00:00.000Z",
+            "name": "Día de los Reyes Magos",
+            "type": "public",
+            "rule": "monday after 01-06"
         },
         {
-        "date": "2023-03-20 00:00:00",
-        "start": "2023-03-20T05:00:00.000Z",
-        "end": "2023-03-21T05:00:00.000Z",
-        "name": "San José",
-        "type": "public",
-        "rule": "monday after 03-19"
+            "date": "2023-03-20 00:00:00",
+            "start": "2023-03-20T05:00:00.000Z",
+            "end": "2023-03-21T05:00:00.000Z",
+            "name": "San José",
+            "type": "public",
+            "rule": "monday after 03-19"
         },
         {
-        "date": "2023-04-02 00:00:00",
-        "start": "2023-04-02T05:00:00.000Z",
-        "end": "2023-04-03T05:00:00.000Z",
-        "name": "Domingo de Ramos",
-        "type": "observance",
-        "rule": "easter -7"
+            "date": "2023-04-02 00:00:00",
+            "start": "2023-04-02T05:00:00.000Z",
+            "end": "2023-04-03T05:00:00.000Z",
+            "name": "Domingo de Ramos",
+            "type": "observance",
+            "rule": "easter -7"
         },
         {
-        "date": "2023-04-06 00:00:00",
-        "start": "2023-04-06T05:00:00.000Z",
-        "end": "2023-04-07T05:00:00.000Z",
-        "name": "Jueves Santo",
-        "type": "public",
-        "rule": "easter -3"
+            "date": "2023-04-06 00:00:00",
+            "start": "2023-04-06T05:00:00.000Z",
+            "end": "2023-04-07T05:00:00.000Z",
+            "name": "Jueves Santo",
+            "type": "public",
+            "rule": "easter -3"
         },
         {
-        "date": "2023-04-07 00:00:00",
-        "start": "2023-04-07T05:00:00.000Z",
-        "end": "2023-04-08T05:00:00.000Z",
-        "name": "Viernes Santo",
-        "type": "public",
-        "rule": "easter -2"
+            "date": "2023-04-07 00:00:00",
+            "start": "2023-04-07T05:00:00.000Z",
+            "end": "2023-04-08T05:00:00.000Z",
+            "name": "Viernes Santo",
+            "type": "public",
+            "rule": "easter -2"
         },
         {
-        "date": "2023-04-09 00:00:00",
-        "start": "2023-04-09T05:00:00.000Z",
-        "end": "2023-04-10T05:00:00.000Z",
-        "name": "Pascua",
-        "type": "public",
-        "rule": "easter"
+            "date": "2023-04-09 00:00:00",
+            "start": "2023-04-09T05:00:00.000Z",
+            "end": "2023-04-10T05:00:00.000Z",
+            "name": "Pascua",
+            "type": "public",
+            "rule": "easter"
         },
         {
-        "date": "2023-05-01 00:00:00",
-        "start": "2023-05-01T05:00:00.000Z",
-        "end": "2023-05-02T05:00:00.000Z",
-        "name": "Día del trabajador",
-        "type": "public",
-        "rule": "05-01"
+            "date": "2023-05-01 00:00:00",
+            "start": "2023-05-01T05:00:00.000Z",
+            "end": "2023-05-02T05:00:00.000Z",
+            "name": "Día del trabajador",
+            "type": "public",
+            "rule": "05-01"
         },
         {
-        "date": "2023-05-22 00:00:00",
-        "start": "2023-05-22T05:00:00.000Z",
-        "end": "2023-05-23T05:00:00.000Z",
-        "name": "La Asunción",
-        "type": "public",
-        "rule": "easter 43"
+            "date": "2023-05-22 00:00:00",
+            "start": "2023-05-22T05:00:00.000Z",
+            "end": "2023-05-23T05:00:00.000Z",
+            "name": "La Asunción",
+            "type": "public",
+            "rule": "easter 43"
         },
         {
-        "date": "2023-06-12 00:00:00",
-        "start": "2023-06-12T05:00:00.000Z",
-        "end": "2023-06-13T05:00:00.000Z",
-        "name": "Corpus Christi",
-        "type": "public",
-        "rule": "easter 64"
+            "date": "2023-06-12 00:00:00",
+            "start": "2023-06-12T05:00:00.000Z",
+            "end": "2023-06-13T05:00:00.000Z",
+            "name": "Corpus Christi",
+            "type": "public",
+            "rule": "easter 64"
         },
         {
-        "date": "2023-06-19 00:00:00",
-        "start": "2023-06-19T05:00:00.000Z",
-        "end": "2023-06-20T05:00:00.000Z",
-        "name": "Sagrado Corazón de Jesús",
-        "type": "public",
-        "rule": "easter 71"
+            "date": "2023-06-19 00:00:00",
+            "start": "2023-06-19T05:00:00.000Z",
+            "end": "2023-06-20T05:00:00.000Z",
+            "name": "Sagrado Corazón de Jesús",
+            "type": "public",
+            "rule": "easter 71"
         },
         {
-        "date": "2023-07-03 00:00:00",
-        "start": "2023-07-03T05:00:00.000Z",
-        "end": "2023-07-04T05:00:00.000Z",
-        "name": "San Pedro y San Pablo",
-        "type": "public",
-        "rule": "monday after 06-29"
+            "date": "2023-07-03 00:00:00",
+            "start": "2023-07-03T05:00:00.000Z",
+            "end": "2023-07-04T05:00:00.000Z",
+            "name": "San Pedro y San Pablo",
+            "type": "public",
+            "rule": "monday after 06-29"
         },
         {
-        "date": "2023-07-20 00:00:00",
-        "start": "2023-07-20T05:00:00.000Z",
-        "end": "2023-07-21T05:00:00.000Z",
-        "name": "Día de la Independencia",
-        "type": "public",
-        "rule": "07-20"
+            "date": "2023-07-20 00:00:00",
+            "start": "2023-07-20T05:00:00.000Z",
+            "end": "2023-07-21T05:00:00.000Z",
+            "name": "Día de la Independencia",
+            "type": "public",
+            "rule": "07-20"
         },
         {
-        "date": "2023-08-07 00:00:00",
-        "start": "2023-08-07T05:00:00.000Z",
-        "end": "2023-08-08T05:00:00.000Z",
-        "name": "Batalla de Boyacá",
-        "type": "public",
-        "rule": "08-07"
+            "date": "2023-08-07 00:00:00",
+            "start": "2023-08-07T05:00:00.000Z",
+            "end": "2023-08-08T05:00:00.000Z",
+            "name": "Batalla de Boyacá",
+            "type": "public",
+            "rule": "08-07"
         },
         {
-        "date": "2023-08-21 00:00:00",
-        "start": "2023-08-21T05:00:00.000Z",
-        "end": "2023-08-22T05:00:00.000Z",
-        "name": "Asunción",
-        "type": "public",
-        "rule": "monday after 08-15"
+            "date": "2023-08-21 00:00:00",
+            "start": "2023-08-21T05:00:00.000Z",
+            "end": "2023-08-22T05:00:00.000Z",
+            "name": "Asunción",
+            "type": "public",
+            "rule": "monday after 08-15"
         },
         {
-        "date": "2023-10-16 00:00:00",
-        "start": "2023-10-16T05:00:00.000Z",
-        "end": "2023-10-17T05:00:00.000Z",
-        "name": "Día de la Raza",
-        "type": "public",
-        "rule": "monday after 10-12"
+            "date": "2023-10-16 00:00:00",
+            "start": "2023-10-16T05:00:00.000Z",
+            "end": "2023-10-17T05:00:00.000Z",
+            "name": "Día de la Raza",
+            "type": "public",
+            "rule": "monday after 10-12"
         },
         {
-        "date": "2023-11-06 00:00:00",
-        "start": "2023-11-06T05:00:00.000Z",
-        "end": "2023-11-07T05:00:00.000Z",
-        "name": "Todos los Santos",
-        "type": "public",
-        "rule": "1st monday in November"
+            "date": "2023-11-06 00:00:00",
+            "start": "2023-11-06T05:00:00.000Z",
+            "end": "2023-11-07T05:00:00.000Z",
+            "name": "Todos los Santos",
+            "type": "public",
+            "rule": "1st monday in November"
         },
         {
-        "date": "2023-11-13 00:00:00",
-        "start": "2023-11-13T05:00:00.000Z",
-        "end": "2023-11-14T05:00:00.000Z",
-        "name": "Independencia de Cartagena",
-        "type": "public",
-        "rule": "monday after 11-11"
+            "date": "2023-11-13 00:00:00",
+            "start": "2023-11-13T05:00:00.000Z",
+            "end": "2023-11-14T05:00:00.000Z",
+            "name": "Independencia de Cartagena",
+            "type": "public",
+            "rule": "monday after 11-11"
         },
         {
-        "date": "2023-12-08 00:00:00",
-        "start": "2023-12-08T05:00:00.000Z",
-        "end": "2023-12-09T05:00:00.000Z",
-        "name": "La inmaculada concepción",
-        "type": "public",
-        "rule": "12-08"
+            "date": "2023-12-08 00:00:00",
+            "start": "2023-12-08T05:00:00.000Z",
+            "end": "2023-12-09T05:00:00.000Z",
+            "name": "La inmaculada concepción",
+            "type": "public",
+            "rule": "12-08"
         },
         {
-        "date": "2023-12-25 00:00:00",
-        "start": "2023-12-25T05:00:00.000Z",
-        "end": "2023-12-26T05:00:00.000Z",
-        "name": "Navidad",
-        "type": "public",
-        "rule": "12-25"
+            "date": "2023-12-25 00:00:00",
+            "start": "2023-12-25T05:00:00.000Z",
+            "end": "2023-12-26T05:00:00.000Z",
+            "name": "Navidad",
+            "type": "public",
+            "rule": "12-25"
         }
-        ]
+    ]
 }

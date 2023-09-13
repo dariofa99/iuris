@@ -10,8 +10,7 @@
       <i> <small> Últ. Act 05 de sep. 2023 <br>
         Si presentas algún problema comunícate al 3106038006  
       </small></i>
-    </h4>`
-    
+    </h4>`    
     message += '</div';
       $("#modal-show-alerts-content").html(message);
       $("#mymodalShowAlerts").modal("show")

@@ -137,7 +137,7 @@ function editRolEstudentAudiencia(idnumber) {
     $( "#label_rol_est"+idnumber).hide();
     $( "#select_rol_est"+idnumber).show();
 
-}
+} 
 
 
 
