@@ -92,6 +92,8 @@ Route::post('/citaciones/search/forday', 'CitacionEstudiantesController@searchCi
 
 
 Route::resource('notifications', 'NotificationsController');
+Route::get('/admin/users/view/notifications','NotificationsController@index');
+
 Route::get('dashboard/search', 'HomeController@search');
 
 Route::resource('users', 'MyusersController');
@@ -568,35 +570,35 @@ Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
  
-  $user = User::where('idnumber',3030)->first();
+ /*  $user = User::where('idnumber',3030)->first();
   $request = ['cursando_id' => 115];
-  $user->asignarTurno($request);
+  $user->asignarTurno($request); */
 
 
-  dd($user);
+  //dd($user);
 
   $estu = DB::select("SELECT est.id, est.idnumber, concat(est.name,' ',est.lastname) as name,
    roles.name as role FROM `users` as est JOIN role_user on role_user.user_id = est.id 
-   join roles on roles.id = role_user.role_id WHERE (roles.id = 6 or roles.id = 8)
-   and est.id > 18649
-   order by est.id asc limit 34");
-
+   join roles on roles.id = role_user.role_id WHERE (roles.id = 6)
+   and est.id > 448
+   order by est.id asc limit 30");
+ // dd($estu);
 //
 
 foreach ($estu as $key => $est) {
   $user = User::with('curso')->where('idnumber',$est->idnumber)->first();
-  $tr = 116;//strval(rand(114, 117));
+  $tr = 117;//strval(rand(114, 117));
   $request = ['cursando_id' => $tr];
   $user->asignarTurno($request);
   $user->cursando_id = $tr;
  $user->save();
 }
- 
+dd($estu);
   //$user->asignarTurno($request);
   $user->cursando_id = 114;
   //$user->save();
-  $h1 = strval(rand(114, 117));
-  dd($h1);
+//  $h1 = strval(rand(114, 117));
+ 
 /*   $dateString = date('Y-m-d');
   $date = DateTime::createFromFormat('Y-m-d', $dateString);
 

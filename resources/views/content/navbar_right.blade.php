@@ -38,7 +38,9 @@
         <a class="nav-link btn_unread_notifications" id="btn_unread_notifications" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
           <span class="badge badge-warning navbar-badge" id="bgnumnotifications">
-            {{count(auth()->user()->unreadNotifications )}}
+            {{count(auth()->user()->unreadNotifications()
+          ->whereDate('created_at','>=','2023-09-14 21:00:00')
+          ->get() )}}
           </span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -46,8 +48,10 @@
            Notificaciones</span>
 
             <div class="notification_content">
-             {{--  @foreach(auth()->user()->notifications()->limit(7)->get() as $key => $notification)
-         
+          @foreach(auth()->user()->notifications()
+          ->whereDate('created_at','>=','2023-09-14 21:00:00')
+          ->limit(7)->get() as $key => $notification)
+       {{--   {{dd(auth()->user()->notifications()->limit(7)->get()[0]['data'])}} --}}
               <div class="dropdown-divider"></div>
 
               <a class="{{$notification->read_at != null ? 'btn_read_noti':'btn_not_not'}} "  @if(isset($notification->data['url']) and $notification->data['url'] and $notification->data['url']!='undefined') href="{{$notification->data['url']}}"  @endif class="dropdown-item">
@@ -62,7 +66,7 @@
               </a> 
          
              
-              @endforeach --}}
+              @endforeach 
             </div>
 
        

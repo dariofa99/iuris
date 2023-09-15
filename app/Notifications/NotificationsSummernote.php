@@ -66,9 +66,17 @@ class NotificationsSummernote extends Notification
     public function toDatabase($notifiable)
     {       
         return [
-           'type_notification'=>'summernote_notification',
+       /*     'type_notification'=>'summernote_notification',
            'link_to'=>'/conciliaciones/'.$this->conciliacion->id.'/edit',
-           'mensaje'=>$this->asunto
+           'mensaje'=>$this->asunto */
+
+                   
+           'type_notification'=>'summernote_notification',          
+           'message'=>$this->asunto,
+           'url'=>'/conciliaciones/'.$this->conciliacion->id.'/edit',
+           'created_at'=>date("Y-m-d H:i:s"),
+           'icon'=>'fas fa-user'
+
         ];
     }
 }

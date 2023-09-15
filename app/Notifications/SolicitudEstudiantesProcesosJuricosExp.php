@@ -65,9 +65,16 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
     public function toDatabase($notifiable)
     {      
         return [
-           'type_notification'=>'Solicitud de proceso jurídico',
+        /*    'type_notification'=>'Solicitud de proceso jurídico',
            'link_to'=>'/expedientes/'.$this->expediente->id.'/edit',
-           'mensaje'=>"Solicitud de proceso jurídico"
+           'mensaje'=>"Solicitud de proceso jurídico" */
+
+           'type_notification'=>'Solicitud de proceso jurídico',          
+           'message'=>"Solicitud de proceso jurídico",
+           'url'=>'/expedientes/'.$this->expediente->id.'/edit',
+           'created_at'=>date("Y-m-d H:i:s"),
+           'icon'=>'fas fa-user'
+
         ];
     }
 }

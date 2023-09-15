@@ -819,3 +819,54 @@ body{
 	margin-top: 3px !important;
   }
   
+  .notification_content{
+	overflow: auto;
+	height: 400px;
+	border: 1px solid rgb(245, 245, 245);
+  }
+  .content_not_message {
+	overflow: hidden;
+   
+	
+	width: 100%;
+  }
+  .itemnot{
+	 -ms-word-break: break-all; word-break: break-all; /* Non standard for webkit */ word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; hyphens: auto; }
+  .btn_not{
+	border: 1px solid rgb(206, 206, 240);
+	background-color: rgb(206, 206, 240);
+	display: block;
+	min-height: 50px;
+  }
+  .btn_not_not{
+	border: 1px solid #275d2c;
+	background-color: #275d2c;
+	display: block;
+	min-height: 50px;
+	margin: 2px;
+	border-radius: 3px;
+	padding: 4px;
+	color: #EAEDED;
+  }
+  
+  .btn_read_noti{
+	border: 1px solid #F7F6F8;
+	background-color: #F7F6F8;
+	display: block;
+	min-height: 50px;
+	margin: 2px;
+	border-radius: 3px;
+	padding: 4px;
+	color: #EAEDED;
+  }
+  .btn_read_noti  hr,.btn_not_not hr{
+   padding: 0px;
+   margin: 0px;
+  }
+  .btn_not_not .itemnot{
+	color: #c4c1c1 !important;
+  }
+  
+  .btn_read_noti .itemnot{
+	color: #000000 !important;
+  }

@@ -4,13 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
-
-
-use Session;
-use Redirect;
-
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Turno;
@@ -18,9 +11,8 @@ use App\turnos_docentes;
 use App\AsistenciaDocentes;
 use App\Services\UsersService;
 use App\User;
-use DB;
-
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HorarioController extends Controller
 {
@@ -60,7 +52,7 @@ class HorarioController extends Controller
     ,'role_user.role_id', 'roles.display_name')->groupBy('users.idnumber')->orderBy('users.created_at', 'desc')->get();
   */
     $docentes = $this->usersService->getUsersByRoleName('docente');
-   // dd($docentes);
+    // dd($docentes);
     $periodo = DB::table('periodo')
       ->join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
       ->where('sp.sede_id', session('sede')->id_sede)
@@ -463,7 +455,7 @@ class HorarioController extends Controller
               $idregisdoc = $turnos_doc[$value]->id;
               $backgroundColor = "#f3f2ff";
             }
-            if ((\Auth::user()->hasRole('diradmin') || \Auth::user()->hasRole('dirgral') || \Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
+            if ((Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('dirgral') || Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
               $events = $events . "
           {
           title          : '" . $turnos_doc[$value]->nombre_completo . "',
@@ -505,7 +497,7 @@ class HorarioController extends Controller
               $idregisdoc = $turnos_doc[$value]->id;
               $backgroundColor = "#f3f2ff";
             }
-            if ((\Auth::user()->hasRole('diradmin') || \Auth::user()->hasRole('dirgral') || \Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
+            if ((Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('dirgral') || Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
               $events = $events . "
           {
           title          : '" . $turnos_doc[$value]->nombre_completo . "',
@@ -547,7 +539,7 @@ class HorarioController extends Controller
               $idregisdoc = $turnos_doc[$value]->id;
               $backgroundColor = "#f3f2ff";
             }
-            if ((\Auth::user()->hasRole('diradmin') || \Auth::user()->hasRole('dirgral') || \Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
+            if ((Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('dirgral') || Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
               $events = $events . "
           {
           title          : '" . $turnos_doc[$value]->nombre_completo . "',
@@ -589,7 +581,7 @@ class HorarioController extends Controller
               $idregisdoc = $turnos_doc[$value]->id;
               $backgroundColor = "#f3f2ff";
             }
-            if ((\Auth::user()->hasRole('diradmin') || \Auth::user()->hasRole('dirgral') || \Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
+            if ((Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('dirgral') || Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
               $events = $events . "
           {
           title          : '" . $turnos_doc[$value]->nombre_completo . "',
@@ -631,7 +623,7 @@ class HorarioController extends Controller
               $idregisdoc = $turnos_doc[$value]->id;
               $backgroundColor = "#f3f2ff";
             }
-            if ((\Auth::user()->hasRole('diradmin') || \Auth::user()->hasRole('dirgral') || \Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
+            if ((Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('dirgral') || Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
               $events = $events . "
           {
           title          : '" . $turnos_doc[$value]->nombre_completo . "',
@@ -699,8 +691,8 @@ class HorarioController extends Controller
                   'astid_lugar' => $idlugar,
                   'astfecha' => $request->fechaestasis,
                   'astid_tip_asist' => $idasisest,
-                  'astusercreated' => \Auth::user()->idnumber,
-                  'astuserupdated' => \Auth::user()->idnumber,
+                  'astusercreated' => Auth::user()->idnumber,
+                  'astuserupdated' => Auth::user()->idnumber,
                 ];
                 if ($id == 'undefined' || $id == null) {
                   $asistencia = DB::table('asistencia')
@@ -719,7 +711,7 @@ class HorarioController extends Controller
         }
       }
     }
-    return response()->json(['guardado'=>true]);
+    return response()->json(['guardado' => true]);
     return redirect('horarios/');
     //return response()->json($request->all());
   }
@@ -770,12 +762,12 @@ class HorarioController extends Controller
   }
   public function consultach($color, $horario, $fecha)
   {
-    $fecha = Carbon::parse($fecha)->format('Y-m-d H:i:s');
+    $fechaF = Carbon::parse($fecha)->format('Y-m-d H:i:s');
     $asistencia = DB::table('asistencia')
       ->join('users',  'users.idnumber', '=', 'asistencia.astid_estudent')
       ->join('referencias_tablas as ref', 'ref.id', '=', 'users.cursando_id')
       ->select('ref.ref_nombre', 'asistencia.id as id', 'users.name', 'users.lastname', 'users.cursando_id', 'users.idnumber', 'asistencia.astid_tip_asist', 'asistencia.astid_lugar', 'astdescrip_asist')
-      ->where('asistencia.astfecha', '=', $fecha)
+      ->where('asistencia.astfecha', '=', $fechaF)
       //->orderBy('users.cursando_id', 'asc')
       ->get();
     if (count($asistencia) > 0) {
@@ -783,16 +775,56 @@ class HorarioController extends Controller
     } else {
       if ($color != "" & $horario != "") {
         if ($horario == "110" || $horario == "111") {
-          $curso1 = "115";
+          $horarioFijo = 118;
         } elseif ($horario == "112" || $horario == "113") {
-          $curso1 = "114";
+          $horarioFijo = 119;
         }
-        if ($horario == "110" || $horario == "111") {
+      /*   if ($horario == "110" || $horario == "111") {
           $curso2 = "117";
         } elseif ($horario == "112" || $horario == "113") {
           $curso2 = "116";
-        }
-        $turnos = DB::table('turnos')
+        } */
+        $fechaDia = Carbon::parse($fecha)->format('l');
+        $diasSemana = [
+          "Monday"=>144,
+          "Tuesday"=>145,
+          "Wednesday"=>146,
+          "Thursday"=>147,
+          "Friday"=>148
+        ];
+        $trnid_dia = $diasSemana[$fechaDia]; 
+          $turnos = DB::table('turnos')
+          ->join('users',  'users.idnumber', '=', 'turnos.trnid_estudent')
+          ->join('referencias_tablas as ref', 'ref.id', '=', 'users.cursando_id')
+          ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
+          ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
+          ->select('ref.ref_nombre', 'users.name', 'users.lastname', 'users.cursando_id', 'users.idnumber')
+          ->where(function ($queryor) use ($color, $horario, $horarioFijo) {
+            $queryor->where('turnos.trnid_color', '=', $color)
+              ->where(function($q) use ($horario, $horarioFijo){
+                $q->orWhere( 'turnos.trnid_horario', '=', $horario)
+                ->orWhere( 'turnos.trnid_horario', '=', $horarioFijo)
+                ->orWhere( 'turnos.trnid_horario', '=', $horarioFijo);
+              });                    
+          })
+          ->orWhere(function ($queryor) use ($horario, $trnid_dia, $horarioFijo) {
+            $queryor->where( 'turnos.trnid_dia', '=', $trnid_dia)
+                ->where(function($q)use ($horario, $horarioFijo) {
+                  $q->orWhere('turnos.trnid_horario', '=', $horario)
+                  ->orWhere('turnos.trnid_horario', '=', $horarioFijo)
+                  ;
+                });                   
+            })
+          ->where('sedes.id_sede', session('sede')->id_sede)
+          ->orderBy('users.cursando_id', 'asc')
+          ->orderBy('users.idnumber', 'asc')
+          ->get();
+          return response()->json(
+
+            $turnos->toArray()
+  
+          );
+       /*    $turnos = DB::table('turnos')
           ->join('users',  'users.idnumber', '=', 'turnos.trnid_estudent')
           ->join('referencias_tablas as ref', 'ref.id', '=', 'users.cursando_id')
           ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
@@ -807,10 +839,14 @@ class HorarioController extends Controller
             $queryor->where('turnos.trnid_color', '=', $color)
               ->where('users.cursando_id', '=', $curso2);
           })
+          ->orwhere(function ($queryor) use ($trnid_dia,$horarioFijo) {
+            $queryor->where('turnos.trnid_dia', '=', $trnid_dia)
+            ->where('turnos.trnid_horario', '=', $horarioFijo);
+          })
           ->where('sedes.id_sede', session('sede')->id_sede)
           ->orderBy('users.cursando_id', 'asc')
           ->orderBy('users.idnumber', 'asc')
-          ->get();
+          ->get(); */
         //dd($turnos);
         return response()->json(
 

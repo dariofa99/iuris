@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use App\Mail\UserNotification as Mailable;
 use App\User;
+
 class UserNotification extends Notification
 {
     use Queueable;
@@ -20,7 +21,7 @@ class UserNotification extends Notification
      */
     public function __construct(User $notifify)
     {
-        $this->notifify = $notifify;        
+        $this->notifify = $notifify;
     }
 
     /**
@@ -42,11 +43,10 @@ class UserNotification extends Notification
      */
     public function toMail($notifiable)
     {
-      
-        return (new Mailable($notifiable))
-        ->subject('Notificación')
-        ->to($notifiable->email);
 
+        return (new Mailable($notifiable))
+            ->subject('Notificación')
+            ->to($notifiable->email);
     }
 
     /**
@@ -57,14 +57,13 @@ class UserNotification extends Notification
      */
     public function toDatabase($notifiable)
     {
-    
+
         return [
-           'type_notification'=>$this->notifify->notification,
-           'link_to'=>$this->notifify->link_to,
-           'mensaje'=>$this->notifify->mensaje
+            'type_notification' => $this->notifify->notification,
+            'message' => $this->notifify->mensaje,
+            'url' => $this->notifify->link_to,
+            'created_at' => date("Y-m-d H:i:s"),
+            'icon' => 'fas fa-user'
         ];
     }
-   
-
-    
 }

@@ -65,9 +65,17 @@ class SolicitudEstudiantesConciliacion extends Notification
     public function toDatabase($notifiable)
     {      
         return [
-           'type_notification'=>'Solicitud de conciliación',
+        /*    'type_notification'=>'Solicitud de conciliación',
            'link_to'=>'/conciliaciones/'.$this->conciliacion->id.'/edit',
-           'mensaje'=>auth()->user()->name.' '.auth()->user()->lastname
+           'mensaje'=>auth()->user()->name.' '.auth()->user()->lastname */
+
+           
+           'type_notification'=>'Solicitud de conciliación',          
+           'message'=>auth()->user()->name.' '.auth()->user()->lastname,
+           'url'=>'/conciliaciones/'.$this->conciliacion->id.'/edit',
+           'created_at'=>date("Y-m-d H:i:s"),
+           'icon'=>'fas fa-user'
+
         ];
     }
 }

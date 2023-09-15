@@ -11,11 +11,26 @@ class NotificationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // 
+        $notifications = $this->notifications($request);
+        if ($request->ajax()) {
+         $view = view('content.notifications.partials.ajax.index',compact('notifications'))->render();
+         return response()->json(['view'=>$view,'request'=>$request->all()]);
+        }
+    
+         return view('content.notifications.index',compact('notifications'));
+ 
     }
 
+    
+    private function notifications(Request $request)
+    {
+        return  auth()->user()->notifications()
+        ->whereDate('created_at','>=','2023-09-14 21:00:00')
+        ->limit($request->has('limit') ? $request->limit : 10)->get();
+       // return view('content.notifications.index');
+    }
     /**
      * Show the form for creating a new resource.
      *

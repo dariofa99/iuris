@@ -60,9 +60,13 @@ class CitacionEstudiantes extends Notification
     {
       
         return [
-           'type_notification'=>'Citación',
-           'link_to'=>'/expedientes/'.$notifiable->expid.'/edit',
-           'mensaje'=>'Citación de '.$notifiable->docente_fullname.' Exp: '.$notifiable->expid
+                       'type_notification'=>'Citación',          
+           'message'=>'Citación de '.$notifiable->docente_fullname.' Exp: '.$notifiable->expid,
+           'url'=>'/expedientes/'.$notifiable->expid.'/edit',
+           'created_at'=>date("Y-m-d H:i:s"),
+           'icon'=>'fas fa-user'
+
+
         ];
     }
 }

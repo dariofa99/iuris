@@ -612,7 +612,6 @@ $(document).ready(function () {
 
     $("#myModal_exp_user_edit").on("click", '#btnActualizarUserForEstudiante', async function (e) {
         var errors = validateForm("myFormUserEditForExpediente");
-        console.log(errors)
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserEditForExpediente");
             var data = userService.getAditionalDataByForm('myFormUserEditForExpediente');

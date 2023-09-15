@@ -63,9 +63,17 @@ class SolicitudRadicarConciliacion extends Notification
     public function toDatabase($notifiable)
     {      
         return [
-           'type_notification'=>'Solicitud de radicado conciliación',
+          /*  'type_notification'=>'Solicitud de radicado conciliación',
            'link_to'=>'/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit',
-           'mensaje'=>auth()->user()->name.''.auth()->user()->lastname
+           'mensaje'=>auth()->user()->name.''.auth()->user()->lastname */
+
+           'type_notification'=>'Solicitud de radicado conciliación',          
+           'message'=>auth()->user()->name.''.auth()->user()->lastname,
+           'url'=>'/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit',
+           'created_at'=>date("Y-m-d H:i:s"),
+           'icon'=>'fas fa-user'
+
+
         ];
     }
 }

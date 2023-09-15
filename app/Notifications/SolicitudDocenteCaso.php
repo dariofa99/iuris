@@ -56,9 +56,17 @@ class SolicitudDocenteCaso extends Notification
     {
        // dd($notifiable);
        return [
-           'link_to'=>'/expedientes/'.$notifiable->expid.'/edit',
+     /*       'link_to'=>'/expedientes/'.$notifiable->expid.'/edit',
            'type_notification'=>'Solicitud de cambio',
-           'mensaje'=>'Se ha solicitado un cambio de expediente'
+           'mensaje'=>'Se ha solicitado un cambio de expediente' */
+
+           
+           'type_notification'=>'Solicitud de cambio',          
+           'message'=>"Se ha solicitado un cambio de expediente",
+           'url'=>'/expedientes/'.$notifiable->expid.'/edit',
+           'created_at'=>date("Y-m-d H:i:s"),
+           'icon'=>'fas fa-user'
+
         ];
     }
 }
