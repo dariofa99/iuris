@@ -43,7 +43,7 @@
           ->get() )}}
           </span>
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="min-width:320px !important">
           <span class="dropdown-item dropdown-header">
            Notificaciones</span>
 

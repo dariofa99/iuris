@@ -127,7 +127,7 @@
                     @include('myforms.components_exp.frm_oficina_virtual') 
                 </div> <!-- /.md12-->
             </div>
-        </div>
+        </div> 
 
         <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
             @include('myforms.components_exp.frm_datos_caso')

@@ -17,6 +17,7 @@ use App\Services\ExpedientesService;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class Expediente extends Model
 {
@@ -517,7 +518,7 @@ class Expediente extends Model
             }
         }
 
-        if ($acts->pendiente > 0) {
+        if ($acts->pendiente > 0) { 
             if (\Auth::user()->hasRole('estudiante')) {
                 $var = $acts->aprobado + $acts->pendiente;
 
@@ -604,6 +605,7 @@ class Expediente extends Model
 
     public function setNotActLimit($date = null)
     {
+       
         $fecha_limit = Carbon::now();
         $padresAct = DB::table('actuacions')
             ->join('revisiones_actuacion', 'actuacions.id', '=', 'revisiones_actuacion.parent_rev_actid')
@@ -614,6 +616,7 @@ class Expediente extends Model
 
         $hijos = [];
         $segmento = $this->getSegmentoActivo();
+       
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")
@@ -624,10 +627,11 @@ class Expediente extends Model
                     DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre,fecha_limit FROM actuacions, revisiones_actuacion
                 WHERE actuacions.id = revisiones_actuacion.rev_actid
                 AND parent_rev_actid = $actpa->id
-                AND actestado_id <> 136 AND actestado_id <> 138
+                AND actestado_id <> 136 AND actestado_id <> 138 and actestado_id <> 235
                 ORDER BY rev_actid DESC LIMIT 1"),
                 );
-                if ($hijosAct[0]->fecha_limit !== null) {
+              
+                if (count($hijosAct) > 0 and $hijosAct[0]->fecha_limit !== null) {
                     $percent = 100;
                     $date = Carbon::now()->format('Y-m-d');
                     $fecha_limit = Carbon::parse($hijosAct[0]->fecha_limit);
@@ -648,7 +652,7 @@ class Expediente extends Model
                         }
                     }
 
-
+                   
                     if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $fecha_limit < $date) {
                         $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
@@ -663,11 +667,12 @@ class Expediente extends Model
                             'tpntid' => 1,
                             'expidnumber' => $actuacion->actexpid,
                             'estidnumber' => $actuacion->actidnumberest,
-                            'docidnumber' => \Auth::user()->idnumber,
+                            'docidnumber' => Auth::user()->idnumber,
                             'tbl_org_id' => $actuacion->id,
                         ];
                         //
                         $actuacion->actestado_id = 139;
+                        $actuacion->actuserupdated = Auth::user()->idnumber;
                         $actuacion->save();
                         $actuacion->asignarNotas($data);
                     }
@@ -958,6 +963,13 @@ class Expediente extends Model
     {
         $act = $this->actuacion()
             ->where(['actusercreated' => $this->expidnumberest])
+            ->where(function($q){
+                $q->orwhere('actestado_id','=',101)
+                    ->orwhere('actestado_id','=',102)
+                    ->orwhere('actestado_id','=',138)
+                    ->orwhere('actestado_id','=',139)
+                    ->orwhere('actestado_id','=',104);
+            })
             ->orderBy('actuacions.actfecha', 'desc')->first();
         $color = 'green';
         $dias = 0;

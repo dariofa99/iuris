@@ -839,14 +839,14 @@ body{
 	min-height: 50px;
   }
   .btn_not_not{
-	border: 1px solid #275d2c;
-	background-color: #275d2c;
+	border: 1px solid #28a745;
+	background-color: #28a745;
 	display: block;
 	min-height: 50px;
 	margin: 2px;
 	border-radius: 3px;
 	padding: 4px;
-	color: #EAEDED;
+	color: #ffffff;
   }
   
   .btn_read_noti{
@@ -864,7 +864,7 @@ body{
    margin: 0px;
   }
   .btn_not_not .itemnot{
-	color: #c4c1c1 !important;
+	color: #ffffff !important;
   }
   
   .btn_read_noti .itemnot{

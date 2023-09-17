@@ -2358,8 +2358,10 @@ function llenarModalDetailsAct(res) {
         $("#actestado_det").prop('disabled', true).val(102);
     }
     $("#fecha_limit_d").val(res.fecha_limit);
-
-    $("#label_nombre_docente").text(res.docente_update.name + ' ' + res.docente_update.lastname);
+    var fecha = moment(res.updated_at);
+    var fechaFormateada = fecha.format('D [de] MMMM [de] YYYY');
+    var text = `<br><small>${res.docente_update.name} ${res.docente_update.lastname} - ${fechaFormateada}</small>`;
+    $("#label_nombre_docente").html(text);
     var rutadescarga = "/actpdfdownload/" + res.id + "/estudiante";
     if (res.actdocnompropio != '' && res.actdocruta != "" && res.actdocnompropio != null && res.actdocruta != null) {
         $("#lab-nombre-est").html('<a href="' + rutadescarga + '" target="_blank">' + res.actdocnompropio + '</a>');

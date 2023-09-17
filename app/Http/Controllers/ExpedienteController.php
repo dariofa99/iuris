@@ -628,7 +628,7 @@ class ExpedienteController extends Controller
     $url = '/expedientes/';
     $expediente = $this->expedienteService->findWithFilter([
       'expid' => $id
-    ]);
+    ]); 
     if (!$expediente) return view('errors.error', compact('url'));
     $estudiante = $expediente->estudiante;
     $asignacion = $expediente->asignaciones()->where('asigest_id', $expediente->expidnumberest)
@@ -672,7 +672,7 @@ class ExpedienteController extends Controller
     }
     //Agregue la funcion getusers Para poder usarla en el index
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
-
+    $expediente->setNotActLimit();
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));

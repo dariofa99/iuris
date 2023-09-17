@@ -72,7 +72,7 @@ Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirm
 
 
 ///rutas que requieren atenticación
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth','mantenimiento']], function() {
 //Nuevo usuarios
 Route::resource('usuarios', 'UsersController');
 Route::get("usuarios/buscar/persona","UsersController@findUserWithFilter");
