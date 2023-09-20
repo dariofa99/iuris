@@ -196,7 +196,7 @@
                         <label for="">Nota Ética</label><br>
                         <label id="lbl_not_etiac"></label>
                     </div>
-                    @if ($segmento and $segmento->act_fc)
+                    @if ($segmento)
                         <div class="col-md-3">
                             <input type="hidden" value="{{ $segmento->id }}" id="segmento_id" />
                             <a style="cursor:pointer" id="btn_cam_nt_act">Cambiar Notas</a>
@@ -218,7 +218,7 @@
 
                     <div class="col-md-12">
                         <label for="">Evaluado por: </label>
-                        <i id="lbldocevname"> xxxxx</i>
+                        <i id="lbldocevname">user</i>
                     </div>
 
                 </div>

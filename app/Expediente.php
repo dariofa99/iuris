@@ -973,7 +973,8 @@ class Expediente extends Model
             ->orderBy('actuacions.actfecha', 'desc')->first();
         $color = 'green';
         $dias = 0;
-        if ($act) {
+       
+        if ($act) {           
             $dias = $this->difDays($act->actfecha, date('Y-m-d'));
             $text =  "<b>Días transcurridos desde última actuación:</b>";
         } else {

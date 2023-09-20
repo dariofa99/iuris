@@ -1,14 +1,13 @@
  @foreach ($expediente->getActuaciones($only_estu) as $key => $actuacion)
      @php
          $haycorrecciones = false;
-         $actuacion->actestado_id != 102 ?: ($haycorrecciones = true);
+         ($actuacion->actestado_id == 102 || $actuacion->actestado_id == 140 ) ? $haycorrecciones = true : ($haycorrecciones = false);
          $hayactuaciones = false;
          $hayhijos = false;
          $ultima_id = '';
-         $vencido = false;
+         $vencido = false;         
          if (count($actuacion->getHijos($actuacion)) > 0) {
              $actFechaLim = $actuacion->fecha_limit;
-             // $haycorrecciones = false;
              foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
                  if ($hijo->actestado_id == '102') {
                      $haycorrecciones = true;
@@ -16,7 +15,10 @@
                      $actFechaLim = $hijo->fecha_limit;
                      $hayhijos = true;
                  }
-                 if ($hijo->actestado_id == '101' || $hijo->actestado_id == '104' || $hijo->actestado_id == '234' || $hijo->actestado_id == '139') {
+                 if ($hijo->actestado_id == '101' 
+                 || $hijo->actestado_id == '104' 
+                 || $hijo->actestado_id == '234' 
+                 || $hijo->actestado_id == '139') {
                      $haycorrecciones = false;
                      $hayactuaciones = true;
                      $hayhijos = true;
@@ -36,11 +38,12 @@
          </td>
          <td>
              <span class="badge badge-success" style="background-color: {{ $actuacion->estado->color }} !important">
-                 {{ $actuacion->estado->ref_nombre }}
+                 {{ $actuacion->estado->ref_nombre }} {{ $actuacion->estado->id }}
              </span>
 
          </td>
          <td>
+           
              @if ($actuacion->fecha_limit != '' and $hayhijos == false and $actuacion->estado->id != 139)
                  {{ getDiffDays(date('Y-m-d'), $actuacion->fecha_limit) }} Días
              @else
@@ -107,30 +110,34 @@
                          Editar Revisón
                      </button>
                  @endif
-
-                 @if (
-                     $actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
-                         $actuacion->actusercreated == currentUser()->idnumber || currentUser()->hasRole('amatai') and
-                         $hayactuaciones === false and
-                         $haycorrecciones === false)
+                 @if ($actuacion->actestado_id == 101 
+                 || $actuacion->actestado_id == 136 
+                 || $actuacion->actestado_id == 140
+                 and $actuacion->actusercreated == currentUser()->idnumber 
+                 || currentUser()->hasRole('amatai')
+                 and $hayactuaciones===false
+                 and ($haycorrecciones===true and $hayhijos===false))
                      <button data-modal="#myModal_act_edit" type='button' value="{{ $actuacion->id }}"
-                         class='btn btn-primary btn-sm buscar_actuacion btn-block'> Editar
+                         class='btn btn-primary btn-sm buscar_actuacion btn-block'>
+                        Editar
                      </button>
                  @endif
 
-                 @if (
-                     $actuacion->actestado_id == 102 || $actuacion->actestado_id == 140 and
-                         $haycorrecciones === true and
-                         $expediente->expidnumberest == currentUser()->idnumber || currentUser()->hasRole('amatai'))
+                 @if (($actuacion->actestado_id == 102 || $actuacion->actestado_id == 140)
+                  and $haycorrecciones === true 
+                  and ($expediente->expidnumberest == currentUser()->idnumber 
+                  || currentUser()->hasRole('amatai')))
                      <button data-modal="#myModal_act_add_revision" type='button' value="{{ $actuacion->id }}"
                          class='btn btn-warning btn-sm btn-block buscar_actuacion' data-titulo_modal='Nueva actuación'>
                          Ag. Corrección </button>
                  @endif
-                 @if (
-                     $actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
-                         $actuacion->actusercreated == currentUser()->idnumber || currentUser()->hasRole('amatai') and
-                         $hayactuaciones === false and
-                         $haycorrecciones === false)
+                 @if ($actuacion->actestado_id == 101 
+                 || $actuacion->actestado_id == 136 
+                 || $actuacion->actestado_id == 140
+                 and $actuacion->actusercreated == currentUser()->idnumber 
+                 || currentUser()->hasRole('amatai')
+                 and $hayactuaciones===false
+                 and ($haycorrecciones===true and $hayhijos===false))
                      <button type='button' value="{{ $actuacion->id }}"
                          class='btn btn-danger btn-block btn-sm delete_act'>
                          Eliminar

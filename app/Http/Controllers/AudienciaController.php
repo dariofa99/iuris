@@ -175,6 +175,14 @@ class AudienciaController extends Controller
         $rollist = DB::table('referencias_tablas')
         ->select('id','ref_nombre')
         ->where('categoria','type_user_conciliacion')
+        ->where(function ($query) {
+            $query->orWhere([
+                    'id' => 203,
+                ])
+                ->orWhere([
+                    'id' => 204,
+                ]);
+        })
         ->get();
 
         return compact('rollist');

@@ -1,7 +1,7 @@
-@if ((currentUser()->can('act_conciliacion') || currentUser()->can('ver_audiencia_conciliacion') ||
-(currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))))
-           
-           <input type="hidden" id="prdfecha_inicio" value="{{$periodo->prdfecha_inicio}}" >
+@if ((currentUser()->can('act_conciliacion') 
+|| currentUser()->can('ver_audiencia_conciliacion') 
+|| (currentUserInConciliacion($conciliacion->id,['conciliador','asistente']))))           
+<input type="hidden" id="prdfecha_inicio" value="{{$periodo->prdfecha_inicio}}" >
 <div class="row">
     <div class="col-md-3">
         <h4 class="box-title">
@@ -69,13 +69,11 @@
 </div>
 <hr> 
 @endif
-@if ((currentUser()->can('act_conciliacion') || 
-(currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and 
-($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
-             and $conciliacion->getUser(203)->pivot->estado_id == 229))))
+@if (currentUser()->can('asig_reparto'))
 
    @if($audiencia != '')        
  <div class="edit_audiencia" style="@if ($audiencia != '') display:block @endif" >
+    <h4>Reparto</h4>
    <hr>
     <div class="row"  style="height: 300px; overflow-x: auto;display:{{($audiencia != "")? 'block':'none'}}" id="list_turno_estudiantes_conciliacion">
          @include('myforms.conciliaciones.componentes.list_turno_estudiante') 

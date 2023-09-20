@@ -10008,7 +10008,7 @@ function get_notas(tbl_id, origen) {
         url: route,
         type: "GET",
         datatype: "json",
-        data: { origen: origen },
+        data: { origen: origen }, 
         cache: false,
         beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));

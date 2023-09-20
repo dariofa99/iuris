@@ -27,7 +27,7 @@ $(document).ready(function () {
                 $("#wait").hide();
                 Swal.fire({
                     title: 'El caso se ha creado con éxito!',
-                    type: 'success',
+                    icon: 'success',
                     text: "¿Qué desea hacer?",
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

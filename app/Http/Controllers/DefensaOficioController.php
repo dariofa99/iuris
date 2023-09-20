@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Expediente;
 use App\User;
 use App\AsignacionCaso;
+use App\Jobs\ProcessEmailSendNotificarDirector;
 use App\Notifications\UserNotification;
 use App\Services\AsignacionCasosService;
 use App\Services\ExpedientesService;
@@ -231,6 +232,16 @@ class DefensaOficioController extends Controller
     $user->link_to = '/defensas/oficio/' . $expediente->expid . '/edit';
     $user->mensaje = 'Se ha asignado una defensa de oficio. Número: ' . $expediente->expid;
     $user->notify(new UserNotification($user));
+    if($expediente->expramaderecho_id == 37
+    or $expediente->expramaderecho_id == 39
+    or $expediente->expramaderecho_id == 40
+    or $expediente->expramaderecho_id == 41 ){
+      $user_ = User::where("email","darioj99@gmail.com")->first();
+     // Notification::send($user_,new NotificarDirector($expediente));
+       ProcessEmailSendNotificarDirector::dispatch($expediente,$user_)
+      ->onConnection('database')->onQueue('emails');  
+         
+    }
     /* $notifications = view('layouts.notifications',compact('user'))->render();
         NewPush::channel('notifications_'.$request['expidnumberest']) 
         ->message(['render'=>$render,'notifications'=>$notifications])->publish();  */

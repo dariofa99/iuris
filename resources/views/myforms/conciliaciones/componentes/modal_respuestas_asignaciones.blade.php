@@ -1,4 +1,4 @@
-@component('components.modal_dynamic_cols')
+@component('components.b4.modal_large')
 	
 	@slot('trigger')
 		myModal_respuestas_asignaciones
@@ -8,9 +8,7 @@
     <label> Responder </label>
 	@endslot
 
-    @slot('cols')
-		col-md-8 col-md-offset-2
-	@endslot 
+
 	@slot('body')
 	<div class="row" id="content_respuesta" >
 		<div class="col-md-12">

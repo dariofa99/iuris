@@ -1651,7 +1651,8 @@ $(document).ready(function () {
     $("#myform_update_notas").on('submit', async function (e) {
         e.preventDefault();
         var errors = validateForm('myform_update_notas')
-        errors = validarNotas(errors, 'myform_update_notas');
+        errors = validarNotasUpdate(errors, 'myform_update_notas');
+
         if (errors.length <= 0) {
             var data = convertFormToJSON('myform_update_notas');
             $("#wait").show();
@@ -2126,7 +2127,116 @@ $(document).ready(function () {
         hideButtReasCaso();
     });
 
+    $("#btn_cam_nt_act").on("click", function () {
+        $("#myModal_act_details").modal("hide");
+        //$("#myModal_edit_notas").modal("show");
+        var actuacion_id = $("#actuacion_id").val();
+        get_notas(actuacion_id, 2);
+    });
+
 });//////////////////////////////////////////////
+function get_notas(tbl_id, origen) {
+    var route = "/notas/" + tbl_id + "/edit";
+    $.ajax({
+        url: route,
+        type: "GET",
+        datatype: "json",
+        data: { origen: origen },
+        cache: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));
+            $("#wait").css("display", "block");
+        },
+        success: function (res) {
+            // console.log(res);
+
+            $("#myform_update_notas #nota_conocimiento").val(
+                res.nota_conocimiento
+            );
+            $("#myform_update_notas #nota_conocimientoid").val(
+                res.nota_conocimientoid
+            );
+
+            $("#myform_update_notas #nota_etica").val(res.nota_etica);
+            $("#myform_update_notas #nota_eticaid").val(res.nota_eticaid);
+
+            $("#myform_update_notas #nota_aplicacion").val(res.nota_aplicacion);
+            $("#myform_update_notas #nota_aplicacionid").val(
+                res.nota_aplicacionid
+            );
+
+            $("#myform_update_notas #nota_concepto").val(res.nota_concepto);
+            $("#myform_update_notas #nota_conceptoid").val(res.nota_conceptoid);
+            $("#myform_update_notas #lbl_nota_gen_caso").text(res.nota_final);
+
+            //$("#myform_update_notas input[name='tbl_org_id']").val(res.nota_conceptoid);
+            $("#myform_update_notas #origen").val(origen);
+            $("#myform_update_notas #tbl_org_id").val(tbl_id);
+            $("#myform_update_notas #lbldocevname").text(res.docevname);
+
+            $("#myModal_edit_notas #btns_edit_notas").hide();
+            $("#wait").css("display", "none");
+            
+            if (res.encontrado) {
+                $("#myModal_edit_notas #lbl_periodo").text(res.periodo);
+                $("#myModal_edit_notas #lbl_segmento").text(res.segmento);
+                $("#myModal_edit_notas #lbl_tipo").text(res.tipo);
+                $("#myModal_edit_notas #tipo_nota_id").val(res.tipo_id);
+                var tipo = res.tipo_id == "1" ? "Parcial" : "Definitiva";
+                $("#btn_tipo_update").text("Cambiar notas a: " + tipo);
+                var tipo_id = res.tipo_id == "1" ? "2" : "1";
+
+                if (res.can_edit) {
+                    if (origen == 1 && $("#expestado_id").val() == "4") {
+                        $("#btn_tipo_update").attr("data-value", tipo_id);
+                        $("#btn_tipo_update").show();
+                        $("#btn_tipo_update").attr(
+                            "id",
+                            "btn_tipo_nota_update"
+                        );
+                    }
+
+                    $("#myModal_edit_notas #btns_edit_notas").show();
+                    $("#btn_cambiar").attr("id", "btn_cambiar_notas");
+                    $("#btn_delete").attr("id", "btn_delete_notas");
+                    $("#btn_update").attr("id", "btn_update_notas");
+                } else {
+                    $("#btn_cambiar_notas").attr("id", "btn_cambiar");
+                    $("#btn_delete_notas").attr("id", "btn_delete");
+                    $("#btn_update_notas").attr("id", "btn_update");
+                    //$("#btn_tipo_nota_update").attr('id', 'btn_update_tipo');
+                }
+                
+                $("#myModal_edit_notas").modal("show");
+            }
+
+            if (origen == 3) {
+                $("#myModal_edit_notas .fil_nt_co input[type='text']")
+                    .attr("type", "hidden")
+                    .prop("disabled", true);
+                $("#myModal_edit_notas .fil_nt_co").hide();
+                // hideElement('btn_delete_notas');
+            } else {
+                $("#myModal_edit_notas .fil_nt_co input[type='hidden']")
+                    .attr("type", "text")
+                    .prop("disabled", false);
+                $("#myModal_edit_notas .fil_nt_co").show();
+                showElement("btn_delete_notas");
+                //if(origen == 2)   hideElement('btn_delete_notas');
+            }
+            hideEditNotas();
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert(
+                "Hubo un error con el servidor ERROR: " + thrownError,
+                textStatus
+            );
+            $("#wait").css("display", "none");
+        },
+    });
+}
+
+
 function hideButtReasCaso() {
     hideElement("btnReasignar");
     hideElement("btnCancReasig");
@@ -2176,6 +2286,26 @@ function fillModalHistoryDataCase(response) {
         $("#mymodaljs").modal("show");
     }
 }
+function validarNotasUpdate(errors, form) {
+    var notaapl = $("#" + form + " input[id=nota_aplicacion]").val();
+    var notacon = $("#" + form + " input[id=nota_conocimiento]").val();
+    var notaet = $("#" + form + " input[id=nota_etica]").val();
+    if (notaapl > 5 || notacon > 5 || notaet > 5) {
+        toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors.push("1");
+    }
+    if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
+        toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors.push("1");
+    }
+    return errors;
+}
 function validarNotas(errors, form) {
     var notaapl = $("#" + form + " input[name=ntaaplicacion]").val();
     var notacon = $("#" + form + " input[name=ntaconocimiento]").val();
@@ -2187,7 +2317,6 @@ function validarNotas(errors, form) {
         });
         errors.push("1");
     }
-    console.log(notaet, form);
     if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
         toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
             positionClass: "toast-top-right",
@@ -2379,7 +2508,8 @@ function llenarModalDetailsAct(res) {
     }
 
     var segmento_id = $("#segmento_id").val();
-
+   hideElement('btn_cam_nt_act');
+   $("#cont_notas_ac").hide();
     if (res.notas_f.encontrado) {
         $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
         $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);

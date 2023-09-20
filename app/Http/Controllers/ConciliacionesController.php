@@ -191,7 +191,7 @@ class ConciliacionesController extends Controller
 
         $estudiantes = $this->getEstudiantes();
         $turnos = $this->turnosService->index($request);
-
+ 
         $numusers =  $conciliacion->usuarios->count();
         $audiencia = AudienciaConciliacion::where('id_conciliacion', $conciliacion->id)->first();
         $salaalterna = SalasAlternasConciliacion::where(['idnumber' => Auth::user()->idnumber, "id_conciliacion" => $conciliacion->id])->first();

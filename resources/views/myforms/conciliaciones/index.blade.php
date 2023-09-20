@@ -185,7 +185,9 @@
             {{$conciliacion->categoria->ref_nombre}}
         </td>
         <td>
-            <span style="background-color: {{$conciliacion->estado->color}}" class="badge">{{$conciliacion->estado->ref_nombre}}</span> 
+            <span style="color:#ffffff;background-color: {{$conciliacion->estado->color}}" class="badge">
+            {{$conciliacion->estado->ref_nombre}}
+            </span> 
         </td>
         
         <td>           

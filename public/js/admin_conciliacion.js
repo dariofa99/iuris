@@ -496,18 +496,20 @@ $(document).ready(function () {
 
   $("#table_list_estudiantes_aud").on("click", ".btn_asignar_estudiante_audiencia", async function (e) {
     var idnumber = $(this).attr("data-id");
+    var idrol = $(this).attr("data-rol");
     $("#wait").show();
     let response = await conciliacionService.getRolesEstudentAudiencia();
     var li = '<option value="">Seleccione...</option>';
     response.rollist.forEach(element => {
-      li += '<option value="' + element.id + '" ' + true + '>' + element.ref_nombre + '</option>'
+      var stateoption = "";
+      if (idrol == element.id) { stateoption = "selected" };
+      li += '<option ' + stateoption + '  value="' + element.id + '" ' + true + '>' + element.ref_nombre + '</option>';
     });
     $("#label_rol_est_conciliacion" + idnumber).hide();
     $("#btn_habilityEditRol_Est" + idnumber).hide();
     $("#select_rol_est_conciliacion" + idnumber).show();
     $("#btn_hide_edit_rol_conciliacion_est" + idnumber).show();
     $("#btn_UpdateRol_est" + idnumber).show();
-
     $("#select_rol_est_conciliacion" + idnumber).html(li);
     $("#wait").hide();
 
@@ -516,6 +518,40 @@ $(document).ready(function () {
          if (idrol == value.id) { stateoption = "selected" }
          $("#select_rol_est_conciliacion"+idnumber).append('<option value="' + value.id + '" '+ stateoption +'>' + value.ref_nombre + '</option>');
      }); */
+  });
+
+  $("#btn_notificarse_cancelar").on("click",async function () {
+    var request = {
+      'tabla_destino': "241",
+      'status_id': 1,
+      'categoria':'mensaje_notificarse_cancelar'
+    }
+    let response = await conciliacionService.getDestinyForReport(request);
+ 
+    
+/*     var request = {
+      'conciliacion_id': $("#conciliacion_id").val(),
+      'tabla_destino': '241',
+      'status_id': $(this).attr("data-estado"),
+      'categoria': 'mensaje_notificarse_cancelar'
+    }
+    let res = await conciliacionService.getPdfReportesConciliacion(request);
+    */ $("#wait").hide();  
+   /*  if(res.body){
+        $("#content_form_correo_est_responder"+idform).summernote("code", res.body);
+    }else if(res.errors){
+        toastr.error(res.error, "Algo falló!", {
+            positionClass: "toast-bottom-right",
+            timeOut: "4000",
+        });
+        $("#"+idform).summernote("code", "Escriba su mensaje aquí!");
+    } */
+    $("#content_form_correo_est_responder").summernote("code", response[0].reporte);
+
+    $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
+    $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
+
+    $("#myModal_respuestas_asignaciones").modal("show");
   });
 
   $("#table_list_estudiantes_aud").on("click", '.btn_hide_edit_rol_conciliacion_est', function (e) {

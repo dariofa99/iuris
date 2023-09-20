@@ -16,6 +16,7 @@ use App\ConciliacionEstado;
 use App\Expediente;
 use App\Mail\Firma;
 use App\Mail\RegConciliacionSuccess;
+use App\Notifications\NotificarDirector;
 use App\Notifications\SolicitudRadicarConciliacion;
 use App\Periodo;
 use App\Segmento;
@@ -72,7 +73,7 @@ Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirm
 
 
 ///rutas que requieren atenticación
-Route::group(['middleware' => ['auth','mantenimiento']], function() {
+Route::group(['middleware' => ['auth']], function() {
 //Nuevo usuarios
 Route::resource('usuarios', 'UsersController');
 Route::get("usuarios/buscar/persona","UsersController@findUserWithFilter");
@@ -573,9 +574,20 @@ Route::get('/prueba', function () {
  /*  $user = User::where('idnumber',3030)->first();
   $request = ['cursando_id' => 115];
   $user->asignarTurno($request); */
+  $expediente = Expediente::find(23282);
+  $message = "<h3>Se ha creado un nuevo expediente!</h3>";
 
-
-  //dd($user);
+  $message .= "<h4>Número: ".$expediente->expid."<br>";
+  $message .= "Rama del Derecho: ".$expediente->rama_derecho->ramadernombre."<br>";
+ 
+  $message .= "Estudiante: ".$expediente->estudiante->name." ".$expediente->estudiante->lastname."<br>";
+  $message .= "Docente: ".$expediente->getDocenteAsig()->name." ".$expediente->getDocenteAsig()->lastname."<br></h4>";
+  $user = User::where('email','darioj99@gmail.com')->first();
+  Notification::send($user,new NotificarDirector($expediente, $user));
+  return view('myforms.mails.formato_correo',[
+    'mensaje'=>$message,
+    'url'=>url('/expedientes/'.$expediente->expid.'/edit')
+]);
 
   $estu = DB::select("SELECT est.id, est.idnumber, concat(est.name,' ',est.lastname) as name,
    roles.name as role FROM `users` as est JOIN role_user on role_user.user_id = est.id 

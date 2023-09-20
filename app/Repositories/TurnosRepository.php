@@ -20,7 +20,7 @@ class TurnosRepository extends BaseRepository implements TurnosService {
             return $query->whereHas('sedes',function($query){
                     $query->where('sede_id',session('sede')->id_sede);
             });
-        })->get();
+        })->orderBy('turnos.trnid_color','desc')->get();
         return $turnos;
     }
 }

@@ -83,10 +83,7 @@ Notas
                 No.
             </th>
            <th width="1%">
-            @if(Request::has('origen') and Request::get('origen')=='expedientes') Expediente
-            @else
-            Conciliación
-            @endif  
+            Expediente
             </th>
            
             <th width="1%">
@@ -117,16 +114,11 @@ Notas
                         @endphp
                     </td>
                     <td>
-                        @if(Request::has('origen') and Request::get('origen')=='expedientes')
+                     
                         <a target="_blank" href="/expedientes/{{$data[0]['expediente']}}/edit">
                             {{$data[0]['expediente']}}
                         </a> 
-                        @else
-                        <a target="_blank" href="/conciliaciones/{{$data[0]['tbl_org_id']}}/edit">
-                            {{$data[0]['expediente']}}
-                        </a> 
-                        @endif  
-
+                       
                       
                     </td>
 

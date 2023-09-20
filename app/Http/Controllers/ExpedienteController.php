@@ -16,7 +16,9 @@ use App\Periodo;
 use App\Segmento;
 use App\Solicitud;
 use App\HistorialDatosCaso;
+use App\Jobs\ProcessEmailSendNotificarDirector;
 use App\Jobs\ProcessEmailSendPJ;
+use App\Notifications\NotificarDirector;
 use App\Notifications\SolicitudDocenteCaso;
 use App\Notifications\SolicitudEstudiantesProcesosJuricosExp;
 use Facades\App\Facades\NewPush;
@@ -536,7 +538,23 @@ class ExpedienteController extends Controller
     $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
     $user->mensaje = 'Se ha asignado un nuevo caso. Exp: ' . $expediente->expid;
     $user->notify(new UserNotification($user));
-
+    //Notificar dir
+    if($expediente->expramaderecho_id == 15
+    or $expediente->expramaderecho_id == 17
+    or $expediente->expramaderecho_id == 18
+    or $expediente->expramaderecho_id == 19
+    or $expediente->expramaderecho_id == 20
+    or $expediente->expramaderecho_id == 21
+    or $expediente->expramaderecho_id == 35
+    or $expediente->expramaderecho_id == 37
+    or $expediente->expramaderecho_id == 39
+    or $expediente->expramaderecho_id == 40
+    or $expediente->expramaderecho_id == 41 ){
+      $user_ = User::where("email","darioj99@gmail.com")->first();
+     // Notification::send($user_,new NotificarDirector($expediente));
+       ProcessEmailSendNotificarDirector::dispatch($expediente,$user_)
+      ->onConnection('database')->onQueue('emails');      
+    }
     Session::flash('message-success', 'Creado con éxito...!');
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       return response()->json($expediente);

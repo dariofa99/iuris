@@ -64,7 +64,7 @@ class TurnosController extends Controller
                 'trnid_dia'
             )
             ->orderBy('trnid_color', 'asc')->get();
-        //  dd($turnos);
+       
         $data_search = '';
 
         if (isset($request->data_search) and !$request->ajax()) {

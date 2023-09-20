@@ -2,15 +2,15 @@
 
 namespace App\Notifications;
 
-use App\Conciliacion;
 
+use App\Expediente;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 
-class SolicitudEstudiantesProcesosJuricosExp extends Notification
+class NotificarDirector extends Notification
 {
     use Queueable;
 
@@ -19,12 +19,12 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
      *
      * @return void
      */
-    public $mensaje;
     public $expediente;
-    public function __construct($mensaje,$expediente)
+    public $message;
+    public function __construct(Expediente $expediente,$message)
     {
-       $this->mensaje = $mensaje;  
-       $this->expediente = $expediente;        
+        $this->expediente = $expediente;
+        $this->message = $message;
     }
 
     /**
@@ -35,7 +35,7 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
+        return ['mail'];
     }
 
     /**
@@ -48,12 +48,11 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
     {
        
         return (new MailMessage($notifiable))
-        ->subject('Solicitud de proceso jurídico')
-        ->view('myforms.mails.frm_notificaciones_procjudexp',[
-                'mensaje'=>$this->mensaje,
-                'url'=>url('/expedientes/'.$this->expediente->expid.'/edit')
-        ]);
-
+            ->subject('Nuevo caso creado')
+            ->view('myforms.mails.formato_correo', [
+                'mensaje' => $this->message,
+                'url' => url('/expedientes/' . $this->expediente->expid . '/edit#case_data')
+            ]);
     }
 
     /**
@@ -63,18 +62,8 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
      * @return array
      */
     public function toDatabase($notifiable)
-    {      
+    {
         return [
-        /*    'type_notification'=>'Solicitud de proceso jurídico',
-           'link_to'=>'/expedientes/'.$this->expediente->id.'/edit',
-           'mensaje'=>"Solicitud de proceso jurídico" */
-
-           'type_notification'=>'Solicitud de proceso jurídico',          
-           'message'=>"Solicitud de proceso jurídico",
-           'url'=>'/expedientes/'.$this->expediente->id.'/edit',
-           'created_at'=>date("Y-m-d H:i:s"),
-           'icon'=>'fas fa-user'
-
         ];
     }
 }
