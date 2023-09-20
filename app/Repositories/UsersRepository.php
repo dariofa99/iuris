@@ -182,7 +182,7 @@ class UsersRepository extends BaseRepository implements UsersService
       ->join('roles', 'roles.id', '=', 'ru.role_id')
       ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
       ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
-      //->where('users.type_status_id','<>',15)
+      ->where('users.active',true)
       ->where('permissions.name', $permission)
       ->select("users.id", 'users.email', 'users.name')
       ->get(); 

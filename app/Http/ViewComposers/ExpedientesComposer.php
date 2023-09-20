@@ -41,7 +41,7 @@ class ExpedientesComposer
 	public function compose(View $view)
 	{
 		
-		//$reframa_derecho = $this->referenciasService->getRamasDerechoForExpediente();
+		$reframa_derecho = $this->referenciasService->getRamasDerechoForExpediente();
 		$estados = $this->referenciasService->getEstadosForExpediente();
 		$tipo_proceso = $this->referenciasService->getTipoProcesoForExpediente();;
 		$est_projexp = $this->referenciasService->getReferenciasByFilter(
@@ -116,7 +116,8 @@ class ExpedientesComposer
 		$view->with([
 			'rama_derecho' => $rama_derecho,
 			'cat_projexp' => $cat_projexp,
-			'est_projexp' => $est_projexp            
+			'est_projexp' => $est_projexp,
+			'reframa_derecho'=>$reframa_derecho          
 		])
 			->with(['rdata_enf_dif' => $rdata_enf_dif])
 			->with(['rdata_info_soc_ec' => $rdata_info_soc_ec])

@@ -71,7 +71,7 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
 
            'type_notification'=>'Solicitud de proceso jurídico',          
            'message'=>"Solicitud de proceso jurídico",
-           'url'=>'/expedientes/'.$this->expediente->id.'/edit',
+           'url'=>'/expedientes/'.$this->expediente->expid.'/edit',
            'created_at'=>date("Y-m-d H:i:s"),
            'icon'=>'fas fa-user'
 

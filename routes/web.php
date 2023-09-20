@@ -94,6 +94,7 @@ Route::post('/citaciones/search/forday', 'CitacionEstudiantesController@searchCi
 
 Route::resource('notifications', 'NotificationsController');
 Route::get('/admin/users/view/notifications','NotificationsController@index');
+Route::put('/admin/users/mark/read','NotificationsController@markAsRead');
 
 Route::get('dashboard/search', 'HomeController@search');
 

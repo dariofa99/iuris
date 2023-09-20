@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationsController extends Controller
 {
@@ -49,9 +50,7 @@ class NotificationsController extends Controller
      */
     public function store(Request $request)
     {
-        $user = \Auth::user();
-        $user->unreadNotifications->markAsRead();
-        return response()->json($request->all());
+       
     }
 
     /**
@@ -85,7 +84,14 @@ class NotificationsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       
+    }
+
+    public function markAsRead(Request $request)
+    {
+        $user = Auth::user();
+        $user->unreadNotifications->markAsRead();
+        return response()->json($request->all());
     }
 
     /**

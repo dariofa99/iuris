@@ -38,7 +38,7 @@
          </td>
          <td>
              <span class="badge badge-success" style="background-color: {{ $actuacion->estado->color }} !important">
-                 {{ $actuacion->estado->ref_nombre }} {{ $actuacion->estado->id }}
+                 {{ $actuacion->estado->ref_nombre }}
              </span>
 
          </td>

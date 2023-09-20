@@ -714,8 +714,7 @@ $(document).ready(function () {
         e.preventDefault();
         var errors = validateForm('myFormExpsStore');
         if (errors.length <= 0) {
-            var request = convertFormToJSON('myFormExpsStore');
-            request['email_dir_notification'] = BASE_EMAIL;
+            var request = convertFormToJSON('myFormExpsStore');           
             $("#wait").show();
             var response = await expedientesService.store(request);
             resetForm('myFormExpsStore')

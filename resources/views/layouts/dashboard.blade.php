@@ -150,7 +150,7 @@ if (!isset($modo_nav_crl)) {
 
     <script src={{ asset('js/config.js?v=1') }}></script>
     {!! Html::script('js/application.js?v=1') !!}
-
+    <script type="module" src="{{ asset('js/scripts.js?v=1') }}"></script>
 
     <script>
         //para que funcionen los tooltip

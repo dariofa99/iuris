@@ -221,6 +221,15 @@ class ActuacionController extends Controller
         $user->mensaje = 'Se ha asignado una nueva actuación. Exp: ' . $expediente->expid;
         $user->notify(new UserNotification($user));
       }
+
+      if ($actuacion->actestado_id == 136) {
+        $user = $expediente->getDocenteAsig();
+        $user->notification = 'Nueva notificación de caso';
+        $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
+        $user->mensaje = 'Se ha creado un anexo. Exp: ' . $expediente->expid;
+        $user->notify(new UserNotification($user));
+      }
+
       //  $actuaciones = $this->getActuacionesExp($request['actexpid'],0);
 
 
