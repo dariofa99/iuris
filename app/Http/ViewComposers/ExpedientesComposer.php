@@ -41,7 +41,7 @@ class ExpedientesComposer
 	public function compose(View $view)
 	{
 		
-		$reframa_derecho = $this->referenciasService->getRamasDerechoForExpediente();
+		//$reframa_derecho = $this->referenciasService->getRamasDerechoForExpediente();
 		$estados = $this->referenciasService->getEstadosForExpediente();
 		$tipo_proceso = $this->referenciasService->getTipoProcesoForExpediente();;
 		$est_projexp = $this->referenciasService->getReferenciasByFilter(
@@ -50,6 +50,8 @@ class ExpedientesComposer
 		$cat_projexp = $this->referenciasService->getReferenciasByFilter(
 			['tabla_ref' => 'expediente_procesos', 'categoria' => 'projudexp_categoria']
 		);
+		$rama_derecho_defensas = $rama_derecho = RamaDerecho::where('categoria', 'defensas')
+		->pluck('ramadernombre', 'id');;
 		//$tipo_archivo = TipoArchivo::pluck('tiparchinombre','id');
 		//$reqasis = DB::table('ref_reqasis')->select('reqid_refasis','ref_reqasistencia')->get();
 		$reqasis = ReqAsistencia::all();
@@ -58,24 +60,13 @@ class ExpedientesComposer
 
 		$cptonota = Cptonota::pluck('cpntnombre', 'id');
 		$segmento = $this->segmentosService->getSegmentoActivo();
-		$periodo = $this->periodosService->getPeriodoActivo();;
-		/*   Periodo::join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-			->where('sp.sede_id', session('sede')->id_sede)
-			->where('estado', true)->first();
-		 *///$motivos_cierre = MotivoEstadoCaso::pluck('nombre_motivo','id');
-
+		$periodo = $this->periodosService->getPeriodoActivo();;	
 		$motivos_cierre = MotivoEstadoCaso::all();
 		$estadosPluck = Estado::pluck('nombre_estado', 'id');
 		$motivo_asig = MotivoAsigCaso::pluck('nom_motivo', 'id');
-		/* $tipodoc = DB::table('referencias_tablas')
-		->where(['tabla_ref'=>'users','categoria'=>'tipo_doc'])
-		->where('ref_nombre','<>','Sin definir')->get(); */
-		$genero = $this->referenciasService->getReferenciasByFilter(
+	    $genero = $this->referenciasService->getReferenciasByFilter(
 			['tabla_ref' => 'users', 'categoria' => 'genero']
-		);
-		/* DB::table('referencias_tablas')
-			->where(['tabla_ref' => 'users', 'categoria' => 'genero'])
-			->where('ref_nombre', '<>', 'Sin definir')->get(); */
+		);		
 		$estcivil = DB::table('referencias_tablas')
 			->where(['tabla_ref' => 'users', 'categoria' => 'estado_civil'])
 			->where('ref_nombre', '<>', 'Sin definir')->get();
@@ -134,7 +125,7 @@ class ExpedientesComposer
 			->with(['rdata_discap' => $rdata_discap])
 			->with(['rdata_gretnc' => $rdata_gretnc])
 			->with(['segmento' => $segmento])
-			->with(['reframa_derecho' => $reframa_derecho])
+			->with(['rama_derecho_defensas' => $rama_derecho_defensas])
 			->with(['genero' => $genero])
 			->with(['tipvivienda' => $tipvivienda])
 			->with(['muncpios' => $muncpios])

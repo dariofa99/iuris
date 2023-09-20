@@ -129,10 +129,12 @@
         </div>
 
         <!-- /.input group -->
-    </div>
+    </div> 
+  
     <div class="col-md-4">
         <div class="form-group">
             {!! Form::label('Rama del Derecho: ') !!}
+            @if($expediente->exptipoproce_id!=3)
             {!! Form::select('expramaderecho_id', $rama_derecho, $expediente->rama_derecho->id, [
                 'placeholder' => 'Selecciona...',
                 'class' => 'form-control disabled required',
@@ -140,6 +142,15 @@
                 'disabled',
                 'id' => 'expramaderecho_id',
             ]) !!}
+            @else
+            {!! Form::select('expramaderecho_id', $rama_derecho_defensas, $expediente->rama_derecho->id, [
+                'placeholder' => 'Selecciona...',
+                'class' => 'form-control disabled required',
+                'required' => 'required',
+                'disabled',
+                'id' => 'expramaderecho_id',
+            ]) !!}
+            @endif
         </div>
     </div>
     <div class="col-md-2">

@@ -38,6 +38,12 @@ class ReferenciasRepository extends BaseRepository implements ReferenciasService
         $ramas =  $this->getWithFilter(['categoria'=>'expedientes']);
         return $ramas ;
     }
+    public function getRamasDerechoForDefensas()
+    {
+        $this->query = new RamaDerecho();
+        $ramas =  $this->getWithFilter(['categoria'=>'defensas']);
+        return $ramas ;
+    }
 
     public function getTipoProcesoForExpediente(){
         $this->query = new RefTipoProceso();

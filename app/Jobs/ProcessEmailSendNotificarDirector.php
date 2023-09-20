@@ -20,19 +20,16 @@ class ProcessEmailSendNotificarDirector implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $expediente;
-    protected $userService;
     protected $user;
     /**
      * Create a new job instance.
      * @param Expediente $expediente
      * @return void
      */
-    public function __construct(Expediente $expediente,$user)
+    public function __construct(Expediente $expediente)
     {
         Log::info($expediente);
-        $this->expediente = $expediente;
-        $this->user = $user;
-        $this->userService = App::make(UsersService::class);
+        $this->expediente = $expediente;        
     }
 
     /**
@@ -42,7 +39,7 @@ class ProcessEmailSendNotificarDirector implements ShouldQueue
      */
     public function handle()
     {
-       
+        $this->user = User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first();
         $message = "<h3>Se ha creado un nuevo expediente!</h3>";
         $message .= "<h4>Número: " . $this->expediente->expid . "<br>";
         $message .= "Rama del Derecho: " . $this->expediente->rama_derecho->ramadernombre . "<br>";

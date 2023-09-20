@@ -915,14 +915,16 @@ class Expediente extends Model
     }
     public function fechaHistorialDatosCaso($tipo)
     {
-        $asig = $this->getAsignacion();
+        $asig = $this->asignacion;
+        
         if ($asig) {
+            
             $historial = HistorialDatosCaso::where('hisdc_expidnumber', $this->expid)
                 ->where('hisdc_tipo_datos_caso', $tipo)
                 ->where('hisdc_idnumberest_id', $this->expidnumberest)
-                ->where('created_at', '>=', $asig->fecha_asig)
+                ->where('created_at', '>=', Carbon::parse($asig->fecha_asig)->startOfDay())
                 ->orderBy('id', 'DESC')
-                ->first();
+                ->first();            
             if ($historial) {
                 $his_fecha = $historial->created_at;
                 $his_fecha = $his_fecha->format('d-m-Y');
@@ -935,7 +937,7 @@ class Expediente extends Model
 
     public function getDaysAfterAsig()
     {
-        $asig = $this->getAsignacion();
+        $asig = $this->asignacion;
         if ($asig) {
             $fecha_ini = Carbon::now();
             return $fecha_ini->diffInDays($asig->fecha_asig, false) * -1;

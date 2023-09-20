@@ -611,10 +611,10 @@ $(document).ready(function () {
 
 
     $("#myModal_exp_user_edit").on("click", '#btnActualizarUserForEstudiante', async function (e) {
-        var errors = validateForm("myFormUserEditForExpediente");
+        var errors = validateForm("myFormUserEditExpediente");
         if (errors.length <= 0) {
-            var request = convertFormToJSON("myFormUserEditForExpediente");
-            var data = userService.getAditionalDataByForm('myFormUserEditForExpediente');
+            var request = convertFormToJSON("myFormUserEditExpediente");
+            var data = userService.getAditionalDataByForm('myFormUserEditExpediente');
             request["data"] = (data);
             $("#wait").show();
             let response = await userService.update(request);
@@ -715,6 +715,7 @@ $(document).ready(function () {
         var errors = validateForm('myFormExpsStore');
         if (errors.length <= 0) {
             var request = convertFormToJSON('myFormExpsStore');
+            request['email_dir_notification'] = BASE_EMAIL;
             $("#wait").show();
             var response = await expedientesService.store(request);
             resetForm('myFormExpsStore')

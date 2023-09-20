@@ -236,10 +236,8 @@ class DefensaOficioController extends Controller
     or $expediente->expramaderecho_id == 39
     or $expediente->expramaderecho_id == 40
     or $expediente->expramaderecho_id == 41 ){
-      $user_ = User::where("email","darioj99@gmail.com")->first();
-     // Notification::send($user_,new NotificarDirector($expediente));
-       ProcessEmailSendNotificarDirector::dispatch($expediente,$user_)
-      ->onConnection('database')->onQueue('emails');  
+     ProcessEmailSendNotificarDirector::dispatch($expediente)
+     ->onConnection('database')->onQueue('emails'); 
          
     }
     /* $notifications = view('layouts.notifications',compact('user'))->render();

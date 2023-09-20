@@ -582,8 +582,9 @@ Route::get('/prueba', function () {
  
   $message .= "Estudiante: ".$expediente->estudiante->name." ".$expediente->estudiante->lastname."<br>";
   $message .= "Docente: ".$expediente->getDocenteAsig()->name." ".$expediente->getDocenteAsig()->lastname."<br></h4>";
-  $user = User::where('email','darioj99@gmail.com')->first();
-  Notification::send($user,new NotificarDirector($expediente, $user));
+  $user = User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first();
+ // dd(env('NOTIFICATION_DIR_EMAIL'));
+  Notification::send($user,new NotificarDirector($expediente, $message));
   return view('myforms.mails.formato_correo',[
     'mensaje'=>$message,
     'url'=>url('/expedientes/'.$expediente->expid.'/edit')

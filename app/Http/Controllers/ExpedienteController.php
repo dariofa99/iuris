@@ -550,9 +550,8 @@ class ExpedienteController extends Controller
     or $expediente->expramaderecho_id == 39
     or $expediente->expramaderecho_id == 40
     or $expediente->expramaderecho_id == 41 ){
-      $user_ = User::where("email","darioj99@gmail.com")->first();
-     // Notification::send($user_,new NotificarDirector($expediente));
-       ProcessEmailSendNotificarDirector::dispatch($expediente,$user_)
+      // Notification::send($user_,new NotificarDirector($expediente));
+       ProcessEmailSendNotificarDirector::dispatch($expediente)
       ->onConnection('database')->onQueue('emails');      
     }
     Session::flash('message-success', 'Creado con éxito...!');

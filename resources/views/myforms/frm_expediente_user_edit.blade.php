@@ -16,7 +16,7 @@
         @endsection
         @include('msg.ajax.success')
 	
-		<form id="myFormUserEditForExpediente" method="POST">
+		<form id="myFormUserEditExpediente" method="POST">
 			<div class="row">
 				@include('myforms.users.formulario_registro',[
 					'user'=>$expediente->solicitante

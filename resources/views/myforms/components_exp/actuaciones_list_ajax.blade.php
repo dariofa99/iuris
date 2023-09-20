@@ -110,13 +110,13 @@
                          Editar Revisón
                      </button>
                  @endif
-                 @if ($actuacion->actestado_id == 101 
+                 @if ((($actuacion->actestado_id == 101 
                  || $actuacion->actestado_id == 136 
-                 || $actuacion->actestado_id == 140
+                 || $actuacion->actestado_id == 140)
                  and $actuacion->actusercreated == currentUser()->idnumber 
-                 || currentUser()->hasRole('amatai')
+                 || currentUser()->hasRole('amatai'))
                  and $hayactuaciones===false
-                 and ($haycorrecciones===true and $hayhijos===false))
+                 and ($haycorrecciones===false and $hayhijos===false))
                      <button data-modal="#myModal_act_edit" type='button' value="{{ $actuacion->id }}"
                          class='btn btn-primary btn-sm buscar_actuacion btn-block'>
                         Editar
@@ -131,13 +131,13 @@
                          class='btn btn-warning btn-sm btn-block buscar_actuacion' data-titulo_modal='Nueva actuación'>
                          Ag. Corrección </button>
                  @endif
-                 @if ($actuacion->actestado_id == 101 
+                 @if ((($actuacion->actestado_id == 101 
                  || $actuacion->actestado_id == 136 
-                 || $actuacion->actestado_id == 140
+                 || $actuacion->actestado_id == 140)
                  and $actuacion->actusercreated == currentUser()->idnumber 
-                 || currentUser()->hasRole('amatai')
+                 || currentUser()->hasRole('amatai'))
                  and $hayactuaciones===false
-                 and ($haycorrecciones===true and $hayhijos===false))
+                 and ($haycorrecciones===false and $hayhijos===false))
                      <button type='button' value="{{ $actuacion->id }}"
                          class='btn btn-danger btn-block btn-sm delete_act'>
                          Eliminar

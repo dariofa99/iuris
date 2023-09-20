@@ -12,6 +12,7 @@ interface ReferenciasService {
 
     public function getEstadosForExpediente();
     public function getRamasDerechoForExpediente();
+    public function getRamasDerechoForDefensas();
     public function getTipoProcesoForExpediente();
     public function getReferenciasByFilter($filter);
 }
