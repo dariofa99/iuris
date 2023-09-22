@@ -1,5 +1,6 @@
 import { UserService } from './services/users.js';
 import { ExpedientesService } from './services/expedientes.js';
+import { ConciliacionService } from './services/conciliaciones.js';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 
@@ -135,6 +136,23 @@ $(document).ready(function () {
             //return false;
         }
         return false;
+    });
+
+    $("#table_list_estados").on("click", ".btn_descargar_rep_pdf", function (e) {
+        /*var request = {
+            estado_id: $(this).attr("data-id"),
+            conciliacion_id: $("#conciliacion_id").val(),
+        };
+        getEstadosReportesPdf(request);*/
+ 
+        var request = {
+          //  conc_estado_id: $(this).attr("data-id"),
+            tabla_destino: "226",
+            status_id: $(this).attr("data-estado_id"),
+            conciliacion_id:$("#conciliacion_id").val()
+        };
+        getPdfReportesConciliacion(request); 
+
     });
 
     $("#exptipoproce_id2").change(async function () {

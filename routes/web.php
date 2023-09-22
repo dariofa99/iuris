@@ -575,7 +575,7 @@ Route::get('/prueba', function () {
  /*  $user = User::where('idnumber',3030)->first();
   $request = ['cursando_id' => 115];
   $user->asignarTurno($request); */
-  $expediente = Expediente::find(23282);
+/*   $expediente = Expediente::find(23282);
   $message = "<h3>Se ha creado un nuevo expediente!</h3>";
 
   $message .= "<h4>Número: ".$expediente->expid."<br>";
@@ -589,12 +589,12 @@ Route::get('/prueba', function () {
   return view('myforms.mails.formato_correo',[
     'mensaje'=>$message,
     'url'=>url('/expedientes/'.$expediente->expid.'/edit')
-]);
+]); */
 
   $estu = DB::select("SELECT est.id, est.idnumber, concat(est.name,' ',est.lastname) as name,
    roles.name as role FROM `users` as est JOIN role_user on role_user.user_id = est.id 
    join roles on roles.id = role_user.role_id WHERE (roles.id = 6)
-   and est.id > 448
+   and est.id > 1
    order by est.id asc limit 30");
  // dd($estu);
 //

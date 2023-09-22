@@ -870,3 +870,8 @@ body{
   .btn_read_noti .itemnot{
 	color: #000000 !important;
   }
+  #pdfViewer {
+	width: 100%;
+	height: 1070px;
+	border: none;
+}

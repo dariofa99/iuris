@@ -1,10 +1,11 @@
 import { FormatosService } from './services/formatos_documentos.js';
 import { ExpedientesService } from './services/expedientes.js';
 import { ConciliacionService } from './services/conciliaciones.js';
+import { ReferenciasService } from './services/referencias.js';
 const conciliacionService = new ConciliacionService();
 const formatosService = new FormatosService();
 const expedientesService = new ExpedientesService();
-
+const referenciasService = new ReferenciasService();
 $(document).ready(function () {
 
     $("#myFormCreatePdfReporte").on("submit", async function (e) {
@@ -222,6 +223,38 @@ $(document).ready(function () {
                 }
             }
         }
+    });
+    $(".select_values").on("change",function(e) {       
+        $(".content_values_"+$(this).attr('data-view')).hide();
+        $("#"+$(this).val()).show()
+    });
+
+    $(".content_values_update").on("click","#btn_create_category",async function(e){        
+        var request = {
+            'conciliacion_id':$("#conciliacion_id").val(),
+            'tabla_destino':'conciliaciones_email',
+            'status_id':178
+        }
+      let response = await formatosService.getReportes(request);
+      console.log(response);
+        $("#myModal_create_category_report").modal("show")
+    }) ;
+
+    $("#myModal_create_category_report input[name='name']").on('keyup',function (e) {
+        var cadena = $(this).val();
+        var minusculas = cadena.toLowerCase();
+        var espacios = minusculas.replace(/\s+/g, "_");
+        var final = espacios.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+       // var final = "[-"+sin_tildes+"-]";
+        $("#myModal_create_category_report input[name='short_name']").val(final)
+
+    });
+
+    $("#myformCreateCategoryReport").on("submit",function(e) {
+        var request = convertFormToJSON('myformCreateCategoryReport');
+
+        let response = referenciasService.storeFromReports(request)
+        e.preventDefault()
     });
 
     $("#myFormAsigReporte").on("submit", async function (e) {

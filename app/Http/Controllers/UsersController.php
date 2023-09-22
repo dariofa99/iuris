@@ -123,8 +123,7 @@ class UsersController extends Controller
     }
     $user = $this->userService->store($request);
     if (Auth::guest()) Auth::login($user);
-    return response()->json(['user' => $user]);
-    // return Redirect::to('/users/create');
+    return response()->json(['user' => $user]);  
   }
 
 

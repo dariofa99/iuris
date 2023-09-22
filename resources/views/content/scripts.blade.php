@@ -1,8 +1,8 @@
 <script>
-  @if (Session::has('message-information'))
-      var message = '';
-      message += '<div class="alert alert-warning" style="font-size:18px">';
-      message += `<h4>
+    @if (!Session::has('message-information'))
+        var message = '';
+        message += '<div class="alert alert-warning" style="font-size:18px">';
+        message += `<h4>
       <strong style="border-bottom:1px solid white">
         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
       Recuerda que estamos actualizando la plataforma, si presentas algún problema refresca el navegador
@@ -10,9 +10,21 @@
       <i> <small> Últ. Act 20 de sep. 2023 <br>
         Si presentas algún problema comunícate al 3106038006  
       </small></i>
-    </h4>`    
-    message += '</div';
-      $("#modal-show-alerts-content").html(message);
-      $("#mymodalShowAlerts").modal("show")
-  @endif
+    </h4> </div`;
+
+        var keyCir = localStorage.getItem("keyCir");
+        if (keyCir == null) {            
+            message = `<embed  src="{{ asset('recursos/Circular.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message += `<button class="btn btn-success" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+
+        }
+        $("#modal-show-alerts-content").html(message);
+        $("#mymodalShowAlerts").modal("show");
+    @endif
+    $("#mymodalShowAlerts").on("click",'#btnNotFalse',function (e) {
+      localStorage.setItem('keyCir', true);
+      $("#mymodalShowAlerts").modal("hide");
+      e.preventDefault();
+
+    })
 </script>

@@ -87,31 +87,6 @@
                 </li>
                 @endif
 
-
-                @if( currentUser()->can('ver_documentos_conciliacion') ||
-                (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
-               and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
-               $conciliacion->getUser(203)->pivot->estado_id == 230
-               ))
-                <li class="nav-item">
-                    <a class="nav-link urlactive" id="documentos-tab" data-toggle="tab" href="#documentos" role="tab"
-                        aria-controls="documentos_tab" aria-selected="false">
-                        Documentos
-                    </a>
-                </li>
-                @endif
-                @if((currentUser()->can('ver_comentarios_conciliacion'))
-                || ((currentUserInConciliacion($conciliacion->id,['autor'])))
-                || ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id 
-                and $conciliacion->getUser(203)->pivot->estado_id == 230)
-                )
-                <li class="nav-item">
-                    <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
-                        role="tab" aria-controls="notificaciones" aria-selected="false">
-                        Notificaciones
-                    </a>
-                </li>
-                @endif
                 @if(((currentUser()->can('ver_estados_conciliacion')))
                 || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and (
                    ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
@@ -156,6 +131,31 @@
             @endif
 
             
+
+            @if( currentUser()->can('ver_documentos_conciliacion') ||
+            (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
+           and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
+           $conciliacion->getUser(203)->pivot->estado_id == 230
+           ))
+            <li class="nav-item">
+                <a class="nav-link urlactive" id="documentos-tab" data-toggle="tab" href="#documentos" role="tab"
+                    aria-controls="documentos_tab" aria-selected="false">
+                    Documentos
+                </a>
+            </li>
+            @endif
+            @if((currentUser()->can('ver_comentarios_conciliacion'))
+            || ((currentUserInConciliacion($conciliacion->id,['autor'])))
+            || ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id 
+            and $conciliacion->getUser(203)->pivot->estado_id == 230)
+            )
+            <li class="nav-item">
+                <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
+                    role="tab" aria-controls="notificaciones" aria-selected="false">
+                    Notificaciones
+                </a>
+            </li>
+            @endif
 
             </ul>
 

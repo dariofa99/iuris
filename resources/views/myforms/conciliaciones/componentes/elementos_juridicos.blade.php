@@ -14,7 +14,7 @@
     @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
             || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar','conciliador']) || currentUser()->hasRole('amatai'))))
              @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor'])))
-         <button type="button" data-tipo="206" class="btn btn-primary btn-sm pull-right btn_add_conc_he_con">Agregar hecho</button>
+         <button type="button" data-tipo="206" class="btn btn-primary btn-sm float-right btn_add_conc_he_con">Agregar hecho</button>
          @endif
     @endif
     </label>
@@ -34,7 +34,7 @@
                 @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
             || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar','conciliador']))))
              @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor'])))
-                <button type="button" data-tipo="207" class="btn btn-primary btn-sm pull-right btn_add_conc_he_con"> Agregar pretensión</button>       
+                <button type="button" data-tipo="207" class="btn btn-primary btn-sm float-right btn_add_conc_he_con"> Agregar pretensión</button>       
             @endif
             @endif
             </label>

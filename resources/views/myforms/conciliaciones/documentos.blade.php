@@ -1,20 +1,15 @@
 <div class="row" id="content_files_conciliacion" style="display: block">
-    <div class="col-md-1">
+    <div class="col-md-2">
         
-        <button type="button" id="btn_create_document_" data-category="233" class="btn btn-primary btn-sm  btn_create_document">Agregar documento</button>
+        <button type="button" id="btn_create_document_" data-category="233" class="mb-2 btn btn-primary btn-sm  btn_create_document">Agregar documento</button>
           
      </div>
 
     <div class="col-md-1 col-md-offset-10">
        @if(((currentUser()->hasRole('diradmin') ||  currentUser()->hasRole('amatai') ||  currentUser()->hasRole('secretaria'))))
-        @if($conciliacion->estado_id==194 || $conciliacion->estado_id==225)       
+       {{--  @if($conciliacion->estado_id==194 || $conciliacion->estado_id==225)       
         <button id="btn_radicar_conci" class="btn btn-success" data-estado="178">Radicar</button>
-        @endif
-
-        @if($conciliacion->estado_id==178)       
-        <button id="btn_notificar_conci_est" class="btn btn-success" data-estado="{{$conciliacion->estado_id}}">
-            Notificar</button>
-        @endif
+        @endif --}}       
         @endif
     </div>
  

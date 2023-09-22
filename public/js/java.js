@@ -2568,8 +2568,7 @@ return false;
 
     });
 
-    $(".select_values").on("change",function(e) {
-        console.log($(this).attr('data-view'));
+    $(".select_values").on("change",function(e) {       
         $(".content_values_"+$(this).attr('data-view')).hide();
         $("#"+$(this).val()).show()
     });

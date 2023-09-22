@@ -229,7 +229,25 @@ $(document).ready(function () {
     $("#btn_cambiar_estado").hide();
 
   });
+  $(".btn_create_document").on("click", function (e) {
 
+    $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
+    $("#myformCreateConciliacionAnexo")[0].reset();
+    $("#myformCreateConciliacionAnexo input[name=concept]").val($(this).attr("data-concept"));
+    $("#myformCreateConciliacionAnexo input[name=category_id]").remove();
+    $("#myformEditConciliacionAnexo input[name=conciliacion_file]").prop("required", true);
+
+    $("#myformCreateConciliacionAnexo").append(
+      $("<input>", {
+        type: 'hidden',
+        value: $(this).attr("data-category"),
+        name: "category_id"
+      })
+    )
+    $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
+    $("#myModal_create_document .modal-title").text("Creando anexo");
+    $("#myModal_create_document").modal("show");
+  });
   $("#btn_cancelar_estado").on("click", function () {
     $("#btn_cancelar_estado").hide();
     $("#btn_cambiar_estado").show();
@@ -262,6 +280,23 @@ $(document).ready(function () {
     }
   });
 
+  $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", async function (e) {
+    e.preventDefault()
+    var request = new FormData($(this)[0]);
+    request.append("conciliacion_id", $("#conciliacion_id").val());
+    $("#wait").show()
+    let response = await conciliacionService.addFile(request);
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: "Actualizado con éxito!",
+      showConfirmButton: false,
+      timer: 2500
+    });
+    window.location.reload(true);
+    e.preventDefault();
+  }
+  );
 
   $(".fila_usuarios_not").on("click", function (e) {
 
@@ -520,15 +555,15 @@ $(document).ready(function () {
      }); */
   });
 
-  $("#btn_notificarse_cancelar").on("click",async function () {
+  $("#btn_notificarse_cancelar").on("click", async function () {
     var request = {
       'tabla_destino': "241",
       'status_id': 1,
-      'categoria':'mensaje_notificarse_cancelar'
+      'categoria': 'mensaje_notificarse_cancelar'
     }
     let response = await conciliacionService.getDestinyForReport(request);
- 
-    
+
+
 /*     var request = {
       'conciliacion_id': $("#conciliacion_id").val(),
       'tabla_destino': '241',
@@ -536,16 +571,16 @@ $(document).ready(function () {
       'categoria': 'mensaje_notificarse_cancelar'
     }
     let res = await conciliacionService.getPdfReportesConciliacion(request);
-    */ $("#wait").hide();  
-   /*  if(res.body){
-        $("#content_form_correo_est_responder"+idform).summernote("code", res.body);
-    }else if(res.errors){
-        toastr.error(res.error, "Algo falló!", {
-            positionClass: "toast-bottom-right",
-            timeOut: "4000",
-        });
-        $("#"+idform).summernote("code", "Escriba su mensaje aquí!");
-    } */
+    */ $("#wait").hide();
+    /*  if(res.body){
+         $("#content_form_correo_est_responder"+idform).summernote("code", res.body);
+     }else if(res.errors){
+         toastr.error(res.error, "Algo falló!", {
+             positionClass: "toast-bottom-right",
+             timeOut: "4000",
+         });
+         $("#"+idform).summernote("code", "Escriba su mensaje aquí!");
+     } */
     $("#content_form_correo_est_responder").summernote("code", response[0].reporte);
 
     $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
