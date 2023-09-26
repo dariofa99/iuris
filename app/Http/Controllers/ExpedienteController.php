@@ -491,7 +491,7 @@ class ExpedienteController extends Controller
     //  return response()->json($request->all());
     $res_day = Carbon::now();
     $res_day = $res_day->addDays(7)->format('Y-m-d');
-    $date = Carbon::now(); 
+    $date = Carbon::now();
     $request['expfecha_res'] = $res_day;
     $expediente = $this->expedienteService->store($request);
     $request['asigest_id'] = $request['expidnumberest'];
@@ -538,21 +538,28 @@ class ExpedienteController extends Controller
     $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
     $user->mensaje = 'Se ha asignado un nuevo caso. Exp: ' . $expediente->expid;
     $user->notify(new UserNotification($user));
+    $request['comentario'] = 'Abierto primera vez';
+    $request['expidnumber'] = $expediente->expid;
+    $request['ref_estado_id'] = $expediente->expestado_id;
+    $request['ref_motivo_estado_id'] = 13;
+    $estado_caso = $this->estadoCasoService->store($request);
     //Notificar dir
-    if($expediente->expramaderecho_id == 15
-    or $expediente->expramaderecho_id == 17
-    or $expediente->expramaderecho_id == 18
-    or $expediente->expramaderecho_id == 19
-    or $expediente->expramaderecho_id == 20
-    or $expediente->expramaderecho_id == 21
-    or $expediente->expramaderecho_id == 35
-    or $expediente->expramaderecho_id == 37
-    or $expediente->expramaderecho_id == 39
-    or $expediente->expramaderecho_id == 40
-    or $expediente->expramaderecho_id == 41 ){
+    if (
+      $expediente->expramaderecho_id == 15
+      or $expediente->expramaderecho_id == 17
+      or $expediente->expramaderecho_id == 18
+      or $expediente->expramaderecho_id == 19
+      or $expediente->expramaderecho_id == 20
+      or $expediente->expramaderecho_id == 21
+      or $expediente->expramaderecho_id == 35
+      or $expediente->expramaderecho_id == 37
+      or $expediente->expramaderecho_id == 39
+      or $expediente->expramaderecho_id == 40
+      or $expediente->expramaderecho_id == 41
+    ) {
       // Notification::send($user_,new NotificarDirector($expediente));
-       ProcessEmailSendNotificarDirector::dispatch($expediente)
-      ->onConnection('database')->onQueue('emails');      
+      ProcessEmailSendNotificarDirector::dispatch($expediente)
+        ->onConnection('database')->onQueue('emails');
     }
     Session::flash('message-success', 'Creado con éxito...!');
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
@@ -645,7 +652,7 @@ class ExpedienteController extends Controller
     $url = '/expedientes/';
     $expediente = $this->expedienteService->findWithFilter([
       'expid' => $id
-    ]); 
+    ]);
     if (!$expediente) return view('errors.error', compact('url'));
     $estudiante = $expediente->estudiante;
     $asignacion = $expediente->asignaciones()->where('asigest_id', $expediente->expidnumberest)
@@ -790,12 +797,6 @@ class ExpedienteController extends Controller
             $date = Carbon::now();
             $days = $expediente->getDaysOrColorForClose('dias');
             $this->expedienteService->asignarDocente($asignacion_caso);
-            /* if ($days < 15 || $days === "Evaluado por sistema" ||  $days === true) {
-
-              $asignacion_caso->fecha_asig = $date->subDays(15)->format('Y-m-d');
-            } */
-            // no tiene en cuenta la rama del derecho  
-            //$expediente->asigDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho  
           }
         }
       } else if ($request->exptipoproce_id == 2) {
@@ -821,11 +822,11 @@ class ExpedienteController extends Controller
               'asigest_id' => $request['expidnumberest']
             ])
             ->update(['activo' => 0]);
+          $date = Carbon::now();
+          $asignacion_caso->asigest_id = $request['expidnumberest'];
+          $asignacion_caso->fecha_asig = $date->format('Y-m-d H:i:s');
+          $asignacion_caso->save();
         }
-        $date = Carbon::now();
-        $asignacion_caso->asigest_id = $request['expidnumberest'];
-        $asignacion_caso->fecha_asig = $date->format('Y-m-d H:i:s');
-        $asignacion_caso->save();
       }
     }
     $expediente = $this->expedienteService->update($expediente, $request);
@@ -1477,7 +1478,8 @@ class ExpedienteController extends Controller
     $jwt = JWT::encode($tokenjitsi, 'c6x@JKCixAr*4sPO@XjXlb1b^', 'HS256');
     /* NewPush::channel('stream' . $id)
       ->message(['sol_id' => $id . "?jwt=" . $jwt])->publish();
- */  }
+ */
+  }
 
   public function createStream($id)
   {
@@ -1629,7 +1631,7 @@ class ExpedienteController extends Controller
     }
     $expediente->setRelations([]);
     ProcessEmailSendPJ::dispatch($expediente, $request->estado_id)
-    ->onConnection('database')->onQueue('emails');;
+      ->onConnection('database')->onQueue('emails');;
 
 
     return response()->json($expediente);

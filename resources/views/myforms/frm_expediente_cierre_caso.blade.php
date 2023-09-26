@@ -27,11 +27,9 @@
 
             @endif
 
-            @if (
-                $expediente->exptipoproce_id == 1 and
-                    ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and
+            @if (($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and
                         $expediente->expestado_id == 5 and
-                        $expediente->isValidOpen()) ||
+                        $expediente->isValidOpen()) and
                         (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')))
                 <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_reabrir_caso">
                     Volver a evaluar y cerrar caso

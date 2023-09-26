@@ -61,7 +61,7 @@ class EstadosCasoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
 
         if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
 
