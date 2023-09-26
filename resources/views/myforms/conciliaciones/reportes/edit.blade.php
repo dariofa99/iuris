@@ -103,7 +103,7 @@
             set_tab();
             var summernote = $(".summernote");           
             items_delete = [];
-            summernote.summernote({
+          /*   summernote.summernote({
                 toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
@@ -114,34 +114,8 @@
                     ['insert', ['link']],
                     ['view', ['fullscreen', 'codeview', 'help']],
                 ],
-                height: 527,
-                /*  popover: {
-                     image: [
-                         [
-                             "image",
-                             ["resizeFull", "resizeHalf", "resizeQuarter", "resizeNone"],
-                         ],
-                         ["float", ["floatLeft", "floatRight", "floatNone"]],
-                         ["remove", ["removeMedia"]],
-                     ],
-                     link: [["link", ["linkDialogShow", "unlink"]]],
-                     table: [
-                         [
-                             "add",
-                             ["addRowDown", "addRowUp", "addColLeft", "addColRight"],
-                         ],
-                         ["delete", ["deleteRow", "deleteCol", "deleteTable"]],
-                     ],
-                     air: [
-                         ["color", ["color"]],
-                         ["font", ["bold", "underline", "clear"]],
-                         ["para", ["ul", "paragraph"]],
-                         ["table", ["table"]],
-                         ["insert", ["link"]],
-                     ],
-                 }, */
-                // maxHeight:460
-            });
+                height: 527,        
+            }); */
         });
     </script>
 @endpush

@@ -8,6 +8,21 @@ const expedientesService = new ExpedientesService();
 const referenciasService = new ReferenciasService();
 $(document).ready(function () {
 
+    var summernote = $(".summernote");
+    summernote.summernote({
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            //['table', ['table']],
+            ['insert', ['link']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+        ],
+        height: 527,
+    });
+
     $("#myFormCreatePdfReporte").on("submit", async function (e) {
         e.preventDefault();
         var errors = validateForm('myFormCreatePdfReporte');
@@ -75,6 +90,7 @@ $(document).ready(function () {
             $("#myFormEditPdfReporte select[name='id']").val("");
         }
     });
+
 
     $("#sel_reporte_id").on("change", async function () {
         var id = $(this).val();
@@ -183,6 +199,33 @@ $(document).ready(function () {
         $("#" + modal).modal('show');
     });
 
+    $("#btnGuardarPdfTemp").on("click", async function (e) {
+        // alert('Falta guardar') 
+        var request = serializeSummernotePdf(
+            "myFormEditPdfReporte",
+            "summernote_update"
+        );
+        var id = $("#myFormEditPdfReporte select[name=id]").val();
+        if (id == undefined) id = $("#myFormEditPdfReporte input[name=id]").val();
+        if (request) {
+            $("#wait").show();
+            let response = await conciliacionService.updateConPdfTemporal(request, id);
+            $("#wait").hide();
+            toastr.success("Actualizado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+
+
+        }
+        e.preventDefault();
+    });
+
+    $("#btnCancelPdfTemp").on("click", function (e) {
+        window.close();
+        $("#bgtransparent").remove();
+    });
+
     $("#myFormAsigReporte select[name='tabla_destino']").on("change", async function (params) {
         var categoria = $(this).val();
         if (categoria != '') {
@@ -224,33 +267,33 @@ $(document).ready(function () {
             }
         }
     });
-    $(".select_values").on("change",function(e) {       
-        $(".content_values_"+$(this).attr('data-view')).hide();
-        $("#"+$(this).val()).show()
+    $(".select_values").on("change", function (e) {
+        $(".content_values_" + $(this).attr('data-view')).hide();
+        $("#" + $(this).val()).show()
     });
 
-    $(".content_values_update").on("click","#btn_create_category",async function(e){        
+    $(".content_values_update").on("click", "#btn_create_category", async function (e) {
         var request = {
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tabla_destino':'conciliaciones_email',
-            'status_id':178
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'tabla_destino': 'conciliaciones_email',
+            'status_id': 178
         }
-      let response = await formatosService.getReportes(request);
-      console.log(response);
+        let response = await formatosService.getReportes(request);
+        console.log(response);
         $("#myModal_create_category_report").modal("show")
-    }) ;
+    });
 
-    $("#myModal_create_category_report input[name='name']").on('keyup',function (e) {
+    $("#myModal_create_category_report input[name='name']").on('keyup', function (e) {
         var cadena = $(this).val();
         var minusculas = cadena.toLowerCase();
         var espacios = minusculas.replace(/\s+/g, "_");
         var final = espacios.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-       // var final = "[-"+sin_tildes+"-]";
+        // var final = "[-"+sin_tildes+"-]";
         $("#myModal_create_category_report input[name='short_name']").val(final)
 
     });
 
-    $("#myformCreateCategoryReport").on("submit",function(e) {
+    $("#myformCreateCategoryReport").on("submit", function (e) {
         var request = convertFormToJSON('myformCreateCategoryReport');
 
         let response = referenciasService.storeFromReports(request)
@@ -386,7 +429,7 @@ function editAsignacionReporte(request) {
             response.forEach((element) => {
                 $("#chk_reporte_" + element.reporte_id).prop("checked", true);
             });
-           
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {

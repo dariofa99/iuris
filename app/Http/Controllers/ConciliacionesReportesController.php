@@ -30,13 +30,14 @@ class ConciliacionesReportesController extends Controller
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 0);
         })
-        ->with('reporte')
+            ->with('reporte')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();
 
         return response()->json($reportes);
     }
-    private function getReportes(Request $request){
+    private function getReportes(Request $request)
+    {
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 1);
         })
@@ -46,7 +47,7 @@ class ConciliacionesReportesController extends Controller
             //    ->with('users')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();
-           // return $reportes;
+        // return $reportes;
         $reportes->each(function ($reporte) use ($request) {
             $file = ConciliacionEstadoReporteGenerado::where([
                 'status_id' => $request->status_id,
@@ -78,14 +79,13 @@ class ConciliacionesReportesController extends Controller
                 if ($this->hasEmptyValuesPersonalized($reporte->reporte)) {
                     $reporte->hasEmptyValuesPersonalized = true;
                 }
-
             }
         });
         return $reportes;
     }
     public function getPdfReportesConciliacion(Request $request)
     {
-         
+
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $reportes = $this->getReportes($request);
         $view = view('myforms.conciliaciones.componentes.pdf_report_list', compact('reportes', 'conciliacion'))->render();
@@ -113,7 +113,7 @@ class ConciliacionesReportesController extends Controller
         $tipos = [];
         $tipos_estados = [];
         $all_firmas = true;
-        $pivots_id=[];
+        $pivots_id = [];
         foreach ($reporte_de->users as $key => $user) {
             // return response()->json($user);
             $ids[] = $user->id;
@@ -127,7 +127,7 @@ class ConciliacionesReportesController extends Controller
 
         $conciliacion = Conciliacion::find($request->conciliacion_id);
 
-        $view = view('myforms.conciliaciones.componentes.pdf_report_list_firmantes', compact('ids','pivots_id','reporte_de', 'conciliacion', 'tipos', 'tipos_estados', 'all_firmas'))->render();
+        $view = view('myforms.conciliaciones.componentes.pdf_report_list_firmantes', compact('ids', 'pivots_id', 'reporte_de', 'conciliacion', 'tipos', 'tipos_estados', 'all_firmas'))->render();
 
         $response = [
             'data' => $reporte_de,
@@ -151,7 +151,13 @@ class ConciliacionesReportesController extends Controller
             foreach ($request->email_user_id as $key => $us) {
                 $user = DB::table('pdf_reportes_users')
                     ->where('user_id', $us)
-                    ->where(['conciliacion_id' => $request->conciliacion_id, 'pdf_reporte_id' => $request->estado_id, 'tipo_usuario_id' => $request->type_user_id[$key]])
+                    ->where([
+                        'conciliacion_id' => $request->conciliacion_id,
+                        'pdf_reporte_id' => $request->estado_id,
+                        'tipo_usuario_id' => $request->type_user_id[$key],
+                        'revocado' => 0,
+                        'firmado' => 0
+                    ])
                     ->first();
 
                 // return response()->json($user);
@@ -179,6 +185,7 @@ class ConciliacionesReportesController extends Controller
 
     function setFirmantes(Request $request)
     {
+        //  return response()->json($request->all());
         $pdf_rpd = PdfReporteDestino::find($request->estado_id);
 
         if ($request->delete_users_id) {
@@ -433,7 +440,7 @@ class ConciliacionesReportesController extends Controller
     {
         //
         $conciliacion = Conciliacion::with('estados.files.userinestado')
-        ->find($request->conciliacion_id);
+            ->find($request->conciliacion_id);
         /* $conciliacion->estados->each(function ($estado) {
             $estado->files->each(function ($file){
                 $file->userinconciliacion;
@@ -527,10 +534,11 @@ class ConciliacionesReportesController extends Controller
         return response()->json($response);
     }
 
-    public function revockFirma(Request $request){
+    public function revockFirma(Request $request)
+    {
         $revock = DB::table('pdf_reportes_users')
-        ->where(['id'=>$request->pivot_id])
-        ->update(['revocado'=>1]);
+            ->where(['id' => $request->pivot_id])
+            ->update(['revocado' => 1]);
         return response()->json($revock);
     }
 }

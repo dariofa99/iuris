@@ -10,6 +10,10 @@
 @section('titulo_area')
 Actualizando formato            
 @endsection
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
 @section('area_forms')
 
 @include('msg.success')
@@ -29,12 +33,12 @@ Actualizando formato
 
 @push('scripts')
 <!-- aqui van los scripts de cada vista -->
-{{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script> --}}
-
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script type="module" src={{ asset('js/admin_reportespdf.js') }}></script>
 
 
     
 <script>
-          
+        
 </script>
 @endpush

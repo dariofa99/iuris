@@ -82,8 +82,12 @@
 </div>
 @else
 
-    <div class="alert alert-success">
-        Asigne fecha de audiencia para visualizar estudiantes
+    <div class="alert alert-info">
+      
+        <h4>
+            <i class="far fa-calendar-alt"></i> 
+            Asigne fecha de audiencia para asignar reparto!
+        </h4> 
     </div>
 
 

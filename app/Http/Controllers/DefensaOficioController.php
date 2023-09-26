@@ -286,7 +286,7 @@ class DefensaOficioController extends Controller
     ]);
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     
-
+ 
     $readonly = false;
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $expediente->estudiante->id) {
@@ -295,9 +295,13 @@ class DefensaOficioController extends Controller
       }    
     }
   
-    if ($expediente->expestado_id == '4' || $expediente->expestado_id == '2'
-    || $expediente->expestado_id == '5') {
-     Session::flash('message-success', 'Actualizado con éxito...!');
+    if (($expediente->expestado_id == '4' 
+    || $expediente->expestado_id == '2'
+    || $expediente->expestado_id == '5') 
+    and (currentUser()->hasRole('estudiante')
+        || currentUser()->hasRole('solicitante'))
+    ) {
+    
      return redirect('/defensas/oficio/' . $expediente->expid);
    }
     return view('myforms.frm_defensa_oficio_edit', compact('estudiantes', 'expediente', 'readonly'));

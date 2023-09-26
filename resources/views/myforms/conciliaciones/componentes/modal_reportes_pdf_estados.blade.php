@@ -1,4 +1,4 @@
-@component('components.modal_dynamic_cols')
+@component('components.b4.modal_large')
 	
 	@slot('trigger')
 		myModal_reportes_pdf_estados
@@ -8,10 +8,7 @@
 		Reportes 
 	@endslot
 
-    @slot('cols')
-		col-md-8 col-md-offset-2
-	@endslot 
-	@slot('body')
+ 	@slot('body')
 	<div class="row" id="content_user_pdf_list" >
 		<div class="col-md-12">               
             <table class="table" id="myReportPdfList">
@@ -30,8 +27,11 @@
                    
 		</div>		
 	</div>
-    <div class="row" id="content_user_pdf_firmas" style="display: none">
+    <div id="content_user_pdf_firmas" style="display: none">
         <form id="myFormAsigFirmaPdf">
+            <div class="row">
+
+           
             <input type="hidden" name="estado_id">
             <div class="col-md-12">
                 <h4>
@@ -61,7 +61,7 @@
                 </button>
 
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12 mt-3">
                 
                 <table class="table" id="table_list_pdf_users">
                     <thead>
@@ -86,6 +86,7 @@
                     </tbody>
                 </table>
             </div>
+        </div>
         </form>       
     </div>
     <div class="row" id="content_personalized_values_pdf" style="display: none">

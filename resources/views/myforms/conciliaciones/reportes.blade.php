@@ -1,23 +1,24 @@
 <div class="row">
     <div class="col-md-9">
-        <form id="{{ $myForm }}" method="POST">
-          
+        <form id="{{ $myForm }}" method="POST">          
             <input name="reporte" type="hidden">
             @if (isset($conciliacion))
                 <input name="conciliacion_id" value="{{ $conciliacion->id }}" type="hidden">
                 <input name="status_id" value="{{ isset($estado) ? $estado : $conciliacion->status_id }}" type="hidden">
             @endif
             <input name="report_keys" id="report_keys" value="" type="hidden">
-
             <div class="row">
                 <div class="col-md-5">
                     <label> Seleccione una categoria </label>
                     <div class="form-group">
                         <select required name="categoria_id" id="categoria_id"
-                            class="form-control form-control-sm required">
+                            class="form-control form-control-sm required"
+                            @if ($view and $view == 'update_temp')
+                            disabled
+                            @endif>
                             <option value="">Seleccione...</option>
                             @forelse($types_categories_report as $key => $types_categorie)
-                                <option value="{{ $key }}">{{ $types_categorie }}</option>
+                                <option {{(isset($reporte) and $reporte !=null and $reporte->categoria_id == $key) ? "selected":''}} value="{{ $key }}">{{ $types_categorie }}</option>
                             @empty
                                 <option value="">Sin categoria</option>
                             @endforelse
@@ -35,7 +36,6 @@
                     @endif
 
                     @if ($view and $view == 'update_temp')
-
                         <div id="cont_temp">
                             @if ($reporte->is_temp)
                                 <input type="hidden" name="is_temp" value="{{ $reporte->id }}">
@@ -45,13 +45,7 @@
                             @endif
                         </div>
                     @endif
-
                 </div>
-
-
-
-
-
             </div>
             <div
                 @if ($view and $view == 'update') style="border-top: 1px solid rgb(222, 220, 220);margin-top:2px" @endif>
@@ -60,6 +54,9 @@
                         <label> {{ ($view and $view == 'update') ? 'Cambiar' : '' }} Nombre del formato </label>
                         <input type="text" required class="form-control form-control-sm required"
                             name="nombre_reporte"
+                            @if ($view and $view == 'update_temp')
+                            disabled
+                            @endif
                             @if ($view and $view == 'update_temp' and $reporte) value="{{ $reporte->nombre_reporte }}" @endif>
 
                     </div>

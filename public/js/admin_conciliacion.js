@@ -6,6 +6,8 @@ const userService = new UserService();
 const conciliacionService = new ConciliacionService();
 const formatosService = new FormatosService();
 $(document).ready(function () {
+  var users_delete = {};
+  var conc_estado_id = 0;
   if ($("#conciliacion_id").val() != undefined) {
     set_tab();
     var date = $("#audiencia_fecha").val()
@@ -599,6 +601,196 @@ $(document).ready(function () {
 
   });
 
+  $("#table_list_estados").on("click", ".btn_descargar_rep_pdf", async function (e) {
+    var request = {
+      //  conc_estado_id: $(this).attr("data-id"),
+      tabla_destino: "226",
+      status_id: $(this).attr("data-estado_id"),
+      conciliacion_id: $("#conciliacion_id").val()
+    };
+    $("#wait").show();
+    let response = await conciliacionService.getPdfReportesConciliacion(request);
+    $("#myReportPdfList tbody").html("");
+    $("#alertmyReportList").hide();
+    $("#content_user_pdf_firmas").hide();
+    $("#content_personalized_values_pdf").hide();
+    $("#content_user_pdf_list").show();
+    conc_estado_id = response.conc_estado_id
+    $("#myReportPdfList tbody").html(response.view);
+    //$("#myReportList tbody").html(response.view); 
+    $("#alertmyReportList").show();
+    $("#myModal_reportes_pdf_estados").modal("show");
+    $("#wait").hide();
+  });
+
+  var myPopupWindow = window;
+  $("#myReportPdfList").on("click", ".btn_edit_con_pdf", function (e) {
+    e.preventDefault();
+    var url = $(this).attr("href");
+    var bgdiv = $("<div>").attr({
+      className: "bgtransparent",
+      id: "bgtransparent",
+    });
+    // agregamos nuevo div a la pagina       
+    $("body").append(bgdiv);
+    // obtenemos ancho y alto de la ventana del explorer
+    var wscr = $(window).width();
+    var hscr = $(window).height();
+    //establecemos las dimensiones del fondo
+    $("#bgtransparent").css("width", wscr);
+    $("#bgtransparent").css("height", hscr);
+    myPopupWindow = window.open(url,
+      "popup",
+      "toolbar=no,width=" + (window.screen.width - 10) + ", height= " + (window.screen.height - 10) +
+      ",left=10, top=15,resizable=no,scrollbars=NO");
+    myPopupWindow.addEventListener('beforeunload', function (e) {
+      $("#bgtransparent").remove();
+    });
+
+  });
+
+  $("body").on("click", "#bgtransparent", function (e) {
+    e.preventDefault();
+
+    myPopupWindow.resizeTo(window.screen.width, window.screen.height);
+    myPopupWindow.moveTo(0, 0);
+    var confirmClose = confirm("Tienes una ventana emergente abierta \nDeseas cerrarla? \nNo se guardaran los cambios!");
+    if (confirmClose) {
+      myPopupWindow.close();
+      $("#bgtransparent").remove();
+    }
+  });
+
+  $("#myReportPdfList").on("click", ".btn_asignar_firmantes", async function (e) {
+    var id = $(this).attr("data-estado_id");
+    var request = {
+      "id": id,
+      "conciliacion_id": $("#conciliacion_id").val()
+    }
+    users_delete = [];
+    $("#wait").show();
+    let res = await conciliacionService.getFirmantes(request);
+    $(".volver_enviar_mail").hide();
+    $("#btn_volver_enviar_email").hide();
+    $("#btn_enviar_email").show();
+    $(".check_selusfirm").prop("disabled", true);
+    var revocarFirmas = false;
+    $("#btn_revocar_firmas").hide()
+      .attr("data-status_id", "0")
+      .attr("data-reporte_id", "0");
+    if (res.all_firmas == true) {
+      $("#btn_generar_pdf").show()
+        .attr("data-status_id", res.data.status_id)
+        .attr("data-reporte_id", res.data.reporte_id);
+    } else {
+      $("#btn_generar_pdf").hide()
+        .attr("data-status_id", "0")
+        .attr("data-reporte_id", "0")
+    }
+    if (res.data.users.length > 0) {
+      $("#btn_select_volver_enviar_email").show();
+      res.data.users.forEach(user => {
+        if (user.pivot.tipo_firma_id == 209 && user.pivot.firmado == 1) {
+          revocarFirmas = true;
+          $("#btn_revocar_firmas").show()
+            .attr("data-status_id", res.data.status_id)
+            .attr("data-reporte_id", res.data.id);
+        }
+      });
+    } else {
+      $("#btn_select_volver_enviar_email").hide();
+    }
+    $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
+    $("#table_list_pdf_users tbody").html(res.view);
+    $("#myFormAsigFirmaPdf input[name=estado_id]").val(res.data.id);
+    $("#content_user_pdf_firmas").show();
+    $("#content_user_pdf_list").hide();
+    $("#wait").hide();
+  });
+
+  $("#myFormAsigFirmaPdf").on("submit", async function (e) {
+    e.preventDefault()
+    var request = convertFormToJSON('myFormAsigFirmaPdf');
+    request['conciliacion_id'] = $("#conciliacion_id").val();
+    if (users_delete.length > 0) request['delete_users_id'] = users_delete;
+    $("#wait").show();
+    let res = await conciliacionService.setFirmantes(request);
+    Toast.fire({
+      title: 'Asignado con éxito.',
+      icon: 'success',
+      timer: 2000,
+    });
+    $("#content_user_pdf_firmas").hide();
+    $("#content_user_pdf_list").show();
+    $("#myModal_reportes_pdf_estados").modal("hide");
+    //  window.location.reload(true);
+    $("#wait").hide();
+  });
+  $("#btn_select_volver_enviar_email").on("click", function (e) {
+    $(".volver_enviar_mail").show();
+    $(".check_selusfirm").prop("disabled", true);
+    $("#btn_select_volver_enviar_email").hide();
+    $("#btn_volver_enviar_email").show();
+    $("#btn_enviar_email").hide()
+  });
+  $("#btn_volver_enviar_email").on("click", async function (e) {
+    e.preventDefault()
+    var request = convertFormToJSON('myFormAsigFirmaPdf');
+    request['conciliacion_id'] = $("#conciliacion_id").val();
+    $("#wait").show();
+    let res = await conciliacionService.reenviarMails(request);
+    Toast.fire({
+      title: 'Enviado con éxito.',
+      icon: 'success',
+      timer: 2000,
+    });
+    $("#content_user_pdf_firmas").hide();
+    $("#content_user_pdf_list").show();
+    $("#wait").hide();
+  });
+  $("#btn_cancelar_asig_user").on("click", function (e) {
+    $("#content_user_pdf_firmas").hide();
+    $("#content_user_pdf_list").show();
+  });
+  $("#table_list_pdf_users").on("change", '.select_type_firma', function (e) {
+    if ($(this).val() != '209' && $(this).val() != '') {
+      $("#check_selusfirm-" + $(this).attr("data-userid")).prop("disabled", true);
+      $("#check_selusfirm-" + $(this).attr("data-userid")).prop("checked", false);
+      $("#input_selusfirm-" + $(this).attr("data-userid")).val($(this).attr("data-id"));
+      $("#input_selusfirm-" + $(this).attr("data-userid")).prop("disabled", false);
+      $("#input_selustipofirm-" + $(this).attr("data-userid")).val($(this).val());
+      $("#input_selustipofirm-" + $(this).attr("data-userid")).prop("disabled", false);
+      $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false);
+    } else if ($(this).val() == '') {
+      $("#check_selusfirm-" + $(this).attr("data-userid")).prop("disabled", true);
+      $("#input_selusfirm-" + $(this).attr("data-userid")).val("");
+      $("#input_selusfirm-" + $(this).attr("data-userid")).prop("disabled", true);
+      $("#check_selusfirm-" + $(this).attr("data-userid")).prop("checked", false);
+      $("#input_selustipofirm-" + $(this).attr("data-userid")).val("");
+      $("#input_selustipofirm-" + $(this).attr("data-userid")).prop("disabled", true);
+      $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", true);
+    } else {
+      $("#check_selusfirm-" + $(this).attr("data-userid")).prop("disabled", false);
+      $("#check_selusfirm-" + $(this).attr("data-userid")).prop("checked", true);
+      $("#input_selusfirm-" + $(this).attr("data-userid")).val($(this).attr("data-id"));
+      $("#input_selusfirm-" + $(this).attr("data-userid")).prop("disabled", false);
+      $("#input_selustipofirm-" + $(this).attr("data-userid")).val($(this).val());
+      $("#input_selustipofirm-" + $(this).attr("data-userid")).prop("disabled", false);
+      $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false);
+    }
+    if ($(this).val() == '' && $(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).attr("data-userid")) == -1) {
+      users_delete.push($(this).attr("data-userid"));
+      $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false)
+    } else if ($(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).attr("data-userid")) != -1) {
+      users_delete.splice(users_delete.indexOf($(this).attr("data-userid")), 1);
+      $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false)
+    }
+  });
+
+  $("#btnCancelPdfTemp").on("click", function (e) {
+    myPopupWindow.close();
+    $("#bgtransparent").remove();
+  });
   $("#table_list_estudiantes_aud").on("click", '.btn_update_rol_est', async function (e) {
     var idnumber = $(this).attr("data-id");
     var idrol = $("#select_rol_est_conciliacion" + idnumber).val()
@@ -617,7 +809,7 @@ $(document).ready(function () {
     if (idrol == '') {
       Toast.fire({
         title: 'Error en la asignación, contactar al administrador.',
-        type: 'danger',
+        icon: 'danger',
         timer: 5000,
       });
       return false;
@@ -633,7 +825,7 @@ $(document).ready(function () {
     if (res.state == 1 || res.state == true) {
       Toast.fire({
         title: 'La asignación se ha actualizado con exito.',
-        type: 'success',
+        icon: 'success',
         timer: 5000,
       });
       if (res.action == 'delete') {
@@ -651,12 +843,11 @@ $(document).ready(function () {
             .removeAttr("style");
         }
 
-      }
-      // window.location.reload(true)
+      }     
     } else {
       Toast.fire({
         title: 'Error en la asignación, contactar al administrador.',
-        type: 'danger',
+        icon: 'danger',
         timer: 5000,
       });
     }
@@ -664,6 +855,37 @@ $(document).ready(function () {
     $("#wait").css("display", "none");
 
   });
+
+  $("#myFormAsigFirmaPdf").on("click", ".btn_revocar_firmas", function (e) {
+    var status_id = $(this).attr('data-status_id');
+    var reporte_id = $(this).attr('data-reporte_id');
+    Swal.fire({
+      title: "Esta seguro que desea solicitar revocación de firmas?",
+      text:"Esta acción solicitará mediante correo electrónico a las partes con firma electrónica la anulación de la firma.\nDeberá esperar la aceptación.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, solicitar revocación!',
+      cancelButtonText: 'No, cancelar!'
+    }).then(async (result) => {
+      if (result.value) {
+        var request = {
+          "reporte_id": reporte_id,
+          "conc_estado_id": conc_estado_id,
+          "status_id": status_id,
+          "conciliacion_id": $("#conciliacion_id").val()
+        }
+        let res = await conciliacionService.revocarFirmas(request);
+        Toast.fire({
+          title: 'Se ha enviado la solicitud.',
+          icon: 'success',
+          timer: 2000,
+        });
+        $("#wait").hide();
+      }
+    });
+  })
 
   $("#table_list_comentarios").on(
     "click",
@@ -675,7 +897,7 @@ $(document).ready(function () {
       };
       Swal.fire({
         title: "Esta seguro de eliminar el comentario?",
-        type: "warning",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",

@@ -2360,7 +2360,7 @@ return false;
         };
         getPdfReportesConciliacion(request); 
 
-    });
+    }); 
 
     $("#reporte").on("submit", "#myFormCreatePdfReporte", function (e) {
         var request = serializePdf(
@@ -2826,8 +2826,7 @@ return false;
             users_delete.forEach(element => {
                 request.push({name:'delete_users_id[]', value: element})
             });            
-        }
-       
+        }       
         setFirmantes(request);
         e.preventDefault()
      });

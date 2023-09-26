@@ -138,22 +138,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $("#table_list_estados").on("click", ".btn_descargar_rep_pdf", function (e) {
-        /*var request = {
-            estado_id: $(this).attr("data-id"),
-            conciliacion_id: $("#conciliacion_id").val(),
-        };
-        getEstadosReportesPdf(request);*/
- 
-        var request = {
-          //  conc_estado_id: $(this).attr("data-id"),
-            tabla_destino: "226",
-            status_id: $(this).attr("data-estado_id"),
-            conciliacion_id:$("#conciliacion_id").val()
-        };
-        getPdfReportesConciliacion(request); 
-
-    });
+  
 
     $("#exptipoproce_id2").change(async function () {
         var idconsul = $("#exptipoproce_id2").val();
@@ -732,7 +717,7 @@ $(document).ready(function () {
         e.preventDefault();
         var errors = validateForm('myFormExpsStore');
         if (errors.length <= 0) {
-            var request = convertFormToJSON('myFormExpsStore');           
+            var request = convertFormToJSON('myFormExpsStore');
             $("#wait").show();
             var response = await expedientesService.store(request);
             resetForm('myFormExpsStore')
@@ -2194,7 +2179,7 @@ function get_notas(tbl_id, origen) {
 
             $("#myModal_edit_notas #btns_edit_notas").hide();
             $("#wait").css("display", "none");
-            
+
             if (res.encontrado) {
                 $("#myModal_edit_notas #lbl_periodo").text(res.periodo);
                 $("#myModal_edit_notas #lbl_segmento").text(res.segmento);
@@ -2224,7 +2209,7 @@ function get_notas(tbl_id, origen) {
                     $("#btn_update_notas").attr("id", "btn_update");
                     //$("#btn_tipo_nota_update").attr('id', 'btn_update_tipo');
                 }
-                
+
                 $("#myModal_edit_notas").modal("show");
             }
 
@@ -2526,8 +2511,8 @@ function llenarModalDetailsAct(res) {
     }
 
     var segmento_id = $("#segmento_id").val();
-   hideElement('btn_cam_nt_act');
-   $("#cont_notas_ac").hide();
+    hideElement('btn_cam_nt_act');
+    $("#cont_notas_ac").hide();
     if (res.notas_f.encontrado) {
         $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
         $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);
