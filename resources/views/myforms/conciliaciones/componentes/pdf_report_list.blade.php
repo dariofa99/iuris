@@ -6,7 +6,7 @@
 
     {{$reporte->reporte->nombre_reporte}}
     </td>
-    <td width="5%">
+    <td>
    <a class="btn btn-warning btn-sm btn-block" target="_blank" href="/pdf/reportes/generate/{{$conciliacion->id}}/{{$reporte->reporte->id}}/{{ $reporte->status_id}}">
     Vista previa </a> 
 

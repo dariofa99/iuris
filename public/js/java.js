@@ -2997,7 +2997,7 @@ return false;
             conciliacion_id:$("#conciliacion_id").val()
         }; 
         getStatusFiles(request);  
-    })
+    });
   
     $("#tipo_busqueda_conciliacion").on("change",function(e){
         var content = $(this).val()
@@ -3915,7 +3915,7 @@ function getStatusFiles(request) {
                 $(element).children().attr("data-row",key) 
                       
             });
-            console.log(partesConciliacionMail);
+          
             $("#myFormCompartirDocumento input[name=status_id]").val(res.estado.type_status_id)
             $("#content_compartidos").html(res.view_compartidos)         
             $("#myModal_reportes_archivos_compartidos").modal("show")

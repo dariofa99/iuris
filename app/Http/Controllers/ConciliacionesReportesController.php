@@ -146,7 +146,7 @@ class ConciliacionesReportesController extends Controller
         ->whereIn('user_id',$request->email_user_id)
         ->where(['conciliacion_id'=>$request->conciliacion_id,
                 'pdf_reporte_id'=>$request->estado_id
-        ])->get(); */
+        ])->get(); */ 
         if ($request->email_user_id) {
             foreach ($request->email_user_id as $key => $us) {
                 $user = DB::table('pdf_reportes_users')
@@ -169,7 +169,11 @@ class ConciliacionesReportesController extends Controller
                     $user_m->calidad = $referencia->ref_nombre;
                     $user = DB::table('pdf_reportes_users')
                         ->where('user_id', $us)
-                        ->where(['conciliacion_id' => $request->conciliacion_id, 'pdf_reporte_id' => $request->estado_id, 'tipo_usuario_id' => $request->type_user_id[$key]])
+                        ->where([
+                            'conciliacion_id' => $request->conciliacion_id, 
+                            'pdf_reporte_id' => $request->estado_id, 
+                            'tipo_usuario_id' => $request->type_user_id[$key]
+                            ])
                         ->update([
                             'created_at' => date('Y-m-d H:i:s'),
                         ]);

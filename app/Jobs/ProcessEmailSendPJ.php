@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
@@ -20,17 +21,20 @@ class ProcessEmailSendPJ implements ShouldQueue
     private $expediente;
     protected $userService;
     protected $status;
+    protected $userName;
+    
     /**
      * Create a new job instance.
      * @param Expediente $expediente
      * @return void
      */
-    public function __construct(Expediente $expediente,$status)
+    public function __construct(Expediente $expediente,$status,$userName)
     {
         Log::info($expediente);
         $this->expediente = $expediente;
         $this->status = $status;
         $this->userService = App::make(UsersService::class);
+        $this->userName = $userName;
     }
 
     /**
@@ -50,10 +54,10 @@ class ProcessEmailSendPJ implements ShouldQueue
         }
         $estudiante = $this->expediente->estudiante;
         $docente = $this->expediente->getDocenteAsig();
-        Notification::send($estudiante, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $this->expediente));
-        Notification::send($docente, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $this->expediente));
+        Notification::send($estudiante, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $this->expediente,$this->userName));
+        Notification::send($docente, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $this->expediente,$this->userName));
         if (count($users) > 0) {
-            Notification::send($users, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $this->expediente));
+            Notification::send($users, new SolicitudEstudiantesProcesosJuricosExp($mensaje, $this->expediente,$this->userName));
             
         } 
     }

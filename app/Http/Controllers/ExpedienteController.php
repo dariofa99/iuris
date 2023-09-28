@@ -1630,8 +1630,11 @@ class ExpedienteController extends Controller
       $procjudi = $this->procjucicialService->saveFile($procjudi, $request);
     }
     $expediente->setRelations([]);
-    ProcessEmailSendPJ::dispatch($expediente, $request->estado_id)
-      ->onConnection('database')->onQueue('emails');;
+    ProcessEmailSendPJ::dispatch(
+      $expediente,
+      $request->estado_id,
+      Auth::user()->name . " " . Auth::user()->lastname
+    )->onConnection('database')->onQueue('emails');;
 
 
     return response()->json($expediente);

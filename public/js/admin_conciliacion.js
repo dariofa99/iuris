@@ -8,6 +8,7 @@ const formatosService = new FormatosService();
 $(document).ready(function () {
   var users_delete = {};
   var conc_estado_id = 0;
+  var partesConciliacionMail = []
   if ($("#conciliacion_id").val() != undefined) {
     set_tab();
     var date = $("#audiencia_fecha").val()
@@ -420,7 +421,46 @@ $(document).ready(function () {
       }
     });
   });
-
+  $("#table_list_pdf_users").on("click", '.check_selusvolverfirm', function (e) {
+    $("#inusre-" + $(this).attr("data-input_id")).prop('disabled', true)
+    if ($(this).is(":checked")) {
+      $("#inusre-" + $(this).attr("data-input_id")).prop('disabled', false)
+    }
+  });
+  $("#content_user_pdf_list").on("click", ".btn_gene_pdf", function (e) {
+    var status_id = $(this).attr('data-status_id');
+    var reporte_id = $(this).attr('data-reporte_id');
+    Swal.fire({
+      title: 'Esta seguro que desea generar los documentos?',
+      text: "No se podrá revertir los cambios!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, generar!',
+      cancelButtonText: 'No, cancelar!'
+    }).then(async (result) => {
+      if (result.value) {
+        var request = {
+          "reporte_id": reporte_id,
+          "conc_estado_id": conc_estado_id,
+          "status_id": status_id,
+          "conciliacion_id": $("#conciliacion_id").val()
+        }
+        $("#wait").show();
+        await conciliacionService.generarPdfs(request);
+        Toast.fire({
+          title: 'Generado con éxito.',
+          type: 'success',
+          timer: 2000,
+        });
+        $("#content_user_pdf_firmas").hide();
+        $("#content_user_pdf_list").show();
+        $("#myModal_reportes_pdf_estados").modal("hide")
+        $("#wait").hide();
+      }
+    });
+  });
   $(".btn_detalles_us_con").on("click", async function (e) {
     var data_type = $(this).attr("data-type");
     $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
@@ -602,8 +642,8 @@ $(document).ready(function () {
   });
 
   $("#table_list_estados").on("click", ".btn_descargar_rep_pdf", async function (e) {
+    conc_estado_id = $(this).attr("data-id")
     var request = {
-      //  conc_estado_id: $(this).attr("data-id"),
       tabla_destino: "226",
       status_id: $(this).attr("data-estado_id"),
       conciliacion_id: $("#conciliacion_id").val()
@@ -615,9 +655,7 @@ $(document).ready(function () {
     $("#content_user_pdf_firmas").hide();
     $("#content_personalized_values_pdf").hide();
     $("#content_user_pdf_list").show();
-    conc_estado_id = response.conc_estado_id
     $("#myReportPdfList tbody").html(response.view);
-    //$("#myReportList tbody").html(response.view); 
     $("#alertmyReportList").show();
     $("#myModal_reportes_pdf_estados").modal("show");
     $("#wait").hide();
@@ -658,6 +696,55 @@ $(document).ready(function () {
     if (confirmClose) {
       myPopupWindow.close();
       $("#bgtransparent").remove();
+    }
+  });
+
+  $("#table_list_estados").on("click", '.btn_compartir_rep_pdf', async function (e) {
+    var request = {
+      conc_estado_id: $(this).attr("data-id"),
+      tabla_destino: "conciliaciones",
+      status_id: $(this).attr("data-estado_id"),
+      conciliacion_id: $("#conciliacion_id").val()
+    };
+    $("#wait").show();
+    let res = await conciliacionService.getStatusFiles(request);
+    partesConciliacionMail = []
+    $("#tbl_list_mail_partes").html("")
+    $("#tbl_list_archivos_comp").html("")
+    $("#content_shmail").hide();
+    $(".shared_mail").prop("disabled", true);
+    $("#btn_compcon_file").prop("disabled", true)
+    $("#myFormCompartirDocumento select[name=means_id]").prop("disabled", true)
+    $("#myFormCompartirDocumento select[name=means_id]").val(218);
+    $("#myFormCompartirDocumento select[name=category_id]").val(214);
+    var mail = "";
+    var count = 0;
+    res.partes.forEach((user, key) => {
+      if (!partesConciliacionMail.includes(user.email)) {
+        mail += createRowMail(count,user.email);
+        partesConciliacionMail.push(user.email);
+        count++;
+      }
+
+    });
+    $("#tbl_list_mail_partes").html(mail)
+    $("#tbl_list_archivos_comp").append(res.view);
+    /* $(".rows_mails").each((key, element) => {
+      $(element).attr("id", "row-" + key)
+      $(element).children().attr("data-row", key)
+
+    }); */
+    $("#myFormCompartirDocumento input[name=status_id]").val(res.estado.type_status_id)
+    $("#content_compartidos").html(res.view_compartidos)
+    $("#myModal_reportes_archivos_compartidos").modal("show")
+    $("#wait").hide();
+
+    if (res.view == '') {
+      $("#content_msg_info").show();
+      $("#myFormCompartirDocumento").hide()
+    } else {
+      $("#content_msg_info").hide();
+      $("#myFormCompartirDocumento").show()
     }
   });
 
@@ -843,7 +930,7 @@ $(document).ready(function () {
             .removeAttr("style");
         }
 
-      }     
+      }
     } else {
       Toast.fire({
         title: 'Error en la asignación, contactar al administrador.',
@@ -861,7 +948,7 @@ $(document).ready(function () {
     var reporte_id = $(this).attr('data-reporte_id');
     Swal.fire({
       title: "Esta seguro que desea solicitar revocación de firmas?",
-      text:"Esta acción solicitará mediante correo electrónico a las partes con firma electrónica la anulación de la firma.\nDeberá esperar la aceptación.",
+      text: "Esta acción solicitará mediante correo electrónico a las partes con firma electrónica la anulación de la firma.\nDeberá esperar la aceptación.",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -930,6 +1017,64 @@ $(document).ready(function () {
       .html(color.namecolors);
 
 
+  });
+
+  $("#myFormCompartirDocumento select[name=category_id]").on("change", function (e) {
+    e.preventDefault();
+    $("#content_files").show()
+    $("#content_datashared").hide()
+    if ($(this).val() != 214) {
+      $("#myFormCompartirDocumento select[name=means_id]").prop("disabled", false)
+      var means_id = $("#myFormCompartirDocumento select[name=means_id]").val()
+      if (means_id == 218) {
+        $("#content_shmail").show();
+        $(".shared_mail").prop("disabled", false);
+        $("#tbl_list_mail_partes").html("")
+      } else {
+        $("#content_shmail").hide();
+        $(".shared_mail").prop("disabled", true);
+      }
+
+    } else {
+      $("#tbl_list_mail_partes").html("")
+      $("#myFormCompartirDocumento select[name=means_id]").prop("disabled", true)
+      $("#myFormCompartirDocumento select[name=means_id]").val(218);
+      $("#content_shmail").hide();
+      $(".shared_mail").prop("disabled", true);
+      var mail = '';
+      partesConciliacionMail.forEach((element,key) => {
+        mail += createRowMail(key,element);
+      });
+      $("#tbl_list_mail_partes").html(mail)
+      /* $(".rows_mails").each((key, element) => {
+        $(element).attr("id", "row-" + key)
+        $(element).children().find('span').attr("data-row", key)       
+      }); */
+    }
+
+  });
+
+  $("#myFormCompartirDocumento select[name=means_id]").on("change", function (e) {
+    e.preventDefault();
+    $("#content_files").show()
+    $("#content_datashared").hide()
+    $("#tbl_list_mail_partes").html("")
+    if ($(this).val() == 218) {
+      $("#content_shmail").show();
+      $(".shared_mail").prop("disabled", false);
+    } else {
+      $("#content_shmail").hide();
+      $(".shared_mail").prop("disabled", true);
+    }
+
+  });
+
+  $("#tbl_list_mail_partes").on("click", '.btn_delete_mail', function (e) {
+    $("#row-" + $(this).attr("data-row")).remove()
+    $(".rows_mails").each((key, element) => {
+      $(element).attr("id", "row-" + key)
+      $(element).children().attr("data-row", key);
+    });
   });
 
   $("#btm_save_date_audiencia").on('click', async function () {
@@ -1086,4 +1231,14 @@ function notEdit(data_type, form) {
   $("#" + form + " select").val("");
 
 
+}
+function createRowMail(key,usermail) {
+
+  var tr = `<div class="rows_mails" id="row-${key}">
+    <input type="hidden" value="${usermail}" name="shared_mail[]">                      
+      <label  style="cursor: default;" data-row="${key}" class="btn btn-warning btn-sm label p-2 m-1">
+          ${usermail} <span data-row="${key}" style="cursor: pointer;" class="badge badge-light btn_delete_mail">X</span>
+      </label>                                 
+   </div>`;
+  return tr;
 }

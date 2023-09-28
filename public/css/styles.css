@@ -684,12 +684,11 @@ body{
 	border-bottom: 1px solid #e4e4e4;
 	border-radius: 1px;
 	font-size: medium;
+	
 }
-.rows_mails{
-	padding: 3px;
-	float: left;
-	font-size: 17px;
-}
+
+
+
 
 .ul-users-chat{
 	list-style: none;

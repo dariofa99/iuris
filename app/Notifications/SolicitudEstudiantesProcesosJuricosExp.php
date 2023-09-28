@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use Illuminate\Support\Facades\Auth;
 
 class SolicitudEstudiantesProcesosJuricosExp extends Notification
 {
@@ -20,10 +20,12 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
      * @return void
      */
     public $mensaje;
+    public $user;
     public $expediente;
-    public function __construct($mensaje,$expediente)
+    public function __construct($mensaje,$expediente,$user)
     {
        $this->mensaje = $mensaje;  
+       $this->user = $user;  
        $this->expediente = $expediente;        
     }
 
@@ -51,6 +53,7 @@ class SolicitudEstudiantesProcesosJuricosExp extends Notification
         ->subject('Solicitud de proceso jurídico')
         ->view('myforms.mails.frm_notificaciones_procjudexp',[
                 'mensaje'=>$this->mensaje,
+                'user_created'=>$this->user,
                 'url'=>url('/expedientes/'.$this->expediente->expid.'/edit')
         ]);
 

@@ -784,7 +784,7 @@ class ConciliacionesController extends Controller
 
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $estado = ConciliacionEstado::find($request->conc_estado_id);
-
+        //return response()->json(['user'=>$request->all(),'es'=>$estado]);
         if ($request->status_id != '0') {
             $pdfs =  PdfReporteDestino::with('reporte')
                 ->where('status_id', $request->status_id)

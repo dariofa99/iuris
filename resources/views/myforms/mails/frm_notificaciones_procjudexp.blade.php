@@ -21,7 +21,10 @@
 
                                {!!  $mensaje !!} </span></p>
                     </div>
-
+                    @if(isset($user_created))
+                    <hr>
+                        <h4>Enviado por:  {!!  $user_created !!}</h4>
+                    @endif
                 </td>
             </tr>
         </tbody>
