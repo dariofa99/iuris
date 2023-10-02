@@ -248,12 +248,14 @@ class UsersRepository extends BaseRepository implements UsersService
       ->leftjoin('user_has_ramasderecho', 'user_has_ramasderecho.user_id', '=', 'users.id')
       ->leftjoin('rama_derecho', 'rama_derecho.id', '=', 'ramaderecho_id')
       ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-      ->where('role_id', '4')
+      ->where(function($query){
+          $query->orwhere('role_id', '4')
+          ->orwhere('users.active_asignacion', true);
+      })
       ->where('rama_derecho.subrama', $rama)
-      ->where('users.active', true)
-      ->where('users.active_asignacion', true)
+      ->where('users.active', true)      
       ->where('sede_usuarios.sede_id', session('sede')->id_sede)
-      ->select('users.id', 'users.idnumber')
+      ->select('users.id', 'users.idnumber','users.name')
       ->orderBy('users.created_at', 'desc')->get()->toArray();
     return $doceWithRama;
   }

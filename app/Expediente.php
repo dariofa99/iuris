@@ -996,13 +996,19 @@ class Expediente extends Model
 
     public function isValidOpen()
     {
-        $expediente_estado = $this->estados()
-            ->where('ref_estado_id', 4)
-            ->orderBy('created_at', 'desc')->get();
         $dias = $this->getDaysAfterAsig();
-        if ($dias <= 55) {
+        
+        if ($this->expestado_id == 1 and $dias > 20) {
             return true;
         }
+        if ($this->expestado_id == 5 and $dias < 60) {
+            $asig_segmento = $this->asignacion->periodo->segmentos()->first();
+            $segmento = $this->getSegmentoActivo();
+            if($asig_segmento and $segmento and $asig_segmento->id == $segmento->id){
+                return true;
+            }
+        }
+       
         return false;
     }
 

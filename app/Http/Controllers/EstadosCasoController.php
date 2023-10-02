@@ -256,7 +256,7 @@ class EstadosCasoController extends Controller
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->expid
         ]);
-        if ($expediente and ($expediente->expestado_id == 5 and $expediente->isValidOpen())) {
+        if ($expediente and ($expediente->isValidOpen())) {
             $segmento = $this->segmentosService->getSegmentoActivo();
             if ($segmento) {
                 $notas =  $expediente->notas()
@@ -283,7 +283,7 @@ class EstadosCasoController extends Controller
                     'tbl_org_id' => $expediente->id,
                 ];
                 $expediente->asignarNotas($data);
-                $request['comentario'] = "Vencimiento de términos por parte del docente";
+                $request['comentario'] = $expediente->expestado_id != 5 ? "Estudiante no envió a cierre a tiempo":"Re evaluado por docente";
                 $request['expidnumber'] = $request->expid;
                 $request['ref_estado_id'] = 2;
                 $request['ref_motivo_estado_id'] = 8;

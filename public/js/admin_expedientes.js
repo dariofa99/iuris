@@ -1851,6 +1851,12 @@ $(document).ready(function () {
     });
 
     $("#btn_reabrir_caso").on("click", function (e) {
+        var estado = $(this).attr("data-estado");
+    /*     $("#myform_addnew_nota_final_expedientes").append($('<input>',{
+            type:'text',
+            value:estado,
+            name:"estado_casoid"
+        })) */
         $("#myModal_addnew_nota_final_expedientes").modal("show");
     });
     $("#btn_addnew_nota_exp").on("click", async function () {
@@ -1864,7 +1870,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-            window.location.reload(true)
+            //window.location.reload(true)
         }
     });
 

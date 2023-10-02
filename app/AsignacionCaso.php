@@ -82,6 +82,11 @@ public function estudianteact()
         return $this->belongsTo(TablaReferencia::class, 'procesojud_id', 'id');
     }
 
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class, 'periodo_id', 'id');
+    }
+
     public function estadosProcJudCount()
     {
         $esprocesos = $this->procesosJudiciales()

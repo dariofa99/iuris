@@ -503,6 +503,7 @@ class ExpedienteController extends Controller
       //solo para consultas de asesoria   
       $this->expedienteService->asignarDocente($asignacion_caso);
     } else {
+      
       $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
     if ($request->has('solicitud_id')) {
@@ -647,7 +648,7 @@ class ExpedienteController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function edit(Request $request, $id)
-  {
+  {  
     if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
     $url = '/expedientes/';
     $expediente = $this->expedienteService->findWithFilter([
@@ -670,7 +671,7 @@ class ExpedienteController extends Controller
                 'ntaconocimiento' => 0,
                 'ntaetica' => 0,
                 'ntaconcepto' => 'Evaluado por el sistema - Tiempo 30 días agotado',
-                'orgntsid' => '1',
+                'orgntsid' => '4',
                 'segid' => $segmento->id,
                 'perid' => $segmento->perid,
                 'tpntid' => '1',

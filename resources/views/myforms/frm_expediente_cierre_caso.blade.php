@@ -27,15 +27,16 @@
 
             @endif
 
-            @if (($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and
-                        $expediente->expestado_id == 5 and
-                        $expediente->isValidOpen()) and
-                        (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')))
-                <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_reabrir_caso">
-                    Volver a evaluar y cerrar caso
+            @if ( $expediente->isValidOpen()
+            and ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber
+            || (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')
+            || currentUser()->hasRole('dirgral'))
+            ))
+                <button type="button" data-estado="{{$expediente->expestado_id}}" class="btn btn-warning btn-sm mb-2" id="btn_reabrir_caso">
+                  {{$expediente->expestado_id != 5 ? "Evaluar y cerrar caso":"Volver a evaluar y cerrar caso" }}  
                 </button>
             @endif
-
+            
             @if (
                 $expediente->expestado_id != 2 and
                     $expediente->expestado_id != 5 and
@@ -74,7 +75,7 @@
                     </tr>
                     <tr>
                         <td width="15%">
-                            <label>Docente</label>
+                            <label>Creado por</label>
                         </td>
                         <td>
                             <label>
