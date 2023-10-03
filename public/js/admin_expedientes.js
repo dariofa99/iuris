@@ -150,6 +150,9 @@ async function buscarExp() {
             if(data.search_onlyMy_exp===undefined || data.search_onlyMy_exp===null){
                 data['search_onlyMy_exp'] = 'off'
             }
+            if ($("#search_onlyProJur").is(":checked")) {           
+                data['search_onlyProJur'] = 'search_onlyProJur';            
+            }
             console.log(data,data.search_onlyMy_exp);
             var page = "expedientes";
             $("#wait").show();

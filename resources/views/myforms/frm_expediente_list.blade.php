@@ -60,7 +60,7 @@
                             @endif
                         </div>
                         <div class="col-md-12">
-                            <input type="checkbox" name="search_onlyProJur" id="search_onlyProJur"
+                            <input type="checkbox" name="search_onlyProJur" value="search_onlyProJur" id="search_onlyProJur"
                             @if(Request::has('search_onlyProJur'))
                                 checked
                                 @endif>
