@@ -734,8 +734,7 @@ class Expediente extends Model
                 case 'color':
                     $now = Carbon::now();
                     $now2 = Carbon::now();
-
-                    if ($data == 'green') {
+                    if ($data == 'verde') {
                         return $query
                             ->where('exptipoproce_id', 1)
                             ->where('expedientes.expestado_id', '!=', 2)

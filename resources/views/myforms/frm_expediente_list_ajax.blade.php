@@ -1,11 +1,8 @@
  <div class="table-responsive no-padding">
      <table style="font-size: 15px !important" id="tbl_users" class="table table-bordered table-striped dataTable"
          role="grid">
-
-
          <thead>
              <tr>
-
                  <th>Expediente</th>
                  @if (!currentUser()->hasRole('solicitante'))
                      <th>Consultante</th>
@@ -132,12 +129,8 @@
                                      Sin revisión
                                  @endif
                              </span>
-                         @endif
-
-
-
-
-                     </td>
+                         @endif                       
+                    </td>
                      <td>
                          @if (!currentUser()->hasRole('secretaria') and !currentUser()->hasRole('solicitante'))
                              @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == '1')
@@ -234,8 +227,8 @@
  <script>
      (function() {
          element = document.getElementById('badgeCount');
-         valor = convertirMoneda({{ $numEx }});
-         element.innerHTML = valor;
+         
+         //element.innerHTML = valor;
      })();
 
      function convertirMoneda(valor) {

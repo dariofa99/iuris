@@ -1,7 +1,7 @@
 <script>
     @if (Session::has('message-information'))
         var message = '';
-        message += '<div class="alert alert-danger" style="font-size:18px">';
+        message += '<div class="alert alert-success" style="font-size:18px">';
         message += `<h4>
       <strong style="border-bottom:1px solid white">
         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -9,7 +9,7 @@
       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
       
     </h4> </div>`;
-    message += `<span> Últ. Atualización: 1 de oct. 2023 <br>
+    message += `<span> Últ. Atualización: 3 de oct. 2023 <br>
         Si el problema persiste comunícate al 3106038006  
       </span>`
 

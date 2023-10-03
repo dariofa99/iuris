@@ -10,22 +10,55 @@ $(document).ready(function () {
         set_tab();
     }
     $("#search_onlyMy_exp").on("change", async function () {
-        if ($("#search_onlyMy_exp").is(":checked")) {
-            $("#wait").show();
-            var page = "expedientes";
-            var data = {};
-            let res = await index_page(page, data);
-            $("#wait").hide();
-        } else {
-            var page = "expedientes";
-            var data = {
-                tipo_busqueda: 'all'
-            };
-            $("#wait").show();
-            let res = await index_page(page, data);
-            $("#wait").hide();
-        }
+        buscarExp()
     });
+
+    $("#content_count_asesorias_inlist").on("click",".btn_search_color",async function (e) {
+        var request = {
+            tipo_busqueda: "color",
+            data: $(this).attr("id")           
+        };
+       
+        if ($("#search_onlyMy_exp").is(":checked")) {           
+            request['search_onlyMy_exp'] = 'search_onlyMy_exp';            
+        } 
+        if ($("#search_onlyProJur").is(":checked")) {           
+            request['search_onlyProJur'] = 'search_onlyProJur';            
+        }
+        $("#wait").show();
+        var page = "expedientes";      
+        console.log(page);
+        let res = await index_page(page, request);
+        $("#wait").hide();
+    });
+
+async function buscarExp() {
+    var request = {}//convertFormToJSON('myformExpFilter');
+        request['search_onlyMy_exp'] = 'off';
+        if ($("#search_onlyMy_exp").is(":checked")) {           
+            request['search_onlyMy_exp'] = 'search_onlyMy_exp';            
+        } 
+        if ($("#search_onlyProJur").is(":checked")) {           
+            request['search_onlyProJur'] = 'search_onlyProJur';            
+        }
+        var opselected = $("#myformExpFilter select[name='tipo_busqueda']").val();
+        var dataselected = $("#myformExpFilter select[name='data']").val();;
+        var fechaselected = $("#myformExpFilter input[id='data_date']").val();;
+        if (fechaselected != '' && fechaselected != null) request['data'] = fechaselected;
+        if (opselected != '' && opselected != null) request['tipo_busqueda'] = opselected;
+        if (dataselected != '' && dataselected != null) request['data'] = dataselected;
+        
+        
+       $("#wait").show();
+        var page = "expedientes";      
+        console.log(page);
+        let res = await index_page(page, request);
+        $("#wait").hide();
+}
+    $("#search_onlyProJur").on("change", async function () {
+        buscarExp()
+    });
+
     $("#btnCancelar").click(function () {
         $("#btnActualizar").hide();
         $("#btnCancelar").hide();
@@ -112,8 +145,12 @@ $(document).ready(function () {
     $("#myformExpFilter").submit(async function (e) {
         e.preventDefault();
         var errors = validateForm("myformExpFilter");
-        if (errors.length <= 0) {
+        if (errors.length <= 0) {           
             var data = convertFormToJSON("myformExpFilter");
+            if(data.search_onlyMy_exp===undefined || data.search_onlyMy_exp===null){
+                data['search_onlyMy_exp'] = 'off'
+            }
+            console.log(data,data.search_onlyMy_exp);
             var page = "expedientes";
             $("#wait").show();
             let res = await index_page(page, data);
@@ -2579,11 +2616,11 @@ function abrirModalDocentes(res, option) {
 
 async function changeSelectSearchExp(value) {
     var placeholder = "";
-    $("#myformExpFilter input").prop("disabled", true).hide();
-    $("#myformExpFilter select[name='data']").prop("disabled", true).selectpicker('hide');
+    $("#myformExpFilter input").prop("disabled", true).hide().val("");
+    $("#myformExpFilter select[name='data']").prop("disabled", true).selectpicker('hide').val("");
     $("#myformExpFilter table").hide();
     $("#select_data_users").selectpicker('refresh');;;
-    $("#myformExpFilter input[name='search_onlyMy_exp']").prop("disabled", false).show();
+    $("#myformExpFilter input[type='checkbox']").prop("disabled", false).show();
     switch (value) {
         case "idnumber_doc":
             $("#myformExpFilter select[name='data']").prop("disabled", false).selectpicker('show');

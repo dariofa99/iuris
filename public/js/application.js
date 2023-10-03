@@ -276,7 +276,14 @@ async function index_pagination(route) {
         throw new Error(message);
     }
     const topics = await response.json();
-    $("#table_list_model").html(topics);
+    if(topics.view){
+        $("#table_list_model").html(topics.view);
+    }else{
+        $("#table_list_model").html(topics);
+    }
+    if(topics.view_count){
+        $("#content_count_asesorias_inlist").html(topics.view_count);
+    }
     window.history.pushState(null, "", route);
     return topics;
 }
@@ -299,8 +306,17 @@ async function index_page(route, request) {
         throw new Error(message);
     }
     const topics = await response.json();
-    $("#table_list_model").html(topics);
-    window.history.pushState(null, "", page);
+    console.log(topics);
+    if(topics.view){
+        $("#table_list_model").html(topics.view);
+    }else{
+        $("#table_list_model").html(topics);
+    }
+    if(topics.view_count){
+        $("#content_count_asesorias_inlist").html(topics.view_count);
+    }
+    
+    window.history.pushState(null, "", page); 
     return topics;
 }
 function calcularProximosDiasHabiles(fechaActual, n) {

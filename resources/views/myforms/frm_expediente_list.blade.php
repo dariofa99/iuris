@@ -44,16 +44,35 @@
                 <form action="{{ route('expedientes.index') }}" method="GET" id="myformExpFilter">
                     <div class="row">
                         <div class="col-md-12">
-                            @if (currentUser()->hasRole('docente') || currentUser()->hasRole('docente_prueba'))
-                                <input type="checkbox" @if ((isset($request['search_onlyMy_exp']) and $request['search_onlyMy_exp'] == 'on') || empty($request)) checked @endif
-                                    name="search_onlyMy_exp" id="search_onlyMy_exp">
-                                Solo ver mis casos
+                            @if (currentUser()->active_asignacion || currentUser()->hasRole('docente') || currentUser()->hasRole('docente_prueba'))
+                            <input type="hidden" name="search_onlyMy_exp" value="off">    
+                            <input type="checkbox" aria-describedby="desChkVerMisCasos"
+                                @if(!Request::has('search_onlyMy_exp') 
+                                || (Request::has('search_onlyMy_exp') and Request::input('search_onlyMy_exp') != 'off'))
+                                checked
+                                @endif
+                                 name="search_onlyMy_exp"
+                                    id="search_onlyMy_exp">
+                                <label for="search_onlyMy_exp">Solo listar mis casos asignados</label>
+                                {{--  <span id="desChkVerMisCasos" style="font-size: 0px !important;height: 0px;width:0px;position:absolute">
+                                        Marcar para ver solo casos asignados
+                                    </span> --}}
                             @endif
+                        </div>
+                        <div class="col-md-12">
+                            <input type="checkbox" name="search_onlyProJur" id="search_onlyProJur"
+                            @if(Request::has('search_onlyProJur'))
+                                checked
+                                @endif>
+                            <label for="search_onlyProJur">
+                                Solo listar asuntos marcados como jurídicos
+                            </label>
+
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <span>Busqueda</span>
+                            <label for="tipo_busqueda">Busqueda de expedientes</span>
                             <select name="tipo_busqueda" id='tipo_busqueda' class="form-control form-control-sm"
                                 placeholder="Seleccione..." required="required">
                                 <option value="">Seleccione...</option>
@@ -79,7 +98,7 @@
                                         {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante' ? 'selected' : '') }}>
                                         Nombre o apellidos (estudiante)
                                     </option>
-                               
+
                                     <option value="solicitante_num"
                                         {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected' : '') }}>
                                         Documento de identificación (solicitante)
@@ -105,15 +124,15 @@
                                     value="fecha_creacion">
                                     Fecha de Creación
                                 </option>
-                                <option
+                              {{--   <option
                                     {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'fecha_rango' ? 'selected' : '') }}
                                     value="fecha_rango">
                                     Rango Fechas
-                                </option>
+                                </option> --}}
                                 <option
                                     {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'all' ? 'selected' : '') }}
                                     value="all">
-                                    Todo
+                                    Todo (limpiar)
                                 </option>
                             </select>
                         </div>
@@ -129,7 +148,7 @@
                                 'data-live-search-placeholder' => 'Escriba un valor...',
                             ]) !!}
 
-                            <input type="date" id="data" name="data" class="form-control form-control-sm"
+                            <input type="date" required id="data_date" name="data" class="form-control form-control-sm"
                                 style="display: none">
 
 
@@ -167,36 +186,8 @@
                 </form>
             </div>
 
-            <div class="col-md-2">
-                <table style="text-align:right;width:100%;font-size:14px;">
-                    <tr>
-                        <td>
-
-                            <label>No de Expedientes <span class="badge bg-blue" id="badgeCount">
-                                    {{ number_format($numEx, 0, '.', '.') }} </span></label>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-
-                            @if (count($count_colors) > 0 and $count_colors != '')
-                                <div>
-                                    <label>Asesorías asignadas</label><br>
-                                    <span class="badge btn_search_color" id="green"
-                                        style="border:1px solid #2ECC71">{{ $count_colors[0]->verde === null ? 0 : $count_colors[0]->verde }}</span>
-                                    <span class="badge btn_search_color" id="amarillo"
-                                        style="border:1px solid #F4D03F">{{ $count_colors[0]->amarillo === null ? 0 : $count_colors[0]->amarillo }}</span>
-                                    <span class="badge btn_search_color" id="rojo"
-                                        style="border:1px solid #CB4335">{{ $count_colors[0]->rojo === null ? 0 : $count_colors[0]->rojo }}</span>
-                                    <span class="badge btn_search_color" id="gris"
-                                        style="border:1px solid gray">{{ $count_colors[0]->gris === null ? 0 : $count_colors[0]->gris }}</span>
-                                </div>
-                            @endif
-                        </td>
-                    </tr>
-
-                </table>
+            <div class="col-md-2" id="content_count_asesorias_inlist">
+                  @include('myforms.components_exp.count_asesorias_inlist')
             </div>
         </div>
         <div class="row">
@@ -220,4 +211,21 @@
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 
     <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
+    <script>
+        async function init() {
+            var request = {} //convertFormToJSON('myformExpFilter');
+            if ($("#search_onlyMy_exp").is(":checked")) {
+                request['search_onlyMy_exp'] = 'search_onlyMy_exp';
+            }
+            var opselected = $("#myformExpFilter select[name='tipo_busqueda']").val();
+            var dataselected = $("#myformExpFilter select[name='data']").val();;
+            if (opselected != '' && opselected != null) request['tipo_busqueda'] = opselected;
+            if (dataselected != '' && dataselected != null) request['data'] = dataselected;
+            $("#wait").show();
+            var page = "expedientes";
+            let res = await index_page(page, request);
+            $("#wait").hide();
+        }
+        // init();
+    </script>
 @endpush
