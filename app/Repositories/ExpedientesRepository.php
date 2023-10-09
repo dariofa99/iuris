@@ -13,6 +13,7 @@ use App\Services\SegmentosService;
 use App\Services\UsersService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -34,6 +35,97 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $this->usersService = App::make(UsersService::class);
         $this->request = App::make(Request::class);
         $this->asignacionDocenteCasoService = $asignacionDocenteCasoService;
+    }
+    public function index(Request $request)
+    {
+        $this->query = $this->model;
+        $order = "CASE
+        WHEN expestado_id = 1 THEN 1
+        WHEN expestado_id = 4 THEN 2
+        WHEN expestado_id = 3 THEN 3
+        WHEN expestado_id = 2 THEN 4
+        WHEN expestado_id = 5 THEN 5
+        ELSE 6
+        END";
+        if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)) {
+            $order = "CASE
+              WHEN expestado_id = 4 THEN 1
+              WHEN expestado_id = 1 THEN 2
+              WHEN expestado_id = 3 THEN 3
+              WHEN expestado_id = 2 THEN 4
+              WHEN expestado_id = 5 THEN 5
+              ELSE 6
+          END";
+        } else if (currentUser()->hasRole('estudiante')) {
+            $order = "CASE
+              WHEN expestado_id = 3 THEN 1
+              WHEN expestado_id = 1 THEN 2
+              WHEN expestado_id = 4 THEN 3
+              WHEN expestado_id = 2 THEN 4
+              WHEN expestado_id = 5 THEN 5
+              ELSE 6
+              END";
+        }
+
+        $this->applyValidateSede();
+        return $this->query->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
+            ->where(function ($query) use ($request) {
+                if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
+                    and (!$request->has('search_onlyMy_exp') || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
+                ) {
+                    $query->whereHas('asignaciones.asig_docente', function ($q) {
+                        $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
+                            ->where('asignacion_docente_caso.activo', 1);
+                    });
+                } else if (currentUser()->hasRole('estudiante')) {
+                    $query->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
+                        ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if ($request->get('search_onlyProJur')) {
+                    $query->where('asignacion_caso.procesojud_id', '<>', 1);
+                }
+            })
+            ->Criterio($request)
+            ->orderByRaw($order)
+            ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
+            ->groupBy('asignacion_caso.asigexp_id')
+            ->paginate(10);
+    }
+
+    public function getColorsAsesorias(Request $request)
+    {
+        $this->query = $this->model;
+        $this->applyValidateSede();
+        return $this->query->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
+            ->where(function ($query) use ($request) {
+                if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
+                    and (!$request->has('search_onlyMy_exp') || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
+                ) {
+                    $query->whereHas('asignaciones.asig_docente', function ($q) {
+                        $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
+                            ->where('asignacion_docente_caso.activo', 1);
+                    });
+                } else if (currentUser()->hasRole('estudiante')) {
+                    $query->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
+                        ->where('asignacion_caso.activo', '=', 1)
+                        ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if ($request->get('search_onlyProJur')) {
+                    $query->where('asignacion_caso.procesojud_id', '<>', 1);
+                }
+            })
+            ->Criterio($request)
+            ->where('expedientes.exptipoproce_id', 1)
+            ->where('expedientes.expestado_id', "<>", 2)
+            ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) <= 10, 1, 0)) AS verde')
+            ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) <= 20 AND DATEDIFF(NOW(), `fecha_asig`) > 10, 1, 0)) AS amarillo')
+            ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) > 20 AND DATEDIFF(NOW(), `fecha_asig`) < 30, 1, 0)) AS rojo')
+            ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) >= 30, 1, 0)) AS gris')
+            ->get();
     }
 
     public function store(Request $request): Expediente

@@ -1,6 +1,3 @@
-@if ((currentUser()->can('act_conciliacion') 
-|| currentUser()->can('ver_audiencia_conciliacion') 
-|| (currentUserInConciliacion($conciliacion->id,['conciliador','asistente']))))           
 <input type="hidden" id="prdfecha_inicio" value="{{$periodo->prdfecha_inicio}}" >
 <div class="row">
     <div class="col-md-3">
@@ -68,7 +65,7 @@
     </div>
 </div>
 <hr> 
-@endif
+
 @if (currentUser()->can('asig_reparto'))
 
    @if($audiencia != '')        

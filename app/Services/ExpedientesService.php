@@ -10,6 +10,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 interface ExpedientesService {
+    public function index(Request $request);
+    public function getColorsAsesorias(Request $request);
     public function store(Request $request):Expediente;
     public function update(Expediente $expediente,Request $request):Expediente;
     public function find(int $id);

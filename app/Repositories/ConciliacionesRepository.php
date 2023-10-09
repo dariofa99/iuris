@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
-
+use Illuminate\Support\Facades\Auth;
 
 class ConciliacionesRepository extends BaseRepository implements ConciliacionesService
 {
@@ -45,6 +45,15 @@ class ConciliacionesRepository extends BaseRepository implements ConciliacionesS
     ): LengthAwarePaginator {
         $this->applyValidateSede();
         $this->query = $this->query->filter($request);
+        $this->query = $this->query->where(function($query){
+            if (!currentUser()->can('ver_conciliaciones'))
+                {
+                    $query->whereHas('usuarios', function ($q) {
+                        $q->where('conciliacion_has_user.user_id', Auth::user()->id);
+                    });
+                } 
+        });
+
         $con = $this->query->orderBy('conciliaciones.created_at', 'desc')
             ->paginate(20);
         return $con;

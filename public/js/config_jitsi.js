@@ -1,6 +1,6 @@
 var apiObj = null;
 var numsalasvideollamada=0;
-
+ 
 function BindEvent(){
 
     $("#btnHangup").on('click', function () {

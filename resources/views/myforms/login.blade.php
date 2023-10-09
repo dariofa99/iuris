@@ -70,9 +70,9 @@
                             conciliaciones de manera virtual. <br>
                         </h5>
                         <div class="text-center my-4">
-                         {{--   <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-warning">
-                                Solicitar (en desarrollo)
-                            </a> --}}
+                           <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-warning">
+                                Solicitar (en periodo de desarrollo)
+                            </a> 
                            
                         </div>
                     </div>

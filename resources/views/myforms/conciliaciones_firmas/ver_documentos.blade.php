@@ -9,7 +9,7 @@
       <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <label >Consulta de documentos </label>
+                    <label >Vista de documentos </label>
                 </div> 
 
                 <div class="card-body">    
@@ -21,12 +21,12 @@
                             <div class="col-md-12">
                                 <table   class="table" id="myReportPdfList">
                                     <thead>
-                                        <tr><th>
-                                            Nombre 
+                                        <tr><th colspan="2">
+                                            Nombre del documento
                                         </th>
-                                        <th style="text-align: right">
+                                        {{-- <th style="text-align: right">
                                             Ver
-                                        </th>
+                                        </th> --}}
                                      </tr>
                                     </thead>
                                     <tbody>
@@ -40,7 +40,7 @@
                                             {{$file->original_name}}                
                                             </td>
                                             <td>
-                                           <a class="btn btn-warning btn-sm pull-right" target="_blank" href="/conciliaciones/download/file/{{$file->id}}">
+                                           <a class="btn btn-warning btn-block btn-sm float-right" target="_blank" href="/conciliaciones/download/file/{{$file->id}}">
                                             Vista previa </a> 
                                             </td>
                                         

@@ -57,7 +57,7 @@
                                         <label for="category_id">Medio</label>
                                         <select required disabled class="form-control" name="means_id" id="means_id">
                                             <option value="218">Correo electrónico</option>
-                                            <option value="217">Enlace</option>
+                                            <option value="217">Crear enlace</option>
                                         </select>
                                     </div>
                                 </div>

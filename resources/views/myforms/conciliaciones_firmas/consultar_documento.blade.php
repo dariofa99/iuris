@@ -30,24 +30,17 @@
                     <input type="hidden" name="token" value="{{$token}}">
                    <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group has-feedback"><label for="clave">Clave</label>
+                        <div class="form-group has-feedback"><label for="clave">Clave de acceso</label>
                             <input id='clave' name='clave' value="{{ old('clave') }}"  required type="text" class="form-control form-control-sm">
-                            <span class="nav-icon fa fa-user-secret form-control-feedback"></span>
-                            <div class="invalid-feedback">                            
-                            </div>
                         </div>
                         @if($conGen->category_id!=215)                       
                         <div class="form-group has-feedback"><label for="documento">Número de documento</label>
                             <input id='documento' name='documento' value="{{ old('documento') }}"  required type="number" class="form-control form-control-sm">
-                            <span class="nav-icon fa fa-address-card form-control-feedback"></span>
-                            <div class="invalid-feedback">                            
-                            </div>
+                           
                         </div>
-                        <div id="con_inse" class="form-group has-feedback"><label for="nombres">Nombres</label>
+                        <div id="con_inse" class="form-group has-feedback"><label for="nombres">Nombres completos</label>
                             <input id='nombres' name='nombres' value="{{ old('nombres') }}"  required type="text" class="form-control form-control-sm">
-                            <span class="nav-icon fa fa-address-card-o form-control-feedback"></span>
-                            <div class="invalid-feedback">                            
-                            </div>
+                         
                         </div>
                         @else                        
                         <div class="form-group has-feedback"><label for="entidad_nombre">Nombre de la entidad</label>

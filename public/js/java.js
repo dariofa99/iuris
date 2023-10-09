@@ -1,15 +1,15 @@
-$(document).ready(function(){
+$(document).ready(function () {
     alert("js")
     //detecta url y activa el tab correspondiente
     var url = window.location.href;
     var activeTab = url.substring(url.indexOf("#") + 1);
-    $('a[href="#'+ activeTab +'"]').tab('show')
+    $('a[href="#' + activeTab + '"]').tab('show')
     //carga el tab seleccionado en la url sin recargar la pagina
-    $(".urlactive").on("click", function(){
+    $(".urlactive").on("click", function () {
         let stateObj = {
             foo: "nav",
         }
-        history.pushState(stateObj, "menu", "edit"+$(this).attr("href"))
+        history.pushState(stateObj, "menu", "edit" + $(this).attr("href"))
     });
 
 
@@ -34,39 +34,39 @@ $(document).ready(function (e) {
             ['view', ['fullscreen', 'codeview', 'help']],
         ],
         height: 327,
-       /*  popover: {
-            image: [
-                [
-                    "image",
-                    ["resizeFull", "resizeHalf", "resizeQuarter", "resizeNone"],
-                ],
-                ["float", ["floatLeft", "floatRight", "floatNone"]],
-                ["remove", ["removeMedia"]],
-            ],
-            link: [["link", ["linkDialogShow", "unlink"]]],
-            table: [
-                [
-                    "add",
-                    ["addRowDown", "addRowUp", "addColLeft", "addColRight"],
-                ],
-                ["delete", ["deleteRow", "deleteCol", "deleteTable"]],
-            ],
-            air: [
-                ["color", ["color"]],
-                ["font", ["bold", "underline", "clear"]],
-                ["para", ["ul", "paragraph"]],
-                ["table", ["table"]],
-                ["insert", ["link"]],
-            ],
-        }, */
+        /*  popover: {
+             image: [
+                 [
+                     "image",
+                     ["resizeFull", "resizeHalf", "resizeQuarter", "resizeNone"],
+                 ],
+                 ["float", ["floatLeft", "floatRight", "floatNone"]],
+                 ["remove", ["removeMedia"]],
+             ],
+             link: [["link", ["linkDialogShow", "unlink"]]],
+             table: [
+                 [
+                     "add",
+                     ["addRowDown", "addRowUp", "addColLeft", "addColRight"],
+                 ],
+                 ["delete", ["deleteRow", "deleteCol", "deleteTable"]],
+             ],
+             air: [
+                 ["color", ["color"]],
+                 ["font", ["bold", "underline", "clear"]],
+                 ["para", ["ul", "paragraph"]],
+                 ["table", ["table"]],
+                 ["insert", ["link"]],
+             ],
+         }, */
         // maxHeight:460
     });
     $(".item_con").on("mousedown", function (e) {
         var space = "&nbsp;";
         var mySummernote = $(this).attr("data-summernote");
-        var clasehechopre ='';
-        var salto ='';
-        if($(this).attr("user-type")=='hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
+        var clasehechopre = '';
+        var salto = '';
+        if ($(this).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
         $("#" + mySummernote).summernote(
             "pasteHTML",
             `<span data-table="${$(this).attr(
@@ -76,10 +76,10 @@ $(document).ready(function (e) {
             )}" user-type="${$(this).attr("user-type")}" data-name="[-${$(
                 this
             ).attr("data-name")}-]" class="item_sp ${clasehechopre}">[-` +
-                $(this).attr("data-name") +
-                `-]</span>${space}`   
+            $(this).attr("data-name") +
+            `-]</span>${space}`
         );
-       
+
         //  $('.note-editable').trigger('focus');
         //  summernote.summernote('focus');
         //$(".note-editable p").focus()
@@ -183,7 +183,7 @@ $(document).ready(function (e) {
     $(".select2_ramas").select2();
     // if(currentUrl=='/expedientes')  searchExpedientes();
 
-    
+
 
     $("#content_list_solicitudesh").on("click", ".pagination a", function (e) {
         e.preventDefault();
@@ -239,7 +239,7 @@ $(document).ready(function (e) {
             time: "fa fa-clock-o",
             date: "fa fa-calendar",
             up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down", 
+            down: "fa fa-arrow-down",
         },
         //daysOfWeekDisabled: [7],
         allowInputToggle: true,
@@ -287,7 +287,7 @@ $(document).ready(function (e) {
         e.preventDefault();
         id = $(this).attr("id");
         changeStateUser(id);
-    }); 
+    });
 
     $("#table_list_model").on("click", ".btn_edit_per", function () {
         var id = getIdAttr($(this).attr("id"), "-", 1);
@@ -356,7 +356,7 @@ $(document).ready(function (e) {
             expidnumberest != "" &&
             expramaderecho_id != "" &&
             expestado != "" &&
-            exptipoproce_id != "" 
+            exptipoproce_id != ""
         ) {
             // var token = $("#token").val();
             var route = "/expedientes/coordinador/update/" + expediente_id;
@@ -557,7 +557,7 @@ $(document).ready(function (e) {
                 "disabled",
                 true
             );
-        }else if ($(this).val() == "234") {
+        } else if ($(this).val() == "234") {
             hideElement("addNotasAct", "class");
             $("#myform_act_edit_docente #fecha_limit_doc").prop(
                 "disabled",
@@ -570,7 +570,7 @@ $(document).ready(function (e) {
                 "disabled",
                 false
             );
-            
+
         }
         if ($(this).val() == "") {
             hideElement("addNotasAct", "class");
@@ -588,7 +588,7 @@ $(document).ready(function (e) {
     });
 
     $("#btn_add_nota").on("click", function () {
-        ingresarNotas(); 
+        ingresarNotas();
     });
 
     $("#btn_create_segmento").on("click", function () {
@@ -667,19 +667,19 @@ $(document).ready(function (e) {
         return false;
     });
 
-    $("#btn_reabrir_caso").on("click",function(e){
-       
-       
-            $("#myModal_addnew_nota_final_expedientes").modal("show");
-            var request = {
-                'expid':$("#expediente_id").val()
-            };
-            //url = '/segmentos/change/state/'+id;
-           // abrir_caso(request);
-       
+    $("#btn_reabrir_caso").on("click", function (e) {
+
+
+        $("#myModal_addnew_nota_final_expedientes").modal("show");
+        var request = {
+            'expid': $("#expediente_id").val()
+        };
+        //url = '/segmentos/change/state/'+id;
+        // abrir_caso(request);
+
     });
 
-    $("#btn_addnew_nota_exp").on("click",function(){
+    $("#btn_addnew_nota_exp").on("click", function () {
         ingresarNewNotas();
     })
 
@@ -730,7 +730,7 @@ $(document).ready(function (e) {
         return false;
     });
 
-  
+
 
     $(".btn_cambiar_docente").on("click", function () {
         var id = getIdAttr($(this).attr("id"), "-");
@@ -764,10 +764,10 @@ $(document).ready(function (e) {
 
     $("#tbl_ajax").on("click", ".btn_change_status", function () {
         var id = $(this).val();
-        var estado = $(this).attr("id"); 
+        var estado = $(this).attr("id");
         var request = {
-            "id":id,
-            "new_estado":$(this).attr("data-estado")
+            "id": id,
+            "new_estado": $(this).attr("data-estado")
         }
 
         if (estado == 139) {
@@ -783,7 +783,7 @@ $(document).ready(function (e) {
             request["actdocenrecomendac"] = '';
             changeStateActuacion(request);
             return false;
-        } else if (request.new_estado == 235){           
+        } else if (request.new_estado == 235) {
             Swal.fire({
                 title: 'Anulando anexo',
                 input: 'textarea',
@@ -791,25 +791,25 @@ $(document).ready(function (e) {
                 inputAttributes: {
                     rows: 100,  // Número de filas del textarea
                     cols: 500  // Número de columnas del textarea
-                  },
+                },
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
                 confirmButtonText: 'Enviar',
-                confirmButtonClass: 'btn-success', 
+                confirmButtonClass: 'btn-success',
                 allowEmpty: false, // Evita el valor vacío en el textarea
                 preConfirm: (text) => {
-                    if(text!==''){ 
+                    if (text !== '') {
                         request["actdocenrecomendac"] = text;
                         changeStateActuacion(request);
-                    }else{
+                    } else {
                         Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
 
                     }
-                  
+
                 }
-              });
+            });
             //
-        }else{
+        } else {
             changeStateActuacion(request);
         }
     });
@@ -1060,7 +1060,7 @@ return false;
     });
 
     $("#btn_asig_exp_doc").on("click", function (e) {
-        e.preventDefault(); 
+        e.preventDefault();
         $("#titulo_modal").text("Asignando docente");
         $("#myform_change_docente_exp>#tipo_cambio").val(4);
         var name = $(this).attr("data-name");
@@ -1173,7 +1173,7 @@ return false;
         editCitacionEstudiante(id);
     });
 
-    $("#ct_forcitaest").on("submit","#myformCitarEstudianteEdit",
+    $("#ct_forcitaest").on("submit", "#myformCitarEstudianteEdit",
         function (e) {
             var data = setFormToObject("myformCitarEstudianteEdit");
             var exp_id = $("#expid").val();
@@ -1232,7 +1232,7 @@ return false;
             return false;
         });
 
-    $("#table_list_autorizaciones").on("click",".btn_editar_autorizacion",
+    $("#table_list_autorizaciones").on("click", ".btn_editar_autorizacion",
         function (e) {
             var id = $(this).attr("data-id");
             editAutorizacion(id);
@@ -1265,16 +1265,16 @@ return false;
         }
     );
 
-    $("#content_list_autorizaciones").on("click",".btn_change_estado_autorizacion",function (e) {
-            var id = $(this).attr("data-id");
+    $("#content_list_autorizaciones").on("click", ".btn_change_estado_autorizacion", function (e) {
+        var id = $(this).attr("data-id");
 
-            if ($(this).attr("data-estado") == 0) {
-                var request = { estado: 1, vista: "autorizaciones" };
-            } else {
-                var request = { estado: 0, vista: "autorizaciones" };
-            }
-            changeStatusAutorizacion(request, id);
-        });
+        if ($(this).attr("data-estado") == 0) {
+            var request = { estado: 1, vista: "autorizaciones" };
+        } else {
+            var request = { estado: 0, vista: "autorizaciones" };
+        }
+        changeStatusAutorizacion(request, id);
+    });
 
     $("#table_list_autorizaciones").on(
         "click",
@@ -1407,21 +1407,21 @@ return false;
 
     $("#myform_asig_nota_ext").on("submit", function (e) {
         var request = $(this).serialize();
-       
+
         var notaapl = $("#myform_asig_nota_ext input[name='ntaaplicacion']").val();
         var notacon = $("#myform_asig_nota_ext input[name='ntaconocimiento']").val();
-        var notaet =  $("#myform_asig_nota_ext input[name='ntaetica']").val();
-       
+        var notaet = $("#myform_asig_nota_ext input[name='ntaetica']").val();
+
         var errors = validateForm("myform_asig_nota_ext")
-        if(notaapl > 5 || notacon > 5 || notaet > 5){
+        if (notaapl > 5 || notacon > 5 || notaet > 5) {
             toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
             });
             errors = 1;
         }
-        
-        if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
+
+        if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
             toastr.error("Por favor, verifíque que no haya notas con espacios o caracteres extraños", "", {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
@@ -1429,7 +1429,7 @@ return false;
             errors = 1;
         }
 
-        if(errors <= 0){
+        if (errors <= 0) {
             if ($("#myform_asig_nota_ext input[name=typesub]").val() == "store") {
                 storeNotaExt(request);
             }
@@ -1438,50 +1438,51 @@ return false;
                 oficinaUpdateNota(request, id);
             }
         }
-      
+
         e.preventDefault();
     });
 
-    $("#myform_asig_nota_conciliacion").on("submit", function (e) {        var request = $(this).serialize();
-       
+    $("#myform_asig_nota_conciliacion").on("submit", function (e) {
+        var request = $(this).serialize();
+
         var errors = validateForm("myform_asig_nota_conciliacion");
-        var errors2 = validateNotas("myform_asig_nota_conciliacion");        
-        if(errors.length <= 0){
-            if(errors2.length<=0){
+        var errors2 = validateNotas("myform_asig_nota_conciliacion");
+        if (errors.length <= 0) {
+            if (errors2.length <= 0) {
                 if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "store") {
-                     storeNotaExt(request);
-                 }
-                 if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "update") {
-                     var id = $("#myform_asig_nota_conciliacion input[name=estidnumber]").val();
-                     oficinaUpdateNota(request, id);
-                 }
-            }else{ 
+                    storeNotaExt(request);
+                }
+                if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "update") {
+                    var id = $("#myform_asig_nota_conciliacion input[name=estidnumber]").val();
+                    oficinaUpdateNota(request, id);
+                }
+            } else {
                 toastr.error("Por favor, verifíque que no haya notas superiores a 5, con espacios o caracteres extraños", "", {
                     positionClass: "toast-top-right",
                     timeOut: "6000",
                 });
             }
-           
-        }
-      
-        e.preventDefault();
-      /*   if(notaapl > 5 || notacon > 5 || notaet > 5){
-            toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
-            errors = 1;
-        }
-        
-        if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
-            toastr.error("Por favor, verifíque que no haya notas con espacios o caracteres extraños", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
-            errors = 1;
-        } */
 
-      
+        }
+
+        e.preventDefault();
+        /*   if(notaapl > 5 || notacon > 5 || notaet > 5){
+              toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
+                  positionClass: "toast-top-right",
+                  timeOut: "6000",
+              });
+              errors = 1;
+          }
+          
+          if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
+              toastr.error("Por favor, verifíque que no haya notas con espacios o caracteres extraños", "", {
+                  positionClass: "toast-top-right",
+                  timeOut: "6000",
+              });
+              errors = 1;
+          } */
+
+
     });
 
     $("#myform_asig_nota_ext").on("change", "#chk_change_nota", function (e) {
@@ -1702,7 +1703,7 @@ return false;
 
     $("#btn_dar_baja_exp").on("click", function (e) {
         var request = {
-            "exp_id":$("#expid").val()
+            "exp_id": $("#expid").val()
         }
         Swal.fire({
             title: "Esta seguro de dar de baja el expediente?",
@@ -1742,7 +1743,7 @@ return false;
 
     $(".btn_change_sede").on("click", function (e) {
         var id = $(this).attr("data-id");
-        Swal.fire({ 
+        Swal.fire({
             title: "Esta seguro de seleccionar esta sede?",
             type: "info",
             showCancelButton: true,
@@ -1858,7 +1859,7 @@ return false;
             .text("Guardar")
             .removeClass("btn-warning")
             .addClass("btn-primary");
-       $(".select2").select2();
+        $(".select2").select2();
         $("#lbl_modal_title").text("Creando categoria");
         $("#myModal_create_category").modal("show");
     });
@@ -2070,8 +2071,8 @@ return false;
             if ($(this).prop("type") == "select-one") {
                 var request = {
                     value: $(this)
-                    .find(":selected")
-                    .text(),
+                        .find(":selected")
+                        .text(),
                     value_is_other: "",
                     section: $(this).attr("data-section"),
                     name: $(this).attr("data-name"),
@@ -2092,8 +2093,8 @@ return false;
     });
 
     $(".btn_create_document").on("click", function (e) {
-      
-        $("#myformEditConciliacionAnexo").attr("id","myformCreateConciliacionAnexo");
+
+        $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
         $("#myformCreateConciliacionAnexo")[0].reset();
         $("#myformCreateConciliacionAnexo input[name=concept]").val($(this).attr("data-concept"));
         $("#myformCreateConciliacionAnexo input[name=category_id]").remove();
@@ -2102,10 +2103,10 @@ return false;
             true
         );
         $("#myformCreateConciliacionAnexo").append(
-            $("<input>",{
-                type:'hidden',
-                value:$(this).attr("data-category"),
-                name:"category_id"
+            $("<input>", {
+                type: 'hidden',
+                value: $(this).attr("data-category"),
+                name: "category_id"
             })
         )
         $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
@@ -2113,12 +2114,12 @@ return false;
         $("#myModal_create_document").modal("show");
     });
 
-    $("#myModal_create_document").on("submit","#myformCreateConciliacionAnexo",function (e) {
-            var request = new FormData($(this)[0]);
-            request.append("conciliacion_id", $("#conciliacion_id").val());
-            storeConciliacionAnexo(request);
-            e.preventDefault();
-        }
+    $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", function (e) {
+        var request = new FormData($(this)[0]);
+        request.append("conciliacion_id", $("#conciliacion_id").val());
+        storeConciliacionAnexo(request);
+        e.preventDefault();
+    }
     );
 
     $("#myModal_create_document").on(
@@ -2174,7 +2175,7 @@ return false;
         });
     });
 
-   
+
     $("#btn_agregar_comentario").on("click", function (e) {
         $("#myformEditComentario").attr("id", "myformCreateComentario");
         $("#myformCreateComentario textarea[name=comentario]").val("");
@@ -2182,11 +2183,11 @@ return false;
         $("#myModal_create_comentario .modal-title").text("Creando comentario");
         $("#myModal_create_comentario").modal("show");
     });
-   
-    
+
+
     $(".btn_sancionar_usuario_conciliacion").on("click", function (e) {
         var data_pivot = $(this).attr("data-pivot");
-        var request = {'pivot':data_pivot,'estado_id':224}
+        var request = { 'pivot': data_pivot, 'estado_id': 224 }
         Swal.fire({
             title: "Esta seguro de sancionar al usuario?",
             type: "warning",
@@ -2204,7 +2205,7 @@ return false;
 
     $(".btn_quitsancion_usuario_conciliacion").on("click", function (e) {
         var data_pivot = $(this).attr("data-pivot");
-        var request = {'pivot':data_pivot,'estado_id':1}
+        var request = { 'pivot': data_pivot, 'estado_id': 1 }
         Swal.fire({
             title: "Esta seguro de quitar sanción al usuario?",
             type: "warning",
@@ -2219,36 +2220,36 @@ return false;
             }
         });
     });
-    
 
- /*    $("#myModal_conc_user_create").on("blur",'input[name=idnumber]',function (e) {
-        var id = $(this).val();
-        var request = {
-            'idnumber':id,
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tipodoc_id': $("#myModal_conc_user_create select[name=tipodoc_id]").val(),
-            'section':$("#myModal_conc_user_create input[name=section]").val()
-        }
-        console.log(request);
-        getUser(request,id);
-    }); */
 
-    $("#myModal_conc_user_create").on("submit",'#myformEditConciliacionUser',function (e) {
+    /*    $("#myModal_conc_user_create").on("blur",'input[name=idnumber]',function (e) {
+           var id = $(this).val();
+           var request = {
+               'idnumber':id,
+               'conciliacion_id':$("#conciliacion_id").val(),
+               'tipodoc_id': $("#myModal_conc_user_create select[name=tipodoc_id]").val(),
+               'section':$("#myModal_conc_user_create input[name=section]").val()
+           }
+           console.log(request);
+           getUser(request,id);
+       }); */
+
+    $("#myModal_conc_user_create").on("submit", '#myformEditConciliacionUser', function (e) {
         var id = $("#myformEditConciliacionUser input[name=id]").val();
         var tipo_usuario_id = $("#myModal_conc_user_create input[name=tipo_usuario_id]").val() != '' ? $("#myModal_conc_user_create input[name=tipo_usuario_id]").val() : $("#myModal_conc_user_create select[name=tipo_usuario_id]").val()
-        var request = $(this).serialize()+"&tipo_usuario_id="+tipo_usuario_id;
-        conciliacionUserUpdate(request,id);
+        var request = $(this).serialize() + "&tipo_usuario_id=" + tipo_usuario_id;
+        conciliacionUserUpdate(request, id);
         e.preventDefault();
     });
-    $("#myModal_conc_user_create").on("submit",'#myformCreateConciliacionUser',function (e) {
+    $("#myModal_conc_user_create").on("submit", '#myformCreateConciliacionUser', function (e) {
         var tipo_usuario_id = $("#myModal_conc_user_create input[name=tipo_usuario_id]").val() != '' ? $("#myModal_conc_user_create input[name=tipo_usuario_id]").val() : $("#myModal_conc_user_create select[name=tipo_usuario_id]").val()
-        var request = $(this).serialize()+"&tipo_usuario_id="+tipo_usuario_id;      
+        var request = $(this).serialize() + "&tipo_usuario_id=" + tipo_usuario_id;
         conciliacionUserStore(request);
         e.preventDefault();
     });
 
 
-   
+
 
     $("#myModal_create_comentario").on(
         "submit",
@@ -2351,16 +2352,16 @@ return false;
             conciliacion_id: $("#conciliacion_id").val(),
         };
         getEstadosReportesPdf(request);*/
- 
+
         var request = {
-          //  conc_estado_id: $(this).attr("data-id"),
+            //  conc_estado_id: $(this).attr("data-id"),
             tabla_destino: "226",
             status_id: $(this).attr("data-estado_id"),
-            conciliacion_id:$("#conciliacion_id").val()
+            conciliacion_id: $("#conciliacion_id").val()
         };
-        getPdfReportesConciliacion(request); 
+        getPdfReportesConciliacion(request);
 
-    }); 
+    });
 
     $("#reporte").on("submit", "#myFormCreatePdfReporte", function (e) {
         var request = serializePdf(
@@ -2371,33 +2372,33 @@ return false;
         e.preventDefault();
     });
 
-    $("#reporte").on("submit", "#myFormEditPdfReporte", function (e) {      
+    $("#reporte").on("submit", "#myFormEditPdfReporte", function (e) {
         var request = serializePdf(
             "myFormEditPdfReporte",
             "summernote_update"
         );
         var id = $("#myFormEditPdfReporte select[name=id]").val();
-        if(id==undefined)id = $("#myFormEditPdfReporte input[name=id]").val();
+        if (id == undefined) id = $("#myFormEditPdfReporte input[name=id]").val();
         //alert(id)
         if (request) updatePdfReporte(request, id);
         e.preventDefault();
     });
 
- 
+
 
 
 
     $(".btn_generate_pdf_preview").on("click", function (e) {
         e.preventDefault();
         var myForm = $(this).attr("data-form");
-        var mySummernote = $(this).attr("data-summernote");       
+        var mySummernote = $(this).attr("data-summernote");
         var request = serializePdf(myForm, mySummernote);
         if (request) createPdfPreview(request);
     });
 
     $("#sel_reporte_id").on("change", function () {
         var id = $(this).val();
-        if(id!='')editPdfReporte(id);
+        if (id != '') editPdfReporte(id);
     });
 
     $("#myFormAsigReporte").on("submit", function (e) {
@@ -2406,10 +2407,10 @@ return false;
         e.preventDefault();
     });
 
-    
 
 
-     myPopupWindow = window;
+
+    myPopupWindow = window;
     $("#myReportPdfList").on("click", ".btn_edit_con_pdf", function (e) {
         e.preventDefault();
         var url = $(this).attr("href");
@@ -2429,60 +2430,60 @@ return false;
             url,
             "popup",
             "toolbar=no,width=" +
-                (window.screen.width - 10) +
-                ", height= " +
-                (window.screen.height - 10) +
-                ",left=10, top=15,resizable=no,scrollbars=NO"
-        );      
-        myPopupWindow.addEventListener('beforeunload', function (e) {           
+            (window.screen.width - 10) +
+            ", height= " +
+            (window.screen.height - 10) +
+            ",left=10, top=15,resizable=no,scrollbars=NO"
+        );
+        myPopupWindow.addEventListener('beforeunload', function (e) {
             $("#bgtransparent").remove();
-        }); 
-
         });
 
-   
-    
+    });
+
+
+
     $("body").on("click", "#bgtransparent", function (params) {
         myPopupWindow.resizeTo(window.screen.width, window.screen.height);
         myPopupWindow.moveTo(0, 0);
         var confirmClose = confirm("Tienes una ventana emergente abierta \nDeseas cerrarla? \nNo se guardaran los cambios!");
-        if(confirmClose){
-            myPopupWindow.close();   
-            $("#bgtransparent").remove();   
+        if (confirmClose) {
+            myPopupWindow.close();
+            $("#bgtransparent").remove();
         }
-      
+
     });
 
 
-    $("#btnGuardarPdfTemp").on("click",function (e) {
-       // alert('Falta guardar') 
+    $("#btnGuardarPdfTemp").on("click", function (e) {
+        // alert('Falta guardar') 
         var request = serializePdf(
             "myFormEditPdfReporte",
             "summernote_update"
-        );       
+        );
         var id = $("#myFormEditPdfReporte select[name=id]").val();
-        if(id==undefined)id = $("#myFormEditPdfReporte input[name=id]").val();
-        if (request){
-            updateConPdfTemporal(request,id)               
-           /*  var is_temp = $("#myFormEditPdfReporte input[name=is_temp]").val()
-            if(is_temp){
-                updateConPdfTemporal(request,is_temp)
-            }else{
-                createConPdfTemporal(request, id);
-            } */           
+        if (id == undefined) id = $("#myFormEditPdfReporte input[name=id]").val();
+        if (request) {
+            updateConPdfTemporal(request, id)
+            /*  var is_temp = $("#myFormEditPdfReporte input[name=is_temp]").val()
+             if(is_temp){
+                 updateConPdfTemporal(request,is_temp)
+             }else{
+                 createConPdfTemporal(request, id);
+             } */
         }
         e.preventDefault();
 
-      
+
     });
-    $("#btnCancelPdfTemp").on("click",function (e) {
-        myPopupWindow.close();   
-        $("#bgtransparent").remove();  
+    $("#btnCancelPdfTemp").on("click", function (e) {
+        myPopupWindow.close();
+        $("#bgtransparent").remove();
     });
 
-    $("#btnDeletePdfTemp").on("click",function (e) {
+    $("#btnDeletePdfTemp").on("click", function (e) {
         var id = $("#myFormEditPdfReporte input[name=is_temp]").val();
-        if(id==undefined){
+        if (id == undefined) {
             var id = $("#myFormEditPdfReporte select[name=id]").val();
         }
         Swal.fire({
@@ -2494,60 +2495,60 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, Eliminar!',
             cancelButtonText: 'No, Cancelar!'
-          }).then((result) => {
-            if (result.value) {              
+        }).then((result) => {
+            if (result.value) {
                 deleteConPdfTemporal(id)
-                        
+
             }
-          });   
+        });
     });
 
-    $(".selec_confi_av").on("click",function (e) {
+    $(".selec_confi_av").on("click", function (e) {
         var modal = $(this).attr('data-modal');
-        $("#"+modal).modal('show');
+        $("#" + modal).modal('show');
     });
 
-    $(".btn_add_conc_he_con").on("click",function (e) {
+    $(".btn_add_conc_he_con").on("click", function (e) {
         e.preventDefault();
-        $("#myformEditHechoPretencion").attr('id','myformCreateHechoPretencion');
+        $("#myformEditHechoPretencion").attr('id', 'myformCreateHechoPretencion');
         $("#myformCreateHechoPretencion input[name=id]").val('')
         $("#myformCreateHechoPretencion textarea[name=descripcion]").val('')
         $("#myformCreateHechoPretencion input[name=tipo_id]").val($(this).attr('data-tipo'))
-        $("#myModalCreateConcHechosPretenciones").modal('show'); 
+        $("#myModalCreateConcHechosPretenciones").modal('show');
     });
 
-    $("#myModalCreateConcHechosPretenciones").on("submit",'#myformCreateHechoPretencion',function (e) {
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
+    $("#myModalCreateConcHechosPretenciones").on("submit", '#myformCreateHechoPretencion', function (e) {
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
         storeConciliacionHechoPretencion(request);
         e.preventDefault()
     });
 
-    $(".content_hechos_pretensiones").on("click",'.btn_editar_hepr',function (e) {
+    $(".content_hechos_pretensiones").on("click", '.btn_editar_hepr', function (e) {
         e.preventDefault();
         var id = $(this).attr('data-id');
         editConciliacionHechoPretencion(id)
 
     });
 
-    $(".content_hechos_pretensiones").on("click",'.btn_estado_hepr',function (e) {
+    $(".content_hechos_pretensiones").on("click", '.btn_estado_hepr', function (e) {
         e.preventDefault();
         var id = $(this).attr('data-id');
         $("#myformEditEstadoPretension input[name=id]").val(id)
-        if($(this).attr('data-estado_id')!='1') $("#myformEditEstadoPretension select[name=estado_id]").val($(this).attr('data-estado_id'))
+        if ($(this).attr('data-estado_id') != '1') $("#myformEditEstadoPretension select[name=estado_id]").val($(this).attr('data-estado_id'))
         $("#myModal_create_estado_pretension").modal('show');
         //editConciliacionHechoPretencion(id)
 
     });
-    
 
-    $("#myModalCreateConcHechosPretenciones").on("submit",'#myformEditHechoPretencion',function (e) {
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
+
+    $("#myModalCreateConcHechosPretenciones").on("submit", '#myformEditHechoPretencion', function (e) {
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
         var id = $("#myformEditHechoPretencion input[name=id]").val()
-        updateConciliacionHechoPretencion(request,id);
+        updateConciliacionHechoPretencion(request, id);
         e.preventDefault()
     });
 
-    $(".content_hechos_pretensiones").on("click",'.btn_eliminar_hepr',function (e) {
+    $(".content_hechos_pretensiones").on("click", '.btn_eliminar_hepr', function (e) {
         e.preventDefault();
         var id = $(this).attr('data-id');
         Swal.fire({
@@ -2559,30 +2560,30 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, Eliminar!',
             cancelButtonText: 'No, mantener abierta!'
-          }).then((result) => {
-            if (result.value) {              
+        }).then((result) => {
+            if (result.value) {
                 deleteConciliacionHechoPretencion(id)
-                        
+
             }
-          });   
+        });
 
     });
 
-    $(".select_values").on("change",function(e) {       
-        $(".content_values_"+$(this).attr('data-view')).hide();
-        $("#"+$(this).val()).show()
+    $(".select_values").on("change", function (e) {
+        $(".content_values_" + $(this).attr('data-view')).hide();
+        $("#" + $(this).val()).show()
     });
 
-    $("#myformEditEstadoPretension").on("submit",function (e) {
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
+    $("#myformEditEstadoPretension").on("submit", function (e) {
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
         var id = $("#myformEditEstadoPretension input[name=id]").val()
-        updateConciliacionHechoPretencion(request,id);
-        e.preventDefault();        
+        updateConciliacionHechoPretencion(request, id);
+        e.preventDefault();
     });
 
-    $("#form_expediente_edit").on("submit",function (e) {
+    $("#form_expediente_edit").on("submit", function (e) {
         var request = $(this).serialize();
-        var id = $("#expediente_id").val();        
+        var id = $("#expediente_id").val();
         var textarea = document.getElementById('exp_hechos');
         var contenido = textarea.value.trim();
         var palabras = contenido.split(/\s+/);
@@ -2590,11 +2591,11 @@ return false;
             toastr.error("Los hechos deben tener al menos 20 palabras", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
-            }); 
-            e.preventDefault(); 
+            });
+            e.preventDefault();
             return
         }
-        if($("#exptipoproce_id").val()!=3){
+        if ($("#exptipoproce_id").val() != 3) {
             var textarea = document.getElementById('exp_resp_est');
             var contenido = textarea.value.trim();
             var palabras = contenido.split(/\s+/);
@@ -2602,129 +2603,129 @@ return false;
                 toastr.error("La respuesta debe tener al menos 20 palabras", "", {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
-                }); 
+                });
                 e.preventDefault();
                 return
                 // Realiza las acciones adicionales necesarias si el contenido es válido
             }
         }
-        
-        expedienteUpdate(request,id)
+
+        expedienteUpdate(request, id)
         e.preventDefault();
     });
 
-    $(".encabezado_file").on("change",function (e) {
-       var view = $(this).attr("data-view")
+    $(".encabezado_file").on("change", function (e) {
+        var view = $(this).attr("data-view")
         if (this.files && this.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                $('#encab_img-'+view).attr('src', e.target.result)
-                .css({'width':'100%'}); // Renderizamos la imagen
+                $('#encab_img-' + view).attr('src', e.target.result)
+                    .css({ 'width': '100%' }); // Renderizamos la imagen
                 //console.log(e.target);
                 var image = new Image();
-              //  console.log(image);
+                //  console.log(image);
                 image.src = e.target.result;
-            image.onload = function () {
-                var height = this.height;
-                var width = this.width;               
-                $("#encab_height-"+view).val(height);
-                $("#encab_width-"+view).val(width);
-               
-          }
+                image.onload = function () {
+                    var height = this.height;
+                    var width = this.width;
+                    $("#encab_height-" + view).val(height);
+                    $("#encab_width-" + view).val(width);
+
+                }
             }
             reader.readAsDataURL(this.files[0]);
-            
+
         }
     });
 
-    $(".pie_file").on("change",function (e) {
+    $(".pie_file").on("change", function (e) {
         var view = $(this).attr("data-view")
-         if (this.files && this.files[0]) {
-             var reader = new FileReader();
-             reader.onload = function (e) {
-                $('#pie_img-'+view).attr('src', e.target.result)
-                .css({'width':'100%'}); // Renderizamos la imagen                 
-                var image = new Image();            
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#pie_img-' + view).attr('src', e.target.result)
+                    .css({ 'width': '100%' }); // Renderizamos la imagen                 
+                var image = new Image();
                 image.src = e.target.result;
                 image.onload = function () {
-                 var height = this.height;
-                 var width = this.width;               
-                 $("#pie_height-"+view).val(height);
-                 $("#pie_width-"+view).val(width);
-                
-           }
-             }
-             reader.readAsDataURL(this.files[0]);
-             
-         }
-     });
+                    var height = this.height;
+                    var width = this.width;
+                    $("#pie_height-" + view).val(height);
+                    $("#pie_width-" + view).val(width);
 
-     $("#myReportPdfList").on("click","#btn_desc_all_pdf",function (e) {
-         e.preventDefault();
-         //alert("hola")
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+
+        }
+    });
+
+    $("#myReportPdfList").on("click", "#btn_desc_all_pdf", function (e) {
+        e.preventDefault();
+        //alert("hola")
         var request = {};
-        $(".input_filepdf_id").each((index,element) => {            
+        $(".input_filepdf_id").each((index, element) => {
             if ($(element).is(":checked")) {
-                request[index] = element.value   
+                request[index] = element.value
                 var a = document.createElement("a");
-                a.href="/conciliaciones/download/file/"+element.value
+                a.href = "/conciliaciones/download/file/" + element.value
                 a.download = $(element).attr("data-name");
-                a.target = "_blank";   
-                a.click();                
-            }           
-        }); 
-       // descargarAllPdfConcEstado(request)
-       
-     });
+                a.target = "_blank";
+                a.click();
+            }
+        });
+        // descargarAllPdfConcEstado(request)
+
+    });
 
 
-     $("#btn_download_all_pfd").on("click",function(){
-        var request = 
+    $("#btn_download_all_pfd").on("click", function () {
+        var request =
         {
-            "conciliacion_id":$("#conciliacion_id").val()
+            "conciliacion_id": $("#conciliacion_id").val()
         }
         //descargarAllPdfConcEstado(request)
-     });
+    });
 
-     $(".btn_detalles_us_con").on("click",function(e){
+    $(".btn_detalles_us_con").on("click", function (e) {
         var data_type = $(this).attr("data-type");
         $("#myModal_conc_user_create input[name=tipo_usuario_id]").val(data_type);
         $("#myModal_conc_user_create input[name=section]").val($(this).attr('data-section'));
-        var request = {          
-            'conciliacion_id':$("#conciliacion_id").val(),          
-            'data_type':data_type,
-            'section':$(this).attr('data-section')
+        var request = {
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'data_type': data_type,
+            'section': $(this).attr('data-section')
         }
-        if ($(this).attr('data-user')!=undefined) {
+        if ($(this).attr('data-user') != undefined) {
             request['idnumber'] = $(this).attr('data-user');
-            request['tipodoc_id'] = $("#myModal_conc_user_create select[name=tipodoc_id]").val();  
-            request['is_edit'] = true;  
-        }else{
+            request['tipodoc_id'] = $("#myModal_conc_user_create select[name=tipodoc_id]").val();
+            request['is_edit'] = true;
+        } else {
             request['idnumber'] = '0';
-            request['tipodoc_id'] = 1;          
-        }  
-     getDetallesUser(request,request.idnumber);
-       // $("#myModal_conc_user_create").modal("show"); 
-     });
+            request['tipodoc_id'] = 1;
+        }
+        getDetallesUser(request, request.idnumber);
+        // $("#myModal_conc_user_create").modal("show"); 
+    });
 
-     $(".btn_add_usuario_notas").on("click",function (e) {
-         e.preventDefault();
-         if($(this).attr("data-type")==203){
+    $(".btn_add_usuario_notas").on("click", function (e) {
+        e.preventDefault();
+        if ($(this).attr("data-type") == 203) {
             $("#content_nota_conciliador").show();
             $("#content_nota_auxiliar").hide();
-            $("#content_nota_auxiliar input").prop("disabled",true);
-            $("#content_nota_conciliador input").prop("disabled",false);
-         }else{
+            $("#content_nota_auxiliar input").prop("disabled", true);
+            $("#content_nota_conciliador input").prop("disabled", false);
+        } else {
             $("#content_nota_conciliador").hide();
-            $("#content_nota_conciliador input").prop("disabled",true)
+            $("#content_nota_conciliador input").prop("disabled", true)
             $("#content_nota_auxiliar").show();
-            $("#content_nota_auxiliar input").prop("disabled",false);
-         }
-         $("#myform_asig_nota_conciliacion input[name='estidnumber']").val($(this).attr("data-user"))
-         $("#myModal_add_nota_conciliaciones").modal("show")
-     });
+            $("#content_nota_auxiliar input").prop("disabled", false);
+        }
+        $("#myform_asig_nota_conciliacion input[name='estidnumber']").val($(this).attr("data-user"))
+        $("#myModal_add_nota_conciliaciones").modal("show")
+    });
 
-     $(".btn_delete_notas_con").on("click",function (e) {
+    $(".btn_delete_notas_con").on("click", function (e) {
         e.preventDefault();
         var idnumber = $(this).attr('data-user');
         Swal.fire({
@@ -2736,64 +2737,64 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, Eliminar!',
             cancelButtonText: 'No, mantener!'
-          }).then((result) => {
-            if (result.value) {    
+        }).then((result) => {
+            if (result.value) {
                 var request = {
-                    "idnumber":idnumber,
-                    "tbl_org_id":$("#conciliacion_id").val()
-                }          
-                deleteNotasExt(request);          
+                    "idnumber": idnumber,
+                    "tbl_org_id": $("#conciliacion_id").val()
+                }
+                deleteNotasExt(request);
             }
-          }); 
-       
+        });
+
     });
 
-     $(".btn_edit_notas").on("click",function (e) {
+    $(".btn_edit_notas").on("click", function (e) {
         e.preventDefault();
         var notas = [];
-        notas.push('puntualidad','presentancion_personal');
-        if($(this).attr("data-type")==203){
-            notas.push('manejo_audiencia','analisis_formula');
-        }else{
-            notas.push('plantillas','redaccion_acta');
+        notas.push('puntualidad', 'presentancion_personal');
+        if ($(this).attr("data-type") == 203) {
+            notas.push('manejo_audiencia', 'analisis_formula');
+        } else {
+            notas.push('plantillas', 'redaccion_acta');
         }
-        if($(this).attr("data-type")==203){
+        if ($(this).attr("data-type") == 203) {
             $("#content_nota_conciliador_edit").show();
             $("#content_nota_auxiliar_edit").hide();
-            $("#content_nota_auxiliar_edit input").prop("disabled",true);
-            $("#content_nota_conciliador_edit input").prop("disabled",false);
-         }else{
+            $("#content_nota_auxiliar_edit input").prop("disabled", true);
+            $("#content_nota_conciliador_edit input").prop("disabled", false);
+        } else {
             $("#content_nota_conciliador_edit").hide();
-            $("#content_nota_conciliador_edit input").prop("disabled",true)
+            $("#content_nota_conciliador_edit input").prop("disabled", true)
             $("#content_nota_auxiliar_edit").show();
-            $("#content_nota_auxiliar_edit input").prop("disabled",false);
-         }
-        var request = {
-            'idnumber':$(this).attr("data-user"),
-            'origen':5,
-            'oficina_id':$("#conciliacion_id").val(),
-            'notas':notas
+            $("#content_nota_auxiliar_edit input").prop("disabled", false);
         }
-       // console.log(notas);
-       getNotasConciliacion(request)
-     });
+        var request = {
+            'idnumber': $(this).attr("data-user"),
+            'origen': 5,
+            'oficina_id': $("#conciliacion_id").val(),
+            'notas': notas
+        }
+        // console.log(notas);
+        getNotasConciliacion(request)
+    });
 
-     $("#myform_edit_nota_ext").on("submit",function(e) {
-         var request = $(this).serialize();
+    $("#myform_edit_nota_ext").on("submit", function (e) {
+        var request = $(this).serialize();
         var notaapl = $("#myform_edit_nota_ext input[name='nota_aplicacion']").val();
         var notacon = $("#myform_edit_nota_ext input[name='nota_conocimiento']").val();
-        var notaet =  $("#myform_edit_nota_ext input[name='nota_etica']").val();
+        var notaet = $("#myform_edit_nota_ext input[name='nota_etica']").val();
         var errors = 0;
         var errors = validateForm("myform_edit_nota_ext")
-        if(notaapl > 5 || notacon > 5 || notaet > 5){
+        if (notaapl > 5 || notacon > 5 || notaet > 5) {
             toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
             });
             errors = 1;
         }
-        
-        if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
+
+        if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
             toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
@@ -2801,121 +2802,121 @@ return false;
             errors = 1;
         }
 
-        if(errors <= 0){
+        if (errors <= 0) {
             updateNotasExt(request)
         }
-        
-         e.preventDefault();
-     });
 
-     $("#myReportPdfList").on("click",".btn_asignar_firmantes",function (e) {
-         var  id = $(this).attr("data-estado_id");
-         var request = {
-             "id":id,
-            "conciliacion_id":$("#conciliacion_id").val()
-            }
+        e.preventDefault();
+    });
+
+    $("#myReportPdfList").on("click", ".btn_asignar_firmantes", function (e) {
+        var id = $(this).attr("data-estado_id");
+        var request = {
+            "id": id,
+            "conciliacion_id": $("#conciliacion_id").val()
+        }
         users_delete = [];
         getFirmantes(request);
-     });
+    });
 
-     $("#myFormAsigFirmaPdf").on("submit",function (e) {
+    $("#myFormAsigFirmaPdf").on("submit", function (e) {
         var request = $(this).serializeArray()
-       // request['conciliacion_id'] = $("#conciliacion_id").val();
-        request.push({name:'conciliacion_id', value: $("#conciliacion_id").val()})
-        if(users_delete.length > 0){
+        // request['conciliacion_id'] = $("#conciliacion_id").val();
+        request.push({ name: 'conciliacion_id', value: $("#conciliacion_id").val() })
+        if (users_delete.length > 0) {
             users_delete.forEach(element => {
-                request.push({name:'delete_users_id[]', value: element})
-            });            
-        }       
+                request.push({ name: 'delete_users_id[]', value: element })
+            });
+        }
         setFirmantes(request);
         e.preventDefault()
-     });
+    });
 
-     $("#btn_cancelar_asig_user").on("click",function (e) {
+    $("#btn_cancelar_asig_user").on("click", function (e) {
         $("#content_user_pdf_firmas").hide();
         $("#content_user_pdf_list").show();
-     });
+    });
 
-     var users_delete = {};
-     $("#table_list_pdf_users").on("change",'.check_selusfirm',function (e) {        
-         if(!$(this).is(":checked") && $(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).val()) == -1){
-           users_delete.push($(this).val());
-         }else{
-            users_delete.splice(users_delete.indexOf($(this).val()),1);            
-         }
-     });
+    var users_delete = {};
+    $("#table_list_pdf_users").on("change", '.check_selusfirm', function (e) {
+        if (!$(this).is(":checked") && $(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).val()) == -1) {
+            users_delete.push($(this).val());
+        } else {
+            users_delete.splice(users_delete.indexOf($(this).val()), 1);
+        }
+    });
 
-     $("#table_list_pdf_users").on("change",'.select_type_firma',function (e) {
-       // $(".input_type_user").prop("disabled",true)
-        
+    $("#table_list_pdf_users").on("change", '.select_type_firma', function (e) {
+        // $(".input_type_user").prop("disabled",true)
 
-        if($(this).val()!='209' && $(this).val()!=''){           
-            $("#check_selusfirm-"+$(this).attr("data-userid")).prop("disabled",true);
-            $("#check_selusfirm-"+$(this).attr("data-userid")).prop("checked",false);
-            $("#input_selusfirm-"+$(this).attr("data-userid")).val($(this).attr("data-id"));
-            $("#input_selusfirm-"+$(this).attr("data-userid")).prop("disabled",false);
 
-            $("#input_selustipofirm-"+$(this).attr("data-userid")).val($(this).val());
-            $("#input_selustipofirm-"+$(this).attr("data-userid")).prop("disabled",false);
+        if ($(this).val() != '209' && $(this).val() != '') {
+            $("#check_selusfirm-" + $(this).attr("data-userid")).prop("disabled", true);
+            $("#check_selusfirm-" + $(this).attr("data-userid")).prop("checked", false);
+            $("#input_selusfirm-" + $(this).attr("data-userid")).val($(this).attr("data-id"));
+            $("#input_selusfirm-" + $(this).attr("data-userid")).prop("disabled", false);
 
-            $("#input_tipouser-"+$(this).attr("data-userid")).prop("disabled",false);
+            $("#input_selustipofirm-" + $(this).attr("data-userid")).val($(this).val());
+            $("#input_selustipofirm-" + $(this).attr("data-userid")).prop("disabled", false);
 
-        }else if ($(this).val()==''){
-            $("#check_selusfirm-"+$(this).attr("data-userid")).prop("disabled",true);
-            $("#input_selusfirm-"+$(this).attr("data-userid")).val("");
-            $("#input_selusfirm-"+$(this).attr("data-userid")).prop("disabled",true);
-            $("#check_selusfirm-"+$(this).attr("data-userid")).prop("checked",false);
+            $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false);
 
-            $("#input_selustipofirm-"+$(this).attr("data-userid")).val("");
-            $("#input_selustipofirm-"+$(this).attr("data-userid")).prop("disabled",true);
+        } else if ($(this).val() == '') {
+            $("#check_selusfirm-" + $(this).attr("data-userid")).prop("disabled", true);
+            $("#input_selusfirm-" + $(this).attr("data-userid")).val("");
+            $("#input_selusfirm-" + $(this).attr("data-userid")).prop("disabled", true);
+            $("#check_selusfirm-" + $(this).attr("data-userid")).prop("checked", false);
 
-            $("#input_tipouser-"+$(this).attr("data-userid")).prop("disabled",true);
-        }else{
-            $("#check_selusfirm-"+$(this).attr("data-userid")).prop("disabled",false);
-            $("#check_selusfirm-"+$(this).attr("data-userid")).prop("checked",true);
+            $("#input_selustipofirm-" + $(this).attr("data-userid")).val("");
+            $("#input_selustipofirm-" + $(this).attr("data-userid")).prop("disabled", true);
 
-            $("#input_selusfirm-"+$(this).attr("data-userid")).val($(this).attr("data-id"));
-            $("#input_selusfirm-"+$(this).attr("data-userid")).prop("disabled",false);
+            $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", true);
+        } else {
+            $("#check_selusfirm-" + $(this).attr("data-userid")).prop("disabled", false);
+            $("#check_selusfirm-" + $(this).attr("data-userid")).prop("checked", true);
 
-            $("#input_selustipofirm-"+$(this).attr("data-userid")).val($(this).val());
-            $("#input_selustipofirm-"+$(this).attr("data-userid")).prop("disabled",false);
+            $("#input_selusfirm-" + $(this).attr("data-userid")).val($(this).attr("data-id"));
+            $("#input_selusfirm-" + $(this).attr("data-userid")).prop("disabled", false);
 
-            $("#input_tipouser-"+$(this).attr("data-userid")).prop("disabled",false);
+            $("#input_selustipofirm-" + $(this).attr("data-userid")).val($(this).val());
+            $("#input_selustipofirm-" + $(this).attr("data-userid")).prop("disabled", false);
+
+            $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false);
 
         }
 
-        if($(this).val() == '' && $(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).attr("data-userid")) == -1){
+        if ($(this).val() == '' && $(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).attr("data-userid")) == -1) {
             users_delete.push($(this).attr("data-userid"));
-           // alert($(this).attr("data-userid"))
-            $("#input_tipouser-"+$(this).attr("data-userid")).prop("disabled",false)
-          }else if($(this).attr("data-oldnew") == 'old'  && users_delete.indexOf($(this).attr("data-userid")) != -1){
-             users_delete.splice(users_delete.indexOf($(this).attr("data-userid")),1);  
-             $("#input_tipouser-"+$(this).attr("data-userid")).prop("disabled",false)           
-          }
-        
+            // alert($(this).attr("data-userid"))
+            $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false)
+        } else if ($(this).attr("data-oldnew") == 'old' && users_delete.indexOf($(this).attr("data-userid")) != -1) {
+            users_delete.splice(users_delete.indexOf($(this).attr("data-userid")), 1);
+            $("#input_tipouser-" + $(this).attr("data-userid")).prop("disabled", false)
+        }
+
     });
 
 
-     $("#btn_select_volver_enviar_email").on("click",function (e) {
-         $(".volver_enviar_mail").show();
-         $(".check_selusfirm").prop("disabled",true);
-         $("#btn_select_volver_enviar_email").hide();
-         $("#btn_volver_enviar_email").show();
-         $("#btn_enviar_email").hide()
-     });
+    $("#btn_select_volver_enviar_email").on("click", function (e) {
+        $(".volver_enviar_mail").show();
+        $(".check_selusfirm").prop("disabled", true);
+        $("#btn_select_volver_enviar_email").hide();
+        $("#btn_volver_enviar_email").show();
+        $("#btn_enviar_email").hide()
+    });
 
-     $("#btn_volver_enviar_email").on("click",function (e) {
-        var request = $("#myFormAsigFirmaPdf").serialize() + "&conciliacion_id="+$("#conciliacion_id").val()
+    $("#btn_volver_enviar_email").on("click", function (e) {
+        var request = $("#myFormAsigFirmaPdf").serialize() + "&conciliacion_id=" + $("#conciliacion_id").val()
         reenviarMails(request)
     });
 
 
-    $("#myFormAsigFirmaPdf").on("change",".select_type_firma",function name(e) {
+    $("#myFormAsigFirmaPdf").on("change", ".select_type_firma", function name(e) {
         console.log($(this).val());
-     
+
     });
 
-    $(".btn_gene_pdf").on("click",function (e) {        
+    $(".btn_gene_pdf").on("click", function (e) {
         var status_id = $(this).attr('data-status_id');
         var reporte_id = $(this).attr('data-reporte_id');
         Swal.fire({
@@ -2927,20 +2928,20 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, generar!',
             cancelButtonText: 'No, cancelar!'
-          }).then((result) => {
-            if (result.value) {    
-                var request = { 
-                    "reporte_id":reporte_id,
-                    "conc_estado_id":conc_estado_id,
+        }).then((result) => {
+            if (result.value) {
+                var request = {
+                    "reporte_id": reporte_id,
+                    "conc_estado_id": conc_estado_id,
                     "status_id": status_id,
-                    "conciliacion_id":$("#conciliacion_id").val()
-                }   
-                generarPdfs(request);          
+                    "conciliacion_id": $("#conciliacion_id").val()
+                }
+                generarPdfs(request);
             }
-          }); 
-    }); 
+        });
+    });
 
-    $("#myReportPdfList").on("click",".btn_gene_pdf",function (e) {
+    $("#myReportPdfList").on("click", ".btn_gene_pdf", function (e) {
         var status_id = $(this).attr('data-status_id');
         var reporte_id = $(this).attr('data-reporte_id');
         Swal.fire({
@@ -2952,19 +2953,19 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, generar!',
             cancelButtonText: 'No, cancelar!'
-          }).then((result) => {
-            if (result.value) {    
-                var request = { 
-                    "reporte_id":reporte_id,
-                    "conc_estado_id":conc_estado_id,
+        }).then((result) => {
+            if (result.value) {
+                var request = {
+                    "reporte_id": reporte_id,
+                    "conc_estado_id": conc_estado_id,
                     "status_id": status_id,
-                    "conciliacion_id":$("#conciliacion_id").val()
-                }   
-                generarPdfs(request);          
+                    "conciliacion_id": $("#conciliacion_id").val()
+                }
+                generarPdfs(request);
             }
-          }); 
+        });
     });
-    $("#myFormAsigFirmaPdf").on("click",".btn_revocar_firmas",function (e) {
+    $("#myFormAsigFirmaPdf").on("click", ".btn_revocar_firmas", function (e) {
         var status_id = $(this).attr('data-status_id');
         var reporte_id = $(this).attr('data-reporte_id');
         Swal.fire({
@@ -2975,125 +2976,123 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, solicitar revocación!',
             cancelButtonText: 'No, cancelar!'
-          }).then((result) => {
-            if (result.value) {    
-                var request = { 
-                    "reporte_id":reporte_id,
-                    "conc_estado_id":conc_estado_id,
+        }).then((result) => {
+            if (result.value) {
+                var request = {
+                    "reporte_id": reporte_id,
+                    "conc_estado_id": conc_estado_id,
                     "status_id": status_id,
-                    "conciliacion_id":$("#conciliacion_id").val()
-                }   
-                revocarFirmas(request);          
+                    "conciliacion_id": $("#conciliacion_id").val()
+                }
+                revocarFirmas(request);
             }
-          }); 
+        });
     })
 
-    $("#table_list_estados").on("click",'.btn_compartir_rep_pdf',function(e){
-       
+    $("#table_list_estados").on("click", '.btn_compartir_rep_pdf', function (e) {
+
         var request = {
             conc_estado_id: $(this).attr("data-id"),
             tabla_destino: "conciliaciones",
             status_id: $(this).attr("data-estado_id"),
-            conciliacion_id:$("#conciliacion_id").val()
-        }; 
-        getStatusFiles(request);  
+            conciliacion_id: $("#conciliacion_id").val()
+        };
+        getStatusFiles(request);
     });
-  
-    $("#tipo_busqueda_conciliacion").on("change",function(e){
+
+    $("#tipo_busqueda_conciliacion").on("change", function (e) {
         var content = $(this).val()
         disabledInputs(content)
     });
-        var content = $("#tipo_busqueda_conciliacion").val()
-        disabledInputs(content)
+    var content = $("#tipo_busqueda_conciliacion").val()
+    disabledInputs(content)
 
-  
 
-    $("#tbl_list_archivos_comp").on("change",'.chk_compar_con_f',function (e) {
-        var is_submit = false
-       
+
+    $("#tbl_list_archivos_comp").on("change", '.chk_compar_con_f', function (e) {
+        var is_submit = false;
         $(".chk_compar_con_f").each((chk, element) => {
-            if($(element).is(":checked")){
-                is_submit = true                
-            }            
+            if ($(element).is(":checked")) {
+                is_submit = true
+            }
         });
-      
-        if(is_submit){
-            $("#btn_compcon_file").prop("disabled",false)
-        }else{
-            $("#btn_compcon_file").prop("disabled",true)
+        if (is_submit) {
+            $("#btn_compcon_file").prop("disabled", false)
+        } else {
+            $("#btn_compcon_file").prop("disabled", true)
         }
     });
 
-    $("#myFormCompartirDocumento").on("submit",function(e){
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
-        if($("#myFormCompartirDocumento select[name=means_id]").val()=="218"){
+    $("#myFormCompartirDocumento").on("submit", function (e) {
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
+        if ($("#myFormCompartirDocumento select[name=means_id]").val() == "218") {
             var inputs = $(".rows_mails").length
-            if(inputs <= 0){
+            if (inputs <= 0) {
                 toastr.error("No hay correos validos!", "", {
                     positionClass: "toast-top-right",
                     timeOut: "3000",
                 });
-            }else{
-                storeSharedConcFiles(request);               
+            } else {
+                storeSharedConcFiles(request);
             }
-        }else{             
-            storeSharedConcFiles(request);            
+        } else {
+            storeSharedConcFiles(request);
         }
         e.preventDefault();
-      
+
     });
 
-    $("#myFormCompartirDocumento select[name=category_id]").on("change",function(e){
+    $("#myFormCompartirDocumento select[name=category_id]").on("change", function (e) {
         $("#content_files").show()
         $("#content_datashared").hide()
-        if($(this).val()!=214){
-            $("#myFormCompartirDocumento select[name=means_id]").prop("disabled",false)
+        if ($(this).val() != 214) {
+            $("#myFormCompartirDocumento select[name=means_id]").prop("disabled", false)
             var means_id = $("#myFormCompartirDocumento select[name=means_id]").val()
-            if(means_id==218){
-                 $("#content_shmail").show();
-                 $(".shared_mail").prop("disabled",false);
-                 $("#tbl_list_mail_partes").html("")
-            }else{
+            if (means_id == 218) {
+                $("#content_shmail").show();
+                $(".shared_mail").prop("disabled", false);
+                $("#tbl_list_mail_partes").html("")
+            } else {
                 $("#content_shmail").hide();
-                 $(".shared_mail").prop("disabled",true);
+                $(".shared_mail").prop("disabled", true);
             }
-            
-        }else{
+
+        } else {
             $("#tbl_list_mail_partes").html("")
-            $("#myFormCompartirDocumento select[name=means_id]").prop("disabled",true)
+            $("#myFormCompartirDocumento select[name=means_id]").prop("disabled", true)
             $("#myFormCompartirDocumento select[name=means_id]").val(218);
             $("#content_shmail").hide();
-            $(".shared_mail").prop("disabled",true);
+            $(".shared_mail").prop("disabled", true);
             var mail = '';
             partesConciliacionMail.forEach(element => {
-                mail += createRowMail(element);                
+                mail += createRowMail(element);
             });
             $("#tbl_list_mail_partes").html(mail)
-            $(".rows_mails").each((key,element) => {
-                $(element).attr("id","row-"+key)
-                $(element).children().attr("data-row",key)        
+            $(".rows_mails").each((key, element) => {
+                $(element).attr("id", "row-" + key)
+                $(element).children().attr("data-row", key)
             });
-            
+
 
         }
         e.preventDefault();
     });
 
-    $("#myFormCompartirDocumento select[name=means_id]").on("change",function(e){
+    $("#myFormCompartirDocumento select[name=means_id]").on("change", function (e) {
         $("#content_files").show()
         $("#content_datashared").hide()
         $("#tbl_list_mail_partes").html("")
-        if($(this).val()==218){
+        if ($(this).val() == 218) {
             $("#content_shmail").show();
-            $(".shared_mail").prop("disabled",false);
-       }else{
-           $("#content_shmail").hide();
-           $(".shared_mail").prop("disabled",true);
-       }
+            $(".shared_mail").prop("disabled", false);
+        } else {
+            $("#content_shmail").hide();
+            $(".shared_mail").prop("disabled", true);
+        }
         e.preventDefault();
     });
 
-    $("#enlace_copiar").on("click",function (e) {
+    $("#enlace_copiar").on("click", function (e) {
         //var content = $("#lbl_copy").text()
         var codigoACopiar = document.getElementById('lbl_copy');
         var $bridge = $("<input>")
@@ -3105,57 +3104,52 @@ return false;
             positionClass: "toast-top-right",
             timeOut: "3000",
         });
-
-        e.preventDefault();       
+        e.preventDefault();
     });
-    
-    $("#myFormCompartirDocumento #btn_addmail").on("click",function (e) {
+
+    $("#myFormCompartirDocumento #btn_addmail").on("click", function (e) {
         var usermail = $("#input_email").val()
-       if(validateEmail($("#input_email"))){
-        var mail = "";
-        mail = createRowMail(usermail);
-        $("#tbl_list_mail_partes").append(mail)
-        $(".rows_mails").each((key,element) => {
-             $(element).attr("id","row-"+key)
-             $(element).children().attr("data-row",key)        
-         });
-       }
-    
-
-        
-
-    });
-
-    $("#tbl_list_mail_partes").on("click",'.btn_delete_mail',function(e){
-        $("#row-"+$(this).attr("data-row")).remove()
-        $(".rows_mails").each((key,element) => {
-            $(element).attr("id","row-"+key)
-            $(element).children().attr("data-row",key) 
-                  
-        });
-    });
-
-    $("#content_compartidos").on("click",'.btn_show_files',function(e) {
-        var key = $(this).attr("data-key")
-        $(".content_fd").hide();
-        $("#files-"+key).show()
-    });
-
-    $("#content_compartidos").on("click",'.btn_show_data',function(e) {
-        var key = $(this).attr("data-key")
-        $(".content_fd").hide();
-        $("#data-"+key).show()
-    });
-
-    $("#table_list_pdf_users").on("click",'.check_selusvolverfirm',function (e) {
-        $("#inusre-"+$(this).attr("data-input_id")).prop('disabled',true)
-        if($(this).is(":checked")){
-            $("#inusre-"+$(this).attr("data-input_id")).prop('disabled',false)
+        if (validateEmail($("#input_email"))) {
+            var mail = "";
+            mail = createRowMail(usermail);
+            $("#tbl_list_mail_partes").append(mail)
+            $(".rows_mails").each((key, element) => {
+                $(element).attr("id", "row-" + key)
+                $(element).children().attr("data-row", key)
+            });
         }
     });
 
-    $("#btn_radicar_conci").on("click",function(e) {
-        
+    $("#tbl_list_mail_partes").on("click", '.btn_delete_mail', function (e) {
+        $("#row-" + $(this).attr("data-row")).remove()
+        $(".rows_mails").each((key, element) => {
+            $(element).attr("id", "row-" + key)
+            $(element).children().attr("data-row", key)
+
+        });
+    });
+
+    $("#content_compartidos").on("click", '.btn_show_files', function (e) {
+        var key = $(this).attr("data-key")
+        $(".content_fd").hide();
+        $("#files-" + key).show()
+    });
+
+    $("#content_compartidos").on("click", '.btn_show_data', function (e) {
+        var key = $(this).attr("data-key")
+        $(".content_fd").hide();
+        $("#data-" + key).show()
+    });
+
+    $("#table_list_pdf_users").on("click", '.check_selusvolverfirm', function (e) {
+        $("#inusre-" + $(this).attr("data-input_id")).prop('disabled', true)
+        if ($(this).is(":checked")) {
+            $("#inusre-" + $(this).attr("data-input_id")).prop('disabled', false)
+        }
+    });
+
+    $("#btn_radicar_conci").on("click", function (e) {
+
         Swal.fire({
             title: "Esta seguro que desea radicar la conciliación?",
             type: 'warning',
@@ -3164,34 +3158,34 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, radicar!',
             cancelButtonText: 'No, cancelar!'
-          }).then((result) => {
-            if (result.value) {    
-                var request = { 
-                    "type_status_id":178,
-                    "concepto":"Radicada por secretaría",
-                    "conciliacion_id":$("#conciliacion_id").val()
-                   
-                }   
-                radicarConciliacion(request);          
+        }).then((result) => {
+            if (result.value) {
+                var request = {
+                    "type_status_id": 178,
+                    "concepto": "Radicada por secretaría",
+                    "conciliacion_id": $("#conciliacion_id").val()
+
+                }
+                radicarConciliacion(request);
             }
-          }); 
+        });
 
-    });   
+    });
 
-    $("#btn_notificar_conci_est").on("click",function () {
+    $("#btn_notificar_conci_est").on("click", function () {
         $("#content_mail_notificacion_conciliacion").show();
         $("#content_files_conciliacion").hide();
         var request = {
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tabla_destino':'conciliaciones_email',
-            'status_id':$(this).attr("data-estado"),
-            'categoria':'mensaje_radicado'
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'tabla_destino': 'conciliaciones_email',
+            'status_id': $(this).attr("data-estado"),
+            'categoria': 'mensaje_radicado'
         }
-        getReportes(request,'content_form_correo');
+        getReportes(request, 'content_form_correo');
     });
 
-    $("#btn_nueva_conciliacion").on("click",function (e) {
-    
+    $("#btn_nueva_conciliacion").on("click", function (e) {
+
 
         Swal.fire({
             title: "Esta seguro que desea asignarle una conciliación?",
@@ -3201,77 +3195,77 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, asignar!',
             cancelButtonText: 'No, cancelar!'
-          }).then((result) => {
-            if (result.value) {    
-                var request = { 
-                    "expediente_id":$("#expediente_id").val(),
-                    "exp_idnumber":$("#expid").val()
-                   
-                }   
-                asigConcToExpediente(request);          
+        }).then((result) => {
+            if (result.value) {
+                var request = {
+                    "expediente_id": $("#expediente_id").val(),
+                    "exp_idnumber": $("#expid").val()
+
+                }
+                asigConcToExpediente(request);
             }
-          }); 
-          e.preventDefault();
+        });
+        e.preventDefault();
 
     });
 
-    $("#myFormAsigConcExpediente").on("submit",function(e){
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
+    $("#myFormAsigConcExpediente").on("submit", function (e) {
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
         asigExpedienteToConc(request);
         e.preventDefault()
     });
 
 
-    $("#btn_descargar_turnos").on("click",function (e) {       
-            $(this).attr("href",'/turnos/descargar/curso?data_search='+$("#select_data_cursando").val());            
-       });
+    $("#btn_descargar_turnos").on("click", function (e) {
+        $(this).attr("href", '/turnos/descargar/curso?data_search=' + $("#select_data_cursando").val());
+    });
 
 
-    $("#btn_create_category").on("click",function(e){
+    $("#btn_create_category").on("click", function (e) {
         var request = {
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tabla_destino':'conciliaciones_email',
-            'status_id':178
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'tabla_destino': 'conciliaciones_email',
+            'status_id': 178
         }
-        getReportes(request,'content_form_correo');
+        getReportes(request, 'content_form_correo');
 
         $("#myModal_create_category_report").modal("show")
-    }) ;  
+    });
 
-    $("#myModal_create_category_report input[name='name']").on('keyup',function (e) {
+    $("#myModal_create_category_report input[name='name']").on('keyup', function (e) {
         var cadena = $(this).val();
         var minusculas = cadena.toLowerCase();
         var espacios = minusculas.replace(/\s+/g, "_");
         var final = espacios.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-       // var final = "[-"+sin_tildes+"-]";
+        // var final = "[-"+sin_tildes+"-]";
         $("#myModal_create_category_report input[name='short_name']").val(final)
 
     });
 
-    $("#myformCreateCategoryReport").on("submit",function(e) {
+    $("#myformCreateCategoryReport").on("submit", function (e) {
         var request = $(this).serialize();
         storeFromReports(request)
         e.preventDefault()
     });
 
-    $("#myModal_reportes_pdf_estados").on("click",".btn_add_data_personalized",function(e) {
+    $("#myModal_reportes_pdf_estados").on("click", ".btn_add_data_personalized", function (e) {
         var request = {
-            "reporte_id":$(this).attr("data-reporte_id")
+            "reporte_id": $(this).attr("data-reporte_id")
         };
         getFromReports(request)
         e.preventDefault()
     });
-    
-    $("#myFormEditPersonalizedReportValues").on("submit",function(e) {
+
+    $("#myFormEditPersonalizedReportValues").on("submit", function (e) {
         var request = $(this).serialize();
         insertPersonalizedReportValues(request)
         e.preventDefault();
     });
 
-    $("#myModal_reportes_pdf_estados").on("click",'.btn_revock_tipo_firmas',function(e) {
+    $("#myModal_reportes_pdf_estados").on("click", '.btn_revock_tipo_firmas', function (e) {
         e.preventDefault();
         var request = {
-            "pivot_id":$(this).attr("data-id")
+            "pivot_id": $(this).attr("data-id")
         }
         Swal.fire({
             title: "Esta seguro que desea revocar la firma?",
@@ -3281,168 +3275,168 @@ return false;
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, revocar!',
             cancelButtonText: 'No, cancelar!'
-          }).then((result) => {
-            if (result.value) {    
-                revockFirma(request);         
+        }).then((result) => {
+            if (result.value) {
+                revockFirma(request);
             }
-          }); 
-      
+        });
 
-       
+
+
 
     });
 
-    
-    window.onscroll = function() {
-        var y = window.scrollY;      
-        if(y<390){
-            $(".fila_roles").css({"position":"relative","top":"0px"});
-            
-        }else{
-            $(".fila_roles").css({"position":"fixed","top":"50px"})
-        }   
+
+    window.onscroll = function () {
+        var y = window.scrollY;
+        if (y < 390) {
+            $(".fila_roles").css({ "position": "relative", "top": "0px" });
+
+        } else {
+            $(".fila_roles").css({ "position": "fixed", "top": "50px" })
+        }
 
     };
 
-    $("#myFormEnviarCorreoConciliacion").on("submit",function(e){
-       
-        
+    $("#myFormEnviarCorreoConciliacion").on("submit", function (e) {
+
+
         var formatVal = $("#content_form_correo")
-        .summernote("code")
-        .trim();
+            .summernote("code")
+            .trim();
         //var correo = $("#content_form_correo").text();
         $("#myFormEnviarCorreoConciliacion input[name=cuerpo_correo]").val(formatVal)
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
         console.log(request);
         enviarCorreoConciliacion(request)
         e.preventDefault();
     });
 
-    $("#btn_notificarse").on("click",function () {
-       /*  var request = {
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tabla_destino':'conciliaciones_email',
-            'status_id':$(this).attr("data-estado"),
-            'categoria':'mensaje_notificarse'
-        } */
+    $("#btn_notificarse").on("click", function () {
+        /*  var request = {
+             'conciliacion_id':$("#conciliacion_id").val(),
+             'tabla_destino':'conciliaciones_email',
+             'status_id':$(this).attr("data-estado"),
+             'categoria':'mensaje_notificarse'
+         } */
         var request = {
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tabla_destino':'227',
-            'status_id':$("#estado_conciliacion_id").val(),
-            'categoria':'mensaje_notificarse'
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'tabla_destino': '227',
+            'status_id': $("#estado_conciliacion_id").val(),
+            'categoria': 'mensaje_notificarse'
         }
-        
-        getReportes(request,'content_form_correo_est_responder');
+
+        getReportes(request, 'content_form_correo_est_responder');
         $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
         $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
-        
+
         $("#myModal_respuestas_asignaciones").modal("show");
     });
 
-    $("#btn_notificarse_cancelar").on("click",function () {
+    $("#btn_notificarse_cancelar").on("click", function () {
         var request = {
-            'conciliacion_id':$("#conciliacion_id").val(),
-            'tabla_destino':'conciliaciones_email',
-            'status_id':$(this).attr("data-estado"),
-            'categoria':'mensaje_notificarse_cancelar'
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'tabla_destino': 'conciliaciones_email',
+            'status_id': $(this).attr("data-estado"),
+            'categoria': 'mensaje_notificarse_cancelar'
         }
-        
-        getReportes(request,'content_form_correo_est_responder');
+
+        getReportes(request, 'content_form_correo_est_responder');
         $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
         $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
-        
+
         $("#myModal_respuestas_asignaciones").modal("show");
     });
 
-    $("#myFormResponderCorreo").on("submit",function (e) {
+    $("#myFormResponderCorreo").on("submit", function (e) {
         var formatVal = $("#content_form_correo_est_responder")
-        .summernote("code")
-        .trim();
+            .summernote("code")
+            .trim();
         $("#myFormResponderCorreo input[name=cuerpo_correo]").val(formatVal)
-        var request = $(this).serialize()+"&conciliacion_id="+$("#conciliacion_id").val();
-       
+        var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
+
         enviarCorreoConciliacion(request)
         e.preventDefault();
     });
 
-  
-   
+
+
 }); //Fin del document ready
 
 function enviarCorreoConciliacion(request) {
-    var route = "/conciliaciones/enviar/correo" ;
-	
-	$.ajax({
-		url: route,		
-		type:'POST',
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
+    var route = "/conciliaciones/enviar/correo";
 
-      xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-	    $("#wait").show(); 
-      },	
-		success:function(res){
-			$("#wait").hide();  
-		
+    $.ajax({
+        url: route,
+        type: 'POST',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
+
+            xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            $("#wait").show();
+        },
+        success: function (res) {
+            $("#wait").hide();
+
             $("#content_form_correo").html(res.view)
             //$("#cuerpo_correo").html(res.body);
-			           // window.location.reload(true)
-		   
+            // window.location.reload(true)
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
 
-	});
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
+
+    });
 }
 
-function getReportes(request,idform) {
-    var route = "/pdf/reportes/get" ;
-	 
-	$.ajax({
-		url: route,		
-		type:'GET',
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
+function getReportes(request, idform) {
+    var route = "/pdf/reportes/get";
 
-      xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-	  $("#wait").show();  
-    },	
-		success:function(res){
-			$("#wait").hide();  
-            if(res.body){
-                $("#"+idform).summernote("code", res.body);
-            }else if(res.error){
+    $.ajax({
+        url: route,
+        type: 'GET',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
+
+            xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            $("#wait").show();
+        },
+        success: function (res) {
+            $("#wait").hide();
+            if (res.body) {
+                $("#" + idform).summernote("code", res.body);
+            } else if (res.error) {
                 toastr.error(res.error, "Algo falló!", {
                     positionClass: "toast-bottom-right",
                     timeOut: "4000",
                 });
-                $("#"+idform).summernote("code", "Escriba su mensaje aquí!");
+                $("#" + idform).summernote("code", "Escriba su mensaje aquí!");
             }
-           // $("#content_form_correo").html(res.view)
-           
+            // $("#content_form_correo").html(res.view)
+
             //$("#cuerpo_correo").html(res.body);
-			           // window.location.reload(true)
-		   
+            // window.location.reload(true)
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
 
-	});
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
+
+    });
 }
 
 function revockFirma(request) {
     var route = "/conciliacion/reporte/revock/firma";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3452,22 +3446,22 @@ function revockFirma(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            if(res.error){
+            if (res.error) {
                 Swal.fire({
-                    title: res.message,                    
-                    type: "error",                    
-                    confirmButtonColor: "#3085d6",                   
-                    confirmButtonText: "Cerrar",                    
+                    title: res.message,
+                    type: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Cerrar",
                 });
-            }else{
+            } else {
                 $("#myModal_reportes_pdf_estados").modal("hide");
                 toastr.success("Se ha guardado con éxito", "Correcto!", {
                     positionClass: "toast-bottom-right",
                     timeOut: "4000",
                 });
             }
-           
-           
+
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3484,7 +3478,7 @@ function insertPersonalizedReportValues(request) {
     var route = "/conciliacion/reporte/store/personalized/values";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3494,22 +3488,22 @@ function insertPersonalizedReportValues(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            if(res.error){
+            if (res.error) {
                 Swal.fire({
-                    title: res.message,                    
-                    type: "error",                    
-                    confirmButtonColor: "#3085d6",                   
-                    confirmButtonText: "Cerrar",                    
+                    title: res.message,
+                    type: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Cerrar",
                 });
-            }else{
+            } else {
                 $("#myModal_reportes_pdf_estados").modal("hide");
                 toastr.success("Se ha guardado con éxito", "Correcto!", {
                     positionClass: "toast-bottom-right",
                     timeOut: "4000",
                 });
             }
-           
-           
+
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3525,7 +3519,7 @@ function getFromReports(request) {
     var route = "/categorias/get/from/reports";
     $.ajax({
         url: route,
-        type: "GET", 
+        type: "GET",
         datatype: "json",
         data: request,
         cache: false,
@@ -3535,22 +3529,22 @@ function getFromReports(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            if(res.error){
+            if (res.error) {
                 Swal.fire({
-                    title: res.message,                    
-                    type: "error",                    
-                    confirmButtonColor: "#3085d6",                   
-                    confirmButtonText: "Cerrar",                    
+                    title: res.message,
+                    type: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Cerrar",
                 });
-            }else{
+            } else {
                 $("#myFormEditPersonalizedReportValues input[name='reporte_id']").val(request.reporte_id)
                 $("#table_personalized_values_pdf tbody").html(res.render_view)
                 $("#content_user_pdf_firmas").hide();
                 $("#content_user_pdf_list").hide();
                 $("#content_personalized_values_pdf").show();
             }
-           
-           
+
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3567,7 +3561,7 @@ function storeFromReports(request) {
     var route = "/categorias/store/from/reports";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3577,28 +3571,28 @@ function storeFromReports(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            if(res.error){
+            if (res.error) {
                 Swal.fire({
-                    title: res.message,                    
-                    type: "error",                    
-                    confirmButtonColor: "#3085d6",                   
-                    confirmButtonText: "Cerrar",                    
+                    title: res.message,
+                    type: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Cerrar",
                 });
-            }else{
+            } else {
                 Swal.fire({
                     title: res.message,
                     html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
-                    type: "info",                    
-                    confirmButtonColor: "#3085d6",                    
-                    confirmButtonText: "OK",                    
+                    type: "info",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK",
                 }).then((result) => {
                     if (result.value) {
                         window.location.reload(true)
                     }
                 });
             }
-           
-           
+
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3615,7 +3609,7 @@ function darBajaExpediente(request) {
     var route = "/expedientes/dar/baja";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3625,28 +3619,28 @@ function darBajaExpediente(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            if(res.error){
+            if (res.error) {
                 Swal.fire({
-                    title: res.message,                    
-                    type: "error",                    
-                    confirmButtonColor: "#3085d6",                   
-                    confirmButtonText: "Cerrar",                    
+                    title: res.message,
+                    type: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Cerrar",
                 });
-            }else{
+            } else {
                 Swal.fire({
                     title: res.message,
                     html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
-                    type: "info",                    
-                    confirmButtonColor: "#3085d6",                    
-                    confirmButtonText: "OK",                    
+                    type: "info",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK",
                 }).then((result) => {
                     if (result.value) {
                         window.location.reload(true)
                     }
                 });
             }
-           
-           
+
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3659,11 +3653,11 @@ function darBajaExpediente(request) {
     });
 }
 
-function asigExpedienteToConc(request){
+function asigExpedienteToConc(request) {
     var route = "/conciliaciones/asignar/expediente";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3672,22 +3666,22 @@ function asigExpedienteToConc(request){
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {     
+        success: function (res) {
 
-            if(res.mensaje){
+            if (res.mensaje) {
                 toastr.error(res.mensaje, "", {
                     positionClass: "toast-top-right",
                     timeOut: "2000",
                 });
-            }else{
+            } else {
                 Toast.fire({
                     title: 'Se ha asignado con éxito.',
-                    type: 'success', 
-                    timer: 2000,               
+                    type: 'success',
+                    timer: 2000,
                 });
                 window.location.reload(true)
             }
-                  
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3701,11 +3695,11 @@ function asigExpedienteToConc(request){
 
 }
 
-function asigConcToExpediente(request){
+function asigConcToExpediente(request) {
     var route = "/expedientes/asignar/conciliacion";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3714,22 +3708,22 @@ function asigConcToExpediente(request){
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {     
+        success: function (res) {
 
-            if(res.mensaje){
+            if (res.mensaje) {
                 toastr.error(res.mensaje, "", {
                     positionClass: "toast-top-right",
                     timeOut: "2000",
                 });
-            }else{
+            } else {
                 Toast.fire({
                     title: 'Se ha asignado con éxito.',
-                    type: 'success', 
-                    timer: 2000,               
+                    type: 'success',
+                    timer: 2000,
                 });
                 window.location.reload(true)
             }
-                  
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3745,24 +3739,24 @@ function asigConcToExpediente(request){
 
 
 
-function createRowMail(usermail) {  
+function createRowMail(usermail) {
 
-        var tr =   `<div class="rows_mails" id="row-0">
+    var tr = `<div class="rows_mails" id="row-0">
           <input type="hidden" value="${usermail}" name="shared_mail[]">                      
             <label id="btn_delete_mail-" type="button" data-row="0" class="btn_delete_mail label label-default">
                 ${usermail} <span class="badge">x</span>
             </label>                                 
-         </div>`;         
-         return tr
+         </div>`;
+    return tr
 }
 
 
-function radicarConciliacion(request){
+function radicarConciliacion(request) {
 
     var route = "/conciliaciones/insert/estado";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3771,16 +3765,16 @@ function radicarConciliacion(request){
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {     
+        success: function (res) {
 
             Toast.fire({
-				title: 'Se ha radicado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Se ha radicado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
 
-            window.location.reload(true)    
-                      
+            window.location.reload(true)
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3794,12 +3788,12 @@ function radicarConciliacion(request){
 
 }
 
-function revocarFirmas(request){
+function revocarFirmas(request) {
 
     var route = "/conciliacion/reporte/revocar/firmas";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3808,16 +3802,16 @@ function revocarFirmas(request){
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {     
+        success: function (res) {
 
             Toast.fire({
-				title: 'Se ha enviado la solicitud.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Se ha enviado la solicitud.',
+                type: 'success',
+                timer: 2000,
             });
 
-                     
-                      
+
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3832,11 +3826,11 @@ function revocarFirmas(request){
 }
 
 function storeSharedConcFiles(request) {
-    
+
     var route = "/conciliaciones/store/conc/shared/files";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3845,23 +3839,23 @@ function storeSharedConcFiles(request) {
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {     
+        success: function (res) {
 
             Toast.fire({
-				title: 'Los archivos se han compartido con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Los archivos se han compartido con éxito.',
+                type: 'success',
+                timer: 2000,
             });
 
-            if(res.url){
+            if (res.url) {
                 $("#lbl_clave").text(res.generate.clave)
                 $("#lbl_url").text(res.url)
                 $("#content_datashared").show();
                 $("#content_files").hide();
             }
-          
+
             $("#content_compartidos").html(res.view_compartidos)
-           
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -3877,11 +3871,11 @@ function storeSharedConcFiles(request) {
 
 var partesConciliacionMail = []
 function getStatusFiles(request) {
-    
+
     var route = "/conciliaciones/get/status/files";
     $.ajax({
         url: route,
-        type: "GET", 
+        type: "GET",
         datatype: "json",
         data: request,
         cache: false,
@@ -3890,45 +3884,45 @@ function getStatusFiles(request) {
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {          
+        success: function (res) {
             partesConciliacionMail = []
             $("#tbl_list_mail_partes").html("")
             $("#tbl_list_archivos_comp").html("")
             $("#content_shmail").hide();
-            $(".shared_mail").prop("disabled",true);
-            $("#btn_compcon_file").prop("disabled",true)
-            $("#myFormCompartirDocumento select[name=means_id]").prop("disabled",true)
+            $(".shared_mail").prop("disabled", true);
+            $("#btn_compcon_file").prop("disabled", true)
+            $("#myFormCompartirDocumento select[name=means_id]").prop("disabled", true)
             $("#myFormCompartirDocumento select[name=means_id]").val(218);
             $("#myFormCompartirDocumento select[name=category_id]").val(214);
             var mail = "";
-            res.partes.forEach((user,key) => {                
-                if(!partesConciliacionMail.includes(user.email)){
+            res.partes.forEach((user, key) => {
+                if (!partesConciliacionMail.includes(user.email)) {
                     mail += createRowMail(user.email);
                     partesConciliacionMail.push(user.email)
                 }
-               
+
             });
             $("#tbl_list_mail_partes").html(mail)
             $("#tbl_list_archivos_comp").append(res.view)
-            $(".rows_mails").each((key,element) => {
-                $(element).attr("id","row-"+key)
-                $(element).children().attr("data-row",key) 
-                      
+            $(".rows_mails").each((key, element) => {
+                $(element).attr("id", "row-" + key)
+                $(element).children().attr("data-row", key)
+
             });
-          
+
             $("#myFormCompartirDocumento input[name=status_id]").val(res.estado.type_status_id)
-            $("#content_compartidos").html(res.view_compartidos)         
+            $("#content_compartidos").html(res.view_compartidos)
             $("#myModal_reportes_archivos_compartidos").modal("show")
             $("#wait").hide();
-           
-            if(res.view==''){
+
+            if (res.view == '') {
                 $("#content_msg_info").show();
                 $("#myFormCompartirDocumento").hide()
-            }else{
+            } else {
                 $("#content_msg_info").hide();
                 $("#myFormCompartirDocumento").show()
             }
-            
+
         },
         error: function (xhr, textStatus, thrownError) {
             $("#wait").hide();
@@ -3937,11 +3931,11 @@ function getStatusFiles(request) {
 
 }
 
-function generarPdfs(request) {    
+function generarPdfs(request) {
     var route = "/conciliaciones/generate/documents";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -3950,16 +3944,16 @@ function generarPdfs(request) {
             $("#wait").show();
         },
         /*muestra div con mensaje de 'regristrado'*/
-        success: function (res) {          
+        success: function (res) {
             Toast.fire({
-				title: 'Generado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Generado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
-           /*  var a = document.createElement("a");
-            a.target = "_blank";
-            a.href = res.url;
-            a.click(); */
+            /*  var a = document.createElement("a");
+             a.target = "_blank";
+             a.href = res.url;
+             a.click(); */
 
             $("#content_user_pdf_firmas").hide();
             $("#content_user_pdf_list").show();
@@ -3978,31 +3972,31 @@ function generarPdfs(request) {
 }
 
 function disabledInputs(content) {
-   
+
     $(".inputs").hide()
-    $(".input-search").prop("disabled",true)
+    $(".input-search").prop("disabled", true)
     switch (content) {
         case 'num_conciliacion':
-            $("#input_data_text").prop("disabled",false)
+            $("#input_data_text").prop("disabled", false)
             $("#input_text").show()
             break;
-         case 'idnumber':
-         $("#input_text").show()
-         $("#input_data_text").prop("disabled",false)
+        case 'idnumber':
+            $("#input_text").show()
+            $("#input_data_text").prop("disabled", false)
             break;
-         case 'estado_id':
-             $("#select_data").prop("disabled",false)
-             $("#input_select").show()
+        case 'estado_id':
+            $("#select_data").prop("disabled", false)
+            $("#input_select").show()
             break;
-         case 'fecha_radicado':
-             $("#date_data").prop("disabled",false)
-             $("#input_date").show()
-                break;
-         case 'fecha_rango':
-         $("#date_data_inicio").prop("disabled",false)
-         $("#date_data_final").prop("disabled",false)
-             $("#input_date_rango").show()
-         break;
+        case 'fecha_radicado':
+            $("#date_data").prop("disabled", false)
+            $("#input_date").show()
+            break;
+        case 'fecha_rango':
+            $("#date_data_inicio").prop("disabled", false)
+            $("#date_data_final").prop("disabled", false)
+            $("#input_date_rango").show()
+            break;
         default:
             break;
     }
@@ -4012,7 +4006,7 @@ function reenviarMails(request) {
     var route = "/conciliacion/reporte/firmantes/reenviar/mails";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -4022,17 +4016,17 @@ function reenviarMails(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            
-           // $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
+
+            // $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
             //$("#table_list_pdf_users tbody").html(res.view);
             Toast.fire({
-				title: 'Asignado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Asignado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             $("#content_user_pdf_firmas").hide();
             $("#content_user_pdf_list").show();
-          //  window.location.reload(true);
+            //  window.location.reload(true);
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4049,7 +4043,7 @@ function setFirmantes(request) {
     var route = "/conciliacion/reporte/firmantes";
     $.ajax({
         url: route,
-        type: "POST", 
+        type: "POST",
         datatype: "json",
         data: request,
         cache: false,
@@ -4059,18 +4053,18 @@ function setFirmantes(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            
-           // $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
+
+            // $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
             //$("#table_list_pdf_users tbody").html(res.view);
             Toast.fire({
-				title: 'Asignado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Asignado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             $("#content_user_pdf_firmas").hide();
             $("#content_user_pdf_list").show();
             $("#myModal_reportes_pdf_estados").modal("hide");
-          //  window.location.reload(true);
+            //  window.location.reload(true);
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4087,7 +4081,7 @@ function getFirmantes(request) {
     var route = "/conciliacion/reporte/firmantes";
     $.ajax({
         url: route,
-        type: "GET", 
+        type: "GET",
         datatype: "json",
         data: request,
         cache: false,
@@ -4101,50 +4095,50 @@ function getFirmantes(request) {
             $(".volver_enviar_mail").hide();
             $("#btn_volver_enviar_email").hide();
             $("#btn_enviar_email").show();
-            $(".check_selusfirm").prop("disabled",true);
+            $(".check_selusfirm").prop("disabled", true);
             var revocarFirmas = false;
             $("#btn_revocar_firmas").hide()
-            .attr("data-status_id","0")
-            .attr("data-reporte_id","0");
-            if(res.all_firmas == true){
+                .attr("data-status_id", "0")
+                .attr("data-reporte_id", "0");
+            if (res.all_firmas == true) {
                 $("#btn_generar_pdf").show()
-                .attr("data-status_id",res.data.status_id)
-                .attr("data-reporte_id",res.data.reporte_id);              
+                    .attr("data-status_id", res.data.status_id)
+                    .attr("data-reporte_id", res.data.reporte_id);
 
                 console.log(res.data.reporte_id);
-            }else{
+            } else {
                 $("#btn_generar_pdf").hide()
-                .attr("data-status_id","0")
-                .attr("data-reporte_id","0")
-            } 
+                    .attr("data-status_id", "0")
+                    .attr("data-reporte_id", "0")
+            }
 
-            if(res.data.users.length > 0 ){
+            if (res.data.users.length > 0) {
                 $("#btn_select_volver_enviar_email").show();
-               
+
 
                 res.data.users.forEach(user => {
-                    if(user.pivot.tipo_firma_id==209 && user.pivot.firmado==1 ){
+                    if (user.pivot.tipo_firma_id == 209 && user.pivot.firmado == 1) {
                         revocarFirmas = true;
                         $("#btn_revocar_firmas").show()
-                        .attr("data-status_id",res.data.status_id)
-                        .attr("data-reporte_id",res.data.id);
+                            .attr("data-status_id", res.data.status_id)
+                            .attr("data-reporte_id", res.data.id);
                     }
                 });
 
-               
 
-                 }else{
+
+            } else {
                 $("#btn_select_volver_enviar_email").hide();
-               
+
             }
 
             $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
             $("#table_list_pdf_users tbody").html(res.view);
             $("#myFormAsigFirmaPdf input[name=estado_id]").val(res.data.id);
-            $("#content_user_pdf_firmas").show();           
+            $("#content_user_pdf_firmas").show();
             $("#content_user_pdf_list").hide();
-         
-          //  window.location.reload(true);
+
+            //  window.location.reload(true);
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4161,7 +4155,7 @@ function deleteNotasExt(request) {
     var route = "/notasext/1";
     $.ajax({
         url: route,
-        type: "DELETE", 
+        type: "DELETE",
         datatype: "json",
         data: request,
         cache: false,
@@ -4173,9 +4167,9 @@ function deleteNotasExt(request) {
         success: function (res) {
             $("#myModal_edit_nota_conciliaciones").modal("hide");
             Toast.fire({
-				title: 'Eliminado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Eliminado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             window.location.reload(true);
             $("#wait").hide();
@@ -4194,7 +4188,7 @@ function updateNotasExt(request) {
     var route = "/notasext/1";
     $.ajax({
         url: route,
-        type: "PUT", 
+        type: "PUT",
         datatype: "json",
         data: request,
         cache: false,
@@ -4206,12 +4200,12 @@ function updateNotasExt(request) {
         success: function (res) {
             $("#myModal_edit_nota_conciliaciones").modal("hide");
             Toast.fire({
-				title: 'Actualizado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+                title: 'Actualizado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             $("#wait").hide();
-          // window.location.reload(true)
+            // window.location.reload(true)
         },
         error: function (xhr, textStatus, thrownError) {
             /* alert(
@@ -4226,7 +4220,7 @@ function updateNotasExt(request) {
 function getNotasExt(request) {
     var route = "/notasext/1/edit";
     $.ajax({
-        url: route, 
+        url: route,
         type: "GET",
         datatype: "json",
         data: request,
@@ -4239,16 +4233,16 @@ function getNotasExt(request) {
         success: function (res) {
             $("#myform_edit_nota_ext input[name='nota_conocimientoid']").val(res.notas.nota_conocimientoid);
             $("#myform_edit_nota_ext input[name='nota_conocimiento']").val(res.notas.nota_conocimiento);
-           
+
             $("#myform_edit_nota_ext input[name='nota_aplicacionid']").val(res.notas.nota_aplicacionid);
             $("#myform_edit_nota_ext input[name='nota_aplicacion']").val(res.notas.nota_aplicacion);
-           
+
             $("#myform_edit_nota_ext input[name='nota_eticaid']").val(res.notas.nota_eticaid);
             $("#myform_edit_nota_ext input[name='nota_etica']").val(res.notas.nota_etica);
-           
+
             $("#myform_edit_nota_ext input[name='nota_conceptoid']").val(res.notas.nota_conceptoid);
             $("#myform_edit_nota_ext textarea[name='nota_concepto']").val(res.notas.nota_concepto);
-           
+
 
             $("#myModal_edit_nota_conciliaciones").modal("show");
             $("#wait").hide();
@@ -4266,7 +4260,7 @@ function getNotasExt(request) {
 function getNotasConciliacion(request) {
     var route = "/notasext/1/edit";
     $.ajax({
-        url: route, 
+        url: route,
         type: "GET",
         datatype: "json",
         data: request,
@@ -4277,15 +4271,15 @@ function getNotasConciliacion(request) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            $("#myform_edit_nota_conciliacion input").prop("disabled",true);
+            $("#myform_edit_nota_conciliacion input").prop("disabled", true);
             $("#myform_edit_nota_conciliacion input[name='ntaprespersonal']").val(res.presentancion_personal.nota_presentancion_personal);
             $("#myform_edit_nota_conciliacion input[name='ntapuntualidad']").val(res.puntualidad.nota_puntualidad);
-           if(res.manejo_audiencia) $("#myform_edit_nota_conciliacion input[name='ntamanaudiencia']").val(res.manejo_audiencia.nota_manejo_audiencia);
-           if(res.analisis_formula)$("#myform_edit_nota_conciliacion input[name='ntaanalisisformulas']").val(res.analisis_formula.nota_analisis_formula);
-          
-           if(res.plantillas)$("#myform_edit_nota_conciliacion input[name='ntaplanconciliacion']").val(res.plantillas.nota_plantillas);
-           if(res.redaccion_acta) $("#myform_edit_nota_conciliacion input[name='ntaredaccacta']").val(res.redaccion_acta.nota_redaccion_acta);
-          
+            if (res.manejo_audiencia) $("#myform_edit_nota_conciliacion input[name='ntamanaudiencia']").val(res.manejo_audiencia.nota_manejo_audiencia);
+            if (res.analisis_formula) $("#myform_edit_nota_conciliacion input[name='ntaanalisisformulas']").val(res.analisis_formula.nota_analisis_formula);
+
+            if (res.plantillas) $("#myform_edit_nota_conciliacion input[name='ntaplanconciliacion']").val(res.plantillas.nota_plantillas);
+            if (res.redaccion_acta) $("#myform_edit_nota_conciliacion input[name='ntaredaccacta']").val(res.redaccion_acta.nota_redaccion_acta);
+
 
             $("#myModal_edit_nota_conciliaciones").modal("show");
             $("#wait").hide();
@@ -4300,8 +4294,8 @@ function getNotasConciliacion(request) {
     });
 }
 
-function getDetallesUser(request,idnumber) {
-    var route = "/conciliacion/detalles/user/"+idnumber+"";
+function getDetallesUser(request, idnumber) {
+    var route = "/conciliacion/detalles/user/" + idnumber + "";
     $.ajax({
         url: route,
         type: "GET",
@@ -4314,7 +4308,7 @@ function getDetallesUser(request,idnumber) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-       
+
             $("#content_detalles_user").html(res.view)
             $("#myModal_conc_user_detalles").modal("show");
             $("#wait").hide();
@@ -4345,12 +4339,12 @@ function descargarAllPdfConcEstado(request) {
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
             var tr = '';
-            var  files = {};
-           
+            var files = {};
+
             res.estados.forEach(estado => {
                 estado.files.forEach(file => {
                     tr +=
-                    `<tr>
+                        `<tr>
                     <td>
                     ${estado.concepto}
                     </td>
@@ -4368,12 +4362,12 @@ function descargarAllPdfConcEstado(request) {
                         </a>
                         </td>                    
                     </tr>`;
-                });                
+                });
             });
-          
+
             $("#myReportPdfList tbody").html(tr);
             $("#myReportPdfListPrincipal tbody").append(tr);
-           // $("#myModal_reportes_pdf_estados").modal("show");
+            // $("#myModal_reportes_pdf_estados").modal("show");
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4386,174 +4380,174 @@ function descargarAllPdfConcEstado(request) {
     });
 }
 
-function expedienteUpdate(request,id) {
-    var route = "/expedientes/"+id ;
-	//var token = $("#token").val();
-	$.ajax({
-		url: route,
-		headers: { 'X-CSRF-TOKEN' : token },
-		type:'PUT',
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
-      xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-	  $("#wait").show();  
-    },	
-		success:function(res){
-			$("#wait").hide();  
-		
-			Toast.fire({
-				title: 'Actualizado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+function expedienteUpdate(request, id) {
+    var route = "/expedientes/" + id;
+    //var token = $("#token").val();
+    $.ajax({
+        url: route,
+        headers: { 'X-CSRF-TOKEN': token },
+        type: 'PUT',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            $("#wait").show();
+        },
+        success: function (res) {
+            $("#wait").hide();
+
+            Toast.fire({
+                title: 'Actualizado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
-           // window.location.reload(true)
-		   
+            // window.location.reload(true)
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
 
-	});
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
+
+    });
 }
 
 function sancionarConciliacionUser(request) {
-    var route = "/conciliacion/sancionar/user" ;
-	//var token = $("#token").val();
-	$.ajax({
-		url: route,
-		headers: { 'X-CSRF-TOKEN' : token },
-		type:'GET',
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
+    var route = "/conciliacion/sancionar/user";
+    //var token = $("#token").val();
+    $.ajax({
+        url: route,
+        headers: { 'X-CSRF-TOKEN': token },
+        type: 'GET',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
             xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-            $("#wait").show();  
-    },	
-		success:function(res){
-			//$("#wait").hide();  		
-			Toast.fire({
-				title: 'Actualizado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+            $("#wait").show();
+        },
+        success: function (res) {
+            //$("#wait").hide();  		
+            Toast.fire({
+                title: 'Actualizado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             window.location.reload(true)
-		   
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
 
-	});
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
+
+    });
 }
 
-function deleteConciliacionUser(request) { 
-    var route = "/conciliacion/delete/user" ;
-	//var token = $("#token").val();
-	$.ajax({
-		url: route,
-		headers: { 'X-CSRF-TOKEN' : token },
-		type:'GET',
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
+function deleteConciliacionUser(request) {
+    var route = "/conciliacion/delete/user";
+    //var token = $("#token").val();
+    $.ajax({
+        url: route,
+        headers: { 'X-CSRF-TOKEN': token },
+        type: 'GET',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
 
-      xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-	  $("#wait").show();  
-    },	
-		success:function(res){
-			$("#wait").hide();  
-		
-			Toast.fire({
-				title: 'Usuario eliminado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+            xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            $("#wait").show();
+        },
+        success: function (res) {
+            $("#wait").hide();
+
+            Toast.fire({
+                title: 'Usuario eliminado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             window.location.reload(true)
-		   
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
 
-	});
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
+
+    });
 }
 
-function  conciliacionUserStore(request) {
-    var route = "/expuser" ;
-	//var token = $("#token").val();
-	$.ajax({
-		url: route,
-		headers: { 'X-CSRF-TOKEN' : token },
-		type:'POST',
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
+function conciliacionUserStore(request) {
+    var route = "/expuser";
+    //var token = $("#token").val();
+    $.ajax({
+        url: route,
+        headers: { 'X-CSRF-TOKEN': token },
+        type: 'POST',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
 
-      xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-	  $("#wait").show();  
-    },	
-		success:function(res){
-            $("#myModal_conc_user_create").modal("hide"); 
-			$("#wait").hide();  
-			Toast.fire({
-				title: 'Usuario asignado con éxito.',
-				type: 'success', 
-				timer: 2000,               
+            xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            $("#wait").show();
+        },
+        success: function (res) {
+            $("#myModal_conc_user_create").modal("hide");
+            $("#wait").hide();
+            Toast.fire({
+                title: 'Usuario asignado con éxito.',
+                type: 'success',
+                timer: 2000,
             });
             window.location.reload(true)
-		    $('#msg-success').fadeIn();	 
+            $('#msg-success').fadeIn();
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
 
-	});
+    });
 }
 
-function  conciliacionUserUpdate(request,id) {
-    var route = "/expuser/"+id+"" ;
-	//var token = $("#token").val();
-	$.ajax({
-		url: route,
-		headers: { 'X-CSRF-TOKEN' : token },
-		type:'PUT', 
-		datatype: 'json',
-		data: request,
-		 beforeSend: function(xhr){
+function conciliacionUserUpdate(request, id) {
+    var route = "/expuser/" + id + "";
+    //var token = $("#token").val();
+    $.ajax({
+        url: route,
+        headers: { 'X-CSRF-TOKEN': token },
+        type: 'PUT',
+        datatype: 'json',
+        data: request,
+        beforeSend: function (xhr) {
 
-      xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-	  $("#wait").show();  
-    },	
-		success:function(res){
-            $("#myModal_conc_user_create").modal("hide");  
-			$("#wait").hide();  
-			Toast.fire({
-				title: 'Usuario asignado con éxito.',
-				type: 'success', 
-				timer: 5000,               
+            xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            $("#wait").show();
+        },
+        success: function (res) {
+            $("#myModal_conc_user_create").modal("hide");
+            $("#wait").hide();
+            Toast.fire({
+                title: 'Usuario asignado con éxito.',
+                type: 'success',
+                timer: 5000,
             });
-           window.location.reload(true)
-		    $('#msg-success').fadeIn();	 
+            window.location.reload(true)
+            $('#msg-success').fadeIn();
 
-		},
-    error:function(xhr, textStatus, thrownError){
-		alert("Hubo un error con el servidor ERROR::"+thrownError,textStatus);
-		$("#wait").css("display", "none");
-    }
+        },
+        error: function (xhr, textStatus, thrownError) {
+            alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+            $("#wait").css("display", "none");
+        }
 
-	});
+    });
 }
-function getUser(request,idnumber) {
-    var route = "/conciliacion/user/"+idnumber+"";
+function getUser(request, idnumber) {
+    var route = "/conciliacion/user/" + idnumber + "";
     $.ajax({
         url: route,
         type: "GET",
@@ -4566,7 +4560,7 @@ function getUser(request,idnumber) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-       
+
             $("#content_form_user").html(res.view)
             $("#myModal_conc_user_create #type_solicitud_user").val(request.data_type);
             $("#wait").hide();
@@ -4583,7 +4577,7 @@ function getUser(request,idnumber) {
 
 
 function deleteConciliacionHechoPretencion(id) {
-    var route = "/conciliaciones/hechos/pretenciones/"+id;
+    var route = "/conciliaciones/hechos/pretenciones/" + id;
     $.ajax({
         url: route,
         type: "DELETE",
@@ -4601,10 +4595,10 @@ function deleteConciliacionHechoPretencion(id) {
                 timeOut: "1000",
             });
             if (res.view || res.view == "") {
-                $("#content_hechos_pretensiones-"+res.tipo_id).html(res.view);
+                $("#content_hechos_pretensiones-" + res.tipo_id).html(res.view);
             }
-            $("#myModalCreateConcHechosPretenciones").modal('hide');  
-           
+            $("#myModalCreateConcHechosPretenciones").modal('hide');
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4617,8 +4611,8 @@ function deleteConciliacionHechoPretencion(id) {
     });
 }
 
-function updateConciliacionHechoPretencion(request,id) {
-    var route = "/conciliaciones/hechos/pretenciones/"+id;
+function updateConciliacionHechoPretencion(request, id) {
+    var route = "/conciliaciones/hechos/pretenciones/" + id;
     $.ajax({
         url: route,
         type: "PUT",
@@ -4636,11 +4630,11 @@ function updateConciliacionHechoPretencion(request,id) {
                 timeOut: "1000",
             });
             if (res.view || res.view == "") {
-                $("#content_hechos_pretensiones-"+res.tipo_id).html(res.view);
+                $("#content_hechos_pretensiones-" + res.tipo_id).html(res.view);
             }
-            $("#myModalCreateConcHechosPretenciones").modal('hide');  
+            $("#myModalCreateConcHechosPretenciones").modal('hide');
             $("#myModal_create_estado_pretension").modal('hide')
-           
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4654,7 +4648,7 @@ function updateConciliacionHechoPretencion(request,id) {
 }
 
 function editConciliacionHechoPretencion(id) {
-    var route = "/conciliaciones/hechos/pretenciones/"+id+"/edit";
+    var route = "/conciliaciones/hechos/pretenciones/" + id + "/edit";
     $.ajax({
         url: route,
         type: "GET",
@@ -4667,13 +4661,13 @@ function editConciliacionHechoPretencion(id) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-       
-            $("#myformCreateHechoPretencion").attr('id','myformEditHechoPretencion');
+
+            $("#myformCreateHechoPretencion").attr('id', 'myformEditHechoPretencion');
             $("#myformEditHechoPretencion input[name=id]").val(res.id)
             $("#myformEditHechoPretencion input[name=tipo_id]").val(res.tipo_id)
             $("#myformEditHechoPretencion textarea[name=descripcion]").val(res.descripcion)
             $("#myModalCreateConcHechosPretenciones").modal('show')
-           
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4687,7 +4681,7 @@ function editConciliacionHechoPretencion(id) {
 }
 
 function storeConciliacionHechoPretencion(request) {
-    var route = "/conciliaciones/hechos/pretenciones"; 
+    var route = "/conciliaciones/hechos/pretenciones";
     $.ajax({
         url: route,
         type: "POST",
@@ -4705,10 +4699,10 @@ function storeConciliacionHechoPretencion(request) {
                 timeOut: "1000",
             });
             if (res.view || res.view == "") {
-                $("#content_hechos_pretensiones-"+res.tipo_id).html(res.view);
+                $("#content_hechos_pretensiones-" + res.tipo_id).html(res.view);
             }
-            $("#myModalCreateConcHechosPretenciones").modal('hide');  
-           
+            $("#myModalCreateConcHechosPretenciones").modal('hide');
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4723,7 +4717,7 @@ function storeConciliacionHechoPretencion(request) {
 
 
 function deleteConPdfTemporal(id) {
-    var route = "/conciliaciones/pdf/"+id;
+    var route = "/conciliaciones/pdf/" + id;
     $.ajax({
         url: route,
         type: "DELETE",
@@ -4736,7 +4730,7 @@ function deleteConPdfTemporal(id) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (response) {
-           
+
             Swal.fire({
                 title: 'Éxito',
                 text: "El reporte se ha eliminado con éxito!",
@@ -4744,16 +4738,16 @@ function deleteConPdfTemporal(id) {
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Listo!',                
-              }).then((result) => {
-                if (result.value) {              
-                    window.location.reload(true);                            
+                confirmButtonText: 'Listo!',
+            }).then((result) => {
+                if (result.value) {
+                    window.location.reload(true);
                 }
-              });   
+            });
             //window.location.reload(true);
-           // myPopupWindow.close(); 
-           window.location.reload(true);  
-           $("#bgtransparent").remove(); 
+            // myPopupWindow.close(); 
+            window.location.reload(true);
+            $("#bgtransparent").remove();
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4766,15 +4760,15 @@ function deleteConPdfTemporal(id) {
     });
 }
 
-function updateConPdfTemporal(request,id) {
-    var route = "/conciliaciones/pdf/"+id;
+function updateConPdfTemporal(request, id) {
+    var route = "/conciliaciones/pdf/" + id;
     $.ajax({
         url: route,
         type: "POST",
         datatype: "json",
         data: request,
         cache: false,
-        cache: false,       
+        cache: false,
         headers: { "X-CSRF-TOKEN": token },
         contentType: false,
         processData: false,
@@ -4800,7 +4794,7 @@ function updateConPdfTemporal(request,id) {
     });
 }
 
-function createConPdfTemporal(request,id) {
+function createConPdfTemporal(request, id) {
     var route = "/conciliaciones/pdf";
     $.ajax({
         url: route,
@@ -4808,7 +4802,7 @@ function createConPdfTemporal(request,id) {
         datatype: "json",
         data: request,
         cache: false,
-        cache: false,       
+        cache: false,
         headers: { "X-CSRF-TOKEN": token },
         contentType: false,
         processData: false,
@@ -4818,18 +4812,18 @@ function createConPdfTemporal(request,id) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (response) {
-      
+
             //$("#myFormEditPdfReporte").attr('id','myFormEditPdfTemp');
             $("#myFormEditPdfTemp input[name=id]").val(response.pdf_reporte_id);
-           var input_temp = $("<input>").attr({
-                type:'hidden',
-                value:response.id,
-                name:'is_temp'
-             });
+            var input_temp = $("<input>").attr({
+                type: 'hidden',
+                value: response.id,
+                name: 'is_temp'
+            });
             $("#cont_temp").append(input_temp);
             $("#btnDeletePdfTemp").show();
             //myPopupWindow.close();   
-           // $("#bgtransparent").remove(); 
+            // $("#bgtransparent").remove(); 
             toastr.success("Actualizado con éxito!", "", {
                 positionClass: "toast-bottom-right",
                 timeOut: "1000",
@@ -4865,16 +4859,16 @@ function getPdfReportesConciliacion(request) {
             $("#content_user_pdf_firmas").hide();
             $("#content_personalized_values_pdf").hide();
             $("#content_user_pdf_list").show();
-           
-                conc_estado_id = response.conc_estado_id
-                $("#myReportPdfList tbody").html(response.view);
-                //$("#myReportList tbody").html(response.view); 
-                $("#alertmyReportList").show();
-            
 
-            
+            conc_estado_id = response.conc_estado_id
+            $("#myReportPdfList tbody").html(response.view);
+            //$("#myReportList tbody").html(response.view); 
+            $("#alertmyReportList").show();
+
+
+
             $("#myModal_reportes_pdf_estados").modal("show");
-        
+
             $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
@@ -4933,66 +4927,66 @@ function editPdfReporte(id) {
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-            
+
             // $("#myModal_create_comentario").modal("hide");
             $("#myFormEditPdfReporte input[name=nombre_reporte]").val(res.nombre_reporte);
             $("#myFormEditPdfReporte select[name=categoria_id]").val(res.categoria_id);
             $("#myFormEditPdfReporte select[name=categorianew_id]").val(res.categoria_id);
-            if(res.configuraciones!=null){
+            if (res.configuraciones != null) {
                 $("#myFormEditPdfReporte input[name=top]").val(res.configuraciones.top);
                 $("#myFormEditPdfReporte input[name=right]").val(res.configuraciones.right);
                 $("#myFormEditPdfReporte input[name=bottom]").val(res.configuraciones.bottom);
                 $("#myFormEditPdfReporte input[name=left]").val(res.configuraciones.left);
                 $("#myFormEditPdfReporte select[name=tipo_papel]").val(res.configuraciones.tipo_papel);
-                if(res.files.length>0){
+                if (res.files.length > 0) {
                     res.files.forEach(file => {
-                        if(file.pivot.seccion=='encabezado'){
+                        if (file.pivot.seccion == 'encabezado') {
                             $("#myModal_configuraciones_formato_pdf_update #encab_img-update")
-                            .attr("src",file.temp_path);
+                                .attr("src", file.temp_path);
                             $("#myModal_configuraciones_formato_pdf_update select[name=encabezado_align]")
-                            .val(file.pivot.configuracion.encabezado_align);
+                                .val(file.pivot.configuracion.encabezado_align);
                             $("#myModal_configuraciones_formato_pdf_update input[name=encab_width]")
-                            .val(file.pivot.configuracion.encab_width);
+                                .val(file.pivot.configuracion.encab_width);
                             $("#myModal_configuraciones_formato_pdf_update input[name=encab_height]")
-                            .val(file.pivot.configuracion.encab_height);
+                                .val(file.pivot.configuracion.encab_height);
                         }
-                        if(file.pivot.seccion=='pie'){
+                        if (file.pivot.seccion == 'pie') {
                             $("#myModal_configuraciones_formato_pdf_update #pie_img-update")
-                            .attr("src",file.temp_path);
+                                .attr("src", file.temp_path);
                             $("#myModal_configuraciones_formato_pdf_update select[name=pie_align]")
-                            .val(file.pivot.configuracion.pie_align);
+                                .val(file.pivot.configuracion.pie_align);
                             $("#myModal_configuraciones_formato_pdf_update input[name=pie_width]")
-                            .val(file.pivot.configuracion.pie_width);
+                                .val(file.pivot.configuracion.pie_width);
                             $("#myModal_configuraciones_formato_pdf_update input[name=pie_height]")
-                            .val(file.pivot.configuracion.pie_height);
+                                .val(file.pivot.configuracion.pie_height);
                         }
                     });
 
-                }else{
+                } else {
                     $("#myModal_configuraciones_formato_pdf_update #encab_img-update")
-                            .attr("src","");
-                            $("#myModal_configuraciones_formato_pdf_update select[name=encabezado_align]")
-                            .val("");
-                            $("#myModal_configuraciones_formato_pdf_update input[name=encab_width]")
-                            .val("");
-                            $("#myModal_configuraciones_formato_pdf_update input[name=encab_height]")
-                            .val("");
-                            $("#myModal_configuraciones_formato_pdf_update #pie_img-update")
-                            .attr("src","");
-                            $("#myModal_configuraciones_formato_pdf_update select[name=pie_align]")
-                            .val("");
-                            $("#myModal_configuraciones_formato_pdf_update input[name=pie_width]")
-                            .val("");
-                            $("#myModal_configuraciones_formato_pdf_update input[name=pie_height]")
-                            .val("");
+                        .attr("src", "");
+                    $("#myModal_configuraciones_formato_pdf_update select[name=encabezado_align]")
+                        .val("");
+                    $("#myModal_configuraciones_formato_pdf_update input[name=encab_width]")
+                        .val("");
+                    $("#myModal_configuraciones_formato_pdf_update input[name=encab_height]")
+                        .val("");
+                    $("#myModal_configuraciones_formato_pdf_update #pie_img-update")
+                        .attr("src", "");
+                    $("#myModal_configuraciones_formato_pdf_update select[name=pie_align]")
+                        .val("");
+                    $("#myModal_configuraciones_formato_pdf_update input[name=pie_width]")
+                        .val("");
+                    $("#myModal_configuraciones_formato_pdf_update input[name=pie_height]")
+                        .val("");
                 }
-            }else{
+            } else {
                 $("#myFormEditPdfReporte input[name=top]").val("1,27");
                 $("#myFormEditPdfReporte input[name=right]").val("1,27");
                 $("#myFormEditPdfReporte input[name=bottom]").val("1,27");
                 $("#myFormEditPdfReporte input[name=left]").val("1,27");
             }
-            
+
             $("#summernote_update").summernote("code", res.reporte);
             $("#wait").hide();
         },
@@ -5012,8 +5006,8 @@ function createPdfPreview(request) {
         type: "POST",
         datatype: "json",
         data: request,
-        cache: false,       
-        headers: { "X-CSRF-TOKEN": token },    
+        cache: false,
+        headers: { "X-CSRF-TOKEN": token },
         contentType: false,
         processData: false,
         beforeSend: function (xhr) {
@@ -5045,32 +5039,32 @@ function serializePdf(myForm, mySummernote) {
         .trim();
     console.log(myForm, mySummernote, "jols");
     // alert(formatVal.length)
-    $("#"+myForm + " input[name=reporte]").val('');
-    $("#"+myForm + " input[name=reporte]").val(formatVal);
+    $("#" + myForm + " input[name=reporte]").val('');
+    $("#" + myForm + " input[name=reporte]").val(formatVal);
     var items_ = [];
-    $("#report_keys").val("");   
-  
+    $("#report_keys").val("");
+
     if (formatVal != "") {
-        $("#"+myForm+" .note-editable .item_sp").each((index, element) => {
+        $("#" + myForm + " .note-editable .item_sp").each((index, element) => {
             var it = $(element).attr("user-type");
             var dtn = $(element).attr("data-name");
             items_[index] = {
-                user_type: it,  
+                user_type: it,
                 name: dtn,
                 table: $(element).attr("data-table"),
                 short_name: $(element).attr("data-short_name"),
             };
-          //  $(element).css('border','1px solid red')
-           
+            //  $(element).css('border','1px solid red')
+
         });
-       
+
         var json = JSON.stringify(items_);
-        $("#"+myForm + " input[name=report_keys]").val(json);
-        
-      //  return false;
-      return (request = new FormData(document.getElementById(myForm)));// $(myForm).serialize());
-       // return (request = $(myForm).serialize());
-    }else{
+        $("#" + myForm + " input[name=report_keys]").val(json);
+
+        //  return false;
+        return (request = new FormData(document.getElementById(myForm)));// $(myForm).serialize());
+        // return (request = $(myForm).serialize());
+    } else {
         Swal.fire({
             title: "El formato no puede estar vacío",
             icon: "warning",
@@ -5083,12 +5077,12 @@ function serializePdf(myForm, mySummernote) {
 function updatePdfReporte(request, id) {
     var route = "/pdf/reportes/" + id;
     $.ajax({
-        url: route, 
+        url: route,
         type: "POST",
         datatype: "json",
         data: request,
-        cache: false,     
-        headers: { "X-CSRF-TOKEN": token },     
+        cache: false,
+        headers: { "X-CSRF-TOKEN": token },
         contentType: false,
         processData: false,
         beforeSend: function (xhr) {
@@ -5105,10 +5099,10 @@ function updatePdfReporte(request, id) {
                 positionClass: "toast-bottom-right",
                 timeOut: "1000",
             });
-          /*   $("#summernote_update").summernote("code", "");
-            $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
-            $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
-            $("#myFormEditPdfReporte select[name='id']").val(""); */  
+            /*   $("#summernote_update").summernote("code", "");
+              $("#myFormEditPdfReporte input[name='nombre_reporte']").val("");
+              $("#myFormEditPdfReporte select[name='categorianew_id']").val("");
+              $("#myFormEditPdfReporte select[name='id']").val(""); */
             //$("#sel_reporte_id").html("<option value=''>Primero seleccione una categoria...</option>")
             $("#wait").hide();
         },
@@ -5124,12 +5118,12 @@ function updatePdfReporte(request, id) {
 
 function storePdfReporte(request) {
     var route = "/pdf/reportes";
-    $.ajax({ 
+    $.ajax({
         url: route,
         type: "POST",
         datatype: "json",
         data: request,
-        cache: false,       
+        cache: false,
         headers: { "X-CSRF-TOKEN": token },
         contentType: false,
         processData: false,
@@ -5146,15 +5140,15 @@ function storePdfReporte(request) {
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Listo',              
-              }).then((result) => {
+                confirmButtonText: 'Listo',
+            }).then((result) => {
                 if (result.value) {
-                    window.location.reload(true)            
+                    window.location.reload(true)
                 }
-              });
-              window.location.reload(true);
-           
-           $("#wait").hide();
+            });
+            window.location.reload(true);
+
+            $("#wait").hide();
         },
         error: function (xhr, textStatus, thrownError) {
             alert(
@@ -5293,7 +5287,7 @@ function getEstadosReportesPdf(request) {
         success: function (res) {
             var tr = '';
             res.files.forEach(file => {
-                 tr += `<tr>
+                tr += `<tr>
                     <td>
                     ${file.original_name}
                     </td>
@@ -5349,7 +5343,7 @@ function editConciliacionEstado(request) {
         success: function (res) {
             $("#myformCreateEstado").attr("id", "myformEditEstado");
             $("#myformEditEstado input[name=estado_id]").val(res.id);
-            $("#myformEditEstado select[name=type_status_id]").prop("disabled",true)
+            $("#myformEditEstado select[name=type_status_id]").prop("disabled", true)
 
             $("#myformEditEstado select[name=type_status_id]").val(
                 res.type_status_id
@@ -5369,7 +5363,7 @@ function editConciliacionEstado(request) {
             $("#wait").hide();
         },
     });
-} 
+}
 
 function deleteConciliacionComentario(request) {
     var route = "/conciliaciones/delete/comentario";
@@ -5462,7 +5456,7 @@ function storeConciliacionComentario(request) {
 }
 
 function storeConciliacionEstado(request) {
-    var route = "/conciliaciones/insert/estado"; 
+    var route = "/conciliaciones/insert/estado";
     $.ajax({
         url: route,
         type: "POST",
@@ -5517,15 +5511,15 @@ function storeConciliacionEstado(request) {
             positionClass: "toast-bottom-right",
             timeOut: "1000",
         });
-       // window.location.reload(true)
+        // window.location.reload(true)
         $("#myModal_create_estado").modal("hide");
         $("#wait").hide();
     });
 }
 
 
-   
-    
+
+
 
 
 function insertConADValue(request) {
@@ -5688,14 +5682,14 @@ function referenceEdit(id) {
                 $("#myformEditRCategory select[name=table]").val(res.table);
                 $("#myformEditRCategory select[name=section]").val(res.section);
                 $(".select2").select2();
-                if(res.partes.length > 0){   
-                    var partes = []    ;          
-                    res.partes.forEach(element => {                      
-                        partes.push(element.parte);                  
+                if (res.partes.length > 0) {
+                    var partes = [];
+                    res.partes.forEach(element => {
+                        partes.push(element.parte);
                     });
                     $(".select2").val(partes).trigger('change');;
                 }
-               
+
 
                 $("#myformEditRCategory input[name=name]").val(res.name);
                 $("#myformEditRCategory input[name=short_name]").val(res.short_name);
@@ -6093,7 +6087,7 @@ function updateSoliDocumentos(request) {
 
             resetFormSoliDoc();
             // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
-        } catch (error) {}
+        } catch (error) { }
     });
 }
 
@@ -6189,7 +6183,7 @@ function storeSoliDocumentos(request) {
 
             $("#myformCreateSoliDocumento")[0].reset();
             // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
-        } catch (error) {}
+        } catch (error) { }
     });
 }
 
@@ -6259,7 +6253,7 @@ function storeConciliacionAnexo(request) {
             $("#myModal_create_document").modal("hide");
             $("#myformCreateConciliacionAnexo")[0].reset();
             // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
-        } catch (error) {}
+        } catch (error) { }
     });
 }
 
@@ -6329,7 +6323,7 @@ function updateConciliacionAnexo(request) {
             $("#myModal_create_document").modal("hide");
             $("#myformCreateConciliacionAnexo")[0].reset();
             // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
-        } catch (error) {}
+        } catch (error) { }
     });
 }
 
@@ -6463,7 +6457,7 @@ function deleteDocumentos(id) {
                     });
                     // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
                 }
-            } catch (error) {}
+            } catch (error) { }
         },
         error: function (xhr, textStatus, thrownError) {
             alert(
@@ -6613,7 +6607,7 @@ function updateDocumentos(request, id) {
 
                 // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
             }
-        } catch (error) {}
+        } catch (error) { }
         if (res.mail_error) {
             toastr.error(res.mail_error, "Error", {
                 positionClass: "toast-top-right",
@@ -6726,7 +6720,7 @@ function storeDocumentos(request) {
                 $("#myformCreateDocumento")[0].reset();
                 // $("#table_list_logs tbody [data-toggle='toggle']").bootstrapToggle();
             }
-        } catch (error) {}
+        } catch (error) { }
         if (res.mail_error) {
             toastr.error(res.mail_error, "Error", {
                 positionClass: "toast-top-right",
@@ -6870,11 +6864,11 @@ function storeNotaExt(request) {
         },
         success: function (res) {
             $("#myModal_add_nota_conciliaciones").modal("hide");
-           
+
             Toast.fire({
                 title: "Nota creada con éxito.",
                 type: "success",
-                timer: 2000, 
+                timer: 2000,
             });
             window.location.reload(true);
             $("#wait").css("display", "none");
@@ -7528,7 +7522,7 @@ function searchCitaciones() {
                 $("#wait").css("display", "block");
             },
             success: function (res) {
-               // console.log(res);
+                // console.log(res);
                 llenarTablaListCitaciones(res);
                 $("#wait").css("display", "none");
             },
@@ -7544,7 +7538,7 @@ function searchCitaciones() {
 
 function llenarTablaListCitaciones(res) {
     row = "";
-   // console.log(res);
+    // console.log(res);
     res.forEach((element) => {
         row += `<tr>
    <td>${element.docente_fullname}</td>
@@ -7737,7 +7731,7 @@ function createBiblioteca() {
                     );
                     $("#wait").css("display", "block");
                 },
-            }); 
+            });
         } else {
             showElement("label-alert", "class");
         }
@@ -7860,28 +7854,28 @@ function ingresarNotas() {
 
     errors = validateForm("myform_add_nota_final_expedientes");
 
-        var notaapl = $("#myform_add_nota_final_expedientes input[name=ntaaplicacion]").val()
-        var notacon = $("#myform_add_nota_final_expedientes input[name=ntaconocimiento]").val()
-        var notaet = $("#myform_add_nota_final_expedientes input[name=ntaetica]").val()
+    var notaapl = $("#myform_add_nota_final_expedientes input[name=ntaaplicacion]").val()
+    var notacon = $("#myform_add_nota_final_expedientes input[name=ntaconocimiento]").val()
+    var notaet = $("#myform_add_nota_final_expedientes input[name=ntaetica]").val()
 
-        if(notaapl > 5 || notacon > 5 || notaet > 5){
-            toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
-            errors = 1;
-        }
-        
-        if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
-            toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
-            errors = 1;
-        }
+    if (notaapl > 5 || notacon > 5 || notaet > 5) {
+        toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors = 1;
+    }
+
+    if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
+        toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors = 1;
+    }
 
     if (errors <= 0) {
-        
+
 
         var data = $("#myform_add_nota_final_expedientes").serialize();
         var route = "/notas";
@@ -8409,7 +8403,7 @@ function updateNota(data, refresh = "") {
 
             if (refresh != "") {
                 window.location.reload(true);
-            } 
+            }
             toastr.success("Actualizado con éxito", "Atención!", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
@@ -8448,7 +8442,7 @@ function hideButtReasCaso() {
     $(".disabled-fun4").selectpicker("refresh");
 }
 
-function abrir_caso(request){
+function abrir_caso(request) {
     var route = "/estado/caso/volver/abrir";
 
     $.ajax({
@@ -8456,7 +8450,7 @@ function abrir_caso(request){
         headers: { "X-CSRF-TOKEN": token },
         type: "POST",
         datatype: "json",
-        data:request,
+        data: request,
         cache: false,
         beforeSend: function (xhr) {
             $("#wait").css("display", "block");
@@ -8464,9 +8458,9 @@ function abrir_caso(request){
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
-           console.log(res);
+            console.log(res);
             $("#wait").css("display", "none");
-           
+
         },
         error: function (xhr, textStatus, thrownError) {
             alert(
@@ -9002,7 +8996,7 @@ function searchHorasDocente(idnumber) {
             );
         },
     });
-} 
+}
 
 function llenarTablaShowDocToAsig(res) {
     var table = $("#table_show_docente_toAsig tbody");
@@ -9287,7 +9281,7 @@ function asigTurnoEst() {
 
     var route = "/turnos";
     $.ajax({
-        url: route, 
+        url: route,
         type: "POST",
         datatype: "json",
         data: {
@@ -9467,7 +9461,7 @@ function llenarTablaDetailsAsignaciones(res) {
 }
 function create_periodo(request) {
     var route = "/periodos";
-    $.ajax({ 
+    $.ajax({
         url: route,
         type: "POST",
         datatype: "json",
@@ -10006,7 +10000,7 @@ function get_notas(tbl_id, origen) {
         url: route,
         type: "GET",
         datatype: "json",
-        data: { origen: origen }, 
+        data: { origen: origen },
         cache: false,
         beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", $("#token").attr("content"));
@@ -10172,7 +10166,7 @@ function get_act_ant() {
     var route = "/actuaciones/search/previous";
     $.ajax({
         url: route,
-        type: "GET", 
+        type: "GET",
         datatype: "json",
         data: { id_control_list: id_control_list, bandera: "1" },
         cache: false,
@@ -10457,27 +10451,27 @@ function ingresarNewNotas() {
 
     errors = validateForm("myform_addnew_nota_final_expedientes");
 
-        var notaapl = $("#myform_addnew_nota_final_expedientes input[name=ntaaplicacion]").val()
-        var notacon = $("#myform_addnew_nota_final_expedientes input[name=ntaconocimiento]").val()
-        var notaet = $("#myform_addnew_nota_final_expedientes input[name=ntaetica]").val()
+    var notaapl = $("#myform_addnew_nota_final_expedientes input[name=ntaaplicacion]").val()
+    var notacon = $("#myform_addnew_nota_final_expedientes input[name=ntaconocimiento]").val()
+    var notaet = $("#myform_addnew_nota_final_expedientes input[name=ntaetica]").val()
 
-        if(notaapl > 5 || notacon > 5 || notaet > 5){
-            toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
-            errors = 1;
-        }
-        
-        if(isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)){
-            toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
-            errors = 1;
-        }
+    if (notaapl > 5 || notacon > 5 || notaet > 5) {
+        toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors = 1;
+    }
 
-        
+    if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
+        toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
+            positionClass: "toast-top-right",
+            timeOut: "6000",
+        });
+        errors = 1;
+    }
+
+
     if (errors <= 0) {
         var data = $("#myform_addnew_nota_final_expedientes").serialize();
         var route = "/estado/caso/volver/abrir";

@@ -152,8 +152,7 @@ async function buscarExp() {
             }
             if ($("#search_onlyProJur").is(":checked")) {           
                 data['search_onlyProJur'] = 'search_onlyProJur';            
-            }
-            console.log(data,data.search_onlyMy_exp);
+            }           
             var page = "expedientes";
             $("#wait").show();
             let res = await index_page(page, data);

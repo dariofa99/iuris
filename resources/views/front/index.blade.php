@@ -1,13 +1,6 @@
-@extends('layouts.front.dashboard')
+@extends('layouts.dashboard')
 
-@section('titulo_general')
-@if(currentUser()->hasRole('solicitante'))
-    Casos
-  @else
-    Expedientes
-  @endif
 
-@endsection
 
 @section('titulo_area')
   @if(currentUser()->hasRole('solicitante'))
@@ -19,6 +12,10 @@
 
 
 
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
 
 @section('area_forms') 
 

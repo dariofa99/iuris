@@ -83,6 +83,44 @@ $(document).ready(function () {
     }
 
   });
+  $("#btn_new_conciliacion").on("click", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "Esta seguro de solicitar una nueva conciliación?",
+      html: "<h3>No podrá revertir los cambios</h3>",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, solicitar!",
+      cancelButtonText: "No, cancelar",
+    }).then(async (result) => {
+      if (result.value) {
+        $("#wait").show();
+        var auth_user = JSON.parse($("#authdata").val())
+        var request = {
+          estado_id: 240,
+          solicitante_id: auth_user.id,
+          mail_solicitante: auth_user.email
+        }
+        console.log(auth_user, request);
+        let response = await conciliacionService.registrar_conciliacion(request);
+
+        $("#wait").show();
+        if (response.errors) {
+
+        } else if (response.id != undefined && response.id != null) {
+          toastr.success("Conciliación creada con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+          });
+          window.location = "/conciliaciones/" + response.id + "/edit";
+        }
+        //window.location.reload(true); 
+      }
+    });
+
+  })
 
   $(".btn_asinar_usuario_conciliacion").on("click", function (e) {
     var data_type = $(this).attr("data-type");
@@ -96,7 +134,10 @@ $(document).ready(function () {
     $("#" + form).addClass("form_active");
     $("#" + form + " input").prop("disabled", false);
     $("#" + form + " select").prop("disabled", false);
-
+    var iduser = $("#" + form + " input[name='idnumber']").val();
+    if (iduser != '') {
+      $("#" + form + " input[name='idnumber']").prop("disabled", true);
+    }
   });
 
   $(".btn_asinar_usuario_gen_conciliacion").on("click", function (e) {
@@ -135,7 +176,14 @@ $(document).ready(function () {
   $(".btn_cancel_usuario_conciliacion").on("click", function (e) {
     var data_type = $(this).attr("data-type");
     var form = $(this).attr("data-form");
-    notEdit(data_type, form)
+    var iduser = $("#" + form + " input[name='idnumber']").val();
+    if (iduser == '') {
+      notEdit(data_type, form)
+    } else {
+      disabledForm(form)
+      notEdit(data_type, form)
+    }
+    //
   });
 
   $("#btm_cancel_date_audiencia").on('click', function () {
@@ -145,7 +193,13 @@ $(document).ready(function () {
     $(".edit_audiencia_existe").css("display", "block");
     $("#audiencia_hora").addClass("input_time").prop("disabled", true)
 
-  })
+  });
+
+  $("#btn_iniciar_videollamada").on('click', function () {
+    $(this).prop("disabled", true);
+    $('.iniciar_videollamada').css('display', 'block')
+    startvideollamada();
+  });
 
   $("#myformCreateEstado select[name=type_status_id]").on("change", async function (e) {
     if ($(this).val() != "") {
@@ -721,7 +775,7 @@ $(document).ready(function () {
     var count = 0;
     res.partes.forEach((user, key) => {
       if (!partesConciliacionMail.includes(user.email)) {
-        mail += createRowMail(count,user.email);
+        mail += createRowMail(count, user.email);
         partesConciliacionMail.push(user.email);
         count++;
       }
@@ -1042,8 +1096,8 @@ $(document).ready(function () {
       $("#content_shmail").hide();
       $(".shared_mail").prop("disabled", true);
       var mail = '';
-      partesConciliacionMail.forEach((element,key) => {
-        mail += createRowMail(key,element);
+      partesConciliacionMail.forEach((element, key) => {
+        mail += createRowMail(key, element);
       });
       $("#tbl_list_mail_partes").html(mail)
       /* $(".rows_mails").each((key, element) => {
@@ -1072,11 +1126,25 @@ $(document).ready(function () {
   $("#tbl_list_mail_partes").on("click", '.btn_delete_mail', function (e) {
     $("#row-" + $(this).attr("data-row")).remove()
     $(".rows_mails").each((key, element) => {
-      $(element).attr("id", "row-" + key)
+      $(element).attr("id", "row-" + key);
+      $(element).children().find('span').attr("data-row", key);
       $(element).children().attr("data-row", key);
     });
-  });
 
+  });
+  $("#tbl_list_archivos_comp").on("change", '.chk_compar_con_f', function (e) {
+    var is_submit = false;
+    $(".chk_compar_con_f").each((chk, element) => {
+      if ($(element).is(":checked")) {
+        is_submit = true
+      }
+    });
+    if (is_submit) {
+      $("#btn_compcon_file").prop("disabled", false)
+    } else {
+      $("#btn_compcon_file").prop("disabled", true)
+    }
+  });
   $("#btm_save_date_audiencia").on('click', async function () {
     var id = $(this).attr("data-id")
     var fecha = $("#audiencia_fecha").val()
@@ -1100,6 +1168,83 @@ $(document).ready(function () {
       });
     }
 
+  });
+  $("#enlace_copiar").on("click", function (e) {
+    e.preventDefault();
+    var codigoACopiar = document.getElementById('lbl_copy');
+    var $bridge = $("<input>")
+    $("body").append($bridge);
+    $bridge.val($(codigoACopiar).text()).select();
+    document.execCommand("copy");
+    //$bridge.remove();
+    toastr.success("Información copiada con éxito!", "", {
+      positionClass: "toast-top-right",
+      timeOut: "3000",
+    });
+
+  });
+  $("#myFormCompartirDocumento").on("submit", async function (e) {
+    e.preventDefault();
+    var request = convertFormToJSON('myFormCompartirDocumento');
+    request['conciliacion_id'] = $("#conciliacion_id").val();
+    var bandera = false;
+    if ($("#myFormCompartirDocumento select[name=means_id]").val() == "218") {
+      var inputs = $(".rows_mails").length
+      if (inputs <= 0) {
+        toastr.error("No hay correos validos!", "", {
+          positionClass: "toast-top-right",
+          timeOut: "3000",
+        });
+      } else {
+        $("#wait").show();
+        bandera = true;
+        var res = await conciliacionService.storeSharedConcFiles(request);
+      }
+    } else {
+      $("#wait").show();
+      bandera = true;
+      var res = await conciliacionService.storeSharedConcFiles(request);
+    }
+
+    if (bandera) {
+      Toast.fire({
+        title: 'Los archivos se han compartido con éxito.',
+        icon: 'success',
+        timer: 2000,
+      });
+      if (res.url) {
+        $("#lbl_clave").text(res.generate.clave)
+        $("#lbl_url").text(res.url)
+        $("#content_datashared").show();
+        $("#content_files").hide();
+      }
+      $("#content_compartidos").html(res.view_compartidos)
+      $("#wait").hide();
+    }
+
+    $("#wait").hide();
+  });
+
+  $("#content_compartidos").on("click", '.btn_show_files', function (e) {
+    var key = $(this).attr("data-key");
+    $(".content_fd").hide();
+    $("#files-" + key).toggle();
+  });
+  $("#content_compartidos").on("click", '.btn_show_data', function (e) {
+    var key = $(this).attr("data-key")
+    $(".content_fd").hide();
+    $("#data-" + key).toggle()
+  });
+  $("#myFormCompartirDocumento #btn_addmail").on("click", function (e) {
+
+    if (validateEmail($("#input_email"))) {
+      var usermail = $("#input_email").val()
+      var key = $(".rows_mails").length
+      var mail = "";
+      mail = createRowMail(key, usermail);
+      $("#tbl_list_mail_partes").append(mail)
+
+    }
   });
 
   getActas();
@@ -1224,15 +1369,13 @@ function notEdit(data_type, form) {
   }
   $("#ctbotones-" + data_type).hide()
   $("#fondo_background").removeClass("fondo_background")
-  $("#" + form).removeClass("form_active");
+  /* $("#" + form).removeClass("form_active");
   $("#" + form + " input").prop("disabled", true);
   $("#" + form + " select").prop("disabled", true);
   $("#" + form + " input").val("");
-  $("#" + form + " select").val("");
-
-
+  $("#" + form + " select").val(""); */
 }
-function createRowMail(key,usermail) {
+function createRowMail(key, usermail) {
 
   var tr = `<div class="rows_mails" id="row-${key}">
     <input type="hidden" value="${usermail}" name="shared_mail[]">                      

@@ -83,138 +83,10 @@ class ExpedienteController extends Controller
   public function index(Request $request)
   {
     if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
-    $count_colors = [];
 
-    // array_map('unlink', glob(public_path('act_temp/' . currentUser()->id . '___*'))); //elimina los archivos que el usuario a visualizado anteriormente.(provisional)
-
-    if (empty($request->get('tipo_busqueda'))) {
-
-      $criterio = '';
-      $fechaini = fechasSem('fechaIni');
-      $fechafin = fechasSem('fechaFin');
-      $numpaginate = '10';
-    } else {
-
-      $fechaini = fechasSem('fechaIni');
-      $fechafin = fechasSem('fechaFin');
-      $criterio = $request->data;
-      //$fechaini=$request->get('fechaini');
-      //$fechafin=$request->get('fechafin'); 
-      $numpaginate = '10';
-    }
-    $order = "CASE
-    WHEN expestado_id = 1 THEN 1
-    WHEN expestado_id = 4 THEN 2
-    WHEN expestado_id = 3 THEN 3
-    WHEN expestado_id = 2 THEN 4
-    WHEN expestado_id = 5 THEN 5
-    ELSE 6
-    END";
-    if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)) {
-      $order = "CASE
-          WHEN expestado_id = 4 THEN 1
-          WHEN expestado_id = 1 THEN 2
-          WHEN expestado_id = 3 THEN 3
-          WHEN expestado_id = 2 THEN 4
-          WHEN expestado_id = 5 THEN 5
-          ELSE 6
-      END";
-    } else if (currentUser()->hasRole('estudiante')) {
-      $order = "CASE
-          WHEN expestado_id = 3 THEN 1
-          WHEN expestado_id = 1 THEN 2
-          WHEN expestado_id = 4 THEN 3
-          WHEN expestado_id = 2 THEN 4
-          WHEN expestado_id = 5 THEN 5
-          ELSE 6
-          END";
-    }
-
-
-    $expedientes = Expediente::join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-
-      // ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
-      ->leftjoin('sede_expedientes', 'sede_expedientes.expediente_id', '=', 'expedientes.id')
-      ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_expedientes.sede_id')
-      ->where(function ($query) use ($request) {
-        if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-          and (!$request->has('search_onlyMy_exp') || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
-        ) {
-          $query->whereHas('asignaciones.asig_docente', function ($q) {
-            $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
-              ->where('asignacion_docente_caso.activo', 1);
-          });
-        } else if (currentUser()->hasRole('estudiante')) {
-          $query->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
-            ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
-        } else {
-          //$query->where('asignacion_docente_caso.activo', 1);
-        }
-      })
-      ->where(function ($query) use ($request) {
-        if ($request->get('search_onlyProJur')) {
-          $query->where('asignacion_caso.procesojud_id', '<>', 1);
-        }
-      })
-      ->Criterio($request)
-      ->orderByRaw($order)
-      ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
-      ->where('sede_expedientes.sede_id', session('sede')->id_sede)
-      ->groupBy('asignacion_caso.asigexp_id')
-      ->paginate(10);
-
-    $count_colors = Expediente::join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-      ->leftjoin('sede_expedientes', 'sede_expedientes.expediente_id', '=', 'expedientes.id')
-      ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_expedientes.sede_id')
-      ->where(function ($query) use ($request) {
-        if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-          and (!$request->has('search_onlyMy_exp') || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
-        ) {
-          $query->whereHas('asignaciones.asig_docente', function ($q) {
-            $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
-              ->where('asignacion_docente_caso.activo', 1);
-          });
-        } else if (currentUser()->hasRole('estudiante')) {
-          $query->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
-            ->where('asignacion_caso.activo', '=', 1)
-            ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
-        }
-      })
-      ->where(function ($query) use ($request) {
-        if ($request->get('search_onlyProJur')) {
-          $query->where('asignacion_caso.procesojud_id', '<>', 1);
-        }
-      })
-      ->Criterio($request)
-      ->where('expedientes.exptipoproce_id', 1)
-      ->where('expedientes.expestado_id', "<>", 2)
-      //->where('expedientes.expestado_id', "<>", 5)
-      ->where('sedes.id_sede', session('sede')->id_sede)
-      ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) <= 10, 1, 0)) AS verde')
-      ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) <= 20 AND DATEDIFF(NOW(), `fecha_asig`) > 10, 1, 0)) AS amarillo')
-      ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) > 20 AND DATEDIFF(NOW(), `fecha_asig`) < 30, 1, 0)) AS rojo')
-      ->selectRaw('SUM(IF(DATEDIFF(NOW(), `fecha_asig`) >= 30, 1, 0)) AS gris')
-
-      ->get();
-
-    /*  $count_colors = DB::select(
-        DB::raw("SELECT SUM(IF(DATEDIFF(NOW(), `fecha_asig`)<=10,1,0)) AS verde, 
-        SUM(IF(DATEDIFF(NOW(), `fecha_asig`)<=20,IF(DATEDIFF(NOW(), `fecha_asig`)>10,1,0),0)) AS amarillo, 
-        SUM(IF(DATEDIFF(NOW(), `fecha_asig`)>20,IF(DATEDIFF(NOW(), `fecha_asig`)<30,1,0),0)) AS rojo, 
-        SUM(IF(DATEDIFF(NOW(), `fecha_asig`)>=30,1,0)) AS gris
-        FROM `asignacion_caso` join expedientes on  asignacion_caso.asigexp_id= expedientes.expid
-        join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
-        WHERE expedientes.expidnumberest = asignacion_caso.asigest_id 
-        AND sede_expedientes.sede_id = " . session('sede')->id_sede . "
-        AND expedientes.exptipoproce_id = 1
-        AND expedientes.expestado_id != 2 
-        AND asignacion_caso.activo = 1
-        AND `asigest_id` = " . Auth::user()->idnumber . "")
-      ); */
-
-
-    // dd($countColors);
-    if ($request->ajax()) {
+    $expedientes = $this->expedienteService->index($request);
+    $count_colors = $this->expedienteService->getColorsAsesorias($request);
+    if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       $res = [];
       $view = view('myforms.frm_expediente_list_ajax', compact('expedientes', 'count_colors'))->render();
       $res["view"] = $view;
@@ -227,17 +99,6 @@ class ExpedienteController extends Controller
     $request = $request->all();
     return view('myforms.frm_expediente_list', compact('expedientes', 'count_colors'));
 
-    /*     ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-    ->leftjoin('sede_expedientes', 'sede_expedientes.expediente_id', '=', 'expedientes.id')
-    ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_expedientes.sede_id')
-    ->Criterio($request)
-    ->where('expidnumberest', '=', currentUser()->idnumber)
-    ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber)
-    ->where('asignacion_caso.activo', 1)
-    ->where('sedes.id_sede', session('sede')->id_sede)
-    ->orderBy(DB::raw("FIELD(expestado_id,'3','1','4','2','5')"))
-    ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
-    ->groupBy('asignacion_caso.asigexp_id') */
 
     if (currentUser()->hasRole("estudiante")) {
       $count_colors = DB::select(

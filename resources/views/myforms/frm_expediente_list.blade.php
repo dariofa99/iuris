@@ -211,21 +211,5 @@
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 
     <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
-    <script>
-        async function init() {
-            var request = {} //convertFormToJSON('myformExpFilter');
-            if ($("#search_onlyMy_exp").is(":checked")) {
-                request['search_onlyMy_exp'] = 'search_onlyMy_exp';
-            }
-            var opselected = $("#myformExpFilter select[name='tipo_busqueda']").val();
-            var dataselected = $("#myformExpFilter select[name='data']").val();;
-            if (opselected != '' && opselected != null) request['tipo_busqueda'] = opselected;
-            if (dataselected != '' && dataselected != null) request['data'] = dataselected;
-            $("#wait").show();
-            var page = "expedientes";
-            let res = await index_page(page, request);
-            $("#wait").hide();
-        }
-        // init();
-    </script>
+
 @endpush

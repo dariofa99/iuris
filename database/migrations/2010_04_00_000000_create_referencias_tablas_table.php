@@ -18,7 +18,7 @@ class CreateReferenciasTablasTable extends Migration
             $table->string('ref_value');
             $table->string('ref_nombre');
             $table->string('categoria');
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->string('tabla_ref');
             $table->timestamps();
         });

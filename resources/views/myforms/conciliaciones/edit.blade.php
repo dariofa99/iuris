@@ -1,6 +1,8 @@
 @extends('layouts.dashboard')
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
+  
+    <!-- aqui van los estilos de cada vista -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     {!! Html::style('/css/jitsi.css?v=2') !!}
 
@@ -78,7 +80,9 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
 
                 @if(currentUser()->can('ver_form_conciliacion') 
-                || (currentUserInConciliacion($conciliacion->id,['conciliador','asistente','autor'])))
+                || (currentUserInConciliacion($conciliacion->id,
+                ['conciliador','asistente','autor','solicitante']
+                )))
                 <li class="nav-item">
                     <a class="nav-link active urlactive" id="info-tab" data-toggle="tab" href="#info_tab" role="tab"
                         aria-controls="chat_tab" aria-selected="false">
@@ -144,11 +148,7 @@
                 </a>
             </li>
             @endif
-            @if((currentUser()->can('ver_comentarios_conciliacion'))
-            || ((currentUserInConciliacion($conciliacion->id,['autor'])))
-            || ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id 
-            and $conciliacion->getUser(203)->pivot->estado_id == 230)
-            )
+            @if(currentUser()->can('ver_notif_conciliacion'))
             <li class="nav-item">
                 <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
                     role="tab" aria-controls="notificaciones" aria-selected="false">
@@ -204,14 +204,14 @@
  
 @push('scripts')
   <script src="{{ asset('plugins/summernote-0.8/summernote.min.js') }}"></script>
-  
+  <script src="https://meet.jit.si/external_api.js"></script>
+  {!! Html::script('js/config_jitsi.js?v=3')!!} 
+    @include('myforms.conciliaciones.script')
     <!-- aqui van los scripts de cada vista -->
     <script type="module" src={{ asset('js/admin_conciliacion.js') }}></script>
 
     {{-- {!! Html::script('js/audiencia_conciliacion.js?v=1')!!} --}}
-    <script src="https://meet.jit.si/external_api.js"></script>
-    {{-- {!! Html::script('js/config_jitsi.js?v=3')!!} --}}
-    {{-- @include('myforms.conciliaciones.script') --}}
+   
     <script>
         var request = {
             "conciliacion_id": $("#conciliacion_id").val()

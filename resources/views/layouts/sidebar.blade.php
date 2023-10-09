@@ -136,7 +136,9 @@
 
                     </ul>
                 </li>
-                @if (currentUser()->can('ver_conciliaciones_') || currentUser()->hasRole('amatai'))
+                @if (currentUser()->can('ver_conciliaciones') ||
+                        currentUser()->hasRole('amatai') ||
+                        count(currentUser()->conciliaciones) > 0)
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-handshake"></i>
@@ -151,11 +153,13 @@
                                     <p>Listar</p>
                                 </a>
                             </li>
-                            <li class="nav-item ml-3">
-                                <a href="{{ route('reportes.create') }}" class="nav-link">
-                                    <p> Administrar actas y correos</p>
-                                </a>
-                            </li>
+                            @if (currentUser()->can('admin_actasandmail'))
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('reportes.create') }}" class="nav-link">
+                                        <p> Administrar actas y correos</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif

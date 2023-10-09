@@ -70,7 +70,7 @@ class ConciliacionesController extends Controller
         $this->turnosService = $turnosService;
         $this->conciliacionService = $conciliacionService;
         $this->conciliacionComentariosService = $conciliacionComentariosService;
-        $this->middleware('permission:ver_conciliaciones',   ['only' => ['index']]);
+        //$this->middleware('permission:ver_conciliaciones',   ['only' => ['index']]);
         $this->middleware('auth', ['except' => ['downloadFile']]);
     }
 
@@ -82,11 +82,11 @@ class ConciliacionesController extends Controller
     public function index(Request $request)
     {
 
-        if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
+        //if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
 
         $conciliaciones =   $this->conciliacionService->getAllConciliaciones($request); // $reporte = ConciliacionReporte::find(5); 
 
-
+        // dd($conciliaciones,auth()->user());
         return view('myforms.conciliaciones.index', compact('conciliaciones'));
     }
 
@@ -134,6 +134,20 @@ class ConciliacionesController extends Controller
             $periodo = $this->periodoService->getPeriodoActivo();
             $request['periodo_id'] =  $periodo->id;
             $conciliacion = $this->conciliacionService->store($request);
+            if ($request->has('solicitante_id')) {
+                $conciliacion->usuarios()->attach($request->get('solicitante_id'), [
+                    'tipo_usuario_id' => 205,
+                    'estado_id' => 1
+                ]);
+            }
+            if ($request->has('mail_solicitante')) {
+                $user = $conciliacion->getUser(205);
+                try {
+                    Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
+                } catch (\Throwable $th) {
+                    return response()->json([$conciliacion]);
+                }
+            }
         } catch (\Throwable $e) {
             $mensajeError = "Ha ocurrido un error: " . $e->getMessage();
             Session::flash('message-warning', $mensajeError);
@@ -141,21 +155,7 @@ class ConciliacionesController extends Controller
                 $mensajeError
             ]]);
         }
-        if ($request->has('solicitante_id')) {
-            $conciliacion->usuarios()->attach($request->get('solicitante_id'), [
-                'tipo_usuario_id' => 205,
-                'estado_id' => 1
-            ]);
-        }
 
-        if ($request->has('mail_solicitante')) {
-            $user = $conciliacion->getUser(205);
-            try {
-                Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
-            } catch (\Throwable $th) {
-                return response()->json([$conciliacion]);
-            }
-        }
 
         return response()->json($conciliacion);
     }
@@ -180,7 +180,7 @@ class ConciliacionesController extends Controller
     public function edit($id, Request $request)
     {
 
-        if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
+        // if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
         $conciliacion = $this->conciliacionService->find($id);
         if (!$conciliacion) {
             Session::flash('message-warning', "Ups! No se ha encontrado la conciliacion");
@@ -191,7 +191,7 @@ class ConciliacionesController extends Controller
 
         $estudiantes = $this->getEstudiantes();
         $turnos = $this->turnosService->index($request);
- 
+
         $numusers =  $conciliacion->usuarios->count();
         $audiencia = AudienciaConciliacion::where('id_conciliacion', $conciliacion->id)->first();
         $salaalterna = SalasAlternasConciliacion::where(['idnumber' => Auth::user()->idnumber, "id_conciliacion" => $conciliacion->id])->first();

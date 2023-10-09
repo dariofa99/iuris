@@ -73,16 +73,14 @@ if (!isset($modo_nav_crl)) {
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-    <div id="fondo_background">
-  
-    </div>
+
     <div class="wrapper">
         <!-- Navbar -->
         @yield('navbar')
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        @include('layouts.sidebar')
+        @include('layouts.front.sidebar')
         <!-- /:main Sidebar Container -->
 
         <!-- Content Wrapper. Contains page content -->
@@ -90,8 +88,12 @@ if (!isset($modo_nav_crl)) {
 
             <!-- Content Header (Page header) -->
             <input type="hidden" id="olderInputValue">
-             
-               <input type="hidden" id="authdata"  value="{{ Auth::user() }}">
+            <input type="hidden" id="inputHash" value="{{ sha1(Auth::user()->id) }}">
+            <input type="hidden" id="connectedData"
+                value='{"ver_conectados_chat":"{{ Auth::user()->can('ver_conectados_chat') ? 'true' : 'false' }}","role":"{{ Auth::user()->roles[0]->name }}","username":"{{ Auth::user()->name }}","idusuario":"{{ Auth::user()->id }}","correo":"{{ Auth::user()->email }}","imagen":"{{ asset(auth()->user()->image) }}"}'>
+            
+               <input type="hidden" id="authdata"
+                value="{{ Auth::user() }}">
  
             <div style="min-height: 450px;" class="card card-success card-outline">
                 <div class="card-header">
