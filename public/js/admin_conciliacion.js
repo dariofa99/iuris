@@ -173,7 +173,7 @@ $(document).ready(function () {
     }
     $("#wait").hide();
   });
- 
+
   $(".btn_cancel_usuario_conciliacion").on("click", function (e) {
     var data_type = $(this).attr("data-type");
     var form = $(this).attr("data-form");
@@ -652,6 +652,25 @@ $(document).ready(function () {
          if (idrol == value.id) { stateoption = "selected" }
          $("#select_rol_est_conciliacion"+idnumber).append('<option value="' + value.id + '" '+ stateoption +'>' + value.ref_nombre + '</option>');
      }); */
+  });
+
+  $("#btn_notificarse").on("click",async function () {
+    var request = {
+      //'conciliacion_id': $("#conciliacion_id").val(),
+      'tabla_destino': '227',
+      'status_id': 1,
+      'categoria': 'mensaje_notificarse'
+    }
+    let response = await conciliacionService.getDestinyForReport(request);
+    $("#content_form_correo_est_responder").summernote("code", response[0].reporte);
+
+  /*   $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
+    $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
+    getReportes(request, 'content_form_correo_est_responder'); */
+    $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
+    $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
+
+    $("#myModal_respuestas_asignaciones").modal("show");
   });
 
   $("#btn_notificarse_cancelar").on("click", async function () {

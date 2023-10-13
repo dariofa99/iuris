@@ -200,7 +200,7 @@ $(document).ready(function () {
     });
 
     $("#btnGuardarPdfTemp").on("click", async function (e) {
-        // alert('Falta guardar') 
+         //alert('Falta guardar') 
         var request = serializeSummernotePdf(
             "myFormEditPdfReporte",
             "summernote_update"
@@ -208,6 +208,7 @@ $(document).ready(function () {
         var id = $("#myFormEditPdfReporte select[name=id]").val();
         if (id == undefined) id = $("#myFormEditPdfReporte input[name=id]").val();
         if (request) {
+            console.log(request);
             $("#wait").show();
             let response = await conciliacionService.updateConPdfTemporal(request, id);
             $("#wait").hide();
@@ -279,7 +280,15 @@ $(document).ready(function () {
             'status_id': 178
         }
         let response = await formatosService.getReportes(request);
-        console.log(response);
+        $("#myModal_create_category_report").modal("show")
+    });
+    $(".content_values_store").on("click", "#btn_create_category", async function (e) {
+        var request = {
+            'conciliacion_id': $("#conciliacion_id").val(),
+            'tabla_destino': 'conciliaciones_email',
+            'status_id': 178
+        }
+        let response = await formatosService.getReportes(request);
         $("#myModal_create_category_report").modal("show")
     });
 

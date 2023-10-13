@@ -80,6 +80,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="content_s">
+                            
                             <div id="{{ $mySummernote }}" class="summernote">
                                 @if (isset($reporte) and $view and $view == 'update_temp')
                                     {!! $reporte->reporte !!}
@@ -285,9 +286,11 @@
 
             <div class="content_values_{{ $view }}" style="display: none;margin-top:3px"
                 id="personalizado_{{ $view }}">
+                @if($view!='update_temp')
                 <div class="col-md-12">
-                    <button class="btn" id="btn_create_category">+</button>
+                    <button class="btn btn-success" id="btn_create_category">+</button>
                 </div>
+                @endif
                 @include('myforms.conciliaciones.componentes.categories_ajax', [
                     'mySummernote' => $mySummernote,
                 ])

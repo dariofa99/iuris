@@ -344,7 +344,7 @@ class ConciliacionesReportesController extends Controller
 
     public function update(Request $request, $id)
     {
-        //return response()->json("request->all()");
+        
         $config = $this->setConfig($request);
         $request['configuraciones'] = json_encode($config);
         $co_reporte = PdfReporte::find($id);

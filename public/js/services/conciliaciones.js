@@ -515,14 +515,12 @@ export class ConciliacionService {
     }
     async updateConPdfTemporal(request, id) {
         const response = await fetch(BASE_URL + "conciliaciones/pdf/" + id, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "X-Requested-With": "XMLHttpRequest",
-                "X-CSRF-Token": $("#token").attr("content"),
-            },
-            body: JSON.stringify(request)
+            method: 'POST', 
+            headers: {        
+                'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+                "X-CSRF-Token": $("#token").attr("content"),             
+            },            
+            body: (request)
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
