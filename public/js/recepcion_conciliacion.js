@@ -125,6 +125,7 @@ $(function () {
     $("#btn_parte_convocada").on("click",async function() {
       $("#wait").show();
       if(!$("#chk_not_parte").is(":checked")){
+        $("#myFormParteConvocada textarea").remove()
         var errors = validateForm("myFormParteConvocada"); 
         if(errors.length<=0){
           addUserByStep("myFormParteConvocada",this,6)

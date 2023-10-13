@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Conciliacion;
+use App\ConciliacionEstado;
 use Illuminate\Http\Request;
 use App\Solicitud;
 use App\User;
@@ -227,6 +228,12 @@ class SolicitudesController extends Controller
             'estado_id'=>1
         ]);
         $solicitud->conciliaciones()->attach($conciliacion->id);
+        $estado = ConciliacionEstado::create([
+            'concepto' => "Solicitud primera vez",
+            'type_status_id' => $conciliacion->estado_id,
+            'user_id' => $request->input('solicitante_id'),
+            'conciliacion_id' => $conciliacion->id
+        ]);
         $response=[];
         try {
             Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
@@ -263,8 +270,6 @@ class SolicitudesController extends Controller
      */
     public function show($id)
     {
-
-        //dd("dssd");
         try {
             $solicitud = Solicitud::find($id);
             $tur_aten=  Solicitud::join('sede_solicitudes','sede_solicitudes.solicitud_id','=','solicitudes.id')

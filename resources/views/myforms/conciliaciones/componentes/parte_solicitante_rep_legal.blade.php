@@ -38,10 +38,10 @@
         <button data-form="myUserRepLegalForm" style="margin: 1px" type="button" @if($user->idnumber!=null) data-user="{{$user->idnumber}}" @endif data-section="rep_legal" data-type="{{$tipo_usuario_id}}" class="btn btn-success btn-sm btn_agregar_usuario_conciliacion pull-right">  
             <i class="fa fa-plus"> </i> {{$user->idnumber!=null ? 'Actualizar' : 'Agregar'}} 
         </button>
-     </div>  
-     <div id="user_rep_legal_form">
-        @include('myforms.conciliaciones.componentes.user_replegal_form')
-    </div> 
+     </div>      
+</div>
+<div id="user_rep_legal_form">
+    @include('myforms.conciliaciones.componentes.user_replegal_form') 
 </div>
 
 

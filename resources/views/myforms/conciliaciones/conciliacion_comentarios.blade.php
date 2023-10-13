@@ -75,7 +75,7 @@
                 <label> Seleccione un formato </label>
                 <select id="categoria_notifica__id" name="reporte_id" required class="form-control form-control-sm required">  
                     <option value="">Seleccione...</option>            
-                                       
+                    <option value="1">En blanco</option>                 
                 </select>
          
               

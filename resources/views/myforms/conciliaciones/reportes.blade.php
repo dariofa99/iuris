@@ -201,7 +201,7 @@
                     'parte' => 'solicitante',
                     'view' => 'solicitante_values',
                     'mySummernote' => $mySummernote,
-                ])
+                ]) 
             </div>
 
             <div class="content_values_{{ $view }}" style="display: none"

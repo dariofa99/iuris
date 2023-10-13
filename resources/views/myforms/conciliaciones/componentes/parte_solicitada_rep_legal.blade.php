@@ -39,9 +39,10 @@
             <i class="fa fa-plus"> </i> {{$user->idnumber!=null ? 'Actualizar' : 'Agregar'}} 
         </button>
      </div>  
-     <div id="user_rep_legal_solicitada_form">
-        @include('myforms.conciliaciones.componentes.user_replegal_solicitada_form')
-    </div> 
+     
 </div>
+<div id="user_rep_legal_solicitada_form">
+    @include('myforms.conciliaciones.componentes.user_replegal_solicitada_form')
+</div> 
 
 

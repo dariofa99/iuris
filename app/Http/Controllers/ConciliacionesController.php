@@ -114,9 +114,6 @@ class ConciliacionesController extends Controller
             Session::flash('message-warning', $mensajeError);
             return redirect('/conciliaciones/');
         }
-
-
-
         return redirect('/conciliaciones/' . $conciliacion->id . '/edit');
     }
 
@@ -140,6 +137,12 @@ class ConciliacionesController extends Controller
                     'estado_id' => 1
                 ]);
             }
+            $estado = ConciliacionEstado::create([
+                'concepto' => "Solicitud primera vez",
+                'type_status_id' => $conciliacion->estado_id,
+                'user_id' => $request->input('solicitante_id'),
+                'conciliacion_id' => $conciliacion->id
+            ]);
             if ($request->has('mail_solicitante')) {
                 $user = $conciliacion->getUser(205);
                 try {
@@ -179,9 +182,11 @@ class ConciliacionesController extends Controller
      */
     public function edit($id, Request $request)
     {
-
-        // if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
         $conciliacion = $this->conciliacionService->find($id);
+        if (currentUser()->hasRole("solicitante") and($conciliacion->estado_id!=178)) {
+            return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
+        }
+
         if (!$conciliacion) {
             Session::flash('message-warning', "Ups! No se ha encontrado la conciliacion");
             return redirect("/conciliaciones");

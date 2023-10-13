@@ -5,14 +5,8 @@
 <div class="row">
     <div class="col-md-12">
         <h4 align="center"> <strong> PARTE SOLICITANTE </strong>
-
-
-            @if (currentUser()->hasRole('diradmin') ||
-                    currentUser()->hasRole('coord_centro_conciliacion') ||
-                    currentUser()->hasRole('amatai') ||
-                    currentUserInConciliacion($conciliacion->id, ['autor', 'auxiliar', 'conciliador']))
+            @if (currentUser()->can('ver_asignaciones_conciliacion'))
                 @if ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 174 || $conciliacion->estado_id == 176 || $conciliacion->estado_id == 194)
-
                     @if ($user->idnumber == null || currentUserInConciliacion($conciliacion->id, ['autor', 'solicitante']))
                         <button data-form="form_solicitante" type="button"
                             @if ($user->idnumber != null) data-user="{{ $user->idnumber }}" @endif

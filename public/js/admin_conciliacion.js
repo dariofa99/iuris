@@ -148,6 +148,7 @@ $(document).ready(function () {
   $(".btn_agregar_usuario_conciliacion").on("click", async function (e) {
     var form = $(this).attr("data-form")
     var user_id = $("#" + form + " input[name='id']").val();
+    console.log(user_id);
     if (user_id != '') {
       var request = {
         "user_id": user_id,
@@ -161,7 +162,7 @@ $(document).ready(function () {
         icon: "success",
         timer: 2000,
       });
-      window.location.reload(true)
+      //window.location.reload(true)
     } else {
       var errors = validateForm(form);
       var request = {};
@@ -172,7 +173,7 @@ $(document).ready(function () {
     }
     $("#wait").hide();
   });
-
+ 
   $(".btn_cancel_usuario_conciliacion").on("click", function (e) {
     var data_type = $(this).attr("data-type");
     var form = $(this).attr("data-form");
@@ -241,7 +242,7 @@ $(document).ready(function () {
           { positionClass: "toast-top-right", timeOut: "50000" }
         );
       } else {
-
+        $("#wait").show()
         const result = await conciliacionService.storeConciliacionEstado(request)
           .then((response) => {
             Swal.fire({
@@ -256,6 +257,7 @@ $(document).ready(function () {
           });
       }
     } else {
+      $("#wait").show()
       const result = await conciliacionService.storeConciliacionEstado(request)
         .then((response) => {
           Swal.fire({
@@ -270,6 +272,7 @@ $(document).ready(function () {
         });
     }
     //
+    //$("#wait").show()
     e.preventDefault();
   }
   );

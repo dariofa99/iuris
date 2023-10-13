@@ -535,7 +535,7 @@ async function buscarExp() {
                             showConfirmButton: false,
                             timer: 2500
                         });
-                        window.location.reload(true);
+                      //  window.location.reload(true);
                         e.preventDefault()
                     })
                     .catch((error) => {
