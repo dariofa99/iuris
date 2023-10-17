@@ -9,7 +9,7 @@ use App\Traits\ColorTurnos;
 use Illuminate\Support\Facades\Event;
 use DB;
 use App\User;
-use App\Traits\AsigNotas;
+use App\Traits\AsigNotas; 
 use App\Traits\UploadFile;
 use App\Segmento;
 use App\HistorialDatosCaso;
@@ -571,6 +571,7 @@ class Expediente extends Model
                 ['actestado_id', '<>', '138'],
                 ['actestado_id', '<>', '139'],
                 ['actestado_id', '<>', 234],
+                ['actestado_id', '<>', 235],
                 ['actidnumberest', $this->expidnumberest],
                 ['actexpid', $this->expid]
             ])

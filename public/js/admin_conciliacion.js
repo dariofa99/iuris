@@ -654,56 +654,50 @@ $(document).ready(function () {
      }); */
   });
 
-  $("#btn_notificarse").on("click",async function () {
+  $("#btn_notificarse").on("click", async function () {
     var request = {
-      //'conciliacion_id': $("#conciliacion_id").val(),
-      'tabla_destino': '227',
+      'conciliacion_id': $("#conciliacion_id").val(),
+      'tabla_destino': '241',
       'status_id': 1,
       'categoria': 'mensaje_notificarse'
     }
-    let response = await conciliacionService.getDestinyForReport(request);
-    $("#content_form_correo_est_responder").summernote("code", response[0].reporte);
-
-  /*   $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
-    $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
-    getReportes(request, 'content_form_correo_est_responder'); */
+    let response = await formatosService.getReportes(request);
+    $("#content_form_correo_est_responder").summernote("code", "");
+    if (response.body) {
+      $("#content_form_correo_est_responder").summernote("code", response.body);
+    } else if (response.error) {
+      toastr.error(response.error, "Algo falló!", {
+        positionClass: "toast-bottom-right",
+        timeOut: "4000",
+      });
+    }
     $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
     $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
-
+    $("#myFormResponderCorreo input[name=reporte_id]").val(response.reporte.id)
     $("#myModal_respuestas_asignaciones").modal("show");
   });
 
   $("#btn_notificarse_cancelar").on("click", async function () {
     var request = {
-      'tabla_destino': "241",
+      'conciliacion_id': $("#conciliacion_id").val(),
+      'tabla_destino': '241',
       'status_id': 1,
       'categoria': 'mensaje_notificarse_cancelar'
     }
-    let response = await conciliacionService.getDestinyForReport(request);
-
-
-/*     var request = {
-      'conciliacion_id': $("#conciliacion_id").val(),
-      'tabla_destino': '241',
-      'status_id': $(this).attr("data-estado"),
-      'categoria': 'mensaje_notificarse_cancelar'
+    let response = await formatosService.getReportes(request);
+    $("#content_form_correo_est_responder").summernote("code", "");
+    $("#wait").hide();
+    if (response.body) {
+      $("#content_form_correo_est_responder").summernote("code", response.body);
+    } else if (response.error) {
+      toastr.error(response.error, "Algo falló!", {
+        positionClass: "toast-bottom-right",
+        timeOut: "4000",
+      });
     }
-    let res = await conciliacionService.getPdfReportesConciliacion(request);
-    */ $("#wait").hide();
-    /*  if(res.body){
-         $("#content_form_correo_est_responder"+idform).summernote("code", res.body);
-     }else if(res.errors){
-         toastr.error(res.error, "Algo falló!", {
-             positionClass: "toast-bottom-right",
-             timeOut: "4000",
-         });
-         $("#"+idform).summernote("code", "Escriba su mensaje aquí!");
-     } */
-    $("#content_form_correo_est_responder").summernote("code", response[0].reporte);
-
     $("#myFormResponderCorreo input[name=user_estado_id]").val($(this).attr('data-user_estado'))
-    $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'))
-
+    $("#myFormResponderCorreo input[name=pivot_id]").val($(this).attr('data-pivot_id'));
+    $("#myFormResponderCorreo input[name=reporte_id]").val(response.reporte.id)
     $("#myModal_respuestas_asignaciones").modal("show");
   });
 
@@ -822,6 +816,42 @@ $(document).ready(function () {
       $("#content_msg_info").hide();
       $("#myFormCompartirDocumento").show()
     }
+  });
+
+  $("#myFormResponderCorreo").on("submit", async function (e) {
+    e.preventDefault();
+    var errors = validateForm("myFormResponderCorreo");
+    var formatVal = $("#content_form_correo_est_responder")
+      .summernote("code")
+      .trim();
+    if (errors.length <= 0 && formatVal != "<p><br></p>" && formatVal != "") {
+      $("#myFormResponderCorreo input[name=cuerpo_correo]").val(formatVal);
+      var request = convertFormToJSON("myFormResponderCorreo");
+      request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
+      $("#wait").show();
+      let response = await conciliacionService.sendNotification(request);
+      let comentarios = await conciliacionService.getComentarios({ "conciliacion_id": $("input[name='conciliacion_id']").val() });
+      $("#table_list_comentarios tbody").html(comentarios.view);
+      $("#btn_cancelar_conc_not").hide();
+      $("#btn_conciliacion_notificacion").show();
+      $("#content_create_notification").hide();
+      $("#content_conc_notif").show();
+      e.preventDefault();
+      $("#wait").hide();
+      // window.location.reload(true)
+
+    }
+
+    /*  var formatVal = $("#content_form_correo_est_responder")
+       .summernote("code")
+       .trim();
+     $("#myFormResponderCorreo input[name=cuerpo_correo]").val(formatVal)
+     var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
+     let response = await conciliacionService.sendNotification(request);
+      
+ 
+     enviarCorreoConciliacion(request)
+     e.preventDefault(); */
   });
 
   $("#myReportPdfList").on("click", ".btn_asignar_firmantes", async function (e) {
@@ -1014,8 +1044,8 @@ $(document).ready(function () {
         timer: 5000,
       });
     }
-    //location.reload();
-    $("#wait").css("display", "none");
+    location.reload();
+    //$("#wait").css("display", "none");
 
   });
 

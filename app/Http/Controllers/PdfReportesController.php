@@ -263,7 +263,8 @@ class PdfReportesController extends Controller
             $bodytag =  $this->getBody($reporte,$conciliacion);
         // $view = view('myforms.conciliaciones.documentos_cuerpo_correo',compact('bodytag'))->render();
             return response()->json([
-                'body'=> $bodytag,            
+                'body'=> $bodytag,   
+                'reporte'=>$reporte      
             ]);
        }
        

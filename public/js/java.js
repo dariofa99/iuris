@@ -3354,7 +3354,6 @@ return false;
             .trim();
         $("#myFormResponderCorreo input[name=cuerpo_correo]").val(formatVal)
         var request = $(this).serialize() + "&conciliacion_id=" + $("#conciliacion_id").val();
-
         enviarCorreoConciliacion(request)
         e.preventDefault();
     });

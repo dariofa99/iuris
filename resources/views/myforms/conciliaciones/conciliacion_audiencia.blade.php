@@ -52,8 +52,7 @@
             &nbsp;
             </label>
           
-            @if ($audiencia != "" and (isset($conciliacion->getUser(203)->pivot->user_id) and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
-            and $conciliacion->getUser(203)->pivot->estado_id == 229) || currentUser()->can('ver_audiencia_conciliacion'))
+            @if ($audiencia != "" and currentUser()->can('editar_audiencia_conciliacion'))
 
             <input type="button" value="Editar" class="btn btn-warning btn-block btn-sm" id="btm_edit_date_audiencia" data-id="{{$conciliacion->id}}">
             @endif 
@@ -147,21 +146,18 @@
 @if(((currentUser()->can('act_conciliacion')))
 || (currentUserInConciliacion($conciliacion->id,['auxiliar','conciliador'])))
 @if($conciliacion->estado_id==181)
-
 <hr>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group" >
               <label style="display: block; margin-bottom:10px">Acuerdos
                    <button type="button" data-tipo="208" class="btn btn-primary btn-sm pull-right btn_add_conc_he_con"> Agregar Acuerdo</button>       
-           
-            </label>
+              </label>
             <div id="content_hechos_pretensiones-208" class="content_hechos_pretensiones">
                 @include('myforms.conciliaciones.componentes.hechos_pretenciones_ajax',[
                     'tipo_id'=>208
                 ]) 
-            </div>
-           
+            </div>           
         </div>
     </div>
 </div>

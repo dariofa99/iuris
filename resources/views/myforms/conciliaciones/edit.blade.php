@@ -139,8 +139,7 @@
             @if( currentUser()->can('ver_documentos_conciliacion') ||
             (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
            and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
-           $conciliacion->getUser(203)->pivot->estado_id == 230
-           ))
+           $conciliacion->getUser(203)->pivot->estado_id == 230))
             <li class="nav-item">
                 <a class="nav-link urlactive" id="documentos-tab" data-toggle="tab" href="#documentos" role="tab"
                     aria-controls="documentos_tab" aria-selected="false">

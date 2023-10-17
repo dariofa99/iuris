@@ -69,7 +69,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-
+                @if(!currentUser()->hasRole('coord_centro_conciliacion'))
                 <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
@@ -81,12 +81,14 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                       
                         <li class="nav-item ml-3">
                             <a href="{{ route('expedientes.index') }}" class="nav-link">
                                 {{--  <i class="fas fa-clipboard nav-icon"></i> --}}
                                 <p>Ver expedientes</p>
                             </a>
                         </li>
+                       
                         @if (currentUser()->can('crear_expediente'))
                             <li class="nav-item ml-3">
                                 <a href="{{ route('expedientes.create') }}" class="nav-link">
@@ -132,10 +134,11 @@
                                 </a>
                             </li>
                         @endif
-
-
                     </ul>
                 </li>
+
+                @endif
+
                 @if (currentUser()->can('ver_conciliaciones') ||
                         currentUser()->hasRole('amatai') ||
                         count(currentUser()->conciliaciones) > 0)

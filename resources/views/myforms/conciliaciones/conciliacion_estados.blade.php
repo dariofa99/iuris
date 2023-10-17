@@ -1,12 +1,9 @@
 <div class="row" >
     <div class="col-md-2">
-     @if(currentUserInConciliacion($conciliacion->id,['autor','conciliador','asistente']) ||
-     currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || 
-     currentUser()->hasRole('secretaria') || currentUser()->hasRole('docente') || currentUser()->hasRole('amatai'))
+     @if(currentUser()->can('change_status_conciliaciones'))
         <input type="button" value="Cambiar estado" class="btn btn-primary btn-block btn-sm" id="btn_cambiar_estado">
         <input type="button" value="Cancelar" style="display: none" class="btn btn-warning btn-block btn-sm" id="btn_cancelar_estado">
-       
-     @endif 
+    @endif 
     </div>
 <div class="col-md-7">
 

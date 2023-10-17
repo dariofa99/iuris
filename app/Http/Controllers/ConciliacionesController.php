@@ -992,7 +992,7 @@ class ConciliacionesController extends Controller
 
     public function enviarCorreo(Request $request)
     {
-        // return response()->json($request->all());
+        // return response()->json($request->all()); 
 
         if ($request->has('correo_send')) {
             $users = User::whereIn('email', $request->correo_send)->get();

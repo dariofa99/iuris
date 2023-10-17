@@ -16,7 +16,11 @@
     || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))))
     
 
-    @if(!$reporte->is_created and !$reporte->has_firm and count($reporte->users)<=0 and (currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
+    @if(!$reporte->is_created 
+    and !$reporte->has_firm 
+    and count($reporte->users)<=0 
+    and (currentUser()->hasRole('coord_centro_conciliacion') 
+        || currentUser()->hasRole('amatai') || currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar'])))
     <a href="/pdf/reportes/editar/temporal/{{$reporte->reporte->id}}/{{$conciliacion->id}}/{{ $reporte->status_id}}" class="btn_edit_con_pdf btn btn-primary btn-sm btn-block" data-id="45" id="btn_edcpdf_45">
         Editar
     </a>
