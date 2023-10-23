@@ -69,8 +69,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                @if(!currentUser()->hasRole('coord_centro_conciliacion'))
-                <li
+                  <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
                     <a href="#" class="nav-link">
@@ -136,8 +135,6 @@
                         @endif
                     </ul>
                 </li>
-
-                @endif
 
                 @if (currentUser()->can('ver_conciliaciones') ||
                         currentUser()->hasRole('amatai') ||
