@@ -159,7 +159,6 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $this->model->expusercreated = currentUser()->idnumber;
         $this->model->expuserupdated = currentUser()->idnumber;
         $this->model->save();
-
         if ($request->has('sede_id')) {
             $sede = Sede::find($request->get('sede_id'));
             session(["sede" => $sede]);
@@ -169,9 +168,6 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 $this->model->sedes()->attach(session('sede')->id_sede);
             }
         }
-
-        //Event::dispatch('expediente.created', $this->model);
-
         return $this->model;
     }
 
@@ -186,9 +182,10 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
     public function asignarDocente(AsignacionCaso $asignacion_caso)
     {
-        $segmento = $this->segmentoService->getSegmentoActivo();
+        $segmento = $this->segmentoService->getSegmentoActivo(); 
+        $subRama = $asignacion_caso->expediente->rama_derecho->subrama;
         $docente_unavi = $this->usersService->getDocentesByRama("UNAVI");
-        if ($docente_unavi) {
+        if ($docente_unavi and $subRama=='UNAVI') {
             $asig_doc = DB::select(
                 DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
               JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
@@ -265,9 +262,6 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 )
                 ->orderBy('users.created_at', 'desc')->get();
         }
-
-
-
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
