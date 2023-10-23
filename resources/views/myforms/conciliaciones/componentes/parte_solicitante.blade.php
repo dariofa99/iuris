@@ -1,13 +1,8 @@
-@php
-    $user = $conciliacion->getUser(205);
-@endphp
-
 <div class="row">
     <div class="col-md-12">
-        <h4 align="center"> <strong> PARTE SOLICITANTE </strong>
+        <h4 align="center"> <strong> PARTE SOLICITANTE </strong> </h4>
             @if (currentUser()->can('ver_asignaciones_conciliacion'))
-                @if ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 174 || $conciliacion->estado_id == 176 || $conciliacion->estado_id == 194)
-                    @if ($user->idnumber == null || currentUserInConciliacion($conciliacion->id, ['autor', 'solicitante']))
+                    @if ($user->idnumber == null)
                         <button data-form="form_solicitante" type="button"
                             @if ($user->idnumber != null) data-user="{{ $user->idnumber }}" @endif
                             data-section="solicitante" data-type="205"
@@ -22,11 +17,7 @@
                             <i class="fa fa-trash"> </i>
                         </button>
                     @endif
-
-                @endif
-            @endif
-        </h4>
-
+                @endif      
     </div>
 </div>
 <div class="row" id="form_solicitante">

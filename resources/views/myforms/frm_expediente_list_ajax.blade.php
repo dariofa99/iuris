@@ -21,7 +21,7 @@
              @foreach ($expedientes as $expediente)
                  <tr role="row">
                      <td>{{ $expediente->expid }}</td>
-                     @if (!currentUser()->hasRole('solicitante'))
+                     @if ($expediente->solicitante and !currentUser()->hasRole('solicitante'))
                          <td>
                              <div @if (currentUser()->hasRole('docente')) class="textcor" @endif>
                                  {{ FullName($expediente->solicitante->name, $expediente->solicitante->lastname) }}

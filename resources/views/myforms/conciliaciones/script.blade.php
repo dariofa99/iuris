@@ -15,7 +15,7 @@
             BindEvent();
             StartMeeting(meeting_id,dispNme,nameroom);
         }
-    }
+    } 
     $(function(){  
         $("#btn_iniciar_videollamada").on('click', function () {
             $(this).prop( "disabled", true );

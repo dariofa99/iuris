@@ -1,7 +1,8 @@
 <input type="hidden" name="id" value="{{isset($user) ? $user->id : ''}}">
 
 <div class="col-md-3">
-    <div class="form-group has-feedback"><label for="idnumber">Tipo de Persona*</label>
+    <div class="form-group has-feedback">
+        <label for="idnumber">Tipo de Persona*</label>
       <select {{$disabled}}  required name="tipopers_id" id="tipopers_id" class="form-control form-control-sm required">
           <option value="">Seleccione...</option>
           @foreach($tipopers as $key => $doc)

@@ -32,27 +32,32 @@
 
                 <tr>
                     <th>IDENTIFICACIÓN SOLICITANTE:</th>
-                    <td>{{ $expediente->solicitante->idnumber }}
+                    <td>{{ $expediente->solicitante ? $expediente->solicitante->idnumber :'No hay solicitante' }}
                     </td>
                 </tr>
 
                 <tr>
                     <th>SOLICITANTE:</th>
-                    <td>{{ FullName($expediente->solicitante->name, $expediente->solicitante->lastname) }}
+                    <td>{{ $expediente->solicitante ? FullName($expediente->solicitante->name, $expediente->solicitante->lastname) :'No hay solicitante'}}
                     </td>
                 </tr>
 
                 <tr>
                     <th>TELÉFONO SOLICITANTE:</th>
-                    <td> {{ $expediente->solicitante->tel1 }} @if ($expediente->solicitante->tel2 != '')
+                    <td> 
+                        @if($expediente->solicitante)
+                        {{ $expediente->solicitante->tel1 }} @if ($expediente->solicitante->tel2 != '')
                             - {{ $expediente->solicitante->tel2 }}
+                        @endif
+                        @else
+                        Sin solicitante
                         @endif
                     </td>
                 </tr>
 
                 <tr>
                     <th>DIRECCIÓN SOLICITANTE:</th>
-                    <td> {{ $expediente->solicitante->address }}
+                    <td> {{ $expediente->solicitante ? $expediente->solicitante->address : "Sin solicitante" }}
                     </td>
                 </tr>
             @endif

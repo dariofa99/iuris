@@ -27,7 +27,7 @@
                    </th> --}}
                </thead>
                <tbody>
-                  @include('myforms.conciliaciones.componentes.solicitud_user_asig_notas_ajax')
+                  @include('myforms.conciliaciones.componentes.conciliacion_user_asig_notas_ajax')
                </tbody>
            </table>
        </div>

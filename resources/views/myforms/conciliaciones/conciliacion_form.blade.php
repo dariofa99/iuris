@@ -10,9 +10,9 @@
         @endif
     </div>
 
-    @if (currentUserInConciliacion($conciliacion->id, ['conciliador', 'asistente'])
-    and (($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id)
-    and ($conciliacion->getUser(203)->pivot->estado_id == 1)))
+    @if (currentUserInConciliacion($conciliacion->id, ['conciliador', 'asistente']) and
+            ($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and
+                $conciliacion->getUser(203)->pivot->estado_id == 1))
         @php
             $conciliador = $conciliacion->getUser(203);
             $auth_is_con = $conciliador->id == currentUser()->id;
@@ -34,27 +34,23 @@
             </button>
         </div>
     @endif
-
-
-
 </div>
-
-
-
 <input type="hidden" name="conciliacion_id" id="conciliacion_id" value="{{ $conciliacion->id }}">
 <input type="hidden" id="older_value">
 <input type="hidden" id="estado_conciliacion_id" value="{{ $conciliacion->estado_id }}">
-<div class="box_section">
-    @include('myforms.conciliaciones.componentes.parte_solicitante', [
-        'section' => 'parte_solicitante',
-    ])
-
-</div>
 @php
     $parte_solicitante = $conciliacion->getUser(205); //Solicitante
 @endphp
 
-@if ($parte_solicitante->tipopers_id == 238)
+<div class="box_section">
+    @include('myforms.conciliaciones.componentes.parte_solicitante', [
+        'section' => 'parte_solicitante',
+        'user' => $parte_solicitante,
+    ])
+</div>
+
+
+@if ($parte_solicitante->tipopers_id != 238)
     <div class="box_section">
         @include('myforms.conciliaciones.componentes.parte_solicitante_rep_legal', [
             'section' => 'representante_legal_solicitante',
@@ -85,7 +81,6 @@
         'section' => 'parte_solicitada',
         'disabled' => 'disabled',
     ])
-
 </div>
 @php
     $parte_sol = $conciliacion->getUser(197); //Solicitada

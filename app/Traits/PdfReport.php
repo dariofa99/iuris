@@ -13,10 +13,8 @@ trait PdfReport
         if ($conciliacion != null) {
             $json = json_decode($reporte->report_keys);
             $bodytag = $reporte->reporte;
-            if (count($json) > 0) {
-                // dd($json);
-                foreach ($json as $key => $data) {
-                    
+            if (count($json) > 0) {              
+                foreach ($json as $key => $data) {                    
                     foreach (
                         $conciliacion
                             ->usuarios()
@@ -24,8 +22,7 @@ trait PdfReport
                             ->orderBy('conciliacion_has_user.created_at', 'desc')
                             ->get()
                         as $key_2 => $user
-                    ) {
-                        
+                    ) {                        
                         if ($data->table == 'users') {
                             $label = $data->short_name;
                             $value = $user->$label;

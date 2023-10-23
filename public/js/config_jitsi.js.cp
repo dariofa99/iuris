@@ -1,17 +1,17 @@
 var apiObj = null;
-var numsalasvideollamada = 0;
-
-function BindEvent() {
+var numsalasvideollamada=0;
+ 
+function BindEvent(){
 
     $("#btnHangup").on('click', function () {
         numsalasvideollamada = 0;
-        $("#btn_iniciar_videollamada").prop("disabled", false);
+        $("#btn_iniciar_videollamada").prop( "disabled", false );
         apiObj.executeCommand('hangup');
         //$( "#jitsi-meet-conf-container" ).remove();
         $('#jitsi-meet-conf-container').empty();
         $('#container-meet').hide();
     });
-
+    
     $("#btnCustomMic").on('click', function () {
         apiObj.executeCommand('toggleAudio');
     });
@@ -26,7 +26,7 @@ function BindEvent() {
     });
 }
 
-function StartMeeting(roomName, dispNme, nameAlt) {
+function StartMeeting(roomName,dispNme,nameAlt){
     numsalasvideollamada = 1;
     const domain = 'meet.jit.si';
 
@@ -41,7 +41,7 @@ function StartMeeting(roomName, dispNme, nameAlt) {
         userInfo: {
             displayName: dispNme
         },
-        configOverwrite: {
+        configOverwrite:{
             doNotStoreRoom: true,
             startVideoMuted: 0,
             startWithVideoMuted: true,
@@ -52,13 +52,6 @@ function StartMeeting(roomName, dispNme, nameAlt) {
             remoteVideoMenu: {
                 disableKick: true
             },
-            customParticipantMenuButtons: [
-                {
-                    icon: 'data:image/svg+xml;base64,...',
-                    id: 'custom-button',
-                    text: 'Custom Button'
-                }
-            ]
         },
         interfaceConfigOverwrite: {
             filmStripOnly: false,
@@ -87,25 +80,25 @@ function StartMeeting(roomName, dispNme, nameAlt) {
         },
         audioMuteStatusChanged: function (data) {
             //iconos microfono
-            if (data.muted) {
+            if(data.muted) {
                 $("#btnCustomMic").html('<i class="fa fa-microphone-slash" aria-hidden="true"></i>');
                 //$("#btnCustomMic").tooltip({title: "Encender micrófono"});
-                $("#btnCustomMic").prop('title', 'Encender micrófono');
+                $("#btnCustomMic").prop('title','Encender micrófono');
 
             } else {
                 $("#btnCustomMic").html('<i class="fa fa-microphone" aria-hidden="true"></i>');
-                //  $("#btnCustomMic").tooltip({title: "Apagar micrófono"});
-                $("#btnCustomMic").prop('title', 'Apagar micrófono');
+              //  $("#btnCustomMic").tooltip({title: "Apagar micrófono"});
+                $("#btnCustomMic").prop('title','Apagar micrófono');
             }
         },
         videoMuteStatusChanged: function (data) {
-            if (data.muted) {
+            if(data.muted) {
                 $("#btnCustomCamera").html('<i class="fas fa-video-slash"></i>');
-                $("#btnCustomCamera").prop('title', 'Encender Cámara');
+                $("#btnCustomCamera").prop('title','Encender Cámara');
                 //$("#btnCustomCamera").tooltip({title: "Apagar micrófono"});
             } else {
                 $("#btnCustomCamera").html('<i class="fas fa-video"></i>');
-                $("#btnCustomCamera").prop('title', 'Apagar Cámara');
+                $("#btnCustomCamera").prop('title','Apagar Cámara');
                 //$("#btnCustomCamera").tooltip({title: "Apagar Cámara"});
             }
 
@@ -114,18 +107,18 @@ function StartMeeting(roomName, dispNme, nameAlt) {
 
         },
         screenSharingStatusChanged: function (data) {
-            if (data.on) {
+            if(data.on) {
                 $("#btnScreenShareCustom i").css("color", "red");
-                $("#btnScreenShareCustom").prop('title', 'Dejar de compartir pantalla');
+                $("#btnScreenShareCustom").prop('title','Dejar de compartir pantalla');
             } else {
                 $("#btnScreenShareCustom i").css("color", "white");
-                $("#btnScreenShareCustom").prop('title', 'Compartir pantalla');
+                $("#btnScreenShareCustom").prop('title','Compartir pantalla');
             }
         },
-        participantJoined: function (data) {
+        participantJoined: function(data){
             console.log('participantJoined', data);
         },
-        participantLeft: function (data) {
+        participantLeft: function(data){
             console.log('participantLeft', data);
         }
     });

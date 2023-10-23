@@ -186,6 +186,7 @@
                         <option value="apoderado_solicitante_{{ $view }}">Apoderado parte solicitante</option>
                         <option value="solicitada_{{ $view }}">Parte solicitada</option>
                         <option value="conciliador_{{ $view }}">Conciliador</option>
+                        <option value="asistente_{{ $view }}">Asistente</option>
                         <option value="rep_legal_solicitada_{{ $view }}">Rep. Legal parte solicitada</option>
                         <option value="hechos_pretensiones_{{ $view }}">Hechos - Pretensiones</option>
                         <option value="audiencia_{{ $view }}">Audiencia</option>
@@ -211,6 +212,16 @@
                     'tipo_usuario_id' => 203,
                     'parte' => 'conciliador',
                     'view' => 'solicitante_values',
+                    'mySummernote' => $mySummernote,
+                ])
+            </div>
+
+            <div class="content_values_{{ $view }}" style="display: none"
+                id="asistente_{{ $view }}">
+                @include('myforms.conciliaciones.componentes.reportes_values', [
+                    'tipo_usuario_id' => 204,
+                    'parte' => 'asistente',
+                    'view' => 'asistente_values',
                     'mySummernote' => $mySummernote,
                 ])
             </div>

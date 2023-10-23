@@ -20,9 +20,9 @@
             Sancionar
         </button>  --}}
         @else 
-        <button type="button" data-user="{{$user->idnumber}}" data-pivot="{{$user->pivot->id}}" class="btn btn-warning btn-sm btn_quitsancion_usuario_conciliacion">  
+       {{--  <button type="button" data-user="{{$user->idnumber}}" data-pivot="{{$user->pivot->id}}" class="btn btn-warning btn-sm btn_quitsancion_usuario_conciliacion">  
             Quitar sanción
-        </button> 
+        </button>  --}}
         @endif
          
 @endif

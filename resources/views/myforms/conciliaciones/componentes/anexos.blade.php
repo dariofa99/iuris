@@ -15,11 +15,11 @@
                     currentUser()->hasRole('amatai') ||
                     currentUserInConciliacion($conciliacion->id, ['autor', 'auxiliar']))
                 <button type="button" data-category="232" id="btn_create_document"
-                    class="btn_create_document btn btn-primary btn-sm float-right">Subir cédula
+                    class="btn_create_document btn btn-primary btn-sm float-right">Subir documentos
                 </button>
-                <button type="button" data-category="232" id="btn_create_document"
+               {{--  <button type="button" data-category="232" id="btn_create_document"
                     class="btn_create_document mr-1 btn btn-primary btn-sm float-right">Subir pruebas
-                </button>               
+                </button> --}}               
             @endif
         @endif
 
