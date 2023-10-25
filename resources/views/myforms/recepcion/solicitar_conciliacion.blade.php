@@ -94,7 +94,7 @@ $pasos = [
         <div class="col-md-10">
 
           <div class="card">
-            <div class="card-header bg-success">
+            <div class="card-header">
               <br>
              
               @include('myforms.recepcion.menu_buttons',[
@@ -158,6 +158,7 @@ $pasos = [
              </div>
            </div>
           </div>
+          <hr>
           </div>
         </div>
 </div>

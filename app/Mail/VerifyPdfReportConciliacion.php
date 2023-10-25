@@ -35,8 +35,7 @@ class VerifyPdfReportConciliacion extends Mailable
     public function build()
     {
       
-        return $this->from('iuris@udenar.edu.co', 'Verificación de documento')
-        ->subject("Documentos conciliación")
+        return $this->subject("Documentos conciliación")
         ->view('myforms.mails.frm_verify_pdf_report_conciliacion');
     }
 }

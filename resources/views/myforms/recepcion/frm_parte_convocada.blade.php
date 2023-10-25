@@ -8,7 +8,7 @@
                 <div class="checkbox">
                     <label>
                         <input
-                            {{ $conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') ? 'checked' : '' }}
+                        {{ (!$conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') || ($conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') and $user->idnumber == null)) ? 'checked' : '' }}
                             id="chk_not_parte" type="checkbox">
                         No tengo toda la información de la parte convocada
                     </label>
@@ -24,7 +24,7 @@
 
 
         <div class="row" id="content_detalles_solicitada"
-            style="display: {{ ($conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') and $user->idnumber == null) ? 'block' : 'none' }}">
+            style="display: {{ (!$conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') || ($conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') and $user->idnumber == null)) ? 'block' : 'none' }}">
             <div class="col-md-12">
                 <div class="form-group">
                     @include('myforms.conciliaciones.componentes.asunto', [

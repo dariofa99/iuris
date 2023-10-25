@@ -13,16 +13,25 @@ class RegConciliacionCorregir extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $notification;
-
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct(Conciliacion $notification)
-    {
-       $this->notification = $notification;
+    protected $users;
+    protected $cuerpo_correo;
+    protected $conciliacion;
+    protected $asunto;
+    protected $user_created;
+   
+    public function __construct(
+        $users,
+        $cuerpo_correo,
+        Conciliacion $conciliacion,
+        $asunto,
+        $user_created
+    ) {
+       // Log::info($users);
+        $this->users = $users;
+        $this->cuerpo_correo = $cuerpo_correo;
+        $this->conciliacion = $conciliacion;
+        $this->asunto = $asunto;
+        $this->user_created = $user_created;
     }
 
     /**
@@ -33,10 +42,11 @@ class RegConciliacionCorregir extends Mailable
     public function build()
     {
       
-        return $this->view('myforms.mails.formato_correo_',[
-            "mensaje"=>$this->notification->message,
-            "url"=>url("/solicitudes/recepcion/conciliacion/".$this->notification->token."?id=".$this->notification->id."&paso=2")
+        return $this->view('myforms.mails.formato_correo',[
+            "mensaje"=>$this->cuerpo_correo,
+            "url"=>url("/solicitudes/recepcion/conciliacion/".$this->conciliacion->token."?id=".$this->conciliacion->id."&paso=2"),
+            'user_created'=>$this->user_created
         ])
-        ->subject("Estado de conciliación CCEAH");
+        ->subject($this->asunto);
     }
 }

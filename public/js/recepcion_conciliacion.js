@@ -398,10 +398,10 @@ $("#btn_solicitar_conciliacion").on("click",function (e) {
       if (result.value) {
         $("#wait").show();
         var request = {
-          'concepto':"Solicitado por externo",
+          'concepto':"Solicitud de revisión de conciliación",
           'type_status_id':175,
           'conciliacion_id':$("#conciliacion_id").val(),
-          'send_notification':true
+          'send_notification':true 
         }
         const response = await conciliacionService.updateEstado(request);
         window.location.reload(true)     

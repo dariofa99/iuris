@@ -3,21 +3,17 @@
 namespace App\Jobs;
 
 use App\Conciliacion;
-use App\Expediente;
-use App\Notifications\NotificationsSummernote;
-use App\Notifications\SolicitudEstudiantesProcesosJuricosExp;
-use App\Services\UsersService;
-use App\User;
+use App\Mail\RegConciliacionCorregir;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
-class ProcessEmailSendSummernoteNotification implements ShouldQueue
+class ProcessEmailSendConciliacionResponse implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $users;
@@ -25,7 +21,7 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
     protected $conciliacion;
     protected $asunto;
     protected $user_created;
-   
+
     public function __construct(
         $users,
         $cuerpo_correo,
@@ -33,7 +29,7 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
         $asunto,
         $user_created
     ) {
-       // Log::info($users);
+         Log::info($users);
         $this->users = $users;
         $this->cuerpo_correo = $cuerpo_correo;
         $this->conciliacion = $conciliacion;
@@ -49,11 +45,12 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
     public function handle()
     {
         Log::info($this->cuerpo_correo);
-        Notification::send($this->users, new NotificationsSummernote(
+        Mail::to($this->users)->send(new RegConciliacionCorregir(
+            $this->users,
             $this->cuerpo_correo,
             $this->conciliacion,
             $this->asunto,
-            $this->user_created
+            $this->user_created,
         ));
     }
 }

@@ -22,11 +22,13 @@ class NotificationsSummernote extends Notification
     public $mensaje;
     public $conciliacion;
     public $asunto;
-    public function __construct($mensaje,$conciliacion,$asunto)
+    protected $user_created;
+    public function __construct($mensaje,$conciliacion,$asunto,$user_created)
     {
        $this->mensaje = $mensaje; 
        $this->asunto = $asunto;  
-       $this->conciliacion = $conciliacion;        
+       $this->conciliacion = $conciliacion;  
+       $this->user_created = $user_created;        
     }
     /**
      * Get the notification's delivery channels.
@@ -52,7 +54,8 @@ class NotificationsSummernote extends Notification
         ->subject($this->asunto)
         ->view('myforms.mails.formato_correo',[
                 'mensaje'=>$this->mensaje,
-                'url'=>url('/conciliaciones/'.$this->conciliacion->id.'/edit')
+                'url'=>url('/conciliaciones/'.$this->conciliacion->id.'/edit'),
+                'user_created'=> $this->user_created
         ]);
 
     }

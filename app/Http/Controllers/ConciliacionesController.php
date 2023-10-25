@@ -13,11 +13,11 @@ use App\ReferencesStaticData;
 use App\ConciliacionComentario;
 use App\ConciliacionEstado;
 use App\ConciliacionPdfTemporal;
-
 use App\AudienciaConciliacion;
 use App\ConciliacionEstadoFileCompartido;
 use App\ConciliacionEstadoReporteGenerado;
 use App\Expediente;
+use App\Jobs\ProcessEmailSendConciliacionResponse;
 use App\Jobs\ProcessEmailSendSummernoteNotification;
 use App\Mail\RegConciliacionCorregir;
 use App\Mail\RegConciliacionSuccess;
@@ -29,7 +29,6 @@ use App\PdfReporteDestino;
 use App\Periodo;
 use App\Traits\PdfReport as TraitPdf;
 use PDF;
-use Storage;
 use App\SalasAlternasConciliacion;
 use App\Services\ConciliacionComentarioService;
 use App\Services\ConciliacionesService;
@@ -44,6 +43,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class ConciliacionesController extends Controller
 {
@@ -316,7 +316,7 @@ class ConciliacionesController extends Controller
 
 
 
-        //  return response()->json($reportes);
+          //return response()->json($request->all());
 
 
         $request['user_id'] = Auth::user()->id;
@@ -356,7 +356,7 @@ class ConciliacionesController extends Controller
                 ['conciliacion_id' => $conciliacion->id, 'user_id' => currentUser()->id]
             );
         }
-
+        $user_created = currentUser()->name." ".currentUser()->lastname;
         if ($conciliacion->estado_id == 175) { //Enviado a revision
             if (count($conciliacion->actuaciones) > 0) {
                 $actuacion = $conciliacion->actuaciones[0];
@@ -368,7 +368,22 @@ class ConciliacionesController extends Controller
             }
             if ($request->has("send_notification")) {
                 $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
-                Notification::send($users, new SolicitudRadicarConciliacion($estado));
+                ProcessEmailSendSummernoteNotification::dispatch(
+                    $users,
+                    $estado->concepto,
+                    $conciliacion,
+                    "Solicitud de conciliación",
+                    $user_created
+                )
+                    ->onConnection('database')->onQueue('emails');;
+                  /*   Notification::send($users, new NotificationsSummernote(
+                        $estado->concepto,
+                        $conciliacion,
+                        "Revision por favor",
+                        $user_created
+                    )); */
+
+                //Notification::send($users, new SolicitudRadicarConciliacion($estado,$user_created));
             }
         }
 
@@ -378,13 +393,38 @@ class ConciliacionesController extends Controller
             //$conciliacion->fecha_radicado = date('Y-m-d H:i:s');
             $conciliacion->save();
             $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
-            Notification::send($users, new SolicitudRadicarConciliacion($estado));
+            ProcessEmailSendSummernoteNotification::dispatch(
+                $users,
+                $request->cuerpo_correo,
+                $conciliacion,
+                $request->asunto,
+                $user_created
+            )
+                ->onConnection('database')->onQueue('emails');;
+            //Notification::send($users, new SolicitudRadicarConciliacion($estado,$user_created));
         }
 
         if ($conciliacion->estado_id == 176) { //corregir
-            $conciliacion->message = $estado->concepto;
-            $user = $conciliacion->getUser(205);
-            if ($user->id != null and $conciliacion->categoria_id == 219) Mail::to($user)->send(new RegConciliacionCorregir($conciliacion));
+            
+            $users = $conciliacion->getUser(205);
+            if ($users->id != null and $conciliacion->categoria_id == 219){     
+                ProcessEmailSendConciliacionResponse::dispatch(
+                    $users,
+                    $estado->concepto,
+                    $conciliacion,
+                    "Solicitud de correcciones",
+                    $user_created
+                    
+                )
+                    ->onConnection('database')->onQueue('emails');;
+                    /* Notification::send($users, new NotificationsSummernote(
+                        $estado->concepto,
+                        $conciliacion,
+                        "Solicitud de correcciones",
+                        $user_created
+                    )); */
+               // Mail::to($user)->send(new SolicitudRadicarConciliacion($estado,$user_created ));
+            } 
         }
 
         $view = view('myforms.conciliaciones.componentes.conciliacion_estados_ajax', compact('conciliacion'))->render();
@@ -987,7 +1027,7 @@ class ConciliacionesController extends Controller
         $us = json_decode($us);
         return response()->json($us);
         $mensaje =  ConciliacionEstado::find(153);
-        Notification::send($us, new SolicitudRadicarConciliacion($mensaje));
+       // Notification::send($us, new SolicitudRadicarConciliacion($mensaje,$user_created));
     }
 
     public function enviarCorreo(Request $request)
@@ -1000,15 +1040,8 @@ class ConciliacionesController extends Controller
             $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
         }
         $comentario = $this->conciliacionComentariosService->store($request);
-        /*     ConciliacionComentario::create([
-        'comentario'=> $request->cuerpo_correo,
-        'user_id' => Auth::user()->id,
-        'asunto'=>$request->asunto,
-        'reporte_id'=>$request->reporte_id,
-        'conciliacion_id'=>$request->conciliacion_id
-    ]); */
         $conciliacion = Conciliacion::find($request->conciliacion_id);
-
+        $user_created = currentUser()->name." ".currentUser()->lastname;
         if ($request->has('pivot_id') and $request->get('pivot_id') != '' and $request->get('pivot_id') != null) {
             $update = $conciliacion->usuarios()
                 ->where('conciliacion_has_user.id', $request->pivot_id)->first();
@@ -1019,7 +1052,8 @@ class ConciliacionesController extends Controller
             $users,
             $request->cuerpo_correo,
             $conciliacion,
-            $request->asunto
+            $request->asunto,
+            $user_created
         )
             ->onConnection('database')->onQueue('emails');;
         //Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo ,$conciliacion , $request->asunto ));

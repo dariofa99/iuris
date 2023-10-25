@@ -571,7 +571,19 @@ Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
+ $message = "Espero que te encuentres bien. <br><br>
+ Hemos recibido tu solicitud de conciliación jurídica y queremos asegurarte que estamos aquí para ayudarte.
+ Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>
+ Nuestro equipo legal está preparado para guiarte a lo largo de todo el proceso de conciliación, brindándote el apoyo necesario y respondiendo todas tus preguntas o inquietudes.
  
+ ";
+
+  return view('myforms.mails.formato_correo',[
+    'mensaje'=>$message,
+    'url'=>url("/solicitudes/recepcion/conciliacion/123?id=10&paso=2"),
+    'user_created'=>"Dario Narvaez"
+]);
+
  /*  $user = User::where('idnumber',3030)->first();
   $request = ['cursando_id' => 115];
   $user->asignarTurno($request); */

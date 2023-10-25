@@ -24,7 +24,7 @@ class RegConciliacionSuccess extends Mailable
     {
        $this->notification = $notification;
     }
-
+ 
     /**
      * Build the message.
      *
@@ -32,11 +32,14 @@ class RegConciliacionSuccess extends Mailable
      */
     public function build()
     {
-      
-        return $this->view('myforms.mails.formato_correo_',[
-            "mensaje"=>"Gracias por utilizar nuestros servicios.<br>Puedes dar clic en el siguente botón para seguir la solicitud.",
+        $message = "<br><br>
+        Hemos recibido tu solicitud de conciliación y queremos asegurarte que estamos aquí para ayudarte.
+        Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>
+        Recuerda estar pendiente de tus datos de contacto para comunicarnos.";
+        return $this->view('myforms.mails.formato_correo',[
+            "mensaje"=> $message,
             "url"=>url("/solicitudes/recepcion/conciliacion/".$this->notification->token."?id=".$this->notification->id."&paso=2")
         ])
-        ->subject("Solicitud de conciliación CCEAH");
+        ->subject("Solicitud de conciliación");
     }
 }

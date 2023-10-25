@@ -20,7 +20,10 @@
                                 style="font-size: 18px; line-height: 25.2px; color: #666666;">
                                 {!! $mensaje !!} </span>
                         </p>
-                       
+                        @if(isset($user_created))
+                        <hr>
+                            <h4>Enviado por:  {!!  $user_created !!}</h4>
+                        @endif
                     </div>
 
                 </td>

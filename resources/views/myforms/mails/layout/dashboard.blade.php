@@ -12,8 +12,6 @@
     <title></title>
 
     <style type="text/css">
-    
-
         @media only screen and (min-width: 620px) {
             .u-row {
                 width: 600px !important;
@@ -90,18 +88,14 @@
             text-decoration: none !important;
         }
 
-        table,
-        td {
-            color: #000000;
-        }
-
+      
         #u_body a {
             color: #161a39;
             text-decoration: underline;
         }
     </style>
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap" rel="stylesheet" type="text/css">
-   </head>
+</head>
 
 <body class="clean-body u_body"
     style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #f9f9f9;color: #000000">
@@ -112,34 +106,43 @@
             <tr style="vertical-align: top;">
                 <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
 
-                    @include('myforms.mails.layout.header')
-
-
+                    @if (config('app.name') == 'ConciliApp')
+                        @include('myforms.mails.layout.conciliapp_header')
+                    @else
+                        @include('myforms.mails.layout.header')
+                    @endif
 
                     <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
-                            <div  style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                        <div class="u-row"
+                            style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
+                            <div
+                                style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
 
                                 <div class="u-col u-col-100"
                                     style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
                                     <div style="height: 100%;width: 100% !important;">
-                                        <div   style="box-sizing: border-box; min-height: 350px; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                                            @yield('area_content')                                    
-                                            
+                                        <div
+                                            style="box-sizing: border-box; min-height: 350px; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
+                                            @yield('area_content')
+
                                         </div>
                                     </div>
                                 </div>
-                              
+
                             </div>
                         </div>
                     </div>
+                    @if (config('app.name') == 'ConciliApp')
+                        @include('myforms.mails.layout.conciliapp_footer')
+                    @else
+                        @include('myforms.mails.layout.footer')
+                    @endif
 
-                    @include('myforms.mails.layout.footer')                             
                 </td>
             </tr>
         </tbody>
     </table>
-    
+
 </body>
 
 </html>

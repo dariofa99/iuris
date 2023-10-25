@@ -1,4 +1,4 @@
-<div class="u-row-container" style="padding: 0px;background-color: transparent">
+<div class="u-row-container" style="padding: 0px;background-color: transparent;margin-top:5px">
                         <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #222d32;">
                             <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
                                    <div class="u-col u-col-50"

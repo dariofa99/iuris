@@ -20,9 +20,11 @@ class SolicitudRadicarConciliacion extends Notification
      * @return void
      */
     public $conciliacion;
-    public function __construct(ConciliacionEstado $conciliacion)
+    public $user_created;
+    public function __construct(ConciliacionEstado $conciliacion,$user_created)
     {
-       $this->conciliacion = $conciliacion;        
+       $this->conciliacion = $conciliacion;
+       $this->user_created = $user_created;        
     }
 
     /**
@@ -44,12 +46,13 @@ class SolicitudRadicarConciliacion extends Notification
      */
     public function toMail($notifiable)
     {
-       
+        
         return (new MailMessage($notifiable))
         ->subject('Solicitud de radicado conciliación')
-        ->view('myforms.mails.solicitud_radicado_conciliacion',[
+        ->view('myforms.mails.formato_correo',[
                 'mensaje'=>$this->conciliacion->concepto,
-                'url'=>url('/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit')
+                'url'=>url('/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit'),
+                'user_created'=>$this->user_created
         ]);
 
     }
