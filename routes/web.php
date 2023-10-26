@@ -571,6 +571,11 @@ Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
 
 Route::get('/prueba', function () {
+  $user = User::where('email','darioj99@udenar.edu.co')->first();
+  $conciliacion = Conciliacion::first();
+  
+  Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
+  dd(  $conciliacion);
  $message = "Espero que te encuentres bien. <br><br>
  Hemos recibido tu solicitud de conciliación jurídica y queremos asegurarte que estamos aquí para ayudarte.
  Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>

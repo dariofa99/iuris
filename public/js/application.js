@@ -51,7 +51,6 @@ $(document).ready(function () {
 });
 
 function validateEmail(obj) {
-
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($(obj).val()) || $(obj).val() == '') {
         return (true)
     }

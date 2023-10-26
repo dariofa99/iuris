@@ -86,14 +86,14 @@ if (!isset($modo_nav_crl)) {
         <!-- /:main Sidebar Container -->
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper pt-1">
 
             <!-- Content Header (Page header) -->
             <input type="hidden" id="olderInputValue">
              
                <input type="hidden" id="authdata"  value="{{ Auth::user() }}">
  
-            <div style="min-height: 450px;" class="card card-success card-outline">
+            <div style="min-height: 450px;" class="card  card-{{config('app.name') == 'ConciliApp' ? 'purple' : 'success'}} card-outline">
                 <div class="card-header">
                     @yield('titulo_area')
                     @yield('area_buttons')

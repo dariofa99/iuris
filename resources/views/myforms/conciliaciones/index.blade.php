@@ -8,10 +8,11 @@
     @if (!currentuser()->can('crear_conciliaciones'))
         <a href="/conciliaciones/create" id="btn_new_conciliacion" class="btn btn-success">
             Solicitar nueva conciliación</a>
+            @else
+            Conciliaciones
     @endif
 @endsection
 @section('navbar')
-    <!-- aqui va el menu de cada vista -->
     @include('content.navbar')
 @endsection
 @section('area_forms')

@@ -1,12 +1,17 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-{{ $sidebar_modo }}-primary elevation-4" style="background-color:#222d32">
+<aside class="main-sidebar sidebar-{{ $sidebar_modo }}-primary elevation-4" style="background-color:{{ config('app.name') == 'ConciliApp' ? 'rgb(74, 41, 123)' : '#222d32' }}">
     <!-- Brand Logo -->
 
     <a href="/home" class="brand-link"
-        style="background-color: #374850 !important; padding: .4125rem .5rem;text-align: center;">
-        <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Lybra" class="img-fluid"
-            style="border-radius: 20px;height:42px">
-        <span class="brand-text font-weight-{{ $sidebar_brand_modo }}"></span> IURIS </span>
+        style="background-color: {{ config('app.name') == 'ConciliApp' ? '#ffffff' : '#222d32' }} !important; padding: .4125rem .5rem;text-align: center;">
+        @if (config('app.name') == 'ConciliApp')
+            <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
+        @else
+            <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Lybra" class="img-fluid"
+                style="border-radius: 20px;height:42px">
+            <span class="brand-text font-weight-{{ $sidebar_brand_modo }}"></span> IURIS </span>
+        @endif
+
     </a>
 
 
@@ -69,7 +74,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                  <li
+                <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
                     <a href="#" class="nav-link">
@@ -80,14 +85,14 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                       
+
                         <li class="nav-item ml-3">
                             <a href="{{ route('expedientes.index') }}" class="nav-link">
                                 {{--  <i class="fas fa-clipboard nav-icon"></i> --}}
                                 <p>Ver expedientes</p>
                             </a>
                         </li>
-                       
+
                         @if (currentUser()->can('crear_expediente'))
                             <li class="nav-item ml-3">
                                 <a href="{{ route('expedientes.create') }}" class="nav-link">

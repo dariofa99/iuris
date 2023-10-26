@@ -5,12 +5,12 @@ $modo_nav_crl="light";
 $modo_sidebar="light";
 //modo oscuro/claro nav superior 
 $color_nav="green";
-$modo_nav="dark";
+$modo_nav= config('app.name') == 'ConciliApp' ? 'light' : 'dark';
 }
 ?>
 
 
-  <nav class="main-header navbar navbar-expand navbar-{{ $color_nav  }} navbar-{{ $modo_nav  }}">
+  <nav style="color:#000000;background-color: {{ config('app.name') == 'ConciliApp' ? '#ffffff' : 'green' }}" class="main-header navbar navbar-expand navbar-{{ $color_nav  }} navbar-{{ $modo_nav  }}">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
