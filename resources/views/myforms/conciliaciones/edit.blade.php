@@ -158,12 +158,12 @@
             @endif
 
            
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link urlactive" id="notas-tab" data-toggle="tab" href="#notas"
                     role="tab" aria-controls="notas" aria-selected="false">
                     Notas
                 </a>
-            </li>
+            </li> --}}
            
 
             </ul>
@@ -188,9 +188,9 @@
                 <div class="tab-pane fade " id="audiencia" role="tabpanel" aria-labelledby="audiencia-tab">
                     @include('myforms.conciliaciones.conciliacion_audiencia')
                 </div>
-                <div class="tab-pane fade " id="notas" role="tabpanel" aria-labelledby="notas-tab">
+                {{-- <div class="tab-pane fade " id="notas" role="tabpanel" aria-labelledby="notas-tab">
                     @include('myforms.conciliaciones.conciliacion_notas')
-                </div>
+                </div> --}}
 
             </div>
                     
