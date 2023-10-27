@@ -1,7 +1,7 @@
 @component('components.modal')
 	
 	@slot('trigger')
-        myModalCreateConcHechosPretenciones
+        myModalCreateConcHechosPretensiones
 	@endslot
 
 	@slot('title')
@@ -15,7 +15,7 @@
 		<div class="col-md-12">
 	
     
-            <form method="POST" class="form_store" accept-charset="UTF-8" id="myformCreateHechoPretencion">
+            <form method="POST" class="form_store" accept-charset="UTF-8" id="myformCreateHechoPretension">
     
       <input type="hidden" name="id">
       <input type="hidden" name="tipo_id">

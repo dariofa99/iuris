@@ -1,5 +1,5 @@
-<script>
-    @if (Session::has('message-information'))
+<script> 
+    @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         var message = '';
         message += '<div class="alert alert-success" style="font-size:18px">';
         message += `<h4>

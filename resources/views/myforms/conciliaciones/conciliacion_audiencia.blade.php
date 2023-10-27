@@ -145,13 +145,13 @@
 
 @if(((currentUser()->can('act_conciliacion')))
 || (currentUserInConciliacion($conciliacion->id,['auxiliar','conciliador'])))
-@if($conciliacion->estado_id==181)
+{{-- @if($conciliacion->estado_id==181) --}}
 <hr>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group" >
               <label style="display: block; margin-bottom:10px">Acuerdos
-                   <button type="button" data-tipo="208" class="btn btn-primary btn-sm pull-right btn_add_conc_he_con"> Agregar Acuerdo</button>       
+                   <button type="button" data-tipo="208" class="btn btn-warning btn-sm float-right btn_add_conc_he_con"> Agregar Acuerdo</button>       
               </label>
             <div id="content_hechos_pretensiones-208" class="content_hechos_pretensiones">
                 @include('myforms.conciliaciones.componentes.hechos_pretenciones_ajax',[
@@ -161,7 +161,7 @@
         </div>
     </div>
 </div>
-@endif
+{{-- @endif --}}
 @endif
 
 @endif

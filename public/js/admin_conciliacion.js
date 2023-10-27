@@ -340,6 +340,84 @@ $(document).ready(function () {
     }
   });
 
+  $(".btn_add_conc_he_con").on("click", function (e) {
+    e.preventDefault();
+    $("#myformEditHechoPretension").attr('id', 'myformCreateHechoPretension');
+    $("#myformCreateHechoPretension input[name=id]").val('')
+    $("#myformCreateHechoPretension textarea[name=descripcion]").val('')
+    $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'))
+    $("#myModalCreateConcHechosPretensiones").modal('show');
+  });
+
+  $(".content_hechos_pretensiones").on("click", '.btn_editar_hepr', async function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id');
+    $("#wait").show();
+    const response = await conciliacionService.editHechoPretension(id);
+    $("#myformCreateHechoPretension").attr('id', 'myformEditHechoPretension');
+    $("#myformEditHechoPretension input[name=id]").val(response.id)
+    $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
+    $("#myformEditHechoPretension textarea[name=descripcion]").val(response.descripcion);
+    $("#wait").hide();
+    $("#myModalCreateConcHechosPretensiones").modal('show');
+  });
+
+  $("#myModalCreateConcHechosPretensiones").on("submit", '#myformCreateHechoPretension', async function (e) {
+    e.preventDefault()
+    $("#wait").show();
+    var request = convertFormToJSON("myformCreateHechoPretension");
+    request['conciliacion_id'] = $("#conciliacion_id").val()
+    e.preventDefault()
+    const response = await conciliacionService.addHechosPretensiones(request);
+    if (response.view || response.view == "") {
+      $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
+    }
+    $("#myModalCreateConcHechosPretensiones").modal('hide');
+    $("#wait").hide();
+  });
+  $("#myModalCreateConcHechosPretensiones").on("submit", '#myformEditHechoPretension', async function (e) {
+    e.preventDefault()
+    $("#wait").show();
+    var request = convertFormToJSON("myformEditHechoPretension");
+    request['conciliacion_id'] = $("#conciliacion_id").val();
+    var id = $("#myformEditHechoPretension input[name=id]").val();
+    $("#wait").show();
+    const response = await conciliacionService.updateHechosPretensiones(request, id);
+    if (response.view || response.view == "") {
+      $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
+    }
+    $("#wait").hide();
+    $("#myModalCreateConcHechosPretensiones").modal('hide');
+    $("#myModal_create_estado_pretension").modal('hide')
+
+
+  });
+
+  $(".content_hechos_pretensiones").on("click",'.btn_eliminar_hepr', async function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id');
+    Swal.fire({
+        title: 'Esta seguro que desea eliminar el registro?',
+        text: "No se podrá revertir los cambios!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'No, mantener!'
+      }).then(async (result) => {
+        if (result.value) {      
+          $("#wait").show()        
+            const response = await conciliacionService.deleteFile(id);
+            if (response.view || response.view == "") {
+              $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
+          }
+          $("#wait").hide() 
+          $("#myModalCreateConcHechosPretensiones").modal('hide');
+                    
+        }
+      });   
+  });
   $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", async function (e) {
     e.preventDefault()
     var request = new FormData($(this)[0]);

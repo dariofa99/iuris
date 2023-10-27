@@ -875,3 +875,8 @@ body{
 	border: none;
 }
 
+.list_hp{
+	list-style: none;
+	text-align: justify;
+	border: 2px solid red;;
+}

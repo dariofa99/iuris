@@ -40,15 +40,15 @@ trait PdfReport
                     }
                     if ($data->table == 'conc_hechos_preten') {
                         // dd($data );
-                        $id = $data->short_name == 'hechos' ? 206 : 207;
+                        $id = $data->short_name == 'hechos' ? 206 : (($data->short_name == 'acuerdos') ? 208 : 207);
                         $hechos = $conciliacion
                             ->hechos_pretensiones()
                             ->where('tipo_id', $id)
                             ->get();
                         if (count($hechos) > 0) {
-                            $hechos_cadena = "<ul class='list_hp'>";
+                            $hechos_cadena = "<ul class='list_hp' style='text-align:justify'>";
                             foreach ($hechos as $key => $hp) {
-                                $hechos_cadena .= '<li>' . $hp->descripcion . '</li>';
+                                $hechos_cadena .= "<li style='padding:2px;margin-bottom:2px'> " . $hp->descripcion . '</li>';
                             }
                             $hechos_cadena .= '</ul>';
                             $bodytag = str_replace($data->name, $hechos_cadena, $bodytag);

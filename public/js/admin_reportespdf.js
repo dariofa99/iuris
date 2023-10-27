@@ -316,7 +316,7 @@ $(document).ready(function () {
             var request = convertFormToJSON("myFormAsigReporte");
             $("#wait").show();
             let response = await formatosService.asignarReporte(request);
-            toastr.success("Bien", "", {
+            toastr.success("Asignado con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });

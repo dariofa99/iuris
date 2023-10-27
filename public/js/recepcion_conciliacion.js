@@ -207,11 +207,11 @@ $(function () {
 
     $(".btn_add_conc_he_con").on("click",function (e) {
       e.preventDefault();
-      $("#myformEditHechoPretencion").attr('id','myformCreateHechoPretencion');
-      $("#myformCreateHechoPretencion input[name=id]").val('')
-      $("#myformCreateHechoPretencion textarea[name=descripcion]").val('')
-      $("#myformCreateHechoPretencion input[name=tipo_id]").val($(this).attr('data-tipo'))
-      $("#myModalCreateConcHechosPretenciones").modal('show'); 
+      $("#myformEditHechoPretension").attr('id','myformCreateHechoPretension');
+      $("#myformCreateHechoPretension input[name=id]").val('')
+      $("#myformCreateHechoPretension textarea[name=descripcion]").val('')
+      $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'))
+      $("#myModalCreateConcHechosPretensiones").modal('show'); 
       $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos": "Agregando pretensiones")
   });
 
@@ -237,17 +237,17 @@ $(function () {
     $("#myModal_create_document").modal("show");
 });
 
-$("#myModalCreateConcHechosPretenciones").on("submit",'#myformCreateHechoPretencion', async function (e) {
+$("#myModalCreateConcHechosPretensiones").on("submit",'#myformCreateHechoPretension', async function (e) {
+  e.preventDefault()
   $("#wait").show();
-  var request = convertFormToJSON("myformCreateHechoPretencion");
+  var request = convertFormToJSON("myformCreateHechoPretension");
   request['conciliacion_id'] = $("#conciliacion_id").val()
   e.preventDefault()
   const response = await conciliacionService.addHechosPretensiones(request);
-  
-   if (response.view || response.view == "") {
+  if (response.view || response.view == "") {
     $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
   }
-  $("#myModalCreateConcHechosPretenciones").modal('hide');
+  $("#myModalCreateConcHechosPretensiones").modal('hide');
   $("#wait").hide();
 });
 
@@ -283,7 +283,7 @@ $(".content_hechos_pretensiones").on("click",'.btn_eliminar_hepr', async functio
           if (response.view || response.view == "") {
             $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
         }
-        $("#myModalCreateConcHechosPretenciones").modal('hide');
+        $("#myModalCreateConcHechosPretensiones").modal('hide');
                   
       }
     });   
@@ -295,27 +295,27 @@ $(".content_hechos_pretensiones").on("click",'.btn_editar_hepr',async function (
   var id = $(this).attr('data-id');
   $("#wait").show();
   const response = await conciliacionService.editHechoPretension(id);
-  $("#myformCreateHechoPretencion").attr('id','myformEditHechoPretencion');
-  $("#myformEditHechoPretencion input[name=id]").val(response.id)
-  $("#myformEditHechoPretencion input[name=tipo_id]").val(response.tipo_id)
-  $("#myformEditHechoPretencion textarea[name=descripcion]").val(response.descripcion);
+  $("#myformCreateHechoPretension").attr('id','myformEditHechoPretension');
+  $("#myformEditHechoPretension input[name=id]").val(response.id)
+  $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
+  $("#myformEditHechoPretension textarea[name=descripcion]").val(response.descripcion);
   $("#wait").hide();
-  $("#myModalCreateConcHechosPretenciones").modal('show');
+  $("#myModalCreateConcHechosPretensiones").modal('show');
 });
 
-$("#myModalCreateConcHechosPretenciones").on("submit",'#myformEditHechoPretencion',async function (e) {
+$("#myModalCreateConcHechosPretensiones").on("submit",'#myformEditHechoPretension',async function (e) {
   e.preventDefault()
   $("#wait").show();
-  var request = convertFormToJSON("myformEditHechoPretencion");
+  var request = convertFormToJSON("myformEditHechoPretension");
   request['conciliacion_id'] = $("#conciliacion_id").val();  
-  var id = $("#myformEditHechoPretencion input[name=id]").val();
+  var id = $("#myformEditHechoPretension input[name=id]").val();
   $("#wait").show();
   const response = await conciliacionService.updateHechosPretensiones(request,id);
   if (response.view || response.view == "") {
     $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
 }
 $("#wait").hide();
-$("#myModalCreateConcHechosPretenciones").modal('hide');  
+$("#myModalCreateConcHechosPretensiones").modal('hide');  
 $("#myModal_create_estado_pretension").modal('hide')
 
   

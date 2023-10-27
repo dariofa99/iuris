@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
 
     <a href="/home" class="brand-link"
-        style="background-color: {{ config('app.name') == 'ConciliApp' ? '#ffffff' : '#222d32' }} !important; padding: .4125rem .5rem;text-align: center;">
+        style="background-color: {{ config('app.name') == 'ConciliApp' ? '#ffffff' : '#374850' }} !important; padding: .4125rem .5rem;text-align: center;">
         @if (config('app.name') == 'ConciliApp')
             <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
         @else

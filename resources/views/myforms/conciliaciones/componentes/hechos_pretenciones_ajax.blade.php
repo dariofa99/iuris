@@ -14,21 +14,15 @@
       </small>
      
       @if($hecho->user_id == auth()->user()->id)
-      @if(($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194))
+     {{--  @if(($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194)) --}}
       @if($tipo_id=='207' and !Request::has("id"))
       <a href="#" data-id="{{$hecho->id}}" data-estado_id="{{$hecho->estado_id}}"  class="btn_estado_hepr pull-right btn_hepr"> Estado </a>
       @endif
       <a href="#"  data-id="{{$hecho->id}}" class="btn_editar_hepr pull-right btn_hepr"> Editar </a> 
       <a href="#" data-id="{{$hecho->id}}" class="btn_eliminar_hepr pull-right btn_hepr"> Eliminar</a>
+     {{--  @endif --}}
       @endif
-      @endif
-       {{--  <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Editar <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-id="{{$hecho->id}}" class="btn_editar_hepr">Editar</a></li>
-          <li><a href="#" data-id="{{$hecho->id}}" class="btn_eliminar_hepr">Eliminar</a></li>      
-        </ul> --}}
+       
       </div>
 </div>
        

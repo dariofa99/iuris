@@ -188,7 +188,7 @@
                         <option value="conciliador_{{ $view }}">Conciliador</option>
                         <option value="asistente_{{ $view }}">Asistente</option>
                         <option value="rep_legal_solicitada_{{ $view }}">Rep. Legal parte solicitada</option>
-                        <option value="hechos_pretensiones_{{ $view }}">Hechos - Pretensiones</option>
+                        <option value="hechos_pretensiones_{{ $view }}">Hechos - Pretensiones - Acuerdos</option>
                         <option value="audiencia_{{ $view }}">Audiencia</option>
                         <option value="personalizado_{{ $view }}">Personalizado</option>
                         <option value="info_conciliacion_{{ $view }}">Información de conciliación</option>
@@ -280,6 +280,13 @@
                         <small data-table="conc_hechos_preten" data-summernote="{{ $mySummernote }}"
                             data-short_name="pretensiones" class="item_con" user-type="hepr"
                             data-name="pretensiones">Pretensiones</small>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group item_value">
+                        <small data-table="conc_hechos_preten" data-summernote="{{ $mySummernote }}"
+                            data-short_name="acuerdos" class="item_con" user-type="hepr"
+                            data-name="acuerdos">Acuerdos</small>
                     </div>
                 </div>
             </div>
