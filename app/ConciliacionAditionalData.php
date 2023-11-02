@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ConciliationAditionalStaticData extends Model
+class ConciliacionAditionalData extends Model
 {
-    protected $table = 'conciliacion_adst_data';
+    protected $table = 'conciliacion_aditional_data';
     protected $fillable = ['value',
     'value_is_other',
     'reference_data_id',

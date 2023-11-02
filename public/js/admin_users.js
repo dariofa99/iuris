@@ -42,7 +42,7 @@ $(document).ready(function () {
           type: $(obj).attr("data-type"),
           name: $(obj).attr("data-name"),
           option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).val()).val(),
+          value_is_other: $("#value_other_text-" + $(obj).attr('data-reference_id')).val(),
           conciliacion_id: $("#conciliacion_id").val()
         });
       });
@@ -197,7 +197,7 @@ $(document).ready(function () {
           type: $(obj).attr("data-type"),
           name: $(obj).attr("data-name"),
           option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).attr('data-id')).val(),
+          value_is_other: $("#value_other_text-" + $(obj).attr('data-reference_id')).val(),
 
         });
       });

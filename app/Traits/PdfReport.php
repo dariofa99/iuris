@@ -13,10 +13,14 @@ trait PdfReport
         if ($conciliacion != null) {
             $json = json_decode($reporte->report_keys);
             $bodytag = $reporte->reporte;
+           
             if (count($json) > 0) {              
-                foreach ($json as $key => $data) {                    
-                    foreach (
-                        $conciliacion
+                foreach ($json as $key => $data) {   
+                    //dd($json );   
+                    if($data->table == 'users'){
+
+                    }        
+                    foreach ($conciliacion
                             ->usuarios()
                             ->where('tipo_usuario_id', $data->user_type)
                             ->orderBy('conciliacion_has_user.created_at', 'desc')

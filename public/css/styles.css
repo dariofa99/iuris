@@ -517,14 +517,14 @@ background:#F4F6F6;
 }
 .item_con {
 	cursor: pointer;
+	display: block;
 	
 }
 
 .item_value{
 	padding: 2px;
 	padding-left: 5px;
-	padding-right: 5px;
-	cursor: pointer;
+	padding-right: 5px;	
 	border: 1px solid #bbb3b3;
 	border-radius: 3px;
 }

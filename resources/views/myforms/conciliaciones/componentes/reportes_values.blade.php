@@ -1,2 +1,2 @@
 
-@include('myforms.conciliaciones.componentes.'.$view) 
+@include('myforms.conciliaciones.componentes.'.$view)

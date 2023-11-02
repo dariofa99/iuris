@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePdfReportPersonalizedValuesTable extends Migration
+class CreateConciliacionAditionalData extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePdfReportPersonalizedValuesTable extends Migration
      */
     public function up()
     {
-        /* Schema::create('pdf_report_personalized_values', function (Blueprint $table) {
+        Schema::create('conciliacion_aditional_data', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('value')->nullable();  
             $table->string('value_is_other')->nullable();                             
@@ -23,11 +23,11 @@ class CreatePdfReportPersonalizedValuesTable extends Migration
             $table->integer('reference_data_option_id')->unsigned(); 
             $table->foreign('reference_data_option_id')->references('id') 
             ->on('references_data_options')->onDelete('cascade')->onUpdate('cascade');
-            $table->bigInteger('reporte_id')->unsigned();
-            $table->foreign('reporte_id')->references('id')->on('pdf_reportes')->onDelete('cascade')
+            $table->integer('conciliacion_id')->unsigned();
+            $table->foreign('conciliacion_id')->references('id')->on('conciliaciones')->onDelete('cascade')
             ->onUpdate('cascade');	
             $table->timestamps();
-        }); */
+        });
     }
 
     /**
@@ -37,6 +37,6 @@ class CreatePdfReportPersonalizedValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pdf_report_personalized_values');
+        Schema::dropIfExists('conciliacion_aditional_data');
     }
 }

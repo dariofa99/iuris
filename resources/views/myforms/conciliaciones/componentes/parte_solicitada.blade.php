@@ -51,10 +51,10 @@
     <div id="user_solicitante_form">
         @include('myforms.conciliaciones.componentes.user_partesolicitada_form')
     </div>
-</div>
+</div> 
 
 <div class="row" id="content_detalles_solicitada"
-    style="display: {{ ($conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') and $user->idnumber == null) ? 'block' : 'none' }}">
+    style="display: {{ ($user->idnumber == null) ? 'block' : 'none' }}">
     <div class="col-md-12">
         <div class="form-group">
             @include('myforms.conciliaciones.componentes.asunto', [

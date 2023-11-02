@@ -93,8 +93,8 @@ function validateForm(form) {
     var errors = [];
 
     $("#" + form + " .required").each(function (index, obj) {
-
-        if ($(obj).attr('disabled') != 'disabled') {
+       
+        if ($(obj).attr('disabled') != 'disabled' && !$(obj).is("input[type='hidden']")) {
             if ($(obj).is("input, select, textarea") && !$(this).is("div") && $(this).val() == '') {
                 console.log($(obj));
                 var inputElement = $(obj);

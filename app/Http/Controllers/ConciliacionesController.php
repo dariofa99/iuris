@@ -8,8 +8,8 @@ use App\Turno;
 use App\File;
 use App\TablaReferencia;
 use App\User;
-use App\ConciliationAditionalStaticData;
-use App\ReferencesStaticData;
+use App\ConciliacionAditionalData;
+use App\ReferencesData;
 use App\ConciliacionComentario;
 use App\ConciliacionEstado;
 use App\ConciliacionPdfTemporal;
@@ -515,28 +515,26 @@ class ConciliacionesController extends Controller
     }
 
     private function storeData($ref_data, $request)
-    {
+    { 
 
-        $data = ConciliationAditionalStaticData::where([
+        $data = ConciliacionAditionalData::where([
             'reference_data_id' => $ref_data->id,
             'conciliacion_id' => $request['conciliacion_id']
         ])->first();
-
-
         if ($data) {
             $data->fill([
                 'value' => $request["value"],
                 'reference_data_option_id' => $request["option_id"],
-                'value_is_other' => $request["value_is_other"],
+                'value_is_other' =>isset($request["value_is_other"]) != null ? $request["value_is_other"] : null,
             ]);
             $data->save();
         } else {
-            $data = ConciliationAditionalStaticData::create([
+            $data = ConciliacionAditionalData::create([
                 'reference_data_id' => $ref_data->id,
                 'reference_data_option_id' => $request["option_id"],
                 'conciliacion_id' => $request["conciliacion_id"],
                 'value' => $request["value"],
-                'value_is_other' => $request["value_is_other"],
+                'value_is_other' => isset($request["value_is_other"]) != null ? $request["value_is_other"] : null,
             ]);
         }
     }
@@ -546,13 +544,14 @@ class ConciliacionesController extends Controller
 
         if ($request->has('data') and is_array($request->data)) {
             foreach ($request->data as $key => $rq) {
-                $ref_data = ReferencesStaticData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
+                $rq['conciliacion_id'] = $request->conciliacion_id;
+                $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
                 if ($ref_data) {
                     $this->storeData($ref_data, $rq);
                 }
             }
         } else {
-            $ref_data = ReferencesStaticData::where(['name' => $request['name'], 'section' => $request['section']])->first();
+            $ref_data = ReferencesData::where(['name' => $request['name'], 'section' => $request['section']])->first();
 
             $this->storeData($ref_data, $request);
         }

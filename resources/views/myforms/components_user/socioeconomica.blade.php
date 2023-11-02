@@ -28,8 +28,7 @@
             </div>
         </div>
 
-        @include('myforms.components_user.aditional_data',
-        [
+        @include('myforms.components_user.aditional_data',[
             "data"=>getReferencesDataBySection("socio_economica",'users')
         ])
      

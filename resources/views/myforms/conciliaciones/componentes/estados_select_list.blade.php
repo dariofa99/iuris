@@ -63,25 +63,32 @@
     @endif
 
     @if($conciliacion->estado_id==181 || $conciliacion->estado_id==183 || $conciliacion->estado_id==190)
+    
     @if(currentUserInConciliacion($conciliacion->id,['autor','solicitante']))
     <option value="182"> Solicitud de aplazamiento </option>
     <option value="184"> Solicitud de desistimiento </option>
     @endif
+
     @if($conciliacion->estado_id!=183)
-    @if(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai') ||
+
+    @if(currentUser()->hasRole('coord_centro_conciliacion') 
+    || currentUser()->hasRole('amatai') ||
     currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))
     <option value="183"> Suspendida </option>
     @endif
+
     @endif
    
-    @if(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai') ||
+    @if(currentUser()->hasRole('coord_centro_conciliacion') 
+    || currentUser()->hasRole('amatai') ||
     currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']))
     <option value="185"> Acuerdo </option>
     <option value="186"> Acuerdo parcial </option>
     <option value="187"> No acuerdo </option>
     <option value="188">No acuerdo parcial </option>
     <option value="189">Informe no asistencia </option>
-    @endif  
+    @endif 
+
     @endif
 
     @if(currentUser()->hasRole('coord_centro_conciliacion'))

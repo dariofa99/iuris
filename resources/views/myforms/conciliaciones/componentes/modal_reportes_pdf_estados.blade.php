@@ -108,8 +108,8 @@
                 </table>
                
         </div>
-        <div class="col-md-4">
-            <button type="submit">Enviar</button>
+        <div class="col-md-3">
+            <button class="btn btn-block btn-sm btn-primary" type="submit">Enviar</button>
         </div>
     </form>
     </div>

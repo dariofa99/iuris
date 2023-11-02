@@ -4,6 +4,11 @@
 Categorias
 
 @endsection
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
+
 
 @section('titulo_area')
 <div class="pull-left" style="float: left !important;">
@@ -21,11 +26,13 @@ Categorias
 @include('msg.success') 
 <div class="row">
     <div class="col-md-12" id="content_categories_list">
-        @include('myforms.categories.partials.ajax.index')
+        @include('myforms.categorias.partials.ajax.index')
     </div>
 </div>
-
-
-@include('myforms.categories.partials.modals.create')
+@include('myforms.categorias.partials.modals.create')
 
 @stop
+@push('scripts')
+<script type="module" src={{ asset('js/admin_categorias.js') }}></script>
+  
+@endpush

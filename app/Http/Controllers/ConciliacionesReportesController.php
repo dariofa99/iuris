@@ -490,12 +490,14 @@ class ConciliacionesReportesController extends Controller
                 if ($value->user_type == 'personalized') {
                     $data[] = $value;
                 }
-            }
+            } 
         }
+
+       //return response()->json([$data]);
         $view =  view('myforms.conciliaciones.componentes.form_personalized_values', compact('data', 'reporte'))->render();
         $response = [];
         $response['render_view'] = $view;
-        return response()->json([$data]);
+        return response()->json($response);
     }
 
     public function insertPersonalizedReportValues(Request $request)

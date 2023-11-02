@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePdfReportPersonalizedValuesTable extends Migration
+class CreatePdfReportAditionalData extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePdfReportPersonalizedValuesTable extends Migration
      */
     public function up()
     {
-        /* Schema::create('pdf_report_personalized_values', function (Blueprint $table) {
+        Schema::create('pdf_report_aditional_data', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('value')->nullable();  
             $table->string('value_is_other')->nullable();                             
@@ -25,9 +25,9 @@ class CreatePdfReportPersonalizedValuesTable extends Migration
             ->on('references_data_options')->onDelete('cascade')->onUpdate('cascade');
             $table->bigInteger('reporte_id')->unsigned();
             $table->foreign('reporte_id')->references('id')->on('pdf_reportes')->onDelete('cascade')
-            ->onUpdate('cascade');	
+            ->onUpdate('cascade');
             $table->timestamps();
-        }); */
+        });
     }
 
     /**
@@ -37,6 +37,6 @@ class CreatePdfReportPersonalizedValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pdf_report_personalized_values');
+        Schema::dropIfExists('pdf_report_aditional_data');
     }
 }

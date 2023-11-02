@@ -11,7 +11,7 @@
          @include('myforms.components_user.socioeconomica', [
              'disabled' => (isset($user) and $user != null) ? 'disabled' : '',
          ])
-
+ 
          <div class="col-md-12">
              <div class="form-group">
                  <label for="tipo_usuario">Tipo de usuario</label>

@@ -6,7 +6,6 @@
 
 use Carbon\Carbon;
 use App\ReferencesData;
-use App\ReferencesStaticData;
 
 function currentUser()
 {
@@ -300,7 +299,7 @@ if ( ! function_exists('icon_link_to_route')) {
   }
 
   function getReferencesStaticTableBySection($section,$table){
-    $ref_data = ReferencesStaticData::where([
+    $ref_data = ReferencesData::where([
         'section'=>$section,
         'table'=>$table,
         'is_visible'=>1
@@ -336,6 +335,30 @@ function getDiffDays($fecha_inicio,$fecha_fin){
     $inicio = Carbon::parse($fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
     $fin = Carbon::parse($fecha_fin); //moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
     return  $inicio->diffInDays($fin, false);
+}
+function quitarAcentos($cadena) {
+    $acentos = array(
+        'á' => 'a',
+        'é' => 'e',
+        'í' => 'i',
+        'ó' => 'o',
+        'ú' => 'u',
+        'Á' => 'A',
+        'É' => 'E',
+        'Í' => 'I',
+        'Ó' => 'O',
+        'Ú' => 'U',
+        'ü' => 'u',
+        'Ü' => 'U',
+        'ñ' => 'n',
+        'Ñ' => 'N'
+        // Puedes agregar más caracteres a esta lista según tus necesidades
+    );
+
+    // Reemplazar los caracteres acentuados por sus equivalentes sin acento
+    $cadenaSinAcentos = strtr($cadena, $acentos);
+
+    return $cadenaSinAcentos;
 }
 
 ?>

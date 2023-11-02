@@ -1865,10 +1865,7 @@ return false;
     });
 
     $("#btn_new_static_category").on("click", function (e) {
-        $("#myformEditRStaticCategory").attr(
-            "id",
-            "myformCreateStaticCategory"
-        );
+        $("#myformEditRStaticCategory").attr("id","myformCreateStaticCategory");
         $("#myformCreateStaticCategory")[0].reset();
         $("#aditional_options_table tbody").html("");
         $("#content_aditional_options").hide();
@@ -1919,10 +1916,7 @@ return false;
         addOptionTable(item);
     });
 
-    $("#content_aditional_options").on(
-        "click",
-        ".btn_delete_option_row",
-        function (e) {
+    $("#content_aditional_options").on("click",".btn_delete_option_row",function (e) {
             var older_row = $(this).attr("data-item");
             items_delete.push({ id: $(this).attr("data-id") });
             $("#option_row-" + older_row).remove();
@@ -1949,8 +1943,7 @@ return false;
                 $(".adoptions").hide();
                 $("#type_data_id").val(26);
             }
-        }
-    );
+        });
 
     $("#content_aditional_options").on(
         "click",
@@ -3513,7 +3506,7 @@ function insertPersonalizedReportValues(request) {
             $("#wait").hide();
         },
     });
-}
+} 
 function getFromReports(request) {
     var route = "/categorias/get/from/reports";
     $.ajax({

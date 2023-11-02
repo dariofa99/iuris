@@ -74,7 +74,7 @@ class ComposerServiceProvider extends ServiceProvider
         ],'App\Http\ViewComposers\SolicitudesComposer');
 
         View::composer([
-            'myforms.categories.*',   
+            'myforms.categorias.*',   
             'myforms.static_categories.*',                                  
         ],'App\Http\ViewComposers\CategoriasComposer');
 

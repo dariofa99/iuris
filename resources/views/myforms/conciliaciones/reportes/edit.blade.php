@@ -37,7 +37,9 @@
 @section('area_forms')
 
     @include('msg.success')
-
+{{-- {{dd(strtolower(str_replace(" ","_",getReferencesDataBySection(
+    'elementos_juridicos',
+    'conciliaciones')[4]->name)))}} --}}
     <div class="row">
         <div class="col-md-12">
             <div class="card card-primary card-outline card-outline-tabs">

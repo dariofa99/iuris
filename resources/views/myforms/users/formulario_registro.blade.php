@@ -67,10 +67,12 @@
         </div>
 
         <div class="col-md-{{isset($col)?$col:'6'}}">
-            <div class="form-group has-feedback"><label for="name">Otro telefóno*</label>
+            <div class="form-group has-feedback">
+                <label for="name">Otro telefóno*</label>
                 <input autocomplete="off" {{isset($disabled) ? $disabled : ''}} id='tel2' value="{{(isset($user)) ? $user->tel2:"" }}" name='tel2' required type="text" class="form-control form-control-sm onlynumber required"  data-toggle="tooltip" title="Número de contacto 2"  placeholder="Número de contacto 2" maxlength="10" >
-                
-            </div>
+           </div>
         </div>
 
-      
+        @include('myforms.components_user.aditional_data',[
+            "data"=>getReferencesDataBySection("datos_personales",'users')
+        ])

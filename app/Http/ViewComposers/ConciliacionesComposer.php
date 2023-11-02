@@ -52,10 +52,10 @@ class ConciliacionesComposer
 		->where('ref_nombre','<>','Sin definir')
 		->pluck('ref_nombre','id');
 
-		$categories_report = ReferencesData::where(['categories'=>'pdf_reportes',
+	/* 	$categories_report = ReferencesData::where(['categories'=>'pdf_reportes',
 		'table'=>'pdf_reportes'])
 		->where('name','<>','Sin definir')
-		->get();
+		->get(); */
 
 		$types_categories_report = TablaReferencia::where(['categoria'=>'tipo_reporte',
 		'tabla_ref'=>'pdf_reportes'])
@@ -70,7 +70,7 @@ class ConciliacionesComposer
 			'types_status'=>$types_status,
 			'types_users'=>$types_users,
 			'types_status_pretension'=>$types_status_pretension,
-			'categories_report'=>$categories_report,
+			/* 'categories_report'=>$categories_report, */
 			'types_categories_report'=>$types_categories_report,
 			'periodo'=>$periodo
 		]);

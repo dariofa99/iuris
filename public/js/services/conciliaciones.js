@@ -125,7 +125,7 @@ export class ConciliacionService {
 
     async addHechosPretensiones(request) {
         const response = await fetch(BASE_URL + 'conciliaciones/hechos/pretenciones', {
-            method: 'POST', 
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -515,11 +515,11 @@ export class ConciliacionService {
     }
     async updateConPdfTemporal(request, id) {
         const response = await fetch(BASE_URL + "conciliaciones/pdf/" + id, {
-            method: 'POST', 
-            headers: {        
+            method: 'POST',
+            headers: {
                 'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-                "X-CSRF-Token": $("#token").attr("content"),             
-            },            
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
             body: (request)
         });
         if (!response.ok) {
@@ -654,6 +654,25 @@ export class ConciliacionService {
                 "X-CSRF-Token": $("#token").attr("content"),
             },
             body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+    async getCategoriaFromReports(request) {
+        const response = await fetch(BASE_URL + "categorias/get/from/reports?" + new URLSearchParams(request), {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;

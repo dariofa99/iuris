@@ -393,30 +393,30 @@ $(document).ready(function () {
 
   });
 
-  $(".content_hechos_pretensiones").on("click",'.btn_eliminar_hepr', async function (e) {
+  $(".content_hechos_pretensiones").on("click", '.btn_eliminar_hepr', async function (e) {
     e.preventDefault();
     var id = $(this).attr('data-id');
     Swal.fire({
-        title: 'Esta seguro que desea eliminar el registro?',
-        text: "No se podrá revertir los cambios!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, Eliminar!',
-        cancelButtonText: 'No, mantener!'
-      }).then(async (result) => {
-        if (result.value) {      
-          $("#wait").show()        
-            const response = await conciliacionService.deleteFile(id);
-            if (response.view || response.view == "") {
-              $("#content_hechos_pretensiones-"+response.tipo_id).html(response.view);
-          }
-          $("#wait").hide() 
-          $("#myModalCreateConcHechosPretensiones").modal('hide');
-                    
+      title: 'Esta seguro que desea eliminar el registro?',
+      text: "No se podrá revertir los cambios!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Eliminar!',
+      cancelButtonText: 'No, mantener!'
+    }).then(async (result) => {
+      if (result.value) {
+        $("#wait").show()
+        const response = await conciliacionService.deleteFile(id);
+        if (response.view || response.view == "") {
+          $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
         }
-      });   
+        $("#wait").hide()
+        $("#myModalCreateConcHechosPretensiones").modal('hide');
+
+      }
+    });
   });
   $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", async function (e) {
     e.preventDefault()
@@ -561,6 +561,32 @@ $(document).ready(function () {
     if ($(this).is(":checked")) {
       $("#inusre-" + $(this).attr("data-input_id")).prop('disabled', false)
     }
+  });
+  $("#myModal_reportes_pdf_estados").on("click", ".btn_add_data_personalized", async function (e) {
+    e.preventDefault();
+    var request = {
+      "reporte_id": $(this).attr("data-reporte_id")
+    };    
+    $("#wait").show();
+    let response = await conciliacionService.getCategoriaFromReports(request);
+    if (response.error) {
+      Swal.fire({
+        title: response.message,
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Cerrar",
+      });
+    } else {
+      $("#myFormEditPersonalizedReportValues input[name='reporte_id']").val(request.reporte_id)
+      $("#table_personalized_values_pdf tbody").html(response.render_view)
+      $("#content_user_pdf_firmas").hide();
+      $("#content_user_pdf_list").hide();
+      $("#content_personalized_values_pdf").show();
+    }
+
+
+    $("#wait").hide();
+
   });
   $("#content_user_pdf_list").on("click", ".btn_gene_pdf", function (e) {
     var status_id = $(this).attr('data-status_id');

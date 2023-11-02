@@ -49,8 +49,9 @@ class Conciliacion extends Model
     
     public function aditional_static_data()
     {
-        return $this->hasMany(ConciliationAditionalStaticData::class, 'conciliacion_id', 'id');
-    }
+        return $this->hasMany(ConciliacionAditionalData::class, 'conciliacion_id', 'id');
+    } 
+    
     public function estados()
     {
         return $this->hasMany(ConciliacionEstado::class, 'conciliacion_id', 'id');
@@ -176,5 +177,17 @@ class Conciliacion extends Model
             ->join('users', 'users.id', '=', 'cu.user_id');             
         }
         
+    }
+
+    public function getDataVal($ref_id,$ref_option){
+        $ref_data = $this->aditional_static_data()       
+        ->where([
+             'reference_data_id'=>$ref_id,
+            'reference_data_option_id'=>$ref_option])->first();
+               
+        if($ref_data){
+            return $ref_data;
+        }
+       return false; 
     }
 }

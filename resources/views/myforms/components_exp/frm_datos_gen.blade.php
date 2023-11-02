@@ -1,9 +1,9 @@
 <div class="row">
     <input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">
-   @if($expediente->getAsignacion())
-    <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig"
-        name="fecha_asig">
-  @endif
+    @if ($expediente->getAsignacion())
+        <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig"
+            name="fecha_asig">
+    @endif
     @if (!currentUser()->hasRole('estudiante'))
         <div class="col-md-4">
             <input type="hidden" name="oldexpidnumberest" id="oldexpidnumberest">
@@ -64,29 +64,42 @@
             </div>
         @endif
         <div class="col-md-3 ">
-            
-            @if($expediente->asignacion)
-            
-            @if (auth()->user()->can('editar_datos_caso'))
-                <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
-                    Editar</a>
-                <a class="btn btn-success btn-sm" id="btnActualizar" style="display: none;">
-                    <i class="fa  fa-check-circle"> </i>
-                    Actualizar</a>
-                <a class="btn btn-danger btn-sm" style="display: none;" id="btnCancelar">
-                    <i class="fa  fa-remove"> </i>
-                    Cancelar</a>
-            @endif
-            
-            @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                    $expediente->asignacion->procesojud_id == 1 and
-                    $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                        (currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('amatai')))
-                <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur mt-1">
-                    Activar como proceso jurídico
-                </a>
+
+            @if ($expediente->asignacion)
+
+                @if (auth()->user()->can('editar_datos_caso'))
+                    <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
+                        Editar</a>
+                    <a class="btn btn-success btn-sm" id="btnActualizar" style="display: none;">
+                        <i class="fa  fa-check-circle"> </i>
+                        Actualizar</a>
+                    <a class="btn btn-danger btn-sm" style="display: none;" id="btnCancelar">
+                        <i class="fa  fa-remove"> </i>
+                        Cancelar</a>
+                @endif
+
+                @if (
+                    $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+                        $expediente->asignacion->procesojud_id == 1 and
+                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                            (currentUser()->hasRole('diradmin') ||
+                                currentUser()->hasRole('dirgral') ||
+                                currentUser()->hasRole('amatai')))
+                    <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur mt-1">
+                        Activar como proceso jurídico
+                    </a>
+                @endif
+
+                @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+                        $expediente->asignacion->procesojud_id == 1 and
+                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                            (currentUser()->hasRole('diradmin') ||
+                                currentUser()->hasRole('dirgral') ||
+                                currentUser()->hasRole('amatai')))
+                    <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur mt-1">
+                        Activar pausa
+                    </a>
+                @endif
 
                 @if (!$readonly)
                     <div class="pull-right" style="margin-top:1px;">
@@ -96,9 +109,8 @@
                         @endif
                     </div>
                 @endif
-            @endif
             @else
-            Error en la asignación
+                Error en la asignación
             @endif
         </div>
     @endif
@@ -129,27 +141,27 @@
         </div>
 
         <!-- /.input group -->
-    </div> 
-  
+    </div>
+
     <div class="col-md-4">
         <div class="form-group">
             {!! Form::label('Rama del Derecho: ') !!}
-            @if($expediente->exptipoproce_id!=3)
-            {!! Form::select('expramaderecho_id', $rama_derecho, $expediente->rama_derecho->id, [
-                'placeholder' => 'Selecciona...',
-                'class' => 'form-control disabled required',
-                'required' => 'required',
-                'disabled',
-                'id' => 'expramaderecho_id',
-            ]) !!}
+            @if ($expediente->exptipoproce_id != 3)
+                {!! Form::select('expramaderecho_id', $rama_derecho, $expediente->rama_derecho->id, [
+                    'placeholder' => 'Selecciona...',
+                    'class' => 'form-control disabled required',
+                    'required' => 'required',
+                    'disabled',
+                    'id' => 'expramaderecho_id',
+                ]) !!}
             @else
-            {!! Form::select('expramaderecho_id', $rama_derecho_defensas, $expediente->rama_derecho->id, [
-                'placeholder' => 'Selecciona...',
-                'class' => 'form-control disabled required',
-                'required' => 'required',
-                'disabled',
-                'id' => 'expramaderecho_id',
-            ]) !!}
+                {!! Form::select('expramaderecho_id', $rama_derecho_defensas, $expediente->rama_derecho->id, [
+                    'placeholder' => 'Selecciona...',
+                    'class' => 'form-control disabled required',
+                    'required' => 'required',
+                    'disabled',
+                    'id' => 'expramaderecho_id',
+                ]) !!}
             @endif
         </div>
     </div>

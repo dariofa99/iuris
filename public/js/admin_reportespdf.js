@@ -283,12 +283,13 @@ $(document).ready(function () {
         $("#myModal_create_category_report").modal("show")
     });
     $(".content_values_store").on("click", "#btn_create_category", async function (e) {
-        var request = {
+      /*   var request = {
             'conciliacion_id': $("#conciliacion_id").val(),
             'tabla_destino': 'conciliaciones_email',
             'status_id': 178
         }
-        let response = await formatosService.getReportes(request);
+        let response = await formatosService.getReportes(request); */
+        $("#myModal_create_category_report input[name='summernote']").val($(this).attr('data-summernote')).hide()
         $("#myModal_create_category_report").modal("show")
     });
 
@@ -297,16 +298,22 @@ $(document).ready(function () {
         var minusculas = cadena.toLowerCase();
         var espacios = minusculas.replace(/\s+/g, "_");
         var final = espacios.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        // var final = "[-"+sin_tildes+"-]";
         $("#myModal_create_category_report input[name='short_name']").val(final)
 
     });
 
-    $("#myformCreateCategoryReport").on("submit", function (e) {
-        var request = convertFormToJSON('myformCreateCategoryReport');
-
-        let response = referenciasService.storeFromReports(request)
+    $("#myformCreateCategoryReport").on("submit",async function (e) {
         e.preventDefault()
+        var request = convertFormToJSON('myformCreateCategoryReport');
+        $("#wait").show();
+        let response = await referenciasService.storeFromReports(request);
+        $(".content_categories_ajax").html(response.view);   
+        $("#myModal_create_category_report").modal("hide")   ;
+        $("#wait").hide();  
+        toastr.success("Creado con éxito", "", {
+            positionClass: "toast-bottom-right",
+            timeOut: "4000",
+        });
     });
 
     $("#myFormAsigReporte").on("submit", async function (e) {
@@ -412,12 +419,26 @@ $(".item_con").on("mousedown", function (e) {
         $(this).attr("data-name") +
         `-]</span>${space}`
     );
+});
 
-    //  $('.note-editable').trigger('focus');
-    //  summernote.summernote('focus');
-    //$(".note-editable p").focus()
-    //  $(".item_sp").prop('disabled',true).css('color','blue')
-    //document.getElementById("dcalc").disabled = true;
+$("#content_categories_ajax").on("mousedown",".item_con",function (e) {
+    var space = "&nbsp;";
+    var mySummernote = $(this).attr("data-summernote");
+    var clasehechopre = '';
+    var salto = '';
+    if ($(this).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
+    $("#" + mySummernote).summernote(
+        "pasteHTML",
+        `<span data-table="${$(this).attr(
+            "data-table"
+        )}" data-short_name="${$(this).attr(
+            "data-short_name"
+        )}" user-type="${$(this).attr("user-type")}" data-name="[-${$(
+            this
+        ).attr("data-name")}-]" class="item_sp ${clasehechopre}">[-` +
+        $(this).attr("data-name") +
+        `-]</span>${space}`
+    );
 });
 
 function editAsignacionReporte(request) {

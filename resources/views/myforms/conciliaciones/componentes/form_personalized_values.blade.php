@@ -1,7 +1,8 @@
 @foreach ($data as $item)
+
 <tr>
     <td>
-       {{ getAditionalDataByShortName($item->short_name,'pdf_reportes')->name}}
+       {{ getAditionalDataByShortName($item->short_name,$item->table)->name}}
     </td> 
     <td>
         <input name="short_name[]"  value="{{$item->short_name}}" type="hidden">
@@ -11,4 +12,4 @@
         type="text" class="form-control form-control-sm">
     </td>
 </tr> 
-@endforeach
+@endforeach 

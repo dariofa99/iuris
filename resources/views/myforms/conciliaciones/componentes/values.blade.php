@@ -5,5 +5,5 @@
             {{$value->name}} [{{$parte}}]
         </small>     
     </div>
-</div> 
+</div>  
 @endforeach

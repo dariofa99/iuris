@@ -161,4 +161,9 @@
             </div>
         </div>
     @endif
+    
+    @include('myforms.components_user.aditional_data',[
+        "data"=>getReferencesDataBySection("datos_personales",'users')
+    ])
+    
 </div>

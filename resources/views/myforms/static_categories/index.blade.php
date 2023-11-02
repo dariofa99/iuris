@@ -1,20 +1,23 @@
 @extends('layouts.dashboard')
 
 @section('titulo_general')
-Categorias
-
+    Categorias
 @endsection
 
 @section('titulo_area')
 <div class="pull-left" style="float: left !important;">
     <button class="btn btn-primary btn-sm" id="btn_new_static_category">Nueva categoría</button>
-    </div>
+</div>
 @endsection
 
 @section('area_buttons')
 
 @endsection
  
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
 
 @section('area_forms') 
  
@@ -24,8 +27,11 @@ Categorias
         @include('myforms.static_categories.partials.ajax.index')
     </div>
 </div>
-
-
 @include('myforms.static_categories.partials.modals.create')
 
 @stop
+
+@push('scripts')
+<script type="module" src={{ asset('js/admin_categorias.js') }}></script>
+  
+@endpush

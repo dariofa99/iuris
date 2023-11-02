@@ -55,7 +55,7 @@ class PdfReporte extends Model
 
      public function getDataValWShort($short_name){
         $ref_data = $this->aditional_data()
-        ->join('references_data','references_data.id','pdf_report_personalized_values.reference_data_id')
+        ->join('references_data','references_data.id','pdf_report_aditional_data.reference_data_id')
        // ->join('referencias_tablas','referencias_tablas.id','estadocivil_id')
         ->where(['short_name'=>$short_name])->first();
            //dd($ref_data)     ;

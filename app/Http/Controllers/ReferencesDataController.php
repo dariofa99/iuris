@@ -18,7 +18,7 @@ class ReferencesDataController extends Controller
     public function index()  
     {
         $categories = $this->getCategories();
-        return view('myforms.categories.index',compact('categories'));
+        return view('myforms.categorias.index',compact('categories'));
     }
 
     private function getCategories(){
@@ -43,13 +43,13 @@ class ReferencesDataController extends Controller
      */
     public function store(Request $request)
     {
-       //dd($request->all());
+       // return response()->json($request->all());
         $this->guardar($request);
         $categories = $this->getCategories();
-        $view =  view('myforms.categories.partials.ajax.index',compact('categories'))->render();
+        $view =  view('myforms.categorias.partials.ajax.index',compact('categories'))->render();
         $response=[];
         $response['render_view'] = $view;
-        return response()->json( $response);
+        return response()->json($response);
 
     }
 
@@ -57,10 +57,11 @@ class ReferencesDataController extends Controller
     {
        //dd($request->all());
         $this->guardar($request);
-        $categories = $this->getCategories();
-        $view =  view('myforms.categories.partials.ajax.index',compact('categories'))->render();
+        $categories_report = getReferencesDataBySection('personalizado','pdf_reportes');
+        $mySummernote = $request->summernote;
+        $view =  view('myforms.conciliaciones.componentes.categories_ajax',compact('categories_report','mySummernote'))->render();
         $response=[];
-        $response['render_view'] = $view;
+        $response['view'] = $view;
         return response()->json( $response);
 
     }
@@ -89,12 +90,7 @@ class ReferencesDataController extends Controller
                 ]);
         }
         if ($request->table=='conciliacion') {
-            foreach ($request->parte as $key => $parte) {
-                $insert = ConciliacionUserForm::create([
-                    'parte'=>$parte,
-                    'reference_data_id'=>$referencia->id,                    
-                ]);
-            }
+          
            
         }
     }

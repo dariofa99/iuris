@@ -28,7 +28,7 @@ class ConciliacionReporte extends Model
     
     public function aditional_static_data()
     {
-        return $this->hasMany(ConciliationAditionalStaticData::class, 'conciliacion_id', 'id');
+        return $this->hasMany(ConciliacionAditionalData::class, 'conciliacion_id', 'id');
     }
     public function estados()
     {

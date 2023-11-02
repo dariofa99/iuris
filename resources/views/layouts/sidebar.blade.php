@@ -5,7 +5,7 @@
     <a href="/home" class="brand-link"
         style="background-color: {{ config('app.name') == 'ConciliApp' ? '#ffffff' : '#374850' }} !important; padding: .4125rem .5rem;text-align: center;">
         @if (config('app.name') == 'ConciliApp')
-            <img src="{{ asset('dist/img/conciliapp_logo_horizontal.png') }}" alt="Sis Image" style="height: 45px;">
+            <img src="{{ asset('dist/img/conciliapplogohor.png') }}" alt="Sis Image" style="height: 45px;">
         @else
             <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Lybra" class="img-fluid"
                 style="border-radius: 20px;height:42px">
@@ -281,6 +281,17 @@
                                     <p>Roles y permisos</p>
                                 </a>
                             </li>
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('categorias.index') }}" class="nav-link">
+                                    <p>Categorías</p>
+                                </a>
+                            </li>
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('categories.index') }}" class="nav-link">
+                                    <p>Categorías estáticas</p>
+                                </a>
+                            </li>
+
                         </ul>
                     </li>
                 @endif
