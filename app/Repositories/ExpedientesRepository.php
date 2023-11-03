@@ -182,10 +182,12 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
     public function asignarDocente(AsignacionCaso $asignacion_caso)
     {
-        $segmento = $this->segmentoService->getSegmentoActivo(); 
+        $segmento = $this->segmentoService->getSegmentoActivo();
         $subRama = $asignacion_caso->expediente->rama_derecho->subrama;
         $docente_unavi = $this->usersService->getDocentesByRama("UNAVI");
-        if ($docente_unavi and $subRama=='UNAVI') {
+
+        if ($docente_unavi and $subRama == 'UNAVI') {
+
             $asig_doc = DB::select(
                 DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
               JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
@@ -194,7 +196,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
               JOIN sede_usuarios ON sede_usuarios.user_id = users.id
               JOIN role_user ON role_user.user_id = users.id
               WHERE expedientes.exptipoproce_id = '1' AND users.active=1
-              AND users.idnumber != '" . $docente_unavi[0]['idnumber'] . "'
+              AND users.idnumber = '" . $docente_unavi[0]['idnumber'] . "'
               AND (users.active_asignacion = 1 or role_user.role_id = 4)
               AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
               GROUP BY `docidnumber` ORDER BY num_casos ASC")
@@ -211,7 +213,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                         ->orwhere('users.active_asignacion', true);
                 })
                 ->where('users.active', true)
-                ->where('users.idnumber', '<>', $docente_unavi[0]['idnumber'])
+                ->where('users.idnumber', '=', $docente_unavi[0]['idnumber'])
 
                 ->where('sedes.id_sede', session('sede')->id_sede)
                 ->select(
@@ -249,7 +251,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                         ->orwhere('users.active_asignacion', true);
                 })
                 ->where('users.active', true)
-
+                ->where('users.idnumber', '<>', $docente_unavi[0]['idnumber'])
                 ->where('sedes.id_sede', session('sede')->id_sede)
                 ->select(
                     'users.active',
@@ -262,11 +264,14 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 )
                 ->orderBy('users.created_at', 'desc')->get();
         }
+        // dd($docentes);
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
+
             if (count($docentes) == count($asig_doc)) {
-                $this->request['docidnumber']  = $docente_unavi[0]['idnumber'];
+                $this->request['docidnumber']  = $asig_doc[0]->docidnumber;               
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
+                return;
             } else {
                 foreach ($docentes as $key => $docente) {
                     $found_key = array_search($docente->idnumber, array_column($asig_doc, 'docidnumber'));

@@ -1224,9 +1224,9 @@ class ExpedienteController extends Controller
 
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
-
+    //18478
+    $expediente = Expediente::find(25669);
     $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
-      'asigest_id' => 3030,
       'asigexp_id' => $expediente->expid,
       'activo' => 1
     ]);
