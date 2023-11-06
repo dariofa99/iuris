@@ -11,6 +11,7 @@ use App\AsignacionCaso;
 use App\Jobs\ProcessEmailSendNotificarDirector;
 use App\Notifications\UserNotification;
 use App\Services\AsignacionCasosService;
+use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
 use App\Services\UsersService;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,14 @@ class DefensaOficioController extends Controller
   private $userService;
   private $expedientesService;
   private $asignacionCasosService;
+  private $estadoCasoService;
   public function __construct(
     UsersService $userService,
     ExpedientesService $expedientesService,
-    AsignacionCasosService $asignacionCasosService
+    AsignacionCasosService $asignacionCasosService,
+    EstadosCasoService $estadoCasoService
   ) {
+    $this->estadoCasoService = $estadoCasoService;
     $this->userService = $userService;
     $this->expedientesService = $expedientesService;
     $this->asignacionCasosService = $asignacionCasosService;
@@ -217,16 +221,15 @@ class DefensaOficioController extends Controller
     $request['exptipoproce_id'] = 3;
     $request['expidnumber'] = $user->idnumber;
     $expediente = $this->expedientesService->store($request);
-
     $request['asigest_id'] =  $expediente->expidnumberest;
     $request['asigexp_id'] =  $expediente->expid;
     $request['periodo_id'] =  $request['periodo_id'];
     $asignacion_caso = $this->asignacionCasosService->store($request);
-
-
-    /* $expedientes = $this->getExpEstu($request['expidnumberest']);
-    $numEx = count($expedientes);
-    $render = view('myforms.frm_expediente_list_ajax', compact('expedientes', 'numEx'))->render(); */
+    $request['comentario'] = 'Abierto primera vez';
+    $request['expidnumber'] = $expediente->expid;
+    $request['ref_estado_id'] = $expediente->expestado_id;
+    $request['ref_motivo_estado_id'] = 13;
+    $estado_caso = $this->estadoCasoService->store($request);
     $user = $expediente->estudiante;
     $user->notification = 'Nueva notificación de caso';
     $user->link_to = '/defensas/oficio/' . $expediente->expid . '/edit';
@@ -245,7 +248,7 @@ class DefensaOficioController extends Controller
         ->message(['render'=>$render,'notifications'=>$notifications])->publish();  */
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       return response()->json($expediente);
-    }
+    } 
     return redirect('/expedientes');
   }
 

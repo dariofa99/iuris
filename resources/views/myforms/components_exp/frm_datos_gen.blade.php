@@ -43,7 +43,7 @@
         </div>
 
         @if ($expediente->expfecha_res)
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>Fecha respuesta</label>
                     <p>
@@ -63,48 +63,47 @@
                 </div>
             </div>
         @endif
-        <div class="col-md-3 ">
+        <div class="col-md-2 ">
 
             @if ($expediente->asignacion)
 
                 @if (auth()->user()->can('editar_datos_caso'))
-                    <a class="btn btn-primary btn-sm" id="btnEditar"><i class="fa fa-edit"> </i>
+                    <a class="btn btn-primary btn-sm btn-block" id="btnEditar"><i class="fa fa-edit"> </i>
                         Editar</a>
-                    <a class="btn btn-success btn-sm" id="btnActualizar" style="display: none;">
+                    <a class="btn btn-success btn-block btn-sm" id="btnActualizar" style="display: none;">
                         <i class="fa  fa-check-circle"> </i>
                         Actualizar</a>
-                    <a class="btn btn-danger btn-sm" style="display: none;" id="btnCancelar">
+                    <a class="btn btn-danger btn-sm btn-block" style="display: none;" id="btnCancelar">
                         <i class="fa  fa-remove"> </i>
                         Cancelar</a>
                 @endif
-
-                @if (
-                    $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                        $expediente->asignacion->procesojud_id == 1 and
+                    
+                @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+                        $expediente->asignacion->procesojud_id != 1 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             (currentUser()->hasRole('diradmin') ||
                                 currentUser()->hasRole('dirgral') ||
                                 currentUser()->hasRole('amatai')))
-                    <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur mt-1">
+                    <a href="#" id="btn_act_proc_jur" class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
                         Activar como proceso jurídico
                     </a>
                 @endif
 
-                @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                        $expediente->asignacion->procesojud_id == 1 and
-                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                            (currentUser()->hasRole('diradmin') ||
+                @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' 
+                and $expediente->expestado_id==1 and $expediente->exptipoproce_id!=1 and                       
+                        ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                            currentUser()->hasRole('diradmin') ||
                                 currentUser()->hasRole('dirgral') ||
                                 currentUser()->hasRole('amatai')))
-                    <a href="#" id="btn_act_proc_jur" class="btn btn-sm btn-warning btn_act_proc_jur mt-1">
+                    <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info btn_act_proc_jur mt-1">
                         Activar pausa
                     </a>
-                @endif
+                @endif 
 
                 @if (!$readonly)
                     <div class="pull-right" style="margin-top:1px;">
                         @if (currentUser()->can('tomar_caso') and $expediente->getDocenteAsig()->name == 'Sin asignar')
-                            <a class="btn btn-sm btn-primary" id="btnTomarCaso"><i class="fa fa-check"> </i>
+                            <a class="btn btn-sm btn-success btn-block" id="btnTomarCaso"><i class="fa fa-check"> </i>
                                 Tomar Caso</a>
                         @endif
                     </div>

@@ -129,8 +129,14 @@
                                      Sin revisión
                                  @endif
                              </span>
-                         @endif                       
-                    </td>
+                         @else
+                             <span class="pull-center badge bg-orange dis-block">
+                                 <div>
+                                 </div>
+                                 {{ $expediente->estado->nombre_estado }}
+                             </span>
+                         @endif
+                     </td>
                      <td>
                          @if (!currentUser()->hasRole('secretaria') and !currentUser()->hasRole('solicitante'))
                              @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == '1')
@@ -227,7 +233,7 @@
  <script>
      (function() {
          element = document.getElementById('badgeCount');
-         
+
          //element.innerHTML = valor;
      })();
 

@@ -86,12 +86,15 @@ public function estudianteact()
     {
         return $this->belongsTo(Periodo::class, 'periodo_id', 'id');
     }
+    public function pausas()
+    {
+        return $this->hasMany(ExpedientePausas::class, 'asig_caso_id', 'id');
+    }
 
     public function estadosProcJudCount()
     {
         $esprocesos = $this->procesosJudiciales()
         ->where('estado_id', '=', $this->procesojud_id)->get();
-
         return count($esprocesos);
     }
 

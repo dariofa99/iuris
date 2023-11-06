@@ -19,7 +19,7 @@ interface ExpedientesService {
     public function asignarDocente(AsignacionCaso $asignacionCaso);
     public function asignargDocenteSeguimiento(AsignacionCaso $asignacionCaso,$tipoproceso);
     public function getActuacions($expid,$only);
-  
+    public function pausarExpediente($expediente, Request $request);
     /* public function getAllUsers(Request $request):LengthAwarePaginator;
     
     public function getUsersByRoleName(String $role):Array;

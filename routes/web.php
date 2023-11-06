@@ -259,6 +259,7 @@ Route::post('expedientes/cambiar/docente', 'ExpedienteController@cambiarDocente'
 Route::post('expedientes/store/proceso/judicial', 'ExpedienteController@storeProcJudicial'); 
 Route::post('expedientes/cambiar/proceso/judicial', 'ExpedienteController@cambiarProcesoJuridico'); 
 Route::get('expedientes/proceso/judicial/{id}/edit', 'ExpedienteController@editExpProcJudicial'); 
+Route::post('expedientes/pausar', 'ExpedienteController@pausarExpediente'); 
 
 
 

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Actuacion;
 use App\AsignacionCaso;
 use App\Expediente;
+use App\ExpedientePausas;
 use App\Sede;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\ExpedientesService;
@@ -294,9 +295,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     private function getDocentesAsigByTypeProcess($tipoproce)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
-        return $asig_doc = DB::select(
-            DB::raw(
-                "SELECT `docidnumber`, `name`, COUNT(`docidnumber`) AS num_casos 
+        return $asig_doc = DB::select(DB::raw("SELECT `docidnumber`, `name`, COUNT(`docidnumber`) AS num_casos 
         FROM `asignacion_docente_caso`
         JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
         JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
@@ -378,4 +377,18 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ])
             ->orderBy('created_at', 'desc')->get();
     }
+
+    public function pausarExpediente($expediente, Request $request){
+        $asignacion = $expediente->asignacion;
+        ExpedientePausas::create([
+          'fecha_inicial'=>$request->input('fecha_inicial'),
+          'fecha_final'=>$request->input('fecha_final'),
+          'userestud_id'=>$asignacion->estudiante->id,        
+          'asig_caso_id'=>$asignacion->id,
+          'user_id'=>currentUser()->id,
+          'estado_id'=>249
+        ]);     
+        return $asignacion;
+      }
+
 }

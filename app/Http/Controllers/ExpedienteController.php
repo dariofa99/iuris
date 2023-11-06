@@ -12,6 +12,7 @@ use App\AsignacionCaso;
 use App\AsigDocenteCaso;
 use App\Conciliacion;
 use App\Events\LoginEvent;
+use App\ExpedientePausas;
 use App\Periodo;
 use App\Segmento;
 use App\Solicitud;
@@ -298,9 +299,9 @@ class ExpedienteController extends Controller
       'expid' => $id
     ]);
     if (!$expediente) return view('errors.error', compact('url'));
+
     $estudiante = $expediente->estudiante;
-    $asignacion = $expediente->asignaciones()->where('asigest_id', $expediente->expidnumberest)
-      ->where(['asigest_id' => $expediente->expidnumberest, 'activo' => 1])->first();
+    $asignacion = $expediente->asignacion;
     if ($expediente->exptipoproce_id ==  1) {
       $days = $expediente->getDaysOrColorForClose('dias');
       if ($days <= 0 || $days === true) {
@@ -341,11 +342,20 @@ class ExpedienteController extends Controller
     //Agregue la funcion getusers Para poder usarla en el index
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     $expediente->setNotActLimit();
+    if($expediente->isValidEvaPause()){
+      $request['expestado_id'] = 1;
+      $expediente = $this->expedienteService->update($expediente, $request);
+      $request['comentario'] = 'Fecha de pausa caducada';
+      $request['expidnumber'] = $expediente->expid;
+      $request['ref_estado_id'] = $expediente->expestado_id;
+      $request['ref_motivo_estado_id'] = 11;
+      $estado_caso = $this->estadoCasoService->store($request);      
+    }
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));
       }
-      if (($expediente->expestado_id == '2' or $expediente->expestado_id == '5')) {
+      if (($expediente->expestado_id == '2' or $expediente->expestado_id == '5'  or $expediente->expestado_id == '6')) {
         //	Session::flash('message-success', 'Actualizado con éxito...!');
         return redirect('/expedientes/' . $expediente->expid);
       }
@@ -363,9 +373,7 @@ class ExpedienteController extends Controller
       return redirect('/expedientes/' . $expediente->expid);
     }
     $readonly = false;
-    return view(
-      'myforms.frm_expediente_edit',
-      compact('estudiantes', 'expediente', 'asignacion', 'readonly')
+    return view('myforms.frm_expediente_edit', compact('estudiantes', 'expediente', 'asignacion', 'readonly')
     );
   }
 
@@ -1432,5 +1440,19 @@ class ExpedienteController extends Controller
       "error" => true,
       "message" => "No hay un docente de pruebas activo"
     ]);
+  }
+
+  public function pausarExpediente(Request $request)
+  {
+    $expediente = $this->expedienteService->find($request->expediente_id);
+    $request['expestado_id'] = 6;
+    $expediente = $this->expedienteService->update($expediente, $request);
+    $asignacion = $this->expedienteService->pausarExpediente($expediente, $request);
+    $request['comentario'] = 'Pausado primera vez';
+    $request['expidnumber'] = $expediente->expid;
+    $request['ref_estado_id'] = $expediente->expestado_id;
+    $request['ref_motivo_estado_id'] = 11;
+    $estado_caso = $this->estadoCasoService->store($request);
+    return response()->json($asignacion);
   }
 }

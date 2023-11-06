@@ -4,7 +4,6 @@
             currentUser()->hasRole('amatai') or
             currentUser()->hasRole('diradmin') or
             currentUser()->hasRole('dirgral'))
-
         <div class="col-md-12" align="right">
             @if (
                 (currentUser()->hasRole('estudiante') and
@@ -24,19 +23,19 @@
                         Actualizar Solicitud de cierre
                     </button>
                 @endif
-
             @endif
 
-            @if ( $expediente->isValidOpen()
-            and ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber
-            || (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai')
-            || currentUser()->hasRole('dirgral'))
-            ))
-                <button type="button" data-estado="{{$expediente->expestado_id}}" class="btn btn-warning btn-sm mb-2" id="btn_reabrir_caso">
-                  {{$expediente->expestado_id != 5 ? "Evaluar y cerrar caso":"Volver a evaluar y cerrar caso" }}  
+            @if (
+                $expediente->isValidOpen() and
+                    $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        (currentUser()->hasRole('diradmin') ||
+                            currentUser()->hasRole('amatai') ||
+                            currentUser()->hasRole('dirgral')))
+                <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
+                    id="btn_reabrir_caso">
+                    {{ $expediente->expestado_id != 5 ? 'Evaluar y cerrar caso' : 'Volver a evaluar y cerrar caso' }}
                 </button>
             @endif
-            
             @if (
                 $expediente->expestado_id != 2 and
                     $expediente->expestado_id != 5 and
@@ -51,7 +50,6 @@
     @endif
 
     <div class="col-md-12">
-
         @if (count($expediente->estados) > 0)
             <div class="box-body table-responsive no-padding">
                 <table id="tbl_cierre_caso" class="table table-bordered table-striped dataTable dataTable"
@@ -62,6 +60,23 @@
                         </td>
                         <td>
                             <label>{{ $expediente->estado->nombre_estado }}</label>
+                            @if ($expediente->estado->id == 6)
+                                @php
+                                    $pausa = $expediente->asignacion
+                                        ->pausas()
+                                        ->orderBy('created_at', 'desc')
+                                        ->first();
+                                    $text = '';
+                                    if ($expediente->expestado_id == 6) {
+                                        if ($pausa) {
+                                            $fecha = 'desde ' . getSmallDate($pausa->fecha_inicial) . ' hasta ' . getSmallDate($pausa->fecha_final);
+                                            $text = '<br><b>El expediente estará en pausa ' . $fecha . '</b>';
+                                        }
+                                    }
+                                @endphp
+                                  {!!  $text !!}
+                            @endif
+                          
                         </td>
                     </tr>
                     <tr>
@@ -69,7 +84,7 @@
                             <label>Fecha</label>
                         </td>
                         <td>
-                           <label>{{ getSmallDateWithHour($expediente->estados()->orderBy('created_at', 'desc')->first()->created_at) }}</label>
+                            <label>{{ getSmallDateWithHour($expediente->estados()->orderBy('created_at', 'desc')->first()->created_at) }}</label>
 
                         </td>
                     </tr>
@@ -80,13 +95,13 @@
                         <td>
                             <label>
                                 {{ $expediente->estados()->orderBy('created_at', 'desc')->first()->user->name }}
-                            
+
                                 {{ $expediente->estados()->orderBy('created_at', 'desc')->first()->user->lastname }}
                                 <small>
                                     ({{ $expediente->estados()->orderBy('created_at', 'desc')->first()->user->role()->first()->display_name }})
                                 </small>
                             </label>
-                     
+
                         </td>
                     </tr>
                     <tr>

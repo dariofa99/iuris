@@ -13,33 +13,33 @@ $(document).ready(function () {
         buscarExp()
     });
 
-    $("#content_count_asesorias_inlist").on("click",".btn_search_color",async function (e) {
+    $("#content_count_asesorias_inlist").on("click", ".btn_search_color", async function (e) {
         var request = {
             tipo_busqueda: "color",
-            data: $(this).attr("id")           
+            data: $(this).attr("id")
         };
-       
-        if ($("#search_onlyMy_exp").is(":checked")) {           
-            request['search_onlyMy_exp'] = 'search_onlyMy_exp';            
-        } 
-        if ($("#search_onlyProJur").is(":checked")) {           
-            request['search_onlyProJur'] = 'search_onlyProJur';            
+
+        if ($("#search_onlyMy_exp").is(":checked")) {
+            request['search_onlyMy_exp'] = 'search_onlyMy_exp';
+        }
+        if ($("#search_onlyProJur").is(":checked")) {
+            request['search_onlyProJur'] = 'search_onlyProJur';
         }
         $("#wait").show();
-        var page = "expedientes";      
+        var page = "expedientes";
         console.log(page);
         let res = await index_page(page, request);
         $("#wait").hide();
     });
 
-async function buscarExp() {
-    var request = {}//convertFormToJSON('myformExpFilter');
+    async function buscarExp() {
+        var request = {}//convertFormToJSON('myformExpFilter');
         request['search_onlyMy_exp'] = 'off';
-        if ($("#search_onlyMy_exp").is(":checked")) {           
-            request['search_onlyMy_exp'] = 'search_onlyMy_exp';            
-        } 
-        if ($("#search_onlyProJur").is(":checked")) {           
-            request['search_onlyProJur'] = 'search_onlyProJur';            
+        if ($("#search_onlyMy_exp").is(":checked")) {
+            request['search_onlyMy_exp'] = 'search_onlyMy_exp';
+        }
+        if ($("#search_onlyProJur").is(":checked")) {
+            request['search_onlyProJur'] = 'search_onlyProJur';
         }
         var opselected = $("#myformExpFilter select[name='tipo_busqueda']").val();
         var dataselected = $("#myformExpFilter select[name='data']").val();;
@@ -47,14 +47,14 @@ async function buscarExp() {
         if (fechaselected != '' && fechaselected != null) request['data'] = fechaselected;
         if (opselected != '' && opselected != null) request['tipo_busqueda'] = opselected;
         if (dataselected != '' && dataselected != null) request['data'] = dataselected;
-        
-        
-       $("#wait").show();
-        var page = "expedientes";      
+
+
+        $("#wait").show();
+        var page = "expedientes";
         console.log(page);
         let res = await index_page(page, request);
         $("#wait").hide();
-}
+    }
     $("#search_onlyProJur").on("change", async function () {
         buscarExp()
     });
@@ -145,14 +145,14 @@ async function buscarExp() {
     $("#myformExpFilter").submit(async function (e) {
         e.preventDefault();
         var errors = validateForm("myformExpFilter");
-        if (errors.length <= 0) {           
+        if (errors.length <= 0) {
             var data = convertFormToJSON("myformExpFilter");
-            if(data.search_onlyMy_exp===undefined || data.search_onlyMy_exp===null){
+            if (data.search_onlyMy_exp === undefined || data.search_onlyMy_exp === null) {
                 data['search_onlyMy_exp'] = 'off'
             }
-            if ($("#search_onlyProJur").is(":checked")) {           
-                data['search_onlyProJur'] = 'search_onlyProJur';            
-            }           
+            if ($("#search_onlyProJur").is(":checked")) {
+                data['search_onlyProJur'] = 'search_onlyProJur';
+            }
             var page = "expedientes";
             $("#wait").show();
             let res = await index_page(page, data);
@@ -177,7 +177,28 @@ async function buscarExp() {
         return false;
     });
 
-  
+    $("#btn_act_pausa_exp").on("click", function (e) {
+        e.preventDefault();        
+       $("#mymodalPausarExpediente").modal("show")
+    });
+    $("#myformPausarExpediente").on("submit",async function(e){
+        e.preventDefault();
+        var errors = validateForm('myformPausarExpediente');
+        if(errors.length<=0){
+            var request = convertFormToJSON("myformPausarExpediente");
+            request['expediente_id'] = $("#expediente_id").val();
+            $("#wait").show();
+            let response = await expedientesService.pausarExpediente(request);
+            if(response){
+                toastr.success("Se actalizó con éxito", "", {
+                    timeOut: "4000",
+                });
+                window.location.reload(true);
+            }
+           // $("#wait").hide();
+        
+        }
+    });
 
     $("#exptipoproce_id2").change(async function () {
         var idconsul = $("#exptipoproce_id2").val();
@@ -535,7 +556,7 @@ async function buscarExp() {
                             showConfirmButton: false,
                             timer: 2500
                         });
-                      //  window.location.reload(true);
+                        //  window.location.reload(true);
                         e.preventDefault()
                     })
                     .catch((error) => {
@@ -758,7 +779,7 @@ async function buscarExp() {
         if (errors.length <= 0) {
             var request = convertFormToJSON('myFormExpsStore');
             $("#wait").show();
-            var response = await expedientesService.store(request);
+            var response = await expedientesService.store(request); 
             resetForm('myFormExpsStore')
             $("#wait").hide();
             Swal.fire({
@@ -1891,11 +1912,11 @@ async function buscarExp() {
 
     $("#btn_reabrir_caso").on("click", function (e) {
         var estado = $(this).attr("data-estado");
-    /*     $("#myform_addnew_nota_final_expedientes").append($('<input>',{
-            type:'text',
-            value:estado,
-            name:"estado_casoid"
-        })) */
+        /*     $("#myform_addnew_nota_final_expedientes").append($('<input>',{
+                type:'text',
+                value:estado,
+                name:"estado_casoid"
+            })) */
         $("#myModal_addnew_nota_final_expedientes").modal("show");
     });
     $("#btn_addnew_nota_exp").on("click", async function () {
