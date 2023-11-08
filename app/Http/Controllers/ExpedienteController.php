@@ -99,7 +99,7 @@ class ExpedienteController extends Controller
     }
     $request = $request->all();
     return view('myforms.frm_expediente_list', compact('expedientes', 'count_colors'));
-  }
+  } 
 
 
   /**
@@ -1233,13 +1233,13 @@ class ExpedienteController extends Controller
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
-    $expediente = Expediente::find(25669);
+    $expediente = Expediente::find(25724);
     $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
       'asigexp_id' => $expediente->expid,
       'activo' => 1
     ]);
 
-    $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
+   // $expediente = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);
 
     //$relations = $asignacion_caso->getRelations();
     dd($expediente);
@@ -1295,7 +1295,6 @@ class ExpedienteController extends Controller
   public function editExpProcJudicial(Request $request, $id)
   {
     $procjudi = $this->procjucicialService->find($id);
-
     $view = view("myforms.components_exp.frm_detalles_exprocjudicial", compact('procjudi'))->render();
     return response()->json([
       'view' => $view,
@@ -1348,7 +1347,7 @@ class ExpedienteController extends Controller
     }
 
     return response()->json($asig_doc);
-    $expediente = Expediente::find(1);
+  /*   $expediente = Expediente::find(1);
     $asig = $expediente->asignaciones()
       ->where('asigest_id', $expediente->estudiante->idnumber)
       ->where('activo', 1)
@@ -1396,7 +1395,7 @@ class ExpedienteController extends Controller
       $asig_doc->save();
     } catch (\Throwable $th) {
       return response()->json(['error' => $th->getMessage()]);
-    }
+    } */
   }
 
   public function darBaja(Request $request)

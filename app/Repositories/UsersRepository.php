@@ -209,8 +209,7 @@ class UsersRepository extends BaseRepository implements UsersService
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
         'role_user.role_id',
         'roles.display_name'
-      )
-      ->orderBy('users.created_at', 'desc')->get();
+      )->orderBy('users.created_at', 'desc')->get();
 
     return $users->toArray();
   }
@@ -256,7 +255,7 @@ class UsersRepository extends BaseRepository implements UsersService
       ->where('users.active', true)      
       ->where('sede_usuarios.sede_id', session('sede')->id_sede)
       ->select('users.id', 'users.idnumber','users.name')
-      ->orderBy('users.created_at', 'desc')->get()->toArray();
+      ->orderBy('users.created_at', 'desc')->groupBy('users.idnumber')->get()->toArray();
     return $doceWithRama;
   }
 

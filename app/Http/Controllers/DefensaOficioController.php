@@ -46,55 +46,29 @@ class DefensaOficioController extends Controller
   public function index(Request $request)
   {
 
+
     array_map('unlink', glob(public_path('act_temp/' . currentUser()->id . '___*'))); //elimina los archivos que el usuario a visualizado anteriormente.(provisional)
-    // dd($request->all());  
-
-    //$date = Carbon::now();
-    /*
-      $users = User::where('id', currentUser()->id)
-        ->get(['id', 'name', 'lastname' ,'idrol']);
-
-
-     foreach ($users as $user) 
-     {
-       $idrol=$user->idrol;
-     }*/
-    //dd($idrol);
-
-
-
-
-    //dd($request->all());
-    //validacion fechas en caso que aun no envien variables get
     if (empty($request->get('tipo_busqueda'))) {
-
       $criterio = '';
       $fechaini = fechasSem('fechaIni');
       $fechafin = fechasSem('fechaFin');
       $numpaginate = '20';
     } else {
-
       $fechaini = fechasSem('fechaIni');
       $fechafin = fechasSem('fechaFin');
       $criterio = $request->data;
-      //$fechaini=$request->get('fechaini');
-      //$fechafin=$request->get('fechafin');
       $numpaginate = '100';
     }
 
 
     if (currentUser()->hasRole("estudiante")) {
-
       if (!empty($request->get('tipo_busqueda'))) {
-
         if ((is_null($request->dataIni))) {
           //Si no es rango de fechas
           $expedientes = Expediente::where('expidnumberest', '=', currentUser()->idnumber)->Criterio($request->data, $request->tipo_busqueda)->orderBy(DB::raw("FIELD(expestado,'3','1','4','2')"))->paginate(10);
           $numEx = Expediente::where('expidnumberest', '=', currentUser()->idnumber)->Criterio($request->data, $request->tipo_busqueda)->count();
         } else {
-
           $expedientes = Expediente::where('expidnumberest', '=', currentUser()->idnumber)->RangoFechas($request->dataIni, $request->dataFin)->orderBy(DB::raw("FIELD(expestado,'3','1','4','2')"))->paginate(10);
-
           $numEx = Expediente::where('expidnumberest', '=', currentUser()->idnumber)->RangoFechas($request->dataIni, $request->dataFin)->count();
         }
       } else {
@@ -178,7 +152,7 @@ class DefensaOficioController extends Controller
 
     $active_expe = 'active';
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
-   
+
     // $user = User::with('role')->where('role.id',6)->get();
 
     //   dd($users);
@@ -235,20 +209,21 @@ class DefensaOficioController extends Controller
     $user->link_to = '/defensas/oficio/' . $expediente->expid . '/edit';
     $user->mensaje = 'Se ha asignado una defensa de oficio. Número: ' . $expediente->expid;
     $user->notify(new UserNotification($user));
-    if($expediente->expramaderecho_id == 37
-    or $expediente->expramaderecho_id == 39
-    or $expediente->expramaderecho_id == 40
-    or $expediente->expramaderecho_id == 41 ){
-     ProcessEmailSendNotificarDirector::dispatch($expediente)
-     ->onConnection('database')->onQueue('emails'); 
-         
+    if (
+      $expediente->expramaderecho_id == 37
+      or $expediente->expramaderecho_id == 39
+      or $expediente->expramaderecho_id == 40
+      or $expediente->expramaderecho_id == 41
+    ) {
+      ProcessEmailSendNotificarDirector::dispatch($expediente)
+        ->onConnection('database')->onQueue('emails');
     }
     /* $notifications = view('layouts.notifications',compact('user'))->render();
         NewPush::channel('notifications_'.$request['expidnumberest']) 
         ->message(['render'=>$render,'notifications'=>$notifications])->publish();  */
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       return response()->json($expediente);
-    } 
+    }
     return redirect('/expedientes');
   }
 
@@ -270,7 +245,7 @@ class DefensaOficioController extends Controller
       if ($expediente->expidnumberest != Auth::user()->idnumber) {
         $url = '/expedientes/';
         return view('errors.error', compact('url'));
-      }     
+      }
     }
     return view('myforms.frm_defensa_oficio_show', compact('expediente', 'readonly', 'estudiantes'));
   }
@@ -288,25 +263,25 @@ class DefensaOficioController extends Controller
       'expid' => $id
     ]);
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
-    
- 
+
+
     $readonly = false;
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $expediente->estudiante->id) {
         $url = '/expedientes/';
         return view('errors.error', compact('url'));
-      }    
+      }
     }
-  
-    if (($expediente->expestado_id == '4' 
-    || $expediente->expestado_id == '2'
-    || $expediente->expestado_id == '5') 
-    and (currentUser()->hasRole('estudiante')
+
+    if (($expediente->expestado_id == '4'
+        || $expediente->expestado_id == '2'
+        || $expediente->expestado_id == '5')
+      and (currentUser()->hasRole('estudiante')
         || currentUser()->hasRole('solicitante'))
     ) {
-    
-     return redirect('/defensas/oficio/' . $expediente->expid);
-   }
+
+      return redirect('/defensas/oficio/' . $expediente->expid);
+    }
     return view('myforms.frm_defensa_oficio_edit', compact('estudiantes', 'expediente', 'readonly'));
   }
 

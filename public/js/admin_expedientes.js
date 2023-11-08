@@ -190,13 +190,11 @@ $(document).ready(function () {
             $("#wait").show();
             let response = await expedientesService.pausarExpediente(request);
             if(response){
-                toastr.success("Se actalizó con éxito", "", {
+                toastr.success("Se actualizó con éxito", "", {
                     timeOut: "4000",
                 });
                 window.location.reload(true);
-            }
-           // $("#wait").hide();
-        
+            }   
         }
     });
 
