@@ -1,4 +1,4 @@
-@component('components.modal')
+@component('components.b4.modal_large')
 	
 	@slot('trigger')
 		myModal_reporasis

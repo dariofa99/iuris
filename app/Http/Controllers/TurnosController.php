@@ -64,7 +64,7 @@ class TurnosController extends Controller
                 'trnid_dia'
             )
             ->orderBy('trnid_color', 'asc')->get();
-       
+
         $data_search = '';
 
         if (isset($request->data_search) and !$request->ajax()) {
@@ -268,7 +268,16 @@ class TurnosController extends Controller
             ->join('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
             ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-            ->select('users.name', 'users.lastname', 'ref.ref_nombre', DB::raw('SUM(IF(asistencia.astid_tip_asist = 121 OR asistencia.astid_tip_asist = 127 OR asistencia.astid_tip_asist = 128, 1, 0)) AS asistencia'), DB::raw('SUM(IF(asistencia.astid_tip_asist = 122, 1, 0)) AS falta_simple'), DB::raw('SUM(IF(asistencia.astid_tip_asist = 123 OR asistencia.astid_tip_asist = 126, 1, 0)) AS falta_doble'), DB::raw('SUM(IF(asistencia.astid_tip_asist = 125, 1, 0)) AS reposicion'), 'users.idnumber')
+            ->select(
+                'users.name',
+                'users.lastname',
+                'ref.ref_nombre',
+                DB::raw('SUM(IF(asistencia.astid_tip_asist = 121 OR asistencia.astid_tip_asist = 127 OR asistencia.astid_tip_asist = 128, 1, 0)) AS asistencia'),
+                DB::raw('SUM(IF(asistencia.astid_tip_asist = 122, 1, 0)) AS falta_simple'),
+                DB::raw('SUM(IF(asistencia.astid_tip_asist = 123 OR asistencia.astid_tip_asist = 126, 1, 0)) AS falta_doble'),
+                DB::raw('SUM(IF(asistencia.astid_tip_asist = 125, 1, 0)) AS reposicion'),
+                'users.idnumber'
+            )
             ->where('users.active', true)
             ->where('role_id', '6')
             ->where('astfecha', '>=', $fecha)

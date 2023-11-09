@@ -1924,11 +1924,11 @@ $(document).ready(function () {
             var request = convertFormToJSON('myform_addnew_nota_final_expedientes');
             $("#wait").show();
             let response = await expedientesService.reabrirCaso(request);
-            toastr.success("Creado con éxito", "", {
+            toastr.success("Actualizado con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-            //window.location.reload(true)
+            window.location.reload(true)
         }
     });
 
@@ -1971,7 +1971,7 @@ $(document).ready(function () {
             window.location.reload(true)
         }
         return false;
-        e.preventDefault();
+      
     });
     $("#table_list_citaciones").on("click", ".btn_edit_citacion", async function () {
         var id = $(this).attr("id");
@@ -1997,8 +1997,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-            window.location.reload(true)
-
+            window.location.reload(true);
             return false;
         }
     });

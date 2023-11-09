@@ -5,6 +5,7 @@ var checks_bd = [];
 var horas = [];
 $(document).ready(function () {
 	set_tab();
+	getAsistenciaReport();
 	$(".btn_habilityupdatecolor").on("click", function (e) {
 		e.preventDefault();
 		var id = $(this).attr("data-id");
@@ -216,40 +217,6 @@ $(document).ready(function () {
 				icon: 'success',
 				timer: 2000,
 			});
-			
-/* 			
-			var route = "/turnos/acdocentes";
-			//var token = $("#token").val();
-			$.ajax({
-				url: route,
-				headers: { 'X-CSRF-TOKEN': token },
-				type: 'post',
-				datatype: 'json',
-				data: { mydata },
-				cache: false,
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-					$("#wait").show();
-				},
-
-
-
-				success: function (res) {
-					consultar_horario(docidmunber);
-					Toast.fire({
-						title: 'Actualizado con éxito.',
-						icon: 'success',
-						timer: 2000,
-					});
-					$("#wait").hide();
-
-				},
-
-				error: function (xhr, textStatus, thrownError) {
-					alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
-				}
-
-			}); */
 		} else {
 			Toast.fire({
 				title: 'No se han hecho cambios.',
@@ -318,78 +285,81 @@ $(document).ready(function () {
 			$("#contenrepasistenciadoc").append(datosasis);//coloca una nueva opcion
 		}
 		$("#wait").hide();
-
-
-
-
-
-		/* 	var route = "/turnos/docentes/reporte/asis";
-			$("#wait").css("display", "block");
-			$.get(route, function (res) {
-				console.log(res);
-				if (res == "") {
-					$("#contenrepasistenciadoc").append('');//coloca una nueva opcion
-	
-					$("#wait").css("display", "none");
-				} else {
-					//$("#expidnumberest").find('option').remove().end();//elimina opciones existentes
-					var datosasis = "";
-					$(res.docentes).each(function (key, value) {
-						var asistencias = 0;
-						var permisos = 0;
-						var reposiciones = 0;
-						var datasistencias = res.asistencia.find(datosasis => datosasis.docidnumber === value.idnumber);
-						var datapermisos = res.permisos.find(datosper => datosper.docidnumber === value.idnumber);
-						var datareposiciones = res.reposicion.find(datosrepo => datosrepo.docidnumber === value.idnumber);
-						if (datasistencias) { asistencias = datasistencias.asistencia; }
-						if (datapermisos) { permisos = datapermisos.permisos; }
-						if (datareposiciones) { reposiciones = datareposiciones.reposicion; }
-	
-	
-						datosasis += '<tr>' +
-							'<td>' + parseInt(key + 1) + '</td>' +
-							'<td>' + value.idnumber + '</td>' +
-							'<td>' + value.full_name + '</td>' +
-							'<td>' + round(asistencias / 60) + '</td>' +
-							'<td>' + round(permisos / 60) + '</td>' +
-							'<td>' + round(reposiciones / 60) + '</td>' +
-							'<td>' + parseInt(parseInt(round(permisos / 60)) - parseInt(round(reposiciones / 60))) + '</td>' +
-							'</tr>';
-	
-	
-					});
-					$("#contenrepasistenciadoc").append(datosasis);//coloca una nueva opcion
-				}
-				$("#wait").css("display", "none");
-	
-			}); */
-
-
 	});
 
 	$("#table_list_model").on("click", ".btn_asig_turno", function (e) {
-        e.preventDefault();
-        var idnumber = ($(this).attr("data-idnumber"));
-        $("#label_idnumber_estToAsig").text(idnumber);
-        $("#est_idnumber").val(idnumber);
-        $("#myModal_asig_turno_estudiante").modal("show");
-    });
-	
-    $("#btn_asig_turno_est").on("click",async function(e) {
+		e.preventDefault();
+		var idnumber = ($(this).attr("data-idnumber"));
+		$("#label_idnumber_estToAsig").text(idnumber);
+		$("#est_idnumber").val(idnumber);
+		$("#myModal_asig_turno_estudiante").modal("show");
+	});
+
+	$("#btn_asig_turno_est").on("click", async function (e) {
 		e.preventDefault();
 		var request = convertFormToJSON('myform_asig_turno_est');
 		$("#wait").show();
 		let response = await horariosService.asigTurnoEst(request);
 		toastr.success("Se actualizó con éxito", "", {
-            positionClass: "toast-top-center",
-            timeOut: "4000",
-        });
+			positionClass: "toast-top-center",
+			timeOut: "4000",
+		});
 		window.location.reload(true);
-		console.log(request);
-		//asigTurnoEst();
+	});
+
+	$("#tableEstAsistencia").on("click", ".btn_det_rasis", async function () {
+
+		var id = $(this).attr("data-idnumber");
+		let response = await horariosService.detallesAsistencia(id);
+		$("#ced_det_asis").text(' ' + id);
+		$("#nom_det_asis").text($(this).attr('name'));
+		var datosasis = "";
+		var textlugar = [];
+		textlugar["130"] = "Consultorios";
+		textlugar["131"] = "C.J. Virtuales";
+		textlugar["132"] = "Of. Desplazados";
+		textlugar["133"] = "Externo";
+		textlugar["134"] = "Otro";
+		$(response).each(function (key, value) {
+			var nombre = value.name + ' ' + value.lastname;
+			// //console.log(value.idnumber);
+			datosasis += '<tr>' +
+				'<td>' + parseInt(key + 1) + '</td>' +
+				'<td>' + value.ref_nombre + '</td>' +
+				'<td>' + textlugar[value.astid_lugar] + '</td>' +
+				'<td>' + value.astfecha + '</td>' +
+				'<td><div class="textcor">' + value.astdescrip_asist + '</div></td>' +
+				'</tr>';
+
+
+		});
+		$("#table-details-asistencia").html(datosasis);//coloca una nueva opcion		
+		$("#estadp_det_asis").text('');
+		$("#myModal_reporasis").modal("show");
 	});
 
 });/////////////////////////////////////////////////////
+
+async function getAsistenciaReport() {
+	let response = await horariosService.getAsistenciaReport();
+	if (response.length > 0) {
+		var datosasis = '';
+		response.forEach((value, key) => {
+			datosasis += '<tr>' +
+				'<td>' + parseInt(key + 1) + '</td>' +
+				'<td>' + value.idnumber + '</td>' +
+				'<td>' + value.name + ' ' + value.lastname + '</td>' +
+				'<td>' + value.ref_nombre + '</td>' +
+				'<td>' + value.asistencia + '</td>' +
+				'<td>' + parseInt(parseInt(value.falta_doble * 2) + parseInt(value.falta_simple)) + '</td>' +
+				'<td>' + value.reposicion + '</td>' +
+				'<td><button type="button" class="btn btn-success btn-sm btn_det_rasis" data-idnumber=' + value.idnumber + ' id="dt_rasis-' + value.idnumber + '" name="' + value.name + ' ' + value.lastname + '">Detalles</button></td>' +
+				'</tr>';
+		});
+		$("#tableEstAsistencia tbody").html(datosasis)
+	}
+}
+
 function habilityEditColor(turno_id) {
 	showElement("color_id" + turno_id);
 	showElement("cursando_id" + turno_id);

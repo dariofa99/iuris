@@ -31,8 +31,8 @@
             </li>
         @endif
         <li class="nav-item">
-            <a class="nav-link urlactive" id="reporasistencia-data" data-toggle="tab" href="#reporasistencia_data" role="tab"
-                aria-controls="reporasistencia_data" aria-selected="true">
+            <a class="nav-link urlactive" id="estasisten-data" data-toggle="tab" href="#estasisten_data" role="tab"
+                aria-controls="estasisten_data" aria-selected="true">
                 Reporte asistencia
             </a>
         </li>
@@ -46,6 +46,10 @@
          <div class="tab-pane fade show" id="estsinasig_data" role="tabpanel" aria-labelledby="estsinasig_data-tab">
           @include("myforms.turnos.estudiantes_porasignar")
         </div>
+
+        <div class="tab-pane fade show" id="estasisten_data" role="tabpanel" aria-labelledby="estasisten_data-tab">
+            @include("myforms.turnos.estudiantes_asistencia")
+          </div>
     </div> 
 
     @include('myforms.frm_modal_asig_turno_est')

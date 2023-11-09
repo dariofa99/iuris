@@ -1233,13 +1233,20 @@ class ExpedienteController extends Controller
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
-    $expediente = Expediente::find(25724);
+    $expediente = Expediente::find(25680);
     $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
       'asigexp_id' => $expediente->expid,
       'activo' => 1
     ]);
 
-   // $expediente = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);
+    if ($expediente->exptipoproce_id == 1) {
+      //solo para consultas de asesoria   
+     // $this->expedienteService->asignarDocente($asignacion_caso);
+    } else {
+
+      //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+    }
+   // $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
 
     //$relations = $asignacion_caso->getRelations();
     dd($expediente);
@@ -1286,7 +1293,7 @@ class ExpedienteController extends Controller
       $expediente,
       $request->estado_id,
       Auth::user()->name . " " . Auth::user()->lastname
-    )->onConnection('database')->onQueue('emails');;
+    )->onConnection('database')->onQueue('emails');
 
 
     return response()->json($expediente);
