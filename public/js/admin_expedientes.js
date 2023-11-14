@@ -189,6 +189,7 @@ $(document).ready(function () {
         $("#wait").show();
         let response =  await expedientesService.getPausasExpediente(request);
         if(response.length>0){
+            console.log("sisisi",response.length);
             var tr='';
             response.forEach((element,key) => {
                 tr+=`
