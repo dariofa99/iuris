@@ -1,11 +1,12 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem('keyCir', true);
-        if(localStorage.getItem('keyCarouselNotiClose')){
+      /*   if(localStorage.getItem('keyCarouselNotiClose')){
           var message = getGeneralMessage();
         }else{
           var message = getCarrousel();
-        }        
+        }      */ 
+        var message = getGeneralMessage();  
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
@@ -59,16 +60,16 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-info" style="font-size:18px">';
+        message += '<div class="alert alert-warning" style="font-size:18px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
-                      Recuerda que estamos actualizando la plataforma, si presentas algún problema refresca el navegador
+                      Recuerda que estamos actualizando la plataforma, si se presenta algún problema refresque el navegador
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Atualización: 8 de nov. 2023 <br>
-                        Si el problema persiste comunícate al 3106038006  
+        message += `<span> Últ. Atualización: 14 de nov. 2023 <br>
+                        Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 
         return message;

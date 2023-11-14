@@ -894,6 +894,40 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
     }
+    async getPausasExpediente(request) {
+        const response = await fetch(BASE_URL + "expedientes/get/pausas?"+ new URLSearchParams(request), {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;           
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+    async deletePausa(id,request) {
+        const response = await fetch(BASE_URL + "expedientes/delete/pausa/"+id+"?"+ new URLSearchParams(request), {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;           
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
     showProgress(percentage) {
         const progressDiv = document.getElementById('progressbarwait');
         $(progressDiv).show();

@@ -77,28 +77,40 @@
                         <i class="fa  fa-remove"> </i>
                         Cancelar</a>
                 @endif
-                    
-                @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+
+                @if (
+                    $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->asignacion->procesojud_id != 1 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             (currentUser()->hasRole('diradmin') ||
                                 currentUser()->hasRole('dirgral') ||
                                 currentUser()->hasRole('amatai')))
-                    <a href="#" id="btn_act_proc_jur" class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
+                    <a href="#" id="btn_act_proc_jur"
+                        class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
                         Activar como proceso jurídico
                     </a>
                 @endif
 
-                @if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar' 
-                and $expediente->expestado_id==1 and $expediente->exptipoproce_id!=1 and                       
+                @if (
+                    $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
+                        $expediente->exptipoproce_id != 1 and
                         ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('diradmin') ||
-                                currentUser()->hasRole('dirgral') ||
-                                currentUser()->hasRole('amatai')))
-                    <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info btn_act_proc_jur mt-1">
-                        Activar pausa
-                    </a>
-                @endif 
+                            currentUser()->hasRole('dirgral') ||
+                            currentUser()->hasRole('amatai')))
+                    @if ($expediente->expestado_id == 1)
+                        <a href="#" id="btn_act_pausa_exp"
+                            class="btn btn-block btn-sm btn-info mt-1">
+                            Activar pausa
+                        </a>
+                    @endif
+                    @if ($expediente->expestado_id == 6)
+                        <a href="#" id="btn_quit_pausa_exp"
+                            class="btn btn-block btn-sm btn-danger mt-1">
+                            Quitar pausa
+                        </a>
+                    @endif
+                @endif
 
                 @if (!$readonly)
                     <div class="pull-right" style="margin-top:1px;">

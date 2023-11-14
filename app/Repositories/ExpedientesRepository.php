@@ -340,4 +340,10 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         ]);
         return $asignacion;
     }
+    public function deletePausa($id){
+       $pausa =  ExpedientePausas::find($id);
+       $pausa->delete();
+        return $pausa;
+        ;
+    }
 }

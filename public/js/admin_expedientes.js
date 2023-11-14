@@ -181,6 +181,69 @@ $(document).ready(function () {
         e.preventDefault();        
        $("#mymodalPausarExpediente").modal("show")
     });
+    $("#btn_quit_pausa_exp").on("click",async function (e) {
+        e.preventDefault();   
+        var request = {
+            'expediente_id':$("#expediente_id").val()
+        }  
+        $("#wait").show();
+        let response =  await expedientesService.getPausasExpediente(request);
+        if(response.length>0){
+            var tr='';
+            response.forEach((element,key) => {
+                tr+=`
+                <tr>
+                    <td>
+                        ${key+1}
+                    </td>
+                    <td>
+                        ${element.fecha_initxt}
+                    </td>
+                    <td>
+                        ${element.fecha_fintxt}
+                    </td>
+                    <td width="5%">
+                        <button data-id="${element.id}" class="btn btn-sm btn-block btn-danger btn_delete_pausa">
+                        <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`
+            });
+            $("#tblListPausasExp tbody").html(tr);           
+        }
+        $("#wait").hide();
+       $("#mymodalPausasExpediente").modal("show")
+    });
+
+    $("#tblListPausasExp").on("click",".btn_delete_pausa",function(e) {
+        e.preventDefault();
+        var id = $(this).attr("data-id");
+        Swal.fire({
+            title: 'Esta seguro de eliminar la pausa?',
+            text:"Se abrirá nuevamente el caso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                var request = {
+                    'expediente_id':$("#expediente_id").val()
+                }
+                let response = await expedientesService.deletePausa(id,request);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true);
+            }
+        });
+
+
+    })
     $("#myformPausarExpediente").on("submit",async function(e){
         e.preventDefault();
         var errors = validateForm('myformPausarExpediente');

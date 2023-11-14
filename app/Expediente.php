@@ -165,6 +165,8 @@ class Expediente extends Model
         return $this->belongsTo(Estado::class, 'expestado_id', 'id');
     }
 
+   
+
     public function solicitudes()
     {
         return $this->belongsToMany(Solicitud::class, 'solicitud_has_exp', 'exp_id')
