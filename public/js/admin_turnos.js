@@ -338,10 +338,25 @@ $(document).ready(function () {
 		$("#myModal_reporasis").modal("show");
 	});
 
+	$('#myFormBuscarEstudiante').on('keyup', '.select_data_users', async function (e) {
+		let name = $(this).val();
+		if (name != '' && name.length >= 3) {			
+			var opcion_busq = '<option value="' + name + '">' + name + '</option>';
+			$("#select_data_users").html(opcion_busq);			
+			let request = {
+				'name': name,
+			}
+			getAsistenciaReport(request);
+		} else if(name == ''){
+			getAsistenciaReport();
+		}
+	});
+
 });/////////////////////////////////////////////////////
 
-async function getAsistenciaReport() {
-	let response = await horariosService.getAsistenciaReport();
+async function getAsistenciaReport(request = {}) {
+	$("#loader_inidiv").show()
+	let response = await horariosService.getAsistenciaReport(request);
 	if (response.length > 0) {
 		var datosasis = '';
 		response.forEach((value, key) => {
@@ -356,8 +371,11 @@ async function getAsistenciaReport() {
 				'<td><button type="button" class="btn btn-success btn-sm btn_det_rasis" data-idnumber=' + value.idnumber + ' id="dt_rasis-' + value.idnumber + '" name="' + value.name + ' ' + value.lastname + '">Detalles</button></td>' +
 				'</tr>';
 		});
-		$("#tableEstAsistencia tbody").html(datosasis)
+		$("#tableEstAsistencia tbody").html(datosasis);		
+	}else{
+		$("#tableEstAsistencia tbody").html('<tr><td colspan="8">No se encontraron resultados</td></tr>');	
 	}
+	$("#loader_inidiv").hide()
 }
 
 function habilityEditColor(turno_id) {

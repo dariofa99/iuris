@@ -133,8 +133,8 @@ export class HorariosService {
         return topics;
     }
 
-    async getAsistenciaReport() {
-        const response = await fetch(BASE_URL + "turnos/asistencia", {
+    async getAsistenciaReport(request={}) {
+        const response = await fetch(BASE_URL + "turnos/asistencia?"+ new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

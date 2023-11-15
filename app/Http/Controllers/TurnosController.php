@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Turno;
-use DB;
 use App\Periodo;
 use App\TablaReferencia;
 use App\User;
 use App\Oficina;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\EstudiantesCursosExport;
+use App\Services\PeriodosService;
+use Illuminate\Support\Facades\DB;
 
 class TurnosController extends Controller
 {
+
+    private $periodosService;
+  
+    public function __construct(
+      PeriodosService $periodosService      
+    ) {
+      $this->periodosService = $periodosService;
+    }
 
 
     public function index(Request $request)
@@ -253,13 +262,11 @@ class TurnosController extends Controller
         return ($users);
     }
 
-    public function reporasistencia()
+    public function reporasistencia(Request $request)
     {
-        $periodo = DB::table('periodo')
-            ->join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
-            ->where('sp.sede_id', session('sede')->id_sede)
-            ->where('estado', '=', '1')
-            ->first();
+
+        $periodo =  $this->periodosService->getPeriodoActivo();
+
         $fecha = $periodo->prdfecha_inicio;
 
         $rasistencia = DB::table('users')
@@ -278,6 +285,12 @@ class TurnosController extends Controller
                 DB::raw('SUM(IF(asistencia.astid_tip_asist = 125, 1, 0)) AS reposicion'),
                 'users.idnumber'
             )
+            ->where(function($query) use ($request){
+                if($request->has('name') and $request->input('name')!=''){
+                    return $query->orWhere('users.lastname', 'like', "%{$request->name}%")
+                    ->orWhere('users.name', 'like', "%{$request->name}%");
+                }
+            })
             ->where('users.active', true)
             ->where('role_id', '6')
             ->where('astfecha', '>=', $fecha)

@@ -2,6 +2,10 @@
 
 
 
+@push('styles')
+    <!-- aqui van los estilos de cada vista -->
+    <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+@endpush
 
 @section('titulo_area')
     Listado de Estudiantes
@@ -40,23 +44,24 @@
 
     <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
         <div class="tab-pane fade show active" id="estasig_tab" role="tabpanel" aria-labelledby="estasig-tab">
-          @include("myforms.turnos.estudiantes_asignados")
+            @include('myforms.turnos.estudiantes_asignados')
         </div>
 
-         <div class="tab-pane fade show" id="estsinasig_data" role="tabpanel" aria-labelledby="estsinasig_data-tab">
-          @include("myforms.turnos.estudiantes_porasignar")
+        <div class="tab-pane fade show" id="estsinasig_data" role="tabpanel" aria-labelledby="estsinasig_data-tab">
+            @include('myforms.turnos.estudiantes_porasignar')
         </div>
 
         <div class="tab-pane fade show" id="estasisten_data" role="tabpanel" aria-labelledby="estasisten_data-tab">
-            @include("myforms.turnos.estudiantes_asistencia")
-          </div>
-    </div> 
+            @include('myforms.turnos.estudiantes_asistencia')
+        </div>
+    </div>
 
     @include('myforms.frm_modal_asig_turno_est')
     @include('myforms.frm_modal_detail_reporasistencia')
 
- 
+
 @stop
 @push('scripts')
-      <script type="module" src={{ asset('js/admin_turnos.js') }}></script>
+    <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
+    <script type="module" src={{ asset('js/admin_turnos.js') }}></script>
 @endpush

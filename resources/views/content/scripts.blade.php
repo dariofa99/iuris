@@ -60,15 +60,15 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-warning" style="font-size:18px">';
+        message += '<div class="alert alert-success" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
-                      Recuerda que estamos actualizando la plataforma, si se presenta algún problema refresque el navegador
+                      Recuerde que estamos actualizando la plataforma, si se presenta algún problema refresque el navegador
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Atualización: 14 de nov. 2023 <br>
+        message += `<span> Últ. Atualización: 15 de nov. 2023 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 

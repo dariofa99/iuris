@@ -346,4 +346,11 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         return $pausa;
         ;
     }
+    public function updatePausa($id, Request $request)
+    {        
+        $pausa = ExpedientePausas::find($id);
+        $pausa->fill($request->all());
+        $pausa->save();
+        return $pausa;
+    }
 }

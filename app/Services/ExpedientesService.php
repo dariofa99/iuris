@@ -21,19 +21,8 @@ interface ExpedientesService {
     public function getActuacions($expid,$only);
     public function pausarExpediente($expediente, Request $request);
     public function deletePausa($id);
-    /* public function getAllUsers(Request $request):LengthAwarePaginator;
-    
-    public function getUsersByRoleName(String $role):Array;
-    public function getDocentes():Array;
-    public function getEstudiantes():Array;
-    public function getDocentesByRama($rama):Array;
-    public function getUsersByPermissionName($permission):Collection; 
-    public function findUserByNameOrLastNameAndRole(String $name,$role):Array; 
-    public function setValidateSede($status);
-    public function addSede(User $user);
-    public function changeSede(User $user);
- 
-      */
+    public function updatePausa($id, Request $request);
+   
    
 }
 ?>

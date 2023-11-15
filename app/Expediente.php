@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Traits\ColorTurnos;
 use Illuminate\Support\Facades\Event;
-use DB;
 use App\User;
 use App\Traits\AsigNotas; 
 use App\Traits\UploadFile;
@@ -18,6 +17,7 @@ use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Expediente extends Model
 {
@@ -347,7 +347,7 @@ class Expediente extends Model
         }
 
         if ($acts->pendiente > 0) { 
-            if (\Auth::user()->hasRole('estudiante')) {
+            if (Auth::user()->hasRole('estudiante')) {
                 $var = $acts->aprobado + $acts->pendiente;
 
                 if ($acts->padre > $var) {

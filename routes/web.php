@@ -262,6 +262,7 @@ Route::get('expedientes/proceso/judicial/{id}/edit', 'ExpedienteController@editE
 Route::post('expedientes/pausar', 'ExpedienteController@pausarExpediente'); 
 Route::get('expedientes/get/pausas', 'ExpedienteController@getPausasExpediente'); 
 Route::delete('expedientes/delete/pausa/{id}', 'ExpedienteController@deletePausaExpediente'); 
+Route::put('expedientes/update/pausa/{id}', 'ExpedienteController@updatePausaExpediente'); 
 
 
 

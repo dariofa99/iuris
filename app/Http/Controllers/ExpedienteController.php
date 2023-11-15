@@ -1436,4 +1436,9 @@ class ExpedienteController extends Controller
     $pausa = $this->expedienteService->deletePausa($id);
     return response()->json($pausa);
   }
+  public function updatePausaExpediente(Request $request,$id){
+    $expediente = $this->expedienteService->find($request->expediente_id);
+    $pausa = $this->expedienteService->updatePausa($id,$request);
+    return response()->json($pausa);
+  }
 }
