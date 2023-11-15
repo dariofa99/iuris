@@ -185,8 +185,10 @@ $(document).ready(function () {
         $("#wait").show();
         let response = await expedientesService.getPausasExpediente(request);
         if (response.length > 0) {
+
             var tr = '';
             response.forEach((element, key) => {
+                var fechaActual = new Date().toISOString().split('T')[0];
                 tr += `
                 <tr>
                     <td>
@@ -196,7 +198,7 @@ $(document).ready(function () {
                         ${element.fecha_initxt}
                     </td>
                     <td>
-                    <input type="hidden" value="${element.fecha_final}" data-id="${element.id}" id="fecha_final-${element.id}" name="fecha_final" class="form-control form-control-sm" >
+                    <input min="${fechaActual}" type="hidden" value="${element.fecha_final}" data-id="${element.id}" id="fecha_final-${element.id}" name="fecha_final" class="form-control form-control-sm" >
                       <span id="lbl-${element.id}"> ${element.fecha_fintxt} </span>
                     </td>
                     <td width="5%">
@@ -221,6 +223,7 @@ $(document).ready(function () {
                 </tr>`;
             });
             $("#tblListPausasExp tbody").html(tr);
+           
         } else {
             $("#tblListPausasExp tbody").html("<tr><td>No hay datos</td></tr>");
         }
@@ -290,7 +293,7 @@ $(document).ready(function () {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
                 });
-                window.location.reload(true);
+                window.location = '/expedientes/'+$("#expid").val()+'/edit#case_data';
             }
         });
 

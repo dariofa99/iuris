@@ -193,6 +193,9 @@
     @include('myforms.frm_requerimiento_details')
     @include('myforms.components_exp.frm_modal_create_requerimiento')
     @include('myforms.components_exp.frm_modal_create_actuacion')
+    @include('myforms.components_exp.frm_modal_pausar_expediente')
+    @include('myforms.components_exp.frm_modal_pausas_expediente')
+ 
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
             'user_idnumber' => $expediente->expidnumber,
