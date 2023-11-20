@@ -5,7 +5,7 @@
          $hayactuaciones = false;
          $hayhijos = false;
          $ultima_id = '';
-         $vencido = false;         
+         $vencido = false;          
          if (count($actuacion->getHijos($actuacion)) > 0) {
              $actFechaLim = $actuacion->fecha_limit;
              foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
@@ -43,7 +43,7 @@
 
          </td>
          <td>
-           
+           {{$actuacion->actestado_id}}
              @if ($actuacion->fecha_limit != '' and $hayhijos == false and $actuacion->estado->id != 139)
                  {{ getDiffDays(date('Y-m-d'), $actuacion->fecha_limit) }} Días
              @else
@@ -79,7 +79,10 @@
 
                  @if (
                      $actuacion->actestado_id == 235 and
-                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
+                         ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber 
+                         || currentUser()->hasRole('amatai')
+                         || currentUser()->hasRole('dirgral')
+                         || currentUser()->hasRole('diradmin')))
                      <button type='button' data-estado='136' value="{{ $actuacion->id }}"
                          class='btn btn-danger btn-block btn-sm btn_change_status'>
                          Des-anular</button>
@@ -179,7 +182,10 @@
                      @if (!$readonly)
                          @if (
                              $hijo->actestado_id == 136 and
-                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai'))
+                                 ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber 
+                                 || currentUser()->hasRole('amatai')
+                                 || currentUser()->hasRole('dirgral')
+                                 || currentUser()->hasRole('diradmin')))
                              <button type="button" value="{{ $hijo->id }}"
                                  class="btn btn-default btn-block btn-sm btn_change_status" style="color:#777">
                                  Marcar revisado

@@ -99,7 +99,7 @@ class ExpedienteController extends Controller
     }
     $request = $request->all();
     return view('myforms.frm_expediente_list', compact('expedientes', 'count_colors'));
-  } 
+  }
 
 
   /**
@@ -189,19 +189,7 @@ class ExpedienteController extends Controller
     $request['ref_motivo_estado_id'] = 13;
     $estado_caso = $this->estadoCasoService->store($request);
     //Notificar dir
-    if (
-      $expediente->expramaderecho_id == 15
-      or $expediente->expramaderecho_id == 17
-      or $expediente->expramaderecho_id == 18
-      or $expediente->expramaderecho_id == 19
-      or $expediente->expramaderecho_id == 20
-      or $expediente->expramaderecho_id == 21
-      or $expediente->expramaderecho_id == 35
-      or $expediente->expramaderecho_id == 37
-      or $expediente->expramaderecho_id == 39
-      or $expediente->expramaderecho_id == 40
-      or $expediente->expramaderecho_id == 41
-    ) {
+    if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
       // Notification::send($user_,new NotificarDirector($expediente));
       ProcessEmailSendNotificarDirector::dispatch($expediente)
         ->onConnection('database')->onQueue('emails');
@@ -342,14 +330,14 @@ class ExpedienteController extends Controller
     //Agregue la funcion getusers Para poder usarla en el index
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     $expediente->setNotActLimit();
-    if($expediente->isValidEvaPause()){
+    if ($expediente->isValidEvaPause()) {
       $request['expestado_id'] = 1;
       $expediente = $this->expedienteService->update($expediente, $request);
       $request['comentario'] = 'Fecha de pausa caducada';
       $request['expidnumber'] = $expediente->expid;
       $request['ref_estado_id'] = $expediente->expestado_id;
       $request['ref_motivo_estado_id'] = 11;
-      $estado_caso = $this->estadoCasoService->store($request);      
+      $estado_caso = $this->estadoCasoService->store($request);
     }
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $estudiante->id) {
@@ -373,7 +361,9 @@ class ExpedienteController extends Controller
       return redirect('/expedientes/' . $expediente->expid);
     }
     $readonly = false;
-    return view('myforms.frm_expediente_edit', compact('estudiantes', 'expediente', 'asignacion', 'readonly')
+    return view(
+      'myforms.frm_expediente_edit',
+      compact('estudiantes', 'expediente', 'asignacion', 'readonly')
     );
   }
 
@@ -1222,31 +1212,32 @@ class ExpedienteController extends Controller
   public function pruebaasig($id)
   {
 
-    try {
-      $expediente = $this->expedienteService->findWithFilter([
-        'expid' => $id
-      ]);
-    } catch (\Throwable $th) {
-      dd($th);
-    }
-
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
-    $expediente = Expediente::find(25680);
-    $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
+    $expediente = Expediente::find(23334);
+    /* $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
       'asigexp_id' => $expediente->expid,
       'activo' => 1
-    ]);
+    ]); */
+
+    if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
+      // Notification::send($user_,new NotificarDirector($expediente));
+      ProcessEmailSendNotificarDirector::dispatch($expediente)
+        ->onConnection('database')->onQueue('emails');
+        dd(ramasDerechoNotificar(),User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first());
+    }
+
+    dd("dd");
 
     if ($expediente->exptipoproce_id == 1) {
       //solo para consultas de asesoria   
-     // $this->expedienteService->asignarDocente($asignacion_caso);
+      // $this->expedienteService->asignarDocente($asignacion_caso);
     } else {
 
       //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
-   // $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
+    // $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
 
     //$relations = $asignacion_caso->getRelations();
     dd($expediente);
@@ -1354,7 +1345,6 @@ class ExpedienteController extends Controller
     }
 
     return response()->json($asig_doc);
-
   }
 
   public function darBaja(Request $request)
@@ -1418,13 +1408,14 @@ class ExpedienteController extends Controller
   {
     $expediente = $this->expedienteService->find($request->expediente_id);
     $pausas = $expediente->asignacion->pausas;
-    $pausas->each(function($pau){
+    $pausas->each(function ($pau) {
       $pau->fecha_initxt = getSmallDate($pau->fecha_inicial);
       $pau->fecha_fintxt = getSmallDate($pau->fecha_final);
     });
     return response()->json($pausas);
   }
-  public function deletePausaExpediente(Request $request,$id){
+  public function deletePausaExpediente(Request $request, $id)
+  {
     $expediente = $this->expedienteService->find($request->expediente_id);
     $request['expestado_id'] = 1;
     $expediente = $this->expedienteService->update($expediente, $request);
@@ -1436,9 +1427,10 @@ class ExpedienteController extends Controller
     $pausa = $this->expedienteService->deletePausa($id);
     return response()->json($pausa);
   }
-  public function updatePausaExpediente(Request $request,$id){
+  public function updatePausaExpediente(Request $request, $id)
+  {
     $expediente = $this->expedienteService->find($request->expediente_id);
-    $pausa = $this->expedienteService->updatePausa($id,$request);
+    $pausa = $this->expedienteService->updatePausa($id, $request);
     return response()->json($pausa);
   }
 }

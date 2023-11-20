@@ -9,24 +9,23 @@ use App\ReferencesData;
 
 function currentUser()
 {
-     return auth()->user();
+    return auth()->user();
 }
 
 
-function currentUserInConciliacion($conciliacion,$roles)
+function currentUserInConciliacion($conciliacion, $roles)
 {
-    $role = auth()->user()->tipo_conciliacion()->where('conciliacion_id',$conciliacion)->get();
-   // dd($role);
-    if(is_array($roles)){
-        foreach ($role as $key => $rol) {   
-            
-            if(in_array(strtolower($rol->ref_value),$roles)){
-                return true;
-           }
-        } 
-    }
-     return  false;
+    $role = auth()->user()->tipo_conciliacion()->where('conciliacion_id', $conciliacion)->get();
+    // dd($role);
+    if (is_array($roles)) {
+        foreach ($role as $key => $rol) {
 
+            if (in_array(strtolower($rol->ref_value), $roles)) {
+                return true;
+            }
+        }
+    }
+    return  false;
 }
 
 
@@ -35,216 +34,209 @@ function currentUserInConciliacion($conciliacion,$roles)
 
 function fechasSem($criterio)
 {
-       
-    $date=Carbon::now();
- 
 
-    if($criterio=='fechaIni')
+    $date = Carbon::now();
 
-    {
-          $fecha = $date->subDays(30)->format('Y-m-d'); 
 
-    }elseif ($criterio=='fechaFin') {
-        
-          $fecha = $date->format('Y-m-d'); 
+    if ($criterio == 'fechaIni') {
+        $fecha = $date->subDays(30)->format('Y-m-d');
+    } elseif ($criterio == 'fechaFin') {
+
+        $fecha = $date->format('Y-m-d');
     }
 
     return $fecha;
-
 }
 
 
 function TiempoTrans($criterio)
-{       
+{
 
-    Carbon::setLocale('es');       
-    $date=Carbon::parse($criterio); 
-    $fecha = $date->diffForHumans();  
+    Carbon::setLocale('es');
+    $date = Carbon::parse($criterio);
+    $fecha = $date->diffForHumans();
 
     return $fecha;
-
 }
-function getSmallDate($date){
-    $created_at = Carbon::parse($date);   
+function getSmallDate($date)
+{
+    $created_at = Carbon::parse($date);
 
-    $meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    $fecha = $created_at->day.' '.$meses[($created_at->month)-1].". ".$created_at->year;
-   
-    return $fecha;
-}
+    $meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    $fecha = $created_at->day . ' ' . $meses[($created_at->month) - 1] . ". " . $created_at->year;
 
-function getSmallDateWithHour($date){
-    $created_at = Carbon::parse($date);   
-
-    $meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    $fecha = $created_at->day.' '.$meses[($created_at->month)-1].". ".$created_at->year.". ".$created_at->format('g:i A');
-   
     return $fecha;
 }
 
+function getSmallDateWithHour($date)
+{
+    $created_at = Carbon::parse($date);
 
-function getLongDateWithHour($date){
-    $created_at = Carbon::parse($date);   
+    $meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    $fecha = $created_at->day . ' ' . $meses[($created_at->month) - 1] . ". " . $created_at->year . ". " . $created_at->format('g:i A');
 
-    $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    $fecha = $created_at->day.' '.$meses[($created_at->month)-1]." del ".$created_at->year." a las ".$created_at->format('g:i A');
-   
     return $fecha;
 }
 
-function getMonthAndYear($date){
-    $created_at = Carbon::parse($date);   
 
-    $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    $fecha = $meses[($created_at->month)-1]." de ".$created_at->year;
-   
+function getLongDateWithHour($date)
+{
+    $created_at = Carbon::parse($date);
+
+    $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    $fecha = $created_at->day . ' ' . $meses[($created_at->month) - 1] . " del " . $created_at->year . " a las " . $created_at->format('g:i A');
+
     return $fecha;
 }
 
-function getMessagesForPro($estado,$expid){
+function getMonthAndYear($date)
+{
+    $created_at = Carbon::parse($date);
+
+    $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    $fecha = $meses[($created_at->month) - 1] . " de " . $created_at->year;
+
+    return $fecha;
+}
+
+function getMessagesForPro($estado, $expid)
+{
     $messages = [
         243 =>  "Esta recibiendo este correo porque se presentó el <b>autoadmisorio</b> del proceso jurídico asignado en el 
-        expediente No. ".$expid." en ".config("app.name")."."  ,     
+        expediente No. " . $expid . " en " . config("app.name") . ".",
         244 =>  "Esta recibiendo este correo porque se presentó el <b>autoinadmisorio</b> del proceso jurídico asignado en el 
-        expediente No. ".$expid." en ".config("app.name")."."  ,  
+        expediente No. " . $expid . " en " . config("app.name") . ".",
         245 =>  "Esta recibiendo este correo porque se <b>habilitó como proceso jurídico</b> el 
-        expediente No. ".$expid." en ".config("app.name")."."  ,
+        expediente No. " . $expid . " en " . config("app.name") . ".",
         246 =>  "Esta recibiendo este correo porque se <b>presentó la demanda</b> del proceso jurídico asignado en el 
-        expediente No. ".$expid." en ".config("app.name")."."  ,
+        expediente No. " . $expid . " en " . config("app.name") . ".",
         247 =>  "Esta recibiendo este correo porque se <b>rechazó la demanda</b> del proceso jurídico asignado en el 
-        expediente No. ".$expid." en ".config("app.name")."."  ,
+        expediente No. " . $expid . " en " . config("app.name") . ".",
         001 =>  "Esta recibiendo este correo porque se <b>presentó la subsanación</b> de demanda del proceso jurídico asignado en el 
-        expediente No. ".$expid." en ".config("app.name")."."  ,
+        expediente No. " . $expid . " en " . config("app.name") . ".",
     ];
 
-    return isset($messages[$estado]) ? $messages[$estado]:"Estado no encontrado";
-
- 
+    return isset($messages[$estado]) ? $messages[$estado] : "Estado no encontrado";
 }
 
 function fechaActual()
-{       
+{
 
 
-       
-    $date=Carbon::now(); 
-    $fecha = $date->format('Y-m-d');  
+
+    $date = Carbon::now();
+    $fecha = $date->format('Y-m-d');
 
     return $fecha;
-
 }
 
 
 function parseLongDate($fecha)
-{    
-if($fecha!==null)  {
-    $date=Carbon::parse($fecha); 
-    //$fecha = $date->format('Y-m-d');  
-    $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    $dia = $date->day;
-    if($date->day<10){
-        $dia = '0'.$date->day;
-    }
-
-    $fecha = $dia.', días del mes de ' .$meses[$date->month - 1].' del año '.$date->year;
-     
-        return $fecha;
-}
-return 'sin fecha';
-
-}
-
-function getLettersDays($fecha){
-    
-    if($fecha!==null)  {
-        $date=Carbon::parse($fecha); 
+{
+    if ($fecha !== null) {
+        $date = Carbon::parse($fecha);
+        //$fecha = $date->format('Y-m-d');  
+        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         $dia = $date->day;
-         
-         //   return $fecha;
-    
+        if ($date->day < 10) {
+            $dia = '0' . $date->day;
+        }
 
-     $dias = [
+        $fecha = $dia . ', días del mes de ' . $meses[$date->month - 1] . ' del año ' . $date->year;
 
-        0=>'',
-
-        1=>'un',
-
-        2=>'dos',
-
-        3=>'tres',
-
-        4=>'cuatro',
-
-        5=>'cinco',
-
-        6=>'seis',
-
-        7=>'siete',
-
-        8=>'ocho',
-
-        9=>'nueve',
-
-        10=>'diez',
-
-        11=>'once',
-
-        12=>'doce',
-
-        13=>'trece',
-
-        14=>'catorce',
-
-        15=>'quince',
-
-        16=>'dieciseis',
-
-        17=>'diecisiete',
-
-        18=>'dieciocho',
-
-        19=>'diecinueve',
-
-        20=>'veinte',
-        21=>'veintiuno',
-        22=>'veintidos',
-        23=>'veintitres',
-        24=>'veinticuatro',
-        25=>'veinticinco',
-        26=>'veintiseis',
-        27=>'veintisiete',
-        28=>'veintiocho',
-        29=>'veintinueve',
-        30=>'treinta',
-        31=>'treintaiuno'
-
-    ];
-
-    return $dias[$dia];
+        return $fecha;
+    }
+    return 'sin fecha';
 }
-return 'sin fecha';
+
+function getLettersDays($fecha)
+{
+
+    if ($fecha !== null) {
+        $date = Carbon::parse($fecha);
+        $dia = $date->day;
+
+        //   return $fecha;
 
 
+        $dias = [
+
+            0 => '',
+
+            1 => 'un',
+
+            2 => 'dos',
+
+            3 => 'tres',
+
+            4 => 'cuatro',
+
+            5 => 'cinco',
+
+            6 => 'seis',
+
+            7 => 'siete',
+
+            8 => 'ocho',
+
+            9 => 'nueve',
+
+            10 => 'diez',
+
+            11 => 'once',
+
+            12 => 'doce',
+
+            13 => 'trece',
+
+            14 => 'catorce',
+
+            15 => 'quince',
+
+            16 => 'dieciseis',
+
+            17 => 'diecisiete',
+
+            18 => 'dieciocho',
+
+            19 => 'diecinueve',
+
+            20 => 'veinte',
+            21 => 'veintiuno',
+            22 => 'veintidos',
+            23 => 'veintitres',
+            24 => 'veinticuatro',
+            25 => 'veinticinco',
+            26 => 'veintiseis',
+            27 => 'veintisiete',
+            28 => 'veintiocho',
+            29 => 'veintinueve',
+            30 => 'treinta',
+            31 => 'treintaiuno'
+
+        ];
+
+        return $dias[$dia];
+    }
+    return 'sin fecha';
 }
 
 
 function fechaFortatoPer($criterio)
-{       
-    Carbon::setLocale('es');   
-    $date=Carbon::now(); 
-    $fecha = $date->format($criterio);  
+{
+    Carbon::setLocale('es');
+    $date = Carbon::now();
+    $fecha = $date->format($criterio);
 
     return $fecha;
-
 }
 
 
 
 function idAleatorio($criterio)
-{       
-    
-    return $criterio;
+{
 
+    return $criterio;
 }
 
 
@@ -252,21 +244,22 @@ function idAleatorio($criterio)
 
 function FullName($criterio1, $criterio2)
 {
-     return $criterio1." ".$criterio2;
+    return $criterio1 . " " . $criterio2;
 }
 
 
 
-function active($url){
+function active($url)
+{
     // dd(($url));
-     return $url === request()->is($url);
- }
+    return $url === request()->is($url);
+}
 
 
 
 
 
-if ( ! function_exists('icon_link_to_route')) {
+if (!function_exists('icon_link_to_route')) {
     /**
      * Create link to named route with glyphicon icon.
      * 
@@ -285,58 +278,61 @@ if ( ! function_exists('icon_link_to_route')) {
 
         $attributes = HTML::attributes($attributes);
 
-        $iconpart = '<i class="fa fa-'.e($icon).'"></i>';
+        $iconpart = '<i class="fa fa-' . e($icon) . '"></i>';
 
-        return '<a href="'.$url.'"'.$attributes.'>'.$iconpart.'<span>'.$title.'</span></a>';
-
+        return '<a href="' . $url . '"' . $attributes . '>' . $iconpart . '<span>' . $title . '</span></a>';
     }
 }
-  function getAditionalDataByShortName($short_name,$table){
-    return $aditional_data = ReferencesData::where('short_name',$short_name)
-    ->where('table',$table)
-    ->first();
+function getAditionalDataByShortName($short_name, $table)
+{
+    return $aditional_data = ReferencesData::where('short_name', $short_name)
+        ->where('table', $table)
+        ->first();
+}
 
-  }
-
-  function getReferencesStaticTableBySection($section,$table){
+function getReferencesStaticTableBySection($section, $table)
+{
     $ref_data = ReferencesData::where([
-        'section'=>$section,
-        'table'=>$table,
-        'is_visible'=>1
-        ])->get();
-    if ($ref_data) return $ref_data;            
-    
-   return false; 
+        'section' => $section,
+        'table' => $table,
+        'is_visible' => 1
+    ])->get();
+    if ($ref_data) return $ref_data;
+
+    return false;
 }
 
-function getReferencesDataBySection($section,$table){
+function getReferencesDataBySection($section, $table)
+{
     $rdata_enf_dif = ReferencesData::where([
-        'section' => $section, 
-        'table'=>$table,
-        'is_visible'=>1
-        ])->get();
-    if ($rdata_enf_dif) return $rdata_enf_dif;            
-    
-   return false; 
+        'section' => $section,
+        'table' => $table,
+        'is_visible' => 1
+    ])->get();
+    if ($rdata_enf_dif) return $rdata_enf_dif;
+
+    return false;
 }
 
-function getReferencesTableByCategory($category){
+function getReferencesTableByCategory($category)
+{
     $rollist = DB::table('referencias_tablas')
-    ->select('id','ref_nombre')
-    ->where('categoria',$category)
-    //->where('categoria',$category)
-    ->get();
+        ->select('id', 'ref_nombre')
+        ->where('categoria', $category)
+        //->where('categoria',$category)
+        ->get();
 
     return $rollist;
-
 }
 
-function getDiffDays($fecha_inicio,$fecha_fin){
+function getDiffDays($fecha_inicio, $fecha_fin)
+{
     $inicio = Carbon::parse($fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
     $fin = Carbon::parse($fecha_fin); //moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
     return  $inicio->diffInDays($fin, false);
 }
-function quitarAcentos($cadena) {
+function quitarAcentos($cadena)
+{
     $acentos = array(
         'á' => 'a',
         'é' => 'e',
@@ -359,6 +355,30 @@ function quitarAcentos($cadena) {
     $cadenaSinAcentos = strtr($cadena, $acentos);
 
     return $cadenaSinAcentos;
+}
+
+function ramasDerechoNotificar()
+{
+    return [
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        31,
+        32,
+        33,
+        35,
+        37,
+        39,
+        40,
+        41,
+    ];
 }
 
 ?>
