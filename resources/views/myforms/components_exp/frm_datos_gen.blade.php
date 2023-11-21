@@ -80,9 +80,9 @@
 
                 @if (
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                        $expediente->asignacion->procesojud_id != 1 and
-                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                            (currentUser()->hasRole('diradmin') ||
+                        $expediente->asignacion->procesojud_id == 1 and
+                        ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                            currentUser()->hasRole('diradmin') ||
                                 currentUser()->hasRole('dirgral') ||
                                 currentUser()->hasRole('amatai')))
                     <a href="#" id="btn_act_proc_jur"

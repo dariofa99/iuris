@@ -32,7 +32,7 @@
                     <option value="users">Usuarios</option>
                     <option value="conciliaciones">Conciliaciones</option>
                     <option value="pdf_reportes">Reportes pdf</option>
-                </select>
+                </select> 
             </div>
 
             <div class="form-group content_section" id="content_section" style="display: none">

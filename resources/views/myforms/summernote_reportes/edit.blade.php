@@ -67,7 +67,7 @@
                     <div class="tab-content" id="custom-tabs-four-tabContent">
                         <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel"
                             aria-labelledby="custom-tabs-four-home-tab">
-                        @include('myforms.conciliaciones.reportes', [
+                        @include('myforms.summernote_reportes.componentes.reportes', [
                                 'view' => 'store',
                                 'mySummernote' => 'summernote_store',
                                 'myForm' => 'myFormCreatePdfReporte',
@@ -75,7 +75,7 @@
                         </div>
                         <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                             aria-labelledby="custom-tabs-four-profile-tab">
-                            @include('myforms.conciliaciones.reportes', [
+                            @include('myforms.summernote_reportes.componentes.reportes', [
                                 'view' => 'update',
                                 'mySummernote' => 'summernote_update',
                                 'myForm' => 'myFormEditPdfReporte',
@@ -83,13 +83,13 @@
                         </div>
                         <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel"
                             aria-labelledby="custom-tabs-four-messages-tab">
-                            @include('myforms.conciliaciones.admin_destinos')
+                            @include('myforms.summernote_reportes.componentes.admin_destinos')
                         </div>
 
                     </div>
                 </div>
                 <!-- /.card -->
-            </div>
+            </div> 
         </div>
     </div>
 

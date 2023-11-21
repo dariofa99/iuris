@@ -156,7 +156,7 @@ class PdfReportesController extends Controller
         $reportes = PdfReporte::where('is_copy',0)
         ->get();;
         $conciliacion = new Conciliacion();       
-        return view('myforms.conciliaciones.reportes.edit',compact('conciliaciones','reportes','conciliacion'));
+        return view('myforms.summernote_reportes.edit',compact('conciliaciones','reportes','conciliacion'));
    }
     public function store(Request $request){
       //  dd($request->all());

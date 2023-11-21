@@ -406,18 +406,16 @@ $(".item_con").on("mousedown", function (e) {
     var mySummernote = $(this).attr("data-summernote");
     var clasehechopre = '';
     var salto = '';
-    if ($(this).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
+    if ($(this).attr("data-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
     $("#" + mySummernote).summernote(
         "pasteHTML",
-        `<span data-table="${$(this).attr(
-            "data-table"
-        )}" data-short_name="${$(this).attr(
-            "data-short_name"
-        )}" user-type="${$(this).attr("user-type")}" data-name="[-${$(
-            this
-        ).attr("data-name")}-]" class="item_sp ${clasehechopre}">[-` +
-        $(this).attr("data-name") +
-        `-]</span>${space}`
+        `<span data-table="${$(this).attr("data-table")}"
+               data-model="${$(this).attr("data-model")}" 
+               data-short_name="${$(this).attr("data-short_name")}"
+               data-type="${$(this).attr("data-type")}" 
+               data-name="[-${$(this).attr("data-name")}-]" 
+               class="item_sp ${clasehechopre}">[-${$(this).attr("data-name")}-]
+        </span>${space}`
     );
 });
 
@@ -429,15 +427,13 @@ $("#content_categories_ajax").on("mousedown",".item_con",function (e) {
     if ($(this).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
     $("#" + mySummernote).summernote(
         "pasteHTML",
-        `<span data-table="${$(this).attr(
-            "data-table"
-        )}" data-short_name="${$(this).attr(
-            "data-short_name"
-        )}" user-type="${$(this).attr("user-type")}" data-name="[-${$(
-            this
-        ).attr("data-name")}-]" class="item_sp ${clasehechopre}">[-` +
-        $(this).attr("data-name") +
-        `-]</span>${space}`
+        `<span data-table="${$(this).attr("data-table")}"
+               data-model="${$(this).attr("data-model")}" 
+               data-short_name="${$(this).attr("data-short_name")}"
+               data-type="${$(this).attr("data-type")}" 
+               data-name="[-${$(this).attr("data-name")}-]" 
+               class="item_sp ${clasehechopre}">[-${$(this).attr("data-name")}-]
+        </span>${space}`
     );
 });
 

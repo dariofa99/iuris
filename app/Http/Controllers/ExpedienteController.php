@@ -1221,12 +1221,12 @@ class ExpedienteController extends Controller
       'activo' => 1
     ]); */
 
-    if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
+    /* if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
       // Notification::send($user_,new NotificarDirector($expediente));
       ProcessEmailSendNotificarDirector::dispatch($expediente)
         ->onConnection('database')->onQueue('emails');
         dd(ramasDerechoNotificar(),User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first());
-    }
+    } */
 
     dd("dd");
 

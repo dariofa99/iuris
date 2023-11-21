@@ -23,7 +23,11 @@ class ComposerServiceProvider extends ServiceProvider
             'myforms.conciliaciones.*',    
         ],'App\Http\ViewComposers\ConciliacionesComposer'); 
 
-        
+        View::composer([
+            'myforms.summernote_reportes.*',    
+        ],'App\Http\ViewComposers\SummernoteReportesComposer'); 
+
+
         View::composer([
             'myforms.notas_ver.*',    
         ],'App\Http\ViewComposers\NotasComposer');

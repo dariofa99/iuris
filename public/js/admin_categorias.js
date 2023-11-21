@@ -8,7 +8,8 @@ const dataSections = {
         { id: 'apoderado_solicitante', value: 'Apoderado de la parte solicitante' },
         { id: 'parte_solicitada', value: 'Parte solicitada' },
         { id: 'rep_legal_solicitada', value: 'Representante legal - solicitada' },
-        { id: 'elementos_juridicos', value: 'Elementos jurídicos' }
+        { id: 'elementos_juridicos', value: 'Elementos jurídicos' },
+        { id: 'asunto', value: 'Asunto' }
     ],
     'users': [
         { id: 'datos_personales', value: 'Datos personales' },

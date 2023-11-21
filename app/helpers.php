@@ -359,21 +359,7 @@ function quitarAcentos($cadena)
 
 function ramasDerechoNotificar()
 {
-    return [
-        15,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        31,
-        32,
-        33,
-        35,
+    return [15,17,18,19,20,21,22,23,24,25,31,32,33,35,
         37,
         39,
         40,
