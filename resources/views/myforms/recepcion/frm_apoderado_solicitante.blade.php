@@ -1,22 +1,21 @@
 @php
-  $user = $conciliacion->getUser(196);
+    $user = $conciliacion->getUser(196);
 @endphp
 <form id="myFormApoderado">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="checkbox">
-        <label>
-          <input {{($conciliacion->getStaticDataVal('informacion_parte_convocada','parte_solicitada')) ? 'checked':''}} id="chk_not_parte_apoderado" type="checkbox">
-           No tengo apoderado
-        </label>
-      </div>
+    <div class="row mb-1">
+        <div class="col-md-12">
+            <h4>
+                Marque la siguiente casilla en caso de no contar con un apoderado
+                <input class="chk_not_parte"
+                    id="chk_not_parte_apoderado" type="checkbox">
+            </h4>
+        </div>
     </div>
-  </div>
-  <div class="row" id="content_apoderado_solicitud">
-    @include('myforms.conciliaciones.componentes.formulario_apoderado',
-    [
-        "disabled"=>(!Request::has('id') || $user->idnumber!=null) ? "disabled" : ''    ])
+    <div class="row" id="content_apoderado_solicitud">
+        @include('myforms.conciliaciones.componentes.formulario_apoderado', [
+            'disabled' => !Request::has('id') || $user->idnumber != null ? 'disabled' : '',
+        ])
 
-    
- 
+
+
 </form>

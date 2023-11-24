@@ -88,6 +88,7 @@
 #wait{
 	z-index: 200000;
 }
+
 #load{
 animation: spin 5s linear infinite;
 }

@@ -154,7 +154,7 @@
                    <button type="button" data-tipo="208" class="btn btn-warning btn-sm float-right btn_add_conc_he_con"> Agregar Acuerdo</button>       
               </label>
             <div id="content_hechos_pretensiones-208" class="content_hechos_pretensiones">
-                @include('myforms.conciliaciones.componentes.hechos_pretenciones_ajax',[
+                @include('myforms.conciliaciones.componentes.hechos_pretensiones_ajax',[
                     'tipo_id'=>208
                 ]) 
             </div>           

@@ -2,7 +2,7 @@
 
 <div class="col-md-3">
     <div class="form-group has-feedback">
-        <label for="idnumber">Tipo de Persona*</label>
+        <label for="idnumber">Tipo de Persona<span class="ast_required">*</span></label>
       <select {{$disabled}}  required name="tipopers_id" id="tipopers_id" class="form-control form-control-sm required">
           <option value="">Seleccione...</option>
           @foreach($tipopers as $key => $doc)
@@ -13,7 +13,7 @@
   </div>
 
   <div class="col-md-3">
-    <div class="form-group has-feedback"><label for="idnumber">Tipo documento*</label>
+    <div class="form-group has-feedback"><label for="idnumber">Tipo documento<span class="ast_required">*</span></label>
       <select {{$disabled}}  name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required" required>
           <option value="">Seleccione...</option>
           @foreach($tipodoc as $key => $doc)
@@ -25,7 +25,7 @@
   <div class="col-md-3">
     <div class="form-group">
         <label>
-           No. Identificación*
+           No. Identificación<span class="ast_required">*</span>
         </label>
         
         <input name="idnumber" {{$disabled}}  data-name="idnumber"   required  type="text"
@@ -38,7 +38,7 @@
 <div class="col-md-3">
 <div class="form-group">
     <label >  
-        Nombres*</label>
+        Nombres<span class="ast_required">*</span></label>
     <input  name="name"  {{$disabled}}  data-name="nombre"   required  type="text"
      value="{{$user->name}}" class="form-control form-control-sm required"
     @if(($conciliacion->estado_id!=177 and $conciliacion->estado_id!=179)  and !auth()->user()->can('act_conciliacion'))
@@ -51,7 +51,7 @@
 <div class="col-md-3">
 <div class="form-group">
     <label >  
-        Apellidos*</label>
+        Apellidos<span class="ast_required">*</span></label>
     <input  name="lastname"  {{$disabled}}  data-name="nombre"   required  type="text"
      value="{{$user->lastname}}" class="form-control form-control-sm required"
     @if(($conciliacion->estado_id!=177 and $conciliacion->estado_id!=179)  and !auth()->user()->can('act_conciliacion'))
@@ -63,7 +63,7 @@
 </div>
 <div class="col-md-3">
 <div class="form-group">
-    <label >Teléfono*
+    <label >Teléfono<span class="ast_required">*</span>
     </label>
     <input  name="tel1"  {{$disabled}}  data-name="telefono"   required  type="text"
     value="{{$user->tel1}}" class="form-control form-control-sm required"
@@ -78,7 +78,7 @@
 
 <div class="col-md-3">
 <div class="form-group">
-    <label > Correo electrónico*
+    <label > Correo electrónico<span class="ast_required">*</span>
         </label>
     <input  name="email"  {{$disabled}}  data-name="correo_electronico"   required  type="text"
     value="{{$user->email}}"

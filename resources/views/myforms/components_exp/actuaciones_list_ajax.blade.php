@@ -42,8 +42,7 @@
              </span>
 
          </td>
-         <td>
-           {{$actuacion->actestado_id}}
+         <td>          
              @if ($actuacion->fecha_limit != '' and $hayhijos == false and $actuacion->estado->id != 139)
                  {{ getDiffDays(date('Y-m-d'), $actuacion->fecha_limit) }} Días
              @else

@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <input type="hidden" name="sede_id">
                 <label>
-                    Selecciona una sede*
+                    Selecciona una sede<span class="ast_required">*</span>
                 </label>
             </div>
             @foreach ($sedes as $key => $sede)

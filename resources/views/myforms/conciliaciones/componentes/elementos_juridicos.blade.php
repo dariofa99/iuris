@@ -16,12 +16,12 @@
     || currentUser()->hasRole('amatai')))
             || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar','conciliador']) || currentUser()->hasRole('amatai'))))
              @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor'])))
-         <button type="button" data-tipo="206" class="btn btn-primary btn-sm float-right btn_add_conc_he_con">Agregar hecho</button>
+         <button type="button" data-tipo="206" class="btn btn-primary btn-sm float-right btn_add_conc_he_con">Agregar hechos</button>
          @endif
     @endif
     </label>
     <div id="content_hechos_pretensiones-206" class="content_hechos_pretensiones">
-        @include('myforms.conciliaciones.componentes.hechos_pretenciones_ajax',[
+        @include('myforms.conciliaciones.componentes.hechos_pretensiones_ajax',[
             'tipo_id'=>206
         ]) 
     </div>
@@ -41,7 +41,7 @@
             @endif
             </label>
             <div id="content_hechos_pretensiones-207" class="content_hechos_pretensiones">
-                @include('myforms.conciliaciones.componentes.hechos_pretenciones_ajax',[
+                @include('myforms.conciliaciones.componentes.hechos_pretensiones_ajax',[
                     'tipo_id'=>207
                 ]) 
             </div>

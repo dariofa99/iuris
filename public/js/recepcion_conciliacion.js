@@ -9,6 +9,7 @@ $(function () {
 
   $("#btn_registrar_conc").on("click", async function (e) {
     e.preventDefault();
+
     var errors = validateForm("myFormParteSolicitante");
     //console.log(errors)
     if (errors.length <= 0) {
@@ -43,8 +44,6 @@ $(function () {
           console.log('I was closed by the timer')
         }
       })
-
-      //  var request = new FormData(document.getElementById("myFormParteSolicitante"));  
       var data = [];
       $(".input_user_ad").each((index, obj) => {
         data.push({
@@ -68,7 +67,20 @@ $(function () {
           });
         });
       } else {
-        window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
+        Swal.close();
+        Swal.fire({
+          title: "La solicitud se ha creado con éxito!",
+          html: `<h5>Hemos enviado un correo electrónico con el enlace 
+                  para que puedas seguir el proceso en caso de perder la conexión actual.</h5>`,
+          type: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Continuar..!",
+
+        }).then((result) => {
+          if (result.value) {
+            window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
+          }
+        });
       }
     } else {
       toastr.error("Hay campos que son obligatorios", "Atención!", {
@@ -118,20 +130,25 @@ $(function () {
     var errors = validateForm("myFormApoderado");
     if (errors.length <= 0) {
       addUserByStep("myFormApoderado", this, 4)
+    } else {
+      toastr.error("Marque la casilla en caso de no contar con un apoderado", "Hay campos que son obligatorios", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
     }
   });
 
   $("#btn_parte_convocada").on("click", async function () {
     $("#wait").show();
     if (!$("#chk_not_parte").is(":checked")) {
-      $("#myFormParteConvocada textarea").remove()
+      $("#myFormParteConvocada textarea").prop('disabled', true);
       var errors = validateForm("myFormParteConvocada");
       if (errors.length <= 0) {
         addUserByStep("myFormParteConvocada", this, 6)
       }
     } else {
       if ($("#myFormParteConvocada textarea").val() != '') {
-        validateForm("myFormParteConvocada");
+        //validateForm("myFormParteConvocada");
         var request = {};
         request["conciliacion_id"] = $("#conciliacion_id").val();
         var data = [];
@@ -147,7 +164,6 @@ $(function () {
           });
         });
         request["data"] = (data);
-        console.log(request);
         let response_ = await conciliacionService.addAditionalData(request);
         window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + 6;
       } else {
@@ -165,17 +181,6 @@ $(function () {
       $("#wait").show();
       request["conciliacion_id"] = $("#conciliacion_id").val();
       var data = [];
-      /*     $(".input_cd").each((index,obj)=>{          
-            data.push({
-              value : $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-              section : $(obj).attr("data-section"),
-              type : $(obj).attr("data-type"),
-              name :  $(obj).attr("data-name"),
-              option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-              value_is_other:"",
-              conciliacion_id:$("#conciliacion_id").val()
-            }) ;         
-          });  */
       $("#myFormAsunto .input_user_ad").each((index, obj) => {
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
@@ -190,7 +195,11 @@ $(function () {
       request["data"] = (data);
       let response_ = await conciliacionService.addAditionalData(request);
       window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + 5;
-
+    } else {
+      toastr.error("", "Hay campos que son obligatorios", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
     }
   });
 
@@ -218,29 +227,46 @@ $(function () {
     e.preventDefault();
     $("#myformEditHechoPretension").attr('id', 'myformCreateHechoPretension');
     $("#myformCreateHechoPretension input[name=id]").val('')
-    $("#myformCreateHechoPretension textarea[name=descripcion]").val('')
-    $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'))
+    $("#myformCreateHechoPretension textarea").val('')
+    $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'));
+    
+    var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1
+    var lbl = $(this).attr('data-tipo') == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones"
+    $(this).attr('data-tipo') == 206 ? $("#btn_add_he_pret_input").text("Agregar otro hecho") :
+    $("#btn_add_he_pret_input").text("Agregar otra pretension")
+    
+    var row = `
+      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr">
+        <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+        <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+      </div>
+`
+    $("#content_create_descrip_hepr").html(row)
+
     $("#myModalCreateConcHechosPretensiones").modal('show');
     $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos" : "Agregando pretensiones")
   });
 
   $(".btn_create_document").on("click", function (e) {
+    $("#cont_files input[name=category_id]").remove();
+    $("#cont_files").append(
+      $("<input>", {
+        type: 'hidden',
+        value: $(this).attr("data-category"),
+        name: "category_id",
+        id:"anexo_category_id"
+      })
+    )
 
-    $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
+    /* $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
     $("#myformCreateConciliacionAnexo")[0].reset();
     $("#myformCreateConciliacionAnexo input[name=concept]").val($(this).attr("data-concept"));
     $("#myformCreateConciliacionAnexo input[name=category_id]").remove();
     $("#myformEditConciliacionAnexo input[name=conciliacion_file]").prop(
       "required",
       true
-    );
-    $("#myformCreateConciliacionAnexo").append(
-      $("<input>", {
-        type: 'hidden',
-        value: $(this).attr("data-category"),
-        name: "category_id"
-      })
-    )
+    ); */
+  /*    */
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");
@@ -248,16 +274,38 @@ $(function () {
 
   $("#myModalCreateConcHechosPretensiones").on("submit", '#myformCreateHechoPretension', async function (e) {
     e.preventDefault()
-    $("#wait").show();
-    var request = convertFormToJSON("myformCreateHechoPretension");
-    request['conciliacion_id'] = $("#conciliacion_id").val()
-    e.preventDefault()
-    const response = await conciliacionService.addHechosPretensiones(request);
-    if (response.view || response.view == "") {
-      $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
+   
+    var errors = validateForm('myformCreateHechoPretension');
+    console.log(errors);
+    if(errors.length<=0){
+      $("#myModalCreateConcHechosPretensiones").modal('hide');
+      $("#wait").show();
+      var request = convertFormToJSON("myformCreateHechoPretension");
+      request['conciliacion_id'] = $("#conciliacion_id").val()
+      e.preventDefault();
+      const response = await conciliacionService.addHechosPretensiones(request);
+      if (response.view || response.view == "") {
+        $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
+      }
+      $("#wait").hide();
     }
-    $("#myModalCreateConcHechosPretensiones").modal('hide');
-    $("#wait").hide();
+   
+  });
+
+  $("#myModalCreateConcHechosPretensiones").on("click", '#btn_add_he_pret_input', async function (e) {
+    e.preventDefault();
+    var tipo = $("#myformCreateHechoPretension input[name='tipo_id']").val();
+    console.log(tipo);
+    var key = $(".count_input_descrip_hepr_"+tipo).length + 1
+    var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
+    
+    var row = `
+              <div class="form-group content_input_descrip_hepr count_input_descrip_hepr">
+                <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+                <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+              </div>
+   `
+    $("#content_create_descrip_hepr").append(row)
   });
 
   $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", async function (e) {
@@ -365,8 +413,10 @@ $(function () {
 
   $("#chk_not_parte").on("change", function (e) {
     $("#content_solicitada").show();
-    $("#content_detalles_solicitada").hide()
+    $("#content_detalles_solicitada").hide();
+    $("#myFormParteConvocada textarea").prop('disabled', true);
     if ($(this).is(":checked")) {
+      $("#myFormParteConvocada textarea").prop('disabled', false)
       $("#content_solicitada").hide();
       $("#content_detalles_solicitada").show()
     }

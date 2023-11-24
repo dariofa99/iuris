@@ -96,8 +96,6 @@ function validateForm(form) {
        
         if ($(obj).attr('disabled') != 'disabled' && !$(obj).is("input[type='hidden']")) {
             if ($(obj).is("input, select, textarea") && !$(this).is("div") && $(this).val() == '') {
-                console.log($(obj));
-                var inputElement = $(obj);
                 $(obj).show().css({"background":"red"});
                 errors.push('El campo ' + $(obj).attr('name') + ' es obligatorio');
                 $(obj).css({ 'background': '#EC7063', 'border': '1px solid #EAEDED', 'color': "black" }).addClass("placeholdercolor");

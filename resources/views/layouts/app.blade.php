@@ -24,9 +24,9 @@
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/general.css') }}">
     
-    <link rel="stylesheet"
-        href="{{ config('app.name') != 'ConciliApp' ? asset('css/landing_iuris.css') : asset('css/conciliappfront.css') }}">
+    <link rel="stylesheet" href="{{ config('app.name') == 'Iuris' ? asset('css/landing_iuris.css') : asset('css/conciliappfront.css') }}">
 
     @stack('styles')
 </head>

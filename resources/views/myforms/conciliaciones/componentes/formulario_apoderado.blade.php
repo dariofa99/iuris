@@ -1,7 +1,7 @@
 <input type="hidden" name="id" value="{{isset($user) ? $user->id : ''}}">
 
 <div class="col-md-3">
-<div class="form-group has-feedback"><label for="idnumber">Tipo documento*</label>
+<div class="form-group has-feedback"><label for="idnumber">Tipo documento<span class="ast_required">*</span></label>
   <select  {{isset($disabled) ? $disabled : ''}}  name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required" required>
       <option value="">Seleccione...</option>
       @foreach($tipodoc as $key => $doc)
@@ -14,7 +14,7 @@
 <div class="col-md-3">
 <div class="form-group">
     <label>
-       No. Documento*
+       No. Documento<span class="ast_required">*</span>
     </label>
     <input {{isset($disabled) ? $disabled : ''}}   data-name="cc_nit"  required  type="text"
     value="{{$user->idnumber}}" name="idnumber"
@@ -28,7 +28,7 @@
 <div class="col-md-3">
 <div class="form-group">
     <label >  
-        Nombres*</label>
+        Nombres<span class="ast_required">*</span></label>
     <input   data-name="nombre"  required  type="text"
     {{isset($disabled) ? $disabled : ''}} 
     value="{{$user->name}}"  name="name"
@@ -43,7 +43,7 @@
 <div class="col-md-3">
 <div class="form-group">
     <label >  
-        Apellidos*</label>
+        Apellidos<span class="ast_required">*</span></label>
     <input
     {{isset($disabled) ? $disabled : ''}}  
      data-name="nombre"   required  type="text"
@@ -58,7 +58,7 @@
 
 <div class="col-md-3">
 <div class="form-group">
-    <label >Teléfono*
+    <label >Teléfono<span class="ast_required">*</span>
     </label>
     <input {{isset($disabled) ? $disabled : ''}}   data-name="tel1" name="tel1"  required  type="text"
     value="{{$user->tel1}}" name="tel1"

@@ -1240,8 +1240,7 @@ class ExpedienteController extends Controller
     // $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
 
     //$relations = $asignacion_caso->getRelations();
-    dd($expediente);
-
+    
     $fecha_unix = strtotime("+1 hours");
     $tokenjitsi = array(
       'context' => array(
@@ -1285,8 +1284,6 @@ class ExpedienteController extends Controller
       $request->estado_id,
       Auth::user()->name . " " . Auth::user()->lastname
     )->onConnection('database')->onQueue('emails');
-
-
     return response()->json($expediente);
   }
 

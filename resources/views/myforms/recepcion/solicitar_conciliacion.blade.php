@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @push('styles')
+<link rel="stylesheet" href="{{asset('/plugins/dropzone59/dropzone.css')}}">
+@endpush
    
 @section('content')
 @php
@@ -170,7 +172,10 @@ $pasos = [
     {{-- <script type="module" src={{asset("js/conciliaciones.js")}}></script>
     <script type="module" src={{asset("js/users.js")}}></script>
     --}} 
-    <script type="module"   src={{asset("js/recepcion_conciliacion.js")}}></script>
+    <script src="{{asset('/plugins/dropzone59/dropzone59.js')}}"></script>
+    <script src={{asset("js/dropzone_anexos.js")}}></script>
  
-
+    <script type="module"   src={{asset("js/recepcion_conciliacion.js")}}></script>
+   
+  
 @endpush

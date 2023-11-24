@@ -7,24 +7,21 @@
             <div class="col-md-12">
                 <div class="checkbox">
                     <label>
+                        Marque la casilla en caso de no tener toda la información de la parte convocada
                         <input
-                        {{ (!$conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') || ($conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') and $user->idnumber == null)) ? 'checked' : '' }}
-                            id="chk_not_parte" type="checkbox">
-                        No tengo toda la información de la parte convocada
+                            {{ ($user->idnumber == null and $conciliacion->getStaticDataValByShortName('informacion_parte_convocada_(ej._nombres,_direccion,_telefono)', 'parte_solicitada')) ? 'checked' : '' }}
+                            class="chk_not_parte" id="chk_not_parte" type="checkbox">
                     </label>
                 </div>
             </div>
         </div>
         
-        <div class="row" id="content_solicitada" @if($user and $user->id==null) style="display:none" @endif>
+        <div class="row" id="content_solicitada" style="display: {{ ($user->idnumber == null and $conciliacion->getStaticDataValByShortName('informacion_parte_convocada_(ej._nombres,_direccion,_telefono)', 'parte_solicitada')) ? 'none' : 'auto' }}">
             @include('myforms.conciliaciones.componentes.formulario_parte_solicitada', [
-                'disabled' => ($user->idnumber== null)?:"disabled",
+                'disabled' => $user->idnumber == null ?: 'disabled',
             ])
         </div>
-
-
-        <div class="row" id="content_detalles_solicitada"
-            style="display: {{ (!$conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') || ($conciliacion->getStaticDataVal('informacion_parte_convocada', 'parte_solicitada') and $user->idnumber == null)) ? 'block' : 'none' }}">
+        <div class="row" id="content_detalles_solicitada" style="display: {{ ($user->idnumber == null and $conciliacion->getStaticDataValByShortName('informacion_parte_convocada_(ej._nombres,_direccion,_telefono)', 'parte_solicitada')) ? 'auto' : 'none' }}">
             <div class="col-md-12">
                 <div class="form-group">
                     @include('myforms.conciliaciones.componentes.asunto', [
@@ -32,7 +29,6 @@
                         'col' => 12,
                         'disabled' => '',
                     ])
-
                 </div>
             </div>
         </div>

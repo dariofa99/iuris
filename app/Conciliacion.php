@@ -119,12 +119,13 @@ class Conciliacion extends Model
         ->withPivot('id','conciliacion_id','exp_id','type_status_id','user_id','actuacion_id')->withTimestamps(); 
      }
 
-    public function getStaticDataVal($name,$section,$option_id=null){
-        $ref_data = ReferencesStaticData::where(
-            ['name'=>$name,
+    public function getStaticDataValByShortName($name,$section,$option_id=null){
+        $ref_data = ReferencesData::where(
+            ['short_name'=>$name,
             'section'=>$section
             ])->first();
-        //return $ref_data;
+        
+
          if ($ref_data) {           
             $data = $this->aditional_static_data()
             ->where([

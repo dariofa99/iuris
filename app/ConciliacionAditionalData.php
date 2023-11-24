@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class ConciliacionAditionalData extends Model
 {
     protected $table = 'conciliacion_aditional_data';
-    protected $fillable = ['value',
+    protected $fillable = [
+    'value',
     'value_is_other',
     'reference_data_id',
     'reference_data_option_id',
-    'conciliacion_id'];
+    'conciliacion_id'
+];
 
 
     public function reference()
