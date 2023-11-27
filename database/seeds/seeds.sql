@@ -246,7 +246,9 @@ INSERT INTO `referencias_tablas` (`id`, `ref_value`, `ref_nombre`, `categoria`, 
 (245, '2', 'Presentación demanda', 'projudexp_estado', '#52BE80', 'expediente_procesos', '2018-02-07 10:00:21', '2018-02-07 10:00:19'),
 (246, '1', 'Vigilancia judicial', 'projudexp_estado', '#52BE80', 'expediente_procesos', '2018-02-07 10:00:21', '2018-02-07 10:00:19'),
 (247, '4', 'Rechazado', 'projudexp_estado', '#52BE80', 'expediente_procesos', '2018-02-07 10:00:21', '2018-02-07 10:00:19'),
-(248, '2', 'Tarjeta de identidad', 'tipo_doc', NULL, 'users', '2018-02-07 10:00:02', '2018-02-07 10:00:00');
+(248, '2', 'Tarjeta de identidad', 'tipo_doc', NULL, 'users', '2018-02-07 10:00:02', '2018-02-07 10:00:00'),
+(249, 'Activo', 'Pausado (Activo)', 'tipo_estado', '#48A008', 'expedientes_pausa', '2020-04-20 16:56:14', '2020-04-20 16:56:14'),
+(250, 'Inactivo', 'Pausado (Inactivo)', 'tipo_estado', '#48A008', 'expedientes_pausa', '2020-04-20 16:56:14', '2020-04-20 16:56:14');
 
 INSERT INTO `users` (`id`, `active`, `tipodoc_id`, `tipopers_id`, `idnumber`, `name`, `lastname`, `email`, `password`, `accesofvir`, `description`, `tel1`, `tel2`, `address`, `codigo_estudiantil`, `image`, `datecreated`, `genero_id`, `estadocivil_id`, `estrato_id`, `cursando_id`, `fechanacimien`, `pbesena`, `pbepersondiscap`, `pbevictimconflic`, `pbeadultomayor`, `pbeminoetnica`, `pbemadrecomuni`, `pbecabezaflia`, `pbeninguna`, `usercreated`, `userupdated`, `remember_token`, `confirm_token`, `active_asignacion`, `created_at`, `updated_at`) VALUES
 (1, 1, 2, 237, '1085278208', 'DARIO FAVIER', 'NARVAEZ CALVACHE', 'darioj99@gmail.com', '$2y$10$g3emKA4c8jIEz5bfMMbkOu42LYLNJGK1TBOwtlBdgEhHe4u9ViYhS', '1', '.', '3184637998', '3145507486', 'CALLE 17 CON CARRERA 102 BARRIO PALERMO', '0', '1085278208.jpg', '2017-01-01', 6, 18, 12, 1, '1989-11-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1085271189', '1085271189', NULL, NULL, 0, '2017-08-25 18:27:59', '2023-08-29 16:07:17'),
@@ -524,25 +526,33 @@ INSERT INTO `role_user` (`user_id`, `role_id`) VALUES
 
 
 INSERT INTO `references_data` (`id`, `name`, `short_name`, `categories`, `section`, `is_visible`, `table`, `type_data_id`, `created_at`, `updated_at`) VALUES
-(1, 'Nombre Identitario', 'nombre_identitario', 'users', 'enfoque_diferencial', 1, 'users', 168, '2021-04-22 03:13:33', '2023-05-03 16:13:48'),
-(2, 'Sisben', 'sisben', 'users', 'socio_economica', 1, 'users', 169, '2021-04-22 03:15:15', '2023-03-02 15:33:09'),
-(3, 'Identidad de género', NULL, 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-22 03:16:11', '2021-04-22 03:16:11'),
-(4, 'Orientación sexual', NULL, 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-22 03:18:04', '2021-04-22 03:18:04'),
-(5, '¿Es lidere o lideresa, defensor (a) de derechos humanos?', 'lider_defensor_dhumanos', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-22 03:20:20', '2023-03-01 22:28:38'),
-(6, '¿Es usted una persona con discapacidad?', 'discapacidad', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-22 03:21:10', '2023-03-01 22:41:52'),
-(7, '¿Requiere de algún tipo de apoyo? Intérprete de lengua de señas, lector de pantalla', 'requiere_algun_apoyo', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-22 03:22:44', '2023-03-01 22:39:21'),
-(8, 'Personas a cargo', 'personas_cargo', 'users', 'socio_economica', 1, 'users', 169, '2021-04-22 03:25:16', '2023-03-01 23:22:16'),
-(9, '¿Pertenece a algún grupo étnico?', 'pertenece_grupo_etnico', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-22 03:33:30', '2023-03-01 22:44:06'),
-(10, 'Ingresos mensuales', 'ingresos_mensuales', 'users', 'socio_economica', 1, 'users', 168, '2023-03-02 15:43:20', '2023-03-02 15:43:20'),
-(11, 'Egresos mensuales', 'egresos_mensuales', 'users', 'socio_economica', 1, 'users', 168, '2023-03-02 15:45:37', '2023-03-02 15:45:37'),
-(12, 'Vivienda', 'tipo_vivienda', 'users', 'socio_economica', 1, 'users', 169, '2023-03-02 15:46:46', '2023-03-02 15:46:46'),
-(13, 'Nivel de escolaridad', 'nivel_escolaridad', 'users', 'socio_economica', 1, 'users', 169, '2023-03-02 15:48:24', '2023-03-02 15:48:24');
+(1, 'Nombre Identitario', 'nombre_identitario', 'users', 'enfoque_diferencial', 1, 'users', 168, '2021-04-21 22:13:33', '2023-05-03 11:13:48'),
+(2, 'Sisben', 'sisben', 'users', 'socio_economica', 1, 'users', 169, '2021-04-21 22:15:15', '2023-03-02 10:33:09'),
+(3, 'Identidad de género', 'identidad_de_genero', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-21 22:16:11', '2021-04-21 22:16:11'),
+(4, 'Orientación sexual', 'orientacion_sexual', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-21 22:18:04', '2021-04-21 22:18:04'),
+(5, '¿Es lidere o lideresa, defensor (a) de derechos humanos?', 'lider_defensor_dhumanos', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-21 22:20:20', '2023-03-01 17:28:38'),
+(6, '¿Es usted una persona con discapacidad?', 'discapacidad', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-21 22:21:10', '2023-03-01 17:41:52'),
+(7, '¿Requiere de algún tipo de apoyo? Intérprete de lengua de señas, lector de pantalla', 'requiere_algun_apoyo', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-21 22:22:44', '2023-03-01 17:39:21'),
+(8, 'Personas a cargo', 'personas_cargo', 'users', 'socio_economica', 1, 'users', 169, '2021-04-21 22:25:16', '2023-03-01 18:22:16'),
+(9, '¿Pertenece a algún grupo étnico?', 'pertenece_grupo_etnico', 'users', 'enfoque_diferencial', 1, 'users', 169, '2021-04-21 22:33:30', '2023-03-01 17:44:06'),
+(10, 'Ingresos mensuales', 'ingresos_mensuales', 'users', 'socio_economica', 1, 'users', 168, '2023-03-02 10:43:20', '2023-03-02 10:43:20'),
+(11, 'Egresos mensuales', 'egresos_mensuales', 'users', 'socio_economica', 1, 'users', 168, '2023-03-02 10:45:37', '2023-03-02 10:45:37'),
+(12, 'Vivienda', 'tipo_vivienda', 'users', 'socio_economica', 1, 'users', 169, '2023-03-02 10:46:46', '2023-03-02 10:46:46'),
+(13, 'Nivel de escolaridad', 'nivel_escolaridad', 'users', 'socio_economica', 1, 'users', 169, '2023-03-02 10:48:24', '2023-03-02 10:48:24'),
+(16, 'Lugar exp. Documento', 'lugar_exp._documento', 'users', 'datos_personales', 1, 'users', 168, '2023-11-08 17:03:09', '2023-11-08 17:03:09'),
+(17, 'Desde cuando comenzó el conflicto', 'desde_cuando_comenzo_el_conflicto', 'conciliaciones', 'asunto', 1, 'conciliaciones', 168, '2023-11-21 10:00:28', '2023-11-21 10:00:28'),
+(18, 'Cuantia indeterminada determinada', 'cuantia_indeterminada_determinada', 'conciliaciones', 'asunto', 1, 'conciliaciones', 168, '2023-11-21 10:01:30', '2023-11-21 10:01:30'),
+(19, 'No. Convocados', 'no._convocados', 'conciliaciones', 'asunto', 1, 'conciliaciones', 169, '2023-11-21 10:02:35', '2023-11-21 10:02:35'),
+(20, 'Finalidad de adquisición del servicio', 'finalidad_de_adquisicion_del_servicio', 'conciliaciones', 'asunto', 1, 'conciliaciones', 169, '2023-11-21 10:08:33', '2023-11-21 10:08:33'),
+(21, 'Modalidad de la audiencia de conciliación', 'modalidad_de_la_audiencia_de_conciliacion', 'conciliaciones', 'asunto', 1, 'conciliaciones', 169, '2023-11-21 10:11:48', '2023-11-21 10:11:48'),
+(22, 'Información parte convocada (Ej. Nombres, dirección, teléfono)', 'informacion_parte_convocada_(ej._nombres,_direccion,_telefono)', 'conciliaciones', 'parte_solicitada', 1, 'conciliaciones', 239, '2023-11-21 10:12:55', '2023-11-21 10:12:55'),
+(23, 'numero', 'numero', 'pdf_reportes', 'personalizado', 1, 'pdf_reportes', 168, '2023-11-21 11:50:07', '2023-11-21 11:50:07');
 
 
 INSERT INTO `references_data_options` (`id`, `value`, `status`, `active_other_input`, `references_data_id`, `created_at`, `updated_at`) VALUES
 (1, NULL, 1, 0, 1, NULL, NULL),
-(2, 'SI', 1, 0, 2, NULL, '2023-03-02 15:33:09'),
-(3, 'NO', 1, 0, 2, NULL, '2023-03-02 15:33:09'),
+(2, 'SI', 1, 0, 2, NULL, '2023-03-02 10:33:09'),
+(3, 'NO', 1, 0, 2, NULL, '2023-03-02 10:33:09'),
 (5, 'Mujer', 1, 0, 3, NULL, NULL),
 (6, 'Queer', 1, 0, 3, NULL, NULL),
 (7, 'Hombre', 1, 0, 3, NULL, NULL),
@@ -555,12 +565,12 @@ INSERT INTO `references_data_options` (`id`, `value`, `status`, `active_other_in
 (14, 'Otro', 1, 1, 4, NULL, NULL),
 (15, 'SI', 1, 0, 5, NULL, NULL),
 (16, 'NO', 1, 0, 5, NULL, NULL),
-(17, 'SI', 1, 1, 6, NULL, '2023-03-01 21:52:07'),
+(17, 'SI', 1, 1, 6, NULL, '2023-03-01 16:52:07'),
 (18, 'NO', 1, 0, 6, NULL, NULL),
-(22, 'SI', 1, 1, 7, NULL, '2023-03-01 22:39:21'),
-(23, 'NO', 1, 0, 7, NULL, '2023-03-01 22:39:21'),
-(26, '1', 1, 0, 8, NULL, '2023-03-01 23:22:16'),
-(27, '2', 1, 0, 8, NULL, '2023-03-01 23:22:16'),
+(22, 'SI', 1, 1, 7, NULL, '2023-03-01 17:39:21'),
+(23, 'NO', 1, 0, 7, NULL, '2023-03-01 17:39:21'),
+(26, '1', 1, 0, 8, NULL, '2023-03-01 18:22:16'),
+(27, '2', 1, 0, 8, NULL, '2023-03-01 18:22:16'),
 (28, 'Afrocolombiano', 1, 0, 9, NULL, NULL),
 (29, 'Raizal', 1, 0, 9, NULL, NULL),
 (30, 'Indígena', 1, 0, 9, NULL, NULL),
@@ -578,29 +588,24 @@ INSERT INTO `references_data_options` (`id`, `value`, `status`, `active_other_in
 (43, 'Primaria', 1, 0, 13, NULL, NULL),
 (44, 'Secundaria', 1, 0, 13, NULL, NULL),
 (45, 'Universitaria', 1, 0, 13, NULL, NULL),
-(46, 'Otro', 1, 1, 13, NULL, NULL);
+(46, 'Otro', 1, 1, 13, NULL, NULL),
+(49, 'Lugar exp. Documento', 1, 0, 16, NULL, NULL),
+(50, 'Desde cuando comenzó el conflicto', 1, 0, 17, NULL, NULL),
+(51, 'Cuantia indeterminada determinada', 1, 0, 18, NULL, NULL),
+(52, '1', 1, 0, 19, NULL, NULL),
+(53, '2', 1, 0, 19, NULL, NULL),
+(54, '3', 1, 0, 19, NULL, NULL),
+(55, '3+', 1, 0, 19, NULL, NULL),
+(56, 'Resolver de manera alternativa el conflicto', 1, 0, 20, NULL, NULL),
+(57, 'Cumplir requisito de procedibilidad', 1, 0, 20, NULL, NULL),
+(58, 'Presencial', 1, 0, 21, NULL, NULL),
+(59, 'Virtual', 1, 0, 21, NULL, NULL),
+(60, 'Información parte convocada (Ej. Nombres, dirección, teléfono)', 1, 0, 22, NULL, NULL),
+(61, 'numero', 1, 0, 23, NULL, NULL);
 
-INSERT INTO `references_static_table` (`id`, `display_name`, `name`, `categories`, `section`, `is_visible`, `table`, `type_data_id`, `created_at`, `updated_at`) VALUES
-(1, 'Desde cuando comenzo conflicto', 'desde_cuando_comenzo_conflicto', 'conciliaciones', 'elementos_juridicos', 1, 'conciliaciones', 168, '2022-05-03 10:12:05', '2023-03-01 14:50:13'),
-(3, 'Cuantia indeterminada determinada', 'cuantia_indeterminada_determinada', 'conciliaciones', 'elementos_juridicos', 1, 'conciliaciones', 168, '2022-05-03 10:14:25', '2022-05-03 10:14:25'),
-(4, 'No. Convocados', 'num_convocados', 'conciliaciones', 'elementos_juridicos', 1, 'conciliaciones', 169, '2023-03-01 14:46:36', '2023-03-01 14:46:36'),
-(5, 'Finalidad de adquisición del servicio', 'finalidad_adquisicion_servicio', 'conciliaciones', 'elementos_juridicos', 1, 'conciliaciones', 169, '2023-03-01 15:57:17', '2023-03-01 15:57:17'),
-(6, 'Modalidad de la audiencia de conciliación', 'modalidad_audiencia_conciliacion', 'conciliaciones', 'elementos_juridicos', 1, 'conciliaciones', 169, '2023-03-01 15:58:54', '2023-03-01 15:58:54'),
-(7, 'Información parte convocada (Ej. Nombres, dirección, teléfono)', 'informacion_parte_convocada', 'conciliaciones', 'parte_solicitada', 1, 'conciliaciones', 239, '2023-03-14 16:18:08', '2023-03-22 20:38:13');
 
 
-INSERT INTO `references_static_data_options` (`id`, `value`, `status`, `active_other_input`, `references_static_data_id`, `created_at`, `updated_at`) VALUES
-(1, 'Desde cuando comenzo conflicto', 1, 0, 1, NULL, NULL),
-(3, 'cuantia_indeterminada_determinada', 1, 0, 3, NULL, NULL),
-(4, '1', 1, 0, 4, NULL, NULL),
-(5, '2', 1, 0, 4, NULL, NULL),
-(6, '3', 1, 0, 4, NULL, NULL),
-(7, 'Mas de tres', 1, 0, 4, NULL, NULL),
-(8, 'Resolver de manera alternativa el conflicto', 1, 0, 5, NULL, NULL),
-(9, 'Cumplir requisito de procedibilidad', 1, 0, 5, NULL, NULL),
-(10, 'Presencial', 1, 0, 6, NULL, NULL),
-(11, 'Virtual', 1, 0, 6, NULL, NULL),
-(12, 'informacion_parte_convocada', 1, 0, 7, NULL, NULL);
+
 
 
 INSERT INTO `cptonotas` (`id`, `cpntnombre`, `cpntusercreated`, `cpntuserupdated`, `created_at`, `updated_at`) VALUES
@@ -722,3 +727,63 @@ INSERT INTO `rama_derecho` (`id`, `ramadernombre`, `subrama`, `categoria`, `crea
 (43, 'UNAVI', 'UNAVI', 'expedientes', '2013-02-11 05:00:00', '2013-02-11 05:00:00'),
 (44, 'Migrantes', 'DERECHOS HUMANOS', 'expedientes', '2017-03-15 05:00:00', '2017-03-15 05:00:00'),
 (45, 'Migrantes y víctimas de desplazamiento', 'DERECHOS HUMANOS', 'expedientes', '2017-03-15 05:00:00', '2017-03-15 05:00:00');
+
+INSERT INTO `periodo` (`id`, `prdfecha_inicio`, `prdfecha_fin`, `prddes_periodo`, `estado`, `prdusercreated`, `prduserupdated`, `created_at`, `updated_at`) VALUES
+(1, '2017-08-23', '2018-04-30', 'Periodo 1', 0, NULL, NULL, NULL, '2018-04-04 16:25:25'),
+(2, '2018-08-10', '2019-05-10', 'Periodo 2', 0, NULL, NULL, '2018-08-18 01:56:12', '2018-09-09 22:40:03'),
+(3, '2019-08-20', '2020-06-23', 'Periodo 3', 0, NULL, NULL, '2019-07-31 20:15:19', '2020-07-06 16:55:36'),
+(4, '2020-07-06', '2021-06-30', 'Periodo 4', 0, NULL, NULL, '2020-07-06 16:54:52', '2021-03-25 22:49:31'),
+(5, '2021-10-18', '2022-07-07', 'Periodo 5', 0, NULL, NULL, '2021-10-12 13:29:48', '2022-06-29 02:15:39'),
+(6, '2022-09-05', '2023-06-23', 'Periodo 6', 0, NULL, NULL, '2022-06-25 15:56:42', '2022-09-19 17:25:24'),
+(7, '2023-08-08', '2024-05-17', 'Periodo 7', 1, '1085278208', '1085278208', '2023-08-14 10:22:10', '2023-08-14 10:22:13'),
+(8, '2023-08-08', '2024-05-17', 'Periodo uno', 1, '1085278208', '1085278208', '2023-09-11 17:36:32', '2023-09-11 17:37:58');
+
+INSERT INTO `segmentos` (`id`, `segnombre`, `fecha_inicio`, `fecha_fin`, `estado`, `act_fc`, `fecha_corte`, `est_evaluado`, `perid`, `segusercreated`, `seguserupdated`, `created_at`, `updated_at`) VALUES
+(1, 'Primer Corte', '2017-08-23', '2017-12-15', 0, 0, NULL, 0, 1, NULL, NULL, NULL, '2018-02-15 15:55:59'),
+(2, 'Segundo Corte', '2018-01-08', '2018-04-27', 0, 0, NULL, 0, 1, NULL, NULL, NULL, '2018-02-15 15:55:40'),
+(3, 'Tercer Corte', '2018-04-28', '2018-05-15', 0, 0, NULL, 0, 1, NULL, NULL, NULL, '2018-02-06 21:10:41'),
+(4, 'Primer corte', '2018-08-21', '2019-03-21', 0, 0, '2019-02-18', 1, 2, NULL, NULL, '2018-08-18 01:56:55', '2019-05-17 15:50:11'),
+(5, 'Segundo corte', '2019-03-22', '2019-05-17', 0, 0, '2019-04-29', 1, 2, NULL, NULL, '2019-03-21 21:02:37', '2019-05-17 16:20:07'),
+(6, 'Primer corte', '2019-08-20', '2020-02-21', 0, 0, '2020-02-22', 1, 3, NULL, NULL, '2019-07-31 20:16:46', '2020-02-23 02:38:39'),
+(7, 'Segundo corte', '2020-02-22', '2020-06-16', 0, 0, NULL, 1, 3, NULL, NULL, '2020-02-23 02:39:10', '2020-06-24 00:19:09'),
+(8, 'Primer corte', '2020-07-06', '2020-11-19', 0, 0, '2020-12-01', 1, 4, NULL, NULL, '2020-07-06 16:55:23', '2020-12-02 00:08:39'),
+(9, 'Segundo corte', '2020-11-20', '2021-02-21', 0, 0, '2021-02-22', 1, 4, NULL, NULL, '2020-12-02 00:07:15', '2021-02-22 20:23:12'),
+(10, 'Tercer corte', '2021-02-22', '2021-05-25', 0, 0, NULL, 1, 4, NULL, NULL, '2021-02-22 20:21:15', '2021-05-31 15:35:40'),
+(11, 'Primer corte', '2021-10-18', '2022-02-11', 0, 0, '2022-02-15', 1, 5, NULL, NULL, '2021-10-12 13:30:15', '2022-04-19 17:40:17'),
+(12, 'Segundo corte', '2022-02-12', '2022-04-08', 0, 0, NULL, 1, 5, NULL, NULL, '2022-02-15 16:25:11', '2022-04-21 03:05:23'),
+(13, 'Tercer corte', '2022-04-09', '2022-06-30', 0, 0, '2022-06-25', 1, 5, NULL, NULL, '2022-02-15 16:26:44', '2022-07-02 03:13:31'),
+(14, 'Primer Corte', '2022-09-19', '2023-01-27', 0, 0, '2023-02-15', 1, 6, NULL, NULL, '2022-06-25 15:57:35', '2023-02-15 18:34:27'),
+(15, 'Segundo corte', '2023-01-28', '2023-03-31', 0, 0, '2023-05-23', 1, 6, NULL, NULL, '2022-10-03 14:00:05', '2023-05-23 16:31:46'),
+(16, 'Primer corte', '2023-08-08', '2023-12-12', 1, 0, NULL, 0, 7, NULL, NULL, '2023-08-18 12:14:52', '2023-09-29 10:12:34'),
+(17, 'Corte uno', '2023-08-08', '2023-12-15', 1, 0, NULL, 0, 8, NULL, NULL, '2023-09-11 17:44:02', '2023-09-11 17:44:06'),
+(18, 'Segundo corte', '2023-09-28', '2023-10-31', 0, 0, NULL, 0, 7, NULL, NULL, '2023-09-29 10:12:18', '2023-09-29 10:12:19');
+
+INSERT INTO `sede_segmentos` (`id`, `segmento_id`, `sede_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(2, 2, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(3, 3, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(4, 4, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(5, 5, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(6, 6, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(7, 7, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(8, 8, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(9, 9, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(10, 10, 1, '2021-04-22 20:00:00', '2021-04-22 20:00:00'),
+(11, 11, 1, '2021-10-12 13:30:15', '2021-10-12 13:30:15'),
+(12, 12, 1, '2022-02-15 16:25:11', '2022-02-15 16:25:11'),
+(13, 13, 1, '2022-02-15 16:26:44', '2022-02-15 16:26:44'),
+(14, 14, 1, '2022-06-25 15:57:35', '2022-06-25 15:57:35'),
+(15, 15, 1, '2022-10-03 14:00:05', '2022-10-03 14:00:05'),
+(16, 16, 1, '2023-08-18 12:14:52', '2023-08-18 12:14:52'),
+(17, 17, 2, '2023-09-11 17:44:02', '2023-09-11 17:44:02'),
+(18, 18, 1, '2023-09-29 10:12:18', '2023-09-29 10:12:18');
+
+INSERT INTO `sede_periodos` (`id`, `periodo_id`, `sede_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2020-12-29 12:11:22', '2020-12-29 12:11:22'),
+(2, 2, 1, '2020-12-29 12:11:22', '2020-12-29 12:11:22'),
+(3, 3, 1, '2020-12-29 12:11:22', '2020-12-29 12:11:22'),
+(4, 4, 1, '2020-12-29 12:11:22', '2020-12-29 12:11:22'),
+(5, 5, 1, '2021-10-12 13:29:48', '2021-10-12 13:29:48'),
+(6, 6, 1, '2022-06-25 15:56:43', '2022-06-25 15:56:43'),
+(7, 7, 1, '2023-08-14 10:22:10', '2023-08-14 10:22:10'),
+(8, 8, 2, '2023-09-11 17:36:32', '2023-09-11 17:36:32');

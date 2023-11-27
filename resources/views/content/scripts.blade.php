@@ -1,18 +1,18 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem('keyCir', true);
-      /*   if(localStorage.getItem('keyCarouselNotiClose')){
+        
+         if(localStorage.getItem('keyCircularNotiClose')){
           var message = getGeneralMessage();
         }else{
-          var message = getCarrousel();
-        }      */ 
-        var message = getGeneralMessage();  
+          var message = getCircular();
+        }      
+        //var message = getGeneralMessage();  
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
 
     $("#mymodalShowAlerts").on("click", '#btnNotFalse', function(e) {
-        localStorage.setItem('keyCarouselNotiClose', true);
+        localStorage.setItem('keyCircularNotiClose', true);
         $("#mymodalShowAlerts").modal("hide");
         e.preventDefault();
 
@@ -68,7 +68,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Atualización: 15 de nov. 2023 <br>
+        message += `<span> Últ. Atualización: 27 de nov. 2023 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 
@@ -76,10 +76,10 @@
     }
 
     function getCircular() {
-        var keyCir = localStorage.getItem("keyCir");
+        var keyCir = localStorage.getItem("keyCircularNotiClose");
         var message = '';
         if (keyCir == null) {
-            message = `<embed  src="{{ asset('recursos/Circular.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message = `<embed  src="{{ asset('recursos/CircularNotas.pdf#toolbar=0') }}" id="pdfViewer" >`
             message += `<button class="btn btn-success" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
 
         }

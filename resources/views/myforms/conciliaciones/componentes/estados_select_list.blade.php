@@ -2,7 +2,66 @@
 <select name="type_status_id" class="form-control" required>
     <option value="">Seleccione</option>
 
+    @if(currentUser()->hasRole('coord_centro_conciliacion') 
+    || currentUser()->hasRole('amatai'))
 
+  <option value="175"> Enviar a revisión </option>
+    
+
+       <option value="176"> Corregir </option>
+    <option  value="177"> 
+        Aprobar (docente) </option>
+   
+  
+
+ <option value="225"> Solicitar radicado </option>    
+    
+
+    
+
+
+  <option value="178"> Radicar </option>
+    <option value="228"> Solicitar correcciones </option>
+   
+ 
+
+  <option value="225"> Solicitar radicado </option>  
+  
+   
+    <option value="179"> Inadmitida. Asunto no conciliable </option>
+  
+
+    <option value="180"> Inadmitir-anular </option>
+
+    <option value="194"> Inadmitida Solicitud de correcciones </option>
+    <option value="181"> Admitida </option>
+   
+
+    
+   
+    <option value="182"> Solicitud de aplazamiento </option>
+    <option value="184"> Solicitud de desistimiento </option>
+   
+
+ <option value="183"> Suspendida </option>
+    
+ <option value="185"> Acuerdo </option>
+    <option value="186"> Acuerdo parcial </option>
+    <option value="187"> No acuerdo </option>
+    <option value="188">No acuerdo parcial </option>
+    <option value="189">Informe no asistencia </option>
+   
+
+    <option value="190">Aplazada</option>
+    
+    <option value="191">Informe de archivo desistimiento</option>
+   
+  
+  <option value="193">Registrado en SICAB</option>
+   
+    <option value="192">Constancia no asistencia</option>
+  
+    @else
     @if($conciliacion->getUser(199)->hasRole('estudiante') 
     || $conciliacion->getUser(199)->hasRole('amatai'))
 
@@ -111,5 +170,8 @@
     <option value="192">Constancia no asistencia</option>
     @endif
     @endif
+    @endif
+
+    
 
 </select>
