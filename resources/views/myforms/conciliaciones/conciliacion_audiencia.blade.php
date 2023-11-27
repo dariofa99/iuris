@@ -31,7 +31,7 @@
         </div>
         </h4>
     </div>
-
+    @if(config('app.name') != 'ConciliApp')
     <div class="col-md-3">
         <h4 class="box-title">
         <label>
@@ -46,6 +46,7 @@
         </div>
         </h4>
     </div>
+    @endif
     <div class="col-md-2">
         <h4 class="box-title">
             <label >
@@ -66,7 +67,7 @@
 <hr> 
 
 @if (currentUser()->can('asig_reparto'))
-
+@if(config('app.name') != 'ConciliApp')
    @if($audiencia != '')        
  <div class="edit_audiencia" style="@if ($audiencia != '') display:block @endif" >
     <h4>Reparto</h4>
@@ -85,7 +86,7 @@
             Asigne fecha de audiencia para asignar reparto!
         </h4> 
     </div>
-
+    @endif
 
 @endif 
 @endif 

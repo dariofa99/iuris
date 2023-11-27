@@ -14,9 +14,10 @@ var myDropzone_log = new Dropzone("div#cont_files", { // Make the whole body a d
   url: "/conciliaciones/store/anexo", // Set the url
   thumbnailWidth: 80,
   thumbnailHeight: 80,
-  paramName: "conciliacion_file", 
+  paramName: "conciliacion_file",
   parallelUploads: 20,
   previewTemplate: previewTemplate,
+  acceptedFiles: "application/pdf",
   headers: {
     'x-csrf-token': CSRF_TOKEN,
   },
@@ -27,34 +28,40 @@ var myDropzone_log = new Dropzone("div#cont_files", { // Make the whole body a d
   dictRemoveFileConfirmation: 'Esta seguro...'
 });
 
+
+
 myDropzone_log.on("addedfile", function (file) {
   // Hookup the start button
   //myDropzone_log.addedfile(file)
-  console.log(clickableId.id);
+  console.log(file);
 
-  $("#actions .cancel").prop("disabled", true);
-  if (file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+  //$("#actions_upload_logs .cancel").prop("disabled", true);
+  $("#actions_upload_logs .start").prop("disabled",false).show();
+  if (file.type == 'application/pdf') {
     newimage = "/dist/img/dropzone_file.png";
     file.previewElement.querySelector("img").src = newimage;
     file.previewElement.querySelector("input").value = clickableId.id;
-    /* var idinput = file.name.replace(/\s+/g, "_");
-    $(file.previewElement.querySelector("input")).attr('id', idinput);
-    console.log(file); */
     $("#actions_upload_logs .start").prop("disabled", false);
-    if (clickableId.id != 'otro'){
-      $(clickableId).remove()
-    } else if(clickableId.id == 'otro'){
-      $(file.previewElement.querySelector("input")).prop("readonly",false).val("").trigger('focus')
+    if (clickableId.id != 'otro') {
+      $(clickableId).removeClass('fileinputclickable').hide()
+    } else if (clickableId.id == 'otro') {
+      $(file.previewElement.querySelector("input")).prop("readonly", false).val("").trigger('focus')
     }
+    $(file.previewElement.querySelector("img")).css({ 'height': '70px', 'width': '80px' });
+    $("#actions .cancel").prop("disabled",false);
+  } else {
+    Swal.fire({
+      title: 'Suba ur archivo en formato .pdf',
+      icon: 'info'
+    })
   }
 
-  $(file.previewElement.querySelector("img")).css({ 'height': '70px', 'width': '80px' });
   //file.previewElement.querySelector("img").width = '80';
 
   //
   file.previewElement.querySelector(".cancel").onclick = function () {
     Swal.fire({
-      title: 'Esta seguro de cancelar la subida?',
+      title: 'Esta seguro de eliminar el archivo?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -63,15 +70,17 @@ myDropzone_log.on("addedfile", function (file) {
       cancelButtonText: 'Continuar'
     }).then((result) => {
       if (result.value) {
-
         myDropzone_log.removeFile(file);
+        $(clickableId).addClass('fileinputclickable').show()
+
+
       }
     });
 
     return false;
   };
-  //$("#actions .cancel").prop("disabled",false);
-  //$("#actions .start").prop("disabled",false);
+  //
+  //
 
 
 
@@ -92,7 +101,7 @@ myDropzone_log.on("sending", function (file, xhr, formData) {
 
   formData.append("concept", $(file.previewElement.querySelector("input")).val());
   formData.append("conciliacion_id", $("#conciliacion_id").val());
-  formData.append("category_id",$("#anexo_category_id").val())
+  formData.append("category_id", $("#anexo_category_id").val())
   // And disable the start button
 
 });
@@ -107,7 +116,7 @@ myDropzone_log.on("success", function (file, response) {
   if (response.view || response.view == "") {
     $("#table_anexos_list tbody").html(response.view);
   }
-  
+
   //$("#actions .start").prop("disabled",true);
 });
 
@@ -128,18 +137,23 @@ myDropzone_log.on("queuecomplete", function (progress) {
 document.querySelector("#actions_upload_logs .start").onclick = function () {
   var files = $(".fileinputclickable").length;
   var vacio = false;
-  $(".form-control-dropzone").each(function(key,element){
-    if(element.value=="")vacio = true;
-    
-  })
-  console.log(files,vacio);
+  $(".form-control-dropzone").each(function (key, element) {
+    if (element.value == "") vacio = true;
+  });
+  if (files == 1 && vacio == false) {
+    // myDropzone_log.enqueueFiles(myDropzone_log.getFilesWithStatus(Dropzone.ADDED));
+    console.log("sss");
+  } else {
+    console.log("noo");
+  }
+
   //$("#actions_upload_logs .start").prop("disabled", true);
- // $("#actions_upload_logs .cancel").prop("disabled", true);
- // myDropzone_log.enqueueFiles(myDropzone_log.getFilesWithStatus(Dropzone.ADDED));
+  // $("#actions_upload_logs .cancel").prop("disabled", true);
+  // myDropzone_log.enqueueFiles(myDropzone_log.getFilesWithStatus(Dropzone.ADDED));
 };
-document.querySelector("#actions_upload_logs .cancel").onclick = function () {
+/* document.querySelector("#actions_upload_logs .cancel").onclick = function () {
   myDropzone_log.removeAllFiles(true);
   $("#content_list_support_file").show();
   $("#content_form_support_file").hide();
   $("#myModal_create_bill #type_category_payment_id").val("").change();
-};
+}; */

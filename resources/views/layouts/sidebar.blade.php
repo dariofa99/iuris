@@ -77,6 +77,7 @@
                 <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
+                    @if(config('app.name') != 'ConciliApp')
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder"></i>
                         <p>
@@ -84,6 +85,7 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    @endif
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item ml-3">

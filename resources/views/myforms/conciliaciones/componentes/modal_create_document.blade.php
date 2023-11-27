@@ -16,7 +16,7 @@
                     <span class="btn btn-primary btn-sm fileinputclickable"  id="Documento de identidad">
                         <i class="fa fa-upload"></i>
                         <span>Subir documento identidad</span>
-                    </span>
+                    </span> 
 
                     <span class="btn btn-primary btn-sm fileinputclickable" id="Registro">
                         <i class="fa fa-upload"></i>
@@ -28,11 +28,11 @@
                         <span>Subir otro</span>
                     </span>
 
-                    <button type="reset" class="btn btn-sm btn-default cancel">
+                   {{--  <button type="reset" class="btn btn-sm btn-default cancel">
                         <i class="fa fa-window-close-o"></i>
                         <span>Quitar archivos</span>
-                    </button>
-                    <button type="reset" class="btn btn-sm btn-success start">
+                    </button> --}}
+                    <button type="reset" style="display: none" class="btn btn-sm btn-success start">
                         <i class="fa fa-upload"></i>
                         <span>Cargar archivos</span>
                     </button>

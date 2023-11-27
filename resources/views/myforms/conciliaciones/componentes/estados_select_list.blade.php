@@ -3,7 +3,8 @@
     <option value="">Seleccione</option>
 
 
-    @if($conciliacion->getUser(199)->hasRole('estudiante') || $conciliacion->getUser(199)->hasRole('amatai'))
+    @if($conciliacion->getUser(199)->hasRole('estudiante') 
+    || $conciliacion->getUser(199)->hasRole('amatai'))
 
     @if(currentUser()->hasRole('estudiante') || currentUser()->hasRole('amatai'))
     @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176)

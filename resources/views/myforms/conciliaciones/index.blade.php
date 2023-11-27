@@ -5,7 +5,7 @@
 @endpush
 
 @section('titulo_area')
-    @if (!currentuser()->can('crear_conciliaciones'))
+    @if (currentuser()->can('crear_conciliaciones'))
         <a href="/conciliaciones/create" id="btn_new_conciliacion" class="btn btn-success">
             Solicitar nueva conciliación</a>
             @else

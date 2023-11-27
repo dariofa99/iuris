@@ -588,6 +588,10 @@ $(document).ready(function () {
     $("#wait").hide();
 
   });
+  $("#copy-stream-audiencia").on("click", function () {
+    copiarAlPortapapeles("text-stream-audiencia");
+});
+
   $("#content_user_pdf_list").on("click", ".btn_gene_pdf", function (e) {
     var status_id = $(this).attr('data-status_id');
     var reporte_id = $(this).attr('data-reporte_id');
@@ -1540,4 +1544,30 @@ function createRowMail(key, usermail) {
       </label>                                 
    </div>`;
   return tr;
+}
+
+function copiarAlPortapapeles(idDelDiv) {
+  // Selecciona el contenido del elemento con el id proporcionado
+  var contenido = document.getElementById(idDelDiv).value;
+
+  // Crea un elemento de texto temporal
+  var elementoTemporal = document.createElement("textarea");
+  elementoTemporal.value = contenido;
+
+  // Añade el elemento temporal al DOM
+  document.body.appendChild(elementoTemporal);
+
+  // Selecciona y copia el contenido al portapapeles
+  elementoTemporal.select();
+  document.execCommand("copy");
+
+  // Elimina el elemento temporal
+  document.body.removeChild(elementoTemporal);
+
+  // Puedes mostrar un mensaje o realizar otras acciones después de copiar
+  Toast.fire({
+    title: 'El enlace se ha copiado con éxito!',
+    icon: 'success',
+    timer: 3000,
+  });
 }
