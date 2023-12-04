@@ -338,6 +338,13 @@ $(document).ready(function () {
 
     });
 
+    $(".item_con").on("mousedown", function (e) {
+        fillSummernote(this);       
+    });
+
+    $("#content_categories_ajax").on("mousedown",".item_con",function (e) {
+        fillSummernote(this)
+    });
 
     $("#myFormAsigReporte .buscar_asignacion_re").on("change", function (e) {
         var tabla_destino = $("#myFormAsigReporte select[name=tabla_destino]").val();
@@ -375,13 +382,14 @@ function serializeSummernotePdf(myForm, mySummernote) {
     $("#report_keys").val("");
     if (formatVal != "") {
         $("#" + myForm + " .note-editable .item_sp").each((index, element) => {
-            var it = $(element).attr("user-type");
+            var it = $(element).attr("data-type");
             var dtn = $(element).attr("data-name");
             items_[index] = {
-                user_type: it,
+                data_type: it,
                 name: dtn,
                 table: $(element).attr("data-table"),
                 short_name: $(element).attr("data-short_name"),
+                data_text: $(element).attr("data-text"),
             };
             //  $(element).css('border','1px solid red')
 
@@ -401,41 +409,27 @@ function serializeSummernotePdf(myForm, mySummernote) {
     return false;
 }
 
-$(".item_con").on("mousedown", function (e) {
-    var space = "&nbsp;";
-    var mySummernote = $(this).attr("data-summernote");
-    var clasehechopre = '';
-    var salto = '';
-    if ($(this).attr("data-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
-    $("#" + mySummernote).summernote(
-        "pasteHTML",
-        `<span data-table="${$(this).attr("data-table")}"
-               data-model="${$(this).attr("data-model")}" 
-               data-short_name="${$(this).attr("data-short_name")}"
-               data-type="${$(this).attr("data-type")}" 
-               data-name="[-${$(this).attr("data-name")}-]" 
-               class="item_sp ${clasehechopre}">[-${$(this).attr("data-name")}-]
-        </span>${space}`
-    );
-});
 
-$("#content_categories_ajax").on("mousedown",".item_con",function (e) {
+
+
+function fillSummernote(obj) {
     var space = "&nbsp;";
-    var mySummernote = $(this).attr("data-summernote");
+    var mySummernote = $(obj).attr("data-summernote");
     var clasehechopre = '';
     var salto = '';
-    if ($(this).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
+    if ($(obj).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
     $("#" + mySummernote).summernote(
         "pasteHTML",
-        `<span data-table="${$(this).attr("data-table")}"
-               data-model="${$(this).attr("data-model")}" 
-               data-short_name="${$(this).attr("data-short_name")}"
-               data-type="${$(this).attr("data-type")}" 
-               data-name="[-${$(this).attr("data-name")}-]" 
-               class="item_sp ${clasehechopre}">[-${$(this).attr("data-name")}-]
+        `<span data-table="${$(obj).attr("data-table")}"
+               data-model="${$(obj).attr("data-model")}" 
+               data-short_name="${$(obj).attr("data-short_name")}"
+               data-type="${$(obj).attr("data-type")}"
+               data-text="${$(obj).attr("data-text")}"  
+               data-name="${$(obj).attr("data-name")}" 
+               class="item_sp ${clasehechopre}">${$(obj).attr("data-text")}
         </span>${space}`
     );
-});
+}
 
 function editAsignacionReporte(request) {
     var route = "/pdf/reportes/editar/asignacion";

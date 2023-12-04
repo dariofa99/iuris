@@ -13,17 +13,17 @@
             <div class="col-12">
                 <div id="actions_upload_logs">
                     <!-- The fileinput-button span is used to style the file input field as button -->
-                    <span class="btn btn-primary btn-sm fileinputclickable"  id="Documento de identidad">
+                    <span class="btn btn-primary btn-sm fileinputclickable" data-text="Documento de identidad"  id="documento_identidad">
                         <i class="fa fa-upload"></i>
                         <span>Subir documento identidad</span>
                     </span> 
 
-                    <span class="btn btn-primary btn-sm fileinputclickable" id="Registro">
+                    <span class="btn btn-primary btn-sm fileinputclickable" data-text="Registro" id="registro">
                         <i class="fa fa-upload"></i>
                         <span>Subir registro</span>
                     </span>
 
-                    <span class="btn btn-primary btn-sm fileinputclickable" id="otro">
+                    <span class="btn btn-primary btn-sm fileinputclickable" data-text="Otro" id="otro">
                         <i class="fa fa-upload"></i>
                         <span>Subir otro</span>
                     </span>
@@ -65,7 +65,7 @@
                                <input placeholder="Nombre del archivo"  type="text" readonly class="form-control-dropzone">
                             </div>
                             <div class="col-md-1">
-                                <button class="btn btn-warning cancel">
+                                <button class="btn btn-warning cancel" data-clickeable="sin">
                                     <i class="fa fa-minus-circle"></i>
                                 </button>
                             </div>

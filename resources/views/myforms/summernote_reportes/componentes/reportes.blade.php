@@ -283,7 +283,6 @@
                 <div class="col-md-12" id="content_categories_ajax" class="content_categories_ajax">
                     @include('myforms.summernote_reportes.componentes.categories_ajax', [
                         'categories_report' => getReferencesDataBySection('personalizado', 'pdf_reportes'),
-                        'required' => 'required',
                         'mySummernote' => $mySummernote,
                         'user_type' => 'pdfrep_aditional_data',
                         'parte' => 'personalizado',

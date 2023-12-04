@@ -313,12 +313,7 @@ class ConciliacionesController extends Controller
 
     public function insertEstado(Request $request)
     {
-
-
-
           //return response()->json($request->all());
-
-
         $request['user_id'] = Auth::user()->id;
         $estado = ConciliacionEstado::create($request->all());
         $conciliacion = Conciliacion::find($request->conciliacion_id);
@@ -455,6 +450,18 @@ class ConciliacionesController extends Controller
             'view' => $view
         ]);
     }
+    public function getFilesByCategory(Request $request)
+    {
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $files = $conciliacion->files()->where([
+            'category_id'=> $request->category_id
+        ])->get();
+        //$view = view('myforms.conciliaciones.componentes.solicitud_comentarios_ajax', compact('conciliacion'))->render();
+        return response()->json([
+            'files' => $files
+        ],200);
+    }
+
     public function deleteComentario(Request $request)
     {
         $comentario = ConciliacionComentario::find($request->comentario_id)->delete();

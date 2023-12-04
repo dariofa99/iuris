@@ -359,12 +359,153 @@ function quitarAcentos($cadena)
 
 function ramasDerechoNotificar()
 {
-    return [15,17,18,19,20,21,22,23,24,25,31,32,33,35,
+    return [
+        15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 31, 32, 33, 35,
         37,
         39,
         40,
         41,
     ];
+}
+
+function pdfReportsDataValues()
+{
+    return [
+        'users' => [
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'nombres',
+                'name' => 'Nombres',
+                'table_name' => 'name',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'apellidos',
+                'name' => 'Apellido',
+                'table_name' => 'lastname',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'tipo_identificacion',
+                'name' => 'Tipo identificación',
+                'table_name' => 'tipodoc_id',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'tipo_persona',
+                'name' => 'Tipo identificación',
+                'table_name' => 'tipopers_id',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'numero_identificacion',
+                'name' => 'No. identificación',
+                'table_name' => 'num_doc',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'telefono',
+                'name' => 'Teléfono',
+                'table_name' => 'tel1',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'direccion',
+                'name' => 'Dirección',
+                'table_name' => 'address',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'correo_electronico',
+                'name' => 'Correo electrónico',
+                'table_name' => 'email',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'estado_civil',
+                'name' => 'Estado civil',
+                'table_name' => 'estadocivil_id',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'sexo',
+                'name' => 'Sexo',
+                'table_name' => 'genero_id',
+            ],
+            [
+                'table' => 'users',
+                'model' => 'user',
+                'short_name' => 'codigo_estudiantil',
+                'name' => 'Código estudiantil',
+                'table_name' => 'codigo_estudiantil',
+            ]
+        ],
+        'conciliaciones' => [
+            [
+                'table' => 'conciliaciones',
+                'model' => 'conciliacion',
+                'short_name' => 'numero_radicado',
+                'name' => 'Número de radicado',
+                'table_name' => 'num_conciliacion',
+            ],
+            [
+                'table' => 'conciliaciones',
+                'model' => 'conciliacion',
+                'short_name' => 'fecha_hora_radicado',
+                'name' => 'Fecha y hora de radicado',
+                'table_name' => 'fecha_radicado',
+            ],
+            [
+                'table' => 'audiencias',
+                'model' => 'audiencia',
+                'short_name' => 'fecha_hora_audiencia',
+                'name' => 'Fecha y hora de audiencia',
+                'table_name' => 'fecha_hora',
+            ],
+            [
+                'table' => 'conc_hechos_pretensiones',
+                'model' => 'hechos_pretensiones',
+                'short_name' => 'pretensiones',
+                'name' => 'Pretensiones',
+                'table_name' => 'P',
+            ],
+            [
+                'table' => 'conc_hechos_pretensiones',
+                'model' => 'hechos_pretensiones',
+                'short_name' => 'hechos',
+                'name' => 'Hechos',
+                'table_name' => 'Hechos',
+            ],
+            [
+                'table' => 'conc_hechos_pretensiones',
+                'model' => 'hechos_pretensiones',
+                'short_name' => 'anexos',
+                'name' => 'Anexos',
+                'table_name' => 'A',
+            ],
+
+        ]
+    ];
+}
+
+function obtenerTableName($datos, $shortName) {
+    foreach ($datos as $dato) {
+        if ($dato['short_name'] === $shortName) {
+            return $dato['table_name'];
+        }
+    }
+    // Devuelve algo predeterminado si no se encuentra el 'short_name'
+    return null;
 }
 
 ?>

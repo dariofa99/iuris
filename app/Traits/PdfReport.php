@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits;
 
 use Illuminate\Http\Request;
@@ -13,36 +14,48 @@ trait PdfReport
         if ($conciliacion != null) {
             $json = json_decode($reporte->report_keys);
             $bodytag = $reporte->reporte;
-           
-            if (count($json) > 0) {              
-                foreach ($json as $key => $data) {   
-                    //dd($json );   
-                    if($data->table == 'users'){
 
-                    }        
-                    foreach ($conciliacion
-                            ->usuarios()
-                            ->where('tipo_usuario_id', $data->user_type)
-                            ->orderBy('conciliacion_has_user.created_at', 'desc')
-                            ->get()
-                        as $key_2 => $user
-                    ) {                        
-                        if ($data->table == 'users') {
-                            $label = $data->short_name;
-                            $value = $user->$label;
-                            if ($label == 'estado_civil') {
+            if (count($json) > 0) {
+                foreach ($json as $key => $data) {
+                    //$data = $json[5];
+                   
+                    if ($data->table == 'users') {
+                        $user = $conciliacion->getUser($data->data_type);
+                        
+                        if ($user->id!=null) {
+                            $data_us = pdfReportsDataValues()['users'];
+                            $table_name = obtenerTableName($data_us, $data->short_name);
+                            if ($table_name == 'tipodoc_id') {
+                                $value = $user->tipo_doc->ref_nombre;
+                            } elseif ($table_name == 'genero_id') {
+                                $value = $user->genero->ref_nombre;                               
+                            } elseif ($table_name == 'estadocivil_id') {
                                 $value = $user->estado_civil->ref_nombre;
+                            } elseif ($table_name == 'tipopers_id') {
+                                $value = $user->tipo_persona->ref_nombre;
+                            } elseif ($data->short_name == 'tarjeta_profesional') {
+                                $value = $user->codigo_estudiantil;
+                            } else {
+                                $value = $user->$table_name;
                             }
-                        } elseif ($data->table == 'aditional_data') {
-                            if ($user->getDataValWShort($data->short_name)) {
-                                $value = $user->getDataValWShort($data->short_name)->value . ' ' . $user->getDataValWShort($data->short_name)->value_is_other;
+                            //dd($value);
+                            if (isset($value) and $value!='') {
+                                $bodytag = str_replace($data->data_text, $value, $bodytag);
                             }
                         }
-                        if (isset($value)) {
-                            $bodytag = str_replace($data->name, $value, $bodytag);
+                       
+                        
+                    } else if ($data->table == 'users_aditional_data') {
+                        $user = $conciliacion->getUser($data->data_type);
+                        if ($user and $user->getDataValWShort($data->short_name)) {
+                            $value = $user->getDataValWShort($data->short_name)->value;
+                           // dd($user,$value);
+                            if (isset($value) and $value!='') {
+                                $bodytag = str_replace($data->data_text, $value, $bodytag);
+                            }
                         }
-                    }
-                    if ($data->table == 'conc_hechos_preten') {
+                       
+                    } else if ($data->table == 'conc_hechos_pretensiones') {
                         // dd($data );
                         $id = $data->short_name == 'hechos' ? 206 : (($data->short_name == 'acuerdos') ? 208 : 207);
                         $hechos = $conciliacion
@@ -55,9 +68,9 @@ trait PdfReport
                                 $hechos_cadena .= "<li style='padding:2px;margin-bottom:2px'> " . $hp->descripcion . '</li>';
                             }
                             $hechos_cadena .= '</ul>';
-                            $bodytag = str_replace($data->name, $hechos_cadena, $bodytag);
+                            $bodytag = str_replace($data->data_text, $hechos_cadena, $bodytag);
                             //  $bodytag .= $hechos_cadena;
-                           
+
                         }
                     } elseif ($data->table == 'conciliacion_audiencias') {
                         $audiencia = AudienciaConciliacion::where('id_conciliacion', $conciliacion->id)->first();
@@ -65,8 +78,8 @@ trait PdfReport
                         if ($audiencia) {
                             $diaActual = $audiencia->getFecha();
                         }
-                        $bodytag = str_replace($data->name, $diaActual, $bodytag);
-                    } elseif ($data->table == 'pdf_reportes' and $reporte->id!=null) {
+                        $bodytag = str_replace($data->data_text, $diaActual, $bodytag);
+                    } elseif ($data->table == 'pdf_reportes' and $reporte->id != null) {
                         $ref_data = getAditionalDataByShortName($data->short_name, 'pdf_reportes');
                         if ($ref_data) {
                             $personalized_data = PdfReporteAditionalData::where([
@@ -75,54 +88,47 @@ trait PdfReport
                                 'reporte_id' => $reporte->id,
                             ])->first();
                             if ($personalized_data) {
-                                $bodytag = str_replace($data->name, $personalized_data->value, $bodytag);
+                                $bodytag = str_replace($data->data_text, $personalized_data->value, $bodytag);
                             }
                         }
-                    }elseif($data->table == 'conciliaciones'){
-                        if($data->short_name == 'fecha_hora_radicado'){                            
+                    } elseif ($data->table == 'conciliaciones') {
+                        if ($data->short_name == 'fecha_hora_radicado') {
                             $fecha_ra = Carbon::parse($conciliacion->fecha_radicado);
                             $hora_ra = $fecha_ra->toTimeString();
-                            if($hora_ra > '18:00:00' and $hora_ra < '23:59:59'){
-                                
-                                if($fecha_ra->dayOfWeek == 5){
-                                    $fecha_ra = $fecha_ra->addDay('3');   
-                                    $fecha_ra->setTimeFromTimeString('08:00:00')   ;                          
-                                    
-                                }elseif($fecha_ra->dayOfWeek==6){
-                                    $fecha_ra = $fecha_ra->addDay('2');   
-                                    $fecha_ra->setTimeFromTimeString('08:00:00')   ;                          
-                                    
-                                }elseif($fecha_ra->dayOfWeek==0){
-                                    $fecha_ra = $fecha_ra->addDay('1');   
-                                    $fecha_ra->setTimeFromTimeString('08:00:00')   ;                          
-                                    
-                                }else{
-                                    $fecha_ra = $fecha_ra->addDay('1');   
-                                    $fecha_ra->setTimeFromTimeString('08:00:00')   ;                          
-                                    
+                            if ($hora_ra > '18:00:00' and $hora_ra < '23:59:59') {
+
+                                if ($fecha_ra->dayOfWeek == 5) {
+                                    $fecha_ra = $fecha_ra->addDay('3');
+                                    $fecha_ra->setTimeFromTimeString('08:00:00');
+                                } elseif ($fecha_ra->dayOfWeek == 6) {
+                                    $fecha_ra = $fecha_ra->addDay('2');
+                                    $fecha_ra->setTimeFromTimeString('08:00:00');
+                                } elseif ($fecha_ra->dayOfWeek == 0) {
+                                    $fecha_ra = $fecha_ra->addDay('1');
+                                    $fecha_ra->setTimeFromTimeString('08:00:00');
+                                } else {
+                                    $fecha_ra = $fecha_ra->addDay('1');
+                                    $fecha_ra->setTimeFromTimeString('08:00:00');
                                 }
-                                                              
-                            }elseif($hora_ra >= '00:00:00' and $hora_ra < '08:00:00'){
-                                $fecha_ra->setTimeFromTimeString('08:00:00')   ;                          
-                                 
-                            }else{
-                               
+                            } elseif ($hora_ra >= '00:00:00' and $hora_ra < '08:00:00') {
+                                $fecha_ra->setTimeFromTimeString('08:00:00');
+                            } else {
                             }
                             $fecha_ra = getLongDateWithHour($fecha_ra);
-                            $bodytag = str_replace($data->name,$fecha_ra, $bodytag);
+                            $bodytag = str_replace($data->data_text, $fecha_ra, $bodytag);
                         }
 
-                        if($data->short_name == 'numero_radicado'){
-                            $bodytag = str_replace($data->name, $conciliacion->num_conciliacion, $bodytag);
+                        if ($data->short_name == 'numero_radicado') {
+                            $bodytag = str_replace($data->data_text, $conciliacion->num_conciliacion, $bodytag);
                         }
 
-                        if($data->short_name == 'mes_anio_actual'){
+                        if ($data->short_name == 'mes_anio_actual') {
                             $fecha = getMonthAndYear(date('Y-m-d'));
-                            $bodytag = str_replace($data->name, $fecha, $bodytag);
+                            $bodytag = str_replace($data->data_text, $fecha, $bodytag);
                         }
-                        
                     }
                 }
+               // dd($json);
             }
         } else {
             $bodytag = $reporte->reporte;

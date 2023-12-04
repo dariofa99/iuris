@@ -5,12 +5,12 @@
 @endpush
 
 @section('titulo_area')
-   
+   @if(currentUser()->hasRole('solicitante') || currentUser()->can('crear_conciliaciones'))
         <a href="/conciliaciones/create" id="btn_new_conciliacion" class="btn btn-success">
             Solicitar nueva conciliación</a>
             @else
             Conciliaciones
-  
+  @endif
 @endsection
 @section('navbar')
     @include('content.navbar')

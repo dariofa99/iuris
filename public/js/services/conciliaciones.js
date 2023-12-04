@@ -682,6 +682,27 @@ export class ConciliacionService {
         const topics = await response.json();
         return topics;
     }
+
+    async getFilesByCategory(request) {
+        const response = await fetch(BASE_URL + "get/files/by/category?" + new URLSearchParams(request), {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
     showProgress(percentage) {
         const progressDiv = document.getElementById('progressbarwait');
         $(progressDiv).show();

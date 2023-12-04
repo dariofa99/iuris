@@ -19,7 +19,7 @@ Actualizando formato
 @include('msg.success')
 <div class="row">
     <div class="col-md-12" id="reporte">          
-        @include('myforms.conciliaciones.reportes',[
+        @include('myforms.summernote_reportes.componentes.reportes',[
                 'view'=>'update_temp',
                 'mySummernote'=>'summernote_update',
                 'myForm'=>'myFormEditPdfReporte',

@@ -229,14 +229,14 @@ $(function () {
     $("#myformCreateHechoPretension input[name=id]").val('')
     $("#myformCreateHechoPretension textarea").val('')
     $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'));
-    
+    $("#content_create_descrip_hepr").html("")
     var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1
     var lbl = $(this).attr('data-tipo') == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones"
     $(this).attr('data-tipo') == 206 ? $("#btn_add_he_pret_input").text("Agregar otro hecho") :
     $("#btn_add_he_pret_input").text("Agregar otra pretension")
     
     var row = `
-      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr">
+      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
         <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
         <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
       </div>
@@ -247,7 +247,7 @@ $(function () {
     $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos" : "Agregando pretensiones")
   });
 
-  $(".btn_create_document").on("click", function (e) {
+  $(".btn_create_document").on("click",async function (e) {
     $("#cont_files input[name=category_id]").remove();
     $("#cont_files").append(
       $("<input>", {
@@ -258,15 +258,20 @@ $(function () {
       })
     )
 
-    /* $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
-    $("#myformCreateConciliacionAnexo")[0].reset();
-    $("#myformCreateConciliacionAnexo input[name=concept]").val($(this).attr("data-concept"));
-    $("#myformCreateConciliacionAnexo input[name=category_id]").remove();
-    $("#myformEditConciliacionAnexo input[name=conciliacion_file]").prop(
-      "required",
-      true
-    ); */
-  /*    */
+    var request = {
+      'conciliacion_id':$("#conciliacion_id").val(),
+      'category_id':$(this).attr("data-category")
+    }
+    var files = await conciliacionService.getFilesByCategory(request);
+    files.files.forEach(element => {
+     if(element.pivot.concepto=='Documento de identidad'){
+      $("#actions_upload_logs span[id=documento_identidad]").remove();
+     }
+     if(element.pivot.concepto=='Registro'){
+      $("#actions_upload_logs span[id=registro]").remove();
+     }
+    });
+    console.log(files);
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");
@@ -300,10 +305,10 @@ $(function () {
     var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
     
     var row = `
-              <div class="form-group content_input_descrip_hepr count_input_descrip_hepr">
-                <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
-                <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
-              </div>
+      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
+        <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+        <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+      </div>
    `
     $("#content_create_descrip_hepr").append(row)
   });
@@ -383,7 +388,7 @@ $(function () {
     var request = {
       file_id: $(this).attr("data-file"),
       conciliacion_id: $("#conciliacion_id").val(),
-      category_id: 233
+      category_id: 232
     };
     Swal.fire({
       title: "Esta seguro de eliminar el archivo?",

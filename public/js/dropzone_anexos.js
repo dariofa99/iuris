@@ -40,7 +40,7 @@ myDropzone_log.on("addedfile", function (file) {
   if (file.type == 'application/pdf') {
     newimage = "/dist/img/dropzone_file.png";
     file.previewElement.querySelector("img").src = newimage;
-    file.previewElement.querySelector("input").value = clickableId.id;
+    file.previewElement.querySelector("input").value = clickableId.getAttribute('data-text');
     $("#actions_upload_logs .start").prop("disabled", false);
     if (clickableId.id != 'otro') {
       $(clickableId).removeClass('fileinputclickable').hide()
@@ -48,7 +48,8 @@ myDropzone_log.on("addedfile", function (file) {
       $(file.previewElement.querySelector("input")).prop("readonly", false).val("").trigger('focus')
     }
     $(file.previewElement.querySelector("img")).css({ 'height': '70px', 'width': '80px' });
-    $("#actions .cancel").prop("disabled",false);
+    $(file.previewElement.querySelector("button")).attr("data-clickeable", clickableId.id)
+ 
   } else {
     Swal.fire({
       title: 'Suba ur archivo en formato .pdf',
@@ -60,18 +61,19 @@ myDropzone_log.on("addedfile", function (file) {
 
   //
   file.previewElement.querySelector(".cancel").onclick = function () {
+    var id = $(this).attr('data-clickeable')
     Swal.fire({
       title: 'Esta seguro de eliminar el archivo?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, cancelar!',
-      cancelButtonText: 'Continuar'
+      confirmButtonText: 'Si, eliminar!',
+      cancelButtonText: 'No, cancelar'
     }).then((result) => {
       if (result.value) {
         myDropzone_log.removeFile(file);
-        $(clickableId).addClass('fileinputclickable').show()
+        $("#"+id).addClass('fileinputclickable').show()
 
 
       }
@@ -138,13 +140,27 @@ document.querySelector("#actions_upload_logs .start").onclick = function () {
   var files = $(".fileinputclickable").length;
   var vacio = false;
   $(".form-control-dropzone").each(function (key, element) {
-    if (element.value == "") vacio = true;
+    if (element.value == ""){
+       vacio = true;
+       $(element).focus()
+    } 
   });
   if (files == 1 && vacio == false) {
-    // myDropzone_log.enqueueFiles(myDropzone_log.getFilesWithStatus(Dropzone.ADDED));
+     myDropzone_log.enqueueFiles(myDropzone_log.getFilesWithStatus(Dropzone.ADDED));
     console.log("sss");
   } else {
-    console.log("noo");
+    if(vacio == true){
+      Swal.fire({
+        title: 'Hay campos que son obligatorios',
+        icon: 'error'
+      })
+    }else if(files > 1){
+      Swal.fire({
+        title: 'Hay archivos que son obligatorios',
+        icon: 'error'
+      })
+    }
+    
   }
 
   //$("#actions_upload_logs .start").prop("disabled", true);

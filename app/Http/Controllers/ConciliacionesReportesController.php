@@ -71,15 +71,16 @@ class ConciliacionesReportesController extends Controller
                     $reporte->has_firm = true;
                     break;
                 }
-            }
+            } 
             $reporte->hasValuesPersonalized = false;
-            if ($this->hasValuesPersonalized($reporte->reporte)) {
+            
+          /*   if ($this->hasValuesPersonalized($reporte->reporte)) {
                 $reporte->hasEmptyValuesPersonalized = false;
                 $reporte->hasValuesPersonalized = true;
                 if ($this->hasEmptyValuesPersonalized($reporte->reporte)) {
                     $reporte->hasEmptyValuesPersonalized = true;
                 }
-            }
+            } */
         });
         return $reportes;
     }
@@ -88,6 +89,8 @@ class ConciliacionesReportesController extends Controller
 
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $reportes = $this->getReportes($request);
+        /* $json = json_decode($reportes[0]->reporte->report_keys);
+        return response()->json($json); */
         $view = view('myforms.conciliaciones.componentes.pdf_report_list', compact('reportes', 'conciliacion'))->render();
         $response = [
             'conc_estado_id' => $request->conc_estado_id,
@@ -283,7 +286,7 @@ class ConciliacionesReportesController extends Controller
     {
         $conciliaciones = Conciliacion::all();
         $reportes = PdfReporte::all();
-        return view('myforms.conciliaciones.reportes.edit', compact('conciliaciones', 'reportes'));
+        return view('myforms.summernote_reportes.edit', compact('conciliaciones', 'reportes'));
         //return view('myforms.conciliaciones.reportes.edit');
     }
     public function store(Request $request)
@@ -437,7 +440,7 @@ class ConciliacionesReportesController extends Controller
         }
         $conciliacion = Conciliacion::find($conciliacion);
         $ocultar_menu = true;
-        return view('myforms.conciliaciones.reportes.edit_temporal', compact('reporte', 'ocultar_menu', 'conciliacion', 'estado'));
+        return view('myforms.summernote_reportes.edit_temporal', compact('reporte', 'ocultar_menu', 'conciliacion', 'estado'));
     }
 
     public function getAllPdf(Request $request)

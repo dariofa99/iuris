@@ -1,11 +1,9 @@
 <script>
-    @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
+    @if (!Session::has('message-information') && config('app.name') != 'ConciliApp')
         
-         if(localStorage.getItem('keyCircularNotiClose')){
-          var message = getGeneralMessage();
-        }else{
-          var message = getCircular();
-        }      
+         
+          var message = getMantenimientoMessage();
+         
         //var message = getGeneralMessage();  
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
@@ -71,6 +69,21 @@
         message += `<span> Últ. Atualización: 27 de nov. 2023 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
+
+        return message;
+    }
+
+    function getMantenimientoMessage() {
+        var message = '';
+        message += '<div class="alert alert-info" style="font-size:19px">';
+        message += `<h4>
+                      <strong >
+                        Atención!<br>Por motivo de cierre de corte, IURIS estará fuera de servicio el 04 de diciembre de 2023 a partir de las 9:00pm hasta 10:00pm.
+                   </strong> <br>
+                          <br>
+                      
+                    </h4> </div>`;
+        message += ``;
 
         return message;
     }

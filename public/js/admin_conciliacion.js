@@ -289,7 +289,7 @@ $(document).ready(function () {
     $("#btn_cambiar_estado").hide();
 
   });
-  $(".btn_create_document").on("click", function (e) {
+  $(".btn_create_document").on("click",async function (e) {
 
     $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
     $("#myformCreateConciliacionAnexo")[0].reset();
@@ -302,8 +302,8 @@ $(document).ready(function () {
         type: 'hidden',
         value: $(this).attr("data-category"),
         name: "category_id"
-      })
-    )
+      }));
+     
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");

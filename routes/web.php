@@ -388,6 +388,7 @@ Route::post('conciliaciones/store/conc/shared/files', 'ConciliacionesController@
 Route::post('conciliaciones/asignar/expediente', 'ConciliacionesController@asigExpediente');
 Route::get('conciliacion/sancionar/user', 'ConciliacionesController@sancionarUser');
 Route::get('conciliacion/send/notification/mail', 'ConciliacionesController@enviarNotificacionesCorreo');
+Route::get('get/files/by/category', 'ConciliacionesController@getFilesByCategory');
 
 Route::post('conciliacion/audiencia/create', 'AudienciaController@audienciaCreate');
 Route::get('conciliacion/users/salasalternasaudiencia/{id}/{cont}', 'AudienciaController@getSalasAudiencia');
