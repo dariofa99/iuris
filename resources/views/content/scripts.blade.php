@@ -1,8 +1,6 @@
 <script>
-    @if (!Session::has('message-information') && config('app.name') != 'ConciliApp')
-        
-         
-          var message = getMantenimientoMessage();
+    @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
+        var message = getMantenimientoMessage();
          
         //var message = getGeneralMessage();  
         $("#modal-show-alerts-content").html(message);

@@ -198,9 +198,9 @@ class SegmentosController extends Controller
 
 		$segmento = Segmento::find($id);
 		//dd($segmento); 
-		if ($segmento->fecha_corte != null) {
+		if ($segmento->fecha_corte == null) {
 			Session::flash('message-danger', 'Atención..! No hay una fecha de corte activa');
-			//return response()->json(['errors' => ["No hay una fecha de corte activa"]]);
+			return response()->json(['errors' => ["No hay una fecha de corte activa"]]);
 		}
 
 
@@ -245,7 +245,7 @@ class SegmentosController extends Controller
 		 where expedientes.expidnumberest = asignacion_caso.asigest_id 
 		 and (expestado_id != 5 and expestado_id != 2 and expestado_id != 5 and expestado_id != 6) 		
 		 and asignacion_caso.activo = 1 
-		 and users.idnumber <> 3030		  
+		 and users.idnumber = 30302		  
 		 and fecha_asig < '" . $dateiniciocorte . "' 
 		 and sede_expedientes.sede_id=" . session('sede')->id_sede));
 
@@ -422,8 +422,6 @@ class SegmentosController extends Controller
 						}
 					}
 
-	
-					//$this->Asignotasnewdatos($data);
 				} else {
 
 					//Se verifica si se realizaron actuaciones cada mes en los casos viejos
@@ -519,7 +517,9 @@ class SegmentosController extends Controller
 
 		///////////////fin foreach todos los casos
 
-
+		$dateiniciocorte = Carbon::parse($dateiniciocorte)->startOfDay(); // Asegura que la fecha de inicio sea a las 00:00:00
+		$fechaCorte = Carbon::parse($segmento->fecha_corte)->endOfDay(); // Asegura que la fecha de corte sea a las 23:59:59
+		
 		//consulta sobre los casos asignados solo durante el corte para notas sobre tiempos limites de inicio
 		$expedientescorte = DB::select(DB::Raw(
 			"Select asignacion_caso.fecha_asig,asignacion_caso.evaluado_hechos,
@@ -531,17 +531,18 @@ class SegmentosController extends Controller
 		where expedientes.expidnumberest = asignacion_caso.asigest_id 
 		and expedientes.expidnumberest <> 3030
 		and (expestado_id != 5 and expestado_id != 2)		
-		and (fecha_asig >= '" . $dateiniciocorte . "') 	
+		AND (fecha_asig BETWEEN '" . $dateiniciocorte . "' AND '" . $fechaCorte . "')   
 		and asignacion_caso.periodo_id = " . $segmento->perid . " 
 		and sede_expedientes.sede_id=" . session('sede')->id_sede . "
-		order by asignacion_caso.fecha_asig ASC"
+		order by asignacion_caso.fecha_asig desc"
 
 		));
 
 
 
 		//and expedientes.expidnumberest = '1006106455'
-		//and expedientes.expidnumberest <> 3030
+		//and expedientes.expidnumberest <> 3030 and (fecha_asig <= '" . $segmento->fecha_corte . "') 
+		
 		//and fecha_asig <= '".$datemenosquincediasfinalcorte."') 
 
 
@@ -831,8 +832,8 @@ class SegmentosController extends Controller
 		}
 
 
-		//$segmento->est_evaluado = 1;
-		//$segmento->save();
+		$segmento->est_evaluado = 1;
+		$segmento->save();
 		$segmentos = $this->getSegmentos();
 		$view = view('myforms.frm_segmentos_list_ajax', compact('segmentos'))->render();
 		return response()->json(['saved' => true, 'view' => $view]);
