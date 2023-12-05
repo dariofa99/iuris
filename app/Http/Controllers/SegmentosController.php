@@ -245,7 +245,7 @@ class SegmentosController extends Controller
 		 where expedientes.expidnumberest = asignacion_caso.asigest_id 
 		 and (expestado_id != 5 and expestado_id != 2 and expestado_id != 5 and expestado_id != 6) 		
 		 and asignacion_caso.activo = 1 
-		 and users.idnumber = 30302		  
+		 and users.idnumber <> 3030		  
 		 and fecha_asig < '" . $dateiniciocorte . "' 
 		 and sede_expedientes.sede_id=" . session('sede')->id_sede));
 
