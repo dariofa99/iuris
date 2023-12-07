@@ -948,8 +948,7 @@ export class ExpedientesService {
         return topics;
     }
     showProgress(percentage) {
-        const progressDiv = document.getElementById('progressbarwait');
-        $(progressDiv).show();
+        const progressDiv = document.getElementById('progressbarwait');       
         progressDiv.textContent = `${parseInt(percentage)}%`;
         progressDiv.style.width = `${parseInt(percentage)}%`;
     

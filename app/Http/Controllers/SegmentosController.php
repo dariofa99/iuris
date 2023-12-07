@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Nota;
 use App\HistorialDatosCaso;
 use App\Services\EstadosCasoService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -97,8 +98,8 @@ class SegmentosController extends Controller
 	public function store(Request $request)
 	{
 		$segmento = new Segmento($request->all());
-		//$regmento->segusercreated = \Auth::user()->idnumber;
-		//$regmento->seguserupdated = \Auth::user()->idnumber;		
+		//$regmento->segusercreated = Auth::user()->idnumber;
+		//$regmento->seguserupdated = Auth::user()->idnumber;		
 		$segmento->save();
 		if (session('sede')) {
 			$segmento->sedes()->attach(session('sede')->id_sede);
@@ -253,7 +254,7 @@ class SegmentosController extends Controller
 		// and expedientes.expidnumberest = '1124862051'
 		//and asignacion_caso.periodo_id = " . $segmento->perid . "
 
-		$docente_id = \Auth::user()->idnumber;
+		$docente_id = Auth::user()->idnumber;
 		$exps = [];
 		//return response()->json(["no",$expedientes]); 
 
@@ -497,7 +498,7 @@ class SegmentosController extends Controller
 								'tpntid' => '1',
 								'expidnumber' => $expedientemodel->expid,
 								'estidnumber' => $expedientemodel->expidnumberest,
-								'docidnumber' => \Auth::user()->idnumber,
+								'docidnumber' => Auth::user()->idnumber,
 								'tbl_org_id' => $expedientemodel->id,
 							];
 							$expedientemodel->asignarNotas($data);
@@ -814,7 +815,7 @@ class SegmentosController extends Controller
 								'tpntid' => '1',
 								'expidnumber' => $expedientemodel->expid,
 								'estidnumber' => $expedientemodel->expidnumberest,
-								'docidnumber' => \Auth::user()->idnumber,
+								'docidnumber' => Auth::user()->idnumber,
 								'tbl_org_id' => $expedientemodel->id,
 							];
 							$expedientemodel->asignarNotas($data);

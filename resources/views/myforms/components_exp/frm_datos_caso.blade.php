@@ -171,6 +171,7 @@
                     <div class="col-md-6" style="padding-left: 0px;">
                         {!! Form::label('Hechos: ') !!}
                     </div>
+                    
                     <div class="col-md-6" style="padding-left: 0px; text-align:end;">
                         @if ($expediente->fechaHistorialDatosCaso(141))
                             Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(141)) }}
@@ -178,9 +179,9 @@
                                 style="cursor: pointer; border-bottom:1px solid rgb(206, 206, 206)"> Ver
                                 historial</a>
                         @else
-                            Días despues de asignado
+                           
                             <span class="badge bg-{{ $expediente->getDaysAfterAsig() > 5 ? 'red' : 'green' }}">
-                                {{ $expediente->getDaysAfterAsig() }}
+                                {!! $expediente->getTextForTH() !!}
                             </span>
                         @endif
                     </div>
@@ -211,7 +212,7 @@
                         @else
                             Días despues de asignado:
                             <span class="badge bg-{{ $expediente->getDaysAfterAsig() > 5 ? 'red' : 'green' }}">
-                                {{ $expediente->getDaysAfterAsig() }}
+                                {!! $expediente->getTextForTH() !!}
                             </span>
                         @endif
                     </div>

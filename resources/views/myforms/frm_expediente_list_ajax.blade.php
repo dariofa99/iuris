@@ -138,81 +138,29 @@
                          @endif
                      </td>
                      <td>
-                         @if (!currentUser()->hasRole('secretaria') and !currentUser()->hasRole('solicitante'))
-                             @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == '1')
-                                 @if ($expediente->exptipoproce_id == '3')
-                                     {!! link_to_route(
-                                         'oficio.edit',
-                                         $title = 'Editar',
-                                         $parameters = $expediente->expid,
-                                         $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                     ) !!}
-                                 @else
-                                     {!! link_to_route(
-                                         'expedientes.edit',
-                                         $title = 'Editar',
-                                         $parameters = $expediente->expid,
-                                         $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                     ) !!}
-                                 @endif
-                             @elseif(
-                                 !currentUser()->hasRole('estudiante') and ($expediente->expestado_id == '1' or $expediente->expestado_id == '4') or
-                                     $expediente->expestado_id == '3')
-                                 @if ($expediente->getAsignacion() == null)
-                                     Se debe revisar la asignación
-                                 @else
-                                     @if ($expediente->exptipoproce_id == '3')
-                                         {!! link_to_route(
-                                             'oficio.edit',
-                                             $title = 'Editar',
-                                             $parameters = $expediente->expid,
-                                             $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                         ) !!}
-                                     @else
-                                         {!! link_to_route(
-                                             'expedientes.edit',
-                                             $title = 'Editar',
-                                             $parameters = $expediente->expid,
-                                             $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                         ) !!}
-                                     @endif
-                                 @endif
-                             @else
-                                 @if ($expediente->exptipoproce_id == '3')
-                                     {!! link_to_route(
-                                         'oficio.show',
-                                         $title = 'Ver',
-                                         $parameters = $expediente->expid,
-                                         $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                     ) !!}
-                                 @else
-                                     {!! link_to_route(
-                                         'expedientes.show',
-                                         $title = 'Ver',
-                                         $parameters = $expediente->expid,
-                                         $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
-                                     ) !!}
-                                 @endif
-                             @endif
-                         @else
-                             @if ($expediente->exptipoproce_id == '3')
-                                 {!! link_to_route(
-                                     'oficio.show',
-                                     $title = 'Ver',
-                                     $parameters = $expediente->expid,
-                                     $attributes = ['class' => 'btn btn-primary  btn-block mt-1 btn-sm btn-edit-le'],
-                                 ) !!}
-                             @else
-                                 {!! link_to_route(
-                                     'expedientes.show',
-                                     $title = 'Ver',
-                                     $parameters = $expediente->expid,
-                                     $attributes = ['class' => 'btn btn-primary  btn-block mt-1 btn-sm btn-edit-le'],
-                                 ) !!}
-                             @endif
+                         @if (currentUser()->can('admin_expedientes') ||
+                                 (currentUser()->hasRole('estudiante') ||
+                                     currentUser()->hasRole('docente') ||
+                                     currentUser()->hasRole('coordprac') and
+                                     $expediente->expestado_id == '1' || $expediente->expestado_id == '3' || $expediente->expestado_id == '6'))
+                             {!! link_to_route(
+                                 'expedientes.edit',
+                                 $title = 'Editar',
+                                 $parameters = $expediente->expid,
+                                 $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
+                             ) !!}
+                         @elseif (currentUser()->hasRole('estudiante') || currentUser()->hasRole('docente') || currentUser()->hasRole('coordprac') and
+                                 $expediente->expestado_id != '1' and
+                                 $expediente->expestado_id != '3' and
+                                 $expediente->expestado_id != '6')
+                             {!! link_to_route(
+                                 'expedientes.show',
+                                 $title = 'Ver',
+                                 $parameters = $expediente->expid,
+                                 $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
+                             ) !!}
+                         
                          @endif
-
-
                          <!-- Trigger the modal with a button -->
                          <button type="button" class="btn btn-block mt-1 btn-success btn-sm" data-toggle="modal"
                              data-target="#myModal-{{ $expediente->id }}">Detalles</button>

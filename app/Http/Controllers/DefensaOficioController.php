@@ -276,8 +276,7 @@ class DefensaOficioController extends Controller
     if (($expediente->expestado_id == '4'
         || $expediente->expestado_id == '2'
         || $expediente->expestado_id == '5')
-      and (currentUser()->hasRole('estudiante')
-        || currentUser()->hasRole('solicitante'))
+      and (!currentUser()->can("admin_expedientes"))
     ) {
 
       return redirect('/defensas/oficio/' . $expediente->expid);

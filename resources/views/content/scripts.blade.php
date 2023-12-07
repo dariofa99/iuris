@@ -1,7 +1,7 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem('keyCircularNotiClose');
-        var message = getGeneralMessage();
+        var message = getMantenimientoMessage();
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
@@ -76,7 +76,12 @@
         message += `<h4>
                       <strong >
                         Atención!<br>
-                        Estimado estudiante ya fue.
+                        Teniendo en cuenta que Iuris entrará en periodo de 
+                        vacaciones a partir del día
+                        8 de diciembre del año en curso, se recuerda que
+                        se pausaran los días en los que evalua el sistema a
+                        excepción de las fechas solicitadas por el docente 
+                        para realizar correcciones en los respectivos casos o actuaciones.
                    </strong> <br>
                           <br>
                       

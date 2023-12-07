@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Traits\ColorTurnos;
 use Illuminate\Support\Facades\Event;
 use App\User;
-use App\Traits\AsigNotas; 
+use App\Traits\AsigNotas;
 use App\Traits\UploadFile;
 use App\Segmento;
 use App\HistorialDatosCaso;
@@ -165,7 +165,7 @@ class Expediente extends Model
         return $this->belongsTo(Estado::class, 'expestado_id', 'id');
     }
 
-   
+
 
     public function solicitudes()
     {
@@ -346,7 +346,7 @@ class Expediente extends Model
             }
         }
 
-        if ($acts->pendiente > 0) { 
+        if ($acts->pendiente > 0) {
             if (Auth::user()->hasRole('estudiante')) {
                 $var = $acts->aprobado + $acts->pendiente;
 
@@ -434,7 +434,7 @@ class Expediente extends Model
 
     public function setNotActLimit($date = null)
     {
-       
+
         $fecha_limit = Carbon::now();
         $padresAct = DB::table('actuacions')
             ->join('revisiones_actuacion', 'actuacions.id', '=', 'revisiones_actuacion.parent_rev_actid')
@@ -445,7 +445,7 @@ class Expediente extends Model
 
         $hijos = [];
         $segmento = $this->getSegmentoActivo();
-       
+
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")
@@ -459,7 +459,7 @@ class Expediente extends Model
                 AND actestado_id <> 136 AND actestado_id <> 138 and actestado_id <> 235
                 ORDER BY rev_actid DESC LIMIT 1"),
                 );
-              
+
                 if (count($hijosAct) > 0 and $hijosAct[0]->fecha_limit !== null) {
                     $percent = 100;
                     $date = Carbon::now()->format('Y-m-d');
@@ -481,7 +481,7 @@ class Expediente extends Model
                         }
                     }
 
-                   
+
                     if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $fecha_limit < $date) {
                         $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
@@ -744,15 +744,15 @@ class Expediente extends Model
     public function fechaHistorialDatosCaso($tipo)
     {
         $asig = $this->asignacion;
-        
+
         if ($asig) {
-            
+
             $historial = HistorialDatosCaso::where('hisdc_expidnumber', $this->expid)
                 ->where('hisdc_tipo_datos_caso', $tipo)
                 ->where('hisdc_idnumberest_id', $this->expidnumberest)
                 ->where('created_at', '>=', Carbon::parse($asig->fecha_asig)->startOfDay())
                 ->orderBy('id', 'DESC')
-                ->first();            
+                ->first();
             if ($historial) {
                 $his_fecha = $historial->created_at;
                 $his_fecha = $his_fecha->format('d-m-Y');
@@ -789,39 +789,89 @@ class Expediente extends Model
         return false;
     }
 
+    public function getTextForTH()
+    {
+        $periodo = $this->getPeriodoActivo();
+        $now = Carbon::now();
+        $estamosVacaciones = DB::table("vacaciones_periodo")
+            ->whereDate('fecha_inicio', '<=', $now)
+            ->whereDate('fecha_fin', '>=', $now)
+            ->where("periodo_id", $periodo->id)
+            ->orderBy('created_at', 'desc')->first();
+        if ($estamosVacaciones) {
+            $asig = $this->getAsignacion();
+            $dias = $this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio);
+
+            return "Periodo de vacaciones activo. Días: " . $dias;
+        } else {
+            $dias = $this->getDaysAfterAsig();
+            $text =  "<b>Días transcurridos desde la asignación:</b> " . $dias;
+
+            return $text;
+        }
+        $asig = $this->getAsignacion();
+        $huboVacaciones = DB::table("vacaciones_periodo")
+            ->whereDate('fecha_inicio', '>=', $asig->fecha_asig)
+            ->whereDate('fecha_fin', '<=', $now)
+            ->where("periodo_id", $periodo->id)
+            ->orderBy('created_at', 'desc')->get();
+
+
+        dd($huboVacaciones, $asig);
+    }
+
     public function getDaysForNexAct()
     {
-        $pausa = $this->asignacion->pausas()->orderBy('created_at','desc')->first();  
-        if($this->expestado_id==6) {
-            if($pausa){
-                $fecha = "desde ".getSmallDate($pausa->fecha_inicial)." hasta ".getSmallDate($pausa->fecha_final);
-                return $text =  "<b>El expediente estará en pausa ".$fecha."</b>";
+        $pausa = $this->asignacion->pausas()->orderBy('created_at', 'desc')->first();
+        if ($this->expestado_id == 6) {
+            if ($pausa) {
+                $fecha = "desde " . getSmallDate($pausa->fecha_inicial) . " hasta " . getSmallDate($pausa->fecha_final);
+                return $text =  "<b>El expediente estará en pausa " . $fecha . "</b>";
             }
             return $text =  "<b>El expediente esta en pausa</b>";
         }
+
         $act = $this->actuacion()
             ->where(['actusercreated' => $this->expidnumberest])
-            ->where(function($q){
-                $q->orwhere('actestado_id','=',101)
-                    ->orwhere('actestado_id','=',102)
-                    ->orwhere('actestado_id','=',138)
-                    ->orwhere('actestado_id','=',139)
-                    ->orwhere('actestado_id','=',104);
+            ->where(function ($q) {
+                $q->orwhere('actestado_id', '=', 101)
+                    ->orwhere('actestado_id', '=', 102)
+                    ->orwhere('actestado_id', '=', 138)
+                    ->orwhere('actestado_id', '=', 139)
+                    ->orwhere('actestado_id', '=', 104);
             })
             ->orderBy('actuacions.actfecha', 'desc')->first();
         $color = 'green';
         $dias = 0;
-       
-            
-        if($pausa){            
-            if($act and ($act->actfecha > $pausa->fecha_final)){
+
+        $periodo = $this->getPeriodoActivo();
+        $now = Carbon::now();
+        $estamosVacaciones = DB::table("vacaciones_periodo")
+            ->whereDate('fecha_inicio', '<=', $now)
+            ->whereDate('fecha_fin', '>=', $now)
+            ->where("periodo_id", $periodo->id)
+            ->orderBy('created_at', 'desc')->first();
+        if ($estamosVacaciones) {
+            if ($act and ($act->actfecha < $estamosVacaciones->fecha_inicio)) {
+                $dias = $this->difDays($act->actfecha, $estamosVacaciones->fecha_inicio);
+                $text =  "<b>Periodo de vacaciones activo. Días: $dias</b>";
+            } else if ($act) {
+                $text =  "<b>Periodo de vacaciones activo</b>";
+            } else {
+                $asig = $this->getAsignacion();
+                $dias = $this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio);
+                $text = "Periodo de vacaciones activo. Días: " . $dias;
+            }
+            return $text;
+        } else if ($pausa) {
+            if ($act and ($act->actfecha > $pausa->fecha_final)) {
                 $dias = $this->difDays($act->actfecha, date('Y-m-d'));
-                $text =  "<b>Días transcurridos desde última actuación:</b>";                
-            }else{
+                $text =  "<b>Días transcurridos desde última actuación:</b>";
+            } else {
                 $dias = $this->difDays($pausa->fecha_final, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde final de pausa:</b>";
             }
-        }else if ($act) {           
+        } else if ($act) {
             $dias = $this->difDays($act->actfecha, date('Y-m-d'));
             $text =  "<b>Días transcurridos desde última actuación:</b>";
         } else {
@@ -836,13 +886,13 @@ class Expediente extends Model
 
     public function isValidEvaPause()
     {
-        $asignacion = $this->asignacion;      
-        $pausas = $asignacion->pausas()->where('estado_id',249)->orderBy('created_at','desc')->first();
-        if(($pausas)){
-            if($pausas->fecha_final < date('Y-m-d') and $this->expestado_id==6){
-              return true;
+        $asignacion = $this->asignacion;
+        $pausas = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
+        if (($pausas)) {
+            if ($pausas->fecha_final < date('Y-m-d') and $this->expestado_id == 6) {
+                return true;
             }
-        }       
+        }
         return false;
     }
 
@@ -850,26 +900,26 @@ class Expediente extends Model
     public function isValidOpen()
     {
         $dias = $this->getDaysAfterAsig();
-        
+
         if ($this->expestado_id == 1 and $dias > 20) {
             return true;
         }
         if ($this->expestado_id == 5 and $dias < 60) {
             $asig_segmento = $this->asignacion->periodo->segmentos()->first();
             $segmento = $this->getSegmentoActivo();
-            if($asig_segmento and $segmento and $asig_segmento->id == $segmento->id){
+            if ($asig_segmento and $segmento and $asig_segmento->id == $segmento->id) {
                 return true;
             }
         }
-       
+
         return false;
     }
 
     public function getCitas()
     {
         $asignacion = $this->getAsignacion();
-        try { 
-           
+        try {
+
             $can_edit = false;
             if ($asignacion->asig_docente !== null and $asignacion->asig_docente->docidnumber == auth()->user()->idnumber) {
                 $can_edit = true;

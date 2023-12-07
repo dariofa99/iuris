@@ -106,8 +106,8 @@
                     @endif
                     @if ($expediente->expestado_id == 6)
                         <a href="#" id="btn_quit_pausa_exp"
-                            class="btn btn-block btn-sm btn-danger mt-1">
-                            Quitar pausa
+                            class="btn btn-block btn-sm btn-info mt-1">
+                            Admin. pausa
                         </a>
                     @endif
                 @endif

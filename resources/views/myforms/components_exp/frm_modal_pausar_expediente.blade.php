@@ -26,7 +26,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="nombre_estudiante">Hasta:</label>
-                            <input type="date" min="{{date('Y-m-d')}}" required class="form-control required form-control-sm" id="nombre_estudiante"
+                            <input type="date" min="{{\Carbon\Carbon::now()->addDay(1)->format('Y-m-d')}}" required class="form-control required form-control-sm" id="nombre_estudiante"
                                 name="fecha_final">
                          </div>                      
 

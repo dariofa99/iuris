@@ -287,7 +287,7 @@ class ExpedienteController extends Controller
       'expid' => $id
     ]);
     if (!$expediente) return view('errors.error', compact('url'));
-
+    if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     $estudiante = $expediente->estudiante;
     $asignacion = $expediente->asignacion;
     if ($expediente->exptipoproce_id ==  1) {
@@ -327,7 +327,7 @@ class ExpedienteController extends Controller
         }
       }
     }
-    //Agregue la funcion getusers Para poder usarla en el index
+
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     $expediente->setNotActLimit();
     if ($expediente->isValidEvaPause()) {
@@ -339,6 +339,7 @@ class ExpedienteController extends Controller
       $request['ref_motivo_estado_id'] = 11;
       $estado_caso = $this->estadoCasoService->store($request);
     }
+    if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));
@@ -357,7 +358,11 @@ class ExpedienteController extends Controller
         return view('errors.error', compact('url'));
       }
     }
-    if ($expediente->expestado_id == '2' and !currentUser()->hasRole("amatai")) {
+    if (
+      ($expediente->expestado_id != '1' and
+        $expediente->expestado_id != '3' and
+        $expediente->expestado_id != '6') and !currentUser()->can("admin_expedientes")
+    ) {
       return redirect('/expedientes/' . $expediente->expid);
     }
     $readonly = false;
@@ -1240,7 +1245,7 @@ class ExpedienteController extends Controller
     // $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
 
     //$relations = $asignacion_caso->getRelations();
-    
+
     $fecha_unix = strtotime("+1 hours");
     $tokenjitsi = array(
       'context' => array(
@@ -1390,6 +1395,12 @@ class ExpedienteController extends Controller
   public function pausarExpediente(Request $request)
   {
     $expediente = $this->expedienteService->find($request->expediente_id);
+    if(($expediente->exptipoproce_id == 3 
+    and $expediente->exphechos=="") 
+    || ($expediente->exptipoproce_id != 3 and 
+    $expediente->exprtaest=="" || $expediente->exphechos=="")){
+      return response()->json(["errors"=>['Los hechos y respuesta del estudiante no pueden estar vacios']]);
+    }    
     $request['expestado_id'] = 6;
     $expediente = $this->expedienteService->update($expediente, $request);
     $asignacion = $this->expedienteService->pausarExpediente($expediente, $request);
@@ -1426,7 +1437,19 @@ class ExpedienteController extends Controller
   }
   public function updatePausaExpediente(Request $request, $id)
   {
+   // return response()->json($request->all());
     $expediente = $this->expedienteService->find($request->expediente_id);
+    if ($expediente and $request->has('finapausa') and $request->input('finapausa') == 1) {
+      $request['expestado_id'] = 1;
+      $expediente = $this->expedienteService->update($expediente, $request);
+      $request['comentario'] = 'Terminación de pausa';
+      $request['expidnumber'] = $expediente->expid;
+      $request['ref_estado_id'] = $expediente->expestado_id;
+      $request['ref_motivo_estado_id'] = 11;
+      $estado_caso = $this->estadoCasoService->store($request);
+      $request['fecha_final'] = Carbon::now();
+    }
+   
     $pausa = $this->expedienteService->updatePausa($id, $request);
     return response()->json($pausa);
   }

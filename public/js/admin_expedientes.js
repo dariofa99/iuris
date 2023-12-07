@@ -188,42 +188,47 @@ $(document).ready(function () {
 
             var tr = '';
             response.forEach((element, key) => {
-                var fechaActual = new Date().toISOString().split('T')[0];
+                var fechaActual = new Date();
+                fechaActual.setDate(fechaActual.getDate() + 1);
+                var fechaActual = fechaActual.toISOString().split('T')[0];
                 tr += `
-                <tr>
-                    <td>
-                        ${key + 1}
-                    </td>
-                    <td>
-                        ${element.fecha_initxt}
-                    </td>
-                    <td>
+                <div class="col-md-1">
+                ${key + 1}
+                </div>
+                <div class="col-md-4">
+                    ${element.fecha_initxt}
+                </div>
+                <div class="col-md-4">
                     <input min="${fechaActual}" type="hidden" value="${element.fecha_final}" data-id="${element.id}" id="fecha_final-${element.id}" name="fecha_final" class="form-control form-control-sm" >
-                      <span id="lbl-${element.id}"> ${element.fecha_fintxt} </span>
-                    </td>
-                    <td width="5%">
-                        <button aria-label="Editar pausa" title="Editar pausa" data-id="${element.id}" id="btn_edit_pausa-${element.id}" class="btn btn-sm btn-block btn-primary btn_edit_pausa">
-                            <i class="fa fa-edit"></i>
-                            <span class="sr-only">Editar pausa</span>
-                        </button>
-                        <button aria-label="Eliminar pausa" title="Eliminar pausa" data-id="${element.id}" id="btn_delete_pausa-${element.id}" class="btn btn-sm btn-block btn-danger btn_delete_pausa">
-                            <i class="fa fa-trash"></i>
-                            <span class="sr-only">Eliminar pausa</span>
-                        </button>
-                        <button aria-label="Actualizar pausa" title="Actualizar pausa" style="display:none" id="btn_update_pausa-${element.id}" data-id="${element.id}" class="btn btn-sm btn-block btn-success btn_update_pausa">
-                            <i class="fa fa-check-square"></i>
-                            <span class="sr-only">Actualizar pausa</span>
-                        </button>
-                        <button aria-label="Cancelar" title="Cancelar" style="display:none" id="btn_cancel_pausa-${element.id}" data-id="${element.id}" class="btn btn-sm btn-block btn-default btn_cancel_pausa">
-                            <i class="fa fa-minus"></i>
-                            <span class="sr-only">Cancelar</span>
-                        </button>
-
-                    </td>
-                </tr>`;
-            });
-            $("#tblListPausasExp tbody").html(tr);
+                <span id="lbl-${element.id}"> ${element.fecha_fintxt} </span>
+                    <div style="display:none" id="cont_finp-${element.id}">
+                        <input type="checkbox" value="1" name="finapausa" id="finapausa-${element.id}"> Terminar pausa
+                    </div> 
+                </div>
+            <div class="col-md-3">
+               
+                    <button aria-label="Editar pausa" title="Editar pausa" data-id="${element.id}" id="btn_edit_pausa-${element.id}" class="btn btn-sm  btn-block btn-primary btn_edit_pausa">
+                        <i class="fa fa-edit"></i>
+                        <span class="sr-only">Editar pausa</span>
+                    </button>
+                    <button aria-label="Eliminar pausa" title="Eliminar pausa" data-id="${element.id}" id="btn_delete_pausa-${element.id}" class="btn btn-sm btn-block mb-1 btn-danger btn_delete_pausa">
+                        <i class="fa fa-trash"></i>
+                        <span class="sr-only">Eliminar pausa</span>
+                    </button>
+                    <button aria-label="Actualizar pausa" title="Actualizar pausa" style="display:none;" id="btn_update_pausa-${element.id}" data-id="${element.id}" class="btn btn-sm  btn-success btn_update_pausa">
+                        <i class="fa fa-check-square"></i>
+                        <span class="sr-only">Actualizar pausa</span>
+                    </button>
+                    <button aria-label="Cancelar" title="Cancelar" style="display:none" id="btn_cancel_pausa-${element.id}" data-id="${element.id}" class="btn btn-sm  btn-default btn_cancel_pausa">
+                        <i class="fa fa-minus"></i>
+                        <span class="sr-only">Cancelar</span>
+                    </button>
+            </div>
            
+                `;
+            });
+            $("#tblListPausasExp").html(tr);
+
         } else {
             $("#tblListPausasExp tbody").html("<tr><td>No hay datos</td></tr>");
         }
@@ -236,6 +241,8 @@ $(document).ready(function () {
         var id = $(this).attr("data-id");
         $("#fecha_final-" + id).attr("type", 'date');
         $("#btn_edit_pausa-" + id).hide();
+        $("#finapausa-" + id).prop('disabled', false);
+        $("#cont_finp-" + id).show();
         $("#lbl-" + id).hide();
         $("#btn_delete_pausa-" + id).hide();
         $("#btn_update_pausa-" + id).show();
@@ -248,6 +255,8 @@ $(document).ready(function () {
         $("#lbl-" + id).show();
         $("#btn_delete_pausa-" + id).show();
         $("#btn_edit_pausa-" + id).show();
+        $("#finapausa-" + id).prop('disabled', true);
+        $("#cont_finp-" + id).hide();
         $("#btn_update_pausa-" + id).hide();
         $("#btn_cancel_pausa-" + id).hide();
     });
@@ -259,7 +268,8 @@ $(document).ready(function () {
         var request = {
             'expediente_id': $("#expediente_id").val(),
             'pausa_id': id,
-            'fecha_final': $("#fecha_final-" + id).val()
+            'fecha_final': $("#fecha_final-" + id).val(),
+            'finapausa': $("#finapausa-" + id).is(":checked") ? $("#finapausa-" + id).val() : 0
         }
         let response = await expedientesService.updatePausa(id, request);
         toastr.success("Actualizado con éxito", "", {
@@ -274,8 +284,9 @@ $(document).ready(function () {
         e.preventDefault();
         var id = $(this).attr("data-id");
         Swal.fire({
-            title: 'Esta seguro de eliminar la pausa?',
-            text: "Se abrirá nuevamente el caso!",
+            title: '¿Esta seguro de eliminar la pausa?',
+            html: `<h3>Recuerde que si elimina la pausa no se tendrá en cuenta el tiempo
+                    pausado y se abrirá nuevamente el caso. Si requiere mantener los días de pausa deberá modificar la fecha final de pausa y dejar que el sistema abra nuevamente el caso</h3>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -293,7 +304,7 @@ $(document).ready(function () {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
                 });
-                window.location = '/expedientes/'+$("#expid").val()+'/edit#case_data';
+                window.location = '/expedientes/' + $("#expid").val() + '/edit#case_data';
             }
         });
 
@@ -305,10 +316,17 @@ $(document).ready(function () {
         if (errors.length <= 0) {
             var request = convertFormToJSON("myformPausarExpediente");
             request['expediente_id'] = $("#expediente_id").val();
-            $("#wait").show();
+            // $("#wait").show();
             let response = await expedientesService.pausarExpediente(request);
-            if (response) {
-                toastr.success("Se actualizó con éxito", "", {
+            if (response.errors && response.errors.length > 0) {
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+            } else if (response) {
+                toastr.success("Se pausó con éxito", "", {
                     timeOut: "4000",
                 });
                 window.location.reload(true);
