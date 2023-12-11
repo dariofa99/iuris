@@ -180,8 +180,8 @@
                                 historial</a>
                         @else
                            
-                            <span class="badge bg-{{ $expediente->getDaysAfterAsig() > 5 ? 'red' : 'green' }}">
-                                {!! $expediente->getTextForTH() !!}
+                            <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
+                                {!! $expediente->getTextForTH('mensaje') !!}
                             </span>
                         @endif
                     </div>
@@ -211,8 +211,8 @@
                                 Ver historial</a>
                         @else
                             Días despues de asignado:
-                            <span class="badge bg-{{ $expediente->getDaysAfterAsig() > 5 ? 'red' : 'green' }}">
-                                {!! $expediente->getTextForTH() !!}
+                            <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
+                                {!! $expediente->getTextForTH('text') !!}
                             </span>
                         @endif
                     </div>

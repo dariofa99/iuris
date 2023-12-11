@@ -249,13 +249,14 @@ class Expediente extends Model
 
         try {
 
-            $now = $now == null ? Carbon::now() : Carbon::parse($now);
-            $vacaciones_text = DB::table("vacaciones_periodo")
+            /* $now = $now == null ? Carbon::now() : Carbon::parse($now);
+            $estamos_vacaciones = DB::table("vacaciones_periodo")
+                ->whereDate('fecha_inicio', '<=', $now)
                 ->whereDate('fecha_fin', '>=', $now)
-                ->where("periodo_id", $periodo->id)->first();
+                ->where("periodo_id", $periodo->id)
+                ->orderBy('created_at', 'desc')->first();
             $fecha_asig = Carbon::parse($asig->fecha_asig);
             $fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);
-
             $_vacaciones = DB::table("vacaciones_periodo")
                 ->whereDate('fecha_inicio', '>=', $fecha_asig)
                 ->whereDate('fecha_fin', '<=', $fecha_max)
@@ -289,8 +290,40 @@ class Expediente extends Model
                 } else {
                     $days = $now->diffInDays($fecha_max, false);
                 }
+            } */
+            $periodo = $this->getPeriodoActivo();
+            $now = Carbon::now();
+            $asig = $this->getAsignacion();
+            $estamosVacaciones = DB::table("vacaciones_periodo")
+                ->whereDate('fecha_inicio', '<=', $now)
+                ->whereDate('fecha_fin', '>=', $now)
+                ->where("periodo_id", $periodo->id)
+                ->orderBy('created_at', 'desc')->first();
+            $huboVacaciones = DB::table("vacaciones_periodo")
+                ->whereDate('fecha_inicio', '>=', $asig->fecha_asig)
+                ->whereDate('fecha_fin', '<=', $now)
+                ->where("periodo_id", $periodo->id)
+                ->orderBy('created_at', 'desc')->get();
+            if ($estamosVacaciones) {
+                $dias_v = 0;
+                if ($huboVacaciones) {
+                    foreach ($huboVacaciones as $key => $vacacion) {
+                        $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
+                    }
+                }                
+                $dias = ($this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio) - $dias_v);
+                //dd($asig,$dias_v,$estamosVacaciones);
+            } elseif ($huboVacaciones) {
+                $dias_v = 0;
+                foreach ($huboVacaciones as $key => $vacacion) {
+                    $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
+                }
+                $dias_asig  = $this->getDaysAfterAsig();
+                $dias = $dias_asig - $dias_v;
+            } else {
+                $dias = $this->getDaysAfterAsig();
             }
-            $dias = $days;
+            $days = (30 - $dias);
             $mgs = $days . ' Días';
             if ($days >= 1) $color = '#DA443F !important';
             if ($days >= 10) $color = '#F4D03F !important';
@@ -305,12 +338,15 @@ class Expediente extends Model
                     return $color;
                     break;
                 case 'mensaje':
-                    return $vacaciones_text ? "Vacaciones" : $mgs;
+                    $d = "(días: $days)";
+                    if($days < 0){
+                        $d = "(evaluado)";
+                    }
+                    return $estamosVacaciones ? "Vacaciones $d" : $mgs;
                     break;
                 case 'dias':
-                    return $dias;
+                    return $days;
                     break;
-
                 default:
                     return "Sin argumento";
                     break;
@@ -789,35 +825,53 @@ class Expediente extends Model
         return false;
     }
 
-    public function getTextForTH()
+    public function getTextForTH($item)
     {
         $periodo = $this->getPeriodoActivo();
         $now = Carbon::now();
+        $asig = $this->getAsignacion();
         $estamosVacaciones = DB::table("vacaciones_periodo")
             ->whereDate('fecha_inicio', '<=', $now)
             ->whereDate('fecha_fin', '>=', $now)
             ->where("periodo_id", $periodo->id)
             ->orderBy('created_at', 'desc')->first();
-        if ($estamosVacaciones) {
-            $asig = $this->getAsignacion();
-            $dias = $this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio);
-
-            return "Periodo de vacaciones activo. Días: " . $dias;
-        } else {
-            $dias = $this->getDaysAfterAsig();
-            $text =  "<b>Días transcurridos desde la asignación:</b> " . $dias;
-
-            return $text;
-        }
-        $asig = $this->getAsignacion();
         $huboVacaciones = DB::table("vacaciones_periodo")
             ->whereDate('fecha_inicio', '>=', $asig->fecha_asig)
             ->whereDate('fecha_fin', '<=', $now)
             ->where("periodo_id", $periodo->id)
             ->orderBy('created_at', 'desc')->get();
-
-
-        dd($huboVacaciones, $asig);
+        if ($estamosVacaciones) {
+            $dias_v = 0;
+            if ($huboVacaciones) {
+                foreach ($huboVacaciones as $key => $vacacion) {
+                    $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
+                }
+            }
+            $dias = ($this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio) - $dias_v);
+            $text = "Periodo de vacaciones activo. Días: " . ($dias);
+        } elseif ($huboVacaciones) {
+            $dias_v = 0;
+            foreach ($huboVacaciones as $key => $vacacion) {
+                $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
+            }
+            $dias_asig  = $this->getDaysAfterAsig();
+            $dias = $dias_asig - $dias_v;
+            $text =  "<b>Días transcurridos desde la asignación:</b> " . $dias;
+        } else {
+            $dias = $this->getDaysAfterAsig();
+            $text =  "<b>Días transcurridos desde la asignación:</b> " . $dias;
+        }
+        switch ($item) {
+            case 'dias':
+                return $dias;
+                break;
+            case 'mensaje':
+                return $text;
+                break;
+            default:
+                return $text;
+                break;
+        }
     }
 
     public function getDaysForNexAct()

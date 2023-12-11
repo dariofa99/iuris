@@ -289,7 +289,7 @@ class ExpedienteController extends Controller
     if (!$expediente) return view('errors.error', compact('url'));
     if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     $estudiante = $expediente->estudiante;
-    $asignacion = $expediente->asignacion;
+    $asignacion = $expediente->asignacion; 
     if ($expediente->exptipoproce_id ==  1) {
       $days = $expediente->getDaysOrColorForClose('dias');
       if ($days <= 0 || $days === true) {
