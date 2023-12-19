@@ -17,18 +17,18 @@ trait PdfReport
 
             if (count($json) > 0) {
                 foreach ($json as $key => $data) {
-                    //$data = $json[5];
-                   
+                    // $data = $json[12];
+
                     if ($data->table == 'users') {
                         $user = $conciliacion->getUser($data->data_type);
-                        
-                        if ($user->id!=null) {
+
+                        if ($user->id != null) {
                             $data_us = pdfReportsDataValues()['users'];
                             $table_name = obtenerTableName($data_us, $data->short_name);
                             if ($table_name == 'tipodoc_id') {
                                 $value = $user->tipo_doc->ref_nombre;
                             } elseif ($table_name == 'genero_id') {
-                                $value = $user->genero->ref_nombre;                               
+                                $value = $user->genero->ref_nombre;
                             } elseif ($table_name == 'estadocivil_id') {
                                 $value = $user->estado_civil->ref_nombre;
                             } elseif ($table_name == 'tipopers_id') {
@@ -39,22 +39,20 @@ trait PdfReport
                                 $value = $user->$table_name;
                             }
                             //dd($value);
-                            if (isset($value) and $value!='') {
+                            if (isset($value) and $value != '') {
                                 $bodytag = str_replace($data->data_text, $value, $bodytag);
                             }
                         }
-                       
-                        
                     } else if ($data->table == 'users_aditional_data') {
                         $user = $conciliacion->getUser($data->data_type);
+
                         if ($user and $user->getDataValWShort($data->short_name)) {
                             $value = $user->getDataValWShort($data->short_name)->value;
-                           // dd($user,$value);
-                            if (isset($value) and $value!='') {
+
+                            if (isset($value) and $value != '') {
                                 $bodytag = str_replace($data->data_text, $value, $bodytag);
                             }
                         }
-                       
                     } else if ($data->table == 'conc_hechos_pretensiones') {
                         // dd($data );
                         $id = $data->short_name == 'hechos' ? 206 : (($data->short_name == 'acuerdos') ? 208 : 207);
@@ -78,6 +76,7 @@ trait PdfReport
                         if ($audiencia) {
                             $diaActual = $audiencia->getFecha();
                         }
+                        dd($audiencia);
                         $bodytag = str_replace($data->data_text, $diaActual, $bodytag);
                     } elseif ($data->table == 'pdf_reportes' and $reporte->id != null) {
                         $ref_data = getAditionalDataByShortName($data->short_name, 'pdf_reportes');
@@ -120,11 +119,20 @@ trait PdfReport
 
                         if ($data->short_name == 'numero_radicado') {
                             $bodytag = str_replace($data->data_text, $conciliacion->num_conciliacion, $bodytag);
-                        }
+                        }                      
 
                         if ($data->short_name == 'mes_anio_actual') {
                             $fecha = getMonthAndYear(date('Y-m-d'));
                             $bodytag = str_replace($data->data_text, $fecha, $bodytag);
+                        }
+                    }else if($data->table=='audiencias'){
+                        if ($data->short_name == 'fecha_hora_audiencia') {
+                            $audiencia = AudienciaConciliacion::where('id_conciliacion', $conciliacion->id)->first();
+                            $diaActual = $data->name;
+                            if ($audiencia) {
+                                $diaActual = $audiencia->getFecha();
+                            }
+                            $bodytag = str_replace($data->data_text, $diaActual, $bodytag);
                         }
                     }
                 }

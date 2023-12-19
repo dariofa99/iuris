@@ -1,8 +1,7 @@
 <div class="row">
     <div class="col-md-6">
-        @if ((currentUser()->hasRole('amatai') 
-        || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
-        and !$user->hasRole('docente'))
+        @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') and
+                !$user->hasRole('docente'))
             <div class="form-group" align="right">
                 {!! Form::hidden('active_asignacion', '0') !!}
                 <input value="1" type="checkbox" {{ $user->active_asignacion == '1' ? 'checked' : '' }}
@@ -11,7 +10,7 @@
                 {!! Form::label('Asignación casos ') !!}
             </div>
         @endif
-    </div> 
+    </div>
     <div class="col-md-6">
         @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
             <div class="form-group" align="right">
@@ -20,7 +19,7 @@
                 <input value="1" type="checkbox" {{ $user->active == '1' ? 'checked' : '' }} name="active"
                     id="active">
                 {!! Form::label('Usuario Activo ') !!}
-            </div> 
+            </div>
         @endif
     </div>
     @include('myforms.users.formulario_registro', [
@@ -94,13 +93,15 @@
                 {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
-                    'required' => 'required',    
-                                    
+                    'required' => 'required',
                 ]) !!}
             </div>
         </div>
     @else
-        @if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
+        @if (currentUser()->hasRole('estudiante') ||
+                currentUser()->hasRole('amatai') ||
+                currentUser()->hasRole('diradmin') ||
+                currentUser()->hasRole('dirgral'))
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('Año Cursando') !!}
@@ -149,21 +150,20 @@
             </div>
         </div>
     @endif
-    @if (currentUser()->hasRole('estudiante') || ($user->hasRole('estudiante') and currentUser()->hasRole('amatai')))
-        <div class="col-md-6">
-            <div class="form-group">
-                {!! Form::label('Código estudiantil') !!}
-                {!! Form::text('codigo_estudiantil', $user->codigo_estudiantil, [
-                    'placeholder' => 'Selecciona...',
-                    'class' => 'form-control form-control-sm',
-                    'required' => 'required',
-                ]) !!}
-            </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>
+                {{ $user->hasRole('estudiante') ? 'Código estudiantil' : 'Tarjeta profesional' }}
+            </label>
+            {!! Form::text('codigo_estudiantil', $user->codigo_estudiantil, [
+                'placeholder' => 'Ej. 1234',
+                'class' => 'form-control form-control-sm',
+                'required' => 'required',
+            ]) !!}
         </div>
-    @endif
-    
-    @include('myforms.components_user.aditional_data',[
-        "data"=>getReferencesDataBySection("datos_personales",'users')
+    </div>
+    @include('myforms.components_user.aditional_data', [
+        'data' => getReferencesDataBySection('datos_personales', 'users'),
     ])
-    
+
 </div>

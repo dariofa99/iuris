@@ -9,7 +9,7 @@
 <body>
     <table>
         <tr>
-            <td>Hola</td><td>Mundi</td>
+            <td>Hola</td><td>Mundo</td>
         </tr>
     </table>
 </body> 

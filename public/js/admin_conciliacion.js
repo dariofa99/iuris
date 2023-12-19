@@ -107,7 +107,17 @@ $(document).ready(function () {
         let response = await conciliacionService.registrar_conciliacion(request);
 
         $("#wait").show();
-        if (response.errors) {
+        if(response.errors_email){
+          response.errors_email.forEach(element => {
+            toastr.error(element, "", {
+              positionClass: "toast-top-right",
+              timeOut: "4000",
+            });            
+          });
+          if(response.conciliacion && response.conciliacion.id!=undefined){
+            window.location = "/conciliaciones/" + response.conciliacion.id + "/edit";
+          }
+        }else if (response.errors) {
 
         } else if (response.id != undefined && response.id != null) {
           toastr.success("Conciliación creada con éxito", "", {

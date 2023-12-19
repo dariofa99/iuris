@@ -348,7 +348,7 @@ Route::get('segmentos/close/{id}','SegmentosController@closeSegmento');
 //Periodos
 Route::resource('periodos', 'PeriodosController');
 Route::post('periodos/change/state/{id}','PeriodosController@changeState');
-Route::post('periodos/buscar/segmentos/{id}','PeriodosController@searchSegmentos');
+Route::get('periodos/buscar/segmentos/{id}','PeriodosController@searchSegmentos');
 
 //Auditoria
 Route::resource('auditoria', 'AuditoriaController');

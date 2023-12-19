@@ -397,7 +397,7 @@ function pdfReportsDataValues()
                 'table' => 'users',
                 'model' => 'user',
                 'short_name' => 'tipo_persona',
-                'name' => 'Tipo identificación',
+                'name' => 'Tipo persona',
                 'table_name' => 'tipopers_id',
             ],
             [

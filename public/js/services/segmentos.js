@@ -19,7 +19,7 @@ class SegmentosService {
         return topics;
 
     }
-    async changeState(id){
+    async changeState(id) {
         const response = await fetch(BASE_URL + "segmentos/change/state/" + id, {
             method: 'POST',
             headers: {
@@ -38,7 +38,7 @@ class SegmentosService {
         const topics = await response.json();
         return topics;
     }
-    async edit(id){
+    async edit(id) {
         const response = await fetch(BASE_URL + "segmentos/" + id, {
             method: 'GET',
             headers: {
@@ -46,7 +46,7 @@ class SegmentosService {
                 "Accept": "application/json",
                 "X-Requested-With": "XMLHttpRequest",
                 "X-CSRF-Token": $("#token").attr("content"),
-            }            
+            }
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
@@ -56,7 +56,7 @@ class SegmentosService {
         const topics = await response.json();
         return topics;
     }
-    async update(request,id){
+    async update(request, id) {
         const response = await fetch(BASE_URL + "segmentos/" + id, {
             method: 'PUT',
             headers: {
@@ -75,7 +75,7 @@ class SegmentosService {
         const topics = await response.json();
         return topics;
     }
-    async closeSegmento(id){
+    async closeSegmento(id) {
         const response = await fetch(BASE_URL + "segmentos/close/" + id, {
             method: 'GET',
             headers: {
@@ -83,7 +83,7 @@ class SegmentosService {
                 "Accept": "application/json",
                 "X-Requested-With": "XMLHttpRequest",
                 "X-CSRF-Token": $("#token").attr("content"),
-            }           
+            }
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
@@ -93,6 +93,24 @@ class SegmentosService {
         const topics = await response.json();
         return topics;
     }
-    
+    async searchSegmentos(periodo_id) {
+        const response = await fetch(BASE_URL + "periodos/buscar/segmentos/" + periodo_id, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
 }
-export {SegmentosService}
+export { SegmentosService }

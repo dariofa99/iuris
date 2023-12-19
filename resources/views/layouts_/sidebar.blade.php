@@ -296,7 +296,7 @@
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
-          </a>
+          </a> 
           <ul class="treeview-menu">
             <li>{!! link_to_route('notas.index', 'Notas')!!}</li>  
 

@@ -9,7 +9,7 @@ use App\File;
 use App\TablaReferencia;
 use App\User;
 use App\ConciliacionAditionalData;
-use App\ReferencesData; 
+use App\ReferencesData;
 use App\ConciliacionComentario;
 use App\ConciliacionEstado;
 use App\ConciliacionPdfTemporal;
@@ -148,7 +148,12 @@ class ConciliacionesController extends Controller
                 try {
                     Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
                 } catch (\Throwable $th) {
-                    return response()->json([$conciliacion]);
+                    return response()->json(
+                        ['errors_email' => [$th->getMessage()],
+                        'conciliacion'=>$conciliacion,
+
+                        ]
+                    );
                 }
             }
         } catch (\Throwable $e) {
@@ -183,7 +188,7 @@ class ConciliacionesController extends Controller
     public function edit($id, Request $request)
     {
         $conciliacion = $this->conciliacionService->find($id);
-        if (currentUser()->hasRole("solicitante") and($conciliacion->estado_id!=178)) {
+        if (currentUser()->hasRole("solicitante") and ($conciliacion->estado_id != 178)) {
             return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
         }
 
@@ -313,7 +318,7 @@ class ConciliacionesController extends Controller
 
     public function insertEstado(Request $request)
     {
-          //return response()->json($request->all());
+        //return response()->json($request->all());
         $request['user_id'] = Auth::user()->id;
         $estado = ConciliacionEstado::create($request->all());
         $conciliacion = Conciliacion::find($request->conciliacion_id);
@@ -351,7 +356,7 @@ class ConciliacionesController extends Controller
                 ['conciliacion_id' => $conciliacion->id, 'user_id' => currentUser()->id]
             );
         }
-        $user_created = currentUser()->name." ".currentUser()->lastname;
+        $user_created = currentUser()->name . " " . currentUser()->lastname;
         if ($conciliacion->estado_id == 175) { //Enviado a revision
             if (count($conciliacion->actuaciones) > 0) {
                 $actuacion = $conciliacion->actuaciones[0];
@@ -371,7 +376,7 @@ class ConciliacionesController extends Controller
                     $user_created
                 )
                     ->onConnection('database')->onQueue('emails');;
-                  /*   Notification::send($users, new NotificationsSummernote(
+                /*   Notification::send($users, new NotificationsSummernote(
                         $estado->concepto,
                         $conciliacion,
                         "Revision por favor",
@@ -400,26 +405,26 @@ class ConciliacionesController extends Controller
         }
 
         if ($conciliacion->estado_id == 176) { //corregir
-            
+
             $users = $conciliacion->getUser(205);
-            if ($users->id != null and $conciliacion->categoria_id == 219){     
+            if ($users->id != null and $conciliacion->categoria_id == 219) {
                 ProcessEmailSendConciliacionResponse::dispatch(
                     $users,
                     $estado->concepto,
                     $conciliacion,
                     "Solicitud de correcciones",
                     $user_created
-                    
+
                 )
                     ->onConnection('database')->onQueue('emails');;
-                    /* Notification::send($users, new NotificationsSummernote(
+                /* Notification::send($users, new NotificationsSummernote(
                         $estado->concepto,
                         $conciliacion,
                         "Solicitud de correcciones",
                         $user_created
                     )); */
-               // Mail::to($user)->send(new SolicitudRadicarConciliacion($estado,$user_created ));
-            } 
+                // Mail::to($user)->send(new SolicitudRadicarConciliacion($estado,$user_created ));
+            }
         }
 
         $view = view('myforms.conciliaciones.componentes.conciliacion_estados_ajax', compact('conciliacion'))->render();
@@ -454,12 +459,12 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $files = $conciliacion->files()->where([
-            'category_id'=> $request->category_id
+            'category_id' => $request->category_id
         ])->get();
         //$view = view('myforms.conciliaciones.componentes.solicitud_comentarios_ajax', compact('conciliacion'))->render();
         return response()->json([
             'files' => $files
-        ],200);
+        ], 200);
     }
 
     public function deleteComentario(Request $request)
@@ -522,7 +527,7 @@ class ConciliacionesController extends Controller
     }
 
     private function storeData($ref_data, $request)
-    { 
+    {
 
         $data = ConciliacionAditionalData::where([
             'reference_data_id' => $ref_data->id,
@@ -532,7 +537,7 @@ class ConciliacionesController extends Controller
             $data->fill([
                 'value' => $request["value"],
                 'reference_data_option_id' => $request["option_id"],
-                'value_is_other' =>isset($request["value_is_other"]) != null ? $request["value_is_other"] : null,
+                'value_is_other' => isset($request["value_is_other"]) != null ? $request["value_is_other"] : null,
             ]);
             $data->save();
         } else {
@@ -1033,7 +1038,7 @@ class ConciliacionesController extends Controller
         $us = json_decode($us);
         return response()->json($us);
         $mensaje =  ConciliacionEstado::find(153);
-       // Notification::send($us, new SolicitudRadicarConciliacion($mensaje,$user_created));
+        // Notification::send($us, new SolicitudRadicarConciliacion($mensaje,$user_created));
     }
 
     public function enviarCorreo(Request $request)
@@ -1047,7 +1052,7 @@ class ConciliacionesController extends Controller
         }
         $comentario = $this->conciliacionComentariosService->store($request);
         $conciliacion = Conciliacion::find($request->conciliacion_id);
-        $user_created = currentUser()->name." ".currentUser()->lastname;
+        $user_created = currentUser()->name . " " . currentUser()->lastname;
         if ($request->has('pivot_id') and $request->get('pivot_id') != '' and $request->get('pivot_id') != null) {
             $update = $conciliacion->usuarios()
                 ->where('conciliacion_has_user.id', $request->pivot_id)->first();

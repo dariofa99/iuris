@@ -134,7 +134,7 @@ class NotaController extends Controller
         if (!$request->ajax()) {
 
             $notas = $this->notas_download($request);
-            // dd($notas);
+            
             //return response()->json($notas);
             $segmento = Segmento::find($request->segmento_id);
             $periodo = Periodo::find($request->periodo_id);
@@ -496,12 +496,13 @@ class NotaController extends Controller
                         GROUP BY `estidnumber`"
         ));
 
-        $notas_oficina = DB::select(DB::raw(
+        $notas_oficina =[];
+        /*  DB::select(DB::raw(
             "SELECT `estidnumber`, AVG(`nota`) as nota FROM `notas_ext`       
                         WHERE `segid` = $segmento AND `cptnotaid` != 4  
                         and estidnumber = $user->idnumber
                         GROUP BY `estidnumber`"
-        ));
+        )); */
 
         $data_user = [];
 

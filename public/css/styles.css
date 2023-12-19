@@ -889,3 +889,11 @@ body{
 	align-items: center;
 	text-align: center;
 }
+.contenedor_inputs{
+	margin-top: 3px;
+	border: 1px solid rgb(246, 246, 246);
+	max-height: 500px;
+	overflow: auto;
+	padding: 0.3vh;
+	border-radius: 5px;
+}

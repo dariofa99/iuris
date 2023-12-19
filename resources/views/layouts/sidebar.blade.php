@@ -1,5 +1,6 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-{{ $sidebar_modo }}-primary elevation-4" style="background-color:{{ config('app.name') == 'ConciliApp' ? 'rgb(74, 41, 123)' : '#222d32' }}">
+<aside class="main-sidebar sidebar-{{ $sidebar_modo }}-primary elevation-4"
+    style="background-color:{{ config('app.name') == 'ConciliApp' ? 'rgb(74, 41, 123)' : '#222d32' }}">
     <!-- Brand Logo -->
 
     <a href="/home" class="brand-link"
@@ -77,14 +78,14 @@
                 <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
-                    @if(config('app.name') != 'ConciliApp')
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-folder"></i>
-                        <p>
-                            Expedientes
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
+                    @if (config('app.name') != 'ConciliApp')
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-folder"></i>
+                            <p>
+                                Expedientes
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
                     @endif
                     <ul class="nav nav-treeview">
 
@@ -256,7 +257,25 @@
                         </li>
                     </ul>
                 </li>
-
+                @if (currentUser()->can('ver_configuracion'))
+                    <li
+                        class="nav-item has-treeview {{ (!Route::is('notas.index')) ?: 'menu-open' }}">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-cog"></i>
+                            <p>
+                                Reportes
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('notas.index') }}" class="nav-link">
+                                    <p>Notas</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 @if (currentUser()->can('ver_configuracion'))
                     <li
                         class="nav-item has-treeview {{ (!Route::is('periodos.index') and !Route::is('segmentos.index')) ?: 'menu-open' }}">

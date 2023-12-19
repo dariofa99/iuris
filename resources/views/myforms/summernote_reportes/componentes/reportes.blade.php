@@ -202,106 +202,107 @@
 
                 </div>
             </div>
-            <div class="content_values_{{ $view }}" style="display: block"
-                id="solicitante_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 205,
-                    'parte' => 'solicitante',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                ])
-            </div>
-
-            <div class="content_values_{{ $view }}" style="display: none"
-                id="conciliador_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 203,
-                    'parte' => 'conciliador',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                ])
-            </div>
-
-            <div class="content_values_{{ $view }}" style="display: none"
-                id="asistente_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 204,
-                    'parte' => 'asistente',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                ])
-            </div>
-
-            <div class="content_values_{{ $view }}" style="display: none"
-                id="rep_legal_solicitante_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 195,
-                    'parte' => 'rep_legal_solicitante',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                    //'section'=>'rep_legal_solicitante'
-                ])
-            </div>
-            <div class="content_values_{{ $view }}" style="display: none"
-                id="apoderado_solicitante_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 196,
-                    'parte' => 'apoderado_solicitante',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                ])
-            </div>
-
-            <div class="content_values_{{ $view }}" style="display: none"
-                id="solicitada_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 197,
-                    'parte' => 'solicitada',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                ])
-            </div>
-
-            <div class="content_values_{{ $view }}" style="display: none"
-                id="rep_legal_solicitada_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 198,
-                    'parte' => 'rep_legal_solicitada',
-                    'view' => 'user_values',
-                    'mySummernote' => $mySummernote,
-                ])
-            </div>
-
-            <div class="content_values_{{ $view }}" style="display: none;margin-top:3px"
-                id="personalizado_{{ $view }}">
-                @if ($view != 'update_temp')
-                    <div class="col-md-12 mb-2">
-                        <button data-summernote="{{ $mySummernote }}" class="btn btn-success"
-                            id="btn_create_category">+</button>
-                    </div>
-                @endif
-                <div class="col-md-12" id="content_categories_ajax" class="content_categories_ajax">
-                    @include('myforms.summernote_reportes.componentes.categories_ajax', [
-                        'categories_report' => getReferencesDataBySection('personalizado', 'pdf_reportes'),
+            <div class="contenedor_inputs">
+                <div class="content_values_{{ $view }}" style="display: block"
+                    id="solicitante_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 205,
+                        'parte' => 'solicitante',
+                        'view' => 'user_values',
                         'mySummernote' => $mySummernote,
-                        'user_type' => 'pdfrep_aditional_data',
-                        'parte' => 'personalizado',
-                        'model' => 'conciliaciones',
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="conciliador_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 203,
+                        'parte' => 'conciliador',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="asistente_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 204,
+                        'parte' => 'asistente',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="rep_legal_solicitante_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 195,
+                        'parte' => 'rep_legal_solicitante',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                        //'section'=>'rep_legal_solicitante'
+                    ])
+                </div>
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="apoderado_solicitante_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 196,
+                        'parte' => 'apoderado_solicitante',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="solicitada_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 197,
+                        'parte' => 'solicitada',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="rep_legal_solicitada_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 198,
+                        'parte' => 'rep_legal_solicitada',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none;margin-top:3px"
+                    id="personalizado_{{ $view }}">
+                    @if ($view != 'update_temp')
+                        <div class="col-md-12 mb-2">
+                            <button data-summernote="{{ $mySummernote }}" class="btn btn-success"
+                                id="btn_create_category">+</button>
+                        </div>
+                    @endif
+                    <div class="col-md-12" id="content_categories_ajax" class="content_categories_ajax">
+                        @include('myforms.summernote_reportes.componentes.categories_ajax', [
+                            'categories_report' => getReferencesDataBySection('personalizado', 'pdf_reportes'),
+                            'mySummernote' => $mySummernote,
+                            'user_type' => 'pdfrep_aditional_data',
+                            'parte' => 'personalizado',
+                            'model' => 'conciliaciones',
+                        ])
+                    </div>
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none;margin-top:3px"
+                    id="info_conciliacion_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 'conciliacion',
+                        'parte' => 'conciliaciones',
+                        'view' => 'conciliaciones_values',
+                        'mySummernote' => $mySummernote,
                     ])
                 </div>
             </div>
 
-            <div class="content_values_{{ $view }}" style="display: none;margin-top:3px"
-                id="info_conciliacion_{{ $view }}">
-                @include('myforms.summernote_reportes.componentes.reportes_values', [
-                    'tipo_usuario_id' => 'conciliacion',
-                    'parte' => 'conciliaciones',
-                    'view' => 'conciliaciones_values',
-                    'mySummernote' => $mySummernote,
-                ])
-                {{--  @include("myforms.summernote_reportes.componentes.conciliaciones_values")
- --}}
-            </div>
 
         </div>
 
