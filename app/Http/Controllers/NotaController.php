@@ -377,7 +377,7 @@ class NotaController extends Controller
                 ->where('users.active', true)
                 ->where('users.idnumber', $request->idnumber)
                 ->where('sedes.id_sede', session('sede')->id_sede)
-                ->select(
+                ->select( 
                     'users.active',
                     'users.id',
                     'ref_nombre',
@@ -396,6 +396,7 @@ class NotaController extends Controller
                 ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
                 ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
                 ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
+                ->join('turnos','turnos.trnid_estudent','=',"users.idnumber")
                 ->where('role_id', '6')
                 ->where('users.active', true)
                 ->where('sedes.id_sede', session('sede')->id_sede)
@@ -411,8 +412,7 @@ class NotaController extends Controller
                 )
                 ->orderBy('users.created_at', 'desc')
                 ->get();
-        }
-
+        }       
         $notas_periodo = [];
         if ($request->segmento_id) {
             foreach ($users as $key_2 => $user) {
