@@ -9,7 +9,7 @@
                 <th>IDENTIFICACIÓN:</th>
                 <td>{{$user->idnumber}}
                 </td>
-            </tr>
+            </tr> 
             <tr>
                 <th>TELÉFONO:</th>
                 <td> {{$user->tel1}} </td>
@@ -31,9 +31,10 @@
         </tbody>
     </table>
     <div id="content_aditional_data">    
-        @include('myforms.conciliaciones.componentes.aditional_user_detalles_data',[
-            'section'=> Request::has('section') ? Request::get('section') : 'solicitante'
+        
+       {{--  @include('myforms.conciliaciones.componentes.aditional_user_detalles_data',[
+            'sectio'=> Request::has('section') ? Request::get('section') : 'solicitante'
         ]
-        ) 
+        )  --}}
    </div>
 </div>

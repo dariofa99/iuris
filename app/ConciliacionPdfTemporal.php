@@ -15,7 +15,8 @@ class ConciliacionPdfTemporal extends Model
         'parent_reporte_pdf_id',
         'conciliacion_id',
         'status_id',
-        'reporte_pdf_id'
+        'reporte_pdf_id',
+        'conc_estado_id'
     ];
 
     public function conciliaciones()

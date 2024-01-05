@@ -36,21 +36,21 @@ class ConciliacionesReportesController extends Controller
 
         return response()->json($reportes);
     }
-    private function getReportes(Request $request)
+
+    public function getActasCreadas(Request $request)
     {
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
-            $query->where('is_copy', 1);
+            $query->where('is_copy', 1)
+            ->where('categoria_id',226);
         })
             ->whereHas('temporales', function (Builder $query) use ($request) {
                 $query->where('conciliacion_id', $request->conciliacion_id);
             })
-            //    ->with('users')
-            ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
+            ->with('temporal')
             ->get();
-        // return $reportes;
+        
         $reportes->each(function ($reporte) use ($request) {
-            $file = ConciliacionEstadoReporteGenerado::where([
-                'status_id' => $request->status_id,
+            $file = ConciliacionEstadoReporteGenerado::where([               
                 'conciliacion_id' => $request->conciliacion_id,
                 'reporte_id' => $reporte->reporte_id,
             ])->first();
@@ -71,10 +71,60 @@ class ConciliacionesReportesController extends Controller
                     $reporte->has_firm = true;
                     break;
                 }
-            } 
+            }
             $reporte->hasValuesPersonalized = false;
+
+        });
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $view = view('myforms.conciliaciones.componentes.pdf_report_list', compact('reportes', 'conciliacion'))->render();
+        $response = [           
+            'data' => $reportes,
+            'view' => $view,
+        ];
+        return response()->json($response);
+       
+    }
+
+    private function getReportes(Request $request)
+    {
+        $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+            $query->where('is_copy', 1);
+        })
+            ->whereHas('temporales', function (Builder $query) use ($request) {
+                $query->where('conciliacion_id', $request->conciliacion_id);
+            })
+                ->with('temporales')
+            ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
+            ->get();
+        // return $reportes;
+        $reportes->each(function ($reporte) use ($request) {
+            $file = ConciliacionEstadoReporteGenerado::where([
+                'status_id' => $request->status_id,
+                'conciliacion_id' => $request->conciliacion_id,
+                'reporte_id' => $reporte->reporte_id,
+            ])->first();
+            $reporte->is_created = false;
+            if ($file) {
+                $reporte->is_created = true;
+            }
+            $reporte->has_firm = false;
             
-          /*   if ($this->hasValuesPersonalized($reporte->reporte)) {
+            $reporte->users = $reporte
+                ->users()
+                ->where([
+                    'conciliacion_id' => $request->conciliacion_id,
+                    'revocado' => 0,
+                ])
+                ->get();
+            foreach ($reporte->users as $key_ => $user) {
+                if ($user->pivot->firmado == 0) {
+                    $reporte->has_firm = true;
+                    break;
+                }
+            }
+            $reporte->hasValuesPersonalized = false;
+
+            /*   if ($this->hasValuesPersonalized($reporte->reporte)) {
                 $reporte->hasEmptyValuesPersonalized = false;
                 $reporte->hasValuesPersonalized = true;
                 if ($this->hasEmptyValuesPersonalized($reporte->reporte)) {
@@ -149,7 +199,7 @@ class ConciliacionesReportesController extends Controller
         ->whereIn('user_id',$request->email_user_id)
         ->where(['conciliacion_id'=>$request->conciliacion_id,
                 'pdf_reporte_id'=>$request->estado_id
-        ])->get(); */ 
+        ])->get(); */
         if ($request->email_user_id) {
             foreach ($request->email_user_id as $key => $us) {
                 $user = DB::table('pdf_reportes_users')
@@ -173,10 +223,10 @@ class ConciliacionesReportesController extends Controller
                     $user = DB::table('pdf_reportes_users')
                         ->where('user_id', $us)
                         ->where([
-                            'conciliacion_id' => $request->conciliacion_id, 
-                            'pdf_reporte_id' => $request->estado_id, 
+                            'conciliacion_id' => $request->conciliacion_id,
+                            'pdf_reporte_id' => $request->estado_id,
                             'tipo_usuario_id' => $request->type_user_id[$key]
-                            ])
+                        ])
                         ->update([
                             'created_at' => date('Y-m-d H:i:s'),
                         ]);
@@ -347,7 +397,7 @@ class ConciliacionesReportesController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+
         $config = $this->setConfig($request);
         $request['configuraciones'] = json_encode($config);
         $co_reporte = PdfReporte::find($id);
@@ -493,10 +543,10 @@ class ConciliacionesReportesController extends Controller
                 if ($value->user_type == 'personalized') {
                     $data[] = $value;
                 }
-            } 
+            }
         }
 
-       //return response()->json([$data]);
+        //return response()->json([$data]);
         $view =  view('myforms.conciliaciones.componentes.form_personalized_values', compact('data', 'reporte'))->render();
         $response = [];
         $response['render_view'] = $view;

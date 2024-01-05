@@ -149,8 +149,9 @@ class ConciliacionesController extends Controller
                     Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
                 } catch (\Throwable $th) {
                     return response()->json(
-                        ['errors_email' => [$th->getMessage()],
-                        'conciliacion'=>$conciliacion,
+                        [
+                            'errors_email' => [$th->getMessage()],
+                            'conciliacion' => $conciliacion,
 
                         ]
                     );
@@ -250,39 +251,68 @@ class ConciliacionesController extends Controller
         //
     }
 
-
-    private function crearCopiasFormatoEstado(Request $request, $conciliacion)
+    public function crearActa(Request $request)
     {
-        $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+        $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
+        //  $repo = $this->crearCopiasFormatoEstado($request,$conciliacion);
+        $reportes = PdfReporteDestino::whereHas(
+            'reporte',
+            function (Builder $query) use ($request) {
+                $query->where('is_copy', 1);
+            }
+        )->whereHas(
+            'temporales',
+            function (Builder $query) use ($request) {
+                $query->where("conciliacion_id", $request->conciliacion_id)
+                ->where('parent_reporte_pdf_id', $request->reporte_id);
+            }
+        )->where(([
+            "status_id" => $request->type_status_id,
+            "tabla_destino" => "226"
+        ]))->get();
+       
+       // return response()->json(['generate'=>false,'rq'=>$request->all(),'rep'=>$conc_estado]);
+        if(count($reportes)<=0){
+            $data = PdfReporte::where('is_copy', 0)
+            ->where('id', $request->reporte_id)->first();
+            $repo = $this->crearCopiasFormatoEstado($request,$conciliacion,$data);
+            return response()->json(['generate'=>$repo]);
+        }
+        return response()->json(['generate'=>false]);
+    }
+    private function crearCopiasFormatoEstado(Request $request, Conciliacion $conciliacion,$reporte)
+    {
+       /*  $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 1);
         })->whereHas('temporales', function (Builder $query) use ($request) {
             $query->where("conciliacion_id", $request->conciliacion_id);
         })->where(([
             "status_id" => $request->type_status_id,
             "tabla_destino" => "226"
-        ]))->get();
-
-        if (count($reportes) <= 0) {
-            $data = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+        ]))->get(); */
+       
+        /*     $data = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
                 $query->where('is_copy', 0);
             })
                 ->where([
                     "status_id" => $request->type_status_id,
                     "tabla_destino" => "226"
-                ])->get();
+                ])->get(); */
 
-
-            //return response()->json($data);
-
-            $data->each(function ($data) use ($request, $conciliacion) {
+           // $data->each(function ($data) use ($request, $conciliacion) {
                 //  $reporte_or = PdfReporte::find($reporte->id);
+                $conc_estado = ConciliacionEstado::where([
+                    'type_status_id'=>$request->type_status_id,
+                    'conciliacion_id'=>$conciliacion->id
+                ])->orderBy('created_at','desc')->first();
                 $copy_reporte = PdfReporte::create(
                     [
-                        'reporte' => $data->reporte->reporte,
-                        'report_keys' => $data->reporte->report_keys,
-                        'nombre_reporte' => $data->reporte->nombre_reporte,
-                        'configuraciones' => $data->reporte->configuraciones,
-                        'is_copy' => 1
+                        'reporte' => $reporte->reporte,
+                        'report_keys' => $reporte->report_keys,
+                        'nombre_reporte' => $reporte->nombre_reporte,
+                        'configuraciones' => $reporte->configuraciones,
+                        'is_copy' => 1,
+                        'categoria_id' =>  $reporte->categoria_id
                     ]
                 );
                 $reporDest = PdfReporteDestino::create([
@@ -293,32 +323,33 @@ class ConciliacionesController extends Controller
                 $co_pdf = ConciliacionPdfTemporal::create([
                     'reporte_pdf_id' => $copy_reporte->id,
                     'status_id' => $request->type_status_id,
-                    'parent_reporte_pdf_id' => $data->reporte->id,
-                    'conciliacion_id' => $conciliacion->id
+                    'parent_reporte_pdf_id' => $reporte->id,
+                    'conciliacion_id' => $conciliacion->id,
+                    'conc_estado_id' => $conc_estado->id
                 ]);
 
-                $file_en = $data->reporte->files()->where('seccion', 'encabezado')->first();
+                $file_en = $reporte->files()->where('seccion', 'encabezado')->first();
                 if ($file_en) {
-                    $data->reporte->files()->attach($file_en, [
+                    $reporte->files()->attach($file_en, [
                         'seccion' => 'encabezado',
                         'configuracion' => $file_en->pivot->configuracion
                     ]);
                 }
-
-                $file_pie = $data->reporte->files()->where('seccion', 'pie')->first();
+                $file_pie = $reporte->files()->where('seccion', 'pie')->first();
                 if ($file_pie) {
-                    $data->reporte->files()->attach($file_pie, [
+                    $reporte->files()->attach($file_pie, [
                         'seccion' => 'pie',
                         'configuracion' => $file_pie->pivot->configuracion
                     ]);
                 }
-            });
-        }
+           // });
+            return true;
+        
     }
 
     public function insertEstado(Request $request)
     {
-        //return response()->json($request->all());
+
         $request['user_id'] = Auth::user()->id;
         $estado = ConciliacionEstado::create($request->all());
         $conciliacion = Conciliacion::find($request->conciliacion_id);
@@ -346,7 +377,7 @@ class ConciliacionesController extends Controller
         }
         $conciliacion->save();
         //Crea las copias del formatos para el estado
-        $this->crearCopiasFormatoEstado($request, $conciliacion);
+        //$this->crearCopiasFormatoEstado($request, $conciliacion);
 
 
         if ($request->has("status_file")) {
@@ -705,9 +736,34 @@ class ConciliacionesController extends Controller
         return response()->json($estado);
     }
 
+    public function getEstadosFilesByCategory(Request $request)
+    {
+        /* $estado = ConciliacionEstado::find($request->conc_estado_id);
+        $estado->files = $estado->files()
+            ->where('conciliacion_id', $request->conciliacion_id)
+            ->get(); */
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $partes = $conciliacion->usuarios;
+       /*  $compartidos = ConciliacionEstadoFileCompartido::where([
+            'conciliacion_id' => $conciliacion->id,
+            'status_id' =>   $request->status_id
+        ])->get();
+ */
+        $view = view('myforms.conciliaciones.componentes.conciliacion_estados_files_ajax', compact('estado'))->render();
+        $view_compartidos = view('myforms.conciliaciones.componentes.files_conciliacion_compartidos_ajax', compact('compartidos'))->render();
+
+        $response = [
+            "view_compartidos" => $view_compartidos,
+            "compartidos" => $compartidos,
+            "partes" => $partes,
+            "estado" => $estado,
+            "view" => $view
+        ];
+        return response()->json($response);
+    }
+    
     public function getEstadosFiles(Request $request)
     {
-        // return response()->json($request->all());
         $estado = ConciliacionEstado::find($request->conc_estado_id);
         $estado->files = $estado->files()
             ->where('conciliacion_id', $request->conciliacion_id)
@@ -775,9 +831,7 @@ class ConciliacionesController extends Controller
     {
         $user = DB::table('conciliacion_has_user')
             ->where('id', $request->pivot)->delete();
-        return response()->json([
-            'user' => $user
-        ]);
+        return response()->json(['user' => $user]);
     }
 
     public function addUser(Request $request)
@@ -840,18 +894,16 @@ class ConciliacionesController extends Controller
 
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $estado = ConciliacionEstado::find($request->conc_estado_id);
-        //return response()->json(['user'=>$request->all(),'es'=>$estado]);
+        //return response()->json(['req' => $request->all(), 'es' => $estado]);
         if ($request->status_id != '0') {
             $pdfs =  PdfReporteDestino::with('reporte')
                 ->where('status_id', $request->status_id)
                 ->where('reporte_id', $request->reporte_id)
                 ->get();
-
-            //  return response()->json(['user'=>$pdfs]);   
-
             foreach ($pdfs as $key_1 => $pdf_repor) {
                 //obtengo el pdf temporal            
-                $reporte_t = ConciliacionPdfTemporal::where('reporte_pdf_id', $pdf_repor->reporte_id)
+                $reporte_t = ConciliacionPdfTemporal::where('reporte_pdf_id',
+                 $pdf_repor->reporte_id)
                     ->first();
                 if ($reporte_t) {
                     $reporte =     $reporte_t->reporte_child;
@@ -909,8 +961,16 @@ class ConciliacionesController extends Controller
                 $file->size = '0000';
                 $file->hash = $hash;
                 $file->save();
-                $estado->files()->attach($file, [
+               /*  $estado->files()->attach($file, [
                     'conciliacion_id' => $conciliacion->id,
+                    'user_id'=>currentUser()->id,
+                    'category_id'=>212
+                ]); */
+                $conciliacion->files()->attach($file, [
+                    'type_status_id' => 1,
+                    'concepto' => $name,
+                    'user_id' => auth()->user()->id,
+                    "category_id" => 212,
                 ]);
 
                 $verification_token = str_replace("/", "", bcrypt(\Str::random(50)));

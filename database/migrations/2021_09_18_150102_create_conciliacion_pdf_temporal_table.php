@@ -15,7 +15,7 @@ class CreateConciliacionPdfTemporalTable extends Migration
     {
         Schema::create('conciliacion_pdf_temporal', function (Blueprint $table) {
             $table->bigIncrements('id');
-            
+             
             $table->integer('status_id')->unsigned();
             $table->foreign('status_id')->references('id')->on('referencias_tablas')
             ->onDelete('cascade')->onUpdate('cascade');
@@ -28,6 +28,12 @@ class CreateConciliacionPdfTemporalTable extends Migration
             $table->bigInteger('parent_reporte_pdf_id')->unsigned();
             $table->foreign('parent_reporte_pdf_id')->references('id')->on('pdf_reportes')->onDelete('cascade')
             ->onUpdate('cascade');
+
+            $table->bigInteger('conc_estado_id')->unsigned();
+            $table->foreign('conc_estado_id')->references('id')
+            ->on('conciliaciones_estados')->onDelete('cascade')
+            ->onUpdate('cascade');
+
 
             $table->timestamps();
         });

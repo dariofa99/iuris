@@ -2,7 +2,7 @@
 
 <div class="row file_pdf">
     <div class="col-md-8">
-        {{$file->original_name}}
+        {{$file->original_name}} 
        
     </div>
     <div class="col-md-2" align="center">

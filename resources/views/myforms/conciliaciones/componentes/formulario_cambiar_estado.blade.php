@@ -18,8 +18,8 @@
                     <div class="row" id="alertmyReportList" style="display: none">
                         <div class="col-md-12">
                             <div class="alert alert-info">
-                                Debe tener en cuenta que una vez guardado el estado se generarán
-                                 los siguientes formatos.
+                                Debe tener en cuenta que una vez asignado el nuevo estado 
+                                podrá generar los siguientes formatos en la sección de documentos.
                             
 
                             <table class="table" id="myReportList">

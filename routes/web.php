@@ -389,6 +389,7 @@ Route::post('conciliaciones/asignar/expediente', 'ConciliacionesController@asigE
 Route::get('conciliacion/sancionar/user', 'ConciliacionesController@sancionarUser');
 Route::get('conciliacion/send/notification/mail', 'ConciliacionesController@enviarNotificacionesCorreo');
 Route::get('get/files/by/category', 'ConciliacionesController@getFilesByCategory');
+Route::post('crear/actas/by/status', 'ConciliacionesController@crearActa');
 
 Route::post('conciliacion/audiencia/create', 'AudienciaController@audienciaCreate');
 Route::get('conciliacion/users/salasalternasaudiencia/{id}/{cont}', 'AudienciaController@getSalasAudiencia');
@@ -419,6 +420,7 @@ Route::post('conciliaciones/pdf/{id}', 'ConciliacionesReportesController@update'
 Route::post('conciliaciones/get/all/pdf', 'ConciliacionesReportesController@getAllPdf');
 Route::get('conciliacion/reportes/get', 'ConciliacionesReportesController@getPdfReportesConciliacion');
 Route::get('conciliacion/reportes/for/status', 'ConciliacionesReportesController@getPdfReportForStatus');
+Route::get('conciliacion/get/actas/creadas', 'ConciliacionesReportesController@getActasCreadas');
 
 Route::get('pdf/reportes/editar/temporal/{reporte}/{conciliacion}/{estado}', 'ConciliacionesReportesController@editReporteTemporal');
 Route::get('conciliacion/reporte/firmantes', 'ConciliacionesReportesController@getFirmantes');

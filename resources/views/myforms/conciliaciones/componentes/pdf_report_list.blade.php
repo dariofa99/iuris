@@ -8,7 +8,7 @@
     </td>
     <td>
    <a class="btn btn-warning btn-sm btn-block" target="_blank" href="/pdf/reportes/generate/{{$conciliacion->id}}/{{$reporte->reporte->id}}/{{ $reporte->status_id}}">
-    Vista previa </a> 
+    Vista previa </a>  
 
 
     
@@ -33,7 +33,7 @@
 
     @endif
     @if(!$reporte->hasEmptyValuesPersonalized and !$reporte->is_created and !$reporte->has_firm and (currentUser()->can('gen_doc_pdf_conciliaciones')))
-    <button type="button" data-status_id="{{$reporte->status_id}}" data-reporte_id="{{$reporte->reporte_id}}" id="btn_gene_pdf" class="btn btn-danger btn-block btn-sm btn_gene_pdf">
+    <button type="button" data-conc_status_id="{{$reporte->temporal->conc_estado_id}}" data-status_id="{{$reporte->status_id}}" data-reporte_id="{{$reporte->reporte_id}}" id="btn_gene_pdf" class="btn btn-danger btn-block btn-sm btn_gene_pdf">
         Generar documento
     </button>
     @endif    

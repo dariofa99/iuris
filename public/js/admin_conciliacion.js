@@ -10,6 +10,7 @@ $(document).ready(function () {
   var conc_estado_id = 0;
   var partesConciliacionMail = []
   if ($("#conciliacion_id").val() != undefined) {
+    getActasCreadas();
     set_tab();
     var date = $("#audiencia_fecha").val()
     var color = getColorTurno(date);
@@ -107,17 +108,17 @@ $(document).ready(function () {
         let response = await conciliacionService.registrar_conciliacion(request);
 
         $("#wait").show();
-        if(response.errors_email){
+        if (response.errors_email) {
           response.errors_email.forEach(element => {
             toastr.error(element, "", {
               positionClass: "toast-top-right",
               timeOut: "4000",
-            });            
+            });
           });
-          if(response.conciliacion && response.conciliacion.id!=undefined){
+          if (response.conciliacion && response.conciliacion.id != undefined) {
             window.location = "/conciliaciones/" + response.conciliacion.id + "/edit";
           }
-        }else if (response.errors) {
+        } else if (response.errors) {
 
         } else if (response.id != undefined && response.id != null) {
           toastr.success("Conciliación creada con éxito", "", {
@@ -299,7 +300,7 @@ $(document).ready(function () {
     $("#btn_cambiar_estado").hide();
 
   });
-  $(".btn_create_document").on("click",async function (e) {
+  $(".btn_create_document").on("click", async function (e) {
 
     $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
     $("#myformCreateConciliacionAnexo")[0].reset();
@@ -313,7 +314,7 @@ $(document).ready(function () {
         value: $(this).attr("data-category"),
         name: "category_id"
       }));
-     
+
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");
@@ -576,7 +577,7 @@ $(document).ready(function () {
     e.preventDefault();
     var request = {
       "reporte_id": $(this).attr("data-reporte_id")
-    };    
+    };
     $("#wait").show();
     let response = await conciliacionService.getCategoriaFromReports(request);
     if (response.error) {
@@ -600,11 +601,12 @@ $(document).ready(function () {
   });
   $("#copy-stream-audiencia").on("click", function () {
     copiarAlPortapapeles("text-stream-audiencia");
-});
+  });
 
-  $("#content_user_pdf_list").on("click", ".btn_gene_pdf", function (e) {
+  $("#tblListarActasCreadas").on("click", ".btn_gene_pdf", function (e) {
     var status_id = $(this).attr('data-status_id');
     var reporte_id = $(this).attr('data-reporte_id');
+    var conc_estado_id = $(this).attr('data-conc_status_id');
     Swal.fire({
       title: 'Esta seguro que desea generar los documentos?',
       text: "No se podrá revertir los cambios!",
@@ -853,25 +855,14 @@ $(document).ready(function () {
   $("#myReportPdfList").on("click", ".btn_edit_con_pdf", function (e) {
     e.preventDefault();
     var url = $(this).attr("href");
-    var bgdiv = $("<div>").attr({
-      className: "bgtransparent",
-      id: "bgtransparent",
-    });
-    // agregamos nuevo div a la pagina       
-    $("body").append(bgdiv);
-    // obtenemos ancho y alto de la ventana del explorer
-    var wscr = $(window).width();
-    var hscr = $(window).height();
-    //establecemos las dimensiones del fondo
-    $("#bgtransparent").css("width", wscr);
-    $("#bgtransparent").css("height", hscr);
-    myPopupWindow = window.open(url,
-      "popup",
-      "toolbar=no,width=" + (window.screen.width - 10) + ", height= " + (window.screen.height - 10) +
-      ",left=10, top=15,resizable=no,scrollbars=NO");
-    myPopupWindow.addEventListener('beforeunload', function (e) {
-      $("#bgtransparent").remove();
-    });
+    abrirVentanaEmergente(url);
+
+  });
+
+  $("#tblListarActasCreadas").on("click", ".btn_edit_con_pdf", function (e) {
+    e.preventDefault();
+    var url = $(this).attr("href");
+    abrirVentanaEmergente(url);
 
   });
 
@@ -972,7 +963,48 @@ $(document).ready(function () {
      e.preventDefault(); */
   });
 
-  $("#myReportPdfList").on("click", ".btn_asignar_firmantes", async function (e) {
+  $("#tbl_listActForStatus").on("click", ".btn_crear_acta", function () {
+    let status_id = $("#estado_conciliacion_id").val();
+    let reporte_id = $(this).attr("data-id")
+    Swal.fire({
+      title: "Esta seguro que desea crear el acta?",
+      text: "Esta acción no puede revertirse",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, crear acta!',
+      cancelButtonText: 'No, cancelar!'
+    }).then(async (result) => {
+      if (result.value) {
+        var request = {
+          "type_status_id": status_id,
+          "conciliacion_id": $("#conciliacion_id").val(),
+          "reporte_id":reporte_id
+        }
+        $("#wait").show();
+        let response = await conciliacionService.crearActa(request); 
+        if(response.generate){
+          Toast.fire({
+            title: 'Acta creada con éxito.',
+            icon: 'success',
+            timer: 2000,
+          }); 
+          location.reload(true);
+        } else{
+          Toast.fire({
+            title: 'No se pudo generar el acta.',
+            icon: 'error',
+            timer: 2000,
+          }); 
+          $("#wait").hide();
+        }
+      
+      }
+    });
+  });
+
+  $("#tblListarActasCreadas").on("click", ".btn_asignar_firmantes", async function (e) {
     var id = $(this).attr("data-estado_id");
     var request = {
       "id": id,
@@ -1011,11 +1043,13 @@ $(document).ready(function () {
     } else {
       $("#btn_select_volver_enviar_email").hide();
     }
+   
     $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
     $("#table_list_pdf_users tbody").html(res.view);
     $("#myFormAsigFirmaPdf input[name=estado_id]").val(res.data.id);
     $("#content_user_pdf_firmas").show();
     $("#content_user_pdf_list").hide();
+    $("#myModal_reportes_pdf_estados").modal("show");
     $("#wait").hide();
   });
 
@@ -1418,7 +1452,8 @@ $(document).ready(function () {
   });
 
   getActas();
-  getReportesForDestiny()
+  getReportesForDestiny();
+  getActasForStatus();
 });//fin document ready
 
 function getColorTurno(value) {
@@ -1579,5 +1614,68 @@ function copiarAlPortapapeles(idDelDiv) {
     title: 'El enlace se ha copiado con éxito!',
     icon: 'success',
     timer: 3000,
+  });
+}
+async function getActasForStatus() {
+  if ($("#estado_conciliacion_id").val() != "") {
+    var request = {
+      tabla_destino: "226",
+      status_id: $("#estado_conciliacion_id").val(),
+      conciliacion_id: $("#conciliacion_id").val()
+    };
+    const response = await conciliacionService.getPdfReportForStatus(request);
+
+    if (response.length > 0) {
+      var tr = '';
+      response.forEach(destino => {
+        tr += `
+          <tr>
+            <td>
+            ${destino.reporte.nombre_reporte}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-success btn_crear_acta" data-id="${destino.reporte.id}" id="acta-${destino.reporte.id}">
+                Crear acta
+              </button>
+            </td>
+          </tr>
+          `
+      });
+
+      $("#tbl_listActForStatus tbody").html(tr)
+    }
+  }
+}
+async function getActasCreadas() {
+  if ($("#estado_conciliacion_id").val() != "") {
+    var request = {      
+      conciliacion_id: $("#conciliacion_id").val()
+    };
+    const response = await conciliacionService.getActasCreadas(request);
+
+    if (response.view) {
+     $("#tblListarActasCreadas tbody").html(response.view)
+    }
+  }
+}
+function abrirVentanaEmergente(url){
+  var bgdiv = $("<div>").attr({
+    className: "bgtransparent",
+    id: "bgtransparent",
+  });
+  // agregamos nuevo div a la pagina       
+  $("body").append(bgdiv);
+  // obtenemos ancho y alto de la ventana del explorer
+  var wscr = $(window).width();
+  var hscr = $(window).height();
+  //establecemos las dimensiones del fondo
+  $("#bgtransparent").css("width", wscr);
+  $("#bgtransparent").css("height", hscr);
+  myPopupWindow = window.open(url,
+    "popup",
+    "toolbar=no,width=" + (window.screen.width - 10) + ", height= " + (window.screen.height - 10) +
+    ",left=10, top=15,resizable=no,scrollbars=NO");
+  myPopupWindow.addEventListener('beforeunload', function (e) {
+    $("#bgtransparent").remove();
   });
 }
