@@ -1275,6 +1275,17 @@ $(document).ready(function () {
         var errors = validateForm('myformCreateAct')
         if (errors.length <= 0) {
             const body = new FormData(document.getElementById('myformCreateAct'));
+            const archivo = body.get('actdocnomgen');
+            if (archivo instanceof File && archivo.size <= 0) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Ups! No se ha adjuntado un archivo',                    
+                    showConfirmButton: false,
+                    timer: 5500
+                });
+                return
+            }             
             try {
                 $("#loader-container").show().css({ 'display': 'flex' })
                 $("#wait").show();

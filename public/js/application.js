@@ -510,3 +510,21 @@ function getFestivos() {
         }
     ]
 }
+
+var myVar = setInterval(myTimer, 1000);
+function myTimer() {
+    var d = new Date();
+    var dia = d.getDate();
+    var mes = d.getMonth() + 1;
+    if (mes <= 9) {
+        mes = "0" + mes;
+    }
+    if (dia <= 9) {
+        dia = "0" + dia;
+    }
+    var anio = d.getFullYear();
+    var cadena =
+        "" + " " + mes + "/" + dia + "/" + anio + " " + d.toLocaleTimeString();
+    document.getElementById("fecha_sistema").innerHTML = cadena;
+    //document.getElementById("demo").innerHTML =
+}

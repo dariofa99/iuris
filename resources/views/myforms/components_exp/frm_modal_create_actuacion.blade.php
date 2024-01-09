@@ -102,7 +102,7 @@
             <div class="col-md-12">
                 {!! form::label('Archivo', 'Subir archivo') !!}
                 <div class="form-group">
-                    {!! form::file('actdocnomgen', null, ['class' => 'form-control required', 'id' => 'actdocnomgen']) !!}
+                    {!! form::file('actdocnomgen', null, ['class' => 'form-control required', 'id' => 'actdocnomgen','required']) !!}
                     {!! form::hidden('actdocnompropio', '.', ['class' => 'form-control']) !!}
                     {!! form::hidden('actdocruta', '.', ['class' => 'form-control']) !!}
                 </div>

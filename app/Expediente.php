@@ -932,14 +932,27 @@ class Expediente extends Model
                     ->whereDate('fecha_fin', '<=', $now)
                     ->where("periodo_id", $periodo->id)
                     ->orderBy('created_at', 'desc')->get();
-                if ($huboVacaciones) {
-                    dd($huboVacaciones);
+                $dias_v = 0;
+                if (count($huboVacaciones)>0) {                    
+                    foreach ($huboVacaciones as $key => $vacacion) {
+                        $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
+                    }
+                    $dias = $this->difDays($act->actfecha, date('Y-m-d')) - $dias_v;
+                } else {
+                    $hizoEnVacaciones = DB::table("vacaciones_periodo")
+                        ->whereDate('fecha_inicio', '<=', $act->actfecha)
+                        ->whereDate('fecha_fin', '>=', $act->actfecha)
+                        ->where("periodo_id", $periodo->id)
+                        ->orderBy('created_at', 'desc')->first();                        
+                    if (($hizoEnVacaciones)) {                        
+                        $dias = $this->difDays($hizoEnVacaciones->fecha_fin, date('Y-m-d'));
+                    }else{
+                        $dias = $this->difDays($act->actfecha, date('Y-m-d'));
+                    }
                 }
-                $dias = $this->difDays($act->actfecha, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde última actuación:</b>";
             } else {
                 $asignacion = $this->asignacion;
-                // dd($asignacion);
                 $huboVacaciones = DB::table("vacaciones_periodo")
                     ->whereDate('fecha_inicio', '>=', $asignacion->fecha_asig)
                     ->whereDate('fecha_fin', '<=', $now)
@@ -951,7 +964,6 @@ class Expediente extends Model
                         $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
                     }
                 }
-
                 $dias = $this->getDaysAfterAsig() - $dias_v;
                 $text =  "<b>Días transcurridos desde la asignación:</b>";
             }
