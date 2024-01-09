@@ -185,7 +185,7 @@
                             </span>
                         @endif
                     </div>
-                </div>
+                </div> 
 
                 {!! Form::textarea('exphechos', null, [
                     'class' => 'form-control',

@@ -310,7 +310,7 @@ class Expediente extends Model
                     foreach ($huboVacaciones as $key => $vacacion) {
                         $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
                     }
-                }                
+                }
                 $dias = ($this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio) - $dias_v);
                 //dd($asig,$dias_v,$estamosVacaciones);
             } elseif ($huboVacaciones) {
@@ -339,7 +339,7 @@ class Expediente extends Model
                     break;
                 case 'mensaje':
                     $d = "(días: $days)";
-                    if($days < 0){
+                    if ($days < 0) {
                         $d = "(evaluado)";
                     }
                     return $estamosVacaciones ? "Vacaciones $d" : $mgs;
@@ -925,12 +925,36 @@ class Expediente extends Model
                 $dias = $this->difDays($pausa->fecha_final, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde final de pausa:</b>";
             }
-        } else if ($act) {
-            $dias = $this->difDays($act->actfecha, date('Y-m-d'));
-            $text =  "<b>Días transcurridos desde última actuación:</b>";
         } else {
-            $dias = $this->getDaysAfterAsig();
-            $text =  "<b>Días transcurridos desde la asignación:</b>";
+            if ($act) {
+                $huboVacaciones = DB::table("vacaciones_periodo")
+                    ->whereDate('fecha_inicio', '>=', $act->actfecha)
+                    ->whereDate('fecha_fin', '<=', $now)
+                    ->where("periodo_id", $periodo->id)
+                    ->orderBy('created_at', 'desc')->get();
+                if ($huboVacaciones) {
+                    dd($huboVacaciones);
+                }
+                $dias = $this->difDays($act->actfecha, date('Y-m-d'));
+                $text =  "<b>Días transcurridos desde última actuación:</b>";
+            } else {
+                $asignacion = $this->asignacion;
+                // dd($asignacion);
+                $huboVacaciones = DB::table("vacaciones_periodo")
+                    ->whereDate('fecha_inicio', '>=', $asignacion->fecha_asig)
+                    ->whereDate('fecha_fin', '<=', $now)
+                    ->where("periodo_id", $periodo->id)
+                    ->orderBy('created_at', 'desc')->get();
+                if ($huboVacaciones) {
+                    $dias_v = 0;
+                    foreach ($huboVacaciones as $key => $vacacion) {
+                        $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
+                    }
+                }
+
+                $dias = $this->getDaysAfterAsig() - $dias_v;
+                $text =  "<b>Días transcurridos desde la asignación:</b>";
+            }
         }
         if ($dias > 10) $color = 'orange';
         if ($dias > 20) $color = 'red';
