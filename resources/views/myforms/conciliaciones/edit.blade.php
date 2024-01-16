@@ -104,6 +104,14 @@
                     </a>
                 </li>
                 @endif
+                @if(currentUser()->can('ver_notif_conciliacion'))
+                <li class="nav-item">
+                    <a class="nav-link urlactive" id="actas-tab" data-toggle="tab" href="#actas"
+                        role="tab" aria-controls="actas" aria-selected="false">
+                        Actas
+                    </a>
+                </li>
+                @endif
                 @if( currentUser()->can('ver_documentos_conciliacion') ||
                 (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
                and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
@@ -158,6 +166,8 @@
             @endif
 
            
+
+           
             {{-- <li class="nav-item">
                 <a class="nav-link urlactive" id="notas-tab" data-toggle="tab" href="#notas"
                     role="tab" aria-controls="notas" aria-selected="false">
@@ -191,7 +201,9 @@
                 {{-- <div class="tab-pane fade " id="notas" role="tabpanel" aria-labelledby="notas-tab">
                     @include('myforms.conciliaciones.conciliacion_notas')
                 </div> --}}
-
+                <div class="tab-pane fade " id="actas" role="tabpanel" aria-labelledby="actas-tab">
+                    @include('myforms.conciliaciones.componentes.actas_list')
+                </div>
             </div>
                     
         </div>

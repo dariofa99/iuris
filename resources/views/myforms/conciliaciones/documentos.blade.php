@@ -1,166 +1,64 @@
 <div class="row">
-    <div class="col-md-2">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
-                aria-controls="v-pills-home" aria-selected="true">Crear actas</a>
-            <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
-                aria-controls="v-pills-settings" aria-selected="false">Revisar actas</a>
-            <a class="nav-link" id="v-pills-actas-tab" data-toggle="pill" href="#v-pills-actas" role="tab"
-                aria-controls="v-pills-settings" aria-selected="false">Actas</a>
-            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
-                aria-controls="v-pills-profile" aria-selected="false">Anexos</a>
-            <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
-                aria-controls="v-pills-messages" aria-selected="false">Documentos</a>
-
-        </div>
+    <div class="col-md-3">
+        <button type="button" id="btn_create_document_" data-category="233"
+            class="mb-2 btn btn-primary btn-sm  btn_create_document">
+            Agregar documento
+        </button>
     </div>
-    <div class="col-md-10">
-        <div class="tab-content" id="v-pills-tabContent">
-            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                <table class="table" id="tbl_listActForStatus">
-                    <thead>
-                        <th>
-                            Nombre del acta
-                        </th>
-                        <th>
-                            Acciones
-                        </th>
-                    </thead>
-                    <tbody>
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <th>
+                    Concepto
+                </th>
+                <th>
+                    Categoría
+                </th>
+                <th>
+                    Creado por
+                </th>
+                <th>
+                    Archivo
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </thead>
+            <tbody>
+                @foreach ($conciliacion->files as $key => $file)
+                    <tr>
+                        <td>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="v-pills-actas" role="tabpanel" aria-labelledby="v-pills-actas-tab">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table" id="myReportPdfListPrincipal">
-                            <thead>
-                                <th>
-                                    Concepto
-                                </th>
-                                <th>
-                                    Archivo
-                                </th>
-                                <th>
-                                    Subido por
-                                </th>
-                                <th>
-                                    Acciones
-                                </th>
-                            </thead>
-                            <tbody>
-                                @include('myforms.conciliaciones.componentes.anexos_ajax', [
-                                    'category' => 212,
-                                ])
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                            {{ $file->pivot->concepto }}
+                        </td>
+                        <td>
+                            {{ $file->categoryInConciliacion()->orderBy('created_at', 'desc')->first()->ref_nombre }}
+                        </td>
+                        <td>
+                            {{ $file->userinconciliacion()->orderBy('created_at', 'desc')->first()->name }}
+                            {{ $file->userinconciliacion()->orderBy('created_at', 'desc')->first()->lastname }}
+                            <small>
+                                <i>
+                                    ({{ $file->userinconciliacion()->orderBy('created_at', 'desc')->first()->role()->first()->display_name }})
+                                </i>
+                            </small>
+                        </td>
+                        <td>
+                            <small>
+                                <a target="_blank" href="/conciliaciones/download/file/{{ $file->id }}">
+                                    {{ $file->original_name }}
+                                </a>
+                            </small>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">
+                                Compartir
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
 
-            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                Anexos
-            </div>
-            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
-                <div class="row" id="content_files_conciliacion" style="display: block">
-                    <div class="col-md-2">
-
-                        <button type="button" id="btn_create_document_" data-category="233"
-                            class="mb-2 btn btn-primary btn-sm  btn_create_document">Agregar documento</button>
-
-                    </div>
-
-                    <div class="col-md-1 col-md-offset-10">
-                        @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai') || currentUser()->hasRole('secretaria'))
-                            {{--  @if ($conciliacion->estado_id == 194 || $conciliacion->estado_id == 225)       
-                        <button id="btn_radicar_conci" class="btn btn-success" data-estado="178">Radicar</button>
-                        @endif --}}
-                        @endif
-                    </div>
-
-
-                    <div class="col-md-12">
-                        <table class="table" id="myReportPdfListPrincipal">
-                            <thead>
-                                <th>
-                                    Concepto
-                                </th>
-                                <th>
-                                    Archivo
-                                </th>
-                                <th>
-                                    Subido por
-                                </th>
-                                <th>
-                                    Acciones
-                                </th>
-                            </thead>
-                            <tbody>
-                                @include('myforms.conciliaciones.componentes.anexos_ajax', [
-                                    'category' => 233,
-                                ])
-                            </tbody>
-                        </table>
-                    </div>
-
-
-                </div>
-
-                <div class="row" id="content_mail_notificacion_conciliacion" style="display: none">
-                    <div class="col-md-12">
-                        <h4>
-                            Notificando
-                        </h4>
-                    </div>
-                    <div class="col-md-9" id="">
-                        <form id="myFormEnviarCorreoConciliacion">
-                            <input type="hidden" name="cuerpo_correo">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon">Destinatario</div>
-
-                                    <select required name="correo_send[]" class="selectpicker form-control" multiple>
-                                        @foreach ($conciliacion->getUsersByType(196) as $key => $user)
-                                            <option selected value="{{ $user->email }}">{{ $user->email }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    {{--  --}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="cuerpo_correo">Cuerpo del correo</label>
-                                <div id="content_form_correo" class="summernote">
-
-                                </div>
-                                {{--  <div contentEditable="true" id="content_form_correo" class="form-control editable">
-                                    
-                                </div> --}}
-                            </div>
-                            <hr>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                <table class="table" id="tblListarActasCreadas">
-                    <thead>
-                        <tr>
-                            <th>
-                                Nombre
-                            </th>
-                            <th width="20%" colspan="5">
-                                Acciones
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>

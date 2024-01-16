@@ -11,7 +11,7 @@
             height: 600px;
 
         }
-
+ 
         .toolbox {
             /* position: absolute;*/
             bottom: 0px;

@@ -377,7 +377,7 @@ Route::post('conciliaciones/update/anexo', 'ConciliacionesController@updateAnexo
 //Route::get('conciliaciones/download/file/{file_id}', 'ConciliacionesController@downloadFile'); 
 Route::get('conciliaciones/delete/estado', 'ConciliacionesController@deleteEstado');
 Route::get('conciliaciones/edit/estado', 'ConciliacionesController@editEstado');
-Route::get('audiencias', 'AudienciaController@calendarAudiencias');
+Route::get('audiencias', 'AudienciaController@calendarAudiencias')->name('audiencias.agenda');
 Route::post('conciliaciones/update/estado', 'ConciliacionesController@updateEstado');
 Route::get('conciliaciones/get/estado/pdf', 'ConciliacionesController@getEstadosReportesPdf');
 Route::get('conciliacion/user/{idnumber}', 'ConciliacionesController@getUser');

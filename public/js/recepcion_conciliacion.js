@@ -229,11 +229,21 @@ $(function () {
     $("#myformCreateHechoPretension input[name=id]").val('')
     $("#myformCreateHechoPretension textarea").val('')
     $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'));
-    $("#content_create_descrip_hepr").html("")
-    var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1
-    var lbl = $(this).attr('data-tipo') == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones"
+    $("#content_create_descrip_hepr").html("");
+    $("#btn_add_he_pret_input").show()
+    var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1;
+    var lbl="";
+    if($(this).attr('data-tipo') == 206) lbl = "Descripción de los hechos" ;
+    if($(this).attr('data-tipo') == 207) lbl = "Descripción de la pretensión" ;
+    if($(this).attr('data-tipo') == 208) lbl = "Descripción del acuerdo" ;
+
+    if($(this).attr('data-tipo') == 206) $("#btn_add_he_pret_input").text("Agregar otro hecho") ;
+    if($(this).attr('data-tipo') == 207) $("#btn_add_he_pret_input").text("Agregar otra pretension") ;
+    if($(this).attr('data-tipo') == 208) $("#btn_add_he_pret_input").text("Agregar otro acuerdo") ;
+
+   /*  var lbl = $(this).attr('data-tipo') == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones"
     $(this).attr('data-tipo') == 206 ? $("#btn_add_he_pret_input").text("Agregar otro hecho") :
-    $("#btn_add_he_pret_input").text("Agregar otra pretension")
+    $("#btn_add_he_pret_input").text("Agregar otra pretension") */
     
     var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
@@ -360,7 +370,8 @@ $(function () {
     $("#myformCreateHechoPretension").attr('id', 'myformEditHechoPretension');
     $("#myformEditHechoPretension input[name=id]").val(response.id)
     $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
-    $("#myformEditHechoPretension textarea[name=descripcion]").val(response.descripcion);
+    $("#myformEditHechoPretension textarea").val(response.descripcion);
+    $("#btn_add_he_pret_input").hide()
     $("#wait").hide();
     $("#myModalCreateConcHechosPretensiones").modal('show');
   });

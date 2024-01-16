@@ -418,7 +418,7 @@ function fillSummernote(obj) {
     var clasehechopre = '';
     var salto = '';
     if ($(obj).attr("user-type") == 'hepr') clasehechopre = 'hecho_pret'; salto = '<br>'
-    $("#" + mySummernote).summernote(
+    var summernoteInstance =  $("#" + mySummernote).summernote(
         "pasteHTML",
         `<span data-table="${$(obj).attr("data-table")}"
                data-model="${$(obj).attr("data-model")}" 
@@ -427,8 +427,8 @@ function fillSummernote(obj) {
                data-text="${$(obj).attr("data-text")}"  
                data-name="${$(obj).attr("data-name")}" 
                class="item_sp ${clasehechopre}">${$(obj).attr("data-text")}
-        </span>${space}`
-    );
+        </span>${space}`);
+
 }
 
 function editAsignacionReporte(request) {

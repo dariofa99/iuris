@@ -215,6 +215,7 @@ $(document).ready(function () {
 
   $("#myformCreateEstado select[name=type_status_id]").on("change", async function (e) {
     if ($(this).val() != "") {
+      
       var request = {
         tabla_destino: "226",
         status_id: $(this).val(),
@@ -243,14 +244,22 @@ $(document).ready(function () {
     e.preventDefault();
     var request = new FormData($(this)[0]);
     request.append("conciliacion_id", $("#conciliacion_id").val());
-    var type_status_id = $("#myformCreateEstado select[name=type_status_id]").val()
+    var type_status_id = $("#myformCreateEstado select[name=type_status_id]").val();
+    if(type_status_id==$("#estado_conciliacion_id").val()){
+      toastr.error(
+        "La conciliación ya esta en el estado asignado!",
+        "Error",
+        { positionClass: "toast-top-right", timeOut: "5000" }
+      );
+      return;
+    }
     if (type_status_id == 181) {
       var audiencia = $("#conciliacion_audiencia_id").val()
       if (audiencia == undefined) {
         toastr.error(
           "No se puede admitir la conciliación porque no hay una audiencia habilitada",
           "Error",
-          { positionClass: "toast-top-right", timeOut: "50000" }
+          { positionClass: "toast-top-right", timeOut: "5000" }
         );
       } else {
         $("#wait").show()
@@ -351,40 +360,85 @@ $(document).ready(function () {
     }
   });
 
+  $("#myModalCreateConcHechosPretensiones").on("click", '#btn_add_he_pret_input', async function (e) {
+    e.preventDefault();
+    var tipo = $("#myformCreateHechoPretension input[name='tipo_id']").val();
+    console.log(tipo);
+    var key = $(".count_input_descrip_hepr_"+tipo).length + 1
+    var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
+    
+    var row = `
+      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
+        <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+        <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+      </div>
+   `
+    $("#content_create_descrip_hepr").append(row)
+  });
+
   $(".btn_add_conc_he_con").on("click", function (e) {
     e.preventDefault();
-    $("#myformEditHechoPretension").attr('id', 'myformCreateHechoPretension');
+      $("#myformEditHechoPretension").attr('id', 'myformCreateHechoPretension');
     $("#myformCreateHechoPretension input[name=id]").val('')
-    $("#myformCreateHechoPretension textarea[name=descripcion]").val('')
-    $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'))
+    $("#myformCreateHechoPretension textarea").val('')
+    $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'));
+    $("#content_create_descrip_hepr").html("")
+    $("#btn_add_he_pret_input").show()
+
+    var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1
+    var lbl="";
+    if($(this).attr('data-tipo') == 206) lbl = "Descripción de los hechos" ;
+    if($(this).attr('data-tipo') == 207) lbl = "Descripción de la pretensión" ;
+    if($(this).attr('data-tipo') == 208) lbl = "Descripción del acuerdo" ;
+
+    if($(this).attr('data-tipo') == 206) $("#btn_add_he_pret_input").text("Agregar otro hecho") ;
+    if($(this).attr('data-tipo') == 207) $("#btn_add_he_pret_input").text("Agregar otra pretension") ;
+    if($(this).attr('data-tipo') == 208) $("#btn_add_he_pret_input").text("Agregar otro acuerdo") ;
+
+    var row = `
+      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
+        <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+        <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+      </div>
+`
+    $("#content_create_descrip_hepr").html(row)
+
     $("#myModalCreateConcHechosPretensiones").modal('show');
+    $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos" : "Agregando pretensiones")
+  
   });
 
   $(".content_hechos_pretensiones").on("click", '.btn_editar_hepr', async function (e) {
     e.preventDefault();
     var id = $(this).attr('data-id');
-    $("#wait").show();
+    $("#wait").show();    
     const response = await conciliacionService.editHechoPretension(id);
     $("#myformCreateHechoPretension").attr('id', 'myformEditHechoPretension');
     $("#myformEditHechoPretension input[name=id]").val(response.id)
     $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
-    $("#myformEditHechoPretension textarea[name=descripcion]").val(response.descripcion);
+    $("#myformEditHechoPretension textarea").attr('name','descripcion');
+    $("#myformEditHechoPretension textarea").val(response.descripcion);
+    $("#btn_add_he_pret_input").hide()
     $("#wait").hide();
+    console.log(response.descripcion);
     $("#myModalCreateConcHechosPretensiones").modal('show');
   });
 
   $("#myModalCreateConcHechosPretensiones").on("submit", '#myformCreateHechoPretension', async function (e) {
-    e.preventDefault()
-    $("#wait").show();
-    var request = convertFormToJSON("myformCreateHechoPretension");
-    request['conciliacion_id'] = $("#conciliacion_id").val()
-    e.preventDefault()
-    const response = await conciliacionService.addHechosPretensiones(request);
-    if (response.view || response.view == "") {
-      $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
+    e.preventDefault();    
+    var errors = validateForm('myformCreateHechoPretension');   
+    if(errors.length<=0){
+      $("#myModalCreateConcHechosPretensiones").modal('hide');
+      $("#wait").show();
+      var request = convertFormToJSON("myformCreateHechoPretension");
+      request['conciliacion_id'] = $("#conciliacion_id").val()
+      e.preventDefault();
+      const response = await conciliacionService.addHechosPretensiones(request);
+      if (response.view || response.view == "") {
+        $("#content_hechos_pretensiones-" + response.tipo_id).html(response.view);
+      }
+      $("#wait").hide();
     }
-    $("#myModalCreateConcHechosPretensiones").modal('hide');
-    $("#wait").hide();
   });
   $("#myModalCreateConcHechosPretensiones").on("submit", '#myformEditHechoPretension', async function (e) {
     e.preventDefault()
@@ -1624,22 +1678,30 @@ async function getActasForStatus() {
       conciliacion_id: $("#conciliacion_id").val()
     };
     const response = await conciliacionService.getPdfReportForStatus(request);
-
+    console.log(response);
     if (response.length > 0) {
+      var conid = $("#conciliacion_id").val();
+
       var tr = '';
       response.forEach(destino => {
-        tr += `
+      
+         tr += `
           <tr>
             <td>
             ${destino.reporte.nombre_reporte}
             </td>
             <td>
-              <button class="btn btn-sm btn-success btn_crear_acta" data-id="${destino.reporte.id}" id="acta-${destino.reporte.id}">
-                Crear acta
+              <a target="_blank" href="/pdf/reportes/generate/${conid}/${destino.reporte_id}/${destino.status_id}" class="btn btn-sm btn-warning"  id="actafr-${destino.reporte.id}">
+                Vista previa
+              </a>
+              <button class="btn mt-1 btn-sm btn-success btn_crear_acta" data-id="${destino.reporte.id}" id="acta-${destino.reporte.id}">
+                Activar acta
               </button>
+             
             </td>
-          </tr>
+          </tr> 
           `
+
       });
 
       $("#tbl_listActForStatus tbody").html(tr)

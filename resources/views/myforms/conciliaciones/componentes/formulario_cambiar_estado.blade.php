@@ -10,10 +10,10 @@
                     <textarea name="concepto" required class="form-control"  rows="5"></textarea>                        
                 </div> 
 
-                <div class="form-group"> 
+            {{--     <div class="form-group"> 
                     <label for="description">Subir archivo</label>
                     <input type="file" name="status_file">                      
-                </div> 
+                </div>  --}}
                   
                     <div class="row" id="alertmyReportList" style="display: none">
                         <div class="col-md-12">

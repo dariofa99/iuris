@@ -168,6 +168,11 @@
                                     </a>
                                 </li>
                             @endif
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('audiencias.agenda') }}" class="nav-link">
+                                    <p>Agenda de conciliaciones</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
@@ -197,7 +202,8 @@
                         </ul>
                     </li>
                 @endif
-                @if (currentUser()->can('ver_horarios'))
+                
+                @if (currentUser()->can('ver_horarios') and config('app.name') != 'ConciliApp')
                     <li class="nav-item has-treeview {{ !Route::is('horarios.index') ?: 'menu-open' }}">
                         <a href="#" class="nav-link">
                             <i class="nav-icon far fa-calendar-alt"></i>
@@ -257,7 +263,7 @@
                         </li>
                     </ul>
                 </li>
-                @if (currentUser()->can('ver_configuracion'))
+                @if (currentUser()->can('ver_configuracion') and config('app.name') != 'ConciliApp')
                     <li
                         class="nav-item has-treeview {{ (!Route::is('notas.index')) ?: 'menu-open' }}">
                         <a href="#" class="nav-link">

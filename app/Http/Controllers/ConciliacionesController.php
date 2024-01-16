@@ -126,15 +126,15 @@ class ConciliacionesController extends Controller
     public function store(Request $request)
     {
         //$conciliacion = Conciliacion::find(10);
-        // return response()->json($conciliacion);
+         //return response()->json($request->all());
         try {
             $periodo = $this->periodoService->getPeriodoActivo();
             $request['periodo_id'] =  $periodo->id;
             $conciliacion = $this->conciliacionService->store($request);
-            if ($request->has('solicitante_id')) {
+            if ($request->has('solicitante_id') and currentUser()->hasRole('solicitante')) {
                 $conciliacion->usuarios()->attach($request->get('solicitante_id'), [
                     'tipo_usuario_id' => 205,
-                    'estado_id' => 1
+                    'estado_id' => 1 
                 ]);
             }
             $estado = ConciliacionEstado::create([

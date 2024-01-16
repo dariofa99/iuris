@@ -349,7 +349,7 @@ class ExpedienteController extends Controller
         return redirect('/expedientes/' . $expediente->expid);
       }
       if (($expediente->expestado_id == '4')) {
-        Session::flash('message-success', 'Actualizado con éxito...!');
+        //Session::flash('message-success', 'Actualizado con éxito...!');
         return redirect('/expedientes/' . $expediente->expid);
       }
     } elseif (currentUser()->hasRole("solicitante")) {
@@ -1221,10 +1221,10 @@ class ExpedienteController extends Controller
     dd(method_exists($expediente, 'sedes')); */
     //18478
     $expediente = Expediente::find(23334);
-    /* $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
+     $asignacion_caso =  $this->asignacionCasoService->findWithFilter([
       'asigexp_id' => $expediente->expid,
       'activo' => 1
-    ]); */
+    ]); 
 
     /* if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
       // Notification::send($user_,new NotificarDirector($expediente));
@@ -1232,6 +1232,7 @@ class ExpedienteController extends Controller
         ->onConnection('database')->onQueue('emails');
         dd(ramasDerechoNotificar(),User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first());
     } */
+    $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
 
     dd("dd");
 
@@ -1242,8 +1243,8 @@ class ExpedienteController extends Controller
 
       //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
-    // $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
-
+   
+     dd("");
     //$relations = $asignacion_caso->getRelations();
 
     $fecha_unix = strtotime("+1 hours");

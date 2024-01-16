@@ -29,7 +29,9 @@ class ConciliacionesReportesController extends Controller
     {
         $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 0);
+            
         })
+        ->whereDoesntHave('temporales')
             ->with('reporte')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();

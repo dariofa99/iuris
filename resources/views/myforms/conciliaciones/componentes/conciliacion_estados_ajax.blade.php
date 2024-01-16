@@ -1,4 +1,4 @@
-@foreach($conciliacion->estados as $key => $estado)
+@foreach($conciliacion->estados()->orderBy('created_at','desc')->get() as $key => $estado)
 <tr>
    <td>{{$estado->type_status->ref_nombre}}</td>
    <td>{{$estado->concepto}}</td>

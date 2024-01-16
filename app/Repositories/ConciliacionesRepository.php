@@ -32,10 +32,13 @@ class ConciliacionesRepository extends BaseRepository implements ConciliacionesS
             $conciliacion->sedes()->attach(session('sede')->id_sede);
         }
         //autor
-        $conciliacion->usuarios()->attach(auth()->user()->id, [
-            'tipo_usuario_id' => $request->has('tipo_usuario_id') ? $request->input('tipo_usuario_id') : 199,
-            'estado_id' => 1
-        ]);
+      
+            $conciliacion->usuarios()->attach(auth()->user()->id, [
+                'tipo_usuario_id' => $request->has('tipo_usuario_id') ? $request->input('tipo_usuario_id') : 199,
+                'estado_id' => 1
+            ]);
+       
+      
         return $conciliacion;
     }
     public function getAllConciliaciones(

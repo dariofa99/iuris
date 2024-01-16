@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class File extends Model
 {
     protected $table="files"; //el modelo se va a relacionar con la tabla
-    protected $fillable=['hash','original_name','encrypt_name','path','size'];//que campos tiene la
+    protected $fillable=['hash','original_name','encrypt_name','path','size','category_id'];//que campos tiene la
     public $disk;
     
     public function setDisk($disk){
@@ -24,9 +24,14 @@ class File extends Model
         ->withPivot('id','concepto','file_id','type_status_id','user_id')->withTimestamps(); 
      } 
 
-     public function userinestado(){
+   public function userinestado(){
       return $this->belongsToMany(User::class,'conciliacion_estados_files','file_id','user_id')
       ->withPivot('id','file_id','con_status_id','user_id','conciliacion_id')->withTimestamps(); 
    } 
+
+   public function categoryInConciliacion(){
+      return $this->belongsToMany(TablaReferencia::class,'conciliacion_has_files','file_id','category_id')
+        ->withPivot('id','concepto','file_id','type_status_id','user_id','category_id')->withTimestamps(); 
+   }
 
 }

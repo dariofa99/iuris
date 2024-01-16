@@ -141,8 +141,8 @@
                          @if (currentUser()->can('admin_expedientes') ||
                                  (currentUser()->hasRole('estudiante') ||
                                      currentUser()->hasRole('docente') ||
-                                     currentUser()->hasRole('coordprac') and
-                                     $expediente->expestado_id == '1' || $expediente->expestado_id == '3' || $expediente->expestado_id == '6'))
+                                     currentUser()->hasRole('dirgral') ||
+                                     currentUser()->hasRole('coordprac')))
                              {!! link_to_route(
                                  'expedientes.edit',
                                  $title = 'Editar',

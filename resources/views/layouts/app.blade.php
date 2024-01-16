@@ -25,8 +25,9 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/general.css') }}">
-    
-    <link rel="stylesheet" href="{{ config('app.name') == 'Iuris' ? asset('css/landing_iuris.css') : asset('css/conciliappfront.css') }}">
+
+    <link rel="stylesheet"
+        href="{{ config('app.name') != 'ConciliApp' ? asset('css/landing_iuris.css') : asset('css/conciliappfront.css') }}">
 
     @stack('styles')
 </head>
@@ -47,10 +48,10 @@
     </div>
     <hr>
 
-    @if (config('app.name') == 'ConciliApp')
-        @include('layouts.partials.conciliapp_footer')
-    @else
+    @if (config('app.name') != 'ConciliApp')
         @include('layouts.partials.app_footer')
+    @else
+        @include('layouts.partials.conciliapp_footer')
     @endif
 
 

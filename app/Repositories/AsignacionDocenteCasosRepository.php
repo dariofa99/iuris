@@ -31,6 +31,7 @@ class AsignacionDocenteCasosRepository extends BaseRepository implements Asignac
     public function update(AsigDocenteCaso $expediente,Request $request) : AsigDocenteCaso
     {    
         $expediente->fill($request->all());
+        $expediente->user_updated_id = auth()->user()->idnumber;
         $expediente->save();
         return $expediente;
     }

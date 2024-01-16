@@ -578,7 +578,14 @@ class Expediente extends Model
                     return $query->where(['expidnumberest' => $data]);
                     break;
                 case 'idnumber_doc':
-                    return $query->where('asignacion_docente_caso.docidnumber', $data);
+                    return $query->where(function($qu) use ($data){
+                        $qu->whereHas('asignaciones.asig_docente', function ($q) use ($data) {
+                            $q->where('asignacion_docente_caso.docidnumber', $data);
+                        });
+                    });
+                    
+                    
+                    
                     break;
                 case 'solicitante':
                 case 'solicitante_num':
