@@ -468,6 +468,70 @@ class Expediente extends Model
         return $hijos;
     }
 
+    public function verifyActuacionForCreate()
+    {
+        $actuacions = $this->getActuaciones(1);
+        //return $actuacion;
+        $validForCreate = true;
+        if(($actuacions)){            
+            foreach ($actuacions as $key => $actuacion) {
+                if($actuacion->actestado_id==101
+                || $actuacion->actestado_id==102
+                || $actuacion->actestado_id==140 ){
+                    $validForCreate = false;
+                    if (count($actuacion->getHijos($actuacion)) > 0) {                                  
+                        foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
+                            if($hijo->actestado_id==104
+                            || $hijo->actestado_id==139
+                            || $hijo->actestado_id==234 ){                               
+                                $validForCreate = true;
+                                return $validForCreate;
+                            }
+                        }
+                    }
+                    return $validForCreate;
+                }
+              
+            }
+                
+           
+              
+            return $validForCreate;
+        }
+
+        return $validForCreate;
+        
+    }
+
+    public function verifyActuacionAnexoForCreate()
+    {
+        $actuacions = $this->getActuaciones(1);
+       // return $actuacion;
+        $validForCreate = true;
+        if(($actuacions)){            
+            foreach ($actuacions as $key => $actuacion) {
+                if($actuacion->actestado_id==136){
+                    $validForCreate = false;
+                }
+                if (count($actuacion->getHijos($actuacion)) > 0) {    
+                    //$validForCreate = true;                
+                    foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
+                        if($hijo->actestado_id==136){
+                            $validForCreate = false;
+                        }
+                    }
+                }
+            }
+               
+           
+              
+            return $validForCreate;
+        }
+
+        return $validForCreate;
+        
+    }
+
     public function setNotActLimit($date = null)
     {
 

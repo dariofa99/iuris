@@ -17,14 +17,15 @@ trait PdfReport
 
             if (count($json) > 0) {
                 foreach ($json as $key => $data) {
-                    // $data = $json[12];
-
+                     //$data = $json[1];
+                    
                     if ($data->table == 'users') {
                         $user = $conciliacion->getUser($data->data_type);
 
                         if ($user->id != null) {
                             $data_us = pdfReportsDataValues()['users'];
                             $table_name = obtenerTableName($data_us, $data->short_name);
+                            
                             if ($table_name == 'tipodoc_id') {
                                 $value = $user->tipo_doc->ref_nombre;
                             } elseif ($table_name == 'genero_id') {

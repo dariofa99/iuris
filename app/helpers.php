@@ -405,7 +405,7 @@ function pdfReportsDataValues()
                 'model' => 'user',
                 'short_name' => 'numero_identificacion',
                 'name' => 'No. identificación',
-                'table_name' => 'num_doc',
+                'table_name' => 'idnumber',
             ],
             [
                 'table' => 'users',

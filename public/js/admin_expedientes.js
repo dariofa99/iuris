@@ -1276,7 +1276,8 @@ $(document).ready(function () {
         if (errors.length <= 0) {
             const body = new FormData(document.getElementById('myformCreateAct'));
             const archivo = body.get('actdocnomgen');
-            if (archivo instanceof File && archivo.size <= 0) {
+            var userauth = JSON.parse($("#authdata").val());
+            if (archivo instanceof File && archivo.size <= 0 && userauth.role[0].name=='estudiante') {
                 Swal.fire({
                     position: 'top-end',
                     icon: 'error',
@@ -1285,20 +1286,38 @@ $(document).ready(function () {
                     timer: 5500
                 });
                 return
-            }             
+            }              
             try {
                 $("#loader-container").show().css({ 'display': 'flex' })
                 $("#wait").show();
                 const result = await expedientesService.addActuacion(body)
                     .then((response) => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: "Actualizado con éxito!",
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-                        window.location.reload(true)
+                        if(response.errors){
+                            response.errors.forEach(error => {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    title: 'Ups! Algo fallo',
+                                    html: error,
+                                    showConfirmButton: false,
+                                    timer: 5500
+                                });
+
+                               /*  toastr.error(error, "", {
+                                    positionClass: "toast-top-right",
+                                    timeOut: "6000",
+                                }); */
+                            });
+                        }else{
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: "Actualizado con éxito!",
+                                showConfirmButton: false,
+                                timer: 2500
+                            });
+                            window.location.reload(true)
+                        }                       
                         e.preventDefault()
                     })
                     .catch((error) => {
@@ -1306,7 +1325,7 @@ $(document).ready(function () {
                             position: 'top-end',
                             icon: 'error',
                             title: 'Ups! Algo fallo',
-                            html: error,
+                            html: "Comprueba que el archivo no supere las 10MB",
                             showConfirmButton: false,
                             timer: 5500
                         });
@@ -1362,6 +1381,12 @@ $(document).ready(function () {
             $("#myformCreateCorreccionActButton").text('Agregar Anexo');
             $("#lbl_tip_act").text('Motivo');
             $("#lbl_type_actadd").text('Agregar Anexo');
+        }else if ($(this).attr('data-status') == '101'){
+            var label = 'Agregando corrección a actuación';
+            $("#actestado_id2").val(101);
+            $("#myformCreateCorreccionActButton").text('Agregar corrección');
+            $("#lbl_tip_act").text('Motivo');
+            $("#lbl_type_actadd").text('Agregar corrección');
         }
         $(".lab_id_act").text(label);
         $("#wait").hide();
@@ -1531,14 +1556,33 @@ $(document).ready(function () {
                 $("#wait").show();
                 const result = await expedientesService.addActuacion(body)
                     .then((response) => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: "Actualizado con éxito!",
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-                        window.location.reload(true)
+                        if(response.errors){
+                            response.errors.forEach(error => {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    title: 'Ups! Algo fallo',
+                                    html: error,
+                                    showConfirmButton: false,
+                                    timer: 5500
+                                });
+
+                               /*  toastr.error(error, "", {
+                                    positionClass: "toast-top-right",
+                                    timeOut: "6000",
+                                }); */
+                            });
+                        }else{
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: "Actualizado con éxito!",
+                                showConfirmButton: false,
+                                timer: 2500
+                            });
+                            window.location.reload(true)
+                        }
+                      //  window.location.reload(true)
                         e.preventDefault()
                     })
                     .catch((error) => {

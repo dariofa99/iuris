@@ -155,12 +155,25 @@ class ActuacionController extends Controller
    */
   public function store(Request $request)
   {
+    $expediente = Expediente::where("expid", $request['actexpid'])->first();
+   
+    $validForCreate = true;
+    if(currentUser()->hasRole('estudiante')){
+      if($request->input('actestado_id') == 136){    
+        $errorMessage = 'No se puede crear el anexo, comprueba que no hayan anexos pendientes por revisar'  ;
+        $validForCreate = $expediente->verifyActuacionAnexoForCreate();
+      }else if (!$request->has('parent_actuacion_id')){
+        $validForCreate = $expediente->verifyActuacionForCreate();
+        $errorMessage = 'No se puede crear la actuación, comprueba que no hayan actuaciones pendientes por revisar'  ;
+       
+      }
+    }
+ 
+    //return response()->json($validForCreate); 
+    if ($request->actexpid and $validForCreate) {
 
-    //return response()->json($request->all()); 
-    if ($request->actexpid) {
-
-
-      $expediente_id = $request->id_control_list;
+      
+     // return response()->json($validForCreate); 
       if (isset($request->actexpid)) {          // dd($request->actdocnomgen);
         if ($request->file('actdocnomgen') != '') {
           $docum = $request->file('actdocnomgen');
@@ -178,15 +191,20 @@ class ActuacionController extends Controller
 
           //$actdocruta = public_path($url);                             
         } else {
+          if(currentUser()->hasRole('estudiante')){
+            return response()->json([
+              'errors'=>['Se debe subir un archivo']
+            ]);
+          }
           $actdocnomgen = '';
           $actdocnompropio = '';
           $actdocruta = '';
+
         }
-        $expediente = Expediente::where("expid", $request['actexpid'])->first();
+        
         $actuacion = new Actuacion();
-        $actuacion->actexpid = $request['actexpid'];
+        $actuacion->actexpid = $expediente->expid;
         $actuacion->actnombre = $request['actnombre'];
-        $actuacion->actidnumberest = $request['actnombre'];
         $actuacion->actdescrip = $request['actdescrip'];
         $actuacion->actfecha = $request['actfecha'];
         $actuacion->fecha_limit = $request['fecha_limit'];
@@ -236,6 +254,9 @@ class ActuacionController extends Controller
 
       return response()->json($request->all());
     }
+    return response()->json([
+      'errors'=>[$errorMessage]
+    ]);
   }
 
   private function getActuacionesExp($expediente_id, $bandera)

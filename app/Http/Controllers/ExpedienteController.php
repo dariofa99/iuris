@@ -1232,7 +1232,8 @@ class ExpedienteController extends Controller
         ->onConnection('database')->onQueue('emails');
         dd(ramasDerechoNotificar(),User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first());
     } */
-    $expediente = $this->expedienteService->asignarDocente($asignacion_caso);
+    $expediente = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso,2); // si tiene en cuenta la rama del derecho
+
 
     dd("dd");
 
@@ -1241,7 +1242,7 @@ class ExpedienteController extends Controller
       // $this->expedienteService->asignarDocente($asignacion_caso);
     } else {
 
-      //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+      $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
    
      dd("");

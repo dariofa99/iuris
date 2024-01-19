@@ -33,7 +33,7 @@
          <td>
              {{ $actuacion->actnombre }}
          </td>
-         <td>
+         <td> 
              {{ $actuacion->actdescrip }}
          </td>
          <td>
@@ -130,7 +130,7 @@
                   and ($expediente->expidnumberest == currentUser()->idnumber 
                   || currentUser()->hasRole('amatai')))
                      <button data-modal="#myModal_act_add_revision" type='button' value="{{ $actuacion->id }}"
-                         class='btn btn-warning btn-sm btn-block buscar_actuacion' data-titulo_modal='Nueva actuación'>
+                         class='btn btn-warning btn-sm btn-block buscar_actuacion' data-status='101' data-titulo_modal='Nueva actuación'>
                          Ag. Corrección </button>
                  @endif
                  @if ((($actuacion->actestado_id == 101 

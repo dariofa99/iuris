@@ -72,7 +72,8 @@
         <td colspan="4">
             <div class="alert alert-info">
 
-                <i class="fa fa-info-circle"></i> No hay reportes para mostrar!
+                <i class="fa fa-info-circle"></i>
+                 No hay actas activas para mostrar!
 
             </div>
         </td>

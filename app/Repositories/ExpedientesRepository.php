@@ -181,6 +181,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     }
 
 
+    //Asigna docentes para asesorias
     public function asignarDocente(AsignacionCaso $asignacion_caso)
     {
         $asig_doc = DB::select(
@@ -188,18 +189,16 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
                 JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
                 JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
-                JOIN user_has_ramasderecho ON user_has_ramasderecho.user_id = users.id
-                JOIN rama_derecho ON rama_derecho.id = user_has_ramasderecho.ramaderecho_id
                 JOIN sede_usuarios ON sede_usuarios.user_id = users.id
                 JOIN role_user ON role_user.user_id = users.id
                 WHERE expedientes.exptipoproce_id = '1'
                 AND users.active=1
-                AND  expedientes.expestado_id <> '2'
+                AND  expedientes.expestado_id = '1'
                 AND (users.active_asignacion = 1 or role_user.role_id = 4)
                 AND sede_usuarios.sede_id =  '" . session('sede')->id_sede . "'
                 GROUP BY `docidnumber` ORDER BY num_casos ASC")
         );
-  
+        //dd($asig_doc);
         $docentes = DB::table('users')
             ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
@@ -261,17 +260,20 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
         JOIN user_has_ramasderecho ON user_has_ramasderecho.user_id = users.id
         join rama_derecho ON rama_derecho.id = user_has_ramasderecho.ramaderecho_id
-        JOIN periodo ON asignacion_caso.periodo_id = periodo.id
-        JOIN segmentos ON periodo.id = segmentos.perid
+        JOIN periodo ON asignacion_caso.periodo_id = periodo.id        
         JOIN sede_usuarios ON sede_usuarios.user_id = users.id
         JOIN role_user ON role_user.user_id = users.id
         WHERE expedientes.exptipoproce_id = '$tipoproce'        
         AND users.active=1 
+        AND expedientes.expestado_id = 1
         AND (users.active_asignacion=1 or role_user.role_id=4)
-        AND segmentos.id = $segmento->segmento_id
+        AND asignacion_docente_caso.activo = 1
+        
         AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
         AND rama_derecho.subrama = '" . $subRama. " '
         GROUP BY `docidnumber` ORDER BY num_casos ASC"));
+
+        //AND segmentos.id = $segmento->segmento_id
     }
 
     public function asignargDocenteSeguimiento($asignacion_caso, $tipoproce)
@@ -279,6 +281,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $subRama =  $asignacion_caso->expediente->rama_derecho->subrama;
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce,$subRama);       
         $docentes = $this->usersService->getDocentesByRama($subRama);
+        dd($asig_doc , $docentes );
         $this->request['asig_caso_id']  = $asignacion_caso->id;    
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
