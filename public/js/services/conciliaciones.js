@@ -340,7 +340,7 @@ export class ConciliacionService {
         }
         const topics = await response.json();
         return topics;
-    }
+    } 
 
     async getPdfReportForStatus(request) {
         const response = await fetch(BASE_URL + "conciliacion/reportes/for/status?" + new URLSearchParams(request), {

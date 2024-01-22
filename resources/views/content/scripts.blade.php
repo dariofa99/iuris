@@ -68,7 +68,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 19 de enero de 2024 <br>
+        message += `<span> Últ. Actualización: 22 de enero de 2024 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 

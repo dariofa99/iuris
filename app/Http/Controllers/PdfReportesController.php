@@ -292,7 +292,7 @@ class PdfReportesController extends Controller
      ]);
      }
 
-     public function getDestinosForReport(Request $request){
+    /*  public function getDestinosForReport(Request $request){
         
         //  return response()->json($request->all());
   
@@ -312,6 +312,6 @@ class PdfReportesController extends Controller
          return response()->json([
           'errors'=> ["No hay modelos registrados"],            
       ]);
-      }
+      } */
 
 }

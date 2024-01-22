@@ -1506,7 +1506,7 @@ $(document).ready(function () {
   });
 
   getActas();
-  getReportesForDestiny();
+  getReportesForNotifications();
   getActasForStatus();
 });//fin document ready
 
@@ -1532,19 +1532,21 @@ function getColorTurno(value) {
     "daycolors": daycolors[daysemcolor]
   }
 }
-async function getReportesForDestiny() {
+async function getReportesForNotifications() {
   var request = {
     'tabla_destino': "227",
     'status_id': $("#estado_conciliacion_id").val(),
+    'conciliacion_id':$("#conciliacion_id")
   }
-  let response = await conciliacionService.getDestinyForReport(request);
+  let response = await conciliacionService.getPdfReportForStatus(request);
   if (response.errors && response.errors.length > 0) {
-    console.log(response);
+    
   } else {
+    console.log(response);
     var option = '<option value="">Seleccione...</option>';
     response.forEach(element => {
       option += `
-              <option value="${element.id}">${element.nombre_reporte}</option>
+              <option value="${element.reporte.id}">${element.reporte.nombre_reporte}</option>
            `;
     });
     option += `
@@ -1556,15 +1558,15 @@ async function getReportesForDestiny() {
 
 }
 async function getActas() {
-  var request = {
+/*   var request = {
     //conc_estado_id: $(this).attr("data-id"),
     tabla_destino: "conciliaciones",
     status_id: $("#estado_conciliacion_id").val(),
     conciliacion_id: $("#conciliacion_id").val()
   };
   let response = await conciliacionService.getPdfReportesConciliacion(request);
-  $("#myFormatosActasList tbody").html("");
-  $("#myFormatosActasList tbody").html(response.view);
+  $("#myFormatosActasList tbody").html(""); */
+  //$("#myFormatosActasList tbody").html(response.view);
 
 }
 function alertValidateUser(lastidnumber, form) {
@@ -1716,6 +1718,7 @@ async function getActasCreadas() {
     const response = await conciliacionService.getActasCreadas(request);
 
     if (response.view) {
+       
      $("#tblListarActasCreadas tbody").html(response.view)
     }
   }

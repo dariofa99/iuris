@@ -868,6 +868,45 @@ $(document).ready(function () {
         }
     });
 
+    $("#btn_revisar_dr_caso").on("click", function (e) {
+        let request = {
+            expidnumber: $("#expid").val(),
+            ref_estado_id: 7,
+            ref_motivo_estado_id: 8
+        }
+        Swal.fire({
+            title: 'Pasando a revisión el caso',
+            text: "No se asignarán notas!",
+            input: 'textarea',
+            inputPlaceholder: '¿Por qué va a pasar a revisión el caso?',
+            inputAttributes: {
+                rows: 90,  // Número de filas del textarea
+                cols: 500  // Número de columnas del textarea
+            },
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Pasar a revisión',
+            confirmButtonClass: 'btn-success',
+            allowEmpty: false, // Evita el valor vacío en el textarea
+            preConfirm: (text) => {
+                if (text !== '') {
+                    $("#wait").show();
+                    request["comentario"] = text;
+                    let response = expedientesService.cerrarCaso(request);
+                    toastr.success("Actualizado con éxito", "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                    window.location.reload(true)
+                } else {
+                    Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
+
+                }
+            }
+        });
+        $("#wait").hide();
+    });
+
     $("#btn_cerrar_dr_caso").on("click", function (e) {
         let request = {
             expidnumber: $("#expid").val(),
@@ -905,7 +944,6 @@ $(document).ready(function () {
             }
         });
         $("#wait").hide();
-
     });
     $("#myFormExpsStore").on("submit", async function (e) {
         e.preventDefault();
