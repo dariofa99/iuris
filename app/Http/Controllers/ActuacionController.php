@@ -157,6 +157,7 @@ class ActuacionController extends Controller
   {
     $expediente = Expediente::where("expid", $request['actexpid'])->first();
    
+    
     $validForCreate = true;
     if(currentUser()->hasRole('estudiante')){
       if($request->input('actestado_id') == 136){    
@@ -174,8 +175,8 @@ class ActuacionController extends Controller
 
       
      // return response()->json($validForCreate); 
-      if (isset($request->actexpid)) {          // dd($request->actdocnomgen);
-        if ($request->file('actdocnomgen') != '') {
+              // dd($request->actdocnomgen);
+        if ($request->hasFile('actdocnomgen')) {
           $docum = $request->file('actdocnomgen');
           $nombre_arch = $docum->getClientOriginalName();
           $nombre_arch = htmlentities($nombre_arch);
@@ -192,8 +193,14 @@ class ActuacionController extends Controller
           //$actdocruta = public_path($url);                             
         } else {
           if(currentUser()->hasRole('estudiante')){
+            
+            $docum = $request->file('actdocnomgen');
+          $nombre_arch = $docum->getClientOriginalName();
+          $nombre_arch = htmlentities($nombre_arch);
+          
+
             return response()->json([
-              'errors'=>['Se debe subir un archivo']
+              'errors'=>['Se debe subir un archivo',$request->hasFile('actdocnomgen')]
             ]);
           }
           $actdocnomgen = '';
@@ -231,7 +238,7 @@ class ActuacionController extends Controller
             //'rev_actid'=>$actuacion->id,
           ]);
         }
-      }
+      
       if ($actuacion->actestado_id == 140) {
         $user = $expediente->estudiante;
         $user->notification = 'Nueva notificación de caso';

@@ -740,6 +740,7 @@ $(document).ready(function () {
         resetForm('myFormUserCreateExpediente');
         $("#myFormUserCreateExpediente select[name='tipopers_id']").val(237);
         $("#myFormUserCreateExpediente select[name='tipodoc_id']").val(2);
+        $("#content_infoexp").hide()
     });
 
     $("#content_user_exp_asig").on("blur", "input[name='idnumber']", async function (e) {
@@ -760,6 +761,26 @@ $(document).ready(function () {
                     positionClass: "toast-top-center",
                     timeOut: "4000",
                 });
+                var msg = `Se encontró al usuario ${response.user.name} 
+                ${response.user.lastname} con el rol: ${response.user.roles[0].display_name}.`
+                $("#rl_user_solicitud").text(msg)
+                if (response.expedientes && response.expedientes.length > 0) {
+                    
+                    var li = '';
+                    response.expedientes.forEach(exp => {
+                       li+=`
+                       <li>
+                            ${exp.count} en estado ${exp.nombre_estado}
+                        </li>
+                       ` ;
+                    });
+                    $("#lbl_text_casosasig").text("Tiene los siguientes casos en calidad de solicitante")
+                    $("#list_casos_asignados").html(li)
+                }else{
+                    $("#lbl_text_casosasig").text("NO tiene casos")
+                    $("#list_casos_asignados").html("")
+                }
+                $("#content_infoexp").show()
                 $("#myFormUserEditExpediente input[name='idnumber']").prop('disabled', true);
             }
             $("#wait").hide()
@@ -1183,7 +1204,7 @@ $(document).ready(function () {
             if (result.value) {
                 $("#wait").show();
                 let response = await expedientesService.darDeBaja(request);
-                if(response.errors){
+                if (response.errors) {
                     response.errors.forEach(error => {
                         Swal.fire({
                             position: 'top-end',
@@ -1194,7 +1215,7 @@ $(document).ready(function () {
                             timer: 5500
                         });
                     });
-                }else{
+                } else {
                     Swal.fire({
                         title: response.message,
                         html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
@@ -1203,12 +1224,12 @@ $(document).ready(function () {
                         confirmButtonText: "OK",
                     }).then((result) => {
                         if (result.value) {
-                           window.location.reload(true)
+                            window.location.reload(true)
                         }
                     });
                 }
                 $("#wait").hide();
-                
+
             }
         });
     });
@@ -1330,22 +1351,22 @@ $(document).ready(function () {
             const body = new FormData(document.getElementById('myformCreateAct'));
             const archivo = body.get('actdocnomgen');
             var userauth = JSON.parse($("#authdata").val());
-            if (archivo instanceof File && archivo.size <= 0 && userauth.role[0].name=='estudiante') {
+            if (archivo instanceof File && archivo.size <= 0 && userauth.role[0].name == 'estudiante') {
                 Swal.fire({
                     position: 'top-end',
                     icon: 'error',
-                    title: 'Ups! No se ha adjuntado un archivo',                    
+                    title: 'Ups! No se ha adjuntado un archivo',
                     showConfirmButton: false,
                     timer: 5500
                 });
                 return
-            }              
+            }
             try {
                 $("#loader-container").show().css({ 'display': 'flex' })
                 $("#wait").show();
                 const result = await expedientesService.addActuacion(body)
                     .then((response) => {
-                        if(response.errors){
+                        if (response.errors) {
                             response.errors.forEach(error => {
                                 Swal.fire({
                                     position: 'top-end',
@@ -1356,12 +1377,12 @@ $(document).ready(function () {
                                     timer: 5500
                                 });
 
-                               /*  toastr.error(error, "", {
-                                    positionClass: "toast-top-right",
-                                    timeOut: "6000",
-                                }); */
+                                /*  toastr.error(error, "", {
+                                     positionClass: "toast-top-right",
+                                     timeOut: "6000",
+                                 }); */
                             });
-                        }else{
+                        } else {
                             Swal.fire({
                                 position: 'top-end',
                                 icon: 'success',
@@ -1370,7 +1391,7 @@ $(document).ready(function () {
                                 timer: 2500
                             });
                             window.location.reload(true)
-                        }                       
+                        }
                         e.preventDefault()
                     })
                     .catch((error) => {
@@ -1434,7 +1455,7 @@ $(document).ready(function () {
             $("#myformCreateCorreccionActButton").text('Agregar Anexo');
             $("#lbl_tip_act").text('Motivo');
             $("#lbl_type_actadd").text('Agregar Anexo');
-        }else if ($(this).attr('data-status') == '101'){
+        } else if ($(this).attr('data-status') == '101') {
             var label = 'Agregando corrección a actuación';
             $("#actestado_id2").val(101);
             $("#myformCreateCorreccionActButton").text('Agregar corrección');
@@ -1609,7 +1630,7 @@ $(document).ready(function () {
                 $("#wait").show();
                 const result = await expedientesService.addActuacion(body)
                     .then((response) => {
-                        if(response.errors){
+                        if (response.errors) {
                             response.errors.forEach(error => {
                                 Swal.fire({
                                     position: 'top-end',
@@ -1620,12 +1641,12 @@ $(document).ready(function () {
                                     timer: 5500
                                 });
 
-                               /*  toastr.error(error, "", {
-                                    positionClass: "toast-top-right",
-                                    timeOut: "6000",
-                                }); */
+                                /*  toastr.error(error, "", {
+                                     positionClass: "toast-top-right",
+                                     timeOut: "6000",
+                                 }); */
                             });
-                        }else{
+                        } else {
                             Swal.fire({
                                 position: 'top-end',
                                 icon: 'success',
@@ -1635,7 +1656,7 @@ $(document).ready(function () {
                             });
                             window.location.reload(true)
                         }
-                      //  window.location.reload(true)
+                        //  window.location.reload(true)
                         e.preventDefault()
                     })
                     .catch((error) => {

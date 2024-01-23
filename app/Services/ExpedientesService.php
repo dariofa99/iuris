@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\AsignacionCaso;
 use App\Expediente;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -22,6 +23,7 @@ interface ExpedientesService {
     public function pausarExpediente($expediente, Request $request);
     public function deletePausa($id);
     public function updatePausa($id, Request $request);
+    public function getExpeUser(User $user);
    
    
 }

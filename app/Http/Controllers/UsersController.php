@@ -13,6 +13,7 @@ use App\TablaReferencia;
 use App\Mail\ConfirmarCorreo;
 use App\ReferenceDataOptions;
 use App\ReferencesData;
+use App\Services\ExpedientesService;
 use App\Services\UsersService;
 use App\UserAditionalData;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +27,12 @@ class UsersController extends Controller
 {
 
   private $userService;
+  private $expedienteService;
 
-  public function __construct(UsersService $userService)
+  public function __construct(UsersService $userService,ExpedientesService $expedienteService)
   {
     $this->userService = $userService;
+    $this->expedienteService = $expedienteService;
     $this->middleware('auth', ['except' => ['store', 'anotherMethod']]);
     $this->middleware('permission:ver_usuarios',   ['only' => ['index']]);
   }
@@ -395,15 +398,17 @@ class UsersController extends Controller
       if ($user) {
         $encontrado = true;
       }
-    }
+    } 
     if ($encontrado) {
       $user->roles;
+      $expedientes = $this->expedienteService->getExpeUser($user);
       if ($request->has('view')) {
         $response['view'] = view($request->get('view'), compact('user', 'sin_sede'))->render();
       }
       $response['encontrado'] = true;
 
       $response['user'] = $user;
+      $response['expedientes'] = $expedientes;
       return response()->json($response);
     }
     return  response()->json(['encontrado' => false]);

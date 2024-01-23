@@ -12,6 +12,7 @@ use App\Services\ExpedientesService;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use App\Services\UsersService;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -223,7 +224,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             )
             ->orderBy('users.created_at', 'desc')
             ->groupBy('users.idnumber')->get();
-        
+
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
@@ -249,7 +250,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         }
     }
 
-    private function getDocentesAsigByTypeProcessAndRama($tipoproce,$subRama)
+    private function getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
         return $asig_doc = DB::select(
@@ -271,8 +272,10 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         AND asignacion_docente_caso.activo = 1
         
         AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
-        AND rama_derecho.subrama = '" . $subRama. " '
-        GROUP BY `docidnumber` ORDER BY num_casos ASC"));
+        AND rama_derecho.subrama = '" . $subRama . " '
+        GROUP BY `docidnumber` ORDER BY num_casos ASC"
+            )
+        );
 
         //AND segmentos.id = $segmento->segmento_id
     }
@@ -280,24 +283,24 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     public function asignargDocenteSeguimiento($asignacion_caso, $tipoproce)
     {
         $subRama =  $asignacion_caso->expediente->rama_derecho->subrama;
-        $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce,$subRama);       
-        $docentes = $this->usersService->getDocentesByRama($subRama);       
-        $this->request['asig_caso_id']  = $asignacion_caso->id;    
+        $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
+        $docentes = $this->usersService->getDocentesByRama($subRama);
+        $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
                 $this->request['docidnumber']  = $asig_doc[0]->docidnumber;
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                 return;
             } else {
-                foreach ($docentes as $key => $docente) {                   
+                foreach ($docentes as $key => $docente) {
                     $found_key = array_search($docente['idnumber'], array_column($asig_doc, 'docidnumber'));
-                    if ($found_key === false) {                       
+                    if ($found_key === false) {
                         $this->request['docidnumber']  = $docente['idnumber'];
                         $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                         break;
                     }
                 }
-            }  
+            }
         } elseif (count($docentes) > 0) {
             foreach ($docentes as $key => $docente) {
                 $this->request['docidnumber']  = $docente->idnumber;
@@ -330,6 +333,19 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ->orderBy('created_at', 'desc')->get();
     }
 
+    public function getExpeUser(User $user)
+    {
+        $this->query = $this->model;
+        $this->applyValidateSede();
+        return $this->query->whereHas('solicitante', function ($query) use ($user) {
+            $query->where('expidnumber', $user->idnumber);
+        })
+            ->join('ref_estados', 'expedientes.expestado_id', '=', 'ref_estados.id')
+            ->groupBy('ref_estados.nombre_estado')
+            ->selectRaw('ref_estados.nombre_estado, count(*) as count')
+            ->get();
+    }
+
     public function pausarExpediente($expediente, Request $request)
     {
         $asignacion = $expediente->asignacion;
@@ -343,14 +359,14 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         ]);
         return $asignacion;
     }
-    public function deletePausa($id){
-       $pausa =  ExpedientePausas::find($id);
-       $pausa->delete();
-        return $pausa;
-        ;
+    public function deletePausa($id)
+    {
+        $pausa =  ExpedientePausas::find($id);
+        $pausa->delete();
+        return $pausa;;
     }
     public function updatePausa($id, Request $request)
-    {        
+    {
         $pausa = ExpedientePausas::find($id);
         $pausa->fill($request->all());
         $pausa->save();
