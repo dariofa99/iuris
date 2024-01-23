@@ -17,7 +17,7 @@ class AsignacionCasosRepository extends BaseRepository implements AsignacionCaso
     public function store(Request $request) : AsignacionCaso
     { 
         
-        $this->model->anotacion = ($request->has('anotacion')) ? $request->input('anotacion') : 'asignado';
+        $this->model->anotacion = ($request->has('anotacion')) ? $request->input('anotacion') : 'Asignado por administrador';
         $this->model->activo = ($request->has('activo')) ? $request->input('activo') : 1;
         $this->model->procesojud_id = ($request->has('procesojud_id')) ? $request->input('procesojud_id') : 1;
         $this->model->asigest_id = ($request->has('asigest_id')) ? $request->input('asigest_id') : null;

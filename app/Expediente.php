@@ -1048,12 +1048,14 @@ class Expediente extends Model
     public function isValidEvaPause()
     {
         $asignacion = $this->asignacion;
-        $pausas = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-        if (($pausas)) {
-            if ($pausas->fecha_final < date('Y-m-d') and $this->expestado_id == 6) {
-                return true;
+        if($asignacion){
+            $pausas = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
+            if (($pausas)) {
+                if ($pausas->fecha_final < date('Y-m-d') and $this->expestado_id == 6) {
+                    return true;
+                }
             }
-        }
+        }        
         return false;
     }
 

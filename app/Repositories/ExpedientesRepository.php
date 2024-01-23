@@ -174,6 +174,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
     public function update(Expediente $expediente, Request $request): Expediente
     {
+        $request['expuserupdated'] = currentUser()->idnumber;
         $expediente->fill($request->all());
         $expediente->save();
         // Event::dispatch('expediente.updated', $expediente);
@@ -280,8 +281,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     {
         $subRama =  $asignacion_caso->expediente->rama_derecho->subrama;
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce,$subRama);       
-        $docentes = $this->usersService->getDocentesByRama($subRama);
-        dd($asig_doc , $docentes );
+        $docentes = $this->usersService->getDocentesByRama($subRama);       
         $this->request['asig_caso_id']  = $asignacion_caso->id;    
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {

@@ -897,6 +897,7 @@ $(document).ready(function () {
                         positionClass: "toast-top-right",
                         timeOut: "4000",
                     });
+                    $("#cierre_caso").remove()
                     window.location.reload(true)
                 } else {
                     Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
@@ -1182,18 +1183,32 @@ $(document).ready(function () {
             if (result.value) {
                 $("#wait").show();
                 let response = await expedientesService.darDeBaja(request);
+                if(response.errors){
+                    response.errors.forEach(error => {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Ups! Algo fallo',
+                            html: error,
+                            showConfirmButton: false,
+                            timer: 5500
+                        });
+                    });
+                }else{
+                    Swal.fire({
+                        title: response.message,
+                        html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
+                        icon: "info",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "OK",
+                    }).then((result) => {
+                        if (result.value) {
+                           window.location.reload(true)
+                        }
+                    });
+                }
                 $("#wait").hide();
-                Swal.fire({
-                    title: response.message,
-                    html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
-                    icon: "info",
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "OK",
-                }).then((result) => {
-                    if (result.value) {
-                        window.location.reload(true)
-                    }
-                });
+                
             }
         });
     });
