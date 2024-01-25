@@ -43,6 +43,7 @@ class BaseRepository
     }
     public function validateFilter(array $filter)
     {
+        if ($this->model != null) $this->query = $this->model;
         foreach ($filter as $column => $value) {
             $date = \DateTime::createFromFormat('Y-m-d', $value);
             if ($date instanceof \DateTime) {

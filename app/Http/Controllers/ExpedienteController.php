@@ -133,6 +133,7 @@ class ExpedienteController extends Controller
   public function store(Request $request)
   {
 
+    
     //  return response()->json($request->all());
     $res_day = Carbon::now();
     $res_day = $res_day->addDays(7)->format('Y-m-d');
@@ -286,6 +287,7 @@ class ExpedienteController extends Controller
     $expediente = $this->expedienteService->findWithFilter([
       'expid' => $id
     ]);
+    //dd($expediente->asignacion);
     if (!$expediente) return view('errors.error', compact('url'));
     if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     $estudiante = $expediente->estudiante;
@@ -402,6 +404,7 @@ class ExpedienteController extends Controller
    */
   public function update(Request $request, $id)
   {
+    //return response()->json($request->all());
     $expediente = $this->expedienteService->find($id);
     if ($request->has('exphechos') and $expediente->exphechos != $request['exphechos']) {
       $historial = HistorialDatosCaso::insert([
@@ -460,15 +463,17 @@ class ExpedienteController extends Controller
       || Auth::user()->hasRole('coordprac')
       || Auth::user()->hasRole('amatai')
     ) {
-      if ($asignacion_caso != null and $request->has('expidnumberest')) {
-        if ($request->has('expidnumberest') and $expediente->expidnumberest != $request['expidnumberest']) {
-          DB::table('asignacion_caso')
+      if ($asignacion_caso != null 
+      and $request->has('expidnumberest')) {
+        if ($request->has('expidnumberest') 
+        and $request->expidnumberest != $request['oldexpidnumberest']) {
+         /*  DB::table('asignacion_caso')
             ->where([
               'activo' => 1,
               'asigexp_id' => $expediente->expid,
               'asigest_id' => $request['expidnumberest']
             ])
-            ->update(['activo' => 0]);
+            ->update(['activo' => 0]); */
           $date = Carbon::now();
           $asignacion_caso->asigest_id = $request['expidnumberest'];
           $asignacion_caso->fecha_asig = $date->format('Y-m-d H:i:s');
@@ -1350,12 +1355,12 @@ class ExpedienteController extends Controller
     $estudiantes = $this->userService->getUsersByRoleName("estudiante_pruebas");
     $docentes = $this->userService->getUsersByRoleName("docente_prueba");
 
-    if (count($docentes) <= 0) {
+    if (count($estudiantes) <= 0) {
       return response([
-        "errors" => "No hay un estudiante de pruebas activo",
+        "errors" => ["No hay un estudiante de pruebas activo"],
       ]);
     }
-    if (count($estudiantes) <= 0) {
+    if (count($docentes) <= 0) {
       return response([
         "errors" => ['No hay un docente de pruebas activo']
       ]);
@@ -1376,6 +1381,7 @@ class ExpedienteController extends Controller
       $expediente = $this->expedienteService->update($expediente, $request);
          
       $periodo_act = $this->periodosService->getPeriodoActivo();
+      $request['anotacion'] = "Asignado al dar de baja";
       $request['asigest_id'] = $estudiante['idnumber'];
       $request['periodo_id'] = $periodo_act->id;
       $request['asigexp_id'] = $expediente->expid;
@@ -1397,23 +1403,11 @@ class ExpedienteController extends Controller
       if ($old_asig) {
         $old_asig->activo = 0;
         $old_asig->save();
-      }
-
-      $request['comentario'] = 'Actualizado por administrador';
+      }      
       $request['expidnumber'] = $expediente->expid;
       $request['ref_estado_id'] = $expediente->expestado_id;
       $request['ref_motivo_estado_id'] = 11;
-      $this->estadoCasoService->store($request);
-     
-
-    /*   $asignacion = new AsigDocenteCaso();
-      $asignacion->docidnumber = $docente['idnumber'];
-      $asignacion->asig_caso_id = $asig->id;
-      $asignacion->user_created_id = Auth::user()->idnumber;
-      $asignacion->user_updated_id = Auth::user()->idnumber;
-      $asignacion->save(); */
-     
-
+      $this->estadoCasoService->store($request);   
       return response([
         "error" => false,
         "message" => "El caso se dió de baja con éxito y fue asignado al docente de prueba " . $docente['full_name']

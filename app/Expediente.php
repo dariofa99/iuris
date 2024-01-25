@@ -1062,15 +1062,15 @@ class Expediente extends Model
 
     public function isValidOpen()
     {
-        $dias = $this->getDaysAfterAsig();
-
+        $dias = $this->getTextForTH('dias');
+       
         if ($this->expestado_id == 1 and $dias > 20) {
             return true;
         }
         if ($this->expestado_id == 5 and $dias < 60) {
-            $asig_segmento = $this->asignacion->periodo->segmentos()->first();
-            $segmento = $this->getSegmentoActivo();
-            if ($asig_segmento and $segmento and $asig_segmento->id == $segmento->id) {
+            $asig_periodo = $this->asignacion->periodo;
+            $segmento = $this->getPeriodoActivo();
+            if ($asig_periodo and $segmento and $asig_periodo->id == $segmento->id) {
                 return true;
             }
         }

@@ -24,7 +24,7 @@ class BibliotecaController extends Controller
       //$bibliotecas = Biblioteca::where('bibliestado',1)->orderBy('created_at','desc')->get();
 
       $bibliotecas = $this->bibliotecaService->validateFilter([
-        'bibliestado'=>1
+        'bibliestado'=>1 
       ])->orderBy('created_at','desc')->index($request);
  
      

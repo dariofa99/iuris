@@ -43,7 +43,12 @@ Asignar
 </a>
 @endif
 @endif
-@if(!$expediente->getDocenteAsig()->hasRole('docente_prueba') and (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
+
+@if(!$expediente->getDocenteAsig()->hasRole('docente_prueba') 
+and (currentUser()->hasRole('diradmin') 
+|| currentUser()->hasRole('dirgral') 
+|| currentUser()->hasRole('amatai')
+|| currentUser()->hasRole('coordprac')))
 <a href="#"  class="btn_change_doc_exp" id="btn_dar_baja_exp" data-lastname="{{Auth::user()->lastname}}" data-name="{{Auth::user()->name}}" data-idnumber="{{Auth::user()->idnumber}}">
 Dar de baja
 </a>

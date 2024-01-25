@@ -1,18 +1,32 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem('keyCircularNotiClose');
+    @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('coordprac') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('diradmin') )
+    var keyCir = localStorage.getItem("keyCirActualizaCierreClose");
+        if(keyCir==null){
+          var message = getCarrousel();
+        }else{
+          var message = getGeneralMessage();
+        }
+    @else
+
+    localStorage.removeItem('keyCircularNotiClose');
         var keyCir = localStorage.getItem("keyCirActualizaActNotiClose");
         if(keyCir==null){
           var message = getCircular();
         }else{
           var message = getGeneralMessage();
         }       
-        $("#modal-show-alerts-content").html(message);
+        
+
+    @endif 
+    $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
+    
     @endif
 
     $("#mymodalShowAlerts").on("click", '#btnNotFalse', function(e) {
         localStorage.setItem('keyCirActualizaActNotiClose', true);
+        localStorage.setItem('keyCirActualizaCierreClose', true);
         $("#mymodalShowAlerts").modal("hide");
         e.preventDefault();
 
@@ -39,6 +53,9 @@
                             <div class="carousel-item">
                               <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva4.JPG') }}" alt="Third slide">
                             </div>
+                            <div class="carousel-item">
+                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva5.JPG') }}" alt="Third slide">
+                            </div>                            
                           </div>
                           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -60,7 +77,7 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-danger" style="font-size:19px">';
+        message += '<div class="alert alert-success" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -68,7 +85,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 22 de enero de 2024 <br>
+        message += `<span> Últ. Actualización: 25 de enero de 2024 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 

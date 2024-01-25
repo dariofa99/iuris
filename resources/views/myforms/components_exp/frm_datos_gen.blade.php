@@ -6,19 +6,26 @@
     @endif
     @if (!currentUser()->hasRole('estudiante'))
         <div class="col-md-4">
-            <input type="hidden" name="oldexpidnumberest" id="oldexpidnumberest">
-            <input type="hidden" name="exp_idnumberest" id="exp_idnumberest" value="{{ $expediente->expidnumberest }}">
-            <div class="form-group">
+           <div class="form-group">
                 <label>Estudiante asignado</label>
-                <select data-live-search="true" name="expidnumberest" disabled required id="expidnumberest"
-                    class="required form-control disabled-fun3 selectpicker">
-                    @foreach ($estudiantes as $key => $estudiante)
-                        <option {{ $expediente->expidnumberest != $estudiante['idnumber'] ?: 'selected' }}
-                            value="{{ $estudiante['idnumber'] }}">
-                            {{ $estudiante['full_name'] }}
-                        </option>
-                    @endforeach
-                </select>
+                <input id="inputestudianteasignado" readonly type="text"
+                    value="{{ $expediente->estudiante->name }} {{ $expediente->estudiante->lastname }}"
+                    class="form-control">
+                <div id="contselecestcasos" style="display: none">
+                    <select data-live-search="true"  disabled required id="selectexpidnumberest"
+                        class="required form-control disabled-fun3 selectpicker">
+                        @foreach ($estudiantes as $key => $estudiante)
+                            <option {{ $expediente->expidnumberest != $estudiante['idnumber'] ?: 'selected' }}
+                                value="{{ $estudiante['idnumber'] }}">
+                                {{ $estudiante['full_name'] }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <input type="hidden" name="oldexpidnumberest" value="{{ $expediente->expidnumberest }}" id="oldexpidnumberest">
+                    <input type="hidden" name="expidnumberest" id="idnumberest" disabled>
+                     
+                </div>
             </div>
         </div>
 
@@ -81,10 +88,10 @@
                 @if (
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->asignacion->procesojud_id == 1 and
-                        ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('diradmin') ||
-                                currentUser()->hasRole('dirgral') ||
-                                currentUser()->hasRole('amatai')))
+                            currentUser()->hasRole('dirgral') ||
+                            currentUser()->hasRole('amatai'))
                     <a href="#" id="btn_act_proc_jur"
                         class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
                         Activar como proceso jurídico
@@ -94,19 +101,17 @@
                 @if (
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->exptipoproce_id != 1 and
-                        ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('amatai')))
+                            currentUser()->hasRole('amatai'))
                     @if ($expediente->expestado_id == 1)
-                        <a href="#" id="btn_act_pausa_exp"
-                            class="btn btn-block btn-sm btn-info mt-1">
+                        <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
                             Activar pausa
                         </a>
                     @endif
                     @if ($expediente->expestado_id == 6)
-                        <a href="#" id="btn_quit_pausa_exp"
-                            class="btn btn-block btn-sm btn-info mt-1">
+                        <a href="#" id="btn_quit_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
                             Admin. pausa
                         </a>
                     @endif

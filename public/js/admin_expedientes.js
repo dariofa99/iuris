@@ -56,12 +56,15 @@ $(document).ready(function () {
     });
 
     $("#btnCancelar").click(function () {
+        $("#contselecestcasos").hide();
+        $("#inputestudianteasignado").show()
         $("#btnActualizar").hide();
         $("#btnCancelar").hide();
         $("#btnEditar").show();
         $(".disabled").prop('disabled', true);
         $(".disabled-fun3").prop("disabled", true);
         $(".disabled-fun3").selectpicker("refresh");
+        
     });
 
 
@@ -84,7 +87,14 @@ $(document).ready(function () {
         let response = await userService.getUsersByRole({ 'role': 'docente', 'active': 1 });
         abrirModalDocentes(response.users, option);
     });
-
+    $("#selectexpidnumberest").on("change", async function (e) {
+        if($("#oldexpidnumberest").val()!=$(this).val()){
+            $("#idnumberest").val($(this).val()).prop('disabled',false)
+        }else{
+            $("#idnumberest").val("").prop('disabled',true)
+        }
+       
+    });
     $("#btnActualizar").on("click", async function (e) {
         var errors = validateForm("form_expediente_edit");
         if (errors.length <= 0) {
@@ -98,7 +108,7 @@ $(document).ready(function () {
             }
             $("#wait").show()
             let response = await expedientesService.update(request, form.expediente_id);
-            toastr.success("Se actalizó con éxito", "", {
+            toastr.success("Se actualizó con éxito", "", {
                 timeOut: "4000",
             });
             window.location.reload(true);
@@ -110,6 +120,8 @@ $(document).ready(function () {
 
     });
     $("#btnEditar").click(function () {
+        $("#contselecestcasos").show();
+        $("#inputestudianteasignado").hide()
         $("#btnActualizar").show();
         $("#btnCancelar").show();
         $("#btnEditar").hide();
@@ -117,8 +129,9 @@ $(document).ready(function () {
         $(".disabled-fun3").prop("disabled", false);
         $(".disabled-fun3").selectpicker("refresh");
         if ($("#oldexpidnumberest").val() == "") {
-            $("#oldexpidnumberest").val($("#expidnumberest").val());
+            $("#oldexpidnumberest").val($("#exp_idnumberest").val());
         }
+        
     });
 
     $("#btn_nueva_cita").on("click", function (e) {
@@ -1193,45 +1206,58 @@ $(document).ready(function () {
         }
         Swal.fire({
             title: "Esta seguro de dar de baja el expediente?",
-            text: "Se asignará un docente de pruebas!",
-            icon: "info",
+            text: "Se asignará un docente y estudiante de pruebas!",
+            icon: "warning",
+            input: 'textarea',
+            inputPlaceholder: '¿Por qué va a dar de baja el caso?',
+            inputAttributes: {
+                rows: 90,  // Número de filas del textarea
+                cols: 500  // Número de columnas del textarea
+            },
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, dar de baja!",
-            cancelButtonText: "No, cancelar",
-        }).then(async (result) => {
-            if (result.value) {
-                $("#wait").show();
-                let response = await expedientesService.darDeBaja(request);
-                if (response.errors) {
-                    response.errors.forEach(error => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'error',
-                            title: 'Ups! Algo fallo',
-                            html: error,
-                            showConfirmButton: false,
-                            timer: 5500
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si, dar de baja',
+            confirmButtonClass: 'btn-success',
+            allowEmpty: false, // Evita el valor vacío en el textarea
+            preConfirm: async (text) => {
+                if (text !== '') {
+                    $("#wait").show();
+                    request["comentario"] = text;
+                    let response = await expedientesService.darDeBaja(request);
+                    if (response.errors) {
+                        $("#wait").hide();
+                        response.errors.forEach(error => {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: 'Ups! Algo fallo',
+                                html: error,
+                                showConfirmButton: false,
+                                timer: 5500
+                            });
                         });
-                    });
+                    } else {
+                        $("#wait").hide();
+                        Swal.fire({
+                            title: response.message,
+                            html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
+                            icon: "info",
+                            confirmButtonColor: "#3085d6",
+                            confirmButtonText: "OK",
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.reload(true)
+                            }
+                        });
+                    }
                 } else {
-                    Swal.fire({
-                        title: response.message,
-                        html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
-                        icon: "info",
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "OK",
-                    }).then((result) => {
-                        if (result.value) {
-                            window.location.reload(true)
-                        }
-                    });
+                    Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
+
                 }
                 $("#wait").hide();
-
             }
         });
+
     });
 
     $("#switch_shared_asesoria_caso").on("click", function (e) {
@@ -2569,6 +2595,7 @@ function get_notas(tbl_id, origen) {
 
 
 function hideButtReasCaso() {
+  
     hideElement("btnReasignar");
     hideElement("btnCancReasig");
     hideElement("cont_anotacion");
