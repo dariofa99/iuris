@@ -3,7 +3,7 @@
         myModal_create_document
     @endslot
 
-    @slot('title')
+    @slot('title') 
         Agregando anexo
     @endslot
 

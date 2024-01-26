@@ -104,6 +104,7 @@ myDropzone_log.on("sending", function (file, xhr, formData) {
   formData.append("concept", $(file.previewElement.querySelector("input")).val());
   formData.append("conciliacion_id", $("#conciliacion_id").val());
   formData.append("category_id", $("#anexo_category_id").val())
+  formData.append("view_template", $("#view_template").val())
   // And disable the start button
 
 });
@@ -115,8 +116,14 @@ myDropzone_log.on("success", function (file, response) {
   //file.previewElement.querySelector(".cancel").setAttribute("disabled", "disabled");
   $(file.previewElement.querySelector(".cancel")).removeClass('btn-warning').addClass('btn-success').prop('disabled', true)
   $(file.previewElement.querySelector(".cancel")).children().removeClass('fa-minus-circle').addClass('fa-check')
+ console.log($("#view_template").val());
   if (response.view || response.view == "") {
-    $("#table_anexos_list tbody").html(response.view);
+    if($("#view_template").val()=='anexos_ajax'){
+      $("#table_anexos_list tbody").html(response.view);
+    }else{
+      $("#tablelistardocumentosgen tbody").html(response.view);
+    }
+    
   }
 
   //$("#actions .start").prop("disabled",true);

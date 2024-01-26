@@ -283,7 +283,7 @@ class EstadosCasoController extends Controller
                     'tbl_org_id' => $expediente->id,
                 ];
                 $expediente->asignarNotas($data);
-                $request['comentario'] = $expediente->expestado_id != 5 ? "Estudiante no envió a cierre a tiempo":"Re evaluado por docente";
+                $request['comentario'] = $expediente->expestado_id != 5 ? "Estudiante no envió a cierre a tiempo":"Cerrado despues de vencido el plazo para cierre";
                 $request['expidnumber'] = $request->expid;
                 $request['ref_estado_id'] = 2;
                 $request['ref_motivo_estado_id'] = 8;

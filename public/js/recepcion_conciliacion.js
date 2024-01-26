@@ -260,13 +260,21 @@ $(function () {
   $(".btn_create_document").on("click",async function (e) {
     $("#cont_files input[name=category_id]").remove();
     $("#cont_files").append(
-      $("<input>", {
+      $("<input>", { 
         type: 'hidden',
         value: $(this).attr("data-category"),
         name: "category_id",
         id:"anexo_category_id"
       })
     )
+
+    $("#cont_files").append(
+      $("<input>", { 
+        type: 'hidden',
+        value: 'anexos_ajax',
+        name: "view_template",
+        id:"view_template"
+      }));
 
     var request = {
       'conciliacion_id':$("#conciliacion_id").val(),
@@ -281,7 +289,7 @@ $(function () {
       $("#actions_upload_logs span[id=registro]").remove();
      }
     });
-    console.log(files);
+    
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");

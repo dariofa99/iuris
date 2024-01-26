@@ -51,6 +51,7 @@ if (!isset($modo_nav_crl)) {
 
 
     <!-- Custom -->
+    {!! Html::style('/css/general.css?v=1') !!}
     {!! Html::style('/css/styles.css?v=4.0') !!}
 
     <style>

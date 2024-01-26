@@ -6,6 +6,9 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     {!! Html::style('/css/jitsi.css?v=2') !!}
 
+    <link rel="stylesheet" href="{{asset('/plugins/dropzone59/dropzone.css')}}">
+   
+       
     <style>
         .input_time{
             display: block !important;
@@ -214,6 +217,7 @@
     @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
     @include('myforms.conciliaciones.componentes.modal_reportes_pdf_estados')
     @include('myforms.conciliaciones.componentes.modal_create_document')
+    
     {{-- @include('myforms.conciliaciones.componentes.modal_create_estado') --}}
     @include('myforms.conciliaciones.componentes.modal_detalles_notificaciones')
     @include('myforms.conciliaciones.componentes.modal_create_user')
@@ -231,6 +235,10 @@
   <script src="{{ asset('plugins/summernote-0.8/summernote.min.js') }}"></script>
   <script src="https://meet.jit.si/external_api.js"></script>
   {!! Html::script('js/config_jitsi.js?v=3')!!} 
+  <script src="{{asset('/plugins/dropzone59/dropzone59.js')}}"></script>
+    <script src={{asset("js/dropzone_anexos.js")}}></script>
+ 
+
     @include('myforms.conciliaciones.script')
     <!-- aqui van los scripts de cada vista -->
     <script type="module" src={{ asset('js/admin_conciliacion.js') }}></script>

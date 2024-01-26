@@ -311,7 +311,46 @@ $(document).ready(function () {
   });
   $(".btn_create_document").on("click", async function (e) {
 
-    $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
+    $("#cont_files input[name=category_id]").remove();
+    $("#cont_files").append(
+      $("<input>", { 
+        type: 'hidden',
+        value: $(this).attr("data-category"),
+        name: "category_id",
+        id:"anexo_category_id"
+      }));
+
+      $("#cont_files").append(
+        $("<input>", { 
+          type: 'hidden',
+          value: 'documentos_ajax',
+          name: "view_template",
+          id:"view_template"
+        }));
+
+  /*   var request = {
+      'conciliacion_id':$("#conciliacion_id").val(),
+      'category_id':$(this).attr("data-category")
+    } */
+    $("#actions_upload_logs span[id=otro]").text("Subir documento");
+    $("#actions_upload_logs span[id=documento_identidad]").remove();
+    $("#actions_upload_logs span[id=registro]").remove();
+   /*  var files = await conciliacionService.getFilesByCategory(request);
+
+    files.files.forEach(element => {
+     if(element.pivot.concepto=='Documento de identidad'){
+      $("#actions_upload_logs span[id=documento_identidad]").remove();
+     }
+     if(element.pivot.concepto=='Registro'){
+      $("#actions_upload_logs span[id=registro]").remove();
+     }
+    }); */
+    
+    $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
+    $("#myModal_create_document .modal-title").text("Creando anexo");
+    $("#myModal_create_document").modal("show");
+
+    /* $("#myformEditConciliacionAnexo").attr("id", "myformCreateConciliacionAnexo");
     $("#myformCreateConciliacionAnexo")[0].reset();
     $("#myformCreateConciliacionAnexo input[name=concept]").val($(this).attr("data-concept"));
     $("#myformCreateConciliacionAnexo input[name=category_id]").remove();
@@ -332,7 +371,7 @@ $(document).ready(function () {
     $("#btn_cancelar_estado").hide();
     $("#btn_cambiar_estado").show();
     $("#content_form_estado_c").hide();
-    $("#content_list_estado_c").show();
+    $("#content_list_estado_c").show(); */
   });
 
   $("#categoria_notifica__id").on("change", async function (e) {

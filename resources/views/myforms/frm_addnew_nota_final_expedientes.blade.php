@@ -19,9 +19,7 @@
 
 
     @slot('body')
-        @section('msg-contenido')
-            Registrado
-        @endsection
+       
         @include('msg.ajax.success')
         {!! Form::open(['id' => 'myform_addnew_nota_final_expedientes']) !!}
         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
@@ -43,6 +41,7 @@
                     <div class="form-group">
                         {!! Form::label('Nota conocimiento') !!}
                         {!! Form::text('ntaconocimiento', null, [
+                            'placeholder'=>'5.0',
                             'class' => 'form-control required',
                             'id' => 'ntaconocimiento',
                             'data-inputmask' => "'mask': ['9.9']",
@@ -54,6 +53,7 @@
                     <div class="form-group">
                         {!! Form::label('Nota aplicación') !!}
                         {!! Form::text('ntaaplicacion', null, [
+                            'placeholder'=>'5.0',
                             'class' => 'form-control required',
                             'id' => 'ntaaplicacion',
                             'data-inputmask' => "'mask': ['9.9']",
@@ -65,6 +65,7 @@
                     <div class="form-group">
                         {!! Form::label('Nota Ética') !!}
                         {!! Form::text('ntaetica', null, [
+                            'placeholder'=>'5.0',
                             'class' => 'form-control required',
                             'id' => 'ntaetica',
                             'data-inputmask' => "'mask': ['9.9']",
@@ -81,6 +82,8 @@
                             'class' => 'form-control required',
                             'maxlength' => '100000',
                             'id' => 'ntaconcepto',
+                            'rows'=>'3',
+                            'placeholder'=>'Valoración de las notas',
                         ]) !!}
                     </div>
                 </div>

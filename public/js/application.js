@@ -525,6 +525,6 @@ function myTimer() {
     var anio = d.getFullYear();
     var cadena =
         "" + " " + mes + "/" + dia + "/" + anio + " " + d.toLocaleTimeString();
-    document.getElementById("fecha_sistema").innerHTML = cadena;
+    if(document.getElementById("fecha_sistema")) document.getElementById("fecha_sistema").innerHTML = cadena;
     //document.getElementById("demo").innerHTML =
 }
