@@ -53,7 +53,7 @@
                     <select name="new_expestado" placeholder="Seleccione..." id="new_expestado" class="form-control required">
                         <option value="">Seleccione...</option>
                         @foreach ($estados as $estado)
-                            @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
+                            @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai') || currentUser()->hasRole('dirgral'))
                                 <option value="{{ $estado->id }}">{{ $estado->nombre_estado }}</option>
                             @else
                                 @if ($estado->categoria == 'docente')
