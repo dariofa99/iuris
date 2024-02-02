@@ -9,11 +9,13 @@
             $conciliacion->estado_id == 174 ||
                 $conciliacion->estado_id == 176 ||
                 $conciliacion->estado_id == 194 ||
-                ($conciliacion->estado_id == 240 and currentUserInConciliacion($conciliacion->id, ['autor'])))
+                ($conciliacion->estado_id == 240  
+                and currentUserInConciliacion($conciliacion->id, ['autor','solicitante'])))
             @if (currentUser()->hasRole('diradmin') ||
                     currentUser()->hasRole('coord_centro_conciliacion') ||
                     currentUser()->hasRole('amatai') ||
-                    currentUserInConciliacion($conciliacion->id, ['autor', 'auxiliar']))
+                    currentUserInConciliacion($conciliacion->id, 
+                    ['autor', 'auxiliar','solicitante']))
                 <button type="button" data-category="232" id="btn_create_document"
                     class="btn_create_document btn btn-primary btn-sm float-right">Subir documentos
                 </button>

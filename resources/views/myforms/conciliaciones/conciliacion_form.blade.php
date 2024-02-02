@@ -9,10 +9,9 @@
             </h6>
         @endif
     </div>
-
     @if (currentUserInConciliacion($conciliacion->id, ['conciliador', 'asistente']) and
             ($conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and
-                $conciliacion->getUser(203)->pivot->estado_id == 1))
+                $conciliacion->getUser(203)->pivot->estado_id == 229))
         @php
             $conciliador = $conciliacion->getUser(203);
             $auth_is_con = $conciliador->id == currentUser()->id;

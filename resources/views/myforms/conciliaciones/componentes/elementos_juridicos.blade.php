@@ -14,8 +14,8 @@
     @if(((currentUser()->hasRole('diradmin') 
     || currentUser()->hasRole('coord_centro_conciliacion') 
     || currentUser()->hasRole('amatai')))
-            || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar','conciliador']) || currentUser()->hasRole('amatai'))))
-             @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor'])))
+            || ((currentUserInConciliacion($conciliacion->id,['solicitante','auxiliar','conciliador']) || currentUser()->hasRole('amatai'))))
+             @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor','solicitante'])))
          <button type="button" data-tipo="206" class="btn btn-primary btn-sm float-right btn_add_conc_he_con">Agregar hechos</button>
          @endif
     @endif
@@ -34,8 +34,8 @@
         <div class="form-group" >
             <label style="display: block; margin-bottom:10px">Pretensiones
                 @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
-            || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar','conciliador']))))
-             @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor'])))
+            || ((currentUserInConciliacion($conciliacion->id,['autor','solicitante']))))
+             @if($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194 || ($conciliacion->estado_id==240 and currentUserInConciliacion($conciliacion->id,['autor','solicitante'])))
                 <button type="button" data-tipo="207" class="btn btn-primary btn-sm float-right btn_add_conc_he_con"> Agregar pretensión</button>       
             @endif
             @endif
