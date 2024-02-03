@@ -167,16 +167,6 @@
                 </a>
             </li>
             @endif
-
-           
-
-           
-            {{-- <li class="nav-item">
-                <a class="nav-link urlactive" id="notas-tab" data-toggle="tab" href="#notas"
-                    role="tab" aria-controls="notas" aria-selected="false">
-                    Notas
-                </a>
-            </li> --}}
            
 
             </ul>

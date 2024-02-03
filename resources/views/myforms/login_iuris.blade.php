@@ -63,11 +63,29 @@
                         <b>Solicitudes de conciliación.</b>
                     </div>
                     <div class="card-body">                     
-                        <h5>  El centro de conciliación le ofrece la facilidad de solicitar
-                            conciliaciones de manera virtual. <br>
-                        </h5>
+                       <strong> ¿Qué es la conciliación?</strong><br>
+                        <small> 
+                            Según el Programa Nacional de Conciliación 
+                            impulsado por el Ministerio de Justicia y
+                             Derecho, la conciliación “es un mecanismo 
+                             de resolución de conflictos a través del 
+                             cual, dos o más personas gestionan por sí
+                              mismas la solución de sus diferencias, con 
+                              la ayuda de un tercero neutral y calificado
+                               denominado conciliador”.
+                            <br>
+                            Así pues, la conciliación es un acto jurídico 
+                            mediante el cual se realiza el acercamiento de 
+                            los distintos intereses de las personas 
+                            intervinientes con el fin de llegar a un 
+                            acuerdo que beneficie a ambas partes,
+                             teniendo de presente que la diligencia cuenta
+                              con el consentimiento y la voluntad de 
+                              solucionar un conflicto. <br>
+                            </small>
+                      
                         <div class="text-center my-4">
-                           <a href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-primary">
+                           <a id="btn_solicitar_conciliacion" href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-primary">
                                 Solicitar (en periodo de desarrollo)
                             </a> 
                            
