@@ -28,16 +28,18 @@
                 </ul>
                 <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
                     <div class="tab-pane fade active show" id="compartir" role="tabpanel" aria-labelledby="estado-tab">
-                        <div class="row" id="content_msg_info">
+                        {{-- <div class="row" id="content_msg_info">
                             <div class="col-md-12">
                                 <div class="alert alert-info">
                                     <h4>
-                                        <i class="fa fa-info-circle"></i> <strong>No hay archivos para compartir.</strong>
+                                        <i class="fa fa-info-circle"></i> <strong>
+                                            No hay archivos para compartir.
+                                        </strong>
                                     </h4>
 
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <form id="myFormCompartirDocumento" method="POST">
                             <input type="hidden" name="status_id">
                             <input type="hidden" name="means_id" value="218">
@@ -127,7 +129,7 @@
                                     </div>
 
                                 </div>
-                                <button id="btn_compcon_file" disabled class="btn btn-sm btn-primary">Compartir</button>
+                                <button id="btn_compcon_file"  class="btn btn-sm btn-primary">Compartir</button>
                             </div>
                         </form>
 

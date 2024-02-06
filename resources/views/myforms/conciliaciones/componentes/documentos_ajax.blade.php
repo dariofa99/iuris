@@ -24,7 +24,7 @@
                             </small>
                         </td>
                         <td>
-                            <button class="btn btn-warning">
+                            <button data-concepto="{{$file->pivot->concepto}}" data-id="{{ $file->id }}" class="btn btn-warning btn_compartir_doc">
                                 Compartir
                             </button>
                         </td>

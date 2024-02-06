@@ -8,12 +8,14 @@
         ])
     </div>
     <div class="row mb-1">
+        @if(!$user)
         <div class="col-md-12">
             <h4>
                 Marque la siguiente casilla en caso de no contar con un apoderado
                 <input class="chk_not_parte" id="chk_not_parte_apoderado" type="checkbox">
             </h4>
         </div>
+        @endif
     </div>
 
 </form>

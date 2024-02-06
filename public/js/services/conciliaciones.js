@@ -683,7 +683,7 @@ export class ConciliacionService {
         const topics = await response.json();
         return topics;
     }
-    async storeSharedConcFiles(request) {
+    async storeSharedConcFiles(request) { 
         const response = await fetch(BASE_URL + "conciliaciones/store/conc/shared/files", {
             method: 'POST',
             headers: {

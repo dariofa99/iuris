@@ -971,6 +971,33 @@ $(document).ready(function () {
     }
   });
 
+  $(".btn_compartir_doc").on("click",async function(e) {
+    $("#myModal_reportes_archivos_compartidos").modal("show")
+    var request = {
+      conc_file_id: $(this).attr("data-id"),
+      tabla_destino: "conciliaciones",
+      status_id: $("#estado_conciliacion_id").val(),
+      conciliacion_id: $("#conciliacion_id").val()
+    };
+    $("#wait").show();
+    let res = await conciliacionService.getStatusFiles(request);
+    var mail = "";
+    var count = 0;
+ 
+    res.partes.forEach((user, key) => {
+      if (!partesConciliacionMail.includes(user.email)) {
+          partesConciliacionMail.push(user.email);        
+      }
+    });
+    partesConciliacionMail.forEach(email => {
+      mail += createRowMail(count,email);  
+      count++;      
+    });
+    $("#tbl_list_archivos_comp").html(res.view);
+    $("#tbl_list_mail_partes").html(mail)
+    $("#wait").hide();
+  });
+
   $("#table_list_estados").on("click", '.btn_compartir_rep_pdf', async function (e) {
     var request = {
       conc_estado_id: $(this).attr("data-id"),
@@ -1058,7 +1085,7 @@ $(document).ready(function () {
 
   $("#tbl_listActForStatus").on("click", ".btn_crear_acta", function () {
     let status_id = $("#estado_conciliacion_id").val();
-    let reporte_id = $(this).attr("data-id")
+    let reporte_id = $(this).attr("data-id");
     Swal.fire({
       title: "Esta seguro que desea crear el acta?",
       text: "Esta acción no puede revertirse",
@@ -1484,10 +1511,11 @@ $(document).ready(function () {
     e.preventDefault();
     var request = convertFormToJSON('myFormCompartirDocumento');
     request['conciliacion_id'] = $("#conciliacion_id").val();
+    request['conciliacion_id'] = $("#conciliacion_id").val();
     var bandera = false;
     if ($("#myFormCompartirDocumento select[name=means_id]").val() == "218") {
       var inputs = $(".rows_mails").length
-      if (inputs <= 0) {
+      if (inputs <= 0) { 
         toastr.error("No hay correos validos!", "", {
           positionClass: "toast-top-right",
           timeOut: "3000",

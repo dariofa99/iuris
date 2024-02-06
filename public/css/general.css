@@ -18,3 +18,10 @@
     margin-top: 10px;
     outline: none;
 }
+#wait{
+	z-index: 200000;
+}
+#load{
+animation: spin 5s linear infinite;
+}
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }

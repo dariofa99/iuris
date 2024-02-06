@@ -18,8 +18,8 @@
       @if($tipo_id=='207' and !Request::has("id"))
       <a href="#" data-id="{{$hecho->id}}" data-estado_id="{{$hecho->estado_id}}"  class="btn_estado_hepr pull-right btn_hepr"> Estado </a>
       @endif
-      <a href="#"  data-id="{{$hecho->id}}" class="btn_editar_hepr pull-right btn_hepr"> Editar </a> 
-      <a href="#" data-id="{{$hecho->id}}" class="btn_eliminar_hepr pull-right btn_hepr"> Eliminar</a>
+      <a href="#"  data-id="{{$hecho->id}}" class="btn_editar_hepr float-right btn_hepr m-1"> Editar </a> 
+      <a href="#" data-id="{{$hecho->id}}" class="btn_eliminar_hepr float-right btn_hepr m-1"> Eliminar</a>
      {{--  @endif --}}
       @endif
        

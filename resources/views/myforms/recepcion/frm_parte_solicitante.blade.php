@@ -1,10 +1,12 @@
 <form id="myFormParteSolicitante" method="POST">
     <div class="row">
         @include('myforms.users.formulario_registro')
-
         @include('myforms.components_user.identitaria')
         @include('myforms.components_user.socioeconomica')
-    </div>
+        @if (config('app.name') != 'ConciliApp')
+        <input type="hidden" id="tipopersvalidate_id" name="tipopers_id" value="236">
+        @endif
+    </div> 
     @if (count($sedes) > 1)
         <div class="row">
             <div class="col-md-12">

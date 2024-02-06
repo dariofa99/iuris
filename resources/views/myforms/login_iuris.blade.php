@@ -1,6 +1,6 @@
 <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5 pt-3">
 
                 <div class="card card-success">
                     <div class="card-header">
@@ -13,7 +13,7 @@
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} row">
                                 <label for="email"    class="col-md-3 col-form-label text-md-right">{{ __('Usuario') }}</label>
                                 <div class="col-md-7">
-                                    <input id="email" type="text" class="form-control" name="user_name"
+                                    <input id="email" type="text" class="form-control form-control-sm" name="user_name"
                                         value="{{ old('email') }}" required placeholder="Correo o número de cédula"
                                         autofocus>
 
@@ -25,9 +25,9 @@
                                 </div>
                             </div>
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} row">
-                                <label for="password" class="col-md-3 col-form-label text-md-right">{{ __('Contraseña') }}</label>
+                                <label for="password" class="col-md-3  col-form-label text-md-right">{{ __('Contraseña') }}</label>
                                 <div class="col-md-7">
-                                    <input id="password" type="password" class="form-control" name="password" required
+                                    <input id="password" type="password" class="form-control form-control-sm" name="password" required
                                         autocomplete="current-password">
 
                                     @if ($errors->has('password'))
@@ -56,7 +56,7 @@
                 </div>
 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
 
                 <div class="card card-success">
                     <div class="card-header">

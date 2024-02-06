@@ -87,10 +87,10 @@
 							deberá contar con el número de documento de identificacíon
 							de la persona convocada a la conciliación. Si el convocado es
 							 persona jurídica se requiere documento de certificado de existencia
-							  y representación legal en formato pdf de no más de 3 meses de antiguedad
+							  y representación legal en formato pdf de no más de 3 meses de antiguedad.
 						</strong><br>
 						<input type="checkbox" name="valida_regla" id="valida_regla">
-						Comprendo los terminos y condiciones<br>
+						<label for="valida_regla" style="font-weight: normal">Comprendo los terminos y condiciones</label><br>
 						<button id="btn_continuar_conciliacion" disabled  class="btn btn-primary m-2">
 							Continuar
 						</button> 

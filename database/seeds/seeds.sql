@@ -328,7 +328,8 @@ INSERT INTO `permissions` (`id`, `name`, `display_name`, `description`, `created
 (58, 'asig_reparto', 'Asignar reparto conciliaciónes', 'conciliaciones', '2022-07-14 14:56:02', '2022-07-14 14:56:44'),
 (59, 'admin_actasandmail', 'Admin. Actas y correos conciliaciones', 'conciliaciones', '2022-07-14 14:56:02', '2022-07-14 14:56:44'),
 (60, 'change_status_conciliaciones', 'Cambiar estado de conciliaciones', 'conciliaciones', '2022-07-14 19:56:02', '2022-07-14 19:56:44'),
-(61, 'editar_audiencia_conciliacion', 'Editar audiencia conciliaciones', 'conciliaciones', '2022-07-14 19:56:02', '2022-07-14 19:56:44');
+(61, 'editar_audiencia_conciliacion', 'Editar audiencia conciliaciones', 'conciliaciones', '2022-07-14 19:56:02', '2022-07-14 19:56:44'),
+(62, 'admin_expedientes', 'Admin. Expedientes', 'expedientes', '2022-07-14 19:56:02', '2022-07-14 19:56:44');
 
 INSERT INTO `permission_role` (`permission_id`, `role_id`) VALUES
 (1, 1),
@@ -632,7 +633,10 @@ INSERT INTO `ref_estados` (`id`, `nombre_estado`, `categoria`, `created_at`, `up
 (2, 'Cerrado', 'docente', NULL, NULL),
 (3, 'Rechazado', 'docente', NULL, NULL),
 (4, 'En solicitud de Cierre', 'estudiante', NULL, NULL),
-(5, 'Cerrado (sistema)', 'director', NULL, NULL);
+(5, 'Cerrado (sistema)', 'director', NULL, NULL),
+(6, 'Pausado', 'director', '2023-11-06 21:01:03', '2023-11-06 21:01:03'),
+(7, 'En revisión', 'director', '2023-11-06 21:01:03', '2023-11-06 21:01:03'),
+(8, 'Dado de baja', 'director', '2023-11-06 21:01:03', '2023-11-06 21:01:03');
 
 INSERT INTO `ref_motivos_estado_caso` (`id`, `nombre_motivo`, `categoria`, `created_at`, `updated_at`) VALUES
 (1, 'Respuesta Satisfactoria', 'estudiante', '2018-02-07 05:00:00', '2018-02-07 05:00:00'),
@@ -646,7 +650,8 @@ INSERT INTO `ref_motivos_estado_caso` (`id`, `nombre_motivo`, `categoria`, `crea
 (9, 'El caso solo fue asesoría', 'estudiante', '2018-02-07 05:00:08', '2018-02-07 05:00:08'),
 (10, 'Revisado por docente', 'docente', '2018-02-07 05:00:09', '2018-02-07 05:00:09'),
 (11, 'Actualizado por usuario', 'director', '2018-02-07 05:00:10', '2018-02-07 05:00:10'),
-(12, 'Actualizado por sistema', 'sistema', '2018-02-07 05:00:10', '2018-02-07 05:00:10');
+(12, 'Actualizado por sistema', 'sistema', '2018-02-07 05:00:10', '2018-02-07 05:00:10'),
+(13, 'Solicitud externa', 'sistema', '2018-02-07 05:00:10', '2018-02-07 05:00:10');
 
 
 INSERT INTO `ref_mot_asig_caso` (`id`, `nom_motivo`, `created_at`, `updated_at`) VALUES

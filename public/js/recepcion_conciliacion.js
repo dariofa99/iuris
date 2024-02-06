@@ -7,6 +7,9 @@ const conciliacionService = new ConciliacionService();
 const solicitudesService = new SolicitudesService();
 $(function () {
 
+ if($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled',true)
+
+
   $("#btn_registrar_conc").on("click", async function (e) {
     e.preventDefault();
 
@@ -285,7 +288,7 @@ $(function () {
      if(element.pivot.concepto=='Documento de identidad'){
       $("#actions_upload_logs span[id=documento_identidad]").remove();
      }
-     if(element.pivot.concepto=='Registro'){
+     if(element.pivot.concepto=='Cert. de existencia y Rep. legal'){
       $("#actions_upload_logs span[id=registro]").remove();
      }
     });
@@ -378,8 +381,15 @@ $(function () {
     $("#myformCreateHechoPretension").attr('id', 'myformEditHechoPretension');
     $("#myformEditHechoPretension input[name=id]").val(response.id)
     $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
-    $("#myformEditHechoPretension textarea").val(response.descripcion);
     $("#btn_add_he_pret_input").hide()
+    $("#content_create_descrip_hepr").html("");
+    var lbl="Actualizando";
+    var row = `
+      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
+        <label for="description" id="lbl_descrip_hepr">${lbl}</label>
+        <textarea name="descripcion" class="form-control required" rows="2">${response.descripcion}</textarea>
+      </div>`;
+    $("#content_create_descrip_hepr").html(row);    
     $("#wait").hide();
     $("#myModalCreateConcHechosPretensiones").modal('show');
   });

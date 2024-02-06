@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="row">
+      {{--   <div class="row">
             <div class="col-md-12">
                 <div class="checkbox">
                     <h3>
@@ -32,5 +32,5 @@
                     </h3>
                 </div>
             </div>
-        </div>
+        </div> --}}
 </form>

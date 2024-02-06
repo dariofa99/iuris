@@ -765,26 +765,29 @@ class ConciliacionesController extends Controller
     
     public function getEstadosFiles(Request $request)
     {
-        $estado = ConciliacionEstado::find($request->conc_estado_id);
+        /* $estado = ConciliacionEstado::find($request->conc_estado_id);
         $estado->files = $estado->files()
             ->where('conciliacion_id', $request->conciliacion_id)
-            ->get();
+            ->get(); */
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $partes = $conciliacion->usuarios;
-        $compartidos = ConciliacionEstadoFileCompartido::where([
+        $conciliacion->files = $conciliacion->files()
+            ->where('file_id', $request->conc_file_id)
+            ->get();
+       /*  $compartidos = ConciliacionEstadoFileCompartido::where([
             'conciliacion_id' => $conciliacion->id,
             'status_id' =>   $request->status_id
-        ])->get();
+        ])->get(); */
 
-        $view = view('myforms.conciliaciones.componentes.conciliacion_estados_files_ajax', compact('estado'))->render();
-        $view_compartidos = view('myforms.conciliaciones.componentes.files_conciliacion_compartidos_ajax', compact('compartidos'))->render();
-
+        $view = view('myforms.conciliaciones.componentes.conciliacion_estados_files_ajax', compact('conciliacion'))->render();
+       /*  $view_compartidos = view('myforms.conciliaciones.componentes.files_conciliacion_compartidos_ajax', compact('compartidos'))->render();
+ */
         $response = [
-            "view_compartidos" => $view_compartidos,
-            "compartidos" => $compartidos,
+           /*  "view_compartidos" => $view_compartidos,
+            "compartidos" => $compartidos, */
             "partes" => $partes,
-            "estado" => $estado,
-            "view" => $view
+             "conciliacion" => $conciliacion,
+            "view" => $view 
         ];
         return response()->json($response);
     }

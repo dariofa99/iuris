@@ -17,12 +17,19 @@
                         <i class="fa fa-upload"></i>
                         <span>Subir documento identidad</span>
                     </span> 
-
-                    <span class="btn btn-primary btn-sm fileinputclickable" data-text="Registro" id="registro">
+                    @php
+                    if(isset($conciliacion)){
+                        $parte_convx = $conciliacion->getUser(197);
+                    }
+                       
+                    @endphp
+                    @if(isset($conciliacion) and isset($parte_convx) and $parte_convx->tipopers_id==238)
+                    <span class="btn btn-primary btn-sm fileinputclickable" 
+                    data-text="Cert. de existencia y Rep. legal" id="registro">
                         <i class="fa fa-upload"></i>
-                        <span>Subir registro</span>
+                        <span>Cert. de existencia y Rep. legal</span>
                     </span>
-
+                    @endif
                     <span class="btn btn-primary btn-sm fileinputclickable" data-text="Otro" id="otro">
                         <i class="fa fa-upload"></i>
                         <span>Subir otro</span>
