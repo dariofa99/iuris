@@ -43,7 +43,7 @@
                         </td>
                         <td>
                             <label>
-                                {{ count($conciliacion->estados) > 0? getSmallDateWithHour($conciliacion->estados()->orderBy('created_at', 'desc')->first()->created_at): '' }}</label>
+                                {{ count($conciliacion->estados) > 0 ? getSmallDateWithHour($conciliacion->estados()->orderBy('created_at', 'desc')->first()->created_at) : '' }}</label>
 
                         </td>
                     </tr>
@@ -53,9 +53,9 @@
                         </td>
                         <td>
                             <label>
-                                {{ count($conciliacion->estados) > 0? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->name .' ' .$conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->lastname: '' }}
+                                {{ count($conciliacion->estados) > 0 ? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->name . ' ' . $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->lastname : '' }}
                                 <small>
-                                    {{ count($conciliacion->estados) > 0? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->role()->first()->display_name: '' }}
+                                    {{ count($conciliacion->estados) > 0 ? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->role()->first()->display_name : '' }}
                                 </small>
                             </label>
                         </td>
@@ -65,7 +65,7 @@
                             <label>Comentario</label>
                         </td>
                         <td>
-                            <textarea name="txtcomenta" rows="4" class="form-control form-control-sm " readonly="readonly">{{ count($conciliacion->estados) > 0? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->concepto: '' }}</textarea>
+                            <textarea name="txtcomenta" rows="4" class="form-control form-control-sm " readonly="readonly">{{ count($conciliacion->estados) > 0 ? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->concepto : '' }}</textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -89,7 +89,7 @@
                 <th>
                     Fecha creación
                 </th>
-                              
+
             </thead>
             <tbody>
                 @include('myforms.conciliaciones.componentes.conciliacion_estados_ajax')

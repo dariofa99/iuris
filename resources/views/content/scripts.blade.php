@@ -5,11 +5,10 @@
 
         var keyCir = localStorage.getItem("keyCircActDosClose");
             if (keyCir == null) {
-              var message = getCircular()
+              var message = getCircular();
             } else {
-              var message = getGeneralMessage()
-            }
-        
+              var message = getGeneralMessage();
+            }        
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
