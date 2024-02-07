@@ -52,7 +52,7 @@ class ActuacionController extends Controller
       copy($rutaDeArchivo, public_path("act_temp/" . $filename));
     } catch (\Throwable $th) {
       //echo "Ups! Parece que el archivo ya no se encuentra en el servidor";;
-     // return;
+      // return;
     }
 
 
@@ -156,89 +156,81 @@ class ActuacionController extends Controller
   public function store(Request $request)
   {
     $expediente = Expediente::where("expid", $request['actexpid'])->first();
-   
-    
-    $validForCreate = true;
-    if(currentUser()->hasRole('estudiante')){
-      if($request->input('actestado_id') == 136){    
-        $errorMessage = 'No se puede crear el anexo, comprueba que no hayan anexos pendientes por revisar'  ;
+    $validForCreate = 0;
+    if (currentUser()->hasRole('estudiante')) {
+      if ($request->input('actestado_id') == 136) {
+        $errorMessage = 'No se puede crear el anexo, comprueba que no hayan anexos pendientes por revisar';
         $validForCreate = $expediente->verifyActuacionAnexoForCreate();
-      }else if (!$request->has('parent_actuacion_id')){
+      } else if (!$request->has('parent_actuacion_id')) {
         $validForCreate = $expediente->verifyActuacionForCreate();
-        $errorMessage = 'No se puede crear la actuación, comprueba que no hayan actuaciones pendientes por revisar'  ;
-       
+        $errorMessage = 'No se puede crear la actuación, comprueba que no hayan actuaciones pendientes por revisar';
       }
     }
- 
-    //return response()->json($validForCreate); 
-    if ($request->actexpid and $validForCreate) {
 
-      
-     // return response()->json($validForCreate); 
-              // dd($request->actdocnomgen);
-        if ($request->hasFile('actdocnomgen')) {
+    //return response()->json($validForCreate); 
+    if ($request->actexpid and $validForCreate < 2) {
+
+      if ($request->hasFile('actdocnomgen')) {
+        $docum = $request->file('actdocnomgen');
+        $nombre_arch = $docum->getClientOriginalName();
+        $nombre_arch = htmlentities($nombre_arch);
+        $nombre_arch = preg_replace('/\&(.)[^;]*;/', '\\1', $nombre_arch);
+        $file_name = preg_replace('([^A-Za-z0-9. ])', '', $nombre_arch);
+        $actdocnompropio = $file_name;
+        $extencion = $request->file('actdocnomgen')->extension();
+        $file_name = md5($file_name) . '.' . $extencion;
+        $file_route = time() . "_" . $file_name;
+        Storage::disk('files_actuaciones')->put($file_route, file_get_contents($docum->getRealPath()));
+        $actdocnomgen = $file_route;
+        $actdocruta = Storage::disk('files_actuaciones')->url($file_route);
+                            
+      } else {
+        if (currentUser()->hasRole('estudiante')) {
+
           $docum = $request->file('actdocnomgen');
           $nombre_arch = $docum->getClientOriginalName();
           $nombre_arch = htmlentities($nombre_arch);
-          $nombre_arch = preg_replace('/\&(.)[^;]*;/', '\\1', $nombre_arch);
-          $file_name = preg_replace('([^A-Za-z0-9. ])', '', $nombre_arch);
-          $actdocnompropio = $file_name;
-          $extencion = $request->file('actdocnomgen')->extension();
-          $file_name = md5($file_name) . '.' . $extencion;
-          $file_route = time() . "_" . $file_name;
-          Storage::disk('files_actuaciones')->put($file_route, file_get_contents($docum->getRealPath()));
-          $actdocnomgen = $file_route;
-          $actdocruta = Storage::disk('files_actuaciones')->url($file_route);
 
-          //$actdocruta = public_path($url);                             
-        } else {
-          if(currentUser()->hasRole('estudiante')){
-            
-            $docum = $request->file('actdocnomgen');
-          $nombre_arch = $docum->getClientOriginalName();
-          $nombre_arch = htmlentities($nombre_arch);
-          
 
-            return response()->json([
-              'errors'=>['Se debe subir un archivo',$request->hasFile('actdocnomgen')]
-            ]);
-          }
-          $actdocnomgen = '';
-          $actdocnompropio = '';
-          $actdocruta = '';
-
-        }
-        
-        $actuacion = new Actuacion();
-        $actuacion->actexpid = $expediente->expid;
-        $actuacion->actnombre = $request['actnombre'];
-        $actuacion->actdescrip = $request['actdescrip'];
-        $actuacion->actfecha = $request['actfecha'];
-        $actuacion->fecha_limit = $request['fecha_limit'];
-        $actuacion->actestado_id = $request['actestado_id'];
-        $actuacion->actdocnomgen = $actdocnomgen;
-        $actuacion->actcategoria_id = 222;
-        $actuacion->actdocnompropio = $actdocnompropio;
-        $actuacion->actidnumberest = $expediente->expidnumberest;
-        $actuacion->actdocruta = $actdocruta;
-        $actuacion->actusercreated = currentUser()->idnumber;
-        $actuacion->actuserupdated = currentUser()->idnumber;
-        $actuacion->save();
-
-        if ($request->has('parent_actuacion_id')) {
-          $actuacion->revisionesExp()->attach($actuacion->id, [
-            'rev_actexpid' => $request['actexpid'],
-            'parent_rev_actid' => $request->parent_actuacion_id,
-            //'rev_actid'=>$actuacion->id,
-          ]);
-        } else {
-          $actuacion->revisionesExp()->attach($actuacion->id, [
-            'rev_actexpid' => $request['actexpid'],
-            'parent_rev_actid' => $actuacion->id,
-            //'rev_actid'=>$actuacion->id,
+          return response()->json([
+            'errors' => ['Se debe subir un archivo', $request->hasFile('actdocnomgen')]
           ]);
         }
-      
+        $actdocnomgen = '';
+        $actdocnompropio = '';
+        $actdocruta = '';
+      }
+
+      $actuacion = new Actuacion();
+      $actuacion->actexpid = $expediente->expid;
+      $actuacion->actnombre = $request['actnombre'];
+      $actuacion->actdescrip = $request['actdescrip'];
+      $actuacion->actfecha = $request['actfecha'];
+      $actuacion->fecha_limit = $request['fecha_limit'];
+      $actuacion->actestado_id = $request['actestado_id'];
+      $actuacion->actdocnomgen = $actdocnomgen;
+      $actuacion->actcategoria_id = 222;
+      $actuacion->actdocnompropio = $actdocnompropio;
+      $actuacion->actidnumberest = $expediente->expidnumberest;
+      $actuacion->actdocruta = $actdocruta;
+      $actuacion->actusercreated = currentUser()->idnumber;
+      $actuacion->actuserupdated = currentUser()->idnumber;
+      $actuacion->save();
+
+      if ($request->has('parent_actuacion_id')) {
+        $actuacion->revisionesExp()->attach($actuacion->id, [
+          'rev_actexpid' => $request['actexpid'],
+          'parent_rev_actid' => $request->parent_actuacion_id,
+          //'rev_actid'=>$actuacion->id,
+        ]);
+      } else {
+        $actuacion->revisionesExp()->attach($actuacion->id, [
+          'rev_actexpid' => $request['actexpid'],
+          'parent_rev_actid' => $actuacion->id,
+          //'rev_actid'=>$actuacion->id,
+        ]);
+      }
+
       if ($actuacion->actestado_id == 140) {
         $user = $expediente->estudiante;
         $user->notification = 'Nueva notificación de caso';
@@ -262,24 +254,24 @@ class ActuacionController extends Controller
       return response()->json($request->all());
     }
     return response()->json([
-      'errors'=>[$errorMessage]
+      'errors' => [$errorMessage]
     ]);
   }
 
   private function getActuacionesExp($expediente_id, $bandera)
   {
 
-    $user_id = \Auth::user()->id;
+    $user_id = Auth::user()->id;
     $userSession = DB::table('users as u')
       ->join('role_user as ru', 'ru.user_id', '=', 'u.id')
       ->join('roles as r', 'r.id', '=', 'ru.role_id')
       ->where('u.id', '=', $user_id)
       ->select('r.name', 'u.idnumber')
       ->first();
-    $userSession->volver_correcciones = \Auth::user()->can('volver_correcciones_actuacion');
+    $userSession->volver_correcciones = Auth::user()->can('volver_correcciones_actuacion');
     $expediente = Expediente::where('expid', $expediente_id)->first();
     // dd($expediente->getDocenteAsig()->idnumber);
-    $expediente->getDocenteAsig()->idnumber == \Auth::user()->idnumber ? $can_edit = true : $can_edit = false;
+    $expediente->getDocenteAsig()->idnumber == Auth::user()->idnumber ? $can_edit = true : $can_edit = false;
     //$userSession->role;
     $actuaciones = DB::table('actuacions as a')
       ->join('revisiones_actuacion as rv', 'rv.rev_actid', '=', 'a.id')
@@ -551,7 +543,7 @@ class ActuacionController extends Controller
     if ($request->ntaaplicacion) {
 
       //$expediente->estudiante;
-      $docente_id = \Auth::user()->idnumber;
+      $docente_id = Auth::user()->idnumber;
       $estudiante_id = $expediente->estudiante->idnumber;
       $data = [
         'ntaaplicacion' => $request->ntaaplicacion,

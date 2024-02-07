@@ -774,17 +774,19 @@ class ConciliacionesController extends Controller
         $conciliacion->files = $conciliacion->files()
             ->where('file_id', $request->conc_file_id)
             ->get();
-       /*  $compartidos = ConciliacionEstadoFileCompartido::where([
+         $compartidos = ConciliacionEstadoFileCompartido::whereHas('files',function($query) use ($request){
+            $query->where("file_id",$request->conc_file_id);
+         })->where([
             'conciliacion_id' => $conciliacion->id,
             'status_id' =>   $request->status_id
-        ])->get(); */
+        ])->get(); 
 
         $view = view('myforms.conciliaciones.componentes.conciliacion_estados_files_ajax', compact('conciliacion'))->render();
-       /*  $view_compartidos = view('myforms.conciliaciones.componentes.files_conciliacion_compartidos_ajax', compact('compartidos'))->render();
- */
+        $view_compartidos = view('myforms.conciliaciones.componentes.files_conciliacion_compartidos_ajax', compact('compartidos'))->render();
+ 
         $response = [
-           /*  "view_compartidos" => $view_compartidos,
-            "compartidos" => $compartidos, */
+            "view_compartidos" => $view_compartidos,
+            "compartidos" => $compartidos, 
             "partes" => $partes,
              "conciliacion" => $conciliacion,
             "view" => $view 

@@ -19,7 +19,7 @@
                         <div class="col-md-12">
                             <div class="alert alert-info">
                                 Debe tener en cuenta que una vez asignado el nuevo estado 
-                                podrá generar los siguientes formatos en la sección de documentos.
+                                podrá generar los siguientes formatos en la sección de <b>Actas</b>.
                             
 
                             <table class="table" id="myReportList">

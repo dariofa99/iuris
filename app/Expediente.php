@@ -471,65 +471,76 @@ class Expediente extends Model
     public function verifyActuacionForCreate()
     {
         $actuacions = $this->getActuaciones(1);
-        //return $actuacion;
+        //return $actuacions;
         $validForCreate = true;
-        if(($actuacions)){            
+        $act_abi = 0;
+        if (($actuacions)) {
             foreach ($actuacions as $key => $actuacion) {
-                if($actuacion->actestado_id==101
-                || $actuacion->actestado_id==102
-                || $actuacion->actestado_id==140 ){
-                    $validForCreate = false;
-                    if (count($actuacion->getHijos($actuacion)) > 0) {                                  
-                        foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
-                            if($hijo->actestado_id==104
-                            || $hijo->actestado_id==139
-                            || $hijo->actestado_id==234 ){                               
-                                $validForCreate = true;
-                                return $validForCreate;
+                if ($actuacion->actusercreated == $this->expidnumberest) {
+                    if (
+                        $actuacion->actestado_id == 101
+                        || $actuacion->actestado_id == 102
+                        || $actuacion->actestado_id == 140
+                    ) {
+                        $validForCreate = false;
+                        $act_abi = $act_abi + 1;
+                        if (count($actuacion->getHijos($actuacion)) > 0) {
+                            foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
+                                if (
+                                    $hijo->actestado_id == 104
+                                    || $hijo->actestado_id == 139
+                                    || $hijo->actestado_id == 234
+                                ) {
+                                    $validForCreate = true;
+                                    $act_abi = $act_abi - 1;
+                                    //return $validForCreate;
+                                }
                             }
                         }
                     }
-                    return $validForCreate;
                 }
-              
             }
-                
-           
-              
-            return $validForCreate;
+
+            return $act_abi;
+
+            //return $validForCreate;
         }
 
         return $validForCreate;
-        
     }
 
     public function verifyActuacionAnexoForCreate()
     {
         $actuacions = $this->getActuaciones(1);
-       // return $actuacion;
+       // return $actuacions;
         $validForCreate = true;
-        if(($actuacions)){            
+        $act_ab = 0;
+        if (($actuacions)) {
             foreach ($actuacions as $key => $actuacion) {
-                if($actuacion->actestado_id==136){
-                    $validForCreate = false;
-                }
-                if (count($actuacion->getHijos($actuacion)) > 0) {    
-                    //$validForCreate = true;                
-                    foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
-                        if($hijo->actestado_id==136){
-                            $validForCreate = false;
+                if ($actuacion->actusercreated == $this->expidnumberest) {
+                    if ($actuacion->actestado_id == 136) {
+                        $act_ab += 1;
+                        $validForCreate = false;
+                    }
+                    if (count($actuacion->getHijos($actuacion)) > 0) {
+
+                        //$validForCreate = true;                
+                        foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
+                            if ($hijo->actestado_id == 136) {
+                                $validForCreate = false;
+                                $act_ab += 1;
+                            }
                         }
                     }
                 }
             }
-               
-           
-              
-            return $validForCreate;
+
+
+
+            return $act_ab;
         }
 
-        return $validForCreate;
-        
+        return $act_ab;
     }
 
     public function setNotActLimit($date = null)
@@ -642,14 +653,14 @@ class Expediente extends Model
                     return $query->where(['expidnumberest' => $data]);
                     break;
                 case 'idnumber_doc':
-                    return $query->where(function($qu) use ($data){
+                    return $query->where(function ($qu) use ($data) {
                         $qu->whereHas('asignaciones.asig_docente', function ($q) use ($data) {
                             $q->where('asignacion_docente_caso.docidnumber', $data);
                         });
                     });
-                    
-                    
-                    
+
+
+
                     break;
                 case 'solicitante':
                 case 'solicitante_num':
@@ -1004,7 +1015,7 @@ class Expediente extends Model
                     ->where("periodo_id", $periodo->id)
                     ->orderBy('created_at', 'desc')->get();
                 $dias_v = 0;
-                if (count($huboVacaciones)>0) {                    
+                if (count($huboVacaciones) > 0) {
                     foreach ($huboVacaciones as $key => $vacacion) {
                         $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
                     }
@@ -1014,10 +1025,10 @@ class Expediente extends Model
                         ->whereDate('fecha_inicio', '<=', $act->actfecha)
                         ->whereDate('fecha_fin', '>=', $act->actfecha)
                         ->where("periodo_id", $periodo->id)
-                        ->orderBy('created_at', 'desc')->first();                        
-                    if (($hizoEnVacaciones)) {                        
+                        ->orderBy('created_at', 'desc')->first();
+                    if (($hizoEnVacaciones)) {
                         $dias = $this->difDays($hizoEnVacaciones->fecha_fin, date('Y-m-d'));
-                    }else{
+                    } else {
                         $dias = $this->difDays($act->actfecha, date('Y-m-d'));
                     }
                 }
@@ -1048,14 +1059,14 @@ class Expediente extends Model
     public function isValidEvaPause()
     {
         $asignacion = $this->asignacion;
-        if($asignacion){
+        if ($asignacion) {
             $pausas = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
             if (($pausas)) {
                 if ($pausas->fecha_final < date('Y-m-d') and $this->expestado_id == 6) {
                     return true;
                 }
             }
-        }        
+        }
         return false;
     }
 
@@ -1063,7 +1074,7 @@ class Expediente extends Model
     public function isValidOpen()
     {
         $dias = $this->getTextForTH('dias');
-       
+
         if ($this->expestado_id == 1 and $dias > 20) {
             return true;
         }

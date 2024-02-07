@@ -1,32 +1,15 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        @if (currentUser()->hasRole('amatai') ||
-                currentUser()->hasRole('coordprac') ||
-                currentUser()->hasRole('dirgral') ||
-                currentUser()->hasRole('diradmin'))
-            var keyCir = localStorage.getItem("keyCirActualizaCierreClose");
+        localStorage.removeItem('keyCirCerrarCasoClose');
+        localStorage.removeItem('keyCirActualizaCierreClose')
+
+        var keyCir = localStorage.getItem("keyCircActDosClose");
             if (keyCir == null) {
-                var message = getCarrousel();
+              var message = getCircular()
             } else {
-                @if (currentUser()->active_asignacion || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
-                    var keyCir = localStorage.getItem("keyCirCerrarCasoClose");
-                    if (keyCir == null) {
-                        var message = getCarrouselDocentes();
-                    } else {
-                        var message = getGeneralMessage();
-                    }
-                @endif
+              var message = getGeneralMessage()
             }
-        @elseif (currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-            var keyCir = localStorage.getItem("keyCirCerrarCasoClose");
-            if (keyCir == null) {
-                var message = getCarrouselDocentes();
-            } else {
-                var message = getGeneralMessage();
-            }
-        @else
-            var message = getGeneralMessage();
-        @endif
+        
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
@@ -118,7 +101,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not":"keyCirCerrarCasoClose"
+            "data-not":"keyCircActDosClose"
         }))
 
         return carrousel;
@@ -126,7 +109,7 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-warning" style="font-size:19px">';
+        message += '<div class="alert alert-info" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -134,7 +117,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 26 de enero de 2024 <br>
+        message += `<span> Últ. Actualización: 07 de febrero de 2024 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 
@@ -163,13 +146,14 @@
     }
 
     function getCircular() {
-        var keyCir = localStorage.getItem("keyCirActualizaActNotiClose");
+        var keyCir = localStorage.getItem("keyCircActDosClose");
         var message = '';
         if (keyCir == null) {
-            message = `<embed  src="{{ asset('recursos/CircularActualAct.pdf#toolbar=0') }}" id="pdfViewer" >`
-            message += `<button class="btn btn-success" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+            message = `<embed  src="{{ asset('recursos/CircularActualActDos.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message += `<button class="btn btn-success" data-not="keyCircActDosClose" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
 
         }
+       
         return message;
     }
 </script>

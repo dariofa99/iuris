@@ -268,7 +268,8 @@ INSERT INTO `roles` (`id`, `name`, `display_name`, `description`, `created_at`, 
 (9, 'profesional externo', 'Profesional externo', 'rol', '2020-09-15 05:00:00', '2020-09-08 05:00:00'),
 (10, 'coord_centro_conciliacion', 'Coordinación centro de conciliación', 'Centro de Conciliación', '2020-09-15 05:00:00', '2020-09-08 05:00:00'),
 (11, 'doc_asig_caso', 'Docente Asig. caso', 'docente que puede asignar casos', '2020-12-29 12:11:22', '2020-12-29 12:11:22'),
-(12, 'docente_prueba', 'Docente Prueba', 'Para dar de baja a expedientes', '2022-09-30 19:33:22', '2022-09-30 19:34:17');
+(12, 'docente_prueba', 'Docente Prueba', 'Para dar de baja a expedientes', '2022-09-30 19:33:22', '2022-09-30 19:34:17'),
+(13, 'estudiante_pruebas', 'Estudiante pruebas', 'Para dar de baja a expedientes', '2022-09-30 19:33:22', '2022-09-30 19:34:17');
 
 INSERT INTO `permissions` (`id`, `name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES
 (1, 'crear_roles', 'Crear roles', 'roles', '2019-11-25 18:12:07', '2019-11-25 18:16:13'),

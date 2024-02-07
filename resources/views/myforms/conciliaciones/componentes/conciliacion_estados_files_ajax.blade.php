@@ -9,7 +9,7 @@
         <a target="_blank" href="/conciliaciones/download/file/{{$file->id}}"><i class="fa fa-download"></i></a>
     </div>
     <div align="center" class="col-md-2">
-        <input data-status_id="1" class="chk_compar_con_f" data-id="{{$file->id}}" type="checkbox" name="compartir_id[]" value="{{$file->id}}" id="{{$file->id}}">
+        <input data-status_id="1" checked class="chk_compar_con_f" data-id="{{$file->id}}" type="checkbox" name="compartir_id[]" value="{{$file->id}}" id="{{$file->id}}">
     </div>
 </div> 
 

@@ -34,7 +34,7 @@ class ConciliacionEstadoFileCompartido extends Model
         return $this->belongsToMany(File::class,'conc_report_comp_files','conc_report_comp_id')
         ->withPivot('id','conc_report_comp_id','file_id')
         ->withTimestamps(); 
-     } 
+     }  
 
      public function downloads(){
       return $this->hasMany(ConciliacionEstadoReporteDescargado::class,'conc_report_comp_id'); 

@@ -34,6 +34,11 @@ class PdfReporteDestino extends Model
     {
         return $this->hasMany(ConciliacionPdfTemporal::class,'reporte_pdf_id','reporte_id');
     } 
+
+    public function temporalesParent()
+    {
+        return $this->hasMany(ConciliacionPdfTemporal::class,'parent_reporte_pdf_id','reporte_id');
+    } 
    
     public function temporal()
     {

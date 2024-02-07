@@ -31,8 +31,8 @@ class ConciliacionesReportesController extends Controller
             $query->where('is_copy', 0);
             
         })
-        ->whereDoesntHave('temporales')
-            ->with('reporte')
+        //->whereDoesntHave('temporal')
+            ->with('reporte','temporalesParent')
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();
 

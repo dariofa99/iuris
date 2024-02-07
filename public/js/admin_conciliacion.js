@@ -10,7 +10,7 @@ $(document).ready(function () {
   var conc_estado_id = 0;
   var partesConciliacionMail = []
   if ($("#conciliacion_id").val() != undefined) {
-    getActasCreadas();
+   
     set_tab();
     var date = $("#audiencia_fecha").val()
     var color = getColorTurno(date);
@@ -971,7 +971,7 @@ $(document).ready(function () {
     }
   });
 
-  $(".btn_compartir_doc").on("click",async function(e) {
+  $("#tablelistardocumentosgen").on("click",".btn_compartir_doc",async function(e) {
     $("#myModal_reportes_archivos_compartidos").modal("show")
     var request = {
       conc_file_id: $(this).attr("data-id"),
@@ -994,7 +994,8 @@ $(document).ready(function () {
       count++;      
     });
     $("#tbl_list_archivos_comp").html(res.view);
-    $("#tbl_list_mail_partes").html(mail)
+    $("#tbl_list_mail_partes").html(mail);
+    $("#content_compartidos").html(res.view_compartidos);
     $("#wait").hide();
   });
 
@@ -1511,7 +1512,7 @@ $(document).ready(function () {
     e.preventDefault();
     var request = convertFormToJSON('myFormCompartirDocumento');
     request['conciliacion_id'] = $("#conciliacion_id").val();
-    request['conciliacion_id'] = $("#conciliacion_id").val();
+    request['status_id'] = $("#estado_conciliacion_id").val();
     var bandera = false;
     if ($("#myFormCompartirDocumento select[name=means_id]").val() == "218") {
       var inputs = $(".rows_mails").length
@@ -1572,9 +1573,11 @@ $(document).ready(function () {
     }
   });
 
-  getActas();
-  getReportesForNotifications();
+  
+  getReportesForNotifications(); 
+  getActasCreadas();
   getActasForStatus();
+  
 });//fin document ready
 
 function getColorTurno(value) {
@@ -1603,7 +1606,7 @@ async function getReportesForNotifications() {
   var request = {
     'tabla_destino': "227",
     'status_id': $("#estado_conciliacion_id").val(),
-    'conciliacion_id':$("#conciliacion_id")
+    'conciliacion_id':$("#conciliacion_id").val()
   }
   let response = await conciliacionService.getPdfReportForStatus(request);
   if (response.errors && response.errors.length > 0) {
@@ -1747,13 +1750,12 @@ async function getActasForStatus() {
       conciliacion_id: $("#conciliacion_id").val()
     };
     const response = await conciliacionService.getPdfReportForStatus(request);
-    console.log(response);
-    if (response.length > 0) {
-      var conid = $("#conciliacion_id").val();
-
-      var tr = '';
-      response.forEach(destino => {
-      
+    var actas_c = $("#tblListarActasCreadas tr").length;
+    console.log(response,actas_c);
+    var tr = '';
+    if (response.length > 0 && response[0].temporales_parent.length <=0) {
+      var conid = $("#conciliacion_id").val();      
+      response.forEach(destino => {      
          tr += `
           <tr>
             <td>
@@ -1765,16 +1767,21 @@ async function getActasForStatus() {
               </a>
               <button class="btn mt-1 btn-sm btn-success btn_crear_acta" data-id="${destino.reporte.id}" id="acta-${destino.reporte.id}">
                 Activar acta
-              </button>
-             
+              </button>             
             </td>
-          </tr> 
-          `
-
-      });
-
-      $("#tbl_listActForStatus tbody").html(tr)
+          </tr>`
+      });      
+    }else{
+      tr += `
+          <tr>
+            <td colspan="2">
+            <div class="alert alert-info">
+                No hay actas disponibles para activar      
+            </div>                  
+            </td>
+          </tr>`;
     }
+    $("#tbl_listActForStatus tbody").html(tr)
   }
 }
 async function getActasCreadas() {

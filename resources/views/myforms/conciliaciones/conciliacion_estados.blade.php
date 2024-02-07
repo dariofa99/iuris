@@ -33,8 +33,8 @@
                         </td>
                         <td>
                             <label>
-
-                                {{ count($conciliacion->estados) > 0 ? $conciliacion->estado->ref_nombre : '' }}</label>
+                                {{ count($conciliacion->estados) > 0 ? $conciliacion->estado->ref_nombre : '' }}
+                            </label>
                         </td>
                     </tr>
                     <tr>
@@ -55,21 +55,11 @@
                             <label>
                                 {{ count($conciliacion->estados) > 0? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->name .' ' .$conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->lastname: '' }}
                                 <small>
-
                                     {{ count($conciliacion->estados) > 0? $conciliacion->estados()->orderBy('created_at', 'desc')->first()->user->role()->first()->display_name: '' }}
                                 </small>
                             </label>
                         </td>
                     </tr>
-                    {{--   <tr>
-                        <td>
-                            <label>Motivo</label>
-                        </td>
-                        <td>
-                            <label>
-                                            </label>
-                        </td>
-                    </tr> --}}
                     <tr>
                         <td>
                             <label>Comentario</label>
@@ -99,12 +89,7 @@
                 <th>
                     Fecha creación
                 </th>
-                <th>
-                    Documentos
-                </th>
-                <th>
-                    Acciones
-                </th>
+                              
             </thead>
             <tbody>
                 @include('myforms.conciliaciones.componentes.conciliacion_estados_ajax')

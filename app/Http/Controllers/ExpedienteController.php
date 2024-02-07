@@ -1220,7 +1220,7 @@ class ExpedienteController extends Controller
     dd(method_exists($expediente, 'sedes')); */
     //18478
     $expediente = $this->expedienteService->findWithFilter([
-      'expid'=>'2024A-175'
+      'expid'=>'2024A-176'
     ]);
     $asignacion_caso =  $expediente->asignacion;
 
@@ -1231,9 +1231,11 @@ class ExpedienteController extends Controller
         dd(ramasDerechoNotificar(),User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first());
     } */
     //$expediente = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, 2); // si tiene en cuenta la rama del derecho
+    
+    
+    $validate = $expediente->verifyActuacionAnexoForCreate();
 
-
-    dd("dd");
+    dd($expediente, $validate );
 
     if ($expediente->exptipoproce_id == 1) {
       //solo para consultas de asesoria   
