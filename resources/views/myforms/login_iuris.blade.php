@@ -39,7 +39,7 @@
                             </div>
                             <div class="form-group row" style="margin-top: 10px">
                                 <div class="col-md-7 offset-md-3">
-                                    <button type="submit" class="btn btn-warning btn-block">
+                                    <button type="submit" class="btn btn-warning btn-block btn-sm">
                                         {{ __('Ingresar') }}
                                     </button>
 
@@ -86,7 +86,7 @@
                       
                         <div class="text-center my-4">
                            <a id="btn_solicitar_conciliacion" href="/solicitudes/conciliacion/recepcion?paso=1" class="btn btn-primary">
-                                Solicitar (en periodo de desarrollo)
+                                Solicitar conciliación <i>(en periodo de pruebas)</i>
                             </a> 
                            
                         </div>
