@@ -10,7 +10,7 @@ $(document).ready(function () {
   var conc_estado_id = 0;
   var partesConciliacionMail = []
   if ($("#conciliacion_id").val() != undefined) {
-   
+    $(":input").inputmask();
     set_tab();
     var date = $("#audiencia_fecha").val()
     var color = getColorTurno(date);
@@ -21,6 +21,36 @@ $(document).ready(function () {
     }
 
   }
+
+  $("#myform_asig_nota_conciliacion").on("submit", function (e) {
+    e.preventDefault();
+    var request = convertFormToJSON("myform_asig_nota_conciliacion");//  $(this).serialize();
+    var errors = validateForm("myform_asig_nota_conciliacion");
+    var errors2 = validateNotas("myform_asig_nota_conciliacion");
+    if (errors.length <= 0) {
+        if (errors2.length <= 0) {
+            if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "store") {
+                storeNotaExt(request);
+            }
+            if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "update") {
+                var id = $("#myform_asig_nota_conciliacion input[name=estidnumber]").val();
+                oficinaUpdateNota(request, id);
+            }
+        } else {
+            toastr.error("Por favor, verifíque que no haya notas superiores a 5, con espacios o caracteres extraños", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+        }
+
+    }
+
+   
+  
+
+
+});
+
   $("#myUserSolicitanteForm").on("focus", "input[name='idnumber']", validateTypeDoc);
   $("#myUserRepLegalForm").on("focus", "input[name='idnumber']", validateTypeDoc);
   $("#myUserApoderadoForm").on("focus", "input[name='idnumber']", validateTypeDoc);
@@ -215,7 +245,7 @@ $(document).ready(function () {
 
   $("#myformCreateEstado select[name=type_status_id]").on("change", async function (e) {
     if ($(this).val() != "") {
-      
+
       var request = {
         tabla_destino: "226",
         status_id: $(this).val(),
@@ -245,7 +275,7 @@ $(document).ready(function () {
     var request = new FormData($(this)[0]);
     request.append("conciliacion_id", $("#conciliacion_id").val());
     var type_status_id = $("#myformCreateEstado select[name=type_status_id]").val();
-    if(type_status_id==$("#estado_conciliacion_id").val()){
+    if (type_status_id == $("#estado_conciliacion_id").val()) {
       toastr.error(
         "La conciliación ya esta en el estado asignado!",
         "Error",
@@ -313,39 +343,39 @@ $(document).ready(function () {
 
     $("#cont_files input[name=category_id]").remove();
     $("#cont_files").append(
-      $("<input>", { 
+      $("<input>", {
         type: 'hidden',
         value: $(this).attr("data-category"),
         name: "category_id",
-        id:"anexo_category_id"
+        id: "anexo_category_id"
       }));
 
-      $("#cont_files").append(
-        $("<input>", { 
-          type: 'hidden',
-          value: 'documentos_ajax',
-          name: "view_template",
-          id:"view_template"
-        }));
+    $("#cont_files").append(
+      $("<input>", {
+        type: 'hidden',
+        value: 'documentos_ajax',
+        name: "view_template",
+        id: "view_template"
+      }));
 
-  /*   var request = {
-      'conciliacion_id':$("#conciliacion_id").val(),
-      'category_id':$(this).attr("data-category")
-    } */
+    /*   var request = {
+        'conciliacion_id':$("#conciliacion_id").val(),
+        'category_id':$(this).attr("data-category")
+      } */
     $("#actions_upload_logs span[id=otro]").text("Subir documento");
     $("#actions_upload_logs span[id=documento_identidad]").remove();
     $("#actions_upload_logs span[id=registro]").remove();
-   /*  var files = await conciliacionService.getFilesByCategory(request);
+    /*  var files = await conciliacionService.getFilesByCategory(request);
+ 
+     files.files.forEach(element => {
+      if(element.pivot.concepto=='Documento de identidad'){
+       $("#actions_upload_logs span[id=documento_identidad]").remove();
+      }
+      if(element.pivot.concepto=='Registro'){
+       $("#actions_upload_logs span[id=registro]").remove();
+      }
+     }); */
 
-    files.files.forEach(element => {
-     if(element.pivot.concepto=='Documento de identidad'){
-      $("#actions_upload_logs span[id=documento_identidad]").remove();
-     }
-     if(element.pivot.concepto=='Registro'){
-      $("#actions_upload_logs span[id=registro]").remove();
-     }
-    }); */
-    
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");
@@ -403,9 +433,9 @@ $(document).ready(function () {
     e.preventDefault();
     var tipo = $("#myformCreateHechoPretension input[name='tipo_id']").val();
     console.log(tipo);
-    var key = $(".count_input_descrip_hepr_"+tipo).length + 1
+    var key = $(".count_input_descrip_hepr_" + tipo).length + 1
     var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
-    
+
     var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
         <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
@@ -417,22 +447,22 @@ $(document).ready(function () {
 
   $(".btn_add_conc_he_con").on("click", function (e) {
     e.preventDefault();
-      $("#myformEditHechoPretension").attr('id', 'myformCreateHechoPretension');
+    $("#myformEditHechoPretension").attr('id', 'myformCreateHechoPretension');
     $("#myformCreateHechoPretension input[name=id]").val('')
     $("#myformCreateHechoPretension textarea").val('')
     $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'));
     $("#content_create_descrip_hepr").html("")
     $("#btn_add_he_pret_input").show()
 
-    var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1
-    var lbl="";
-    if($(this).attr('data-tipo') == 206) lbl = "Descripción de los hechos" ;
-    if($(this).attr('data-tipo') == 207) lbl = "Descripción de la pretensión" ;
-    if($(this).attr('data-tipo') == 208) lbl = "Descripción del acuerdo" ;
+    var key = $(".count_input_descrip_hepr_" + $(this).attr('data-tipo')).length + 1
+    var lbl = "";
+    if ($(this).attr('data-tipo') == 206) lbl = "Descripción de los hechos";
+    if ($(this).attr('data-tipo') == 207) lbl = "Descripción de la pretensión";
+    if ($(this).attr('data-tipo') == 208) lbl = "Descripción del acuerdo";
 
-    if($(this).attr('data-tipo') == 206) $("#btn_add_he_pret_input").text("Agregar otro hecho") ;
-    if($(this).attr('data-tipo') == 207) $("#btn_add_he_pret_input").text("Agregar otra pretension") ;
-    if($(this).attr('data-tipo') == 208) $("#btn_add_he_pret_input").text("Agregar otro acuerdo") ;
+    if ($(this).attr('data-tipo') == 206) $("#btn_add_he_pret_input").text("Agregar otro hecho");
+    if ($(this).attr('data-tipo') == 207) $("#btn_add_he_pret_input").text("Agregar otra pretension");
+    if ($(this).attr('data-tipo') == 208) $("#btn_add_he_pret_input").text("Agregar otro acuerdo");
 
     var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
@@ -444,18 +474,18 @@ $(document).ready(function () {
 
     $("#myModalCreateConcHechosPretensiones").modal('show');
     $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos" : "Agregando pretensiones")
-  
+
   });
 
   $(".content_hechos_pretensiones").on("click", '.btn_editar_hepr', async function (e) {
     e.preventDefault();
     var id = $(this).attr('data-id');
-    $("#wait").show();    
+    $("#wait").show();
     const response = await conciliacionService.editHechoPretension(id);
     $("#myformCreateHechoPretension").attr('id', 'myformEditHechoPretension');
     $("#myformEditHechoPretension input[name=id]").val(response.id)
     $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
-    $("#myformEditHechoPretension textarea").attr('name','descripcion');
+    $("#myformEditHechoPretension textarea").attr('name', 'descripcion');
     $("#myformEditHechoPretension textarea").val(response.descripcion);
     $("#btn_add_he_pret_input").hide()
     $("#wait").hide();
@@ -464,9 +494,9 @@ $(document).ready(function () {
   });
 
   $("#myModalCreateConcHechosPretensiones").on("submit", '#myformCreateHechoPretension', async function (e) {
-    e.preventDefault();    
-    var errors = validateForm('myformCreateHechoPretension');   
-    if(errors.length<=0){
+    e.preventDefault();
+    var errors = validateForm('myformCreateHechoPretension');
+    if (errors.length <= 0) {
       $("#myModalCreateConcHechosPretensiones").modal('hide');
       $("#wait").show();
       var request = convertFormToJSON("myformCreateHechoPretension");
@@ -971,7 +1001,7 @@ $(document).ready(function () {
     }
   });
 
-  $("#tablelistardocumentosgen").on("click",".btn_compartir_doc",async function(e) {
+  $("#tablelistardocumentosgen").on("click", ".btn_compartir_doc", async function (e) {
     $("#myModal_reportes_archivos_compartidos").modal("show")
     var request = {
       conc_file_id: $(this).attr("data-id"),
@@ -983,15 +1013,15 @@ $(document).ready(function () {
     let res = await conciliacionService.getStatusFiles(request);
     var mail = "";
     var count = 0;
- 
+
     res.partes.forEach((user, key) => {
       if (!partesConciliacionMail.includes(user.email)) {
-          partesConciliacionMail.push(user.email);        
+        partesConciliacionMail.push(user.email);
       }
     });
     partesConciliacionMail.forEach(email => {
-      mail += createRowMail(count,email);  
-      count++;      
+      mail += createRowMail(count, email);
+      count++;
     });
     $("#tbl_list_archivos_comp").html(res.view);
     $("#tbl_list_mail_partes").html(mail);
@@ -1101,26 +1131,26 @@ $(document).ready(function () {
         var request = {
           "type_status_id": status_id,
           "conciliacion_id": $("#conciliacion_id").val(),
-          "reporte_id":reporte_id
+          "reporte_id": reporte_id
         }
         $("#wait").show();
-        let response = await conciliacionService.crearActa(request); 
-        if(response.generate){
+        let response = await conciliacionService.crearActa(request);
+        if (response.generate) {
           Toast.fire({
             title: 'Acta creada con éxito.',
             icon: 'success',
             timer: 2000,
-          }); 
+          });
           location.reload(true);
-        } else{
+        } else {
           Toast.fire({
             title: 'No se pudo generar el acta.',
             icon: 'error',
             timer: 2000,
-          }); 
+          });
           $("#wait").hide();
         }
-      
+
       }
     });
   });
@@ -1164,7 +1194,7 @@ $(document).ready(function () {
     } else {
       $("#btn_select_volver_enviar_email").hide();
     }
-   
+
     $("#lbl_pfd_report_name").text(res.data.reporte.nombre_reporte);
     $("#table_list_pdf_users tbody").html(res.view);
     $("#myFormAsigFirmaPdf input[name=estado_id]").val(res.data.id);
@@ -1516,7 +1546,7 @@ $(document).ready(function () {
     var bandera = false;
     if ($("#myFormCompartirDocumento select[name=means_id]").val() == "218") {
       var inputs = $(".rows_mails").length
-      if (inputs <= 0) { 
+      if (inputs <= 0) {
         toastr.error("No hay correos validos!", "", {
           positionClass: "toast-top-right",
           timeOut: "3000",
@@ -1573,11 +1603,29 @@ $(document).ready(function () {
     }
   });
 
-  
-  getReportesForNotifications(); 
+
+  $(".btn_add_usuario_notas").on("click", function (e) {
+    e.preventDefault();
+    if ($(this).attr("data-type") == 203) {
+      $("#content_nota_conciliador").show();
+      $("#content_nota_auxiliar").hide();
+      $("#content_nota_auxiliar input").prop("disabled", true);
+      $("#content_nota_conciliador input").prop("disabled", false);
+    } else {
+      $("#content_nota_conciliador").hide();
+      $("#content_nota_conciliador input").prop("disabled", true)
+      $("#content_nota_auxiliar").show();
+      $("#content_nota_auxiliar input").prop("disabled", false);
+    }
+    $("#myform_asig_nota_conciliacion input[name='estidnumber']").val($(this).attr("data-user"))
+    $("#myModal_add_nota_conciliaciones").modal("show")
+  });
+
+
+  getReportesForNotifications();
   getActasCreadas();
   getActasForStatus();
-  
+
 });//fin document ready
 
 function getColorTurno(value) {
@@ -1606,11 +1654,11 @@ async function getReportesForNotifications() {
   var request = {
     'tabla_destino': "227",
     'status_id': $("#estado_conciliacion_id").val(),
-    'conciliacion_id':$("#conciliacion_id").val()
+    'conciliacion_id': $("#conciliacion_id").val()
   }
   let response = await conciliacionService.getPdfReportForStatus(request);
   if (response.errors && response.errors.length > 0) {
-    
+
   } else {
     console.log(response);
     var option = '<option value="">Seleccione...</option>';
@@ -1628,14 +1676,14 @@ async function getReportesForNotifications() {
 
 }
 async function getActas() {
-/*   var request = {
-    //conc_estado_id: $(this).attr("data-id"),
-    tabla_destino: "conciliaciones",
-    status_id: $("#estado_conciliacion_id").val(),
-    conciliacion_id: $("#conciliacion_id").val()
-  };
-  let response = await conciliacionService.getPdfReportesConciliacion(request);
-  $("#myFormatosActasList tbody").html(""); */
+  /*   var request = {
+      //conc_estado_id: $(this).attr("data-id"),
+      tabla_destino: "conciliaciones",
+      status_id: $("#estado_conciliacion_id").val(),
+      conciliacion_id: $("#conciliacion_id").val()
+    };
+    let response = await conciliacionService.getPdfReportesConciliacion(request);
+    $("#myFormatosActasList tbody").html(""); */
   //$("#myFormatosActasList tbody").html(response.view);
 
 }
@@ -1751,12 +1799,12 @@ async function getActasForStatus() {
     };
     const response = await conciliacionService.getPdfReportForStatus(request);
     var actas_c = $("#tblListarActasCreadas tr").length;
-    console.log(response,actas_c);
+    console.log(response, actas_c);
     var tr = '';
-    if (response.length > 0 && response[0].temporales_parent.length <=0) {
-      var conid = $("#conciliacion_id").val();      
-      response.forEach(destino => {      
-         tr += `
+    if (response.length > 0 && response[0].temporales_parent.length <= 0) {
+      var conid = $("#conciliacion_id").val();
+      response.forEach(destino => {
+        tr += `
           <tr>
             <td>
             ${destino.reporte.nombre_reporte}
@@ -1770,8 +1818,8 @@ async function getActasForStatus() {
               </button>             
             </td>
           </tr>`
-      });      
-    }else{
+      });
+    } else {
       tr += `
           <tr>
             <td colspan="2">
@@ -1786,18 +1834,18 @@ async function getActasForStatus() {
 }
 async function getActasCreadas() {
   if ($("#estado_conciliacion_id").val() != "") {
-    var request = {      
+    var request = {
       conciliacion_id: $("#conciliacion_id").val()
     };
     const response = await conciliacionService.getActasCreadas(request);
 
     if (response.view) {
-       
-     $("#tblListarActasCreadas tbody").html(response.view)
+
+      $("#tblListarActasCreadas tbody").html(response.view)
     }
   }
 }
-function abrirVentanaEmergente(url){
+function abrirVentanaEmergente(url) {
   var bgdiv = $("<div>").attr({
     className: "bgtransparent",
     id: "bgtransparent",

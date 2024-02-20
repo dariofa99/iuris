@@ -330,7 +330,10 @@ INSERT INTO `permissions` (`id`, `name`, `display_name`, `description`, `created
 (59, 'admin_actasandmail', 'Admin. Actas y correos conciliaciones', 'conciliaciones', '2022-07-14 14:56:02', '2022-07-14 14:56:44'),
 (60, 'change_status_conciliaciones', 'Cambiar estado de conciliaciones', 'conciliaciones', '2022-07-14 19:56:02', '2022-07-14 19:56:44'),
 (61, 'editar_audiencia_conciliacion', 'Editar audiencia conciliaciones', 'conciliaciones', '2022-07-14 19:56:02', '2022-07-14 19:56:44'),
-(62, 'admin_expedientes', 'Admin. Expedientes', 'expedientes', '2022-07-14 19:56:02', '2022-07-14 19:56:44');
+(62, 'admin_expedientes', 'Admin. Expedientes', 'expedientes', '2022-07-14 19:56:02', '2022-07-14 19:56:44'),
+(63, 'ver_notas_conciliacion', 'Ver notas conciliación', 'conciliaciones', '2020-09-15 11:29:57', '2020-09-15 11:29:57');
+
+
 
 INSERT INTO `permission_role` (`permission_id`, `role_id`) VALUES
 (1, 1),
@@ -781,7 +784,7 @@ INSERT INTO `sede_segmentos` (`id`, `segmento_id`, `sede_id`, `created_at`, `upd
 (14, 14, 1, '2022-06-25 15:57:35', '2022-06-25 15:57:35'),
 (15, 15, 1, '2022-10-03 14:00:05', '2022-10-03 14:00:05'),
 (16, 16, 1, '2023-08-18 12:14:52', '2023-08-18 12:14:52'),
-(17, 17, 2, '2023-09-11 17:44:02', '2023-09-11 17:44:02'),
+(17, 17, 1, '2023-09-11 17:44:02', '2023-09-11 17:44:02'),
 (18, 18, 1, '2023-09-29 10:12:18', '2023-09-29 10:12:18');
 
 INSERT INTO `sede_periodos` (`id`, `periodo_id`, `sede_id`, `created_at`, `updated_at`) VALUES
@@ -792,4 +795,4 @@ INSERT INTO `sede_periodos` (`id`, `periodo_id`, `sede_id`, `created_at`, `updat
 (5, 5, 1, '2021-10-12 13:29:48', '2021-10-12 13:29:48'),
 (6, 6, 1, '2022-06-25 15:56:43', '2022-06-25 15:56:43'),
 (7, 7, 1, '2023-08-14 10:22:10', '2023-08-14 10:22:10'),
-(8, 8, 2, '2023-09-11 17:36:32', '2023-09-11 17:36:32');
+(8, 8, 1, '2023-09-11 17:36:32', '2023-09-11 17:36:32');

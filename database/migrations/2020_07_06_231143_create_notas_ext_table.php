@@ -16,7 +16,7 @@ class CreateNotasExtTable extends Migration
         Schema::create('notas_ext', function (Blueprint $table) {
             $table->increments('id');
             $table->longText('nota');           
-            //identificación est
+            //identificación est 
             $table->string('estidnumber',12);
             $table->foreign('estidnumber')->references('idnumber')->on('users'); 
             //identificación docente

@@ -33,36 +33,10 @@
         <td>{{ getSmallDateWithHour($user->pivot->created_at) }}</td>
         <td>
 
-            @if (count($user->get_notas_ext($conciliacion->id, ['puntualidad'])['puntualidad']) > 0 and
-                    $user->get_notas_ext($conciliacion->id, ['puntualidad'])['puntualidad']['encontrado'] and
-                    $user->get_notas_ext($conciliacion->id, ['puntualidad'])['puntualidad']['estidnumber'] ==
-                        currentUser()->idnumber ||
-                        currentUser()->hasRole('coord_centro_conciliacion') ||
-                        currentUser()->hasRole('amatai'))
-                {{-- <a target="_blank" href="/notas/ver/estudiante?idnumber={{$user->idnumber}}&origen=conciliaciones" data-user="{{$user->idnumber}}" data-class="btn_edit_notas" data-pivot="{{$user->pivot->id}}" class="btn btn-sm  btn-info  ">  
-       Ver notas
-      </a>   --}}
-                <button data-type="{{ $user->pivot->tipo_usuario_id }}" type="button" data-user="{{ $user->idnumber }}"
-                    data-pivot="{{ $user->pivot->id }}" class="btn btn-sm  btn_edit_notas btn-info">
-                    Ver
-                </button>
-            @elseif(currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai'))
-                <button data-type="{{ $user->pivot->tipo_usuario_id }}" type="button" data-user="{{ $user->idnumber }}"
-                    data-pivot="{{ $user->pivot->id }}" class="btn btn-sm  btn_add_usuario_notas btn-primary">
-                    Agregar notas
-                </button>
-            @endif
-
-
-            @if (count($user->get_notas_ext($conciliacion->id, ['puntualidad'])['puntualidad']) > 0 and
-                    $user->get_notas_ext($conciliacion->id, ['puntualidad'])['puntualidad']['encontrado'] and
-                    $user->get_notas_ext($conciliacion->id, ['puntualidad'])['puntualidad']['docevidnumber'] ==
-                        currentUser()->idnumber)
-                <button type="button" data-user="{{ $user->idnumber }}" data-pivot="{{ $user->pivot->id }}"
-                    data-section="general" class="btn btn-danger btn-sm btn_delete_notas_con">
-                    Eliminar
-                </button>
-            @endif
+            <button data-type="{{ $user->pivot->tipo_usuario_id }}" type="button" data-user="{{ $user->idnumber }}"
+                data-pivot="{{ $user->pivot->id }}" class="btn btn-sm  btn_add_usuario_notas btn-primary">
+                Agregar notas
+            </button>
 
         </td>
     </tr>

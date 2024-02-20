@@ -24,7 +24,7 @@ class User extends Authenticatable
     use ColorTurnos;
     // use MyResetPassword;
 
-    /**
+    /**  
      * The database table used by the model.
      *
      * @var string

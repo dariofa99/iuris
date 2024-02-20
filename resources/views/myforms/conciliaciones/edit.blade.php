@@ -167,6 +167,17 @@
                 </a>
             </li>
             @endif
+
+             @if((config('app.name') != 'ConciliApp') and 
+             currentUser()->can('ver_notas_conciliacion')) 
+            <li class="nav-item">
+                <a class="nav-link urlactive" id="notas-tab" data-toggle="tab" href="#notas"
+                    role="tab" aria-controls="notas" aria-selected="false">
+                    Notas
+                </a>
+            </li>
+             @endif 
+
            
 
             </ul>
@@ -191,9 +202,9 @@
                 <div class="tab-pane fade " id="audiencia" role="tabpanel" aria-labelledby="audiencia-tab">
                     @include('myforms.conciliaciones.conciliacion_audiencia')
                 </div>
-                {{-- <div class="tab-pane fade " id="notas" role="tabpanel" aria-labelledby="notas-tab">
+               <div class="tab-pane fade " id="notas" role="tabpanel" aria-labelledby="notas-tab">
                     @include('myforms.conciliaciones.conciliacion_notas')
-                </div> --}}
+                </div> 
                 <div class="tab-pane fade " id="actas" role="tabpanel" aria-labelledby="actas-tab">
                     @include('myforms.conciliaciones.componentes.actas_list')
                 </div>
@@ -227,6 +238,10 @@
   {!! Html::script('js/config_jitsi.js?v=3')!!} 
   <script src="{{asset('/plugins/dropzone59/dropzone59.js')}}"></script>
     <script src={{asset("js/dropzone_anexos.js")}}></script>
+  <!-- InputMask -->
+  {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
+  {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
+  {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
  
 
     @include('myforms.conciliaciones.script')

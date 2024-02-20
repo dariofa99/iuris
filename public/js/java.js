@@ -1444,7 +1444,6 @@ return false;
 
     $("#myform_asig_nota_conciliacion").on("submit", function (e) {
         var request = $(this).serialize();
-
         var errors = validateForm("myform_asig_nota_conciliacion");
         var errors2 = validateNotas("myform_asig_nota_conciliacion");
         if (errors.length <= 0) {

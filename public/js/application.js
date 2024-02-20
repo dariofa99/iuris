@@ -528,3 +528,24 @@ function myTimer() {
     if(document.getElementById("fecha_sistema")) document.getElementById("fecha_sistema").innerHTML = cadena;
     //document.getElementById("demo").innerHTML =
 }
+
+function validateNotas(form){	
+	var errors = [];
+	$("#"+form+" .val_nota").each(function(index,obj){
+		if ($(this).attr('disabled')!='disabled') {
+			if ($(this).val() !='' && $(this).val()>5) {
+	  			errors.push('El campo '+$(this).attr('name')+' es mayor que 5');
+	  			$(this).css({'background':'#FDEDEC','border':'1px solid #33FF90'});
+	  			$(this).attr('placeholder','Requerido');
+	  			//console.log($(this));
+	  		}else if ($(this).val() !='' && isNaN($(this).val())) {	  			
+	  			$(this).css({'background':'#fff','border':'1px solid #33FF90'});
+				errors.push('El campo esta mal diligenciado');
+				$(this).css({'background':'#FDEDEC','border':'1px solid #33FF90'});
+	  			$(this).attr('placeholder','Requerido');	  		
+	  		}	
+		}
+  		  			
+  	});
+  	return errors 	
+} 

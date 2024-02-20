@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Traits\ColorTurnos;
 use Illuminate\Support\Facades\Event;
-use App\User;
+use App\User; 
 use App\Traits\AsigNotas;
 use App\Traits\UploadFile;
 use App\Segmento;

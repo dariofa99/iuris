@@ -4,7 +4,7 @@ const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
     if ($("#expediente_id").val() != undefined) {
-        $(":input").inputmask();
+        $(":input").inputmask(); 
         set_tab();
     }
     $("#search_onlyMy_exp").on("change", async function () {
@@ -1592,7 +1592,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
             });
-            errors = 1;
+            errors = 1; 
         }
         if (notaapl > 5 || notacon > 5 || notaet > 5) {
             toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
