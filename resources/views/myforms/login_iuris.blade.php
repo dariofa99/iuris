@@ -45,11 +45,18 @@
 
                                     @if (Route::has('password.request'))
                                         <hr>
-                                        <a href="/password/reset">Olvide mi contraseña...</a>
-
-                                        </a>
+                                        <a href="/password/reset">
+                                            Olvide mi contraseña...</a>
+                                        
                                     @endif
+                                    
+                                    
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px" href="/videos">
+                                    Ver videos de ayuda
+                                </a>
                             </div>
                         </form>
                     </div>
