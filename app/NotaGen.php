@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\AsigNotasExt;
-class NotaExt extends Model
+class NotaGen extends Model
 {
     use AsigNotasExt;
        /**
@@ -12,7 +12,7 @@ class NotaExt extends Model
      *
      * @var string
      */
-    protected $table = 'notas_ext';
+    protected $table = 'notasgen';
     public $ntaconocimiento;
     public $ntaconcepto;
 
@@ -24,14 +24,12 @@ class NotaExt extends Model
     protected $fillable = [
 							'nota',
 							'estidnumber',
-							'extidnumber',
-							
+							'extidnumber',							
 							'cptnotaid',
 							'segid',
 							'orgntsid',
 							'tpntid',
                             'perid',
-							//'notusercreated',
 							'tbl_org_id',
 							'created_at',
 							'updated_at'

@@ -133,12 +133,12 @@
                                                 {{ $biblioteca->rama_derecho->ramadernombre }}
                                             </td>
                                             <td>
-                                                {!! link_to_route(
+                                               {{--  {!! link_to_route(
                                                     'biblioteca.pdf',
                                                     $title = 'Descargar',
                                                     $parameters = $biblioteca->biblioteca_id,
                                                     $attributes = ['class' => 'btn btn-warning btn-sm', 'target' => '_blank'],
-                                                ) !!}
+                                                ) !!} --}}
                                                 <!-- Trigger the modal with a button -->
                                                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                                     data-target="#myModal_show_details"
@@ -149,7 +149,7 @@
                                                         data-toggle="modal" data-target="#myModal_act_edit_doc"
                                                         onclick="findBiblioteca({{ $biblioteca->biblioteca_id }})">Editar</button>
 
-                                                    {!! link_to_route(
+                                                   {{--  {!! link_to_route(
                                                         'biblioteca.change',
                                                         $title = 'Eliminar',
                                                         $parameters = $biblioteca->biblioteca_id,
@@ -157,11 +157,10 @@
                                                             'class' => 'btn btn-danger btn-sm',
                                                             'onclick' => 'return confirm("¿Está seguro de eliminar el registro?")',
                                                         ],
-                                                    ) !!}
+                                                    ) !!} --}}
                                                 @endif
                                             </td>
 
-                                            </td>
                                         </tr>
                                     @endforeach
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotasExtTable extends Migration
+class CreateNotasgenTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateNotasExtTable extends Migration
      */
     public function up()
     {
-        Schema::create('notas_ext', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('notasgen', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->longText('nota');           
             //identificación est 
             $table->string('estidnumber',12);
@@ -38,7 +38,6 @@ class CreateNotasExtTable extends Migration
             $table->integer('tpntid')->unsigned();
             $table->foreign('tpntid')->references('id')->on('tipo_nota'); //tipo nota 
             $table->string('tbl_org_id');
-            
             $table->timestamps();
         });
     }
@@ -50,6 +49,6 @@ class CreateNotasExtTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notas_ext');
+        Schema::dropIfExists('notasgen');
     }
 }

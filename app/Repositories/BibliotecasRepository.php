@@ -21,6 +21,7 @@ class BibliotecasRepository extends BaseRepository implements BibliotecasService
 	{
         $this->applyValidateSede();
 		$bibliotecas = $this->query
+        ->where('bibliestado',$request->has('bibliestado') ? $request->input('bibliestado') : 1)
         ->Criterio($request)
         ->orderBy('created_at','desc')
         ->paginate(5);

@@ -151,7 +151,7 @@ $(document).ready(function () {
                 window.location.href = url;
                 console.log(a);                 
             }
-        });
+        }); 
     })
 
 

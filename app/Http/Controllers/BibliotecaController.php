@@ -21,22 +21,17 @@ class BibliotecaController extends Controller
 
     public function index(Request $request){ 
      // array_map('unlink', glob(public_path('act_temp/'.currentUser()->id.'___*')));//elimina los archivos que el 
-      //$bibliotecas = Biblioteca::where('bibliestado',1)->orderBy('created_at','desc')->get();
-
-      $bibliotecas = $this->bibliotecaService->validateFilter([
-        'bibliestado'=>1 
-      ])->orderBy('created_at','desc')->index($request);
- 
-     
-       return view('galeria.index',compact('bibliotecas'));
+      $bibliotecas = Biblioteca::where('bibliestado',1)->orderBy('created_at','desc')->paginate(15);
+      $bibliotecas = $this->bibliotecaService->index($request);
+      return view('galeria.index',compact('bibliotecas'));
     }
 
     public function showBibliotecaOff(Request $request){
        
-     // $bibliotecas = Biblioteca::where('bibliestado',0)->orderBy('created_at','DESC')->get();
-     $bibliotecas = $this->bibliotecaService->validateFilter([
+      $bibliotecas = Biblioteca::where('bibliestado',0)->orderBy('created_at','DESC')->get();
+     /* $bibliotecas = $this->bibliotecaService->validateFilter([
       'bibliestado'=>0
-    ])->orderBy('created_at','desc')->index($request);
+    ])->orderBy('created_at','desc')->index($request); */
 
 
       $active_galeria = 'active';
@@ -130,6 +125,7 @@ class BibliotecaController extends Controller
 
     public function change($id){
       $biblioteca= Biblioteca::find($id);
+      dd($biblioteca);
       if ($biblioteca->bibliestado == 1) {
         $biblioteca->bibliestado = 0;
         $biblioteca->save();
