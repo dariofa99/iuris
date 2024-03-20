@@ -7,11 +7,14 @@
 use Carbon\Carbon;
 use App\ReferencesData;
 
+
+
+if(!function_exists('currentUser')) {
 function currentUser()
 {
     return auth()->user();
 }
-
+}
 
 function currentUserInConciliacion($conciliacion, $roles)
 {
@@ -360,7 +363,8 @@ function quitarAcentos($cadena)
 function ramasDerechoNotificar()
 {
     return [
-        15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 31, 32, 33, 35,
+        15, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 31, 32, 33, 35,
         37,
         39,
         40,

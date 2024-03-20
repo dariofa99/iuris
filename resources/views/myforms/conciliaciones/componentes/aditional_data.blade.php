@@ -45,7 +45,7 @@
                     class="form-control form-control-sm input_user_ad {{ isset($required) ? $required : '' }}">@if (isset($conciliacion) and
                             $reference->options[0] and
                             $conciliacion->getDataVal($reference->id, $reference->options[0]->id))
-{{ $conciliacion->getDataVal($reference->id, $reference->options[0]->id)->value }}@endif</textarea>
+                    {{ $conciliacion->getDataVal($reference->id, $reference->options[0]->id)->value }}@endif</textarea>
             @else
                 <input {{ isset($disabled) ? $disabled : '' }} data-reference_id="{{ $reference->id }}"
                     data-name="{{ $reference->name }}" data-option="{{ $reference->options[0]->id }}"

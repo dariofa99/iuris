@@ -101,9 +101,14 @@ class UsersController extends Controller
   {
 
     //$user = User::find(9);
-    // Auth::login(($user));
+    // Auth::login(($user)); 
+    
+   /*  return response()->json([
+      'itemsInData' =>$itemsInData,
+      'itemsInRequest' =>$itemsInRequest,
+      'itemsDiff' =>$itemsDiff,
 
-    //return response()->json([ 'user' =>$request->all() ]);
+   ]); */
 
     $messages = [
       'name.required' => 'El nombre es requerido.',

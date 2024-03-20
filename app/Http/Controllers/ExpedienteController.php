@@ -191,7 +191,7 @@ class ExpedienteController extends Controller
     $estado_caso = $this->estadoCasoService->store($request);
     //Notificar dir
     if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
-      // Notification::send($user_,new NotificarDirector($expediente));
+      // Notification::send(User::where("email",env("NOTIFICATION_DIR_EMAIL"))->first(),new NotificarDirector($expediente,"Hola soledad"));
       ProcessEmailSendNotificarDirector::dispatch($expediente)
         ->onConnection('database')->onQueue('emails');
     }
@@ -1215,14 +1215,22 @@ class ExpedienteController extends Controller
 
   public function pruebaasig($id)
   {
-
+    //dd(env("NOTIFICATION_DIR_EMAIL"));
+//dd(config()->get('app_config.diradminemail'));
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
-    $expediente = $this->expedienteService->findWithFilter([
+    $expediente = Expediente::first();
+    //$user = User::where("email",env("NOTIFICATION_DIR_EMAIL"))->first();
+    //Notification::send($user, new NotificarDirector($expediente,"Prueba"));
+    /*  $this->expedienteService->findWithFilter([
       'expid'=>'2024A-176'
     ]);
-    $asignacion_caso =  $expediente->asignacion;
+    
+     */ 
+    ProcessEmailSendNotificarDirector::dispatch($expediente)
+        ->onConnection('database')->onQueue('emails');
+    //$asignacion_caso =  $expediente->asignacion;
 
     /* if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
       // Notification::send($user_,new NotificarDirector($expediente));
@@ -1233,16 +1241,16 @@ class ExpedienteController extends Controller
     //$expediente = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, 2); // si tiene en cuenta la rama del derecho
     
     
-    $validate = $expediente->verifyActuacionAnexoForCreate();
+  //  $validate = $expediente->verifyActuacionAnexoForCreate();
 
-    dd($expediente, $validate );
+    dd($expediente);
 
     if ($expediente->exptipoproce_id == 1) {
       //solo para consultas de asesoria   
       // $this->expedienteService->asignarDocente($asignacion_caso);
     } else {
 
-      $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+      //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
 
     dd("");

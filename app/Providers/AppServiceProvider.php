@@ -7,6 +7,7 @@ use App\Repositories\AsignacionDocenteCasosRepository;
 use App\Repositories\AutorizacionesRepository;
 use App\Repositories\BaseRepository;
 use App\Repositories\BibliotecasRepository;
+use App\Repositories\ConcEncuSatisfaccionRepository;
 use App\Repositories\ConciliacionComentariosRepository;
 use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
@@ -24,6 +25,7 @@ use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\AutorizacionesService;
 use App\Services\BibliotecasService;
+use App\Services\ConcEncuSatisfaccionService;
 use App\Services\ConciliacionComentarioService;
 use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
@@ -64,14 +66,17 @@ class AppServiceProvider extends ServiceProvider
         \Carbon\Carbon::setlocale('es');
         Session::forget('sede');
         Schema::defaultStringLength(191);
-         $this->app->bind('nota',function(){
+     /*     $this->app->bind('nota',function(){
             return new \App\NotaExt();
-        }); 
+        });  */
    /*      $this->app->singleton('GuzzleHttp\Client',function(){
             return new Client(
                 ['base_uri'=>'http://judex.udenar.edu.co/']
             );
         });  */
+        $this->app->bind(   
+            BaseRepository::class
+        );
         $this->app->bind(            
             UsersService::class,
             UsersRepository::class,       
@@ -143,5 +148,12 @@ class AppServiceProvider extends ServiceProvider
             PeriodosRepository::class,
             BaseRepository::class
         );
+
+        $this->app->bind(
+            ConcEncuSatisfaccionService::class,
+            ConcEncuSatisfaccionRepository::class,
+            
+        );
+
     }
 }

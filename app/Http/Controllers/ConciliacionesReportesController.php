@@ -31,9 +31,17 @@ class ConciliacionesReportesController extends Controller
             $query->where('is_copy', 0);
             
         })
-            ->with('reporte','temporalesParent')
+            ->with('reporte')
+         
             ->where($request->except(['_', 'conciliacion_id', 'conc_estado_id']))
             ->get();
+
+        if(count($reportes)>0){
+            $reportes->each(function($reporte) use ($request){
+                $reporte->tempConc = $reporte->temporalesParent()
+                ->where('conciliacion_id',$request->input('conciliacion_id'))->get();
+            });
+        }
 
         return response()->json($reportes);
     }

@@ -83,7 +83,9 @@ if (!isset($modo_nav_crl)) {
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
+        
         @include('layouts.sidebar')
+     
         <!-- /:main Sidebar Container -->
 
         <!-- Content Wrapper. Contains page content -->

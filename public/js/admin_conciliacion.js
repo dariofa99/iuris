@@ -28,28 +28,22 @@ $(document).ready(function () {
     var errors = validateForm("myform_asig_nota_conciliacion");
     var errors2 = validateNotas("myform_asig_nota_conciliacion");
     if (errors.length <= 0) {
-        if (errors2.length <= 0) {
-            if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "store") {
-                storeNotaExt(request);
-            }
-            if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "update") {
-                var id = $("#myform_asig_nota_conciliacion input[name=estidnumber]").val();
-                oficinaUpdateNota(request, id);
-            }
-        } else {
-            toastr.error("Por favor, verifíque que no haya notas superiores a 5, con espacios o caracteres extraños", "", {
-                positionClass: "toast-top-right",
-                timeOut: "6000",
-            });
+      if (errors2.length <= 0) {
+        if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "store") {
+          storeNotaExt(request);
         }
-
+        if ($("#myform_asig_nota_conciliacion input[name=typesub]").val() == "update") {
+          var id = $("#myform_asig_nota_conciliacion input[name=estidnumber]").val();
+          oficinaUpdateNota(request, id);
+        }
+      } else {
+        toastr.error("Por favor, verifíque que no haya notas superiores a 5, con espacios o caracteres extraños", "", {
+          positionClass: "toast-top-right",
+          timeOut: "6000",
+        });
+      }
     }
-
-   
-  
-
-
-});
+  });
 
   $("#myUserSolicitanteForm").on("focus", "input[name='idnumber']", validateTypeDoc);
   $("#myUserRepLegalForm").on("focus", "input[name='idnumber']", validateTypeDoc);
@@ -57,12 +51,6 @@ $(document).ready(function () {
   $("#myUserParteSolicitadaForm").on("focus", "input[name='idnumber']", validateTypeDoc);
   $("#myUserRepLegalSolicitadaForm").on("focus", "input[name='idnumber']", validateTypeDoc);
   $("#user_gen_conciliacion_form").on("focus", "#myUserConciliacionesForm input[name='idnumber']", validateTypeDoc);
-
-  /*  $("#user_gen_conciliacion_form").on("blur", "#myUserConciliacionesForm input[name='idnumber']", async function () {
-     var lastidnumber = $(this).val();
-     alertValidateUser(lastidnumber, "myUserConciliacionesForm");
-     $(this).val("");
-   }); */
 
   $("#myUserRepLegalSolicitadaForm").on("blur", "input[name='idnumber']", async function () {
     var lastidnumber = $(this).val();
@@ -1621,6 +1609,29 @@ $(document).ready(function () {
     $("#myModal_add_nota_conciliaciones").modal("show")
   });
 
+  $("#openModEvSatisf").on("click",function(e) {
+    $("#myModal_form_evnivelsatisfaccion").modal("show")
+  })
+
+  $("#myEvaNivSatForm").on("submit",async function(e){
+    e.preventDefault();
+        var errors = validateForm("myEvaNivSatForm");
+        if (errors.length <= 0) {
+            var request = convertFormToJSON("myEvaNivSatForm");
+            request['conciliacion_id'] = $("#conciliacion_id").val();
+            var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
+            request["data"] = (data);
+            $("#wait").show()
+            let response = await conciliacionService.storeEncuSatisf(request);
+            $("#wait").hide();
+            $("#myModal_form_evnivelsatisfaccion").modal("hide")
+            Toast.fire({
+              title: 'La encuesta se ha enviado con éxito.',
+              icon: 'success',
+              timer: 2000,
+            });
+          }
+  })
 
   getReportesForNotifications();
   getActasCreadas();
@@ -1799,9 +1810,10 @@ async function getActasForStatus() {
     };
     const response = await conciliacionService.getPdfReportForStatus(request);
     var actas_c = $("#tblListarActasCreadas tr").length;
-    console.log(response, actas_c);
+
     var tr = '';
-    if (response.length > 0 && response[0].temporales_parent.length <= 0) {
+    if (response.length > 0 && response[0].tempConc.length <= 0) {
+
       var conid = $("#conciliacion_id").val();
       response.forEach(destino => {
         tr += `

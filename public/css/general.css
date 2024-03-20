@@ -25,3 +25,9 @@
 animation: spin 5s linear infinite;
 }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+#acept_ter{
+    background-color: white;
+    padding: 3px;
+    border-radius: 5px;
+    color: black;
+}

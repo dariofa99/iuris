@@ -54,7 +54,7 @@ class CreateUsersTable extends Migration
 
             $table->date('fechanacimien')->nullable();
             $table->string('pbesena',5)->nullable();            
-            $table->string('pbepersondiscap',5)->nullable();
+            $table->boolean('pbepersondiscap')->default(0);
             $table->string('pbevictimconflic',5)->nullable();
             $table->string('pbeadultomayor',5)->nullable();
             $table->string('pbeminoetnica',5)->nullable();

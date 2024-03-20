@@ -32,6 +32,7 @@
                     <option value="users">Usuarios</option>
                     <option value="conciliaciones">Conciliaciones</option>
                     <option value="pdf_reportes">Reportes pdf</option>
+                    <option value="conc_encuesta_satisf">Encuesta de satisfacción (conciliaciones)</option>
                 </select> 
             </div>
 

@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -104,11 +105,12 @@ class UsersRepository extends BaseRepository implements UsersService
     ]);
 
     if ($request->has('data') and is_array($request->data)) {
+      $requestData = $request->data;
       foreach ($request->data as $key => $rq) {
         $rq['user_id'] = $user->id;
         $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
         if ($ref_data) {
-          $this->storeData($ref_data, $rq);
+          $this->storeData($ref_data, $rq, $requestData);
         }
       }
     }
@@ -130,9 +132,9 @@ class UsersRepository extends BaseRepository implements UsersService
 
     $this->applyValidateSede();
     $users = $this->query->with(['roles', 'curso'])
-    ->whereHas('roles', function ($query) use ($role) {
-      return $query->where('roles.name', $role);
-    })
+      ->whereHas('roles', function ($query) use ($role) {
+        return $query->where('roles.name', $role);
+      })
       ->where(function ($query) {
         if ($this->verifyStatus) {
           return $query->where('users.active', true);
@@ -140,7 +142,7 @@ class UsersRepository extends BaseRepository implements UsersService
       })
       ->where(function ($query) {
         //if (!currentUser()->hasRole('amatai')) {
-          return $query->where('users.idnumber', '<>', 30030);
+        return $query->where('users.idnumber', '<>', 30030);
         //}
       })->select(
         'users.active',
@@ -154,7 +156,7 @@ class UsersRepository extends BaseRepository implements UsersService
 
   public function findUserByNameOrLastNameAndRole($name, $role, $verify_status = false): array
   {
-    $this->applyValidateSede(); 
+    $this->applyValidateSede();
     $users = $this->query->with('roles')->whereHas('roles', function ($query) use ($role) {
       return $query->where('roles.name', $role);
     })
@@ -176,16 +178,16 @@ class UsersRepository extends BaseRepository implements UsersService
   }
 
   public function getUsersByPermissionName($permission): Collection
-  { 
+  {
 
     $users = User::join('role_user as ru', 'users.id', '=', 'ru.user_id')
       ->join('roles', 'roles.id', '=', 'ru.role_id')
       ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
       ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
-      ->where('users.active',true)
+      ->where('users.active', true)
       ->where('permissions.name', $permission)
       ->select("users.id", 'users.email', 'users.name')
-      ->get(); 
+      ->get();
 
     return $users;
   }
@@ -247,14 +249,14 @@ class UsersRepository extends BaseRepository implements UsersService
       ->leftjoin('user_has_ramasderecho', 'user_has_ramasderecho.user_id', '=', 'users.id')
       ->leftjoin('rama_derecho', 'rama_derecho.id', '=', 'ramaderecho_id')
       ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-      ->where(function($query){
-          $query->orwhere('role_id', '4')
+      ->where(function ($query) {
+        $query->orwhere('role_id', '4')
           ->orwhere('users.active_asignacion', true);
       })
       ->where('rama_derecho.subrama', $rama)
-      ->where('users.active', true)      
+      ->where('users.active', true)
       ->where('sede_usuarios.sede_id', session('sede')->id_sede)
-      ->select('users.id', 'users.idnumber','users.name')
+      ->select('users.id', 'users.idnumber', 'users.name')
       ->orderBy('users.created_at', 'desc')->groupBy('users.idnumber')->get()->toArray();
     return $doceWithRama;
   }
@@ -286,11 +288,12 @@ class UsersRepository extends BaseRepository implements UsersService
     $user->fill($request->all());
     $user->save();
     if ($request->has('data') and is_array($request->data)) {
+      $requestData = $request->data;
       foreach ($request->data as $key => $rq) {
         $rq['user_id'] = $user->id;
         $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
         if ($ref_data) {
-          $this->storeData($ref_data, $rq);
+          $this->storeData($ref_data, $rq, $requestData);
         }
       }
     }
@@ -347,13 +350,43 @@ class UsersRepository extends BaseRepository implements UsersService
     return $user;
   }
 
-  protected function storeData($ref_data, $request)
+  protected function storeData($ref_data, $request, $requestData)
   {
 
-    $data = UserAditionalData::where([
-      'reference_data_id' => $ref_data->id,
-      'user_id' => $request['user_id']
-    ])->first();
+
+    if ($ref_data->type_data_id == 170) {
+      $data = UserAditionalData::where([
+        'reference_data_id' => $ref_data->id,
+        'user_id' => $request['user_id']
+      ])->get();
+      $itemsInData = [];
+      foreach ($data as $key => $value) {
+        $itemsInData[] = $value->reference_data_option_id;
+      }
+      $itemsInRequest = [];
+      foreach ($requestData as $key => $value) {
+        $itemsInRequest[] = $value['option_id'];
+      }
+      $itemsDiff = array_diff($itemsInData, $itemsInRequest);
+      $delete = UserAditionalData::whereIn('reference_data_option_id', $itemsDiff)
+        ->where([
+          'reference_data_id' => $ref_data->id,
+          'user_id' => $request['user_id']
+        ])->delete();
+
+      $data = UserAditionalData::where([
+        'reference_data_option_id' => $request["option_id"],
+        'reference_data_id' => $ref_data->id,
+        'user_id' => $request['user_id']
+      ])->first();
+    } else {
+      $data = UserAditionalData::where([       
+        'reference_data_id' => $ref_data->id,
+        'user_id' => $request['user_id']
+      ])->first();
+    }
+
+
 
 
     if ($data) {

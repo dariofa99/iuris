@@ -4,7 +4,7 @@ const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
     if ($("#expediente_id").val() != undefined) {
-        $(":input").inputmask(); 
+        $(":input").inputmask();
         set_tab();
     }
     $("#search_onlyMy_exp").on("change", async function () {
@@ -64,7 +64,7 @@ $(document).ready(function () {
         $(".disabled").prop('disabled', true);
         $(".disabled-fun3").prop("disabled", true);
         $(".disabled-fun3").selectpicker("refresh");
-        
+
     });
 
 
@@ -88,12 +88,12 @@ $(document).ready(function () {
         abrirModalDocentes(response.users, option);
     });
     $("#selectexpidnumberest").on("change", async function (e) {
-        if($("#oldexpidnumberest").val()!=$(this).val()){
-            $("#idnumberest").val($(this).val()).prop('disabled',false)
-        }else{
-            $("#idnumberest").val("").prop('disabled',true)
+        if ($("#oldexpidnumberest").val() != $(this).val()) {
+            $("#idnumberest").val($(this).val()).prop('disabled', false)
+        } else {
+            $("#idnumberest").val("").prop('disabled', true)
         }
-       
+
     });
     $("#btnActualizar").on("click", async function (e) {
         var errors = validateForm("form_expediente_edit");
@@ -131,7 +131,7 @@ $(document).ready(function () {
         if ($("#oldexpidnumberest").val() == "") {
             $("#oldexpidnumberest").val($("#exp_idnumberest").val());
         }
-        
+
     });
 
     $("#btn_nueva_cita").on("click", function (e) {
@@ -753,7 +753,8 @@ $(document).ready(function () {
         resetForm('myFormUserCreateExpediente');
         $("#myFormUserCreateExpediente select[name='tipopers_id']").val(237);
         $("#myFormUserCreateExpediente select[name='tipodoc_id']").val(2);
-        $("#content_infoexp").hide()
+        $("#content_infoexp").hide();
+        ocultarCompDiscapUser();
     });
 
     $("#content_user_exp_asig").on("blur", "input[name='idnumber']", async function (e) {
@@ -778,10 +779,10 @@ $(document).ready(function () {
                 ${response.user.lastname} con el rol: ${response.user.roles[0].display_name}.`
                 $("#rl_user_solicitud").text(msg)
                 if (response.expedientes && response.expedientes.length > 0) {
-                    
+
                     var li = '';
                     response.expedientes.forEach(exp => {
-                       li+=`
+                        li += `
                        <li>
                             ${exp.count} en estado ${exp.nombre_estado}
                         </li>
@@ -789,7 +790,7 @@ $(document).ready(function () {
                     });
                     $("#lbl_text_casosasig").text("Tiene los siguientes casos en calidad de solicitante")
                     $("#list_casos_asignados").html(li)
-                }else{
+                } else {
                     $("#lbl_text_casosasig").text("NO tiene casos")
                     $("#list_casos_asignados").html("")
                 }
@@ -805,21 +806,51 @@ $(document).ready(function () {
     $("#content_user_exp_asig #myFormUserCreateExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
     $("#content_user_exp_asig #myFormUserEditExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
 
-    $("#content_user_exp_asig").on("click", '#registrar_exp_us', async function (e) {
+    $("#content_user_exp_asig")
+    .on("change", "select[name='pbepersondiscap']", function (e) {
+
+        if ($(this).val() == 1) {
+            //$(".discaform").show();
+            mostrarCompDiscapUser()
+        } else {
+            ocultarCompDiscapUser();
+
+        }
+    });
+
+    $("#content_user_exp_asig")
+    .on("change", "select[name='has_apoyo']", function (e) {
+
+        if ($(this).val() == 1) {
+            $(".has_apoyo").show()
+            $("#acept_ter").prop("disabled",false)
+        } else {
+            $(".has_apoyo").hide()
+            $("#acept_ter").prop("disabled",true).prop("checked",false)
+        }
+    });
+
+
+    $("#content_user_exp_asig").on("submit", '#myFormUserCreateExpediente', async function (e) {
+        e.preventDefault();
         var errors = validateForm("myFormUserCreateExpediente");
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserCreateExpediente");
             var data = [];
             $("#myFormUserCreateExpediente .input_user_ad").each((index, obj) => {
-                data.push({
-                    value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-                    section: $(obj).attr("data-section"),
-                    type: $(obj).attr("data-type"),
-                    name: $(obj).attr("data-name"),
-                    option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-                    value_is_other: $("#value_other_text-" + $(obj).val()).val(),
-                    conciliacion_id: $("#conciliacion_id").val()
-                });
+
+                if (($(obj).attr("data-type") == 170 && $(obj).is(":checked"))
+                    || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
+                    data.push({
+                        value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
+                        section: $(obj).attr("data-section"),
+                        type: $(obj).attr("data-type"),
+                        name: $(obj).attr("data-name"),
+                        option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
+                        value_is_other: $("#value_other_text-" + $(obj).val()).val(),
+                        conciliacion_id: $("#conciliacion_id").val()
+                    });
+                }
             });
             request["data"] = (data);
             $("#wait").show();
@@ -832,9 +863,9 @@ $(document).ready(function () {
                     });
                 });
             } else {
-                resetForm('myFormUserEditExpediente');
-                $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
-                $("#myModal_exp_user_edit").modal("hide");
+               // resetForm('myFormUserEditExpediente');
+               // $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
+              //  $("#myModal_exp_user_edit").modal("hide");
             }
             $("#wait").hide();
         }
@@ -873,7 +904,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#content_user_exp_asig").on("click", '#actualizar_exp_us', async function (e) {
+    $("#content_user_exp_asig").on("submit", '#myFormUserEditExpediente', async function (e) {
+       e.preventDefault();
         var errors = validateForm("myFormUserEditExpediente");
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserEditExpediente");
@@ -1592,7 +1624,7 @@ $(document).ready(function () {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
             });
-            errors = 1; 
+            errors = 1;
         }
         if (notaapl > 5 || notacon > 5 || notaet > 5) {
             toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
@@ -2595,7 +2627,7 @@ function get_notas(tbl_id, origen) {
 
 
 function hideButtReasCaso() {
-  
+
     hideElement("btnReasignar");
     hideElement("btnCancReasig");
     hideElement("cont_anotacion");
@@ -3029,4 +3061,18 @@ async function changeSelectSearchExp(value) {
             break;
         default:
     }
+}
+
+
+function ocultarCompDiscapUser() {
+    $(".discaform").hide();
+    $("#has_apoyo").prop("disabled",true).val("");
+    $("#acept_ter").prop("disabled",true).prop("checked",false);
+    $(".has_apoyo").hide()
+}
+
+function mostrarCompDiscapUser() {
+    $(".discaform").show();
+    $(".has_apoyo").hide()
+    $("#has_apoyo").prop("disabled",false)
 }

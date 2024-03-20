@@ -57,8 +57,8 @@ class User extends Authenticatable
         'estrato_id',
         'estadocivil_id',
         'cursando_id',
-        'fechanacimien',
-        'pbesena',
+        'fechanacimien', 
+        'has_apoyo',
         'pbepersondiscap',
         'pbevictimconflic',
         'pbeadultomayor',
@@ -136,7 +136,7 @@ class User extends Authenticatable
     }
     public function notas_ext()
     {
-        return $this->hasMany(NotaExt::class, 'estidnumber', 'idnumber');
+        /* return $this->hasMany(NotaExt::class, 'estidnumber', 'idnumber'); */
     }
 
     public function aditional_data()
@@ -316,7 +316,7 @@ class User extends Authenticatable
     public function getNotas($request)
     {
         if ($request->origen and $request->origen == 'conciliaciones') {
-            $notas = $this->notas_ext()
+            $notas = $this->notas()
                 ->whereDate('notas_ext.created_at', '>', '2021-10-17')
                 ->where(function ($query) use ($request) {
                     if ($request->has('segid') and $request->segid != '') {

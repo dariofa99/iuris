@@ -359,6 +359,11 @@ Route::get('documentos/get', 'CaseLogController@getDocuments');
 Route::post('documentos/{id}', 'CaseLogController@update');
 Route::get('/descargar/documento/{id}','CaseLogController@downloadFileLog');
 
+//Conciliaciones encuestas
+Route::resource('conciliacion/encuestas', 'ConcEncuSatisfaccionController');
+
+
+
 //Conciliaciones
 Route::resource('conciliaciones', 'ConciliacionesController');
 //Solicitudes

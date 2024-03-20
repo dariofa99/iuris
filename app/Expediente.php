@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Traits\ColorTurnos;
 use Illuminate\Support\Facades\Event;
-use App\User; 
+use App\User;
 use App\Traits\AsigNotas;
 use App\Traits\UploadFile;
 use App\Segmento;
@@ -512,7 +512,7 @@ class Expediente extends Model
     public function verifyActuacionAnexoForCreate()
     {
         $actuacions = $this->getActuaciones(1);
-       // return $actuacions;
+        // return $actuacions;
         $validForCreate = true;
         $act_ab = 0;
         if (($actuacions)) {
@@ -549,20 +549,32 @@ class Expediente extends Model
         $fecha_limit = Carbon::now();
         $padresAct = DB::table('actuacions')
             ->join('revisiones_actuacion', 'actuacions.id', '=', 'revisiones_actuacion.parent_rev_actid')
-            ->where([['actestado_id', '<>', '136'], ['actestado_id', '<>', '138'], ['actestado_id', '<>', '139'], ['actestado_id', '<>', '174'], ['actestado_id', '<>', '175'], ['actestado_id', '<>', '176'], ['actestado_id', '<>', '177'], ['actestado_id', '<>', '178'], ['actidnumberest', $this->expidnumberest], ['actexpid', $this->expid]])
+            ->where([
+                ['actestado_id', '<>', '136'],
+                ['actestado_id', '<>', '138'],
+                ['actestado_id', '<>', '139'],
+                ['actestado_id', '<>', '174'],
+                ['actestado_id', '<>', '175'],
+                ['actestado_id', '<>', '176'],
+                ['actestado_id', '<>', '177'],
+                ['actestado_id', '<>', '178'], 
+                ['actidnumberest', $this->expidnumberest], 
+                ['actexpid', $this->expid]
+            ])
             ->select('actuacions.id')
             ->groupBy('actuacions.id')
             ->get();
 
         $hijos = [];
         $segmento = $this->getSegmentoActivo();
-
+              
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")
                 ->where("periodo_id", $periodo->id)->get();
 
             foreach ($padresAct as $key => $actpa) {
+                
                 $hijosAct = DB::select(
                     DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre,fecha_limit FROM actuacions, revisiones_actuacion
                 WHERE actuacions.id = revisiones_actuacion.rev_actid
@@ -570,7 +582,8 @@ class Expediente extends Model
                 AND actestado_id <> 136 AND actestado_id <> 138 and actestado_id <> 235
                 ORDER BY rev_actid DESC LIMIT 1"),
                 );
-
+                
+               // 
                 if (count($hijosAct) > 0 and $hijosAct[0]->fecha_limit !== null) {
                     $percent = 100;
                     $date = Carbon::now()->format('Y-m-d');
@@ -592,8 +605,8 @@ class Expediente extends Model
                         }
                     }
 
-
-                    if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $fecha_limit < $date) {
+                    if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $hijosAct[0]->fecha_limit < $date) {
+                      
                         $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
                         $data = [

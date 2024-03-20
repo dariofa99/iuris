@@ -72,6 +72,7 @@
         </div>
 
         <!-- Sidebar Menu -->
+        @if(!isset($ocultar_menu))
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
@@ -202,7 +203,7 @@
                         </ul>
                     </li>
                 @endif
-                
+
                 @if (currentUser()->can('ver_horarios') and config('app.name') != 'ConciliApp')
                     <li class="nav-item has-treeview {{ !Route::is('horarios.index') ?: 'menu-open' }}">
                         <a href="#" class="nav-link">
@@ -264,8 +265,7 @@
                     </ul>
                 </li>
                 @if (currentUser()->can('ver_configuracion') and config('app.name') != 'ConciliApp')
-                    <li
-                        class="nav-item has-treeview {{ (!Route::is('notas.index')) ?: 'menu-open' }}">
+                    <li class="nav-item has-treeview {{ !Route::is('notas.index') ?: 'menu-open' }}">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-cog"></i>
                             <p>
@@ -327,6 +327,7 @@
             </li>
             </ul>
         </nav>
+        @endif
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->

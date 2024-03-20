@@ -194,7 +194,8 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 JOIN sede_usuarios ON sede_usuarios.user_id = users.id
                 JOIN role_user ON role_user.user_id = users.id
                 WHERE expedientes.exptipoproce_id = '1'
-                AND users.active=1
+                AND users.active = 1
+                AND users.idnumber <> 98378318
                 AND  expedientes.expestado_id = '1'
                 AND (users.active_asignacion = 1 or role_user.role_id = 4)
                 AND sede_usuarios.sede_id =  '" . session('sede')->id_sede . "'
@@ -212,6 +213,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                     ->orwhere('users.active_asignacion', true);
             })
             ->where('users.active', true)
+            ->where('users.idnumber',"<>", 98378318)
             ->where('sedes.id_sede', session('sede')->id_sede)
             ->select(
                 'users.active',

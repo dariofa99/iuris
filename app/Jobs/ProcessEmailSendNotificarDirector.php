@@ -37,15 +37,16 @@ class ProcessEmailSendNotificarDirector implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle() 
     {
-        $this->user = User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first();
+        $this->user = User::where("email",config()->get('app_config.diradminemail'))->first();
         $message = "<h3>Se ha creado un nuevo expediente!</h3>";
         $message .= "<h4>Número: " . $this->expediente->expid . "<br>";
         $message .= "Rama del Derecho: " . $this->expediente->rama_derecho->ramadernombre . "<br>";
         $message .= "Estudiante: " . $this->expediente->estudiante->name . " " . $this->expediente->estudiante->lastname . "<br>";
         $message .= "Docente: " . $this->expediente->getDocenteAsig()->name . " " . $this->expediente->getDocenteAsig()->lastname . "<br></h4>";
         Notification::send($this->user, new NotificarDirector($this->expediente,$message));
-       
+       Log::info(env("NOTIFICATION_DIR_EMAIL"));
+       Log::info($this->user);
     }
 }

@@ -340,7 +340,7 @@ export class ConciliacionService {
         }
         const topics = await response.json();
         return topics;
-    } 
+    }
 
     async getPdfReportForStatus(request) {
         const response = await fetch(BASE_URL + "conciliacion/reportes/for/status?" + new URLSearchParams(request), {
@@ -683,7 +683,7 @@ export class ConciliacionService {
         const topics = await response.json();
         return topics;
     }
-    async storeSharedConcFiles(request) { 
+    async storeSharedConcFiles(request) {
         const response = await fetch(BASE_URL + "conciliaciones/store/conc/shared/files", {
             method: 'POST',
             headers: {
@@ -748,6 +748,44 @@ export class ConciliacionService {
         progressDiv.textContent = `${parseInt(percentage)}%`;
         progressDiv.style.width = `${parseInt(percentage)}%`;
 
+    }
+    getAditionalDataByForm(form) {
+        var data = [];
+
+        $("#" + form + " .input_user_ad").each((index, obj) => {
+            if (($(obj).attr("data-type") == 170 && $(obj).is(":checked"))
+                || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
+                data.push({
+                    value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
+                    section: $(obj).attr("data-section"),
+                    type: $(obj).attr("data-type"),
+                    name: $(obj).attr("data-name"),
+                    option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
+                    value_is_other: $("#value_other_text-" + $(obj).val()).val(),
+                    conciliacion_id: $("#conciliacion_id").val()
+                });
+            }
+        });
+        return data;
+    }
+    async storeEncuSatisf(request) {
+        const response = await fetch(BASE_URL + "conciliacion/encuestas", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
     }
 
 }

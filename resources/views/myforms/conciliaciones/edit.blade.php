@@ -48,10 +48,13 @@
 
 @section('titulo_area')
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-11">
             Número: <strong>{{ $conciliacion->num_conciliacion }}</strong><br>
             <span style="color:#ffffff;background-color: {{ $conciliacion->estado->color }}" class="badge">
-                Estado: {{ $conciliacion->estado->ref_nombre }} {{ $conciliacion->estado->id }}</span>
+            Estado: {{ $conciliacion->estado->ref_nombre }} {{ $conciliacion->estado->id }}</span>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-info" id="openModEvSatisf">Evaluar satisfacción</button>
         </div>
     </div>
 
@@ -229,7 +232,7 @@
     @include('myforms.conciliaciones.componentes.modal_edit_notas')
     @include('myforms.conciliaciones.componentes.modal_reportes_archivos_compartidos')
     @include('myforms.conciliaciones.componentes.modal_respuestas_asignaciones')
-
+    @include('myforms.conciliaciones.componentes.modal_form_evnivelsatisfaccion')
 @stop
  
 @push('scripts')
