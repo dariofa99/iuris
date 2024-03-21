@@ -10,6 +10,7 @@
 storage/*
 /storage/*.key
 /vendor
+/config/app_config.php
 .env
 .env.example
 .phpunit.result.cache
