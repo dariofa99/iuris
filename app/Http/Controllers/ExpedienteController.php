@@ -133,7 +133,7 @@ class ExpedienteController extends Controller
   public function store(Request $request)
   {
 
-    
+
     //  return response()->json($request->all());
     $res_day = Carbon::now();
     $res_day = $res_day->addDays(7)->format('Y-m-d');
@@ -340,6 +340,10 @@ class ExpedienteController extends Controller
       $request['ref_estado_id'] = $expediente->expestado_id;
       $request['ref_motivo_estado_id'] = 11;
       $estado_caso = $this->estadoCasoService->store($request);
+      $exp = ExpedientePausas::where("asig_caso_id", $asignacion->id)
+        ->update([
+          "estado_id" => 250
+        ]);
     }
     if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     if (currentUser()->hasRole("estudiante")) {
@@ -463,11 +467,15 @@ class ExpedienteController extends Controller
       || Auth::user()->hasRole('coordprac')
       || Auth::user()->hasRole('amatai')
     ) {
-      if ($asignacion_caso != null 
-      and $request->has('expidnumberest')) {
-        if ($request->has('expidnumberest') 
-        and $request->expidnumberest != $request['oldexpidnumberest']) {
-         /*  DB::table('asignacion_caso')
+      if (
+        $asignacion_caso != null
+        and $request->has('expidnumberest')
+      ) {
+        if (
+          $request->has('expidnumberest')
+          and $request->expidnumberest != $request['oldexpidnumberest']
+        ) {
+          /*  DB::table('asignacion_caso')
             ->where([
               'activo' => 1,
               'asigexp_id' => $expediente->expid,
@@ -1213,10 +1221,42 @@ class ExpedienteController extends Controller
     return response()->json($response);
   }
 
-  public function pruebaasig($id)
+  public function pruebaasig(Request $request, $id)
   {
-    //dd(env("NOTIFICATION_DIR_EMAIL"));
-//dd(config()->get('app_config.diradminemail'));
+    $exp = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
+      ->join("expedientes_pausa", "expedientes_pausa.asig_caso_id", "=", "asignacion_caso.id")
+      ->select("expedientes.id as exp_id", "expedientes.expestado_id", "asignacion_caso.id as asigcaso_id", "expedientes.expid", "expedientes_pausa.fecha_final")
+      ->whereDate("expedientes_pausa.fecha_final", "<", Carbon::now())
+      ->whereDate("expedientes.updated_at", Carbon::now())
+      ->where("expedientes_pausa.estado_id", 249)
+      ->where("expedientes.expestado_id", 6)
+      ->get();
+
+    /* $exp = DB::table('expedientes')->join("asignacion_caso","expedientes.expid","=","asignacion_caso.asigexp_id")
+    ->join("expedientes_pausa","expedientes_pausa.asig_caso_id","=","asignacion_caso.id")
+    ->select("expedientes.expestado_id","asignacion_caso.id","expedientes.expid","expedientes_pausa.fecha_final")
+    ->whereDate("expedientes_pausa.fecha_final","<",Carbon::now())
+    ->where("expedientes.expestado_id",6)
+  ->get(); */
+  dd($exp);
+    $exp->each(function ($exped) use ($request) {
+      $expediente = Expediente::find($exped->exp_id);
+      //if ($expediente->isValidEvaPause()) {     
+      $expediente->expestado_id = 6;
+      $expediente->save();
+      $request['comentario'] = 'Fecha de pausa caducada';
+      $request['expidnumber'] = $expediente->expid;
+      $request['ref_estado_id'] = $expediente->expestado_id;
+      $request['ref_motivo_estado_id'] = 11;
+      // $estado_caso = $this->estadoCasoService->store($request);
+      $exp = ExpedientePausas::where("asig_caso_id", $exped->asigcaso_id)
+        ->update([
+          "estado_id" => 249
+        ]);
+      //  }
+    });
+    dd($exp);
+    //dd(config()->get('app_config.diradminemail'));
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
@@ -1227,9 +1267,9 @@ class ExpedienteController extends Controller
       'expid'=>'2024A-176'
     ]);
     
-     */ 
+     */
     ProcessEmailSendNotificarDirector::dispatch($expediente)
-        ->onConnection('database')->onQueue('emails');
+      ->onConnection('database')->onQueue('emails');
     //$asignacion_caso =  $expediente->asignacion;
 
     /* if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
@@ -1239,9 +1279,9 @@ class ExpedienteController extends Controller
         dd(ramasDerechoNotificar(),User::where("email",env('NOTIFICATION_DIR_EMAIL'))->first());
     } */
     //$expediente = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, 2); // si tiene en cuenta la rama del derecho
-    
-    
-  //  $validate = $expediente->verifyActuacionAnexoForCreate();
+
+
+    //  $validate = $expediente->verifyActuacionAnexoForCreate();
 
     dd($expediente);
 
@@ -1377,19 +1417,19 @@ class ExpedienteController extends Controller
     }
 
     if (count($docentes) > 0 and count($estudiantes) > 0) {
-      
+
       $expediente = $this->expedienteService->findWithFilter([
-        'expid' => $request->exp_id        
+        'expid' => $request->exp_id
       ]);
       $asig = $expediente->asignacion;
       $asig->activo = 0;
-      $asig->save(); 
+      $asig->save();
 
       $estudiante = $estudiantes[0];
       $request['expestado_id'] = 8;
       $request["expidnumberest"] = $estudiante["idnumber"];
       $expediente = $this->expedienteService->update($expediente, $request);
-         
+
       $periodo_act = $this->periodosService->getPeriodoActivo();
       $request['anotacion'] = "Asignado al dar de baja";
       $request['asigest_id'] = $estudiante['idnumber'];
@@ -1403,7 +1443,7 @@ class ExpedienteController extends Controller
 
       $request['docidnumber'] = $docente['idnumber'];
       $request['asig_caso_id'] = $asignacion->id;
-     
+
       $this->asignacionDocenteCasoService->store($request);
 
       $old_asig = AsigDocenteCaso::where([
@@ -1413,11 +1453,11 @@ class ExpedienteController extends Controller
       if ($old_asig) {
         $old_asig->activo = 0;
         $old_asig->save();
-      }      
+      }
       $request['expidnumber'] = $expediente->expid;
       $request['ref_estado_id'] = $expediente->expestado_id;
       $request['ref_motivo_estado_id'] = 11;
-      $this->estadoCasoService->store($request);   
+      $this->estadoCasoService->store($request);
       return response([
         "error" => false,
         "message" => "El caso se dió de baja con éxito y fue asignado al docente de prueba " . $docente['full_name']
