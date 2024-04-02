@@ -863,9 +863,9 @@ $(document).ready(function () {
                     });
                 });
             } else {
-               // resetForm('myFormUserEditExpediente');
-               // $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
-              //  $("#myModal_exp_user_edit").modal("hide");
+                resetForm('myFormUserEditExpediente');
+                $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
+                $("#myModal_exp_user_edit").modal("hide");
             }
             $("#wait").hide();
         }
