@@ -3,7 +3,7 @@
  @if (!$readonly and $expediente->expestado_id != '2' and $expediente->expestado_id != '4')
      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_req_create"
          id="btn_modal_req">Nueva cita/requerimiento</button>
- @endif
+ @endif 
 
 
 

@@ -1,9 +1,8 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem('keyCirCerrarCasoClose');
-        localStorage.removeItem('keyCirActualizaCierreClose')
+        
 
-        var keyCir = localStorage.getItem("keyCircActDosClose");
+        var keyCir = localStorage.getItem("keyCircjuridicos2024");
             if (keyCir == null) {
               var message = getCircular();
             } else {
@@ -145,11 +144,11 @@
     }
 
     function getCircular() {
-        var keyCir = localStorage.getItem("keyCircActDosClose");
+        var keyCir = localStorage.getItem("keyCircjuridicos2024");
         var message = '';
         if (keyCir == null) {
-            message = `<embed  src="{{ asset('recursos/CircularActualActDos.pdf#toolbar=0') }}" id="pdfViewer" >`
-            message += `<button class="btn btn-success" data-not="keyCircActDosClose" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+            message = `<embed  src="{{ asset('recursos/Circularconsultoriosjuridicos2024.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message += `<button class="btn btn-success" data-not="keyCircjuridicos2024" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
 
         }
        
