@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6">
-        @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') and
-                !$user->hasRole('docente'))
+        @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') 
+        || currentUser()->hasRole('dirgral'))
             <div class="form-group" align="right">
                 {!! Form::hidden('active_asignacion', '0') !!}
                 <input value="1" type="checkbox" {{ $user->active_asignacion == '1' ? 'checked' : '' }}

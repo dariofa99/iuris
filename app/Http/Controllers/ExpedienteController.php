@@ -1223,14 +1223,14 @@ class ExpedienteController extends Controller
 
   public function pruebaasig(Request $request, $id)
   {
-    $exp = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
+    /* $exp = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
       ->join("expedientes_pausa", "expedientes_pausa.asig_caso_id", "=", "asignacion_caso.id")
       ->select("expedientes.id as exp_id", "expedientes.expestado_id", "asignacion_caso.id as asigcaso_id", "expedientes.expid", "expedientes_pausa.fecha_final")
       ->whereDate("expedientes_pausa.fecha_final", "<", Carbon::now())
       ->whereDate("expedientes.updated_at", Carbon::now())
       ->where("expedientes_pausa.estado_id", 249)
       ->where("expedientes.expestado_id", 6)
-      ->get();
+      ->get(); */
 
     /* $exp = DB::table('expedientes')->join("asignacion_caso","expedientes.expid","=","asignacion_caso.asigexp_id")
     ->join("expedientes_pausa","expedientes_pausa.asig_caso_id","=","asignacion_caso.id")
@@ -1238,24 +1238,8 @@ class ExpedienteController extends Controller
     ->whereDate("expedientes_pausa.fecha_final","<",Carbon::now())
     ->where("expedientes.expestado_id",6)
   ->get(); */
-  dd($exp);
-    $exp->each(function ($exped) use ($request) {
-      $expediente = Expediente::find($exped->exp_id);
-      //if ($expediente->isValidEvaPause()) {     
-      $expediente->expestado_id = 6;
-      $expediente->save();
-      $request['comentario'] = 'Fecha de pausa caducada';
-      $request['expidnumber'] = $expediente->expid;
-      $request['ref_estado_id'] = $expediente->expestado_id;
-      $request['ref_motivo_estado_id'] = 11;
-      // $estado_caso = $this->estadoCasoService->store($request);
-      $exp = ExpedientePausas::where("asig_caso_id", $exped->asigcaso_id)
-        ->update([
-          "estado_id" => 249
-        ]);
-      //  }
-    });
-    dd($exp);
+ 
+    //dd($exp);
     //dd(config()->get('app_config.diradminemail'));
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
@@ -1268,9 +1252,9 @@ class ExpedienteController extends Controller
     ]);
     
      */
-    ProcessEmailSendNotificarDirector::dispatch($expediente)
-      ->onConnection('database')->onQueue('emails');
-    //$asignacion_caso =  $expediente->asignacion;
+  /*   ProcessEmailSendNotificarDirector::dispatch($expediente)
+      ->onConnection('database')->onQueue('emails'); */
+    $asignacion_caso =  $expediente->asignacion;
 
     /* if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
       // Notification::send($user_,new NotificarDirector($expediente));
@@ -1283,14 +1267,14 @@ class ExpedienteController extends Controller
 
     //  $validate = $expediente->verifyActuacionAnexoForCreate();
 
-    dd($expediente);
+    //dd($expediente);
 
     if ($expediente->exptipoproce_id == 1) {
       //solo para consultas de asesoria   
-      // $this->expedienteService->asignarDocente($asignacion_caso);
+       $this->expedienteService->asignarDocente($asignacion_caso);
     } else {
 
-      //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+      $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
 
     dd("");

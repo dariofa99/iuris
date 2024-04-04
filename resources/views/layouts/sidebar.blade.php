@@ -254,7 +254,13 @@
                         <li class="nav-item ml-3">
                             <a href="{{ url('/bibliotecas') }}" class="nav-link">
 
-                                <p>Ver documentos</p>
+                                <p>Ver documentos activos</p>
+                            </a>
+                        </li>
+                        <li class="nav-item ml-3">
+                            <a href="{{ url('/bibliotecas/inactivas/view') }}" class="nav-link">
+
+                                <p>Ver historico</p>
                             </a>
                         </li>
                         <li class="nav-item ml-3">
@@ -313,11 +319,11 @@
                                     <p>Categorías</p>
                                 </a>
                             </li>
-                            <li class="nav-item ml-3">
+                           {{--  <li class="nav-item ml-3">
                                 <a href="{{ route('categories.index') }}" class="nav-link">
                                     <p>Categorías estáticas</p>
                                 </a>
-                            </li>
+                            </li> --}}
 
                         </ul>
                     </li>

@@ -197,11 +197,11 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 AND users.active = 1
                 AND users.idnumber <> 98378318
                 AND  expedientes.expestado_id = '1'
-                AND (users.active_asignacion = 1 or role_user.role_id = 4)
+                AND (users.active_asignacion = 1)
                 AND sede_usuarios.sede_id =  '" . session('sede')->id_sede . "'
                 GROUP BY `docidnumber` ORDER BY num_casos ASC")
         );
-        //dd($asig_doc);
+        
         $docentes = DB::table('users')
             ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
@@ -209,8 +209,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
             ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
             ->where(function ($query) {
-                $query->orwhere('role_id', '4')
-                    ->orwhere('users.active_asignacion', true);
+                $query->orwhere('users.active_asignacion', true);
             })
             ->where('users.active', true)
             ->where('users.idnumber',"<>", 98378318)
@@ -270,7 +269,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         WHERE expedientes.exptipoproce_id = '$tipoproce'        
         AND users.active=1 
         AND expedientes.expestado_id = 1
-        AND (users.active_asignacion=1 or role_user.role_id=4)
+        AND (users.active_asignacion=1)
         AND asignacion_docente_caso.activo = 1
         
         AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
@@ -287,6 +286,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $subRama =  $asignacion_caso->expediente->rama_derecho->subrama;
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
+       
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {

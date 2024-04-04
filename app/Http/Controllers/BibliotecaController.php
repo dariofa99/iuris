@@ -35,8 +35,8 @@ class BibliotecaController extends Controller
    // $bibliotecas = Biblioteca::where('bibliestado', 0)->orderBy('created_at', 'DESC')->get();
     $request["bibliestado"] = 0;
     $bibliotecas = $this->bibliotecaService->index($request);
-    $active_galeria = 'active';
-    return view('galeria.show_biblioteca_inactiva', compact('bibliotecas', 'active_galeria'));
+
+    return view('galeria.show_biblioteca_inactiva', compact('bibliotecas'));
   }
 
   public function show()

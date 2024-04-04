@@ -137,19 +137,18 @@ $(document).ready(function () {
     $(".btn_delete_biblioteca").on("click", function (e) {
         e.preventDefault();
         var id = $(this).attr("data-id");
+        var text = $(this).text();
         Swal.fire({
-            title: '¿Esta seguro de eliminar el documento?',
-            type: 'warning',
+            title: '¿Esta seguro de '+text+' el documento?',
+            icon: 'warning',
             showCancelButton: true,
-            /* confirmButtonColor: '#3085d6', */
-            /* cancelButtonColor: '#d33', */
-            confirmButtonText: 'Si, eliminar',
+            confirmButtonText: 'Si, '+text,
             cancelButtonText: 'No, cancelar'
         }).then(async (result) => {
             if (result.value) {           
                 var url = "bibliotecas/change/" + id;
                 window.location.href = url;
-                console.log(a);                 
+                             
             }
         }); 
     })

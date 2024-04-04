@@ -47,7 +47,7 @@
                             <a href="/bibliotecas" class="btn btn-default">Ver todo</a>
                         </td>
                         <td>
-                           
+
                         </td>
                     </tr>
                 </table>
@@ -86,7 +86,7 @@
                                     <th>
                                         Rama del derecho
                                     </th>
-                                    <th width="5%" >
+                                    <th width="5%">
                                         Acción
                                     </th>
                                 </thead>
@@ -121,10 +121,10 @@
 
                                                 {{ $biblioteca->biblinombre }}
                                             </td>
-                                            <td>                                                
+                                            <td>
                                                 {{ getSmallDateWithHour($biblioteca->updated_at) }}<br>
-                                                <small> {{ ($biblioteca->updated_at->diffForHumans()) }}
-                                                    </small>
+                                                <small> {{ $biblioteca->updated_at->diffForHumans() }}
+                                                </small>
                                             </td>
                                             <td>
                                                 @if ($biblioteca->biblidoctamano / 1024 >= 1000)
@@ -149,29 +149,28 @@
                                                     $attributes = ['class' => 'btn btn-warning btn-sm btn-block', 'target' => '_blank'],
                                                 ) !!}
                                                 <!-- Trigger the modal with a button -->
-                                                <button type="button" class="btn btn-success btn-sm btn-block btn_buscar_biblioteca"
+                                                <button type="button"
+                                                    class="btn btn-success btn-sm btn-block btn_buscar_biblioteca"
                                                     data-id="{{ $biblioteca->id }}" data-toggle="modal"
                                                     data-target="#myModal_show_details">
-                                                    Detalles</button>
-                                                <!-- Trigger the modal with a button -->
+                                                    Detalles
+                                                </button>
                                                 @if (!currentUser()->hasRole('estudiante'))
                                                     <button type="button"
                                                         class="btn btn-primary btn-sm btn-block btn_buscar_biblioteca"
                                                         data-id="{{ $biblioteca->id }}" data-toggle="modal"
-                                                        data-target="#myModal_act_edit_doc">Editar</button>
+                                                        data-target="#myModal_act_edit_doc">Editar
+                                                    </button>
                                                     <button type="button"
                                                         class="btn btn-danger btn-sm btn-block btn_delete_biblioteca"
-                                                        data-id="{{ $biblioteca->id }}">Eliminar</button>
-
-                                                    {{--  {!! link_to_route('biblioteca.change', $title = 'Eliminar', $parameters = $biblioteca->biblioteca_id, $attributes = ['class'=>'btn btn-danger btn-sm btn-block','onclick'=>'return confirm("¿Está seguro de eliminar el registro?")']) !!}
-           --}}
+                                                        data-id="{{ $biblioteca->id }}">Archivar
+                                                    </button>
                                                 @endif
                                             </td>
 
                                             </td>
                                         </tr>
                                     @endforeach
-
                                 </tbody>
 
 
