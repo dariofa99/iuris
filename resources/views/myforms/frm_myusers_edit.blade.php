@@ -91,6 +91,12 @@
                                     Información Identitaria
                                 </a>
                             </li>
+                             <li class="nav-item">
+                                <a class="nav-link urlactive" id="identitaria-tab" data-toggle="tab" href="#identitaria_tab"
+                                    role="tab" aria-controls="identitaria_tab" aria-selected="false">
+                                    Información Discapacidad
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link urlactive" id="economica-tab" data-toggle="tab" href="#economica_tab"
                                     role="tab" aria-controls="economica_tab" aria-selected="false">
