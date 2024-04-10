@@ -201,7 +201,7 @@ class SegmentosController extends Controller
 		//dd($segmento); 
 		if ($segmento->fecha_corte == null) {
 			Session::flash('message-danger', 'Atención..! No hay una fecha de corte activa');
-			return response()->json(['errors' => ["No hay una fecha de corte activa"]]);
+			//return response()->json(['errors' => ["No hay una fecha de corte activa"]]);
 		}
 
 
@@ -244,11 +244,13 @@ class SegmentosController extends Controller
 		 join turnos on turnos.trnid_estudent = users.idnumber 
 		 join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
 		 where expedientes.expidnumberest = asignacion_caso.asigest_id 
-		 and (expestado_id != 5 and expestado_id != 2 and expestado_id != 5 and expestado_id != 6) 		
+		 and (expestado_id != 5 and expestado_id != 2 
+		 and expestado_id != 6) 		
 		 and asignacion_caso.activo = 1 
-		 and users.idnumber <> 3030		  
+		 and users.idnumber = 1004233194		  
 		 and fecha_asig < '" . $dateiniciocorte . "' 
-		 and sede_expedientes.sede_id=" . session('sede')->id_sede));
+		 and sede_expedientes.sede_id=" . session('sede')->id_sede)."
+		 order by asignacion_caso.fecha_asig desc");
 
 
 		// and expedientes.expidnumberest = '1124862051'
@@ -259,7 +261,7 @@ class SegmentosController extends Controller
 		//return response()->json(["no",$expedientes]); 
 
 		foreach ($expedientes as $key => $expediente) {
-			//$expediente = $expedientes[2];
+			$expediente = $expedientes[1];
 			if (($expediente->exptipoproce_id == 3 and $expediente->exphechos == 0)
 				|| ($expediente->exptipoproce_id != 3 and
 					($expediente->exphechos == 0 || $expediente->exprtaest == 0))
@@ -363,7 +365,7 @@ class SegmentosController extends Controller
 					'docidnumber' => $docente_id,
 					'tbl_org_id' => $expediente->id,
 				];
-				$this->Asignotasnewdatos($data);
+				//$this->Asignotasnewdatos($data);
 				// return response()->json("Docente");
 
 			}
@@ -446,11 +448,11 @@ class SegmentosController extends Controller
 						 GROUP BY 1 ORDER BY 1 ASC"));
 					//$iseva = $this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin);
 
-					// return response()->json([$iseva,'sjsj',$actuacionsmes]);
+					// return response()->json(['sjsj',$actuacionsmes]);
 					$res_act = $this->isActuacionEval($actuacionsmes, $dateiniciocorte, $segmento->fecha_fin, $expediente);
 
 					//return response()->json([$res_act,$actuacionsmes,$expediente]); 
-
+					return response()->json(['sjsj',$actuacionsmes,$res_act]);
 					if ($res_act[0]) {
 						$data = [
 							'ntaaplicacion' => 0,

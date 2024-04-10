@@ -91,9 +91,9 @@
                                     Información Identitaria
                                 </a>
                             </li>
-                             <li class="nav-item">
-                                <a class="nav-link urlactive" id="identitaria-tab" data-toggle="tab" href="#identitaria_tab"
-                                    role="tab" aria-controls="identitaria_tab" aria-selected="false">
+                            <li class="nav-item">
+                                <a class="nav-link urlactive" id="discapacidad-tab" data-toggle="tab" href="#discapacidad_tab"
+                                    role="tab" aria-controls="discapacidad_tab" aria-selected="false">
                                     Información Discapacidad
                                 </a>
                             </li>
@@ -122,8 +122,6 @@
                                         'disabled' => isset($user) ? '' : '',
                                     ])
                                 </div>
-
-
                             </div>
 
                             <div id="economica_tab" class="tab-pane fade" role="tabpanel" aria-labelledby="economica-tab">
@@ -132,8 +130,16 @@
                                         'disabled' => isset($user) ? '' : '',
                                     ])
                                 </div>
-
                             </div>
+
+                            <div id="discapacidad_tab" class="tab-pane fade" role="tabpanel" aria-labelledby="discapacidad-tab">
+                                <div class="row">
+                                    @include('myforms.components_user.discapacidad', [
+                                        'disabled' => isset($user) ? '' : '',
+                                    ])
+                                </div>
+                            </div>
+
                             <!-- /.tab-pane -->
 
                             <!-- /.tab-pane -->
@@ -196,10 +202,10 @@
 
             /*   var message = `<h5>Estimado estudiante debido a cambios de horario se habilitará la 
           asignación del curso en el transcurso de esta semana.</h5>`;
-                 
-                 Comunícate con el director
-                 
-                  */
+                     
+                     Comunícate con el director
+                     
+                      */
 
             $("#modal-show-alerts-content").html(message);
             $("#mymodalShowAlerts").modal("show")
