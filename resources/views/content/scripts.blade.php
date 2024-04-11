@@ -149,9 +149,7 @@
         if (keyCir == null) {
             message = `<embed  src="{{ asset('recursos/Circularconsultoriosjuridicos2024.pdf#toolbar=0') }}" id="pdfViewer" >`
             message += `<button class="btn btn-success" data-not="keyCircjuridicos2024" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
-
-        }
-       
+        }       
         return message;
     }
 </script>

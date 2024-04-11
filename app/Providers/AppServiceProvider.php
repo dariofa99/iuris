@@ -21,6 +21,7 @@ use App\Repositories\SegmentosRepository;
 use App\Repositories\SolicitudesRepository;
 use App\Repositories\TurnosRepository;
 use App\Repositories\UsersRepository;
+use App\Repositories\VacacionesRepository;
 use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\AutorizacionesService;
@@ -39,6 +40,7 @@ use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
 use App\Services\TurnosService;
 use App\Services\UsersService;
+use App\Services\VacacionesService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use GuzzleHttp\Client;
@@ -118,6 +120,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(            
             SedesService::class,
             SedesRepository::class,       
+        );
+        $this->app->bind(            
+            VacacionesService::class,
+            VacacionesRepository::class,       
         );
         $this->app->bind(            
             ExpedientesService::class,

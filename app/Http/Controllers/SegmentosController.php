@@ -16,6 +16,8 @@ use Carbon\Carbon;
 use App\Nota;
 use App\HistorialDatosCaso;
 use App\Services\EstadosCasoService;
+use App\Services\PeriodosService;
+use App\Services\VacacionesService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -24,16 +26,21 @@ class SegmentosController extends Controller
 {
 	public $periodo;
 	private $estadoCasoService;
-	
-  
+	private $vacacionesService;
+	private $periodoService;
+
+
 	public function __construct(
-	
-	  EstadosCasoService $estadoCasoService
-	  
+
+		EstadosCasoService $estadoCasoService,
+		VacacionesService $vacacionesService,
+		PeriodosService $periodoService
+
 	) {
-	 
-	  $this->estadoCasoService = $estadoCasoService;
-	 
+
+		$this->estadoCasoService = $estadoCasoService;
+		$this->vacacionesService = $vacacionesService;
+		$this->periodoService = $periodoService;
 	}
 
 	public function periodo()
@@ -184,7 +191,7 @@ class SegmentosController extends Controller
 		return response()->json($response);
 	}
 
-	public function closeSegmento(Request $request,$id)
+	public function closeSegmento(Request $request, $id)
 	{
 
 
@@ -249,7 +256,7 @@ class SegmentosController extends Controller
 		 and asignacion_caso.activo = 1 
 		 and users.idnumber = 1004233194		  
 		 and fecha_asig < '" . $dateiniciocorte . "' 
-		 and sede_expedientes.sede_id=" . session('sede')->id_sede)."
+		 and sede_expedientes.sede_id=" . session('sede')->id_sede) . "
 		 order by asignacion_caso.fecha_asig desc");
 
 
@@ -404,7 +411,6 @@ class SegmentosController extends Controller
 								//Esta en pausa	
 								if ($dias_sin_act > 30) $message = 'No tiene actuaciones. Periodo evaluado desde inicio de corte hasta inicio pausa. ' . $fechaasig->format('Y-m-d') . " - " . $pausa->fecha_inicial . ". Días sin actuaciones: " . $dias_sin_act;
 							}
-							
 						}
 						if ($dias_sin_act > 30) {
 							$data = [
@@ -420,11 +426,10 @@ class SegmentosController extends Controller
 								'estidnumber' => $expediente->expidnumberest,
 								'docidnumber' => $docente_id,
 								'tbl_org_id' => $expediente->id,
-							];							 
+							];
 							$this->Asignotasnewdatos($data);
 						}
 					}
-
 				} else {
 
 					//Se verifica si se realizaron actuaciones cada mes en los casos viejos
@@ -452,7 +457,7 @@ class SegmentosController extends Controller
 					$res_act = $this->isActuacionEval($actuacionsmes, $dateiniciocorte, $segmento->fecha_fin, $expediente);
 
 					//return response()->json([$res_act,$actuacionsmes,$expediente]); 
-					return response()->json(['sjsj',$actuacionsmes,$res_act]);
+					return response()->json(['sjsj', $actuacionsmes, $res_act]);
 					if ($res_act[0]) {
 						$data = [
 							'ntaaplicacion' => 0,
@@ -505,7 +510,7 @@ class SegmentosController extends Controller
 							];
 							$expedientemodel->asignarNotas($data);
 							$expedientemodel->expestado_id = 5;
-							$expedientemodel->save(); 
+							$expedientemodel->save();
 							$request['comentario'] = 'Cerrado por sistema, fin de corte. Tiempo 30 días agotado';
 							$request['expidnumber'] = $expediente->expid;
 							$request['ref_estado_id'] = $expediente->expestado_id;
@@ -522,7 +527,7 @@ class SegmentosController extends Controller
 
 		$dateiniciocorte = Carbon::parse($dateiniciocorte)->startOfDay(); // Asegura que la fecha de inicio sea a las 00:00:00
 		$fechaCorte = Carbon::parse($segmento->fecha_corte)->endOfDay(); // Asegura que la fecha de corte sea a las 23:59:59
-		
+
 		//consulta sobre los casos asignados solo durante el corte para notas sobre tiempos limites de inicio
 		$expedientescorte = DB::select(DB::Raw(
 			"Select asignacion_caso.fecha_asig,asignacion_caso.evaluado_hechos,
@@ -545,7 +550,7 @@ class SegmentosController extends Controller
 
 		//and expedientes.expidnumberest = '1006106455'
 		//and expedientes.expidnumberest <> 3030 and (fecha_asig <= '" . $segmento->fecha_corte . "') 
-		
+
 		//and fecha_asig <= '".$datemenosquincediasfinalcorte."') 
 
 
@@ -590,8 +595,8 @@ class SegmentosController extends Controller
 							'docidnumber' => $docente_id,
 							'tbl_org_id' => $expediente->id,
 						];
-						 $this->Asignotasnewdatos($data);
-						 $asig = AsignacionCaso::where([
+						$this->Asignotasnewdatos($data);
+						$asig = AsignacionCaso::where([
 							'asigexp_id' => $expediente->expid,
 							'asigest_id' => $expediente->expidnumberest,
 							'activo' => 1
@@ -770,7 +775,7 @@ class SegmentosController extends Controller
 
 					$res_act = $this->isActuacionEval($actuacionsmes, $expediente->fecha_asig, $segmento->fecha_fin, $expediente);
 
-
+					//return response()->json(['saved' =>$res_act]);
 
 					if ($res_act[0]) {
 
@@ -852,6 +857,7 @@ class SegmentosController extends Controller
 			->whereDate('fecha_fin', '<=', $fecha_final)
 			->where("periodo_id", $this->periodo()->id)
 			->get();
+
 		if (count($_vacaciones) > 0) {
 			$days_vac = 0;
 			foreach ($_vacaciones as $key => $vacaciones) {
@@ -868,8 +874,8 @@ class SegmentosController extends Controller
 	{
 
 		$_vacaciones = DB::table("vacaciones_periodo")
-			->whereDate('fecha_inicio', '<=', $fecha_inicial)
-			->whereDate('fecha_fin', '>=', $fecha_final)
+			->whereDate('fecha_inicio', '>=', $fecha_inicial)
+			->whereDate('fecha_fin', '<=', $fecha_final)
 			->where("periodo_id", $this->periodo()->id)
 			->get();
 
@@ -925,322 +931,53 @@ class SegmentosController extends Controller
 			'asigest_id' => $expediente->expidnumberest,
 			'activo' => 1
 		])->first();
-		$fecha_fin = Carbon::parse($fecha_fin);
+		/* $fecha_fin = Carbon::parse($fecha_fin);
 		$fechaasig = Carbon::parse($fecha_asig);
-		$fechafinalcorte = $fecha_fin;
+		$fechafinalcorte = $fecha_fin; */
+		$dias_sin_act = 0;
 
 		foreach ($array as $key => $fechacalc) {
-
+			//$end_fecha = Carbon::parse($fechaasig)->addDays(31);
 
 			$fecha1 = Carbon::parse($fechacalc->fechas);
-			$end_fecha = Carbon::parse($fechaasig)->addDays(31);
-			$dias_sin_act = Carbon::parse($fechaasig)->diffInDays($fecha1);
+			$fecha2 = Carbon::parse($fecha_fin);
+			if (array_key_exists($key + 1, $array)) $fecha2 = Carbon::parse($array[$key + 1]->fechas);
 
-
-
-
-
-
+			$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
+			$mensaje = "Desde: {$fecha1} hasta {$fecha2} {$key}";
 			if ($dias_sin_act > 31) {
-				$vacations_days = $this->hasVacations($end_fecha, $end_fecha);
-
-				//Si la actuacion se vence en vacaciones		
-				if ($vacations_days > 0) {
-					$vacations = $this->getVacations($end_fecha, $fechafinalcorte);
-					//if($key == 1) return " nones ".$fechaasig->diffInDays($fecha1)."  ".$end_fecha;
-					$v_date_fin = Carbon::parse($vacations->fecha_fin);
-					//Si la actuacion se hizo en vacaciones 
-					$vacations_days_r = $this->hasVacations($fecha1, $fecha1);
-					if ($vacations_days_r > 0) {
-						//Si no tiene mas actuaciones
-						if (!array_key_exists($key + 1, $array)) {
-							$dias_sin_act = $v_date_fin->diffInDays($fechafinalcorte);
-							if ($dias_sin_act > 31) {
-								//SI hay vacaciones
-								$vacations_days_r = $this->hasVacationsNext($v_date_fin, $fechafinalcorte);
-								$dias_sin_act = $dias_sin_act - $vacations_days_r;
-								if ($dias_sin_act > 30) {
-									//Sin hay pausas
-
-									$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-									if ($pausa and $expediente->expestado_id != 6 and $vacations->fecha_fin < $pausa->fecha_final) {
-										$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fechafinalcorte);
-										if ($dias_sin_act > 31) {
-											return [
-												true,
-												"Período evaluado desde fin de pausa hasta final de corte: <b> " . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " hasta " . Carbon::parse($fechafinalcorte)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-											];
-										}
-									} elseif ($pausa and $expediente->expestado_id == 6) {
-										$dias_sin_act = Carbon::parse($vacations->fecha_fin)->diffInDays($pausa->fecha_inicial);
-										if ($dias_sin_act > 31) {
-											return [
-												true,
-												"Período evaluado desde fin de vacaciones hasta inicio de pausa: <b> " . Carbon::parse($vacations->fecha_fin)->format('Y-m-d') . " hasta " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-											];
-										}
-									} else {
-										return [
-											true,
-											"Período evaluado desde fin de vacaciones hasta final de corte: <b> " . Carbon::parse($vacations->fecha_fin)->format('Y-m-d') . " hasta " . Carbon::parse($fechafinalcorte)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-										];
-									}
-								}; //$v_date_fin." *se evalua 713* ".$dias_sin_act."--**--".$vacations_days_r;
-							}
-						}
-					} else {
-						//si no se hizo en vacaciones
-						$dias_sin_act = Carbon::parse($v_date_fin)->diffInDays($fecha1);
-
-						if ($dias_sin_act > 31) {
-							//Se evalua que hayan vacaciones	
-							$vacations_days = $this->hasVacationsNext($v_date_fin, $fecha1);
-							$dias_sin_act = ($dias_sin_act) - $vacations_days;
-
-							if ($dias_sin_act > 31) {
-								$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-								//si esta abierto y tuvo pausa
-								if ($pausa and $expediente->expestado_id != 6 and $v_date_fin < $pausa->fecha_final) {
-									$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fecha1);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fin de pausa hasta siguiente actuación: <b> " . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " hasta " . Carbon::parse($fecha1)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-										];
-									}
-								} elseif ($pausa and $expediente->expestado_id == 6) {
-									//si tiene pausa y esta pausado
-									$dias_sin_act = Carbon::parse($vacations->fecha_fin)->diffInDays($pausa->fecha_inicial);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fin de vacaciones hasta inicio de pausa: <b> " . Carbon::parse($vacations->fecha_fin)->format('Y-m-d') . " hasta " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-										];
-									}
-								} else {
-									return [
-										true,
-										"Período evaluado desde final de vacaciones hasta siguiente actuación:<b> " . Carbon::parse($v_date_fin)->format('Y-m-d') . " - " . Carbon::parse($fecha1)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-
-									];
-								}
-							} // $key." *se evalua 727* ".$dias_sin_act;
-							//return $vacations_days." *se evalua 727* ".$dias_sin_act."***".$v_date_fin;
-						}
-						if (!array_key_exists($key + 1, $array)) {
-							$dias_sin_act = Carbon::parse($fecha1)->diffInDays($fechafinalcorte);
-							if ($dias_sin_act > 31) {
-								$vacations_days = $this->hasVacationsNext($fecha1, $fechafinalcorte);
-								$dias_sin_act = ($dias_sin_act) - $vacations_days;
-								if ($dias_sin_act > 31) {
-									$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-									//si esta abierto y tuvo pausa
-									if ($pausa and $expediente->expestado_id != 6 and $fecha1 < $pausa->fecha_final) {
-										$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fechafinalcorte);
-										if ($dias_sin_act > 31) {
-											return [
-												true,
-												"Período evaluado desde final de pausa hasta final de corte:<b> " . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " hasta " . Carbon::parse($fechafinalcorte)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días.",
-
-											];
-										}
-									} elseif ($pausa and $expediente->expestado_id == 6) {
-										//si tiene pausa y esta pausado
-										$dias_sin_act = Carbon::parse($fecha1)->diffInDays($pausa->fecha_inicial);
-										if ($dias_sin_act > 31) {
-											return [
-												true,
-												"Período evaluado desde última actuación hasta inicio de pausa:<b> " . Carbon::parse($fecha1)->format('Y-m-d') . " hasta " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días.",
-
-											];
-										}
-									} else {
-										return [
-											true,
-											"Período evaluado desde última actuación hasta final de corte:<b> " . Carbon::parse($fecha1)->format('Y-m-d') . " hasta " . Carbon::parse($fechafinalcorte)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días.",
-										];
-									}
-								} //$vacations_days." *se evalua 732* ".$dias_sin_act;
-							}
-						}
-					}
+				//Si la actuacion se hizo en vacaciones
+				$_vacaciones = $this->vacacionesService->getByDates([
+					['operador' => "<=", "value" => $fecha2],
+					['operador' => ">=", "value" => $fecha2]
+				]);
+				//Si la actuacion se hizo en vacaciones
+				if (count($_vacaciones) > 0) {
+					$fechacalc = $array[$key + 1];
 				} else {
-					//Si la actuacion anterior se hizo en vacaciones 
-					$vacations_days_r = $this->hasVacations($fechaasig, $fechaasig);
-					if ($vacations_days_r > 0) {
-						$vacations = $this->getVacations($fechaasig, $fecha1);
-						$v_date_fin = Carbon::parse($vacations->fecha_fin);
-						$dias_sin_act = $v_date_fin->diffInDays($fecha1);
-						if ($dias_sin_act > 31) {
-							//Si la actuacion no se hizo en vacaciones 
-							$vacations_days_r = $this->hasVacations($fecha1, $fecha1);
-							if ($vacations_days_r <= 0) {
-								$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-								//si esta abierto y tuvo pausa
-								if ($pausa and $expediente->expestado_id != 6 and $v_date_fin < $pausa->fecha_final) {
-									$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fecha1);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde final de pausa hasta siguiente actuación:<b> " . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " - " . Carbon::parse($fecha1)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días.",
-										];
-									}
-								} elseif ($pausa and $expediente->expestado_id == 6) {
-									//si tiene pausa y esta pausado
-									$dias_sin_act = Carbon::parse($v_date_fin)->diffInDays($pausa->fecha_inicial);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fin de vacaciones hasta inicio de pausa:<b> " . Carbon::parse($v_date_fin)->format('Y-m-d') . " - " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días.",
-
-										];
-									}
-								} else {
-									return [
-										true,
-										"Período evaluado desde final de vacaciones hasta siguiente actuación: <b>" . Carbon::parse($v_date_fin)->format('Y-m-d') . " - " . Carbon::parse($fecha1)->format('Y-m-d') . ".</b> " . $dias_sin_act . "  Días.",
-
-									];
-								}
-							}
-						}
-					} else {
-						//Si fue antes de vacaciones o no hay vacaciones
-						$dias_sin_act = Carbon::parse($fechaasig)->diffInDays($fecha1);
-						if ($dias_sin_act > 31) {
-							$vacations_days = $this->hasVacationsNext($fechaasig, $fecha1);
-							$dias_sin_act = $dias_sin_act - $vacations_days;
-							if ($dias_sin_act > 31) {
-
-								$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-								//si esta abierto y tuvo pausa
-								if ($pausa and $expediente->expestado_id != 6 and $fechaasig < $pausa->fecha_final) {
-									$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fecha1);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde final de pausa hasta primera actuación: <b>" . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " - " . Carbon::parse($fecha1)->format('Y-m-d') . ".</b>" . $dias_sin_act . " Días.",
-
-										];
-									}
-								} elseif ($pausa and $expediente->expestado_id == 6) {
-									//si tiene pausa y esta pausado
-									$dias_sin_act = Carbon::parse($fechaasig)->diffInDays($pausa->fecha_inicial);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fecha de asignación hasta inicio pausa: <b>" . Carbon::parse($fechaasig)->format('Y-m-d') . " - " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ".</b>" . $dias_sin_act . " Días.",
-
-										];
-									}
-								} else {
-									return [
-										true,
-										"Período evaluado desde de asignación hasta primera actuación: <b>" . Carbon::parse($fechaasig)->format('Y-m-d') . " hasta " . Carbon::parse($fecha1)->format('Y-m-d') . ".</b>" . $dias_sin_act . " Días.",
-
-									];
-								}
-							} // $key." *se evalua 752* ".$dias_sin_act . "**".$fechaasig."-*-".$vacations_days;
-						}
+					//Si hubieron vacaciones en el lapso
+					$_vacaciones = $this->vacacionesService->getByDates([
+						['operador' => ">=", "value" => $fecha1],
+						['operador' => "<=", "value" => $fecha2]
+					]);
+					if (count($_vacaciones) > 0) {
+						$dias = $this->vacacionesService->getDays($_vacaciones);
+						$dias_sin_act = $dias_sin_act - $dias;
+												
 					}
-				}
-			} else {
-				//Si no esta vencida
-				//Si no tiene mas actuaciones
-				if (!array_key_exists($key + 1, $array)) {
-					//Si la ultima actuacion se hizo en vacaciones 			
-					$vacations_days_r = $this->hasVacations($fecha1, $fecha1);
-					if ($vacations_days_r > 0) {
-						$vacations = $this->getVacations($fecha1, $fechafinalcorte);
-						$v_date_fin = Carbon::parse($vacations->fecha_fin);
-						$dias_sin_act = $v_date_fin->diffInDays($fechafinalcorte);
-						if ($dias_sin_act > 31) {
-							//Si no hay mas vacaciones					 			
-							$vacations_days_r = $this->hasVacationsNext($v_date_fin, $fechafinalcorte);
-							$dias_sin_act = $dias_sin_act - $vacations_days_r;
-							if ($dias_sin_act > 31) {
-								$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-								//si esta abierto y tuvo pausa
-								if ($pausa and $expediente->expestado_id != 6 and $v_date_fin < $pausa->fecha_final) {
-									$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fechafinalcorte);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fin de pausa hasta final corte:<b> " . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " hasta " . Carbon::parse($fechafinalcorte)->format('Y-m-d') . ". </b>" . $dias_sin_act . " Días.",
-
-										];
-									}
-								} elseif ($pausa and $expediente->expestado_id == 6) {
-									//si tiene pausa y esta pausado
-									$dias_sin_act = Carbon::parse($v_date_fin)->diffInDays($pausa->fecha_inicial);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fin vacaciones hasta inicio pausa:<b> " . Carbon::parse($v_date_fin)->format('Y-m-d') . " hasta " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ". </b>" . $dias_sin_act . " Días.",
-
-										];
-									}
-								} else {
-									return [
-										true,
-										"Período evaluado desde fin vacaciones hasta final corte:<b> " . Carbon::parse($v_date_fin)->format('Y-m-d') . " hasta " . Carbon::parse($fechafinalcorte)->format('Y-m-d') . ". </b>" . $dias_sin_act . " Días.",
-
-									];
-								}
-							} // $vacations_days_r." *se evalua 770* ".$dias_sin_act. " ".$v_date_fin;
-						}
-					} else {
-						$dias_sin_act = Carbon::parse($fecha1)->diffInDays($fechafinalcorte);
-						if ($dias_sin_act > 31) {
-							//Se evalua que no hayan vacaciones					
-							$vacations_days_r = $this->hasVacationsNext($fecha1, $fechafinalcorte);
-							//$dias_sin_act = $dias_sin_act - $vacations_days_r;					
-							if ($dias_sin_act > 31) {
-								$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
-								//si esta abierto y tuvo pausa
-								if ($pausa and $expediente->expestado_id != 6 and $fecha1 < $pausa->fecha_final) {
-									$dias_sin_act = Carbon::parse($pausa->fecha_final)->diffInDays($fechafinalcorte);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde fin de pausa hasta final de corte: <b>" . Carbon::parse($pausa->fecha_final)->format('Y-m-d') . " - " . $fechafinalcorte . ".</b> " . $dias_sin_act . " Días",
-
-										];
-									}
-								} elseif ($pausa and $expediente->expestado_id == 6) {
-									//si tiene pausa y esta pausado
-									$dias_sin_act = Carbon::parse($fecha1)->diffInDays($pausa->fecha_inicial);
-									if ($dias_sin_act > 31) {
-										return [
-											true,
-											"Período evaluado desde última actuación hasta inicio pausa: <b>" . Carbon::parse($fecha1)->format('Y-m-d') . " - " . Carbon::parse($pausa->fecha_inicial)->format('Y-m-d') . ".</b> " . $dias_sin_act . " Días",
-
-										];
-									}
-								} else {
-									return [
-										true,
-										"Período evaluado desde última actuación hasta final de corte: <b>" . $fecha1 . " - " . $fechafinalcorte . ".</b> " . $dias_sin_act . " Días",
-
-									];
-								}
-							} // $dias_sin_act." *se evalua 795* ".$vacations_days_r;
-
-						}
+					if ($dias_sin_act > 31) {
+						//$mensaje = "Desde: {$_vacaciones[0]->fecha_fin} hasta {$fecha2} {$key}";
 					}
+					//si estuvo pausado
+					$pausa = $asignacion->pausas()->where('estado_id', 249)->orderBy('created_at', 'desc')->first();
+
+
+
+					//$dias_sin_act =  Carbon::parse($fecha2)->diffInDays($fecha1);
 				}
-			}
-			if (array_key_exists($key + 1, $array)) {
-				$fechaasig = $fecha1;
 			}
 		}
-		return [false];
+		return [$dias_sin_act, $mensaje];
 	}
 
 	private function verMeses($a)
