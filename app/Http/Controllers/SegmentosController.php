@@ -273,7 +273,7 @@ class SegmentosController extends Controller
 							]);
 							if (count($pausas) > 0) {
 								//validar las pausas con vacaciones
-								$dias_pausa = $this->getDiasPausado($pausas, $asignacion);
+								$dias_pausa = $this->getDiasPausado($pausas, $fecha_1,$fecha_2);
 								$dias_sin_hechos = $dias_sin_hechos - $dias_pausa;
 							} else {
 								//Se evalua que no haya habido vacaciones
@@ -362,7 +362,7 @@ class SegmentosController extends Controller
 							]);
 							if (count($pausas) > 0) {
 								//validar las pausas con vacaciones
-								$dias_pausa = $this->getDiasPausado($pausas, $asignacion);
+								$dias_pausa = $this->getDiasPausado($pausas, $fecha1,$fecha2);
 								$dias_sin_act = $dias_sin_act - $dias_pausa;
 								if ($dias_sin_act > 31) {
 									$fecha_ini = getSmallDate($fecha1);
@@ -666,7 +666,7 @@ class SegmentosController extends Controller
 		return 0;
 	}
 
-	private function getDiasPausado($pausas, $asignacion)
+	private function getDiasPausado($pausas, $fecha1,$fecha2)
 	{
 		$dias_pausa = 0;
 		foreach ($pausas as $key_p => $pausa) {
@@ -674,6 +674,21 @@ class SegmentosController extends Controller
 			$fecha_pF = $pausa->fecha_final;
 			$dias_pausado = 0;
 			$dias_vacaciones_p = 0;
+			if ($key_p == 0) {
+
+				//Validar vacaciones desde fecha anterior hasta inicio de pausas
+				$_vacaciones = $this->vacacionesService->getByDates([
+					['operador' => ">=", "value" => $fecha1],
+					['operador' => "<=", "value" => $fecha_pI]
+				]);
+				$dias_vacaciones = 0;
+				if (count($_vacaciones) > 0) {
+					Log::info("Paso el {$pausa->asig_caso_id}");
+					$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
+					$dias_vacaciones_p = $dias_vacaciones_p + $dias_vacaciones;
+				}
+			}
+
 			//si esta en vacaciones el final de pausa
 			$esta_vacaciones_pausa = $this->vacacionesService->getByDates([
 				['operador' => "<=", "value" => $fecha_pF],
@@ -711,6 +726,17 @@ class SegmentosController extends Controller
 			}
 			$dias_pausa = $dias_vacaciones_p + $dias_pausado;
 		}
+		//Validar vacaciones desde fecha ultima de pausas hasta la fecha 2
+		$_vacaciones = $this->vacacionesService->getByDates([
+			['operador' => ">=", "value" => $fecha_pF],
+			['operador' => "<=", "value" => $fecha2]
+		]);
+		$dias_vacaciones = 0;
+		if (count($_vacaciones) > 0) {
+			$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
+			//$dias_vacaciones_p = $dias_vacaciones_p - $dias_vacaciones;
+		}
+		$dias_pausa = $dias_pausa + $dias_vacaciones;
 		return $dias_pausa;
 	}
 	private function isActuacionEval($array, $fecha_asig, $fecha_fin, $expediente)
@@ -750,9 +776,12 @@ class SegmentosController extends Controller
 							['operador' => ">=", "value" => $fecha1],
 							['operador' => "<=", "value" => $fecha2]
 						]);
+
 						if (count($pausas) > 0) {
+							//Se valida vacaciones desde fecha anterior hasta inicio de pausa
+
 							//validar las pausas con vacaciones
-							$dias_pausa = $this->getDiasPausado($pausas, $asignacion);
+							$dias_pausa = $this->getDiasPausado($pausas, $fecha1,$fecha2);
 							//return $dias_pausa ;
 							$dias_sin_act = $dias_sin_act - $dias_pausa;
 							if ($dias_sin_act > 31) {

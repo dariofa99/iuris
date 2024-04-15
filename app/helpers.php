@@ -15,7 +15,7 @@ function currentUser()
     return auth()->user();
 }
 }
-
+if(!function_exists('currentUserInConciliacion')) {
 function currentUserInConciliacion($conciliacion, $roles)
 {
     $role = auth()->user()->tipo_conciliacion()->where('conciliacion_id', $conciliacion)->get();
@@ -30,7 +30,7 @@ function currentUserInConciliacion($conciliacion, $roles)
     }
     return  false;
 }
-
+}
 
 
 
