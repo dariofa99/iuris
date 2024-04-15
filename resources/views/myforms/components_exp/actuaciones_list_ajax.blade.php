@@ -160,13 +160,11 @@
                         Ag. Corrección </button>
                 @endif
                 @if (
-                    ($actuacion->actestado_id == 101 
-                    || $actuacion->actestado_id == 136 
-                    || $actuacion->actestado_id == 140) and
-                        ($actuacion->actusercreated == currentUser()->idnumber ||
+                    $actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
+                        $actuacion->actusercreated == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
                             currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('dirgral')) and
+                            currentUser()->hasRole('dirgral') and
                         $hayactuaciones === false and
                         ($haycorrecciones === false and $hayhijos === false))
                     <button type='button' value="{{ $actuacion->id }}"
@@ -192,7 +190,7 @@
                 </td>
                 <td>
                     <span class="badge badge-success" style="background-color: {{ $hijo->estado->color }} !important">
-                        {{ $hijo->estado->ref_nombre }} 
+                        {{ $hijo->estado->ref_nombre }}
                     </span>
                 </td>
                 <td>
@@ -274,11 +272,10 @@
 
                         @if (
                             $hijo->actestado_id == 101 || $hijo->actestado_id == 136 and
-                                $hijo->actusercreated == currentUser()->idnumber ||
+                                ($hijo->actusercreated == currentUser()->idnumber and $vencido == false) ||
                                     (currentUser()->hasRole('amatai') ||
                                         currentUser()->hasRole('diradmin') ||
-                                        currentUser()->hasRole('dirgral')) and
-                                $vencido == false)
+                                        currentUser()->hasRole('dirgral')))
                             <button data-modal="#myModal_act_edit" type='button' value="{{ $hijo->id }}"
                                 class='btn btn-primary btn-sm buscar_actuacion btn-block'>
                                 Editar

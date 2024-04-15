@@ -2,7 +2,7 @@
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         
 
-        var keyCir = localStorage.getItem("keyCircjuridicos2024");
+        var keyCir = localStorage.getItem("keyCircNotas2Corte");
             if (keyCir == null) {
               var message = getCircular();
             } else {
@@ -107,7 +107,7 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-warning" style="font-size:19px">';
+        message += '<div class="alert alert-danger" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -115,7 +115,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 10 de abril de 2024 <br>
+        message += `<span> Últ. Actualización: 14 de abril de 2024 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 
@@ -144,11 +144,11 @@
     }
 
     function getCircular() {
-        var keyCir = localStorage.getItem("keyCircjuridicos2024");
+        var keyCir = localStorage.getItem("keyCircNotas2Corte");
         var message = '';
         if (keyCir == null) {
-            message = `<embed  src="{{ asset('recursos/Circularconsultoriosjuridicos2024.pdf#toolbar=0') }}" id="pdfViewer" >`
-            message += `<button class="btn btn-success" data-not="keyCircjuridicos2024" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+            message = `<embed  src="{{ asset('recursos/CircularNotas2C.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message += `<button class="btn btn-success" data-not="keyCircNotas2Corte" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
         }       
         return message;
     }

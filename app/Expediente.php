@@ -248,49 +248,6 @@ class Expediente extends Model
 
 
         try {
-
-            /* $now = $now == null ? Carbon::now() : Carbon::parse($now);
-            $estamos_vacaciones = DB::table("vacaciones_periodo")
-                ->whereDate('fecha_inicio', '<=', $now)
-                ->whereDate('fecha_fin', '>=', $now)
-                ->where("periodo_id", $periodo->id)
-                ->orderBy('created_at', 'desc')->first();
-            $fecha_asig = Carbon::parse($asig->fecha_asig);
-            $fecha_max = Carbon::parse($asig->fecha_asig)->addDays(31);
-            $_vacaciones = DB::table("vacaciones_periodo")
-                ->whereDate('fecha_inicio', '>=', $fecha_asig)
-                ->whereDate('fecha_fin', '<=', $fecha_max)
-                ->where("periodo_id", $periodo->id)->first();
-            // return  $_vacaciones;
-
-            if ($_vacaciones) {
-                $fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
-                $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
-                $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
-                $fecha_max->addDays($days_vac);
-                $days = $now->diffInDays($fecha_max, false);
-            } else {
-                $_vacaciones = DB::table("vacaciones_periodo")
-                    ->whereDate('fecha_inicio', '<=', $fecha_max)
-                    ->whereDate('fecha_fin', '>=', $fecha_max)
-                    ->where("periodo_id", $periodo->id)->first();
-                if ($_vacaciones) {
-                    $fecha_vaca_in = Carbon::parse($_vacaciones->fecha_inicio);
-                    $fecha_vaca_fin = Carbon::parse($_vacaciones->fecha_fin);
-                    if ($fecha_max >  $fecha_vaca_in and $fecha_max <  $fecha_vaca_fin) {
-                        $days_pas = $fecha_vaca_in->diffInDays($fecha_max, false);
-                        $days_vac = $fecha_vaca_in->diffInDays($fecha_vaca_fin, false);
-                        $days = $days_pas + $days_vac;
-                        //dd($days,$fecha_asig,$days_pas,$days_vac );
-                        if ($fecha_vaca_fin < $now) {
-                            $days = $fecha_vaca_fin->diffInDays($now, false);
-                            $days =   $days_pas - $days;
-                        }
-                    }
-                } else {
-                    $days = $now->diffInDays($fecha_max, false);
-                }
-            } */
             $periodo = $this->getPeriodoActivo();
             $now = Carbon::now();
             $asig = $this->getAsignacion();
