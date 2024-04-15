@@ -232,6 +232,8 @@ class SegmentosController extends Controller
 					];
 				}
 				$this->Asignotasnewdatos($data);
+				$asignacion->evaluado_hechos = 1;
+				$asignacion->save();
 				Log::info("Evaluado {$expediente->expid}");
 				Log::info("Evaluado {$expediente->expidnumberest}");
 			} else {
@@ -302,6 +304,8 @@ class SegmentosController extends Controller
 									'tbl_org_id' => $expediente->id,
 								];
 								$this->Asignotasnewdatos($data);
+								$asignacion->evaluado_hechos = 1;
+								$asignacion->save();
 							}
 						}
 					}
@@ -327,7 +331,6 @@ class SegmentosController extends Controller
 					'tbl_org_id' => $expediente->id,
 				];
 				$this->Asignotasnewdatos($data);
-				
 			}
 			//Evalua actuaciones
 
