@@ -12,10 +12,7 @@
 	@slot('body')
 
 
-@section('msg-contenido')
-Registrado
-@endsection
-@include('msg.ajax.success')
+
 
 <div class="row justify-content-center">
     <div class="col-md-12" id="ct_forcitaest">

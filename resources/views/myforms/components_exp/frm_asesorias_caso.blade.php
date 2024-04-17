@@ -82,7 +82,7 @@
     </div>
 </div>
 <div class="row">
-    @if (!$readonly and (currentUser()->hasRole('docente') 
+    @if ((currentUser()->hasRole('docente') 
     || currentUser()->hasRole('amatai') ||
      currentUser()->hasRole('diradmin') ||
      currentUser()->hasRole('dirgral')))

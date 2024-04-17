@@ -26,6 +26,15 @@ class SegmentosRepository extends BaseRepository implements SegmentosService{
         ->first();
         return $segmento;
     }
+    public function getSegmentoAsignacion($asignacion): ?Segmento
+    {
+      $segmento = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
+        ->where('sg.sede_id', session('sede')->id_sede)
+        ->whereDate('fecha_inicio',"<=",$asignacion->fecha_asig)
+        ->whereDate('fecha_fin',">=",$asignacion->fecha_asig)
+        ->first();
+        return $segmento;
+    }
   
 }
 

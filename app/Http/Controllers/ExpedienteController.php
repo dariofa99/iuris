@@ -289,7 +289,7 @@ class ExpedienteController extends Controller
     ]);
     //dd($expediente->asignacion);
     if (!$expediente) return view('errors.error', compact('url'));
-    if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
+    //if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     $estudiante = $expediente->estudiante;
     $asignacion = $expediente->asignacion;
     if ($expediente->exptipoproce_id ==  1) {
@@ -350,27 +350,21 @@ class ExpedienteController extends Controller
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));
       }
-      if (($expediente->expestado_id == '2' or $expediente->expestado_id == '5'  or $expediente->expestado_id == '6')) {
+      if ($expediente->expestado_id != '1' 
+      and $expediente->expestado_id != '3') {
         //	Session::flash('message-success', 'Actualizado con éxito...!');
         return redirect('/expedientes/' . $expediente->expid);
       }
-      if (($expediente->expestado_id == '4')) {
-        //Session::flash('message-success', 'Actualizado con éxito...!');
-        return redirect('/expedientes/' . $expediente->expid);
-      }
+     
     } elseif (currentUser()->hasRole("solicitante")) {
       if (Auth::user()->idnumber != $expediente->expidnumber) {
         $url = '/expedientes/';
         return view('errors.error', compact('url'));
       }
     }
-    if (
-      ($expediente->expestado_id != '1' and
-        $expediente->expestado_id != '3' and
-        $expediente->expestado_id != '6') and !currentUser()->can("admin_expedientes")
-    ) {
+   /*  if (!currentUser()->can("admin_expedientes")) {
       return redirect('/expedientes/' . $expediente->expid);
-    }
+    } */
     $readonly = false;
     return view(
       'myforms.frm_expediente_edit',

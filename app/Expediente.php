@@ -193,6 +193,11 @@ class Expediente extends Model
         return $service->getSegmentoActivo();
     }
 
+    private function getSegmentoAsignacion($asignacion)
+    {
+        $service = App::make(SegmentosService::class);
+        return $service->getSegmentoAsignacion($asignacion);
+    }
 
     public function getActuaciones($only)
     {
@@ -514,8 +519,8 @@ class Expediente extends Model
                 ['actestado_id', '<>', '175'],
                 ['actestado_id', '<>', '176'],
                 ['actestado_id', '<>', '177'],
-                ['actestado_id', '<>', '178'], 
-                ['actidnumberest', $this->expidnumberest], 
+                ['actestado_id', '<>', '178'],
+                ['actidnumberest', $this->expidnumberest],
                 ['actexpid', $this->expid]
             ])
             ->select('actuacions.id')
@@ -524,14 +529,14 @@ class Expediente extends Model
 
         $hijos = [];
         $segmento = $this->getSegmentoActivo();
-              
+
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")
                 ->where("periodo_id", $periodo->id)->get();
 
             foreach ($padresAct as $key => $actpa) {
-                
+
                 $hijosAct = DB::select(
                     DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre,fecha_limit FROM actuacions, revisiones_actuacion
                 WHERE actuacions.id = revisiones_actuacion.rev_actid
@@ -539,8 +544,8 @@ class Expediente extends Model
                 AND actestado_id <> 136 AND actestado_id <> 138 and actestado_id <> 235
                 ORDER BY rev_actid DESC LIMIT 1"),
                 );
-                
-               // 
+
+                // 
                 if (count($hijosAct) > 0 and $hijosAct[0]->fecha_limit !== null) {
                     $percent = 100;
                     $date = Carbon::now()->format('Y-m-d');
@@ -563,7 +568,7 @@ class Expediente extends Model
                     }
 
                     if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $hijosAct[0]->fecha_limit < $date) {
-                      
+
                         $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
                         $data = [
@@ -1041,17 +1046,13 @@ class Expediente extends Model
     }
 
 
-    public function isValidOpen()
+    public function isValidOpenPeriodo()
     {
-        $dias = $this->getTextForTH('dias');
-
-        if ($this->expestado_id == 1 and $dias > 20) {
-            return true;
-        }
-        if ($this->expestado_id == 5 and $dias < 60) {
+      
+        if ($this->expestado_id == 5) {
             $asig_periodo = $this->asignacion->periodo;
-            $segmento = $this->getPeriodoActivo();
-            if ($asig_periodo and $segmento and $asig_periodo->id == $segmento->id) {
+            $periodo = $this->getPeriodoActivo();
+            if ($asig_periodo and $periodo and $asig_periodo->id == $periodo->id) {
                 return true;
             }
         }
@@ -1059,6 +1060,16 @@ class Expediente extends Model
         return false;
     }
 
+    public function isValidOpenCorte()
+    {
+        $asignacion = $this->asignacion;
+        $segmento = $this->getSegmentoActivo();
+        $asigCorte = $this->getSegmentoAsignacion($asignacion);       
+        if($segmento and $asigCorte and $segmento->id == $asigCorte ->id){
+           return true;
+        }
+        return false;
+    }
     public function getCitas()
     {
         $asignacion = $this->getAsignacion();

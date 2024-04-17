@@ -256,7 +256,8 @@ class EstadosCasoController extends Controller
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->expid
         ]);
-        if ($expediente and ($expediente->isValidOpen())) {
+        return response()->json(["No se puede evaluar1"]);
+        if ($expediente and ($expediente->isValidOpenCorte())) {
             $segmento = $this->segmentosService->getSegmentoActivo();
             if ($segmento) {
                 $notas =  $expediente->notas()
@@ -299,6 +300,56 @@ class EstadosCasoController extends Controller
         return response()->json(["No se puede evaluar"]);
     }
 
+    public function cerrarCasoNotaMinima(Request $request)
+    {
+        
+        $expediente = $this->expedienteService->findWithFilter([
+            'expid' => $request->expid
+        ]);
+    
+         if ($expediente and ($expediente->isValidOpenPeriodo())) {
+            $asignacion = $expediente->asignacion;
+            $segmento = $this->segmentosService->getSegmentoAsignacion($asignacion);  
+            if ($segmento) {
+                $notas =  $expediente->notas()
+                    ->where([
+                        'estidnumber' => $expediente->expidnumberest,
+                        'orgntsid' => 4,
+                        'tpntid' => 1,
+                        'segid' => $segmento->segmento_id
+                    ])
+                    ->delete();
+
+                $data = [
+                    'ntaaplicacion' => $request->ntaaplicacion,
+                    'ntaconocimiento' => $request->ntaconocimiento,
+                    'ntaetica' => $request->ntaetica,
+                    'ntaconcepto' => $request->ntaconcepto,
+                    'orgntsid' => $request->orgntsid,
+                    'segid' => $request->segid,
+                    'perid' => $request->perid,
+                    'tpntid' => $request->tpntid,
+                    'expidnumber' => $request->expid,
+                    'estidnumber' => $expediente->expidnumberest,
+                    'docidnumber' => auth()->user()->idnumber,
+                    'tbl_org_id' => $expediente->id,
+                ];
+                $expediente->asignarNotas($data);
+                $request['comentario'] = $request->ntaconcepto != "" ? $request->ntaconcepto :"Cerrado despues de vencido el plazo para cierre";
+                $request['expidnumber'] = $request->expid;
+                $request['ref_estado_id'] = 2;
+                $request['ref_motivo_estado_id'] = 8;
+                $estadoCaso = $this->estadoCasoService->store($request);
+                $expediente->expestado_id = 2;
+                $expediente->save();
+                return response()->json("Si evaluado");
+            } else {
+                return response()->json(["No evaluado"]);
+            }
+        }
+
+        return response()->json(["No se puede evaluar"]);
+    }
     /**
      * Show the form for editing the specified resource.
      *

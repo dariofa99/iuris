@@ -807,28 +807,28 @@ $(document).ready(function () {
     $("#content_user_exp_asig #myFormUserEditExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
 
     $("#content_user_exp_asig")
-    .on("change", "select[name='pbepersondiscap']", function (e) {
+        .on("change", "select[name='pbepersondiscap']", function (e) {
 
-        if ($(this).val() == 1) {
-            //$(".discaform").show();
-            mostrarCompDiscapUser()
-        } else {
-            ocultarCompDiscapUser();
+            if ($(this).val() == 1) {
+                //$(".discaform").show();
+                mostrarCompDiscapUser()
+            } else {
+                ocultarCompDiscapUser();
 
-        }
-    });
+            }
+        });
 
     $("#content_user_exp_asig")
-    .on("change", "select[name='has_apoyo']", function (e) {
+        .on("change", "select[name='has_apoyo']", function (e) {
 
-        if ($(this).val() == 1) {
-            $(".has_apoyo").show()
-            $("#acept_ter").prop("disabled",false)
-        } else {
-            $(".has_apoyo").hide()
-            $("#acept_ter").prop("disabled",true).prop("checked",false)
-        }
-    });
+            if ($(this).val() == 1) {
+                $(".has_apoyo").show()
+                $("#acept_ter").prop("disabled", false)
+            } else {
+                $(".has_apoyo").hide()
+                $("#acept_ter").prop("disabled", true).prop("checked", false)
+            }
+        });
 
 
     $("#content_user_exp_asig").on("submit", '#myFormUserCreateExpediente', async function (e) {
@@ -905,7 +905,7 @@ $(document).ready(function () {
     });
 
     $("#content_user_exp_asig").on("submit", '#myFormUserEditExpediente', async function (e) {
-       e.preventDefault();
+        e.preventDefault();
         var errors = validateForm("myFormUserEditExpediente");
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserEditExpediente");
@@ -2238,20 +2238,68 @@ $(document).ready(function () {
                 value:estado,
                 name:"estado_casoid"
             })) */
+        $("#contentChk_cambiarNotas").hide()
         $("#myModal_addnew_nota_final_expedientes").modal("show");
     });
+
+    $("#chk_cambiarNotas").on("change", function (e) {
+        var form = 'myform_addnew_nota_final_expedientes';
+        var notaapl = $("#" + form + " input[name=ntaaplicacion]").prop('readonly', true);
+        var notacon = $("#" + form + " input[name=ntaconocimiento]").prop('readonly', true);
+        var notaet = $("#" + form + " input[name=ntaetica]").prop('readonly', true);
+       
+        if ($(this).is(":checked")) {
+            var notaapl = $("#" + form + " input[name=ntaaplicacion]").prop('readonly', false);
+            var notacon = $("#" + form + " input[name=ntaconocimiento]").prop('readonly', false);
+            var notaet = $("#" + form + " input[name=ntaetica]").prop('readonly', false);
+        }
+
+
+        //$("#mymodalCerrarNotaMinima").modal("show");
+    });
+    $("#btn_cerrar_minima").on("click", function (e) {
+        var form = 'myform_addnew_nota_final_expedientes'
+        var notaapl = $("#" + form + " input[name=ntaaplicacion]").val("3.0").prop('readonly', true);
+        var notacon = $("#" + form + " input[name=ntaconocimiento]").val("3.0").prop('readonly', true);
+        var notaet = $("#" + form + " input[name=ntaetica]").val("3.0").prop('readonly', true);
+        var chk_cambiarNotas = $("#" + form + " input[id=chk_cambiarNotas]").prop('checked', false);
+        $("#nota_destino").val("cerrarCorte")
+        $("#myModal_addnew_nota_final_expedientes").modal("show");
+        $("#contentChk_cambiarNotas").show()
+        //$("#mymodalCerrarNotaMinima").modal("show");
+    });
+
     $("#btn_addnew_nota_exp").on("click", async function () {
         var errors = validateForm("myform_addnew_nota_final_expedientes");
-        errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes');
+
         if (errors <= 0) {
             var request = convertFormToJSON('myform_addnew_nota_final_expedientes');
-            $("#wait").show();
-            let response = await expedientesService.reabrirCaso(request);
-            toastr.success("Actualizado con éxito", "", {
-                positionClass: "toast-top-right",
-                timeOut: "4000",
-            });
-            window.location.reload(true)
+
+            if ($("#nota_destino").val() == "cerrarPeriodo") {
+                errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 5);
+                if (errors <= 0) {
+                    $("#wait").show();
+                    let response = await expedientesService.reabrirCaso(request);
+                    toastr.success("Actualizado con éxito", "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                    window.location.reload(true)
+                }
+            } else if ($("#nota_destino").val() == "cerrarCorte") {
+                errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 3);
+                if (errors <= 0) {
+                  $("#wait").show();
+                    let response = await expedientesService.cerrarCasoNotaMinima(request);
+                    toastr.success("Actualizado con éxito", "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                   window.location.reload(true)
+                }
+            }
+
+
         }
     });
 
@@ -2696,12 +2744,12 @@ function validarNotasUpdate(errors, form) {
     }
     return errors;
 }
-function validarNotas(errors, form) {
+function validarNotas(errors, form, min = 5) {
     var notaapl = $("#" + form + " input[name=ntaaplicacion]").val();
     var notacon = $("#" + form + " input[name=ntaconocimiento]").val();
     var notaet = $("#" + form + " input[name=ntaetica]").val();
-    if (notaapl > 5 || notacon > 5 || notaet > 5) {
-        toastr.error("Por favor verifíque que no haya notas superiores a 5.0", "", {
+    if (notaapl > min || notacon > min || notaet > min) {
+        toastr.error("Por favor verifíque que no haya notas superiores a " + min, "", {
             positionClass: "toast-top-right",
             timeOut: "6000",
         });
@@ -3066,13 +3114,13 @@ async function changeSelectSearchExp(value) {
 
 function ocultarCompDiscapUser() {
     $(".discaform").hide();
-    $("#has_apoyo").prop("disabled",true).val("");
-    $("#acept_ter").prop("disabled",true).prop("checked",false);
+    $("#has_apoyo").prop("disabled", true).val("");
+    $("#acept_ter").prop("disabled", true).prop("checked", false);
     $(".has_apoyo").hide()
 }
 
 function mostrarCompDiscapUser() {
     $(".discaform").show();
     $(".has_apoyo").hide()
-    $("#has_apoyo").prop("disabled",false)
+    $("#has_apoyo").prop("disabled", false)
 }

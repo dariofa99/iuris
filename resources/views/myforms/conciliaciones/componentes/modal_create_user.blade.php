@@ -15,10 +15,6 @@ myModal_conc_user_create
 @slot('body')
 
 
-@section('msg-contenido')
-Registrado 
-@endsection
-@include('msg.ajax.success')
 <input type="hidden" id="tipo_usuario_id" name="tipo_usuario_id">
 <input type="hidden" id="section" name="section">
 <div id="user_gen_conciliacion_form">    

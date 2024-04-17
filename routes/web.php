@@ -282,7 +282,7 @@ Route::resource('estados/caso', 'EstadosCasoController');
 Route::post('/estado/search/', 'EstadosCasoController@search');
 Route::post('/estado/cerrar/caso', 'EstadosCasoController@cerrarCaso');
 Route::post('/estado/caso/volver/abrir', 'EstadosCasoController@abrir_caso'); 
-
+Route::post('/estado/caso/cerrar/minima', 'EstadosCasoController@cerrarCasoNotaMinima'); 
 //Defensas de Oficio
 Route::resource('defensas/oficio', 'DefensaOficioController');
 

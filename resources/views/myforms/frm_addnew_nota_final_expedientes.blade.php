@@ -17,20 +17,12 @@
         </h5>
     @endslot
 
-
     @slot('body')
-       
-        @include('msg.ajax.success')
         {!! Form::open(['id' => 'myform_addnew_nota_final_expedientes']) !!}
-        <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
-
-
-
-
         <div>
             <div class="row">
                 <div class="col-md-4">
-
+                    <input type="hidden" id="nota_destino" value="cerrarPeriodo">
                     {!! Form::hidden('orgntsid', 1, ['class' => 'form-control required', 'id' => 'orgntsid']) !!}
                     {!! Form::hidden('tpntid', 1, ['class' => 'form-control required', 'id' => 'tpntid']) !!}
                     {!! Form::hidden('expid', $expediente->expid, ['class' => 'form-control required', 'id' => 'expid']) !!}
@@ -41,7 +33,7 @@
                     <div class="form-group">
                         {!! Form::label('Nota conocimiento') !!}
                         {!! Form::text('ntaconocimiento', null, [
-                            'placeholder'=>'5.0',
+                            'placeholder' => '5.0',
                             'class' => 'form-control required',
                             'id' => 'ntaconocimiento',
                             'data-inputmask' => "'mask': ['9.9']",
@@ -53,7 +45,7 @@
                     <div class="form-group">
                         {!! Form::label('Nota aplicación') !!}
                         {!! Form::text('ntaaplicacion', null, [
-                            'placeholder'=>'5.0',
+                            'placeholder' => '5.0',
                             'class' => 'form-control required',
                             'id' => 'ntaaplicacion',
                             'data-inputmask' => "'mask': ['9.9']",
@@ -65,7 +57,7 @@
                     <div class="form-group">
                         {!! Form::label('Nota Ética') !!}
                         {!! Form::text('ntaetica', null, [
-                            'placeholder'=>'5.0',
+                            'placeholder' => '5.0',
                             'class' => 'form-control required',
                             'id' => 'ntaetica',
                             'data-inputmask' => "'mask': ['9.9']",
@@ -82,9 +74,24 @@
                             'class' => 'form-control required',
                             'maxlength' => '100000',
                             'id' => 'ntaconcepto',
-                            'rows'=>'3',
-                            'placeholder'=>'Valoración de las notas',
+                            'rows' => '3',
+                            'placeholder' => 'Valoración de las notas',
                         ]) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="contentChk_cambiarNotas">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="">
+                            Deseo cambiar las notas
+                        </label>
+                        <input type="checkbox" id="chk_cambiarNotas">
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fa fa-info-circle"> </i>
+                        Recuerde que solo podrá asignar la nota mínima aprobatoria (3.0) 
+                        o inferior
                     </div>
                 </div>
             </div>
@@ -96,7 +103,7 @@
                 </div>
             @endif
         </div>
-		{!! Form::close() !!}
+        {!! Form::close() !!}
     @endslot
 @endcomponent
 <!-- /modal -->

@@ -26,7 +26,7 @@
             @endif
 
             @if (
-                $expediente->isValidOpen() and
+                $expediente->isValidOpenCorte() and $expediente->expestado_id == 5 and
                     $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                         (currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('amatai') ||
@@ -35,14 +35,21 @@
                     id="btn_reabrir_caso">
                     {{ $expediente->expestado_id != 5 ? 'Evaluar y cerrar caso' : 'Volver a evaluar y cerrar caso' }}
                 </button>
+            @elseif(
+                $expediente->isValidOpenPeriodo() and $expediente->expestado_id == 5 AND
+                    
+                        (currentUser()->hasRole('diradmin') ||
+                            currentUser()->hasRole('amatai') ||
+                            currentUser()->hasRole('dirgral')))
+                <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
+                    id="btn_cerrar_minima">
+                    {{ $expediente->expestado_id != 5 ? 'Evaluar y cerrar caso' : 'Evaluar con nota mínima y cerrar caso' }}
+                </button>
             @endif
             @if (
                 $expediente->expestado_id != 2 and
                     $expediente->expestado_id != 5 and
-                    
-                    currentUser()->hasRole('dirgral') 
-                    || currentUser()->hasRole('amatai') 
-                    || currentUser()->hasRole('diradmin'))
+                    currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
                 <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_cerrar_dr_caso">
                     Cerrar caso
                 </button>
@@ -52,10 +59,10 @@
                 $expediente->expestado_id != 2 and
                     $expediente->expestado_id != 5 and
                     $expediente->expestado_id != 7 and
-                    (currentUser()->hasRole('dirgral') 
-                    || currentUser()->hasRole('amatai') 
-                    || currentUser()->hasRole('diradmin')
-                    || currentUser()->hasRole('coordprac')))
+                    currentUser()->hasRole('dirgral') ||
+                        currentUser()->hasRole('amatai') ||
+                        currentUser()->hasRole('diradmin') ||
+                        currentUser()->hasRole('coordprac'))
                 <button type="button" class="btn btn-info btn-sm mb-2" id="btn_revisar_dr_caso">
                     Pasar a revisión
                 </button>
@@ -79,21 +86,22 @@
                             <label>{{ $expediente->estado->nombre_estado }}</label>
                             @if ($expediente->estado->id == 6)
                                 @php
-                                    $pausa = $expediente->asignacion
-                                        ->pausas()
-                                        ->orderBy('created_at', 'desc')
-                                        ->first();
+                                    $pausa = $expediente->asignacion->pausas()->orderBy('created_at', 'desc')->first();
                                     $text = '';
                                     if ($expediente->expestado_id == 6) {
                                         if ($pausa) {
-                                            $fecha = 'desde ' . getSmallDate($pausa->fecha_inicial) . ' hasta ' . getSmallDate($pausa->fecha_final);
+                                            $fecha =
+                                                'desde ' .
+                                                getSmallDate($pausa->fecha_inicial) .
+                                                ' hasta ' .
+                                                getSmallDate($pausa->fecha_final);
                                             $text = '<br><b>El expediente estará en pausa ' . $fecha . '</b>';
                                         }
                                     }
                                 @endphp
-                                  {!!  $text !!}
+                                {!! $text !!}
                             @endif
-                          
+
                         </td>
                     </tr>
                     <tr>

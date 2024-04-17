@@ -11,11 +11,6 @@ Detalles
 
 @slot('body')
 
-
-@section('msg-contenido')
-Registrado 
-@endsection
-@include('msg.ajax.success')
 <div id="content_detalles_user">    
     {{-- @include('myforms.conciliaciones.componentes.user_detalles_form') --}}
 </div>

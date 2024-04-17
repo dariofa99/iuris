@@ -9,8 +9,8 @@
         $hayhijos = false;
         $ultima_id = '';
         $vencido = false;
-        if (count($actuacion->getHijos($actuacion)) > 0) {
-            $actFechaLim = $actuacion->fecha_limit;
+        $actFechaLim = $actuacion->fecha_limit;
+        if (count($actuacion->getHijos($actuacion)) > 0) {            
             foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
                 if ($hijo->actestado_id == '102') {
                     $haycorrecciones = true;

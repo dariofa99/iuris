@@ -12,10 +12,7 @@
 
 
     @slot('body')
-        @section('msg-contenido')
-            Registrado
-        @endsection
-        @include('msg.ajax.success')
+      
         <div class="row">
             <div class="col-md-10 col-md-offset-1" id="ct_forcita">
 

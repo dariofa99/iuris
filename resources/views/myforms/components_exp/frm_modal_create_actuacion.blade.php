@@ -10,10 +10,7 @@
 
 
     @slot('body')
-        @section('msg-contenido')
-            Registrado
-        @endsection
-        @include('msg.ajax.success')
+      
 
         {!! Form::open(['method' => 'post', 'id' => 'myformCreateAct']) !!}
         <div class="row">
