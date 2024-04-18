@@ -90,8 +90,10 @@
                     </div>
                     <div class="alert alert-warning">
                         <i class="fa fa-info-circle"> </i>
-                        Recuerde que solo podrá asignar la nota mínima aprobatoria (3.0) 
-                        o inferior
+                        Recuerde que la nota se asignará al corte en el 
+                        que fue asignado el caso y solo podrá asignar
+                        la nota mínima aprobatoria (3.0) 
+                        o inferior.
                     </div>
                 </div>
             </div>

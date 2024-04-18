@@ -53,9 +53,11 @@
             @endif
         </div>
     </div>
+    @if(!currentUser()->hasRole('visitante_conciliacion'))
     <div class="row">
         <div class="col-md-12">
             <button class="btn btn-primary" type="submit">Guardar</button>
         </div>
     </div>
+    @endif
 </form>

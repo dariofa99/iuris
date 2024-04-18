@@ -49,7 +49,7 @@ class ConciliacionesRepository extends BaseRepository implements ConciliacionesS
         $this->applyValidateSede();
         $this->query = $this->query->filter($request);
         $this->query = $this->query->where(function($query){
-            if (!currentUser()->can('ver_conciliaciones'))
+            if (!currentUser()->can('ver_conciliaciones') and !currentUser()->hasRole('visitante_conciliacion'))
                 {
                     $query->whereHas('usuarios', function ($q) {
                         $q->where('conciliacion_has_user.user_id', Auth::user()->id);

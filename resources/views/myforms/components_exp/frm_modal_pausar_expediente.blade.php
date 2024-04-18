@@ -4,14 +4,16 @@
     @endslot
 
     @slot('title')
-        Pausar expediente
+        Pausas expediente
     @endslot
 
 
     @slot('body')
-    
-
         <div class="row">
+            @if(($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber
+            || currentUser()->hasRole('diradmin') 
+            || currentUser()->hasRole('amatai') 
+            || currentUser()->hasRole('dirgral')))
             <div class="col-md-12">
                 <form id="myformPausarExpediente">
                     <input type="hidden" name="id" id="autorizacion_id">
@@ -19,22 +21,44 @@
                         <div class="form-group col-md-6">
                             <label for="nombre_estudiante">Pausar desde:</label>
                             <input type="date" required class="form-control required form-control-sm" id="nombre_estudiante"
-                                name="fecha_inicial" readonly value="{{date('Y-m-d')}}">
+                                name="fecha_inicial" readonly value="{{ date('Y-m-d') }}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="nombre_estudiante">Hasta:</label>
-                            <input type="date" min="{{\Carbon\Carbon::now()->addDay(1)->format('Y-m-d')}}" required class="form-control required form-control-sm" id="nombre_estudiante"
-                                name="fecha_final">
-                         </div>                      
+                            <input type="date" min="{{ \Carbon\Carbon::now()->addDay(1)->format('Y-m-d') }}" required
+                                class="form-control required form-control-sm" id="nombre_estudiante" name="fecha_final">
+                        </div>
 
                         <div class="form-group col-md-12">
                             <button type="submit" class="btn btn-primary btn-block">Crear</button>
                         </div>
-
-
                     </div>
-
                 </form>
+            </div>
+            @endif
+            <div class="col-md-12">
+                <table id="tbl_list_p_c" class="table">
+                                     <thead>
+                        <th>
+                            Desde
+                        </th>
+                        <th>
+                            Hasta
+                        </th>
+                        <th>
+                            Días
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+
+                                Sin pausas
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     @endslot

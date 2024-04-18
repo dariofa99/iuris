@@ -6,13 +6,13 @@
     @endif
     @if (!currentUser()->hasRole('estudiante'))
         <div class="col-md-4">
-           <div class="form-group">
+            <div class="form-group">
                 <label>Estudiante asignado</label>
                 <input id="inputestudianteasignado" readonly type="text"
                     value="{{ $expediente->estudiante->name }} {{ $expediente->estudiante->lastname }}"
                     class="form-control">
                 <div id="contselecestcasos" style="display: none">
-                    <select data-live-search="true"  disabled required id="selectexpidnumberest"
+                    <select data-live-search="true" disabled required id="selectexpidnumberest"
                         class="required form-control disabled-fun3 selectpicker">
                         @foreach ($estudiantes as $key => $estudiante)
                             <option {{ $expediente->expidnumberest != $estudiante['idnumber'] ?: 'selected' }}
@@ -22,9 +22,10 @@
                         @endforeach
                     </select>
 
-                    <input type="hidden" name="oldexpidnumberest" value="{{ $expediente->expidnumberest }}" id="oldexpidnumberest">
+                    <input type="hidden" name="oldexpidnumberest" value="{{ $expediente->expidnumberest }}"
+                        id="oldexpidnumberest">
                     <input type="hidden" name="expidnumberest" id="idnumberest" disabled>
-                     
+
                 </div>
             </div>
         </div>
@@ -131,8 +132,17 @@
         </div>
     @endif
 </div>
-
 <div class="row">
+    <div class="col-md-2">
+        @if (currentUser()->hasRole("estudiante"))
+            <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
+                Ver pausas
+            </a>
+        @endif
+    </div>
+</div>
+<div class="row">
+   
     <div class="col-md-2">
         <div class="form-group">
             {!! Form::label('Número expediente') !!}

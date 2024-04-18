@@ -271,16 +271,24 @@ class DefensaOficioController extends Controller
         $url = '/expedientes/';
         return view('errors.error', compact('url'));
       }
+      if (($expediente->expestado_id == '4'
+          || $expediente->expestado_id == '2'
+          || $expediente->expestado_id == '5')) {
+dd("");
+        return redirect('/defensas/oficio/' . $expediente->expid);
+      }
+    } else {
+      if (($expediente->expestado_id == '4'
+          || $expediente->expestado_id == '2'
+          || $expediente->expestado_id == '5')
+        and (!currentUser()->can("admin_expedientes"))
+      ) {
+
+        return redirect('/defensas/oficio/' . $expediente->expid);
+      }
     }
 
-    if (($expediente->expestado_id == '4'
-        || $expediente->expestado_id == '2'
-        || $expediente->expestado_id == '5')
-      and (!currentUser()->can("admin_expedientes"))
-    ) {
 
-      return redirect('/defensas/oficio/' . $expediente->expid);
-    }
     return view('myforms.frm_defensa_oficio_edit', compact('estudiantes', 'expediente', 'readonly'));
   }
 

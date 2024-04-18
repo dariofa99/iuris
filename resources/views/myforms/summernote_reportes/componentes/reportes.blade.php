@@ -92,7 +92,7 @@
                 <div class="col-md-7">
                     <br>
 
-                    @if ($view and $view != 'update_temp')
+                    @if ($view and $view != 'update_temp' and !currentUser()->hasRole('visitante_conciliacion'))
 
                         <button type="submit" class="btn btn-primary btn-sm" style="margin: 2px"><i class="fa fa-save">
                             </i>
@@ -103,21 +103,18 @@
                             @endif
                         </button>
                     @endif
-                    @if ($view and $view == 'update_temp')
+                    @if ($view and $view == 'update_temp' and !currentUser()->hasRole('visitante_conciliacion'))
                         <button type="button" id="btnGuardarPdfTemp" class="btn btn-success btn-sm"
                             style="margin: 2px"><i class="fa fa-save"> </i>
                             Guardar cambios
                         </button>
-
-
-
                         <button type="button" id="btnCancelPdfTemp" class="btn btn-default btn-sm"
                             style="margin: 2px"><i class="fa fa-close"> </i>
                             Cerrar
                         </button>
                     @endif
 
-                    @if ($view == 'update')
+                    @if ($view == 'update' and !currentUser()->hasRole('visitante_conciliacion'))
                         <button type="button" @if (isset($reporte) and !$reporte->is_temp and $view == 'update_temp') style="display:none" @endif
                             id="btnDeletePdfTemp" class="btn btn-danger btn-sm" style="margin: 2px"><i
                                 class="fa fa-trash"> </i>

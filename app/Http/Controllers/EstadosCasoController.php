@@ -256,8 +256,8 @@ class EstadosCasoController extends Controller
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->expid
         ]);
-        return response()->json(["No se puede evaluar1"]);
-        if ($expediente and ($expediente->isValidOpenCorte())) {
+     
+        if ($expediente and ($expediente->isValidOpenCorte() || $expediente->isValidOpenPeriodo())) {
             $segmento = $this->segmentosService->getSegmentoActivo();
             if ($segmento) {
                 $notas =  $expediente->notas()
@@ -284,7 +284,7 @@ class EstadosCasoController extends Controller
                     'tbl_org_id' => $expediente->id,
                 ];
                 $expediente->asignarNotas($data);
-                $request['comentario'] = $expediente->expestado_id != 5 ? "Estudiante no envió a cierre a tiempo":"Cerrado despues de vencido el plazo para cierre";
+                $request['comentario'] = $request->ntaconcepto != "" ? $request->ntaconcepto :"Cerrado despues de vencido el plazo para cierre";
                 $request['expidnumber'] = $request->expid;
                 $request['ref_estado_id'] = 2;
                 $request['ref_motivo_estado_id'] = 8;

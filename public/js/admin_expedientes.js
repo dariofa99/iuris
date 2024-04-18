@@ -186,8 +186,37 @@ $(document).ready(function () {
         return false;
     });
 
-    $("#btn_act_pausa_exp").on("click", function (e) {
+    $("#btn_act_pausa_exp").on("click", async function (e) {
         e.preventDefault();
+        var request = {
+            'expediente_id': $("#expediente_id").val()
+        }
+        $("#wait").show();
+        let response = await expedientesService.getPausasExpediente(request);
+        
+        if (response.length > 0) {
+            var tr = "";
+            response.forEach(pausa => {
+                const fechaInicial = moment(pausa.fecha_inicial); 
+                const fechaFinal = moment(pausa.fecha_final);
+                const diferenciaDias = fechaFinal.diff(fechaInicial, 'days');
+                tr += `
+                <tr>
+                    <td>
+                        ${pausa.fecha_initxt}
+                    </td>
+                    <td>
+                    ${pausa.fecha_fintxt}
+                    </td>
+                    <td>
+                    ${diferenciaDias}
+                    </td>
+                </tr>
+                `;
+            });
+            $("#tbl_list_p_c tbody").html(tr);           
+        }
+        $("#wait").hide();
         $("#mymodalPausarExpediente").modal("show")
     });
     $("#btn_quit_pausa_exp").on("click", async function (e) {
@@ -2247,7 +2276,7 @@ $(document).ready(function () {
         var notaapl = $("#" + form + " input[name=ntaaplicacion]").prop('readonly', true);
         var notacon = $("#" + form + " input[name=ntaconocimiento]").prop('readonly', true);
         var notaet = $("#" + form + " input[name=ntaetica]").prop('readonly', true);
-       
+
         if ($(this).is(":checked")) {
             var notaapl = $("#" + form + " input[name=ntaaplicacion]").prop('readonly', false);
             var notacon = $("#" + form + " input[name=ntaconocimiento]").prop('readonly', false);
@@ -2289,13 +2318,13 @@ $(document).ready(function () {
             } else if ($("#nota_destino").val() == "cerrarCorte") {
                 errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 3);
                 if (errors <= 0) {
-                  $("#wait").show();
+                    $("#wait").show();
                     let response = await expedientesService.cerrarCasoNotaMinima(request);
                     toastr.success("Actualizado con éxito", "", {
                         positionClass: "toast-top-right",
                         timeOut: "4000",
                     });
-                   window.location.reload(true)
+                    window.location.reload(true)
                 }
             }
 

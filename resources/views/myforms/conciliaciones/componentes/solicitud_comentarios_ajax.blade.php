@@ -1,5 +1,6 @@
 @foreach($conciliacion->comentarios()->orderBy('created_at','desc')->get() as $key => $comentario)
-@if(currentUser()->id == $comentario->user_id || $comentario->compartido ==  1)
+@if(currentUser()->id == $comentario->user_id || $comentario->compartido ==  1
+|| currentUser()->hasRole('visitante_conciliacion') || currentUser()->can('ver_notif_conciliacion'))
 
 <tr>
    <td>{!! trim(strip_tags($comentario->asunto)) !!}</td>

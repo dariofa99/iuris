@@ -53,13 +53,14 @@
             &nbsp;
             </label>
           
+            @if(!currentUser()->hasRole('visitante_conciliacion'))
             @if ($audiencia != "" and currentUser()->can('editar_audiencia_conciliacion'))
 
             <input type="button" value="Editar" class="btn btn-warning btn-block btn-sm" id="btm_edit_date_audiencia" data-id="{{$conciliacion->id}}">
             @endif 
             <input type="button" value="Guardar" class="btn btn-primary btn-block btn-sm edit_audiencia" id="btm_save_date_audiencia" data-id="{{$conciliacion->id}}" style="@if ($audiencia != '') display:none @endif">
             <input type="button" value="Cancelar" class="btn btn-danger btn-block btn-sm edit_audiencia" id="btm_cancel_date_audiencia" data-id="{{$conciliacion->id}}" style="display:none">
-           
+           @endif
             
         </h5>
     </div>

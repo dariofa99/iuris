@@ -79,7 +79,8 @@
                 <li
                     class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                         'menu-open' }}">
-                    @if (config('app.name') != 'ConciliApp')
+                    @if (config('app.name') != 'ConciliApp' 
+                    and !currentUser()->hasRole('visitante_conciliacion'))
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-folder"></i>
                             <p>
@@ -146,8 +147,9 @@
                 </li>
 
                 @if (currentUser()->can('ver_conciliaciones') ||
-                        currentUser()->hasRole('amatai') ||
-                        count(currentUser()->conciliaciones) > 0)
+                        currentUser()->hasRole('amatai') 
+                        || currentUser()->hasRole('visitante_conciliacion') 
+                        || count(currentUser()->conciliaciones) > 0)
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-handshake"></i>
@@ -162,7 +164,7 @@
                                     <p>Listar</p>
                                 </a>
                             </li>
-                            @if (currentUser()->can('admin_actasandmail'))
+                            @if (currentUser()->can('admin_actasandmail') || currentUser()->hasRole('visitante_conciliacion') )
                                 <li class="nav-item ml-3">
                                     <a href="{{ route('reportes.create') }}" class="nav-link">
                                         <p> Administrar actas y correos</p>
@@ -243,6 +245,7 @@
                     </li>
                 @endif
                 <li class="nav-item has-treeview">
+                    @if(!currentUser()->hasRole('visitante_conciliacion'))
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-file-word"></i>
                         <p>
@@ -250,6 +253,7 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    @endif
                     <ul class="nav nav-treeview">
                         <li class="nav-item ml-3">
                             <a href="{{ url('/bibliotecas') }}" class="nav-link">

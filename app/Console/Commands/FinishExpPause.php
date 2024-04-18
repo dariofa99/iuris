@@ -64,27 +64,27 @@ class FinishExpPause extends Command
             ->where("expedientes.expestado_id", 6)
             ->where("expedientes_pausa.estado_id", 249)
             ->get();
-        $user = User::find(1);
+        $user = User::where("email","darioj99@gmail.com")->first();
         foreach ($exps as $key => $exped) {
             $expediente = Expediente::find($exped->exp_id);
             $asignacion = $expediente->asignacion;
             $expediente->expestado_id = 1;
-            //$expediente->save();
+            $expediente->save();
             $this->request['useridnumber'] = $user->idnumber;
             $this->request['comentario'] = 'Fecha de pausa caducada';
             $this->request['expidnumber'] = $expediente->expid;
             $this->request['ref_estado_id'] = $expediente->expestado_id;
             $this->request['ref_motivo_estado_id'] = 11;
-            //$estado_caso = $this->estadoCasoService->store($this->request);
+            $estado_caso = $this->estadoCasoService->store($this->request);
             $user = $expediente->estudiante;
             $user->notification = 'Nueva notificación de caso';
             $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
             $user->mensaje = 'Se ha vencido la pausa. Exp: ' . $expediente->expid;
-           // $user->notify(new UserNotification($user));
-           /*  $exp = ExpedientePausas::where("asig_caso_id", $asignacion->id)
+            $user->notify(new UserNotification($user));
+            $exp = ExpedientePausas::where("asig_caso_id", $asignacion->id)
                 ->update([
                     "estado_id" => 250
-                ]); */
+                ]); 
         };
     }
 }

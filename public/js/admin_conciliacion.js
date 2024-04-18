@@ -383,13 +383,13 @@ $(document).ready(function () {
 
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
-    $("#myModal_create_document").modal("show");
+    $("#myModal_create_document").modal("show");*/
   });
   $("#btn_cancelar_estado").on("click", function () {
     $("#btn_cancelar_estado").hide();
     $("#btn_cambiar_estado").show();
     $("#content_form_estado_c").hide();
-    $("#content_list_estado_c").show(); */
+    $("#content_list_estado_c").show(); 
   });
 
   $("#categoria_notifica__id").on("change", async function (e) {
@@ -1802,6 +1802,8 @@ function copiarAlPortapapeles(idDelDiv) {
   });
 }
 async function getActasForStatus() {
+  var user = JSON.parse($("#authdata").val());
+console.log(user);
   if ($("#estado_conciliacion_id").val() != "") {
     var request = {
       tabla_destino: "226",
@@ -1816,7 +1818,20 @@ async function getActasForStatus() {
 
       var conid = $("#conciliacion_id").val();
       response.forEach(destino => {
-        tr += `
+        if(user.role[0].name == 'visitante_conciliacion'){
+          tr += `
+          <tr>
+            <td>
+            ${destino.reporte.nombre_reporte}
+            </td>
+            <td>
+              <a target="_blank" href="/pdf/reportes/generate/${conid}/${destino.reporte_id}/${destino.status_id}" class="btn btn-sm btn-warning"  id="actafr-${destino.reporte.id}">
+                Vista previa
+              </a>                      
+            </td>
+          </tr>`
+        }else{
+          tr += `
           <tr>
             <td>
             ${destino.reporte.nombre_reporte}
@@ -1830,6 +1845,8 @@ async function getActasForStatus() {
               </button>             
             </td>
           </tr>`
+        }
+        
       });
     } else {
       tr += `

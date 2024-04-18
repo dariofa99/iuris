@@ -26,31 +26,52 @@
             @endif
 
             @if (
-                $expediente->isValidOpenCorte() and $expediente->expestado_id == 5 and
-                    $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                        (currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('dirgral')))
+                $expediente->isValidOpenCorte() and
+                    $expediente->expestado_id == 5 and
+                    $expediente->exptipoproce_id == 1 
+                    and ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        currentUser()->hasRole('diradmin') ||
+                        currentUser()->hasRole('amatai') ||
+                        currentUser()->hasRole('dirgral')))
                 <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
                     id="btn_reabrir_caso">
-                    {{ $expediente->expestado_id != 5 ? 'Evaluar y cerrar caso' : 'Volver a evaluar y cerrar caso' }}
+                    Volver a evaluar y cerrar caso
                 </button>
             @elseif(
-                $expediente->isValidOpenPeriodo() and $expediente->expestado_id == 5 AND
-                    
-                        (currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('dirgral')))
+                $expediente->isValidOpenPeriodo() and
+                $expediente->exptipoproce_id == 1 and
+                    $expediente->expestado_id == 5 and
+                    (currentUser()->hasRole('diradmin') 
+                    || currentUser()->hasRole('amatai') 
+                    || currentUser()->hasRole('dirgral')))
                 <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
                     id="btn_cerrar_minima">
-                    {{ $expediente->expestado_id != 5 ? 'Evaluar y cerrar caso' : 'Evaluar con nota mínima y cerrar caso' }}
+                    Evaluar con nota mínima y cerrar caso
+                </button>
+            @elseif(
+                $expediente->isValidOpenPeriodo() and
+                $expediente->exptipoproce_id == 1 and
+                    ($expediente->expestado_id == 1 
+                    || $expediente->expestado_id == 3 
+                    || $expediente->expestado_id == 4 )
+                    and $expediente->getDaysOrColorForClose('dias') <= 10 and
+                    ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber
+                    || currentUser()->hasRole('diradmin') 
+                    || currentUser()->hasRole('amatai') 
+                    || currentUser()->hasRole('dirgral')))
+                 <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
+                    id="btn_reabrir_caso">
+                    Evaluar caso
                 </button>
             @endif
+          
             @if (
                 $expediente->expestado_id != 2 and
                     $expediente->expestado_id != 5 and
-                    currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
-                <button type="button" class="btn btn-warning btn-sm mb-2" id="btn_cerrar_dr_caso">
+                    currentUser()->hasRole('dirgral') 
+                    || currentUser()->hasRole('amatai') 
+                    || currentUser()->hasRole('diradmin'))
+                <button type="button" class="btn btn-danger btn-sm mb-2" id="btn_cerrar_dr_caso">
                     Cerrar caso
                 </button>
             @endif

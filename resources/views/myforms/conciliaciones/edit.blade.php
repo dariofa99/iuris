@@ -85,7 +85,8 @@
         <div class="col-md-12">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-                @if(currentUser()->can('ver_form_conciliacion') 
+                @if(currentUser()->hasRole('visitante_conciliacion')
+                || currentUser()->can('ver_form_conciliacion') 
                 || (currentUserInConciliacion($conciliacion->id,
                 ['conciliador','asistente','autor','solicitante']
                 )))
@@ -97,7 +98,7 @@
                 </li>
                 @endif
 
-                @if(((currentUser()->can('ver_estados_conciliacion')))
+                @if(((currentUser()->can('ver_estados_conciliacion') || currentUser()->hasRole('visitante_conciliacion')))
                 || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and (
                    ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
                     and $conciliacion->getUser(203)->pivot->estado_id == 230)))) 
@@ -110,7 +111,7 @@
                     </a>
                 </li>
                 @endif
-                @if(currentUser()->can('ver_notif_conciliacion'))
+                @if(currentUser()->can('ver_notif_conciliacion') || currentUser()->hasRole('visitante_conciliacion'))
                 <li class="nav-item">
                     <a class="nav-link urlactive" id="actas-tab" data-toggle="tab" href="#actas"
                         role="tab" aria-controls="actas" aria-selected="false">
@@ -118,7 +119,7 @@
                     </a>
                 </li>
                 @endif
-                @if( currentUser()->can('ver_documentos_conciliacion') ||
+                @if( currentUser()->hasRole('visitante_conciliacion') || currentUser()->can('ver_documentos_conciliacion') ||
                 (currentUserInConciliacion($conciliacion->id,['conciliador','asistente'])
                and $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id and 
                $conciliacion->getUser(203)->pivot->estado_id == 230))
@@ -129,7 +130,7 @@
                     </a>
                 </li>
                 @endif
-                @if((currentUser()->can('ver_asignaciones_conciliacion'))
+                @if((currentUser()->can('ver_asignaciones_conciliacion') || currentUser()->hasRole('visitante_conciliacion') )
         || ((currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) 
         and (( $conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))))
@@ -149,7 +150,7 @@
             @if($audiencia!='' || (currentUserInConciliacion($conciliacion->id,['conciliador','auxiliar']) and ( 
             ($conciliacion->getUser(203)->pivot and $conciliacion->getUser(203)->pivot->user_id == auth()->user()->id
              and $conciliacion->getUser(203)->pivot->estado_id == 230)))
-            || currentUser()->can('ver_audiencia_conciliacion'))
+            || currentUser()->can('ver_audiencia_conciliacion') || currentUser()->hasRole('visitante_conciliacion') )
 
                 <li class="nav-item">
                     <a class="nav-link urlactive" id="audiencia-tab" data-toggle="tab" href="#audiencia"
@@ -162,7 +163,7 @@
             
 
           
-            @if(currentUser()->can('ver_notif_conciliacion'))
+            @if(currentUser()->can('ver_notif_conciliacion') || currentUser()->hasRole('visitante_conciliacion') )
             <li class="nav-item">
                 <a class="nav-link urlactive" id="notificaciones-tab" data-toggle="tab" href="#notificaciones"
                     role="tab" aria-controls="notificaciones" aria-selected="false">

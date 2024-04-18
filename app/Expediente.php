@@ -1049,13 +1049,13 @@ class Expediente extends Model
     public function isValidOpenPeriodo()
     {
       
-        if ($this->expestado_id == 5) {
+      
             $asig_periodo = $this->asignacion->periodo;
             $periodo = $this->getPeriodoActivo();
             if ($asig_periodo and $periodo and $asig_periodo->id == $periodo->id) {
                 return true;
             }
-        }
+       
 
         return false;
     }

@@ -24,9 +24,11 @@
                             </small>
                         </td>
                         <td>
+                            @if(!currentUser()->hasRole('visitante_conciliacion'))
                             <button data-concepto="{{$file->pivot->concepto}}" data-id="{{ $file->id }}" class="btn btn-warning btn_compartir_doc">
                                 Compartir
                             </button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

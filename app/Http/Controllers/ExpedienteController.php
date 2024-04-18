@@ -351,7 +351,8 @@ class ExpedienteController extends Controller
         return view('errors.error', compact('url'));
       }
       if ($expediente->expestado_id != '1' 
-      and $expediente->expestado_id != '3') {
+      and $expediente->expestado_id != '3'
+      and $expediente->expestado_id != '6') {
         //	Session::flash('message-success', 'Actualizado con éxito...!');
         return redirect('/expedientes/' . $expediente->expid);
       }
