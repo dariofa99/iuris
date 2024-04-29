@@ -31,3 +31,11 @@ animation: spin 5s linear infinite;
     border-radius: 5px;
     color: black;
 }
+
+.oculto {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }

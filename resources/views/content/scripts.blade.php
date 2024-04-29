@@ -1,13 +1,13 @@
 <script>
-    @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
+    @if (!Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircNotas2Corte");
 
         var keyCir = localStorage.getItem("keyCircCierreCaso");
-            if (keyCir == null) {
-              var message = getCarrouselDocentes();
-            } else {
-              var message = getGeneralMessage();
-            }        
+        if (keyCir == null) {
+            var message = getCarrouselDocentes();
+        } else {
+            var message = getGeneralMessage();
+        }
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
@@ -15,7 +15,7 @@
     $("#mymodalShowAlerts").on("click", '#btnNotFalse', function(e) {
         var item = $(this).attr("data-not")
         localStorage.setItem(item, true);
-        
+
         $("#mymodalShowAlerts").modal("hide");
         e.preventDefault();
 
@@ -59,7 +59,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not":"keyCirActualizaCierreClose"
+            "data-not": "keyCirActualizaCierreClose"
         }))
 
         return carrousel;
@@ -68,7 +68,18 @@
 
     function getCarrouselDocentes() {
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                          <ol class="carousel-indicators">
+          <div class="oculto">
+        Teniendo en cuenta la necesidad de brindar alternativas que permitan la gestión de casos de asesoría vencidos que se evalúan por el sistema (Cerrado - sistema) ahora IURIS permite a los docentes, director general y director administrativo volver a Evaluar y Cerrar estos casos teniendo en cuenta los siguientes parámetros.
+        Si el caso está Cerrado - sistema y NO fue enviado a solicitud de cierre podrá asignar una nota de 0 a 3. 
+        Si el caso está Cerrado - sistema y fue enviado a solicitud de cierre podrá asignar una nota de 0 a 5. 
+
+        Tenga en cuenta que la nueva nota se asignará al corte en el cual se venció el caso.
+
+        Para Evaluar y cerrar caso en administración del caso, pestaña Cierre de caso de clic en el botón Volver a evaluar y cerrar caso
+
+          </div>                
+          
+          <ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
                             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
@@ -102,7 +113,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not":"keyCircCierreCaso"
+            "data-not": "keyCircCierreCaso"
         }))
 
         return carrousel;
@@ -151,8 +162,9 @@
         var message = '';
         if (keyCir == null) {
             message = `<embed  src="{{ asset('recursos/CircularNotas2C.pdf#toolbar=0') }}" id="pdfViewer" >`
-            message += `<button class="btn btn-success" data-not="keyCircNotas2Corte" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
-        }       
+            message +=
+                `<button class="btn btn-success" data-not="keyCircNotas2Corte" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+        }
         return message;
     }
 </script>
