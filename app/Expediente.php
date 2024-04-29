@@ -198,7 +198,11 @@ class Expediente extends Model
         $service = App::make(SegmentosService::class);
         return $service->getSegmentoAsignacion($asignacion);
     }
-
+    public function getSegmentoEvaluacion($asignacion)
+    {
+        $service = App::make(SegmentosService::class);
+        return $service->getSegmentoEvaluacion($asignacion);
+    }
     public function getActuaciones($only)
     {
         $service = App::make(ExpedientesService::class);
@@ -1054,8 +1058,7 @@ class Expediente extends Model
             $periodo = $this->getPeriodoActivo();
             if ($asig_periodo and $periodo and $asig_periodo->id == $periodo->id) {
                 return true;
-            }
-       
+            }       
 
         return false;
     }
@@ -1070,6 +1073,25 @@ class Expediente extends Model
         }
         return false;
     }
+
+    public function isValidNotaMax()
+    {
+        $asignacion = $this->asignacion;
+        $estado = $this->estados()->where('ref_estado_id',4)->first();
+        if($estado!=null){
+            return true;
+        }
+        return false;
+        /* $segmento = $this->getSegmentoActivo();
+        $asigCorte = $this->getSegmentoAsignacion($asignacion);
+        //$asigEva = $this->getSegmentoEvaluacion($asignacion); 
+        dd($estado);      
+        if($segmento and $asigCorte and $segmento->id == $asigCorte ->id){
+           return true;
+        }
+        return false; */
+    }
+
     public function getCitas()
     {
         $asignacion = $this->getAsignacion();

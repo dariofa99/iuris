@@ -66,6 +66,7 @@ class NotaController extends Controller
         $notas = [];
         if (isset($user)) {
             $notas = $user->getNotas($request);
+           // dd($notas);
             return view("myforms.notas_ver.index", compact('user', 'notas','segmentoAct'));
         } else {
             //$user = User::where('idnumber',3030)->first();
@@ -485,7 +486,7 @@ class NotaController extends Controller
                         FROM `notas` JOIN expedientes on notas.expidnumber=expedientes.expid        
                         WHERE `segid` = $segmento AND `cptnotaid` != 4 AND expedientes.exptipoproce_id != '3'
                       and estidnumber = $user->idnumber
-                        GROUP BY `estidnumber`")
+                        GROUP BY `estidnumber` order by cptnotaid")
         );
 
         $nota_defensas = DB::select(DB::raw(

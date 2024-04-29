@@ -274,7 +274,6 @@ class DefensaOficioController extends Controller
       if (($expediente->expestado_id == '4'
           || $expediente->expestado_id == '2'
           || $expediente->expestado_id == '5')) {
-dd("");
         return redirect('/defensas/oficio/' . $expediente->expid);
       }
     } else {

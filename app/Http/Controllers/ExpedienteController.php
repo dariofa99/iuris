@@ -322,6 +322,8 @@ class ExpedienteController extends Controller
               $request['ref_estado_id'] = $expediente->expestado_id;
               $request['ref_motivo_estado_id'] = 12;
               $estado_caso = $this->estadoCasoService->store($request);
+              Session::flash('message-danger', 'Atención! El sistema ha cerrado el caso');
+        
             } else {
               Session::flash('message-danger', 'Atención! No hay un segmento activo');
             }
@@ -1239,7 +1241,7 @@ class ExpedienteController extends Controller
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
-    $expediente = Expediente::first();
+    $expediente = Expediente::where("expid","2024A-399")->first();
     //$user = User::where("email",env("NOTIFICATION_DIR_EMAIL"))->first();
     //Notification::send($user, new NotificarDirector($expediente,"Prueba"));
     /*  $this->expedienteService->findWithFilter([
@@ -1250,7 +1252,8 @@ class ExpedienteController extends Controller
   /*   ProcessEmailSendNotificarDirector::dispatch($expediente)
       ->onConnection('database')->onQueue('emails'); */
     $asignacion_caso =  $expediente->asignacion;
-
+    $segmento = $this->segmentosService->getSegmentoAsignacion($asignacion_caso);
+    dd($segmento);
     /* if (in_array($expediente->expramaderecho_id, ramasDerechoNotificar())) {
       // Notification::send($user_,new NotificarDirector($expediente));
       ProcessEmailSendNotificarDirector::dispatch($expediente)

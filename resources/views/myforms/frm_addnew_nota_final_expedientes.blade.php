@@ -6,6 +6,14 @@
 
     @slot('title')
         Agregando Nota: <h5>
+            @php
+            $diff = false;
+            $segmentoEva = $expediente->getSegmentoEvaluacion($expediente->asignacion);
+            if($periodo and $segmento and $segmentoEva and $segmentoEva->id != $segmento->id){
+                $segmento = $segmentoEva;
+                $diff = true;
+            }
+            @endphp
             @if ($periodo and $segmento)
                 <span class="badge badge-primary">{{ $periodo->prddes_periodo }}</span>
                 <span class="badge badge-primary">{{ $segmento->segnombre }}</span>
@@ -26,7 +34,9 @@
                     {!! Form::hidden('orgntsid', 1, ['class' => 'form-control required', 'id' => 'orgntsid']) !!}
                     {!! Form::hidden('tpntid', 1, ['class' => 'form-control required', 'id' => 'tpntid']) !!}
                     {!! Form::hidden('expid', $expediente->expid, ['class' => 'form-control required', 'id' => 'expid']) !!}
+                  
                     @if ($periodo and $segmento)
+
                         {!! Form::hidden('segid', $segmento->segmento_id, ['class' => 'form-control required', 'id' => 'segid']) !!}
                         {!! Form::hidden('perid', $periodo->periodo_id, ['class' => 'form-control required', 'id' => 'perid']) !!}
                     @endif
@@ -90,13 +100,24 @@
                     </div>
                     <div class="alert alert-warning">
                         <i class="fa fa-info-circle"> </i>
-                        Recuerde que la nota se asignará al corte en el 
-                        que fue asignado el caso y solo podrá asignar
+                        Debido a que no se envió a 
+                        solicitud de cierre solo podrá asignar
                         la nota mínima aprobatoria (3.0) 
                         o inferior.
                     </div>
                 </div>
             </div>
+            @if($diff)
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning">
+                        <i class="fa fa-info-circle"> </i>
+                        Recuerde que la nota se asignará al 
+                        {{$segmento->segnombre}}.
+                    </div>
+                </div>
+            </div>
+            @endif
             @if ($periodo and $segmento)
                 <div class="row">
                     <div class="col-md-6">

@@ -35,6 +35,19 @@ class SegmentosRepository extends BaseRepository implements SegmentosService{
         ->first();
         return $segmento;
     }
+
+    public function getSegmentoEvaluacion($asignacion): ?Segmento
+    {
+      $fecha_vence = Carbon::parse($asignacion->fecha_asig)->addDays(31);
+
+
+      $segmento = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
+        ->where('sg.sede_id', session('sede')->id_sede)
+        ->whereDate('fecha_inicio',"<=",$fecha_vence)
+        ->whereDate('fecha_fin',">=",$fecha_vence)
+        ->first();
+        return $segmento;
+    }
   
 }
 

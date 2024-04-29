@@ -54,8 +54,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px" href="/videos">
+                               {{--  <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px" href="/videos">
                                     Ver videos de ayuda
+                                </a> --}}
+                                <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px"
+                                 href="{{route('encuestas.conciliacion')}}">
+                                   Encuesta
                                 </a>
                             </div>
                         </form>

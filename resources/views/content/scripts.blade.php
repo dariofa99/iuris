@@ -1,10 +1,10 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        
+        localStorage.removeItem("keyCircNotas2Corte");
 
-        var keyCir = localStorage.getItem("keyCircNotas2Corte");
+        var keyCir = localStorage.getItem("keyCircCierreCaso");
             if (keyCir == null) {
-              var message = getCircular();
+              var message = getCarrouselDocentes();
             } else {
               var message = getGeneralMessage();
             }        
@@ -73,25 +73,28 @@
                             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
                             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                             <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+
                           </ol>
                           <div class="carousel-inner">
                             <div class="carousel-item active">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva1.0.JPG') }}" alt="First slide">
+                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva1.JPG') }}" alt="First slide">
                             </div>
                             <div class="carousel-item">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva1.1.JPG') }}" alt="Second slide">
+                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva2.JPG') }}" alt="Second slide">
                             </div>
                             <div class="carousel-item">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva1.2.JPG') }}" alt="Third slide">
+                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva3.JPG') }}" alt="Third slide">
                             </div>
-                                                        
+                            <div class="carousel-item">
+                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva4.JPG') }}" alt="Third slide">
+                            </div>                         
                           </div>
                           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span style="background-color:black" class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                           </a>
                           <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span style="background-color:black" class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                           </a>
                         </div>`;
@@ -99,7 +102,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not":"keyCircActDosClose"
+            "data-not":"keyCircCierreCaso"
         }))
 
         return carrousel;
@@ -107,7 +110,7 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-info" style="font-size:19px">';
+        message += '<div class="alert alert-success" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -115,7 +118,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 18 de abril de 2024 <br>
+        message += `<span> Últ. Actualización: 28 de abril de 2024 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 

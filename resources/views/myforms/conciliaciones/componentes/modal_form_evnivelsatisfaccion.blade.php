@@ -24,7 +24,7 @@
         <div id="evsatisfconciliacion_form">
             <div class="row">
                 <div class="col-md-12">
-                    <p>
+                    <p> 
                         Estimada persona usuaria, para el Centro de Conciliación "Eduardo Alvarado Hurtado" es muy importante su
                         opinión sobre el acceso y la atención brindados. Por ello, en este documento podrá encontrar algunos
                         criterios que nos ayudarán a establecer la evaluación y mejora continua del servicio. Recuerde que su

@@ -2262,11 +2262,12 @@ $(document).ready(function () {
 
     $("#btn_reabrir_caso").on("click", function (e) {
         var estado = $(this).attr("data-estado");
-        /*     $("#myform_addnew_nota_final_expedientes").append($('<input>',{
-                type:'text',
-                value:estado,
-                name:"estado_casoid"
-            })) */
+        var form = 'myform_addnew_nota_final_expedientes'
+        var notaapl = $("#" + form + " input[name=ntaaplicacion]").val("").prop('readonly', false);
+        var notacon = $("#" + form + " input[name=ntaconocimiento]").val("").prop('readonly', false);
+        var notaet = $("#" + form + " input[name=ntaetica]").val("").prop('readonly', false);
+        var chk_cambiarNotas = $("#" + form + " input[id=chk_cambiarNotas]").prop('checked', false);
+        $("#nota_destino").val("cerrarPeriodo")
         $("#contentChk_cambiarNotas").hide()
         $("#myModal_addnew_nota_final_expedientes").modal("show");
     });
@@ -2303,32 +2304,20 @@ $(document).ready(function () {
 
         if (errors <= 0) {
             var request = convertFormToJSON('myform_addnew_nota_final_expedientes');
-
             if ($("#nota_destino").val() == "cerrarPeriodo") {
                 errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 5);
-                if (errors <= 0) {
-                    $("#wait").show();
-                    let response = await expedientesService.reabrirCaso(request);
-                    toastr.success("Actualizado con éxito", "", {
-                        positionClass: "toast-top-right",
-                        timeOut: "4000",
-                    });
-                    window.location.reload(true)
-                }
-            } else if ($("#nota_destino").val() == "cerrarCorte") {
+            }else{
                 errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 3);
-                if (errors <= 0) {
-                    $("#wait").show();
-                    let response = await expedientesService.cerrarCasoNotaMinima(request);
-                    toastr.success("Actualizado con éxito", "", {
-                        positionClass: "toast-top-right",
-                        timeOut: "4000",
-                    });
-                    window.location.reload(true)
-                }
             }
-
-
+            if (errors <= 0) {
+                $("#wait").show();
+                let response = await expedientesService.reabrirCaso(request);
+                toastr.success("Actualizado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
         }
     });
 

@@ -257,17 +257,16 @@ class EstadosCasoController extends Controller
             'expid' => $request->expid
         ]);
      
-        if ($expediente and ($expediente->isValidOpenCorte() || $expediente->isValidOpenPeriodo())) {
-            $segmento = $this->segmentosService->getSegmentoActivo();
+        if ($expediente) {
+            $segmento = $this->segmentosService->find($request->segid);
             if ($segmento) {
                 $notas =  $expediente->notas()
                     ->where([
                         'estidnumber' => $expediente->expidnumberest,
                         'orgntsid' => 4,
                         'tpntid' => 1,
-                        'segid' => $segmento->segmento_id
-                    ])
-                    ->delete();
+                        'segid' => $segmento->id
+                    ])->delete();
 
                 $data = [
                     'ntaaplicacion' => $request->ntaaplicacion,
@@ -326,10 +325,10 @@ class EstadosCasoController extends Controller
                     'ntaetica' => $request->ntaetica,
                     'ntaconcepto' => $request->ntaconcepto,
                     'orgntsid' => $request->orgntsid,
-                    'segid' => $request->segid,
+                    'segid' => $segmento->segmento_id,
                     'perid' => $request->perid,
                     'tpntid' => $request->tpntid,
-                    'expidnumber' => $request->expid,
+                    'expidnumber' => $expediente->expid,
                     'estidnumber' => $expediente->expidnumberest,
                     'docidnumber' => auth()->user()->idnumber,
                     'tbl_org_id' => $expediente->id,

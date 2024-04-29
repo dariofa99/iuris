@@ -5,7 +5,7 @@
     @endslot
 
     @slot('title')
-        Agregando Nota:: <h5>
+        Agregando Nota: <h5>
             @if ($periodo and $segmento)
                 <label class="label bg-blue" style="font-size: 16px;">{{ $periodo->prddes_periodo }}</label>
 
@@ -20,10 +20,7 @@
 
 
     @slot('body')
-        @section('msg-contenido')
-            Registrado
-        @endsection
-        @include('msg.ajax.success')
+     
         {!! Form::open(['id' => 'myform_add_nota_final_expedientes']) !!}
          <div>
             <div class="row">

@@ -11,6 +11,6 @@ interface SegmentosService {
 
     public function getSegmentoActivo():?Segmento;
     public function getSegmentoAsignacion($asignacion):?Segmento;
-   
+    public function getSegmentoEvaluacion($asignacion):?Segmento;
 }
 ?>
