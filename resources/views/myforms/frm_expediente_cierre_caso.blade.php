@@ -10,9 +10,9 @@
         || ($expediente->exptipoproce_id != 1 
             and $expediente->estado->id == 1 
             || $expediente->estado->id == 3))
-            or currentUser()->hasRole('amatai') or
+            or (currentUser()->hasRole('amatai') or
             currentUser()->hasRole('diradmin') or
-            currentUser()->hasRole('dirgral'))
+            currentUser()->hasRole('dirgral')) or($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and $expediente->estado->id == 4))
     <button type="button" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
         data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
         Actualizar Solicitud de cierre

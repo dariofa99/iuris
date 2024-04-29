@@ -2,12 +2,17 @@
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircNotas2Corte");
 
+        @if(currentUser()->hasRole('docente'))
         var keyCir = localStorage.getItem("keyCircCierreCaso");
-        if (keyCir == null) {
+        if (keyCir == null ) {
             var message = getCarrouselDocentes();
         } else {
             var message = getGeneralMessage();
         }
+        @else
+        var message = getGeneralMessage();
+        @endif
+       
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
