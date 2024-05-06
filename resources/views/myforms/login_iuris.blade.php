@@ -57,10 +57,11 @@
                               <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px" href="/videos">
                                     Ver videos de ayuda
                                 </a> 
-                              {{--   <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px"
+                                <br>
+                                 {{-- <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px"
                                  href="{{route('encuestas.conciliacion')}}">
-                                   Encuesta
-                                </a> --}}
+                                   Encuesta (desarrollo)
+                                </a>  --}}
                             </div>
                         </form>
                     </div>

@@ -75,7 +75,7 @@ if (!isset($modo_nav_crl)) {
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div id="fondo_background">
-  
+
     </div>
     <div class="wrapper">
         <!-- Navbar -->
@@ -83,9 +83,9 @@ if (!isset($modo_nav_crl)) {
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        
+
         @include('layouts.sidebar')
-     
+
         <!-- /:main Sidebar Container -->
 
         <!-- Content Wrapper. Contains page content -->
@@ -93,10 +93,11 @@ if (!isset($modo_nav_crl)) {
 
             <!-- Content Header (Page header) -->
             <input type="hidden" id="olderInputValue">
-             
-               <input type="hidden" id="authdata"  value="{{ Auth::user() }}">
- 
-            <div style="min-height: 450px;" class="card  card-{{config('app.name') == 'ConciliApp' ? 'purple' : 'success'}} card-outline">
+
+            <input type="hidden" id="authdata" value="{{ Auth::user() }}">
+
+            <div style="min-height: 450px;"
+                class="card  card-{{ config('app.name') == 'ConciliApp' ? 'purple' : 'success' }} card-outline">
                 <div class="card-header">
                     @yield('titulo_area')
                     @yield('area_buttons')
@@ -148,7 +149,7 @@ if (!isset($modo_nav_crl)) {
 
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
-
+    <script src="{{ asset('js/app.js') }}"></script>
     <script src={{ asset('js/config.js?v=1') }}></script>
     {!! Html::script('js/application.js?v=1') !!}
     <script type="module" src="{{ asset('js/scripts.js?v=1') }}"></script>
@@ -160,7 +161,17 @@ if (!isset($modo_nav_crl)) {
             $('[data-toggle="tooltip"]').tooltip();
             $("#wait").hide()
         });
-        
+        var channel = Echo.join('chat');
+        channel.listen('.event-chat', function(data) {
+            console.log(data);
+            //chat.render(data);
+        }).here(users => {
+            console.log(users);
+         }).joining(user => {
+            console.log(user);
+    }).leaving(user => {
+        console.log(user);
+    });
     </script>
     <!-- PAGE PLUGINS -->
     @stack('scripts')

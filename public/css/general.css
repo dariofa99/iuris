@@ -39,3 +39,23 @@ animation: spin 5s linear infinite;
     height: 1px;
     overflow: hidden;
   }
+  .content-turno{
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .numero_turno{
+    border: 1px solid #DEE2E6;
+    background-color: #DEE2E6;
+    margin-top: 10px;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .numero_turno span{
+    font-size: 3rem;
+  }

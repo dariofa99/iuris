@@ -5,7 +5,7 @@
             @include('content.chat.chat', [
                     'token' => $expediente->solicitudes[0]->number,
                 ])
-        </div>
+        </div> 
        {{--  <div class="col-md-4">
             <button class="btn btn-success btn-sm btn-block" id="btn_adm_documentos">Documentos</button>
             <button class="btn btn-warning btn-sm btn-block" data-type="151"

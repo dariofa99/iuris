@@ -94,6 +94,9 @@
 						<button id="btn_continuar_conciliacion" disabled  class="btn btn-primary m-2">
 							Continuar
 						</button> 
+                        <button id="btn_continuar_expedientes" disabled  class="btn btn-primary m-2">
+							Continuar
+						</button>
                     </div>
 
                 </div>

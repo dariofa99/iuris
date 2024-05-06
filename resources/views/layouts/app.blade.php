@@ -58,7 +58,7 @@
 
     @include('layouts.wait')
 </body>
-
+   
 <!-- jQuery 3 -->
 <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
@@ -81,6 +81,7 @@
 
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('js/app.js') }}" ></script>
 
 <script src={{ asset('js/config.js?v=1') }}></script>
 {!! Html::script('js/application.js?v=1') !!}
@@ -90,6 +91,11 @@
 
 <script type="text/javascript">
     var token = localStorage.getItem('tokensessionpc');
+    var channel = Echo.join('chat');
+        channel.listen('.event-chat', function(data) {
+            console.log(data);
+            //chat.render(data);
+        })
 </script>
 
 </html>

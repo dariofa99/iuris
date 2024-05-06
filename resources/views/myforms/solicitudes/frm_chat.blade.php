@@ -13,8 +13,7 @@
 <div class="col-md-8">
 <input type="hidden" id="tokenc" value="">
 <div class="embed-responsive embed-responsive-4by3" style=" height: 500px; ">
-    {!! \Facades\App\Facades\NewChat::room($solicitud->number)
-    ->can_write(($solicitud->type_status_id == 157  || $solicitud->type_status_id == 158) ? false : true)->render() !!}
+    
 </div> 
 </div> 
 <div class="col-md-3">

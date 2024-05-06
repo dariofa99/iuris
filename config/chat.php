@@ -1,7 +1,7 @@
 <?php
 
 return [
-    "domain"=>"https://cjuridicos.udenar.edu.co",
+    "domain"=>"http://iurischat.amatai.local",
     'connection' => [       
         'key' => env('CHAT_APP_KEY'),
         'password' => env('CHAT_APP_SECRET'),

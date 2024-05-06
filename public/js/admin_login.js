@@ -7,11 +7,17 @@ $(document).ready(function () {
         e.preventDefault();
         window.location = '/solicitudes/conciliacion/recepcion?paso=1'
     });
+    $("#btn_continuar_expedientes").on("click",function(e) {
+        e.preventDefault();
+        window.location = '/solicitudes/expedientes/recepcion?paso=1'
+    });
     $("#valida_regla").on("change",function(e) {
         e.preventDefault();
         $("#btn_continuar_conciliacion").prop("disabled",true)
+        $("#btn_continuar_expedientes").prop("disabled",true)
         if($(this).is(":checked")){
             $("#btn_continuar_conciliacion").prop("disabled",false);
+            $("#btn_continuar_expedientes").prop("disabled",false);
         }
     })
 });

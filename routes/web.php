@@ -474,11 +474,12 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('solicitudes/recepcion/conciliacion/{token}', 'SolicitudesController@recepcion_conciliacion');
 
 Route::post('usuarios', 'UsersController@store');
-
-Route::resource('solicitudes', 'SolicitudesController');
+Route::resource('solicitudes', 'SolicitudesController'); 
+Route::post('solicitudes/expediente', 'SolicitudesController@storeExpediente');
+/* 
 Route::get('solicitudes/view/{token}', 'SolicitudesController@waitRoom');
 Route::post('solicitudes/user/register', 'SolicitudesController@userRegister');
-Route::get('solicitudes/find/e', 'SolicitudesController@find');
+Route::get('solicitudes/find/e', 'SolicitudesController@find'); */
 Route::get('login', array('as' => 'login', function () {
   return view('myforms.login');
 }));
@@ -486,6 +487,11 @@ Route::get('/solicitudes/conciliacion/registro', 'SolicitudesController@registro
 
 Route::get('/solicitudes/conciliacion/recepcion', 'SolicitudesController@solicitar');
 Route::post('/solicitudes/conciliacion/recepcion', 'SolicitudesController@solicitar_store')->name("solicitudes.conciliacion");
+
+Route::get('/solicitudes/expedientes/recepcion', 'SolicitudesController@solicitarExpediente');
+Route::post('/solicitudes/expedientes/recepcion', 'SolicitudesController@solicitarExpedienteStore');
+
+
 Route::get('recepcion', "SolicitudesController@recepcion");
 /* 
 Route::get('recepcion',function(){

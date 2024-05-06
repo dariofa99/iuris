@@ -40,13 +40,13 @@ return [
                 'useTLS' => true,
                 'encrypted' => true,
                 //'host' => 'websockets.alercom.org',
-                'host' => 'judex.udenar.edu.co',
+                'host' => 'websocketsiuris.amatai.local',
                 'port' => 6001,
-                'scheme' => 'https',
-                'curl_options' => [
+                'scheme' => 'http',
+                /* 'curl_options' => [
                     CURLOPT_SSL_VERIFYHOST => 0,
                     CURLOPT_SSL_VERIFYPEER => 0,
-                ],
+                ] */
             ],
         ],
 

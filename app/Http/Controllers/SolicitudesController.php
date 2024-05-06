@@ -50,7 +50,7 @@ class SolicitudesController extends Controller
         $this->sedesService  = $sedesService; 
         $sede = Sede::find(1);       
         session(["sede"=>$sede]);
-        $this->middleware('auth',['except' => ['registro','solicitar_store','store','waitRoom','userRegister','update','find','recepcion','solicitar','recepcion_conciliacion']]);
+        $this->middleware('auth',['except' => ['registro','solicitar_store','store','waitRoom','userRegister','update','find','recepcion','solicitar','recepcion_conciliacion','solicitarExpediente','storeExpediente']]);
         $this->middleware('permission:ver_solicitudes',   ['only' => ['index','edita']]);
         $this->middleware('permission:admin_solicitudes',   ['only' => ['edit']]);
     }
@@ -76,6 +76,13 @@ class SolicitudesController extends Controller
       // Session::forget('sede');
        return view('myforms.recepcion.solicitar_conciliacion');
     } 
+
+    public function solicitarExpediente(Request $request)
+    {         
+       // $user = User::find(20351)  ;
+      // Session::forget('sede');
+       return view('myforms.recepcion.solicitar_expediente');
+    }
 
     public function recepcion_conciliacion(Request $request,$token)
     {          
@@ -138,30 +145,61 @@ class SolicitudesController extends Controller
         return view('myforms.recepcion.frm_registro_conciliacion',compact('conciliacion'));
     }
 
-    public function solicitar_store(Request $request)
+    public function storeExpediente(UserStoreRequest $request)
     {     
-        $user = User::where([
-            'email'=>$request->email,
-            //'idnumber'=>$request->idnumber
-        ])->first();
+            return response()->json($request->all());//
 
-        if(!$user){
-            $user = User::create([
-                'active' => 0,
-                'tipodoc_id' => $request['tipodoc'], 
-                'idnumber' => $request['idnumber'],
-                'name' => $request['name'],
-                'lastname' => $request['lastname'],
-                'password' => $request->has('password') ? $request['password'] : bcrypt($request['idnumber']),
-                'cursando_id' => 1,
-                'email' => $request['email'],                
-                'genero_id' => '6',
-                'estrato_id' => '9',
-                'estadocivil_id' =>'16'        
-            ]);    
-        }
-
-        Auth::login($user);
+          $this->sedesService->setSede($request);
+          $user = $this->userService->store($request);
+          if(Auth::guest()) Auth::login($user);
+          $turno  = $this->solicitudesService->getTurno();
+          $request['turno'] = $turno;
+          $solicitud = $this->solicitudesService->store($request);
+          /* $periodo = $this->periodoService->getPeriodoActivo();
+          $request['periodo_id'] =  $periodo->id;
+          $request['solicitante_id'] =  $user->id;
+          $request['estado_id'] =  240;
+          $request['categoria_id'] =  219; */        
+         
+          /* $conciliacion = $this->conciliacionService->store($request);
+          $conciliacion->usuarios()->attach($user->id,[
+              'tipo_usuario_id'=>205,
+              'estado_id'=>1
+          ]); */
+         /*  $solicitud->conciliaciones()->attach($conciliacion->id);
+          $estado = ConciliacionEstado::create([
+              'concepto' => "Solicitud primera vez",
+              'type_status_id' => $conciliacion->estado_id,
+              'user_id' => $request->input('solicitante_id'),
+              'conciliacion_id' => $conciliacion->id
+          ]); */
+          $response=[];
+          try {
+              //Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
+              } catch (\Throwable $th) {
+                  $response['errors'] = [$th->getMessage()];
+              }
+  
+          
+          //$response['conciliacion'] = $conciliacion;
+          return response()->json($response);// dd($request->all());
+  
+          $solicitud = Solicitud::create($request->all());
+          $solicitud->number = $request->idnumber.''. $turno;
+          $solicitud->save();
+        
+  
+          if($request->has('sede_id')){
+              $solicitud->sedes()->attach($request->sede_id);
+          }
+          $solicitudes = $this->get_solicitudes();
+          $render = view('myforms.solicitudes.frm_list_solicitudes_ajax',compact('solicitudes'))->render();
+          NewPush::channel('solicitudes_coord')
+          ->message(['data'=>'mensaje','render'=>$render])
+          ->publish();
+          return  redirect()->action('SolicitudesController@waitRoom',$solicitud->token);
+          
+     
 
      
        // dd($request->all()) ;     
@@ -306,19 +344,19 @@ class SolicitudesController extends Controller
 
             $user = User::where(['idnumber'=>$solicitud->idnumber,'tipodoc_id'=>$solicitud->tipodoc_id])->first();
             $render =  view('myforms.recepcion.frm_solicitud_espera_ajax',compact('solicitud','tur_aten','user'))->render();
-            NewPush::channel('solicitudes_send')->message([
+           /*  NewPush::channel('solicitudes_send')->message([
                 'solicitud_id'=>$id,
                 'render'=>$render,
                 'tur_aten'=>$turno
-                ])->publish(); 
+                ])->publish();  */
             $solicitudes = $this->get_solicitudes();
             $render = view('myforms.solicitudes.frm_list_solicitudes_ajax',compact('solicitudes'))
             ->render();
             $solicitudesh = $this->get_solicitudesh();
             $renderh = view('myforms.solicitudes.frm_list_solicitudesh_ajax',compact('solicitudesh'))
             ->render();
-            NewPush::channel('solicitudes_coord')
-            ->message(['data'=>'mensaje','render'=>$render,'renderh'=>$renderh])->publish();       
+            /* NewPush::channel('solicitudes_coord')
+            ->message(['data'=>'mensaje','render'=>$render,'renderh'=>$renderh])->publish(); */       
         }
 
         return view('myforms.solicitudes.frm_edit_solicitud',compact('solicitud'));

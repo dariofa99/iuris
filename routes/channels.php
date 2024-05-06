@@ -22,3 +22,7 @@ Broadcast::channel('login', function ($user) {
     Log::info("Notification fire channel login: ".$user->id);
     return  (int) auth()->user()->id === (int) $user->id ? $user : false;
 }); 
+Broadcast::channel('chat', function ($user) {    
+    return  (int) auth()->user()->id === (int) $user->id ? $user : false;
+    
+}); 
