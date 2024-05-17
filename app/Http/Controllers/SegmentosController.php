@@ -234,8 +234,8 @@ class SegmentosController extends Controller
 				$this->Asignotasnewdatos($data);
 				$asignacion->evaluado_hechos = 1;
 				$asignacion->save();
-				Log::info("Evaluado {$expediente->expid}");
 				Log::info("Evaluado {$expediente->expidnumberest}");
+				Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 			} else {
 
 				//cuanto tiempo paso al llenar la informacion desde asignado el caso
@@ -273,7 +273,7 @@ class SegmentosController extends Controller
 							]);
 							if (count($pausas) > 0) {
 								//validar las pausas con vacaciones
-								$dias_pausa = $this->getDiasPausado($pausas, $fecha_1,$fecha_2);
+								$dias_pausa = $this->getDiasPausado($pausas, $fecha_1, $fecha_2);
 								$dias_sin_hechos = $dias_sin_hechos - $dias_pausa;
 							} else {
 								//Se evalua que no haya habido vacaciones
@@ -306,6 +306,8 @@ class SegmentosController extends Controller
 								$this->Asignotasnewdatos($data);
 								$asignacion->evaluado_hechos = 1;
 								$asignacion->save();
+								Log::info("Evaluado {$expediente->expidnumberest}");
+								Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 							}
 						}
 					}
@@ -331,6 +333,8 @@ class SegmentosController extends Controller
 					'tbl_org_id' => $expediente->id,
 				];
 				$this->Asignotasnewdatos($data);
+				Log::info("Evaluado {$expediente->expidnumberest}");
+				Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 			}
 			//Evalua actuaciones
 
@@ -362,7 +366,7 @@ class SegmentosController extends Controller
 							]);
 							if (count($pausas) > 0) {
 								//validar las pausas con vacaciones
-								$dias_pausa = $this->getDiasPausado($pausas, $fecha1,$fecha2);
+								$dias_pausa = $this->getDiasPausado($pausas, $fecha1, $fecha2);
 								$dias_sin_act = $dias_sin_act - $dias_pausa;
 								if ($dias_sin_act > 31) {
 									$fecha_ini = getSmallDate($fecha1);
@@ -383,6 +387,8 @@ class SegmentosController extends Controller
 										'tbl_org_id' => $expediente->id,
 									];
 									$this->Asignotasnewdatos($data);
+									Log::info("Evaluado {$expediente->expidnumberest}");
+									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 								}
 							} else {
 								//no tuvo pausas
@@ -416,6 +422,9 @@ class SegmentosController extends Controller
 										'tbl_org_id' => $expediente->id,
 									];
 									$this->Asignotasnewdatos($data);
+									Log::info("Evaluado {$expediente->expidnumberest}");
+									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+								
 								}
 							}
 						}
@@ -445,7 +454,7 @@ class SegmentosController extends Controller
 					//return $actuacionsmes;
 					// return response()->json(['sjsj',$actuacionsmes]);
 					$res_act = $this->isActuacionEval($actuacionsmes, $dateiniciocorte, $segmento->fecha_fin, $expediente);
-									/* 
+					/* 
 					return response()->json([$res_act,$actuacionsmes,$expediente]); 
 						 */
 					if ($res_act[0]) {
@@ -464,6 +473,9 @@ class SegmentosController extends Controller
 							'tbl_org_id' => $expediente->id,
 						];
 						$this->Asignotasnewdatos($data);
+						Log::info("Evaluado {$expediente->expidnumberest}");
+						Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+					
 					}
 				}
 			}
@@ -491,8 +503,7 @@ class SegmentosController extends Controller
 								'docidnumber' => Auth::user()->idnumber,
 								'tbl_org_id' => $expedientemodel->id,
 							];
-							Log::info("Evaluado {$request['expidnumber']}");
-							Log::info("Evaluado {$expedientemodel->expidnumberest}");
+						
 							$expedientemodel->asignarNotas($data);
 							$expedientemodel->expestado_id = 5;
 							$expedientemodel->save();
@@ -501,6 +512,9 @@ class SegmentosController extends Controller
 							$request['ref_estado_id'] = $expediente->expestado_id;
 							$request['ref_motivo_estado_id'] = 12;
 							$estado_caso = $this->estadoCasoService->store($request);
+							Log::info("Evaluado {$expediente->expidnumberest}");
+								Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+							
 						}
 					}
 				}
@@ -547,13 +561,10 @@ class SegmentosController extends Controller
 		 and sede_expedientes.sede_id=" . session('sede')->id_sede) . "
 		 order by asignacion_caso.fecha_asig desc");
 		///////////////fin foreach todos los casos
-		 $data =$this->evaluarExpedientes($expedientes, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
+		$data = $this->evaluarExpedientes($expedientes, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
 		//return response()->json(['saved' => true, 'view' => $view]);
 		//consulta sobre los casos asignados solo durante el corte para notas sobre tiempos limites de inicio
 		///return response()->json([$data]);
-
-
-
 
 		$expedientescorte = DB::select(DB::Raw(
 			"Select asignacion_caso.fecha_asig,asignacion_caso.evaluado_hechos,
@@ -667,7 +678,7 @@ class SegmentosController extends Controller
 		return 0;
 	}
 
-	private function getDiasPausado($pausas, $fecha1,$fecha2)
+	private function getDiasPausado($pausas, $fecha1, $fecha2)
 	{
 		$dias_pausa = 0;
 		foreach ($pausas as $key_p => $pausa) {
@@ -685,7 +696,7 @@ class SegmentosController extends Controller
 				$dias_vacaciones = 0;
 				if (count($_vacaciones) > 0) {
 					Log::info("Paso el {$pausa->asig_caso_id}");
-					
+
 					$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
 					$dias_vacaciones_p = $dias_vacaciones_p + $dias_vacaciones;
 				}
@@ -740,7 +751,7 @@ class SegmentosController extends Controller
 		}
 		$dias_pausa = $dias_pausa + $dias_vacaciones;
 		Log::info("dias_pausa{$dias_pausa} Paso el {$dias_vacaciones}");
-					
+
 		return $dias_pausa;
 	}
 	private function isActuacionEval($array, $fecha_asig, $fecha_fin, $expediente)
@@ -769,17 +780,17 @@ class SegmentosController extends Controller
 
 			$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
 			$mensaje = "No";
-			
-			
-			
+
+
+
 			if ($dias_sin_act > 31) {
 				$fecha1 = $this->getFechaUno($asignacion, $fecha1);
 				$fecha2 = $this->getFechaDos($asignacion, $fecha2);
-				
-				
+
+
 				if ($fecha1 < $fecha2) {
 					$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
-					
+
 					if ($dias_sin_act > 31) {
 						//si tuvo pausas en el lapso
 
@@ -788,20 +799,20 @@ class SegmentosController extends Controller
 							['operador' => ">=", "value" => $fecha1],
 							['operador' => "<=", "value" => $fecha2]
 						]);
-			
+
 						if (count($pausas) > 0) {
 							//Se valida vacaciones desde fecha anterior hasta inicio de pausa
 
 							//validar las pausas con vacaciones
-							$dias_pausa = $this->getDiasPausado($pausas, $fecha1,$fecha2);
+							$dias_pausa = $this->getDiasPausado($pausas, $fecha1, $fecha2);
 							//return $dias_pausa ;
 							$dias_sin_act = $dias_sin_act - $dias_pausa;
-								
+
 							if ($dias_sin_act > 31) {
 								$fecha_ini = getSmallDate($fecha1);
 								$fecha_fini = getSmallDate($fecha2);
 								$mensaje = "Periodo evaluado desde {$fecha_ini} hasta $fecha_fini. Se contaron pausas {$dias_pausa}. Días: {$dias_sin_act}";
-							return [
+								return [
 									true,
 									$mensaje
 								];
@@ -825,7 +836,7 @@ class SegmentosController extends Controller
 								$dias_sin_act = $dias_sin_act - $dias_vacaciones;
 								$mess = "Se contaron vacaciones {$dias_vacaciones}";
 							}
-							
+
 							if ($dias_sin_act > 31) {
 								$fecha_ini = getSmallDate($fecha1);
 								$fecha_fini = getSmallDate($fecha2);

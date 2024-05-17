@@ -57,11 +57,11 @@
                                 Ver videos de ayuda
                             </a>
                             <br>
-                         
+                         {{-- 
                                     <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px"
                                  href="{{route('encuestas.conciliacion')}}">
                                    Encuesta (desarrollo)
-                                </a>  
+                                </a>   --}}
                                
                         </div>
                     </form>
