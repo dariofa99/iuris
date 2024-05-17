@@ -57,25 +57,25 @@ class FinishExpPause extends Command
     {
 
 
-        $exps = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
+      /*   $exps = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
             ->join("expedientes_pausa", "expedientes_pausa.asig_caso_id", "=", "asignacion_caso.id")
             ->select("expedientes.id as exp_id", "expedientes.expestado_id", "asignacion_caso.id", "expedientes.expid", "expedientes_pausa.fecha_final")
             ->whereDate("expedientes_pausa.fecha_final", "<", Carbon::now())
             ->where("expedientes.expestado_id", 6)
             ->where("expedientes_pausa.estado_id", 249)
-            ->get();
+            ->get(); */
         $user = User::where("email","darioj99@gmail.com")->first();
-        foreach ($exps as $key => $exped) {
+       /*  foreach ($exps as $key => $exped) {
             $expediente = Expediente::find($exped->exp_id);
             $asignacion = $expediente->asignacion;
             $expediente->expestado_id = 1;
-            $expediente->save();
+            //$expediente->save();
             $this->request['useridnumber'] = $user->idnumber;
             $this->request['comentario'] = 'Fecha de pausa caducada';
             $this->request['expidnumber'] = $expediente->expid;
             $this->request['ref_estado_id'] = $expediente->expestado_id;
             $this->request['ref_motivo_estado_id'] = 11;
-            $estado_caso = $this->estadoCasoService->store($this->request);
+          //  $estado_caso = $this->estadoCasoService->store($this->request);
             $user = $expediente->estudiante;
             $user->notification = 'Nueva notificación de caso';
             $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
@@ -84,7 +84,7 @@ class FinishExpPause extends Command
             $exp = ExpedientePausas::where("asig_caso_id", $asignacion->id)
                 ->update([
                     "estado_id" => 250
-                ]); 
-        };
+                ]);  
+        }; */
     }
 }
