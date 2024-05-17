@@ -15,7 +15,7 @@ class EncuestasSatisfaccionController extends Controller
 
 
 
-        return view('myforms.encuestas.conciliaciones.index');
+        return view('myforms.encuestas.conciliaciones.formulario');
     }
     public function buscarConciliaciones(Request $request)
     {

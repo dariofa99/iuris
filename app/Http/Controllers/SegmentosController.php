@@ -202,7 +202,7 @@ class SegmentosController extends Controller
 		$exps = [];
 
 		foreach ($expedientes as $key => $expediente) {
-			//$expediente = $expedientes[3];
+			//$expediente = $expedientes[1];
 			if (($expediente->exptipoproce_id == 3 and $expediente->exphechos == 0)
 				|| ($expediente->exptipoproce_id != 3 and
 					($expediente->exphechos == 0 || $expediente->exprtaest == 0))
@@ -442,12 +442,10 @@ class SegmentosController extends Controller
 						 AND  actfecha <= '" . $datefinalcortereal . "') 
 						 GROUP BY 1 ORDER BY 1 ASC"));
 					//$iseva = $this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin);
-
+					//return $actuacionsmes;
 					// return response()->json(['sjsj',$actuacionsmes]);
 					$res_act = $this->isActuacionEval($actuacionsmes, $dateiniciocorte, $segmento->fecha_fin, $expediente);
-					//return $res_act;
-
-					/* 
+									/* 
 					return response()->json([$res_act,$actuacionsmes,$expediente]); 
 						 */
 					if ($res_act[0]) {
@@ -549,10 +547,13 @@ class SegmentosController extends Controller
 		 and sede_expedientes.sede_id=" . session('sede')->id_sede) . "
 		 order by asignacion_caso.fecha_asig desc");
 		///////////////fin foreach todos los casos
-		$this->evaluarExpedientes($expedientes, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
+		 $data =$this->evaluarExpedientes($expedientes, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
 		//return response()->json(['saved' => true, 'view' => $view]);
 		//consulta sobre los casos asignados solo durante el corte para notas sobre tiempos limites de inicio
-		//return response()->json([$expedientes]);
+		///return response()->json([$data]);
+
+
+
 
 		$expedientescorte = DB::select(DB::Raw(
 			"Select asignacion_caso.fecha_asig,asignacion_caso.evaluado_hechos,
@@ -562,7 +563,7 @@ class SegmentosController extends Controller
 		join `users` on expedientes.expidnumberest = users.idnumber 
 		join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
 		where expedientes.expidnumberest = asignacion_caso.asigest_id 
-		and expedientes.expidnumberest <> 3030
+		and expedientes.expidnumberest  <> 3030
 		and (expestado_id != 5 and expestado_id != 2 and expestado_id != 8)		
 		AND (fecha_asig BETWEEN '" . $dateiniciocorte . "' AND '" . $fechaFinalCorte . "')   
 		and asignacion_caso.periodo_id = " . $segmento->perid . " 
@@ -570,9 +571,9 @@ class SegmentosController extends Controller
 		order by asignacion_caso.fecha_asig desc"
 
 		));
-		//return response()->json([$expedientes]);
+		//return response()->json([$expedientescorte]);
 
-		//$this->evaluarExpedientes($expedientescorte, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
+		$this->evaluarExpedientes($expedientescorte, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
 
 
 		//and expedientes.expidnumberest = '1006106455'
@@ -684,6 +685,7 @@ class SegmentosController extends Controller
 				$dias_vacaciones = 0;
 				if (count($_vacaciones) > 0) {
 					Log::info("Paso el {$pausa->asig_caso_id}");
+					
 					$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
 					$dias_vacaciones_p = $dias_vacaciones_p + $dias_vacaciones;
 				}
@@ -711,7 +713,7 @@ class SegmentosController extends Controller
 			} else {
 				$dias_pausado = Carbon::parse($fecha_pI)
 					->diffInDays($fecha_pF);
-				Log::info($pausas);
+				//Log::info($pausas);
 				if (isset($pausas[$key_p + 1])) {
 					$fecha_next = $pausas[$key_p + 1]->fecha_inicial;
 					//buscar vacaciones entre pausas
@@ -731,12 +733,14 @@ class SegmentosController extends Controller
 			['operador' => ">=", "value" => $fecha_pF],
 			['operador' => "<=", "value" => $fecha2]
 		]);
-		$dias_vacaciones = 0;
+		//$dias_vacaciones = 0;
 		if (count($_vacaciones) > 0) {
 			$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
 			//$dias_vacaciones_p = $dias_vacaciones_p - $dias_vacaciones;
 		}
 		$dias_pausa = $dias_pausa + $dias_vacaciones;
+		Log::info("dias_pausa{$dias_pausa} Paso el {$dias_vacaciones}");
+					
 		return $dias_pausa;
 	}
 	private function isActuacionEval($array, $fecha_asig, $fecha_fin, $expediente)
@@ -753,8 +757,10 @@ class SegmentosController extends Controller
 		$act_i->fechas = Carbon::parse($fecha_fin)->format("Y-m-d");
 		array_push($array, $act_i);
 		$dias_sin_act = 0;
-
+		//return $array;
 		foreach ($array as $key => $fechacalc) {
+			//$key = 2;
+			//$fechacalc = $array[$key];
 			$fecha1 = Carbon::parse($fechacalc->fechas);
 			$fecha2 = Carbon::parse($fecha_fin);
 			if (array_key_exists($key + 1, $array)) {
@@ -763,20 +769,26 @@ class SegmentosController extends Controller
 
 			$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
 			$mensaje = "No";
-
+			
+			
+			
 			if ($dias_sin_act > 31) {
 				$fecha1 = $this->getFechaUno($asignacion, $fecha1);
 				$fecha2 = $this->getFechaDos($asignacion, $fecha2);
+				
+				
 				if ($fecha1 < $fecha2) {
 					$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
+					
 					if ($dias_sin_act > 31) {
 						//si tuvo pausas en el lapso
+
 						$dias_pausa = 0;
 						$pausas = $this->pausaService->getByAsignacion($asignacion, [
 							['operador' => ">=", "value" => $fecha1],
 							['operador' => "<=", "value" => $fecha2]
 						]);
-
+			
 						if (count($pausas) > 0) {
 							//Se valida vacaciones desde fecha anterior hasta inicio de pausa
 
@@ -784,11 +796,12 @@ class SegmentosController extends Controller
 							$dias_pausa = $this->getDiasPausado($pausas, $fecha1,$fecha2);
 							//return $dias_pausa ;
 							$dias_sin_act = $dias_sin_act - $dias_pausa;
+								
 							if ($dias_sin_act > 31) {
 								$fecha_ini = getSmallDate($fecha1);
 								$fecha_fini = getSmallDate($fecha2);
-								$mensaje = "Periodo evaluado desde {$fecha_ini} hasta $fecha_fini. Se contaron pausas. Días: {$dias_sin_act}";
-								return [
+								$mensaje = "Periodo evaluado desde {$fecha_ini} hasta $fecha_fini. Se contaron pausas {$dias_pausa}. Días: {$dias_sin_act}";
+							return [
 									true,
 									$mensaje
 								];
@@ -806,14 +819,17 @@ class SegmentosController extends Controller
 								['operador' => "<=", "value" => $fecha2]
 							]);
 							$dias_vacaciones = 0;
+							$mess = "";
 							if (count($_vacaciones) > 0) {
 								$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
 								$dias_sin_act = $dias_sin_act - $dias_vacaciones;
+								$mess = "Se contaron vacaciones {$dias_vacaciones}";
 							}
+							
 							if ($dias_sin_act > 31) {
 								$fecha_ini = getSmallDate($fecha1);
 								$fecha_fini = getSmallDate($fecha2);
-								$mensaje = "Periodo evaluado desde {$fecha_ini} hasta $fecha_fini. Días: {$dias_sin_act}";
+								$mensaje = "Periodo evaluado desde {$fecha_ini} hasta $fecha_fini.{$mess} Días: {$dias_sin_act}";
 								return [
 									true,
 									$mensaje
@@ -879,6 +895,7 @@ class SegmentosController extends Controller
 			['operador' => ">=", "value" => $fecha2]
 		]);
 
+		Log::info($esta_pausado);
 		//La actuacion se venció mientras estaba en vacaciones
 		$esta_vacaciones = $this->vacacionesService->getByDates([
 			['operador' => "<=", "value" => $fecha2],

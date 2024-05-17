@@ -276,7 +276,7 @@
                     @empty
 
                     @endforelse
-                    {{--   @if ($contador_e > 0 and Request::has('segid') and Request::get('segid') != '')
+                      @if ($contador_e > 0 and Request::has('segid') and Request::get('segid') != '')
             <tr>
                 <td>
                     Promedio Conocimiento
@@ -307,7 +307,7 @@
                    {{ number_format((($promedio_c/$contador_c) + ($promedio_a/$contador_a) +($promedio_e/$contador_e)) /3,1,'.',' ')}} 
                 </td>
             </tr>
-            @endif --}}
+            @endif
                 </tbody>
             </table>
 

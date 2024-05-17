@@ -24,17 +24,14 @@ class ConcEncuSatisfaccionController extends Controller
     public function index(){
 
     	$auditorias = Auditoria::orderBy('created_at','desc')->paginate(200);
-
-        //dd($auditorias);
-
     	return view('myforms.frm_auditoria',compact('auditorias'));
     }
 
     public function store(Request $request){
             $request['user_id'] = auth()->user()->id;
             $request['tipo_usuario_id'] = 1;
-    		$encuestsa = $this->encuestaService->store($request);
-            Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
+    		//$encuestsa = $this->encuestaService->store($request);
+           // Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
  
     		return response()->json($request->all());
 

@@ -28,23 +28,16 @@
            </div>
 
            <div class="has_apoyo form-group alert alert-info">
-               Obligaciones y consideraciones relacionadas con la privacidad y el
-               apoyo a personas con discapacidad.
-               Es fundamental que estas pautas sean comprendidas y respetadas para
-               garantizar el bienestar y la autonomía del solicitante.<br>
-
+            Obligaciones y consideraciones relacionadas con la privacidad en el trámite de apoyo a personas con discapacidad por parte de la persona que brinda el apoyo. Es fundamental que estas pautas sean comprendidas y respetadas para garantizar el bienestar y la autonomía del solicitante.           
+            
                <ol>
                    <li><strong> Confidencialidad y Privacidad:</strong><br>
-                       Se compromete a respetar toda la información personal, médica o confidencial relacionada con el
-                       solicitante debe tratarse
-                       con la máxima confidencialidad.
-                       No se debe compartir información privada con terceros sin el consentimiento expreso del
-                       solicitante.
+                    Se compromete a respetar y tratar con la máxima reserva toda la información personal, médica o confidencial relacionada con el solicitante y que eventualmente pueda conocer. Igualmente tenga en cuenta que está facultado(a) para compartir información privada con terceros sin el consentimiento expreso del solicitante.
+
                    </li>
                    <li><strong>Respeto a la Autonomía:</strong><br>
-                       Se compromete a respetar la autonomía del solicitante en la medida
-                       de lo posible, permitiéndole tomar sus propias decisiones.
-                   </li>
+                    Se compromete a respetar la autonomía del solicitante permitiéndole tomar sus propias decisiones, teniendo en cuenta que el apoyo brindado hace parte de los ajustes razonables que se generan en favor del usuario.
+                </li>
                </ol>
 
                <div>

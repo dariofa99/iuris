@@ -59,3 +59,10 @@ animation: spin 5s linear infinite;
   .numero_turno span{
     font-size: 3rem;
   }
+
+  .tarjeta{
+    min-height: 50px;
+    border-radius: .25rem;
+    border: 1px solid gray;
+    padding: 10px;
+  }
