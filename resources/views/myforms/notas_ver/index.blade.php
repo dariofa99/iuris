@@ -276,7 +276,7 @@
                     @empty
 
                     @endforelse
-                      @if ($contador_e > 0 and Request::has('segid') and Request::get('segid') != '')
+                      @if (currentUser()->hasRole("amatai") and $contador_e > 0 and Request::has('segid') and Request::get('segid') != '')
             <tr>
                 <td>
                     Promedio Conocimiento

@@ -451,12 +451,12 @@ class SegmentosController extends Controller
 						 AND  actfecha <= '" . $datefinalcortereal . "') 
 						 GROUP BY 1 ORDER BY 1 ASC"));
 					//$iseva = $this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin);
-					//return $actuacionsmes;
-					// return response()->json(['sjsj',$actuacionsmes]);
+					
+					//eturn (['sjsj',$actuacionsmes]);
 					$res_act = $this->isActuacionEval($actuacionsmes, $dateiniciocorte, $segmento->fecha_fin, $expediente);
-					/* 
-					return response()->json([$res_act,$actuacionsmes,$expediente]); 
-						 */
+					
+					//return ([$res_act]); 
+						 
 					if ($res_act[0]) {
 						$data = [
 							'ntaaplicacion' => 0,
@@ -582,11 +582,11 @@ class SegmentosController extends Controller
 		order by asignacion_caso.fecha_asig desc"
 
 		));
-		//return response()->json([$expedientescorte]);
+		
 
-		$this->evaluarExpedientes($expedientescorte, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
+		$data = $this->evaluarExpedientes($expedientescorte, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
 
-
+		//return response()->json([$data]);
 		//and expedientes.expidnumberest = '1006106455'
 		//and expedientes.expidnumberest <> 3030 and (fecha_asig <= '" . $segmento->fecha_corte . "') 
 
@@ -761,6 +761,11 @@ class SegmentosController extends Controller
 			'asigest_id' => $expediente->expidnumberest,
 			'activo' => 1
 		])->first();
+
+		if($asignacion->fecha_asig > $fecha_asig ){
+			$fecha_asig = $asignacion->fecha_asig;
+		}
+
 		$act_i = new stdClass();
 		$act_i->fechas = Carbon::parse($fecha_asig)->format("Y-m-d");
 		array_unshift($array, $act_i);
@@ -768,10 +773,9 @@ class SegmentosController extends Controller
 		$act_i->fechas = Carbon::parse($fecha_fin)->format("Y-m-d");
 		array_push($array, $act_i);
 		$dias_sin_act = 0;
-		//return $array;
+		
 		foreach ($array as $key => $fechacalc) {
-			//$key = 2;
-			//$fechacalc = $array[$key];
+			
 			$fecha1 = Carbon::parse($fechacalc->fechas);
 			$fecha2 = Carbon::parse($fecha_fin);
 			if (array_key_exists($key + 1, $array)) {
@@ -781,12 +785,9 @@ class SegmentosController extends Controller
 			$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
 			$mensaje = "No";
 
-
-
 			if ($dias_sin_act > 31) {
 				$fecha1 = $this->getFechaUno($asignacion, $fecha1);
 				$fecha2 = $this->getFechaDos($asignacion, $fecha2);
-
 
 				if ($fecha1 < $fecha2) {
 					$dias_sin_act =  Carbon::parse($fecha1)->diffInDays($fecha2);
@@ -802,7 +803,6 @@ class SegmentosController extends Controller
 
 						if (count($pausas) > 0) {
 							//Se valida vacaciones desde fecha anterior hasta inicio de pausa
-
 							//validar las pausas con vacaciones
 							$dias_pausa = $this->getDiasPausado($pausas, $fecha1, $fecha2);
 							//return $dias_pausa ;

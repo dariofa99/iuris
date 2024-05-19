@@ -126,7 +126,7 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-danger" style="font-size:19px">';
+        message += '<div class="alert alert-info" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -134,7 +134,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 16 de mayo de 2024 <br>
+        message += `<span> Últ. Actualización: 19 de mayo de 2024 <br>
                         Si el problema persiste comuníquese al 3106038006  
                       </span>`;
 
@@ -153,7 +153,8 @@
                         se pausaran los días en los que evalua el sistema a
                         excepción de las fechas solicitadas por el docente 
                         para realizar correcciones en los respectivos casos o actuaciones.
-                   </strong> <br>
+                   </strong>
+                    <br>
                           <br>
                       
                     </h4> </div>`;

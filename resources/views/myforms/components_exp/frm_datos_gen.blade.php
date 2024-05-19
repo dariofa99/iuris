@@ -65,7 +65,9 @@
                                     currentUser()->hasRole('dirgral') or
                                     currentUser()->hasRole('amatai')))
                             &nbsp;&nbsp;
-                            <a style="cursor: pointer;" data-toggle="modal" data-target="#fechalimitres">Modificar</a>
+                            <a style="cursor: pointer;" data-toggle="modal" data-target="#fechalimitres">
+                                Modificar
+                            </a>
                         @endif
                     </p>
                 </div>
@@ -89,10 +91,10 @@
                 @if (
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->asignacion->procesojud_id == 1 and
-                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('amatai'))
+                            currentUser()->hasRole('amatai')))
                     <a href="#" id="btn_act_proc_jur"
                         class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
                         Activar como proceso jurídico
