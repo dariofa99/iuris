@@ -837,7 +837,7 @@ $(document).ready(function () {
 
     $("#content_user_exp_asig")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-
+           
             if ($(this).val() == 1) {
                 //$(".discaform").show();
                 mostrarCompDiscapUser()
@@ -847,6 +847,27 @@ $(document).ready(function () {
             }
         });
 
+        $("#myModal_exp_user_edit")
+        .on("change", "select[name='pbepersondiscap']", function (e) {
+           
+            if ($(this).val() == 1) {
+                //$(".discaform").show();
+                mostrarCompDiscapUser()
+            } else {
+                ocultarCompDiscapUser();
+
+            }
+        });
+        $("#myModal_exp_user_edit")
+        .on("change", "select[name='has_apoyo']", function (e) {
+            if ($(this).val() == 1) {
+                $(".has_apoyo").show()
+                $("#acept_ter").prop("disabled", false)
+            } else {
+                $(".has_apoyo").hide()
+                $("#acept_ter").prop("disabled", true).prop("checked", false)
+            }
+        });
     $("#content_user_exp_asig")
         .on("change", "select[name='has_apoyo']", function (e) {
 
@@ -865,23 +886,8 @@ $(document).ready(function () {
         var errors = validateForm("myFormUserCreateExpediente");
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserCreateExpediente");
-            var data = [];
-            $("#myFormUserCreateExpediente .input_user_ad").each((index, obj) => {
-
-                if (($(obj).attr("data-type") == 170 && $(obj).is(":checked"))
-                    || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
-                    data.push({
-                        value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-                        section: $(obj).attr("data-section"),
-                        type: $(obj).attr("data-type"),
-                        name: $(obj).attr("data-name"),
-                        option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-                        value_is_other: $("#value_other_text-" + $(obj).val()).val(),
-                        conciliacion_id: $("#conciliacion_id").val()
-                    });
-                }
-            });
-            request["data"] = (data);
+            var data = userService.getAditionalDataByForm("myFormUserCreateExpediente")
+            request["data"] = (data);           
             $("#wait").show();
             let response = await userService.registrar(request);
             if (response.errors) {

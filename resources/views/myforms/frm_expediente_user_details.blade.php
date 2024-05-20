@@ -27,12 +27,15 @@ Registrado
 		@include('myforms.users.formulario_registro',[
 			'user'=>$expediente->solicitante
 		])
+		@include('myforms.components_user.discapacidad',[
+			'user'=>$expediente->solicitante
+		])
 		@include('myforms.components_user.identitaria',[
 			'user'=>$expediente->solicitante
 		])
 		@include('myforms.components_user.socioeconomica',[
 			'user'=>$expediente->solicitante
-		])
+		]) 
 	</div>   
 </form>
 

@@ -292,21 +292,20 @@ export class UserService {
   }
   getAditionalDataByForm(form) {
     var data = [];
-
     $("#" + form + " .input_user_ad").each((index, obj) => {
-      if (($(obj).attr("data-type") == 170 && $(obj).is(":checked"))
-        || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
-        data.push({
-          value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-          section: $(obj).attr("data-section"),
-          type: $(obj).attr("data-type"),
-          name: $(obj).attr("data-name"),
-          option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).val()).val(),
-          conciliacion_id: $("#conciliacion_id").val()
-        });
+      if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170) && $(obj).is(":checked"))
+          || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
+             data.push({
+              value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
+              section: $(obj).attr("data-section"),
+              type: $(obj).attr("data-type"),
+              name: $(obj).attr("data-name"),
+              option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
+              value_is_other: $("#value_other_text-" + $(obj).attr("data-id")).val(),
+              conciliacion_id: $("#conciliacion_id").val()
+          });
       }
-    });
+  });
     return data;
   }
 

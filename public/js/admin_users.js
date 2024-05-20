@@ -189,20 +189,8 @@ $(document).ready(function () {
 
     if (errors.length <= 0) {
       var request = convertFormToJSON("myFormUserEdit");
-      var data = [];
-      $("#myFormUserEdit .input_user_ad").each((index, obj) => {
-        data.push({
-          value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-          section: $(obj).attr("data-section"),
-          type: $(obj).attr("data-type"),
-          name: $(obj).attr("data-name"),
-          option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).attr('data-reference_id')).val(),
-
-        });
-      });
+      var data = userService.getAditionalDataByForm('myFormUserEdit');
       request["data"] = (data);
-
       $("#wait").show();
       let response = await userService.update(request);
       if (response.errors) {

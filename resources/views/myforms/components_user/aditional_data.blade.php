@@ -32,13 +32,7 @@
                             value="{{ $opt->id }}">{{ $opt->value }}</option>
                     @endforeach
                 </select>
-                <label @if (!$is_active) style="display: none" @endif
-                    id="lbl_other-{{ $reference->id }}">¿Cuál...?</label>
-                <input {{ isset($disabled) ? $disabled : '' }} id="value_other_text-{{ $reference->id }}"
-                    @if ($is_active) type="text" @else type="hidden" @endif
-                    @if (isset($user) and $user != null and $user->getDataVal($reference->id, $option_id)) value="{{ $user->getDataVal($reference->id, $option_id)->value_is_other }}" @endif
-                    class="form-control form-control-sm" placeholder="¿Cuál...?">
-
+                @include('myforms.components_user.input_other_aditional_data')
             @elseif($reference->type_data_id == 170)
                 @php
                     $is_active = false;
@@ -68,14 +62,8 @@
                    type="checkbox" data-option="{{ $opt->id }}"> 
                    {{$opt->value}} 
                 @endforeach        
-
-                <label @if (!$is_active) style="display: none" @endif
-                    id="lbl_other-{{ $reference->id }}">¿Cuál...?</label>
-
-                <input {{ isset($disabled) ? $disabled : '' }} id="value_other_text-{{ $reference->id }}"
-                    @if ($is_active) type="text" @else type="hidden" @endif
-                    @if (isset($user) and $user != null and $user->getDataVal($reference->id, $option_id)) value="{{ $user->getDataVal($reference->id, $option_id)->value_is_other }}" @endif
-                    class="form-control form-control-sm" placeholder="¿Cuál...?">
+                @include('myforms.components_user.input_other_aditional_data')
+     
             @else
                 <input {{ isset($disabled) ? $disabled : '' }} data-reference_id="{{ $reference->id }}"
                     data-name="{{ $reference->name }}" data-option="{{ $reference->options[0]->id }}"

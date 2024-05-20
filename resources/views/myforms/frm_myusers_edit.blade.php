@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('titulo_area')
-    Rol de Usuario: <strong> {{ $user->roles[0]->display_name }} </strong>
+    Rol de Usuario: <strong> {{ count($user->roles)>0 ? $user->roles[0]->display_name : "Sin rol" }} </strong>
 @endsection
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
@@ -137,7 +137,7 @@
                                     @include('myforms.components_user.discapacidad', [
                                         'disabled' => isset($user) ? '' : '',
                                     ])
-                                </div>
+                                </div> 
                             </div>
 
                             <!-- /.tab-pane -->

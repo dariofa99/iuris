@@ -5,6 +5,30 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 $(document).ready(function () {
+    $(".input_user_ad").on("change", function () {
+        console.log($(this));
+        var elementType = $(this).prop("tagName").toLowerCase(); // Detecta si es select
+        var active, id;
+
+        if (elementType === "select") {
+            var selectedOption = $(this).find("option:selected");
+            active = selectedOption.attr("data-active_other");
+            id = $(this).attr("data-id");
+        } else if ($(this).attr("type") === "checkbox" || $(this).attr("type") === "radio") {
+            active = $(this).attr("data-active_other");
+            id = $(this).attr("data-id");
+        }
+
+        if (elementType === "select" || $(this).is(":checked")) {
+            if (active == 1) {
+                $("#lbl_other-" + id).show();
+                $("#value_other_text-" + id).attr("type", "text");
+            } else {
+                $("#lbl_other-" + id).hide();
+                $("#value_other_text-" + id).attr("type", "hidden");
+            }
+        }
+    });
     $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
         var page = $(this).attr("href");
@@ -93,10 +117,10 @@ function validateForm(form) {
     var errors = [];
 
     $("#" + form + " .required").each(function (index, obj) {
-       
+
         if ($(obj).attr('disabled') != 'disabled' && !$(obj).is("input[type='hidden']")) {
             if ($(obj).is("input, select, textarea") && !$(this).is("div") && $(this).val() == '') {
-                $(obj).show().css({"background":"red"});
+                $(obj).show().css({ "background": "red" });
                 errors.push('El campo ' + $(obj).attr('name') + ' es obligatorio');
                 $(obj).css({ 'background': '#EC7063', 'border': '1px solid #EAEDED', 'color': "black" }).addClass("placeholdercolor");
                 $(obj).attr('placeholder', 'Este campo es obligatorio');                //
@@ -106,13 +130,13 @@ function validateForm(form) {
                 }
             } else if ($(this).is("input, select, textarea") && !$(this).is("div") && $(this).val() != '') {
                 $(this).css({ 'background': '#fff', 'border': '1px solid #EAEDED' })
-                .removeClass("placeholdercolor");
+                    .removeClass("placeholdercolor");
                 if ($(this).hasClass("selectpicker")) {
                     $(this).selectpicker('refresh');
                 }
             }
         }
-          
+
     });
     errors = [... new Set(errors)];
     return errors
@@ -273,12 +297,12 @@ async function index_pagination(route) {
         throw new Error(message);
     }
     const topics = await response.json();
-    if(topics.view){
+    if (topics.view) {
         $("#table_list_model").html(topics.view);
-    }else{
+    } else {
         $("#table_list_model").html(topics);
     }
-    if(topics.view_count){
+    if (topics.view_count) {
         $("#content_count_asesorias_inlist").html(topics.view_count);
     }
     window.history.pushState(null, "", route);
@@ -304,16 +328,16 @@ async function index_page(route, request) {
     }
     const topics = await response.json();
     console.log(topics);
-    if(topics.view){
+    if (topics.view) {
         $("#table_list_model").html(topics.view);
-    }else{
+    } else {
         $("#table_list_model").html(topics);
     }
-    if(topics.view_count){
+    if (topics.view_count) {
         $("#content_count_asesorias_inlist").html(topics.view_count);
     }
-    
-    window.history.pushState(null, "", page); 
+
+    window.history.pushState(null, "", page);
     return topics;
 }
 function calcularProximosDiasHabiles(fechaActual, n) {
@@ -525,27 +549,27 @@ function myTimer() {
     var anio = d.getFullYear();
     var cadena =
         "" + " " + mes + "/" + dia + "/" + anio + " " + d.toLocaleTimeString();
-    if(document.getElementById("fecha_sistema")) document.getElementById("fecha_sistema").innerHTML = cadena;
+    if (document.getElementById("fecha_sistema")) document.getElementById("fecha_sistema").innerHTML = cadena;
     //document.getElementById("demo").innerHTML =
 }
 
-function validateNotas(form){	
-	var errors = [];
-	$("#"+form+" .val_nota").each(function(index,obj){
-		if ($(this).attr('disabled')!='disabled') {
-			if ($(this).val() !='' && $(this).val()>5) {
-	  			errors.push('El campo '+$(this).attr('name')+' es mayor que 5');
-	  			$(this).css({'background':'#FDEDEC','border':'1px solid #33FF90'});
-	  			$(this).attr('placeholder','Requerido');
-	  			//console.log($(this));
-	  		}else if ($(this).val() !='' && isNaN($(this).val())) {	  			
-	  			$(this).css({'background':'#fff','border':'1px solid #33FF90'});
-				errors.push('El campo esta mal diligenciado');
-				$(this).css({'background':'#FDEDEC','border':'1px solid #33FF90'});
-	  			$(this).attr('placeholder','Requerido');	  		
-	  		}	
-		}
-  		  			
-  	});
-  	return errors 	
+function validateNotas(form) {
+    var errors = [];
+    $("#" + form + " .val_nota").each(function (index, obj) {
+        if ($(this).attr('disabled') != 'disabled') {
+            if ($(this).val() != '' && $(this).val() > 5) {
+                errors.push('El campo ' + $(this).attr('name') + ' es mayor que 5');
+                $(this).css({ 'background': '#FDEDEC', 'border': '1px solid #33FF90' });
+                $(this).attr('placeholder', 'Requerido');
+                //console.log($(this));
+            } else if ($(this).val() != '' && isNaN($(this).val())) {
+                $(this).css({ 'background': '#fff', 'border': '1px solid #33FF90' });
+                errors.push('El campo esta mal diligenciado');
+                $(this).css({ 'background': '#FDEDEC', 'border': '1px solid #33FF90' });
+                $(this).attr('placeholder', 'Requerido');
+            }
+        }
+
+    });
+    return errors
 } 

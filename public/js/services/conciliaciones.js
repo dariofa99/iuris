@@ -755,8 +755,7 @@ export class ConciliacionService {
         $("#" + form + " .input_user_ad").each((index, obj) => {
             if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170) && $(obj).is(":checked"))
                 || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
-                console.log(obj);
-                    data.push({
+                   data.push({
                     value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
                     section: $(obj).attr("data-section"),
                     type: $(obj).attr("data-type"),

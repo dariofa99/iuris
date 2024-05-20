@@ -77,7 +77,7 @@
                     class="form-control form-control-sm required">
                     <option value="">Seleccione...</option>
                     @foreach ($roles as $key => $rol)
-                        <option {{ (isset($user) and $user->roles[0]->id == $key) ? 'selected' : '' }}
+                        <option {{ (isset($user) and count($user->roles)>0 and $user->roles[0]->id == $key) ? 'selected' : '' }}
                             value="{{ $key }}">{{ $rol }}</option>
                     @endforeach
                 </select>
@@ -166,4 +166,4 @@
         'data' => getReferencesDataBySection('datos_personales', 'users'),
     ])
 
-</div>
+</div> 

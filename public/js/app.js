@@ -2144,14 +2144,12 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   encrypted: true,
   disableStats: true,
   enabledTransports: ['ws', 'wss'],
-  wsHost: 'websocketsiuris.amatai.local',
+  wsHost: 'judex.udenar.edu.co',
   wsPort: 6001,
-  wssHost: 'websocketsiuris.amatai.local',
+  wssHost: 'judex.udenar.edu.co',
   wssPort: 6001
   //authEndpoint: "/api/broadcasting/auth"
 });
-
-console.log(window.Echo, "iuris");
 
 /***/ }),
 
