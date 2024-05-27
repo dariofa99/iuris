@@ -84,7 +84,7 @@ class User extends Authenticatable
     {
         $this->notify(new MyResetPassword($token));
     }
-    public function tipo_conciliacion()
+    public function tipo_conciliacion() 
     {
         return $this->belongsToMany(TablaReferencia::class, 'conciliacion_has_user', 'user_id', 'tipo_usuario_id')
             ->withPivot('user_id', 'tipo_usuario_id', 'conciliacion_id')->withTimestamps();

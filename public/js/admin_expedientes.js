@@ -24,8 +24,7 @@ $(document).ready(function () {
             request['search_onlyProJur'] = 'search_onlyProJur';
         }
         $("#wait").show();
-        var page = "expedientes";
-        console.log(page);
+        var page = "expedientes";        
         let res = await index_page(page, request);
         $("#wait").hide();
     });
@@ -46,8 +45,7 @@ $(document).ready(function () {
         if (opselected != '' && opselected != null) request['tipo_busqueda'] = opselected;
         if (dataselected != '' && dataselected != null) request['data'] = dataselected;
         $("#wait").show();
-        var page = "expedientes";
-        console.log(page);
+        var page = "expedientes";     
         let res = await index_page(page, request);
         $("#wait").hide();
     }

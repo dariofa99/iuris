@@ -23,7 +23,7 @@
 
                     </div>
                     <div class="card-body">
-                       
+
                         <div class="row justify-content-center">
                             <div class="col-md-4">
                                 <div class="card">
@@ -39,18 +39,38 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div
-                                                class="form-group{{ $errors->has('email') ? ' has-error' : '' }} row">
+                                            <div class="form-group{{ $errors->has('tipodoc_id') ? ' has-error' : '' }} row">
 
                                                 <div class="col-md-12">
-                                                    <input id="email" type="text"
-                                                        class="form-control form-control-sm" name="user_name"
-                                                        value="{{ old('email') }}" required
-                                                        placeholder="Correo o número de cédula" autofocus>
+                                                    <select {{ isset($disabled) ? $disabled : '' }} name="tipodoc_id"
+                                                        id="tipodoc_id" class="form-control form-control-sm required"
+                                                        required>
+                                                        <option value="">Seleccione tipo de documento</option>
+                                                        @foreach ($tipodoc as $key => $doc)
+                                                         @if($key!=0)   <option  value="{{ $doc->id }}">{{ $doc->ref_nombre }}</option>@endif
+                                                        @endforeach
+                                                    </select>
 
-                                                    @if ($errors->has('email'))
+                                                    @if ($errors->has('tipodoc_id'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('email') }}</strong>
+                                                            <strong>{{ $errors->first('tipodoc_id') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} row">
+
+                                                <div class="col-md-12">
+                                                    <input id="idnumber" type="text"
+                                                        class="form-control form-control-sm" name="idnumber"
+                                                        value="{{ old('idnumber') }}" required
+                                                        placeholder="Número de documento" autofocus>
+
+                                                    @if ($errors->has('idnumber'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('idnumber') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -92,7 +112,5 @@
     </div>
 @endsection
 @push('scripts')
-
-    <script type="module" src={{asset("js/admin_encuestas.js")}}></script>
-    
+    <script type="module" src={{ asset('js/admin_encuestas.js') }}></script>
 @endpush

@@ -15,6 +15,8 @@ class CreateConcEncuestaSatisfTable extends Migration
     {
         Schema::create('conc_encuesta_satisf', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->date('fecha_registro'); 
+            $table->string('token'); 
             $table->integer('tipo_usuario_id')->unsigned(); // 
             $table->foreign('tipo_usuario_id')
             ->references('id')->on('referencias_tablas'); 

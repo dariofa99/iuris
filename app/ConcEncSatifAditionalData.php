@@ -17,9 +17,13 @@ class ConcEncSatifAditionalData extends Model
 ];
 
 
-    public function reference()
+    public function pregunta()
     {
        return $this->belongsTo(ReferencesData::class,'reference_data_id','id');
+    } 
+    public function opcion()
+    {
+       return $this->belongsTo(ReferenceDataOptions::class,'reference_data_id');
     } 
 
    /*  public static function boot() {

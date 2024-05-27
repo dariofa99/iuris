@@ -21,45 +21,31 @@
                     <div class="card-body">
 
                         <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                Datos del Usuario<br>
+
+                                Nombre: {{ $user->name }} {{ $user->lastname }}
+                            </div>
                             <div class="col-md-8">
-                                <div class="small-box bg-info">
-                                    <div class="inner">
-                                        <h3>CCEAH-001-23-24</h3>
-                                        <p>En calidad de Solicitante</p>
+                                @foreach ($user->conciliaciones as $key => $conciliacion)
+                                @if(!$conciliacion->encuesta)
+                                    <div class="small-box bg-info">
+                                        <div class="inner">
+                                            <h3>{{$conciliacion->num_conciliacion}}</h3>
+                                            <p>{{$user->tipo_conciliacion()->where('conciliacion_id',$conciliacion->id)->first()->ref_nombre}}</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-chart-pie"></i>
+                                        </div>
+                                        <a data-conciliacion="{{$conciliacion->id}}" data-usertype="{{$conciliacion->pivot->tipo_usuario_id}}" href="{{url('conciliacion/evaluar/encuesta?page=0')}}" class="small-box-footer btn_start_test">
+                                            Realizar encuesta <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-chart-pie"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">
-                                        Realizar encuesta <i class="fas fa-arrow-circle-right"></i>
-                                    </a>
-                                </div>
+                                    @endif
+                                @endforeach
 
-                                <div class="small-box bg-info">
-                                    <div class="inner">
-                                        <h3>CCEAH-001-23-24</h3>
-                                        <p>En calidad de Solicitante</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-chart-pie"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">
-                                        Realizar encuesta <i class="fas fa-arrow-circle-right"></i>
-                                    </a>
-                                </div>
 
-                                <div class="small-box bg-info">
-                                    <div class="inner">
-                                        <h3>CCEAH-001-23-24</h3>
-                                        <p>En calidad de Solicitante</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-chart-pie"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">
-                                        Realizar encuesta <i class="fas fa-arrow-circle-right"></i>
-                                    </a>
-                                </div>
+
 
                             </div>
                         </div>

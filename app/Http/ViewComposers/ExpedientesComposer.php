@@ -45,7 +45,8 @@ class ExpedientesComposer
 		$estados = $this->referenciasService->getEstadosForExpediente();
 		$tipo_proceso = $this->referenciasService->getTipoProcesoForExpediente();;
 		$est_projexp = $this->referenciasService->getReferenciasByFilter(
-			['tabla_ref' => 'expediente_procesos', 'categoria' => 'projudexp_estado']
+			['tabla_ref' => 'expediente_procesos',
+			 'categoria' => 'projudexp_estado']
 		);
 		$cat_projexp = $this->referenciasService->getReferenciasByFilter(
 			['tabla_ref' => 'expediente_procesos', 'categoria' => 'projudexp_categoria']

@@ -300,7 +300,7 @@
           <ul class="treeview-menu">
             <li>{!! link_to_route('notas.index', 'Notas')!!}</li>  
 
-             
+              
              <li>{!! link_to_route('graficas.index', 'Gráficos')!!}</li>
              
 

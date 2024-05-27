@@ -10,6 +10,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Sede;
 use App\LogSession;
+use App\Services\LoginService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers; 
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Auth;
@@ -20,14 +21,11 @@ class LoginController extends Controller
 {
 
     use AuthenticatesUsers ; 
+    private $loginService;
 
-    public function __construct()
+    public function __construct(LoginService $loginService)
     {
-        try {
-         // $this->middleware('guest', ['only'=>'index']);
-        } catch (TokenMismatchException $th) {
-           dd($th);
-        }
+            $this->loginService = $loginService;
       
     }
     /**
@@ -79,13 +77,15 @@ class LoginController extends Controller
                 Session::flash('message-danger', ' Crédenciales de autenticación incorrectas');
                 return Redirect::back();
             }
-        }      
-        if(Auth::attempt([$clave => $request['user_name'], 'password' => $request['password'] ])){
+        }   
+        $request["clave"] = $clave;
+        $login =   $this->loginService->login($request);
+        if($login['login']){
 
             if (Auth::user()->active) LogSession::create(['user_id'=>Auth::user()->id]);
             //Asignar sede
-           
-            if(count(Auth::user()->sedes)<=0){
+           if(isset($login['redirect'])) Redirect::to($login['redirect']);
+          /*   if(count(Auth::user()->sedes)<=0){
                 if(count(Sede::all())==1){
                     $sede = Sede::first();
                     Auth::user()->sedes()->attach($sede->id_sede);
@@ -110,7 +110,7 @@ class LoginController extends Controller
             }elseif(count(Auth::user()->sedes)>=1){
                $sede =  Auth::user()->sedes()->first();            
                 session(["sede"=>$sede]);               
-            }
+            } */
             //dd("ss");
             //en caso de ser estudiante lo rediricciona a sus expedientes
             if(Auth::user()->hasRole("estudiante")){

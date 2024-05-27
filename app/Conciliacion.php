@@ -71,7 +71,10 @@ class Conciliacion extends Model
     {
         return $this->belongsTo(TablaReferencia::class, 'categoria_id', 'id');
     }
- 
+    public function encuesta()
+    {
+        return $this->hasOne(ConcEncuestaSatisf::class,"conciliacion_id");
+    }
     public function hechos_pretensiones()
     {
         return $this->hasMany(ConcHechosPretenciones::class, 'conciliacion_id', 'id');

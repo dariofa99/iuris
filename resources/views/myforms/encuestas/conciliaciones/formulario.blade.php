@@ -13,7 +13,11 @@
                     <div class="card-header">
                         <div class="content_message">
                             <h3>
-                                Se encontraron las siguientes solicitudes
+                                Formulario de registro de encuesta de satisfacción<br>
+                                Fecha: {{date('Y-m-d')}}<br>
+                                Número de radicado: {{$encuesta->conciliacion->num_conciliacion}}
+
+
                             </h3>
                         </div>
 
@@ -23,14 +27,15 @@
                         <div class="row justify-content-center">
                             <div class="col-md-8">
                                 <form id="myEvaNivSatForm">
-                                    <div class="row">
+                                    <input type="hidden" name="encuesta_id" value="{{$encuesta->id}}">
+                                    <div class="row" id="renderQuestion">
                                         @include('myforms.categorias.refs_aditional_data', [
                                             'data' => getReferencesDataBySection(
                                                 'personalizado',
                                                 'conc_encuesta_satisf'),
                                             'col' => 12,
-                                            'model' => \App\User::first(),
-                                            'paginate'=>true                                            
+                                            'model' => $encuesta,
+                                                                                       
                                         ])
                                         @if (!currentUser()->hasRole('visitante_conciliacion'))
                                      

@@ -32,12 +32,7 @@
                         value="{{ $opt->id }}">{{ $opt->value }}</option>
                 @endforeach
             </select>
-            <label @if (!$is_active) style="display: none" @endif
-                id="lbl_other-{{ $reference->id }}">¿Cuál...?</label>
-            <input {{ isset($disabled) ? $disabled : '' }} id="value_other_text-{{ $reference->id }}"
-                @if ($is_active) type="text" @else type="hidden" @endif
-                @if (isset($model) and $model != null and $model->getDataVal($reference->id, $option_id)) value="{{ $model->getDataVal($reference->id, $option_id)->value_is_other }}" @endif
-                class="form-control form-control-sm" placeholder="¿Cuál...?">
+            @include('myforms.categorias.partials.ajax.value_isotherquestion')
         @elseif($reference->type_data_id == 170)
             @php
                 $is_active = false;
@@ -67,8 +62,8 @@
                 {{ $opt->value }}
             @endforeach
 
-       @include('myforms.categorias.partials.ajax.value_isotherquestion')
-            @elseif($reference->type_data_id == 169)
+            @include('myforms.categorias.partials.ajax.value_isotherquestion')
+        @elseif($reference->type_data_id == 169)
             @php
                 $is_active = false;
                 $option_id = 0;
@@ -96,9 +91,8 @@
                     type="radio" data-option="{{ $opt->id }}">
                 {{ $opt->value }}
             @endforeach
-            
-       @include('myforms.categorias.partials.ajax.value_isotherquestion')
-           
+
+            @include('myforms.categorias.partials.ajax.value_isotherquestion')
         @else
             <input {{ isset($disabled) ? $disabled : '' }} data-reference_id="{{ $reference->id }}"
                 data-name="{{ $reference->name }}" data-option="{{ $reference->options[0]->id }}"

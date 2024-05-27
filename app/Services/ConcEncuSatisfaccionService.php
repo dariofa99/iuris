@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 interface ConcEncuSatisfaccionService {
  
     public function store(Request $request):ConcEncuestaSatisf;
+    public function update(Request $request,$encuesta):ConcEncuestaSatisf;
         
    
 }

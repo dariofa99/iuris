@@ -172,6 +172,11 @@
                                         <p>Agenda de conciliaciones</p>
                                     </a>
                                 </li>
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('cencuesta.index') }}" class="nav-link">
+                                        <p>Ver resultados de encuestas</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif
@@ -311,6 +316,12 @@
                                         <p>Notas</p>
                                     </a>
                                 </li>
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('graficas.index') }}" class="nav-link">
+                                        <p>Gráficos</p>
+                                    </a>
+                                </li> 
+                                    
                             </ul>
                         </li>
                     @endif

@@ -7,7 +7,7 @@
                 alert('Error al iniciar videollamada comuníquese con el administrador');
                 return;
             }
-            var dispNme = '{{Auth::user()->name}} {{Auth::user()->lastname}}';
+            var dispNme = 'User de prueba';
             if (!dispNme) {
                 dispNme = "Nuevo usuario";
             }

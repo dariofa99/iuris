@@ -4,38 +4,39 @@ const Toast = Swal.mixin({
     showConfirmButton: false,
     timer: 3000,
 });
+function activeOtherInput(e) {
+    var elementType = $(e.target).prop("tagName").toLowerCase(); // Detecta si es select
+    var active, id;
+    if (elementType === "select") {
+        var selectedOption = $(this).find("option:selected");
+        active = selectedOption.attr("data-active_other");
+        id = $(this).attr("data-id");
+    } else if ($(this).attr("type") === "checkbox" || $(this).attr("type") === "radio") {
+        active = $(this).attr("data-active_other");
+        id = $(this).attr("data-id");
+    }
+    $("#lbl_other-" + id).hide();
+    $("#value_other_text-" + id).attr("type", "hidden");
+    if (elementType === "select" || $(this).is(":checked")) {
+        if (active == 1) {
+            $("#lbl_other-" + id).show();
+            $("#value_other_text-" + id).attr("type", "text");
+        } else {
+            $("#lbl_other-" + id).hide();
+            $("#value_other_text-" + id).attr("type", "hidden");
+        }
+    } 
+}
 $(document).ready(function () {
-    $(".input_user_ad").on("change", function () {
-        console.log($(this));
-        var elementType = $(this).prop("tagName").toLowerCase(); // Detecta si es select
-        var active, id;
+    $("#myEvaNivSatForm").on("change",".input_user_ad",activeOtherInput);
 
-        if (elementType === "select") {
-            var selectedOption = $(this).find("option:selected");
-            active = selectedOption.attr("data-active_other");
-            id = $(this).attr("data-id");
-        } else if ($(this).attr("type") === "checkbox" || $(this).attr("type") === "radio") {
-            active = $(this).attr("data-active_other");
-            id = $(this).attr("data-id");
-        }
-
-        if (elementType === "select" || $(this).is(":checked")) {
-            if (active == 1) {
-                $("#lbl_other-" + id).show();
-                $("#value_other_text-" + id).attr("type", "text");
-            } else {
-                $("#lbl_other-" + id).hide();
-                $("#value_other_text-" + id).attr("type", "hidden");
-            }
-        }
-    });
     $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
         var page = $(this).attr("href");
         $("#wait").show();
         await index_pagination(page);
         $("#wait").hide();
-        // window.history.pushState(null, "", page);
+        window.history.pushState(null, "", page);
     });
     $('.is_tooltip').tooltip();
     $('.onlynumber').keyup(function () {
@@ -51,7 +52,12 @@ $(document).ready(function () {
         validateEmail(this)
     }
     );
-
+    $(".urlactive").on("click", function () {
+        var target = $(this).attr("href")
+        var url = window.location.href;
+        url = url.split("#")[0] + target;
+        history.pushState({}, "", url)
+    });
     $(".content_aditional_data").on(
         "change",
         ".data_input_select",
@@ -85,12 +91,7 @@ function validateEmail(obj) {
     $(obj).focus()
     return (false)
 }
-$(".urlactive").on("click", function () {
-    var target = $(this).attr("href")
-    var url = window.location.href;
-    url = url.split("#")[0] + target;
-    history.pushState({}, "", url)
-});
+
 
 function set_tab() {
     var url = window.location.href;

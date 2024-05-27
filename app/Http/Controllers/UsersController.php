@@ -33,7 +33,6 @@ class UsersController extends Controller
   {
     $this->userService = $userService;
     $this->expedienteService = $expedienteService;
-    $this->middleware('auth', ['except' => ['store', 'anotherMethod']]);
     $this->middleware('permission:ver_usuarios',   ['only' => ['index']]);
   }
 
@@ -134,104 +133,6 @@ class UsersController extends Controller
     return response()->json(['user' => $user]);  
   }
 
-
-
-
-  private function aditionalData($request, $id)
-  {
-    if ($request->has('reference_data_id')) {
-      foreach ($request->reference_data_id as $key => $rd_id) {
-        $var = "value_" . $rd_id;
-        $data = $request->$var;
-        $var2 = "value_text_" . $rd_id;
-        $data_text = $request->$var2;
-        $value_other_text = 'value_other_text_' . $rd_id;
-        $data_value_other_text = $request->$value_other_text;
-        $reference = ReferencesData::find($rd_id);
-        $uad = UserAditionalData::where([
-          'reference_data_id' => $rd_id,
-          'user_id' => $id,
-        ])
-          ->first();
-        if ($data) {
-          if ($uad) {
-            if ($reference->type_data_id == 168) {
-              $uad->value = $data_text[0];
-              $uad->save();
-            } elseif ($reference->type_data_id == 169) {
-              //si es opcion multiple unica respuesta                
-              $op_value = ReferenceDataOptions::find($data[0]);
-              if ($op_value) {
-                $uad->value = $op_value->value;
-                $uad->value_is_other = $data_value_other_text != null ? $data_value_other_text[0] : '';
-                $uad->reference_data_option_id = $data[0];
-                $uad->save();
-              } else {
-                $uad_del = UserAditionalData::where([
-                  'reference_data_id' => $rd_id,
-                  'user_id' => $id,
-                  //'reference_data_option_id'=>$option
-                ])
-                  ->delete();
-              }
-            } elseif ($reference->type_data_id == 170) {
-              //si es opcion multiple varias respuestas
-              $uad_del = UserAditionalData::where([
-                'reference_data_id' => $rd_id,
-                'user_id' => $id,
-                //'reference_data_option_id'=>$option
-              ])
-                ->delete();
-              foreach ($data as $key_2 => $option) {
-                $op_value = ReferenceDataOptions::find($option);
-                $uad = UserAditionalData::create([
-                  'reference_data_id' => $rd_id,
-                  'user_id' => $id,
-                  'reference_data_option_id' => $option,
-                  'value' => $op_value->value,
-                  'value_is_other' => $data_value_other_text != null ? $data_value_other_text[0] : '',
-                ]);
-              }
-            }
-          } else {
-            if ($reference->type_data_id == 168) {
-              //dd($data_value_other_text);
-              $uad = UserAditionalData::create([
-                'reference_data_id' => $rd_id,
-                'user_id' => $id,
-                'reference_data_option_id' => $data[0],
-                'value' => $data_text != null ? $data_text[0] : '',
-                'value_is_other' => $data_value_other_text != null ? $data_value_other_text[0] : '',
-              ]);
-            } else {
-              foreach ($data as $key_2 => $option) {
-                $op_value = ReferenceDataOptions::find($option);
-                if ($op_value) {
-                  $uad = UserAditionalData::create([
-                    'reference_data_id' => $rd_id,
-                    'user_id' => $id,
-                    'reference_data_option_id' => $option,
-                    'value' => $op_value->value,
-                    'value_is_other' => $data_value_other_text != null ? $data_value_other_text[0] : '',
-                  ]);
-                }
-              }
-            }
-          }
-        } else {
-          if ($uad) {
-            $uad_del = UserAditionalData::where([
-              'reference_data_id' => $rd_id,
-              'user_id' => $id,
-              //'reference_data_option_id'=>$option
-            ])
-              ->delete();
-          }
-        }
-      }
-    }
-    return true;
-  }
 
   /**
    * Display the specified resource.
@@ -407,13 +308,13 @@ class UsersController extends Controller
     if ($encontrado) {
       $user->roles;
       $expedientes = $this->expedienteService->getExpeUser($user);
+      $response['expedientes'] = $expedientes;
       if ($request->has('view')) {
         $response['view'] = view($request->get('view'), compact('user', 'sin_sede'))->render();
       }
       $response['encontrado'] = true;
-
       $response['user'] = $user;
-      $response['expedientes'] = $expedientes;
+     
       return response()->json($response);
     }
     return  response()->json(['encontrado' => false]);

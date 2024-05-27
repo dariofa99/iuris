@@ -45,6 +45,9 @@ Route::get('conciliaciones/download/file/{file_id}', 'ConciliacionesController@d
 Route::post('conciliaciones/enviar/correo', 'ConciliacionesController@enviarCorreo');
 Route::get('conciliaciones/get/comentarios', 'ConciliacionesController@getComentarios');
 
+Route::get('conciliacion/encuestas/start', 'ConcEncuSatisfaccionController@index');
+Route::get('encuestas/find/user', 'ConcEncuSatisfaccionController@findUser');
+
 
 
 Route::get('videos', function () {
@@ -66,8 +69,6 @@ Route::get('/firmar/get/status', 'ConciliacionesFirmasController@getStatus');
 Route::get('/firmar/digital/revocar/{token}/{codigo}', 'ConciliacionesFirmasController@firmaRevocar');
 Route::post('/firmar/revocar/ok', 'ConciliacionesFirmasController@firmaRevocarOk');
 Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirmaRevocar');
-Route::get('/conciliacion/evaluar/encuesta', 'EncuestasSatisfaccionController@index')->name("encuestas.conciliacion");
-Route::post('/conciliacion/evaluar/buscar', 'EncuestasSatisfaccionController@buscarConciliaciones');
 
 
 ///rutas que requieren atenticación
@@ -100,7 +101,14 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('users/confirm/email/{token}', 'MyusersController@confirm_email');
   Route::get('users/find/us', 'MyusersController@findUserWithFilter');
   Route::post('users/store', 'MyusersController@userStore');
-
+  ///////////////////////Encuestas de satisfacción
+  Route::get('conciliacion/evaluar/buscar', 'ConcEncuSatisfaccionController@buscarConciliaciones');
+  Route::post('conciliacion/evaluar/store', 'ConcEncuSatisfaccionController@store');
+  Route::get('/conciliacion/evaluar/encuesta', 'ConcEncuSatisfaccionController@renderForm')->name("encuestas.conciliacion");
+  Route::post('conciliacion/evaluar/update', 'ConcEncuSatisfaccionController@update');
+  Route::get('conciliacion/evaluar/reportes', 'ConcEncuSatisfaccionController@showResultados')->name("cencuesta.index");
+  Route::get('conciliacion/evaluar/data/chart', 'ConcEncuSatisfaccionController@getDataForChart');
+  
   Route::group(['middleware' => ['confirm_email', 'perfil']], function () {
 
 
@@ -325,9 +333,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/descargar/documento/{id}', 'CaseLogController@downloadFileLog');
 
     //Conciliaciones encuestas
-    Route::resource('conciliacion/encuestas', 'ConcEncuSatisfaccionController');
-
-
+   // Route::resource('conciliacion/encuestas', 'ConcEncuSatisfaccionController');
+   
 
     //Conciliaciones
     Route::resource('conciliaciones', 'ConciliacionesController');
@@ -398,8 +405,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('conciliacion/reporte/revocar/firmas', 'ConciliacionesReportesController@revocarFirmas');
     Route::post('conciliacion/reporte/firmantes/reenviar/mails', 'ConciliacionesReportesController@reenviarMails');
     Route::get('categorias/get/from/reports', 'ConciliacionesReportesController@getFromReports');
-    Route::post('/conciliacion/reporte/store/personalized/values', 'ConciliacionesReportesController@insertPersonalizedReportValues');
-    Route::post('/conciliacion/reporte/revock/firma', 'ConciliacionesReportesController@revockFirma');
+    Route::post('conciliacion/reporte/store/personalized/values', 'ConciliacionesReportesController@insertPersonalizedReportValues');
+    Route::post('conciliacion/reporte/revock/firma', 'ConciliacionesReportesController@revockFirma');
 
     //Conciliaciones
     Route::resource('conciliaciones/hechos/pretenciones', 'ConcHechosPretencionesController');

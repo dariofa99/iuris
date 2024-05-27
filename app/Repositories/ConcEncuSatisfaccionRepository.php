@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\ConcEncSatifAditionalData;
 use App\ConcEncuestaSatisf;
 use App\Mail\ConfirmarCorreo;
+use App\Mail\RegConcEncuestaSatSuccess;
 use App\ReferencesData;
 use App\Sede;
 use App\Services\ConcEncuSatisfaccionService;
@@ -18,6 +19,7 @@ use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -37,28 +39,54 @@ class ConcEncuSatisfaccionRepository extends BaseRepository implements ConcEncuS
   public function store(Request $request): ConcEncuestaSatisf
   {
 
-    $user =  ConcEncuestaSatisf::create([
-      'tipo_usuario_id' => $request->has('tipo_usuario_id') ? $request->input('tipo_usuario_id') : null,
-      'conciliacion_id' => $request->has('conciliacion_id') ? $request->input('conciliacion_id') : null,
-      'user_id' => $request->has('user_id') ? $request->input('user_id') : null,
-      
-    ]);
+    /* try { */
+      $token = str_replace("/", "&&&",Crypt::encryptString(time()));
+      //$token =  str_replace("/", "&&&", $data_chat);
+        
+      $encuesta =  ConcEncuestaSatisf::create([
+        'fecha_registro' => date('Y-m-d'),
+        'tipo_usuario_id' => $request->has('tipo_usuario_id') ? $request->input('tipo_usuario_id') : null,
+        'conciliacion_id' => $request->has('conciliacion_id') ? $request->input('conciliacion_id') : null,
+        'user_id' => $request->has('user_id') ? $request->input('user_id') : null,
+        'token' => $token
+      ]);
+      if ($request->has('data') and is_array($request->data)) {
+        $requestData = $request->data;
+        foreach ($request->data as $key => $rq) {
+          $rq['enc_satisf_id'] = $encuesta->id;
+          $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
+          if ($ref_data) {
+            $this->storeData($ref_data, $rq, $requestData);
+          }
+        }
+        //Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
+      }
+      return $encuesta;
+    /* } catch (\Throwable $th) {
+      return $th->getMessage();
+    } */
 
+
+    /*  */
+  }
+
+  public function update(Request $request,$encuesta): ConcEncuestaSatisf
+  {
+    $encuesta->fill($request->all());
+    $encuesta->save();
     if ($request->has('data') and is_array($request->data)) {
       $requestData = $request->data;
       foreach ($request->data as $key => $rq) {
-        $rq['enc_satisf_id'] = $user->id;
+        $rq['enc_satisf_id'] = $encuesta->id;
         $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
         if ($ref_data) {
           $this->storeData($ref_data, $rq, $requestData);
         }
       }
+     // Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
     }
-  
-    return $user;
+    return $encuesta;
   }
-
-
 
   protected function storeData($ref_data, $request, $requestData)
   {
@@ -90,7 +118,7 @@ class ConcEncuSatisfaccionRepository extends BaseRepository implements ConcEncuS
         'enc_satisf_id' => $request['enc_satisf_id']
       ])->first();
     } else {
-      $data = ConcEncSatifAditionalData::where([       
+      $data = ConcEncSatifAditionalData::where([
         'reference_data_id' => $ref_data->id,
         'enc_satisf_id' => $request['enc_satisf_id']
       ])->first();
