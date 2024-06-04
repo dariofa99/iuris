@@ -608,8 +608,8 @@ class Expediente extends Model
     {
         if ($request->tipo_busqueda == "adv") {
 
-            //  dd($request->all());
-            return $query->Orwhere(['expidnumberest' => $request->expidnumberest])
+              
+            return $query->where(['expidnumberest' => $request->expidnumberest])
                 ->where('exptipoproce_id', $request->exptipoproce_id)
                 ->where('expestado_id', $request->expestado_id);
 
@@ -617,7 +617,7 @@ class Expediente extends Model
                 //return $query->where('expestado_id', $data);
             }
             //dd("dd00");
-        }
+        } 
 
         if (trim($request->data) != '') {
 

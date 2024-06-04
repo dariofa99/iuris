@@ -287,7 +287,8 @@ class UsersRepository extends BaseRepository implements UsersService
   {
     $user->fill($request->all());
     $user->save();
-    if ($request->has('data') and is_array($request->data)) {
+    if ($request->has('data') and 
+    is_array($request->data)) {
       $requestData = $request->data;
       foreach ($request->data as $key => $rq) {
         $rq['user_id'] = $user->id;

@@ -2,17 +2,13 @@
     <button disabled type="button" class="btn btn-danger btn-sm mb-2" id="btn_trigger_exp_edit_cierre_caso">
         Se debe solicitar la asignación del docente
     </button>
-@elseif((currentUser()->hasRole('estudiante') and
+@elseif(currentUser()->hasRole('estudiante') and
         ($expediente->exptipoproce_id == 1 and
-        $expediente->getDaysOrColorForClose('dias') >= 10
-        and ($expediente->estado->id == 1 
-            || $expediente->estado->id == 3))
-        || ($expediente->exptipoproce_id != 1 
-            and $expediente->estado->id == 1 
-            || $expediente->estado->id == 3))
-            or (currentUser()->hasRole('amatai') or
-            currentUser()->hasRole('diradmin') or
-            currentUser()->hasRole('dirgral')) or($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and $expediente->estado->id == 4))
+            $expediente->getDaysOrColorForClose('dias') >= 10 and
+            $expediente->estado->id == 1 || $expediente->estado->id == 3) ||
+            ($expediente->exptipoproce_id != 1 and $expediente->estado->id == 1 || $expediente->estado->id == 3) or
+        (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral')) or
+        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and $expediente->estado->id == 4)
     <button type="button" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
         data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
         Actualizar Solicitud de cierre
@@ -39,16 +35,34 @@
             </button>
         @endif
     @elseif(
-        ($expediente->expestado_id == 1 
-        || $expediente->expestado_id == 3) and
+        $expediente->expestado_id == 1 || $expediente->expestado_id == 3 and
             $expediente->getDaysOrColorForClose('dias') < 10)
         <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
             id="btn_reabrir_caso">
             Evaluar caso
-        </button>        
+        </button>
     @endif
 @endif
+@if (
+    $expediente->expestado_id != 2 and
+        $expediente->expestado_id != 5 and
+        currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
+    <button type="button" class="btn btn-danger btn-sm mb-2" id="btn_cerrar_dr_caso">
+        Cerrar caso sin evaluar
+    </button>
+@endif
 
+@if (
+    $expediente->expestado_id != 2 and
+        $expediente->expestado_id != 5 and
+        $expediente->expestado_id != 7 and
+        currentUser()->hasRole('dirgral') ||
+            currentUser()->hasRole('amatai') ||
+            currentUser()->hasRole('diradmin'))
+    <button type="button" class="btn btn-info btn-sm mb-2" id="btn_revisar_dr_caso">
+        Pasar a revisión
+    </button>
+@endif
 
 
 

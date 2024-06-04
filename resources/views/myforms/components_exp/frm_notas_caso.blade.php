@@ -35,8 +35,10 @@
                                 </i> Asignar Notas Final de Corte</a>
                         @endif
                     @else
-                        <button disabled class="btn btn-warning pull-right">La fecha final de corte esta
-                            vencida</button>
+                        <button disabled class="btn btn-warning pull-right">
+                            La fecha final de corte esta
+                            vencida
+                        </button>
 
                     @endif
 

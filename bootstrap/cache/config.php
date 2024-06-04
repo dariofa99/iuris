@@ -683,7 +683,7 @@
     ),
     'encryption' => 'tls',
     'username' => 'darioj99@gmail.com',
-    'password' => 'cbxqdvmnafhooqoi',
+    'password' => 'suqplcwyvqzsjewd',
     'sendmail' => '/usr/sbin/sendmail -bs',
     'markdown' => 
     array (

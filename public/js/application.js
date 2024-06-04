@@ -28,7 +28,7 @@ function activeOtherInput(e) {
     } 
 }
 $(document).ready(function () {
-    $("#myEvaNivSatForm").on("change",".input_user_ad",activeOtherInput);
+    $(document).on("change",".input_user_ad",activeOtherInput);
 
     $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
@@ -98,7 +98,6 @@ function set_tab() {
     var activeTab = url.substring(url.indexOf("#") + 1);
     var elementoA = $("a[href='#" + activeTab + "']");
     if (activeTab) elementoA.click();
-
 }
 function round(num, decimales = 1) {
     var signo = (num >= 0 ? 1 : -1);

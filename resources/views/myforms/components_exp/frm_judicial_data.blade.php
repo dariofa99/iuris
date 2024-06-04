@@ -10,11 +10,16 @@
                 $label = 'Presentar respuesta rechazo';
             }
         @endphp
-        @if($expediente->asignacion->procesojud_id!==243)
-        <button data-estado="{{ $expediente->asignacion->procesojud_id }}" class="btn btn-sm btn-primary btn-block"
-            id="btn_ges_judexp">
-            <span>{{ $label }}</span>
-        </button>
+        @if (
+            $expediente->asignacion->procesojud_id !== 243 
+            and (currentUser()->hasRole('estudiante') ||
+                currentUser()->hasRole('amatai') 
+                || currentUser()->hasRole('diradmin') 
+                || currentUser()->hasRole('dirgral')))
+            <button data-estado="{{ $expediente->asignacion->procesojud_id }}" class="btn btn-sm btn-primary btn-block"
+                id="btn_ges_judexp">
+                <span>{{ $label }}</span>
+            </button>
         @endif
     </div>
 </div>
@@ -28,7 +33,7 @@
             </span>
 
         </label>
-       
+
     </div>
 </div>
 <div class="row">

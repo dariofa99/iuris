@@ -259,6 +259,8 @@ function llenarModalDetailsReq(res) {
     $("#lab_ced_solic_det").text(res.requerimiento.expediente.solicitante.idnumber);
     $("#lab_nom_solic_det").text(res.requerimiento.expediente.solicitante.name);
     $("#lab_apell_solic_det").text(res.requerimiento.expediente.solicitante.lastname);
+    $("#lab_telefono_det").text(res.requerimiento.expediente.solicitante.tel1+" - "+res.requerimiento.expediente.solicitante.tel2);
+    
     $("#lab_fech_cita_det").text(res.requerimiento.reqfecha);
     $("#lab_hora_cita_det").text(res.requerimiento.reqhora);
     $("#lab_req_motivo_det").text(res.requerimiento.reqmotivo);

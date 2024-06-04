@@ -730,7 +730,7 @@ $(document).ready(function () {
                             showConfirmButton: false,
                             timer: 2500
                         });
-                        //  window.location.reload(true);
+                        window.location.reload(true);
                         e.preventDefault()
                     })
                     .catch((error) => {
@@ -1514,6 +1514,44 @@ $(document).ready(function () {
         $("#wait").hide();
         e.preventDefault();
     });
+
+    $(".cambiar_actuacion_anexo").on("click", async function (e) {
+        var id = $(this).val();
+        var request = {
+            "id": id,
+            "new_estado": 138
+        }
+        Swal.fire({
+            title: '¿Esta seguro de cambiar la actuación?',
+            html:"La actuación pasará como anexo en estado revisado. No se podrá revertir los cambios",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, cambiar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                await expedientesService.changeStateActuacion(request);
+                toastr.success("Cambió la actuación con éxito.", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "6000",
+                });
+                location.reload(true)
+               
+            }
+        });
+
+
+        
+              
+
+
+
+
+    })
+   
 
     $(".buscar_actuacion").on("click", async function (e) {
         e.preventDefault();

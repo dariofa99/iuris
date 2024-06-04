@@ -85,7 +85,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         {!! Form::label('fecha_limit', 'Fecha limite de entrega', ['id' => 'fecha']) !!}
-                        {!! Form::date('fecha_limit', null, ['class' => 'form-control required', 'maxlength' => '60']) !!}
+                        {!! Form::date('fecha_limit',null, ['class' => 'form-control required', 'maxlength' => '60',"min"=> \Carbon\Carbon::now()->addDay(1)->format("Y-m-d")]) !!}
                     </div>
                 </div>
             @endif

@@ -42,6 +42,12 @@
                     <td>
                         <label id="lab_ced_solic_det"></label>
                     </td>
+                    <td>
+                      Teléfono
+                  </td>
+                  <td>
+                      <label id="lab_telefono_det"></label>
+                  </td>
                 </tr>
                 <tr>
                     <td>

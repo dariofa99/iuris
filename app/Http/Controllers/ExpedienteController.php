@@ -86,6 +86,7 @@ class ExpedienteController extends Controller
     if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
 
     $expedientes = $this->expedienteService->index($request);
+   // dd($request->all());
     $count_colors = $this->expedienteService->getColorsAsesorias($request);
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       $res = [];

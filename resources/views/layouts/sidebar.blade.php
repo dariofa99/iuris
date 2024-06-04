@@ -180,7 +180,7 @@
                             </ul>
                         </li>
                     @endif
-                    @if (currentUser()->can('ver_horarios') and config('app.name') != 'ConciliApp')
+                    @if (currentUser()->hasRole('amatai') and currentUser()->can('ver_horarios') and config('app.name') != 'ConciliApp')
                         <li class="nav-item has-treeview {{ !Route::is('horarios.index') ?: 'menu-open' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon far fa-calendar-alt"></i>
@@ -288,12 +288,16 @@
                                     <p>Ver documentos activos</p>
                                 </a>
                             </li>
+                            @if(currentUser()->hasRole('amatai') ||
+                            currentUser()->hasRole('diradmin') ||
+                            currentUser()->hasRole('dirgral'))
                             <li class="nav-item ml-3">
                                 <a href="{{ url('/bibliotecas/inactivas/view') }}" class="nav-link">
 
                                     <p>Ver historico</p>
                                 </a>
                             </li>
+                            @endif
                             <li class="nav-item ml-3">
                                 <a href="/bibliotecas/create" class="nav-link">
                                     <p> Subir documento </p>

@@ -10,13 +10,21 @@
         $ultima_id = '';
         $vencido = false;
         $actFechaLim = $actuacion->fecha_limit;
-        if (count($actuacion->getHijos($actuacion)) > 0) {            
+        // $actFechaLim < date('Y-m-d') ? ($vencido = true) : ($vencido = false);
+        if ($actuacion->actestado_id == '102' and $actFechaLim < date('Y-m-d')) {
+            $vencido = true;
+        }
+        if (count($actuacion->getHijos($actuacion)) > 0) {
+            $vencido = false;
             foreach ($actuacion->getHijos($actuacion) as $key => $hijo) {
                 if ($hijo->actestado_id == '102') {
                     $haycorrecciones = true;
                     $ultima_id = $hijo->id;
                     $actFechaLim = $hijo->fecha_limit;
                     $hayhijos = true;
+                }
+                if ($actuacion->actestado_id == '102' and $actFechaLim < date('Y-m-d')) {
+                    $vencido = true;
                 }
                 if (
                     $hijo->actestado_id == '101' ||
@@ -27,15 +35,13 @@
                     $haycorrecciones = false;
                     $hayactuaciones = true;
                     $hayhijos = true;
-                }
-                if ($hijo->actestado_id == '102' and $actFechaLim < date('Y-m-d')) {
-                    $vencido = true;
+                    //$vencido = false;
                 }
             }
         } else {
-            if ($actuacion->actestado_id == '102' and $actFechaLim < date('Y-m-d')) {
+            /* if ($actuacion->actestado_id == '102' and $actFechaLim < date('Y-m-d')) {
                 $vencido = true;
-            }
+            } */
         }
     @endphp
     <tr style="background-color: rgb(243, 242, 242) !important">
@@ -53,7 +59,8 @@
         </td>
         <td>
             @if ($actuacion->fecha_limit != '' and $hayhijos == false and $actuacion->estado->id != 139)
-                {{ getDiffDays(date('Y-m-d'), $actuacion->fecha_limit) }} Días
+                {{ getDiffDays(date('Y-m-d'), $actuacion->fecha_limit) }}
+                Días
             @else
                 {{ getSmallDate($actuacion->actfecha) }}
             @endif
@@ -118,6 +125,10 @@
                     <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $actuacion->id }}"
                         class='btn btn-primary btn-block btn-sm buscar_actuacion'>
                         Revisar
+                    </button>
+                    <button type='button' value="{{ $actuacion->id }}"
+                        class='btn btn-warning btn-block btn-sm cambiar_actuacion_anexo'>
+                        Es anexo
                     </button>
                 @endif
 
