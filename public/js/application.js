@@ -99,6 +99,13 @@ function set_tab() {
     var elementoA = $("a[href='#" + activeTab + "']");
     if (activeTab) elementoA.click();
 }
+
+function get_tab() {
+    var url = window.location.href;
+    var activeTab = url.substring(url.indexOf("#") + 1);
+    return (activeTab);
+}
+
 function round(num, decimales = 1) {
     var signo = (num >= 0 ? 1 : -1);
     num = num * signo;
@@ -307,7 +314,7 @@ async function index_pagination(route) {
     }
     window.history.pushState(null, "", route);
     return topics;
-}
+} 
 
 async function index_page(route, request) {
     const page = BASE_URL + route + "?" + new URLSearchParams(request);

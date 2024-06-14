@@ -7,6 +7,7 @@ const userService = new UserService();
 
 
 $(document).ready(function () {
+    
     $("#myEvaNivSatForm").on("click", ".btn_pagq", async function (e) {
         e.preventDefault();
         /*  //var request = convertFormToJSON("myEvaNivSatForm");
@@ -83,9 +84,8 @@ $(document).ready(function () {
 
             }
         });
-
         // var response = await encuestasService.buscarConciliaciones(request);
-
     })
 
 });
+

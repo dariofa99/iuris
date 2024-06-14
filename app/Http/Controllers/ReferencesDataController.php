@@ -70,8 +70,9 @@ class ReferencesDataController extends Controller
 
     private function guardar(Request $request){
         $request['categories'] = $request->table;
+        $request['short_name'] = sanear_string($request->name);
         $referencia = ReferencesData::create($request->all());
- 
+  
         if($request->has('option_name')){
             foreach ($request->option_name as $key => $option) {
                 $insert = DB::table("references_data_options")
@@ -212,8 +213,11 @@ class ReferencesDataController extends Controller
      * @param  \App\ReferencesData  $referencesData
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ReferencesData $referencesData)
+    public function destroy($id)
     {
+        $referencia = ReferencesData::find($id);
+        $referencia->delete();
+        return response()->json($referencia);
         //
     }
 }

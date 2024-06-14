@@ -20,82 +20,82 @@ const dataSections = {
     ]
 };
 var items_delete = [];
-$(document).ready( function () {
-    $("#myModal_create_category").on("submit","#myformEditRCategory", async function (e) {
-        e.preventDefault();    
+$(document).ready(function () {
+    $("#myModal_create_category").on("submit", "#myformEditRCategory", async function (e) {
+        e.preventDefault();
         $("#items_deleted").val(JSON.stringify(items_delete));
-            var request = convertFormToJSON('myformEditRCategory');
-            let id = $("#myformEditRCategory input[name=id]").val();
-            $("#wait").show();
-            let res = await referenciasService.referenceUpdate(request, id);
-            try {
-                if (res.render_view || res.render_view == "") {
-                    $("#content_list_categories").html(res.render_view);
-                    Toast.fire({
-                        type: "success",
-                        title: "Categoria actualizada con éxito.",
-                    });
-                }
-                $("#content_categories_list").html(res.render_view);
-                if (items_delete.length > 0) items_delete.length = 0;
-                $("#myModal_create_category").modal("hide");
-            } catch (error) {
-                toastr.error(
-                    "A ocurrido un error, refresque la página, si el error persiste, consulte con el adiministrador",
-                    "Error",
-                    { positionClass: "toast-top-right", timeOut: "50000" }
-                );
+        var request = convertFormToJSON('myformEditRCategory');
+        let id = $("#myformEditRCategory input[name=id]").val();
+        $("#wait").show();
+        let res = await referenciasService.referenceUpdate(request, id);
+        try {
+            if (res.render_view || res.render_view == "") {
+                $("#content_list_categories").html(res.render_view);
+                Toast.fire({
+                    type: "success",
+                    title: "Categoria actualizada con éxito.",
+                });
             }
-            $("#wait").hide();
-           
+            $("#content_categories_list").html(res.render_view);
+            if (items_delete.length > 0) items_delete.length = 0;
+            $("#myModal_create_category").modal("hide");
+        } catch (error) {
+            toastr.error(
+                "A ocurrido un error, refresque la página, si el error persiste, consulte con el adiministrador",
+                "Error",
+                { positionClass: "toast-top-right", timeOut: "50000" }
+            );
         }
+        $("#wait").hide();
+
+    }
     );
 
-    $("#content_categories_list").on("click",".btn_edit_category",async function (e) {
-            let id = $(this).attr("data-id");
-            e.preventDefault();
-            let res = await referenciasService.referenceEdit(id)
-            console.log(res);           
+    $("#content_categories_list").on("click", ".btn_edit_category", async function (e) {
+        let id = $(this).attr("data-id");
+        e.preventDefault();
+        let res = await referenciasService.referenceEdit(id)
+        console.log(res);
 
-            if (items_delete.length > 0) items_delete.length = 0;
-            //try {
-                $("#myformCreateCategory").attr("id", "myformEditRCategory");
-                $("#myformEditRCategory")[0].reset();
-                $("#myformEditRCategory input[name=id]").val(res.id);
-                $("#myformEditRCategory select[name=type_data_id]").val(res.type_data_id);
-                $("#myformEditRCategory select[name=table]").val(res.table);
-                $("#myformEditRCategory select[name=section]").val(res.section);
-                //$(".select2").select2();
-                if (res.partes.length > 0) {
-                    var partes = [];
-                    res.partes.forEach(element => {
-                        partes.push(element.parte);
-                    });
-                    $(".select2").val(partes).trigger('change');;
+        if (items_delete.length > 0) items_delete.length = 0;
+        //try {
+        $("#myformCreateCategory").attr("id", "myformEditRCategory");
+        $("#myformEditRCategory")[0].reset();
+        $("#myformEditRCategory input[name=id]").val(res.id);
+        $("#myformEditRCategory select[name=type_data_id]").val(res.type_data_id);
+        $("#myformEditRCategory select[name=table]").val(res.table);
+        $("#myformEditRCategory select[name=section]").val(res.section);
+        //$(".select2").select2();
+        if (res.partes.length > 0) {
+            var partes = [];
+            res.partes.forEach(element => {
+                partes.push(element.parte);
+            });
+            $(".select2").val(partes).trigger('change');;
+        }
+
+
+        $("#myformEditRCategory input[name=name]").val(res.name);
+        $("#myformEditRCategory input[name=short_name]").val(res.short_name);
+        $("#myformEditRCategory button[type=submit]")
+            .text("Actualizar")
+            .removeClass("btn-primary")
+            .addClass("btn-warning");
+
+        $("#lbl_modal_title").text("Actualizar categoria");
+        $("#content_section_users").hide();
+        $(".content_section_users select").prop("disabled", true);
+
+        if (res.options.length > 0 && res.type_data_id != 168) {
+            var row = "";
+            res.options.forEach((element, item) => {
+                let checked_ = "";
+                let value = "0";
+                if (element.active_other_input) {
+                    checked_ = "checked";
+                    value = "1";
                 }
-
-
-                $("#myformEditRCategory input[name=name]").val(res.name);
-                $("#myformEditRCategory input[name=short_name]").val(res.short_name);
-                $("#myformEditRCategory button[type=submit]")
-                    .text("Actualizar")
-                    .removeClass("btn-primary")
-                    .addClass("btn-warning");
-
-                $("#lbl_modal_title").text("Actualizar categoria");
-                $("#content_section_users").hide();
-                $(".content_section_users select").prop("disabled", true);
-
-                if (res.options.length > 0 && res.type_data_id != 168) {
-                    var row = "";
-                    res.options.forEach((element, item) => {
-                        let checked_ = "";
-                        let value = "0";
-                        if (element.active_other_input) {
-                            checked_ = "checked";
-                            value = "1";
-                        }
-                        row += `<tr class="option_row" data-item="${item}" id="option_row-${item}">
+                row += `<tr class="option_row" data-item="${item}" id="option_row-${item}">
                                         <td>
                                             <input value="${element.value}" type="text" required name="option_name[]" class="form-control form-control-sm">
                                         </td>
@@ -110,36 +110,36 @@ $(document).ready( function () {
                                             <i class="fa fa-times"></i></button>
                                         </td>               
                                     </tr>`;
-                    });
-                    $("#aditional_options_table tbody").html(row);
-                    $(".adoptions_g").show();
-                    $(".adoptions input").prop("disabled", false);
-                    $("#chk_add_option").prop("checked", true);
-                    $("#sel_answer_type").show();
-                    $("#sel_answer_type select").prop("disabled", false);
-                } else if (res.section == "aditional_info") {
-                    $("#chk_add_option").prop("checked", false);
-                    $(".chkadoptions").show();
-                    $(".adoptions").hide();
-                    $("#sel_answer_type").hide();
-                    $("#sel_answer_type select").prop("disabled", true);
+            });
+            $("#aditional_options_table tbody").html(row);
+            $(".adoptions_g").show();
+            $(".adoptions input").prop("disabled", false);
+            $("#chk_add_option").prop("checked", true);
+            $("#sel_answer_type").show();
+            $("#sel_answer_type select").prop("disabled", false);
+        } else if (res.section == "aditional_info") {
+            $("#chk_add_option").prop("checked", false);
+            $(".chkadoptions").show();
+            $(".adoptions").hide();
+            $("#sel_answer_type").hide();
+            $("#sel_answer_type select").prop("disabled", true);
 
-                    $(".adoptions input").prop("disabled", false);
-                    $("#aditional_options_table tbody").html("");
-                } else {
-                    $(".adoptions_g").hide();
-                    $("#chk_add_option").prop("checked", false);
-                    $("#aditional_options_table tbody").html("");
-                }
-                $("#myModal_create_category").modal("show");
-            /* } catch (error) {
-                toastr.error(
-                    "A ocurrido un error, refresque la página, si el error persiste, consulte con el adiministrador",
-                    "Error",
-                    { positionClass: "toast-top-right", timeOut: "50000" }
-                );
-            } */
+            $(".adoptions input").prop("disabled", false);
+            $("#aditional_options_table tbody").html("");
+        } else {
+            $(".adoptions_g").hide();
+            $("#chk_add_option").prop("checked", false);
+            $("#aditional_options_table tbody").html("");
         }
+        $("#myModal_create_category").modal("show");
+        /* } catch (error) {
+            toastr.error(
+                "A ocurrido un error, refresque la página, si el error persiste, consulte con el adiministrador",
+                "Error",
+                { positionClass: "toast-top-right", timeOut: "50000" }
+            );
+        } */
+    }
     );
 
     $("#btn_new_category").on("click", function (e) {
@@ -216,15 +216,15 @@ $(document).ready( function () {
         $("#wait").hide();
     });
 
-    
-    $("#content_aditional_options").on("click",".chk_active_other_input",  function (e) {
-            var item = $(this).attr("id").split("-")[1];
-            if ($(this).is(":checked")) {
-                $("#active_other_input-" + item).val(1);
-            } else {
-                $("#active_other_input-" + item).val(0);
-            }
-        });
+
+    $("#content_aditional_options").on("click", ".chk_active_other_input", function (e) {
+        var item = $(this).attr("id").split("-")[1];
+        if ($(this).is(":checked")) {
+            $("#active_other_input-" + item).val(1);
+        } else {
+            $("#active_other_input-" + item).val(0);
+        }
+    });
     $(".btn_add_field").on("click", function (e) {
         var item = $(".option_row").length;
         addOptionTable(item);
@@ -253,34 +253,6 @@ $(document).ready( function () {
             $("#type_data_id").val(26);
         }
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     $("#btn_new_static_category").on("click", function (e) {
         $("#myformEditRStaticCategory").attr("id", "myformCreateStaticCategory");

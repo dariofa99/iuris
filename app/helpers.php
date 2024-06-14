@@ -9,27 +9,27 @@ use App\ReferencesData;
 
 
 
-if(!function_exists('currentUser')) {
-function currentUser()
-{
-    return auth()->user();
+if (!function_exists('currentUser')) {
+    function currentUser()
+    {
+        return auth()->user();
+    }
 }
-}
-if(!function_exists('currentUserInConciliacion')) {
-function currentUserInConciliacion($conciliacion, $roles)
-{
-    $role = auth()->user()->tipo_conciliacion()->where('conciliacion_id', $conciliacion)->get();
-    // dd($role);
-    if (is_array($roles)) {
-        foreach ($role as $key => $rol) {
+if (!function_exists('currentUserInConciliacion')) {
+    function currentUserInConciliacion($conciliacion, $roles)
+    {
+        $role = auth()->user()->tipo_conciliacion()->where('conciliacion_id', $conciliacion)->get();
+        // dd($role);
+        if (is_array($roles)) {
+            foreach ($role as $key => $rol) {
 
-            if (in_array(strtolower($rol->ref_value), $roles)) {
-                return true;
+                if (in_array(strtolower($rol->ref_value), $roles)) {
+                    return true;
+                }
             }
         }
+        return  false;
     }
-    return  false;
-}
 }
 
 
@@ -502,7 +502,8 @@ function pdfReportsDataValues()
     ];
 }
 
-function obtenerTableName($datos, $shortName) {
+function obtenerTableName($datos, $shortName)
+{
     foreach ($datos as $dato) {
         if ($dato['short_name'] === $shortName) {
             return $dato['table_name'];
@@ -510,6 +511,63 @@ function obtenerTableName($datos, $shortName) {
     }
     // Devuelve algo predeterminado si no se encuentra el 'short_name'
     return null;
+}
+
+function sanear_string($string)
+{
+    $string = trim($string);
+    $string = str_replace(
+        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+        $string
+    );
+    $string = str_replace(
+        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+        $string
+    );
+    $string = str_replace(
+        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+        $string
+    );
+    $string = str_replace(
+        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+        $string
+    );
+    $string = str_replace(
+        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+        $string
+    );
+    $string = str_replace(
+        array('ñ', 'Ñ', 'ç', 'Ç'),
+        array('n', 'N', 'c', 'C',),
+        $string
+    );
+
+    //Esta parte se encarga de eliminar cualquier caracter extraño
+    $string = str_replace(
+        array(
+            "/", "¨", "º", "-", "~",
+            "#", "@", "|", "!", "",
+            "·", "$", "%", "&", "/",
+            "(", ")", "?", "'", "¡",
+            "¿", "[", "^", "<code>", "]",
+            "+", "}", "{", "¨", "´",
+            ">", "< ", ";", ",", ":",
+            "."
+        ),
+        '',
+        $string
+    );
+    $string = str_replace(
+        array(" "),
+        '_',
+        $string
+    );
+    return strtolower($string);
 }
 
 ?>

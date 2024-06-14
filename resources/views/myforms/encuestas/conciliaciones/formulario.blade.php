@@ -35,7 +35,8 @@
                                                 'conc_encuesta_satisf'),
                                             'col' => 12,
                                             'model' => $encuesta,
-                                                                                       
+                                            'design'=>'card_question'
+                                                                                                                                  
                                         ])
                                         @if (!currentUser()->hasRole('visitante_conciliacion'))
                                      

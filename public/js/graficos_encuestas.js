@@ -1,7 +1,105 @@
 import { EncuestasService } from './services/encuestas.js';
 const encuestasService = new EncuestasService();
+import { ReferenciasService } from "./services/referencias.js";
+const referenciasService = new ReferenciasService();
+
 $(document).ready(async function () {
-    await getChart()
+    set_tab()
+    await getChart();
+    
+    $("#btn_new_category").on("click", function (e) {
+        $("#myformEditRCategory").attr("id", "myformCreateCategory");
+        $("#myformCreateCategory").attr("id", "myformCreateInEnCategory");
+        $("#myformCreateInEnCategory")[0].reset();
+        $("#aditional_options_table tbody").html("");
+        $("#content_aditional_options").hide();
+        $("#myformCreateInEnCategory button[type=submit]")
+            .text("Guardar")
+            .removeClass("btn-warning")
+            .addClass("btn-primary");
+        //$(".select2").select2();
+        var inputElement = document.getElementById("short_name");
+
+        // Accede al elemento padre con la clase 'form-group'
+        var formGroup = inputElement.parentElement;
+        formGroup.remove()
+
+        var inputElement = document.getElementById("table");
+
+        // Accede al elemento padre con la clase 'form-group'
+        var formGroup = inputElement.parentElement;
+        formGroup.remove()
+        $("#lbl_modal_title").text("Creando categoria");
+        $("#myModal_create_category input[name='short_name']").prop('readonly', true);
+        $("#myModal_create_category").modal("show");
+    });
+
+    $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
+        e.preventDefault()
+        $("#wait").show();
+        var request = convertFormToJSON('myformCreateInEnCategory');
+        request['table'] = 'conc_encuesta_satisf'
+        let response = await referenciasService.storeReferencesData(request)
+        window.location.reload()
+                toastr.success(
+                    "La pregunta se creó con éxito",
+                    "",
+                    { positionClass: "toast-top-right", timeOut: "50000" }
+                );
+        $("#myModal_create_category").modal("hide");
+      });
+
+    $("#myModal_create_category").on("submit", "#myformCreateCategory", async function (e) {
+        e.preventDefault()
+        $("#wait").show();
+        var request = convertFormToJSON('myformCreateCategory');
+        //let response = await referenciasService.storeReferencesData(request)
+        Toast.fire({
+            title: "Categoría creada con éxito.",
+            icon: "success",
+            timer: 2000,
+        });
+        $("#myModal_create_category").modal("hide");
+        // $("#content_categories_list").html(response.render_view);
+        $("#wait").hide();
+    });
+
+    $("#list_encuind").on('click', '.pagination a', async function (e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        $("#wait").show()
+        let response = await index_page(url);
+        $(".list_encuind").html(response.view);
+        $("#wait").hide()
+        url += "#" + get_tab()
+        window.history.pushState(null, '', url);
+    });
+    $("#edit_form_tab").on("click", ".btn_delete_category", async function (e) {
+        let id = $(this).attr("data-id");
+        e.preventDefault();
+        Swal.fire({
+            title: '¡Atención!',
+            text: "¿Esta seguro de eliminar la pregunta?\nSe eliminará toda la información asociada",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let response = await referenciasService.deleteReferencesData(id);
+                window.location.reload()
+                toastr.success(
+                    "La pregunta se eliminó con éxito",
+                    "",
+                    { positionClass: "toast-top-right", timeOut: "50000" }
+                );
+               
+
+            }
+        });
+    });
 });
 var getChart = async () => {
     let response = await encuestasService.getChartData({});
@@ -22,15 +120,15 @@ var getChart = async () => {
         </div>
     </div>
         `
-        $("#content-grafs").append(card);
-        pie_chart(pregunta,"graf-"+pregunta.id) 
+            $("#content-grafs").append(card);
+            pie_chart(pregunta, "graf-" + pregunta.id)
         });
-        
+
 
     }
-    console.log(response);
+
 }
-function pie_chart(res,content) {
+function pie_chart(res, content) {
     var chart = new AmCharts.AmPieChart();
     // title of the chart
     //chart.addTitle("table" + ' - ' + "option_table", 16);
@@ -65,4 +163,25 @@ function pie_chart(res,content) {
 
     // WRITE
     chart.write(content);
+}
+
+async function index_page(route, request) {
+    const page = route;
+    const response = await fetch(page, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-Token": $("#token").attr("content"),
+        },
+
+    });
+    if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        console.log(response);
+        throw new Error(message);
+    }
+    const topics = await response.json();
+    return topics;
 }

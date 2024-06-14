@@ -7,7 +7,7 @@
             if (Request::has('page')) {
                 $page = Request::get('page');
             }
-        @endphp
+        @endphp 
         @if ($page == $key)
             @include('myforms.categorias.partials.ajax.pregunta')
         @endif       

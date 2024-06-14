@@ -173,8 +173,17 @@ class ConcEncuSatisfaccionController extends Controller
 
   }
   public function showResultados(Request $request)
-  {
-    return view('myforms.encuestas.conciliaciones.resultados');
+  { 
+    $encuestas = ConcEncuestaSatisf::orderBy('created_at','asc')->paginate(1);
+    if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
+      $view = view('myforms.encuestas.conciliaciones.resultados_individual_ajax',compact('encuestas'))->render();
+      $response=[
+        "view"=>$view
+      ];
+      return response()->json($response);
+
+    }
+    return view('myforms.encuestas.conciliaciones.resultados',compact('encuestas'));
   }
 
 }

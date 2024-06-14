@@ -65,14 +65,18 @@
                 @include('myforms.components_user.input_other_aditional_data')
      
             @else
+            @if(isset($reference->options[0]))
                 <input {{ isset($disabled) ? $disabled : '' }} data-reference_id="{{ $reference->id }}"
                     data-name="{{ $reference->name }}" data-option="{{ $reference->options[0]->id }}"
                     data-type="{{ $reference->type_data_id }}" name="static_data[]"
                     data-section="{{ $reference->section }}" type="text"
-                    @if (isset($user) and $reference->options[0] and $user->getDataVal($reference->id, $reference->options[0]->id)) value="{{ $user->getDataVal($reference->id, $reference->options[0]->id)->value }}" @endif
+                    @if (isset($user) and isset($reference->options[0]) and $reference->options[0] and $user->getDataVal($reference->id, $reference->options[0]->id)) value="{{ $user->getDataVal($reference->id, $reference->options[0]->id)->value }}" @endif
                     class="form-control form-control-sm input_user_ad">
+            @else
+            <label>Error en la opción</label>
+            @endif
             @endif
 
         </div>
-    </div>
+    </div> 
 @endforeach

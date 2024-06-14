@@ -25,7 +25,7 @@ Categorias
  
 @include('msg.success') 
 <div class="row">
-    <div class="col-md-12" id="content_categories_list">
+    <div class="col-md-12 table-responsive no-padding"  id="content_categories_list">
         @include('myforms.categorias.partials.ajax.index')
     </div>
 </div>

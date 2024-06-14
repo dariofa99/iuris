@@ -66,3 +66,12 @@ animation: spin 5s linear infinite;
     border: 1px solid gray;
     padding: 10px;
   }
+  .card_question{
+    border: 1px solid rgba(186, 186, 186, 0.673);
+    border-radius: 5px;
+    margin: 3px;
+    padding: 6px;
+    -webkit-box-shadow: -1px 10px 15px -13px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 10px 15px -13px rgba(0,0,0,0.75);
+    box-shadow: -1px 10px 15px -13px rgba(0,0,0,0.75);
+  }
