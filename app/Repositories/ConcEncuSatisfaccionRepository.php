@@ -59,7 +59,8 @@ class ConcEncuSatisfaccionRepository extends BaseRepository implements ConcEncuS
             $this->storeData($ref_data, $rq, $requestData);
           }
         }
-        //Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
+        
+        Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
       }
       return $encuesta;
     /* } catch (\Throwable $th) {

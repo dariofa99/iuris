@@ -15,11 +15,14 @@
           </div>
           
         <div class="col-md-{{isset($col)?$col:'6'}}">
-          <div class="form-group has-feedback"><label for="tipodoc_id">Tipo documento<span class="ast_required">*</span></label>
+          <div class="form-group has-feedback"><label for="tipodoc_id">Tipo documento
+            <span class="ast_required">*</span></label>
             <select {{isset($disabled) ? $disabled : ''}} name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required" required>
                 <option value="">Seleccione...</option>
                 @foreach($tipodoc as $key => $doc)
-                <option  {{(isset($user) and $user->tipodoc_id == $key) ? "selected":"" }} value="{{$key}}">{{$doc}}</option>
+                <option  {{(isset($user) and $user->tipodoc_id == $key) ? "selected":"" }} value="{{$key}}">
+                    {{$doc}}
+                </option>
                 @endforeach
             </select>
           </div>

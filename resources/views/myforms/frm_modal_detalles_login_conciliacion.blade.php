@@ -76,10 +76,7 @@
                             a las partes, con la indicación de la fecha, hora y medio por el cual se desarrollará la audiencia
                             de conciliación.
                             <br>
-                            Para tal efecto, se designará un estudiante adscrito al Centro de Conciliación, a efectos de que
-                            sirva de tercero neutral y mediador entre las partes en la audiencia de conciliación; así mismo, se
-                            designará a un estudiante que sirva de asistente para la proyección de los posibles resultados de la
-                            audiencia.
+                            Para tal efecto, se designará un estudiante adscrito al Centro de Conciliación.
 							<br>
 						
                         </p>
@@ -94,9 +91,7 @@
 						<button id="btn_continuar_conciliacion" disabled  class="btn btn-primary m-2">
 							Continuar
 						</button> 
-                        <button id="btn_continuar_expedientes" disabled  class="btn btn-primary m-2">
-							Continuar
-						</button>
+                       
                     </div>
 
                 </div>

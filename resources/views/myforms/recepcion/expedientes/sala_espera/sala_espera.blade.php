@@ -1,13 +1,8 @@
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="content-turno">
-               <label class="numero_turno"> <span>
-                01 
-            </span>
-            </label>
-               <label class="lbl_turno"> SU TURNO </label>
-
+                @include('myforms.recepcion.expedientes.sala_espera.turno')
             </div>
         </div>
     </div>

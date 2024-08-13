@@ -619,13 +619,13 @@ class Expediente extends Model
             //dd("dd00");
         } 
 
-        if (trim($request->data) != '') {
+        if ($request->has("data") and trim($request->data) != '' ) {
 
             $data = $request->data;
             switch ($request->tipo_busqueda) {
 
                 case 'codido_exp':
-                    return $query->where('expid', 'like', '%' . $data);
+                    return $query->where('expid', $data);
                     break;
                 case 'estudiante':
                 case 'estudiante_num':

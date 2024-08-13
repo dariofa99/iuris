@@ -351,13 +351,13 @@ class ActuacionController extends Controller
   public function edit($id)
   {
     $userSession = Auth::user()->id_number;
-    $actuacion = Actuacion::find($id);
+    $actuacion = Actuacion::find($id); 
 
     $parentId = DB::table('revisiones_actuacion')
       ->select('parent_rev_actid', 'rev_actid')
       ->where('rev_actid', $id)->first();
     $actuacion->parent = $parentId;
-    $actuacion->notas_f = $actuacion->get_notas();
+    $actuacion->notas_f = [];// $actuacion->get_notas();
     $actuacion->docente_update;
     $actuacion->user_created;
     $actuacion->estudiante;

@@ -5,8 +5,105 @@ import { SolicitudesService } from './services/solicitudes.js';
 const userService = new UserService();
 const conciliacionService = new ConciliacionService();
 const solicitudesService = new SolicitudesService();
+function disabledInputs() {
+    $("#myFormParteSolicitante select[name='tipopers_id']").prop("disabled",true)
+    $("#myFormParteSolicitante select[name='tipodoc_id']").prop("disabled",true)
+    $("#myFormParteSolicitante input[name='email']").attr("readonly",true)
+    $("#myFormParteSolicitante input[name='tel1']").prop("disabled",true)
+    
+    
+}
 $(function () {
     //
+     
+    disabledInputs()
+    $("#myFormParteSolicitante")
+        .on("change", "select[name='pbepersondiscap']", function (e) {
+
+            if ($(this).val() == 1) {
+                //$(".discaform").show();
+                mostrarCompDiscapUser()
+            } else {
+                ocultarCompDiscapUser();
+
+            }
+        });
+    $("#myFormParteSolicitante")
+        .on("change", "select[name='has_apoyo']", function (e) {
+
+            if ($(this).val() == 1) {
+                $(".has_apoyo").show()
+                $("#acept_ter").prop("disabled", false)
+            } else {
+                $(".has_apoyo").hide()
+                $("#acept_ter").prop("disabled", true).prop("checked", false)
+            }
+        });
+
+    $("#btn_registrar_solexp").on("click", async function (e) {
+        e.preventDefault()
+        var errors = validateForm("myFormRegistrarSolicitudCaso");
+        if (errors.length <= 0) {
+            if (!$("#exampleCheck1").is(":checked")) {
+                toastr.error("Se debe aceptar los terminos y condiciones", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                return
+            }
+            var request = convertFormToJSON("myFormRegistrarSolicitudCaso");
+            $("#wait").show()
+            let response = await solicitudesService.solicitarExpediente(request);
+            $("#wait").hide()
+            if (response.errors) {
+                Swal.close();
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+            } else {
+                Swal.close();
+                Swal.fire({
+                    title: "La solicitud se ha creado con éxito!",
+                    html: `<h5>Hemos enviado un correo electrónico con el enlace 
+                  para que puedas seguir el proceso en caso de perder la conexión actual.</h5>`,
+                    type: "success",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Continuar..!",
+                    confirmButtonText: "Continuar..!",
+                    allowOutsideClick: false, // Permitir clic fuera del modal
+                    allowEscapeKey: false, // Permitir escape para cerrar el modal
+                    backdrop: true // Mostrar el backdrop (fondo sombreado)
+
+                }).then((result) => {
+                    if (result.value) {
+                        // console.log(response);
+                        window.location = "/solicitudes/recepcion/expedientes/" + response.solicitud.token + "/?paso=2";
+                    }
+                });
+            }
+        }
+    });
+
+
+    $("#myFormBuscarSolicitud").on("submit", async function (e) {
+        e.preventDefault()
+        var request = convertFormToJSON("myFormBuscarSolicitud");
+        $("#wait").show()
+        let response = await solicitudesService.buscar(request);
+        if (!$.isEmptyObject(response)) {
+            window.location = "/solicitudes/recepcion/expedientes/" + response.token + "/?paso=2";
+
+        }else{
+            $("#wait").hide()
+            toastr.error("No hay una solicitud con el número ingresado.", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
+    })
     $(".btn_activate_video").on("click", async function (e) {
         $("#content-video-call").show()
         startvideollamada();
@@ -14,7 +111,7 @@ $(function () {
     if ($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled', true)
 
 
-    $("#btn_registrar_solexp").on("click", async function (e) {
+    $("#btn_culminar_regus").on("click", async function (e) {
         e.preventDefault();
 
         var errors = validateForm("myFormParteSolicitante");
@@ -28,13 +125,26 @@ $(function () {
                 });
                 return false;
             }
+            if(request.pbepersondiscap == 1 && request.has_apoyo == 1 ){
+                if(!$("#myFormParteSolicitante input[name='acept_ter']").is(":checked")){
+                    toastr.error("Debe aceptar los terminos y condiciones como persona de apoyo.", "Atención!", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                    return false;
+                }
+            }
+           
+
             let timerInterval
             Swal.fire({
                 title: 'Espere por favor!',
-                html: 'Estamos registrando su solicitud',
+                html: 'Estamos registrando sus datos',
                 timer: 10000,
                 timerProgressBar: true,
-                allowOutsideClick: false,
+                allowOutsideClick: false, // Permitir clic fuera del modal
+                allowEscapeKey: false, // Permitir escape para cerrar el modal
+               
                 didOpen: () => {
                     Swal.showLoading()
                     // const b = Swal.getHtmlContainer().querySelector('b')
@@ -63,7 +173,9 @@ $(function () {
                 });
             });
             request["data"] = (data);
-            let response = await solicitudesService.solicitarExpediente(request);
+            request["solicitud_id"] = $("#solicitud_id").val()
+            let response =  await solicitudesService.registrarUsuario(request);
+            console.log(request);
             if (response.errors) {
                 Swal.close();
                 response.errors.forEach(error => {
@@ -75,16 +187,18 @@ $(function () {
             } else {
                 Swal.close();
                 Swal.fire({
-                    title: "La solicitud se ha creado con éxito!",
-                    html: `<h5>Hemos enviado un correo electrónico con el enlace 
-                  para que puedas seguir el proceso en caso de perder la conexión actual.</h5>`,
+                    title: "El registro se ha creado con éxito!",
+                    html: `<h5></h5>`,
                     type: "success",
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "Continuar..!",
-
+                    allowOutsideClick: false, // Permitir clic fuera del modal
+                    allowEscapeKey: false, // Permitir escape para cerrar el modal
+                   
                 }).then((result) => {
                     if (result.value) {
-                        window.location = "/solicitudes/recepcion/expedientes/" + response.solictud.token + "/?id=" + response.conciliacion.id + "&paso=2";
+                        window.location = "/solicitudes/recepcion/expedientes/" + response.token + "/?paso=4";
+
                     }
                 });
             }

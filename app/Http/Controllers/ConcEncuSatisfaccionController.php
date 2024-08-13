@@ -124,6 +124,8 @@ class ConcEncuSatisfaccionController extends Controller
   {
     $encuesta = $this->encuestaService->find($request->encuesta_id);
     $encuesta = $this->encuestaService->update($request, $encuesta);
+    Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
+  
     return response()->json($encuesta);
   }
 

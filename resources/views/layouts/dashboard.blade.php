@@ -167,11 +167,17 @@ if (!isset($modo_nav_crl)) {
             //chat.render(data);
         }).here(users => {
             console.log(users);
-         }).joining(user => {
+        }).joining(user => {
             console.log(user);
-    }).leaving(user => {
-        console.log(user);
-    });
+        }).leaving(user => {
+            console.log(user);
+        });
+        console.log(window.Echo);
+        var channel = Echo.join('cambiosEstadoSolicitud');
+        channel.listen('.solicitud-estados', function(data) {
+            console.log(data);
+            //chat.render(data);
+        })
     </script>
     <!-- PAGE PLUGINS -->
     @stack('scripts')

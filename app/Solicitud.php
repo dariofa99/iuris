@@ -52,5 +52,16 @@ class Solicitud extends Model
         ->withPivot('solicitud_id','conciliacion_id')
         ->withTimestamps(); 
      } 
+
+     public function getTurnoEnAtencion(){
+        $turno = 0;
+        $recepcion = $this->where("type_status_id",155)
+        ->where("id","<",$this->id)
+        ->orderBy("turno","desc")->first();
+        if($recepcion){
+            $turno = $recepcion->turno;
+        }        
+        return $turno; 
+     }
   
 }

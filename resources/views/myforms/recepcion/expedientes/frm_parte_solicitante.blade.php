@@ -1,18 +1,28 @@
+@php
+    if(isset($solicitud)){
+        $user = new App\User();
+        $user->idnumber = $solicitud->idnumber;
+        $user->name = $solicitud->name;
+        $user->lastname = $solicitud->lastname;
+        $user->email = $solicitud->email;
+        $user->tel1 = $solicitud->tel1;
+        $user->estrato_id  = $solicitud->estrato_id;
+        $user->tipodoc_id  = $solicitud->tipodoc_id;
+    }
+
+@endphp
 <form id="myFormParteSolicitante" method="POST">
     <div class="row">
         @include('myforms.users.formulario_registro')
-       {{--  @include('myforms.components_user.identitaria')--}}
-        @include('myforms.components_user.socioeconomica') 
+        @include('myforms.components_user.discapacidad')
+       
+        @include('myforms.components_user.identitaria')
+        @include('myforms.components_user.socioeconomica')
         @if (config('app.name') != 'ConciliApp')
-        <input type="hidden" id="tipopersvalidate_id" name="tipopers_id" value="236">
+            <input type="hidden" id="tipopersvalidate_id" name="tipopers_id" value="236">
         @endif
     </div>
-    <div class="row">
-    <div class="col-md-12">
-    <label for="description">Descripción de la solicitud<span class="ast_required">*</span></label>  
-    <textarea placeholder="Describe brevemente tu caso" class="required form-control form-control-sm" name="description" id="description" cols="30" rows="10"></textarea>  
-    </div>    
-    </div> 
+  
     @if (count($sedes) > 1)
         <div class="row">
             <div class="col-md-12">
@@ -44,11 +54,11 @@
                 </div>
             @endforeach
         </div>
-    @elseif(count($sedes) == 1)       
+    @elseif(count($sedes) == 1)
         @if ($sedes[0]->getActivePeriod())
-        <input type="hidden" name="sede_id" value="{{ $sedes[0]->id_sede }}">
-         @else
-         No podrá registrar, no hay un periodo activo
+            <input type="hidden" name="sede_id" value="{{ $sedes[0]->id_sede }}">
+        @else
+            No podrá registrar, no hay un periodo activo
         @endif
     @endif
 

@@ -48,7 +48,7 @@
     <div class="col-md-6">
         <div class="form-group">
             {!! Form::label('Fecha Nacimiento: ') !!}
-
+            <span class="ast_required">*</span>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -89,7 +89,8 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('Año Cursando ') !!}
+                {!! Form::label('Año Cursando ') !!} 
+                <span class="ast_required">*</span> 
                 {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
@@ -104,7 +105,7 @@
                 currentUser()->hasRole('dirgral'))
             <div class="col-md-6">
                 <div class="form-group">
-                    {!! Form::label('Año Cursando') !!}
+                    {!! Form::label('Año Cursando') !!} <span class="ast_required">*</span>
                     {!! Form::select('cursandosa_id', $cursando, $user->cursando_id, [
                         'placeholder' => 'Selecciona...',
                         'class' => 'form-control form-control-sm',

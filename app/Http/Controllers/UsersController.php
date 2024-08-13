@@ -11,6 +11,7 @@ use \App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\TablaReferencia;
 use App\Mail\ConfirmarCorreo;
+use App\Mail\ValidateAccount;
 use App\ReferenceDataOptions;
 use App\ReferencesData;
 use App\Services\ExpedientesService;
@@ -29,7 +30,7 @@ class UsersController extends Controller
   private $userService;
   private $expedienteService;
 
-  public function __construct(UsersService $userService,ExpedientesService $expedienteService)
+  public function __construct(UsersService $userService, ExpedientesService $expedienteService)
   {
     $this->userService = $userService;
     $this->expedienteService = $expedienteService;
@@ -101,8 +102,8 @@ class UsersController extends Controller
 
     //$user = User::find(9);
     // Auth::login(($user)); 
-    
-   /*  return response()->json([
+
+    /*  return response()->json([
       'itemsInData' =>$itemsInData,
       'itemsInRequest' =>$itemsInRequest,
       'itemsDiff' =>$itemsDiff,
@@ -130,7 +131,7 @@ class UsersController extends Controller
     }
     $user = $this->userService->store($request);
     if (Auth::guest()) Auth::login($user);
-    return response()->json(['user' => $user]);  
+    return response()->json(['user' => $user]);
   }
 
 
@@ -193,7 +194,8 @@ class UsersController extends Controller
     ];
     $validator = Validator::make($request->all(), [
       'email' => [
-        'required', Rule::unique('users')->ignore($user->id)
+        'required',
+        Rule::unique('users')->ignore($user->id)
       ],
       'idnumber' => [
         Rule::unique('users')->ignore($user->id)
@@ -241,7 +243,7 @@ class UsersController extends Controller
 
 
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
-      return response()->json(['user' => $user]); 
+      return response()->json(['user' => $user]);
     }
     if (!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
     return Redirect::to('users/' . $user->id . '/edit');
@@ -304,7 +306,7 @@ class UsersController extends Controller
       if ($user) {
         $encontrado = true;
       }
-    } 
+    }
     if ($encontrado) {
       $user->roles;
       $expedientes = $this->expedienteService->getExpeUser($user);
@@ -314,7 +316,7 @@ class UsersController extends Controller
       }
       $response['encontrado'] = true;
       $response['user'] = $user;
-     
+
       return response()->json($response);
     }
     return  response()->json(['encontrado' => false]);
@@ -409,21 +411,81 @@ class UsersController extends Controller
     return  response()->json(['errors' => false]);
   }
 
-  public function pruebas(Request $request)
+  public function validateSolicitudEmail(Request $request)
   {
-    try {
-      $users = $this->userService->setValidateSede(false)
-        ->findUserByNameOrLastNameAndRole("User", "solicitante");
 
-      /* $users = User::whereHas('roles', function ($query) {
-        return $query->where('roles.name', 'docente');
-    })->get(); */
-      dd($users);
-      return  response()->json($users);
+
+    try {
+      $user = $this->userService->findWithFilter([
+        "confirm_token" => $request->token,
+        "email" => $request->oldemail
+      ]);
+      //return  response()->json($user);
+      $messages = [
+        'email.unique' => 'El :attribute  ya existe en otra cuenta.',
+        'email.required' => 'El :attribute es requerido.',
+
+      ];
+      $validator = Validator::make($request->all(), [
+        'email' => [
+          'required',
+          Rule::unique('users')->ignore($user->id)
+        ],
+        'idnumber' => [
+          Rule::unique('users')->ignore($user->id)
+        ]
+      ], $messages);
+
+      if ($validator->fails()) {
+
+        if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+          return response()->json(['errors' => $validator->errors()->all()]);
+        }
+        return redirect()->back()
+          ->withErrors($validator)
+          ->withInput();
+      }
+      if ($user) {
+
+        $user->confirm_token = str_replace("/", "", bcrypt(\Str::random(5)));
+        $user->save();
+        //Session::flash('message-danger', 'Error! Recuerda escribir un correo electrónico valido, ya que se enviará una confirmación.');
+        Mail::to($request->email)->send(new ValidateAccount($user, $request->email));
+      }
+
+      //dd($user);
+      return  response()->json($user);
     } catch (\Throwable $th) {
-      dd($th);
+      
+      return  response()->json(['errors' => ["El token es invalido, vuelva a iniciar sesión para recuperarlo"]]);
+    }
+    return  response()->json(['errors' => ["El token es invalido, vuelva a iniciar sesión para recuperarlo"]]);
+  }
+  public function activateAccount(Request $request, $token)
+  {
+    $user = $this->userService->findWithFilter([
+      "confirm_token" => $token
+    ]);   
+    try {
+    
+
+      if ($user and $request->has("email")) {
+        //
+        $user->email = $request->email;
+        $user->active = 1;
+        $user->confirm_token = null;
+        $user->save();
+     
+        Session::flash('message-info', 'La cuenta se activó con éxito, ahora puede iniciar sesión');
+        return  redirect("/login");
+      } else {
+        abort(404);
+      }
+    } catch (\Throwable $th) {
+      abort(404);
       return  response()->json(['errors' => $th]);
     }
+    abort(404);
     return  response()->json(['errors' => false]);
   }
 }

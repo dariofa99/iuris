@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 class ConfirmarCorreo
 {
     /**
@@ -15,10 +17,11 @@ class ConfirmarCorreo
      */
     public function handle($request, Closure $next)
     {
-        $user = \Auth::user();
+        $user = Auth::user();
         if(($user->confirm_token!='')){
-           Session::flash('message-danger', 'Recuerda confirmar tu correo electrónico, Se ha enviado un mensaje al correo registrado para realizar la confirmación.');
-             return redirect('users/'.$user->id.'/edit');             
+           Session::flash('message-danger', 'Se ha enviado un mensaje al correo registrado para realizar la confirmación y verificación de tu cuenta.');
+            Auth::logout();
+           return redirect('/validar/cuenta/mensaje?token='.$user->confirm_token.'&email='.$user->email);             
         }
 
         return $next($request);

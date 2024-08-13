@@ -9,7 +9,8 @@ class GuzzleHttpRequest{
     function __construct($url){
         
         $this->client = new Client(
-            ['base_uri'=>$url,
+            [
+            'base_uri'=>$url,
             'verify'=> false,
             'timeout' => 36000,
             'auth' => [ config('env'), config('env')],

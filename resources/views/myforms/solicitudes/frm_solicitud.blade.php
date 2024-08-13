@@ -39,6 +39,11 @@
           <input id='tel1_' disabled value="{{$solicitud->tel1}}" name='tel1' type="text" class="form-control" placeholder="Tu apellido">
         </div>
     </div>
+    <div class="col-md-6">
+      <div class="form-group "><label for="tel1">Correo electrónico</label>
+        <input id='email' disabled value="{{$solicitud->email}}" name='email' type="text" class="form-control" placeholder="Email">
+      </div>
+  </div>
     <div class="col-md-12">
         <div class="form-group has-feedback"><label for="description">Descripción</label>
             <textarea disabled name="description" id="description_" class="form-control" rows="6">{{$solicitud->description}}</textarea>
@@ -58,7 +63,7 @@
       @endif 
       @if($solicitud->type_status_id==165 || $solicitud->type_status_id==155 || $solicitud->type_status_id==156 || $solicitud->type_status_id==155 || $solicitud->type_status_id==171)
       <div class="form-group" > 
-        <a href="#" id="btn_denied_solicitud"  class="btn btn-warning btn-block">Rechazar</a>
+        <a href="#" id="btn_denied_solicitud" data-id="{{$solicitud->id}}"  class="btn btn-warning btn-block">Rechazar</a>
       </div>
       @endif
 

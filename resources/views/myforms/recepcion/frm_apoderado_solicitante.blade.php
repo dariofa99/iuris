@@ -7,8 +7,9 @@
             'disabled' => !Request::has('id') || $user->idnumber != null ? 'disabled' : '',
         ])
     </div>
+    
     <div class="row mb-1">
-        @if(!$user)
+        @if(!$user->idnumber != null)
         <div class="col-md-12">
             <h4>
                 Marque la siguiente casilla en caso de no contar con un apoderado

@@ -187,7 +187,7 @@
             </div>
 
             <div class="col-md-2" id="content_count_asesorias_inlist">
-                  @include('myforms.components_exp.count_asesorias_inlist')
+                 {{--  @include('myforms.components_exp.count_asesorias_inlist') --}}
             </div>
         </div>
         <div class="row">

@@ -33,9 +33,8 @@ class RegConciliacionSuccess extends Mailable
     public function build()
     {
         $message = "<br><br>
-        Hemos recibido tu solicitud de conciliación y queremos asegurarte que estamos aquí para ayudarte.
-        Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>
-        Recuerda estar pendiente de tus datos de contacto para comunicarnos.";
+        Hemos recibido tu solicitud de conciliación.<br>        
+        Con el siguiente enlace puedes seguir completando la solicitud.";
         return $this->view('myforms.mails.formato_correo',[
             "mensaje"=> $message,
             "url"=>url("/solicitudes/recepcion/conciliacion/".$this->notification->token."?id=".$this->notification->id."&paso=2")

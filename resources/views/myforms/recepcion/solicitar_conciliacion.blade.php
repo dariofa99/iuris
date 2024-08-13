@@ -14,7 +14,7 @@ $pasos = [
     "tipo_usuario"=>205,
     "visible"=>true,
     "title"=>"Solicitud",
-    "message"=>"Diligencia el siguiente formulario con la información de la persona que solicita la conciliación, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud.Recuerda que solo los campos marcados con (*) son obligatorios.",
+    "message"=>"Diligencie el siguiente formulario con la información de la persona que solicita la conciliación, recuerde que si ya tiene una cuenta debe <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Tenga en cuenta que solo los campos marcados con (*) son obligatorios.",
     "view"=>"myforms.recepcion.frm_parte_solicitante"
   ],
   1=>[
@@ -104,7 +104,7 @@ $pasos = [
                 'pasos'=>$pasos              
               ])
             </div>
-           <div class="card-body">
+           <div class="card-body" id="content_data_conciliaciones">
             <div class="content_message">
               @include('myforms.recepcion.menu_mensaje',[
                  'paso'=>$paso,

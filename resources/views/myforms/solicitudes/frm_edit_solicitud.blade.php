@@ -3,6 +3,12 @@
     <i>Número de solicitud:</i> {{ $solicitud->number }} <br> <i>Estado de la solicitud:</i>
     <span id="lbl_status_sol"> {{ $solicitud->estado->ref_nombre }} </span>
 @endsection
+
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
+
 @section('area_buttons')
     @if ($solicitud->type_status_id == 155 || $solicitud->type_status_id == 156)
         <p><i>Número de turno:</i> {{ $solicitud->turno }}</p>
@@ -44,22 +50,41 @@
             </ul>
         </div>
     </div>
-
+ 
     <div class="row">
         <div class="col-md-12">
             <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
                 <input type="hidden" id="solicitud_id" value="{{ $solicitud->id }}">
                 <input type="hidden" value="{{ $solicitud->type_status_id }}" id="soli_type_status_id">
-
-                <div class="tab-pane fade active show" id="datos-generales-tab" role="tabpanel" aria-labelledby="datos-generales-tab">
+                <input type="hidden" id="solicitudTk" value="{{ $solicitud->token }}">
+                <div class="tab-pane fade active show" id="datos-generales-tab" role="tabpanel"
+                    aria-labelledby="datos-generales-tab">
                     @include('myforms.solicitudes.frm_solicitud')
                 </div>
 
                 <div class="tab-pane fade" id="chat-tab" role="tabpanel" aria-labelledby="chat-tab">
+                    <div class="row">
+                        <div class="col-md-9">
+                            {!! \Facades\App\Facades\ApiChat::room($solicitud->number)->render() !!}
+                        </div>
+                        <div class="col-md-3">
+                            <table id="tblListFilesShared" class="table">
+                                <thead>
+                                    <th>
+                                        Documentos compartidos
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    @include('myforms.recepcion.expedientes.chat.files_ajax')
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     {{-- @include('myforms.solicitudes.frm_chat') --}}
-                {{--     @include("myforms.recepcion.expedientes.chat.chat", ['token' => 1234])
-                --}}     {!! \Facades\App\Facades\ApiChat::room("1234")->render() !!}
-          
+                    {{--     @include("myforms.recepcion.expedientes.chat.chat", ['token' => 1234])
+                --}}
+
                 </div>
 
                 <div class="tab-pane fade" id="asig-expediente-tab" role="tabpanel" aria-labelledby="asig-expediente-tab">

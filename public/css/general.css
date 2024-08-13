@@ -44,6 +44,7 @@ animation: spin 5s linear infinite;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-left: 60px;
   }
   .numero_turno{
     border: 1px solid #DEE2E6;

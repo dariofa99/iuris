@@ -40,7 +40,7 @@
                         <p style="font-size: 14px; line-height: 140%;"><span
                                 style="font-size: 18px; line-height: 25.2px; color: #666666;">
 
-                                Para ingresar al caso de click en el botón: </span></p>
+                               
                     </td>
                 </tr>
                 <tr>
@@ -54,7 +54,7 @@
                                 style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #0e8e4c; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
                                 <span style="display:block;padding:15px 40px;line-height:120%;"><span
                                         style="font-size: 18px; line-height: 21.6px;">
-                                        Ir al caso
+                                        @if(isset($buttonMessage)) {{$buttonMessage}}  @else Ir al caso @endif
                                     </span></span>
                             </a>
                             <!--[if mso]></center></v:roundrect><![endif]-->

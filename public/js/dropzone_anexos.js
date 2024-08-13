@@ -12,7 +12,8 @@ document.querySelectorAll(".fileinputclickable").forEach(function (element) {
 
 var myDropzone_log = new Dropzone("div#cont_files", { // Make the whole body a dropzone
   url: "/conciliaciones/store/anexo", // Set the url
-  thumbnailWidth: 80,
+ //url:"/solicitudes/store/documento",
+ thumbnailWidth: 80,
   thumbnailHeight: 80,
   paramName: "conciliacion_file",
   parallelUploads: 20,

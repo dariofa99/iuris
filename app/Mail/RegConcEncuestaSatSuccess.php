@@ -33,7 +33,7 @@ class RegConcEncuestaSatSuccess extends Mailable
     public function build()
     {
         $message = "<br><br>
-        Hemos recibido la encuesta de satisfaccion. <br>
+        Hemos recibido su encuesta de satisfaccion. <br>
         Recuerde que para el Centro de Conciliación Eduardo Alvarado Hurtado
         es muy importante su opinión sobre el acceso y la atención brindados.<br>
         <br>

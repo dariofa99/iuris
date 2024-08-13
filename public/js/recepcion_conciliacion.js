@@ -9,6 +9,14 @@ $(function () {
 
  if($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled',true)
 
+  $("#content_data_conciliaciones select[name='tipodoc_id'] option").each(function() {
+    var valor = $(this).val();
+    
+    if (valor == "236" || valor == "248") {
+        $(this).remove(); // Elimina la opción
+    }
+    
+});
 
   $("#btn_registrar_conc").on("click", async function (e) {
     e.preventDefault();

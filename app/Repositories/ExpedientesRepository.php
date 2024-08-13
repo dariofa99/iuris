@@ -31,7 +31,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         Expediente $model,
         AsignacionDocenteCasosService $asignacionDocenteCasoService
     ) {
-        parent::__construct($model);
+        parent::__construct($model); 
         $this->periodoService = App::make(PeriodosService::class);
         $this->segmentoService = App::make(SegmentosService::class);
         $this->usersService = App::make(UsersService::class);
@@ -40,7 +40,8 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     }
     public function index(Request $request)
     {
-        $this->query = $this->model;
+        //dd("");
+        //$this->query = $this->model;
         $order = "CASE
         WHEN expestado_id = 1 THEN 1
         WHEN expestado_id = 4 THEN 2
@@ -70,29 +71,36 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         }
 
         $this->applyValidateSede();
-        return $this->query->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-            ->where(function ($query) use ($request) {
+        return $this->query//->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
+        ->where('expedientes.expidnumberest', '<>', 3030)  
+        ->where(function ($query) use ($request) {
                 if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-                    and (!$request->has('search_onlyMy_exp') || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
-                ) {
+                    and (!$request->has('search_onlyMy_exp') 
+                || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
+                ) {                    
                     $query->whereHas('asignaciones.asig_docente', function ($q) {
                         $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
                             ->where('asignacion_docente_caso.activo', 1);
                     });
                 } else if (currentUser()->hasRole('estudiante')) {
-                    $query->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
+                    $query->whereHas('asignaciones', function ($q) {
+                        $q->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
+                        ->where('asignacion_caso.activo', '=', 1)
                         ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
+                    }); 
+                    
                 }
             })
             ->where(function ($query) use ($request) {
                 if ($request->get('search_onlyProJur')) {
-                    $query->where('asignacion_caso.procesojud_id', '<>', 1);
+                     $query->whereHas('asignaciones', function ($q) {
+                        $q->where('asignacion_caso.procesojud_id', '<>', 1)
+                        ->where('asignacion_caso.activo', '=', 1);
+                    });                   
                 }
-            })
+            }) 
             ->Criterio($request)
-            ->orderByRaw($order)
-            ->orderBy(DB::raw("asignacion_caso.created_at"), 'desc')
-            ->groupBy('asignacion_caso.asigexp_id')
+            ->orderBy("expedientes.created_at","DESC")
             ->paginate(10);
     }
 
@@ -110,6 +118,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                             ->where('asignacion_docente_caso.activo', 1);
                     });
                 } else if (currentUser()->hasRole('estudiante')) {
+                    dd("");
                     $query->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
                         ->where('asignacion_caso.activo', '=', 1)
                         ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);

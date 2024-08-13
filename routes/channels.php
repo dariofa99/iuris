@@ -19,10 +19,19 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 Broadcast::channel('login', function ($user) {
     $user->profile_image = url($user->image);
-    Log::info("Notification fire channel login: ".$user->id);
+    Log::info("Notification fire channel login: " . $user->id);
     return  (int) auth()->user()->id === (int) $user->id ? $user : false;
-}); 
-Broadcast::channel('chat', function ($user) {    
+});
+Broadcast::channel('chat', function ($user) {
     return  (int) auth()->user()->id === (int) $user->id ? $user : false;
-    
-}); 
+});
+Broadcast::channel('cambiosEstadoSolicitud', function ($user) {
+    return  (int) auth()->user()->id === (int) $user->id ? $user : false;
+});
+Broadcast::channel('recepcionDocumentSolicitud', function ($user) {
+    return  (int) auth()->user()->id === (int) $user->id ? $user : false;
+});
+
+Broadcast::channel('recepcionStoreEvent', function ($user) {
+    return  (int) auth()->user()->id === (int) $user->id ? $user : false;
+});

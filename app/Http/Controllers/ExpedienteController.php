@@ -87,18 +87,18 @@ class ExpedienteController extends Controller
 
     $expedientes = $this->expedienteService->index($request);
    // dd($request->all());
-    $count_colors = $this->expedienteService->getColorsAsesorias($request);
+    $count_colors = [];// $this->expedienteService->getColorsAsesorias($request);
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       $res = [];
       $view = view('myforms.frm_expediente_list_ajax', compact('expedientes', 'count_colors'))->render();
       $res["view"] = $view;
       if (!$request->has('tipo_busqueda') || ($request->has('tipo_busqueda') and $request->input('tipo_busqueda') != 'color')) {
-        $view_count = view('myforms.components_exp.count_asesorias_inlist', compact('expedientes', 'count_colors'))->render();
-        $res["view_count"] = $view_count;
+        //$view_count = view('myforms.components_exp.count_asesorias_inlist', compact('expedientes', 'count_colors'))->render();
+        //$res["view_count"] = $view_count;
       }
       return response()->json($res);
     }
-    $request = $request->all();
+    $request = $request->all(); 
     return view('myforms.frm_expediente_list', compact('expedientes', 'count_colors'));
   }
 

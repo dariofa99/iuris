@@ -57,12 +57,12 @@
                                 Ver videos de ayuda
                             </a>
                             <br>
-                          
-                                    <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px"
-                                 href="{{url('conciliacion/encuestas/start')}}">
-                                   Encuesta (desarrollo)
-                                </a>  
-                               
+
+                            <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px"
+                                href="{{ url('conciliacion/encuestas/start') }}">
+                                Encuesta (desarrollo)
+                            </a>
+
                         </div>
                     </form>
                 </div>
@@ -106,6 +106,31 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card card-success">
+                <div class="card-header">
+                    <b>Solicitudes de conciliación.</b>
+                </div>
+                <div class="card-body">
+                    <strong> ¿Qué es la la solicitud de asesoría?</strong><br>
+                    <small>
+                        
+                        <br>
+                      
+                        <br>
+                    </small>
+
+                    
+                    <div class="text-center my-4">
+                        <a id="btn_solicitar_conciliacion" href="/solicitudes/expedientes/recepcion/?paso=1"
+                            class="btn btn-primary">
+                            SOLICITAR ASESORÍA <i>(en periodo de pruebas)</i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>

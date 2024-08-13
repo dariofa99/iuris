@@ -41,6 +41,11 @@ Route::resource('logout', 'LogoutController');
 Route::get('terminosycondiciones', function () {
   return view('auth.terminosycondiciones');
 });
+Route::get('/validar/cuenta/mensaje', function () {
+  return view('myforms.mensaje_validar_cuenta');
+});
+Route::post('usuarios/update/email/solicitud', "UsersController@validateSolicitudEmail");
+Route::get("usuarios/active/account/{token}", "UsersController@activateAccount");
 Route::get('conciliaciones/download/file/{file_id}', 'ConciliacionesController@downloadFile');
 Route::post('conciliaciones/enviar/correo', 'ConciliacionesController@enviarCorreo');
 Route::get('conciliaciones/get/comentarios', 'ConciliacionesController@getComentarios');
@@ -79,6 +84,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get("usuarios/get/by/idnumber", "UsersController@getUsersByIdNumber");
   Route::get("usuarios/find/by/name", "UsersController@findUserByNameOrLastNameAndRole");
   Route::get("usuarios/find/by/role", "UsersController@getUsersByRoleName");
+
   Route::post("usuarios/add/sede", "UsersController@addSede");
   Route::post("usuarios/update/profile/picture", "UsersController@uploadProfilePicture");
 
@@ -104,12 +110,12 @@ Route::group(['middleware' => ['auth']], function () {
   ///////////////////////Encuestas de satisfacción
   Route::get('conciliacion/evaluar/buscar', 'ConcEncuSatisfaccionController@buscarConciliaciones');
   Route::post('conciliacion/evaluar/store', 'ConcEncuSatisfaccionController@store');
-  Route::get('/conciliacion/evaluar/encuesta', 'ConcEncuSatisfaccionController@renderForm')->name("encuestas.conciliacion");
+  Route::get('conciliacion/evaluar/encuesta', 'ConcEncuSatisfaccionController@renderForm')->name("encuestas.conciliacion");
   Route::post('conciliacion/evaluar/update', 'ConcEncuSatisfaccionController@update');
   Route::get('conciliacion/evaluar/reportes', 'ConcEncuSatisfaccionController@showResultados')->name("cencuesta.index");
   Route::get('conciliacion/evaluar/data/chart', 'ConcEncuSatisfaccionController@getDataForChart');
-  
-  Route::group(['middleware' => ['confirm_email', 'perfil']], function () {
+
+  Route::group(['middleware' => ["vaccount", 'confirm_email', 'perfil']], function () {
 
 
     Route::get('home', function () {
@@ -333,8 +339,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/descargar/documento/{id}', 'CaseLogController@downloadFileLog');
 
     //Conciliaciones encuestas
-   // Route::resource('conciliacion/encuestas', 'ConcEncuSatisfaccionController');
-   
+    // Route::resource('conciliacion/encuestas', 'ConcEncuSatisfaccionController');
+
 
     //Conciliaciones
     Route::resource('conciliaciones', 'ConciliacionesController');
@@ -442,6 +448,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('horario/regishordocasis', 'HorarioController@regishordocasis');
 
 
+    Route::post('solicitudes/store/documento', 'SolicitudesController@storeDocument');
 
     //prueba
     Route::get('prueba/expedienteasig', 'ExpedienteController@pruebaasig');
@@ -465,8 +472,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
 
-    //solicitudes
-    Route::post('solicitudes/store/documento', 'SolicitudesController@storeDocument');
+    //solicitudes 
     Route::get('solicitudes/files/{id}/edit', 'SolicitudesController@editDocumento');
     Route::post('solicitudes/update/documento', 'SolicitudesController@updateDocument');
     Route::get('solicitudes/files/delete/{id}', 'SolicitudesController@deleteDocumento');
@@ -481,8 +487,8 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('solicitudes/recepcion/conciliacion/{token}', 'SolicitudesController@recepcion_conciliacion');
 
 Route::post('usuarios', 'UsersController@store');
-Route::resource('solicitudes', 'SolicitudesController'); 
-Route::post('solicitudes/expediente', 'SolicitudesController@storeExpediente');
+Route::resource('solicitudes', 'SolicitudesController');
+//Route::post('solicitudes/expediente', 'SolicitudesController@storeExpediente');
 /* 
 Route::get('solicitudes/view/{token}', 'SolicitudesController@waitRoom');
 Route::post('solicitudes/user/register', 'SolicitudesController@userRegister');
@@ -497,7 +503,12 @@ Route::post('/solicitudes/conciliacion/recepcion', 'SolicitudesController@solici
 
 Route::get('/solicitudes/expedientes/recepcion', 'SolicitudesController@solicitarExpediente');
 Route::post('/solicitudes/expedientes/recepcion', 'SolicitudesController@solicitarExpedienteStore');
+Route::get('/solicitudes/recepcion/expedientes/{token}', 'SolicitudesController@recepcion_expediente');
 
+Route::post('/solicitudes/registro/usuario', 'SolicitudesController@userRegister');
+
+
+Route::post('/solicitudes/buscar/number', 'SolicitudesController@buscarSolicitud');
 
 Route::get('recepcion', "SolicitudesController@recepcion");
 /* 

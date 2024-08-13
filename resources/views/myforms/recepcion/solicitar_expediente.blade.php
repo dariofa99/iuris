@@ -18,19 +18,27 @@
                 'visible' => true,
                 'title' => 'Solicitud',
                 'message' =>
-                    "Diligencia el siguiente formulario con la información de la persona que solicita la asesoría, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Solo los campos marcados con (*) son obligatorios.",
-                'view' => 'myforms.recepcion.expedientes.frm_parte_solicitante',
+                    "Diligencia el siguiente formulario con la información de la persona que solicita la asesoría, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Todos los campos son obligatorios.",
+                'view' => 'myforms.recepcion.frm_solicitud_form',
             ],
             1 => [
                 'id' => 'btn_sala_espera',
                 'tipo_usuario' => 195,
                 'visible' => true,
                 'title' => 'Espera',
-                'message' => 'Espera el turno, cuando un asesor este disponible se activará la sala de chat',
+                'message' => 'Espera el turno, cuando un asesor este disponible revisará la solicitud.',
                 'view' => 'myforms.recepcion.expedientes.sala_espera.sala_espera',
             ],
             2 => [
-                'id' => 'btn_registrar_apod_sol',
+                'id' => 'btn_culminar_regus',
+                'tipo_usuario' => 196,
+                'visible' => true,
+                'title' => 'Registro',
+                'message' => 'Para activar la sala de chat se necesita terminar el registro.',
+                'view' => 'myforms.recepcion.expedientes.frm_parte_solicitante',
+            ],
+            3 => [
+                'id' => 'btn_',
                 'tipo_usuario' => 196,
                 'visible' => true,
                 'title' => 'Virtual',
@@ -39,29 +47,37 @@
             ],
         ];
 
-        if (isset($conciliacion)) {
-            if ($paso >= '2') {
-                $user = $conciliacion->getUser(205); //solicitante
-                if ($user->tipopers_id == 238) {
-                    //$before = $pasos[($paso - 1)];
-                    $pasos[1]['visible'] = true;
-                }
-            }
-
-            if ($paso >= '6') {
-                $user = $conciliacion->getUser(197); //solicitado
-
-                if ($user->tipopers_id == 238) {
-                    $pasos[5]['visible'] = true;
-                }
-            }
-        }
         $num_pasos = count($pasos);
     @endphp
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            @if (!isset($solicitud))
+                <div class="col-md-3">
+
+                    <div class="card">
+                        <div class="card-header">
+                            Recuperar solicitud
+                        </div>
+                        <div class="card-body">
+                            <form id="myFormBuscarSolicitud">
+                                <div class="form-group has-feedback"><label for="name">No. Solicitud<span
+                                            class="ast_required">*</span></label>
+                                    <input id="number" value="" name="codigo_solicitud" required type="text"
+                                        class="form-control form-control-sm onlynumber required" data-toggle="tooltip"
+                                        title="" placeholder="Número de solicitud" maxlength="20"
+                                        data-original-title="Número de solicitud">
+
+                                </div>
+                                <button type="submit" class="btn btn-success">
+                                    BUSCAR
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            <div class="col-md-9">
 
                 <div class="card">
                     <div class="card-header">
@@ -83,11 +99,11 @@
                         @if ($paso == 1)
                             @include($pasos[0]['view'])
                         @else
-                            @include($pasos[$paso - 1]['view'], ['token' => 1234])
-                            @if (isset($conciliacion))
-                                <input type="hidden" value="{{ $conciliacion->id }}" name="conciliacion_id"
-                                    id="conciliacion_id">
+                            @if (isset($solicitud))
+                                <input type="hidden" value="{{ $solicitud->id }}" name="solicitud_id" id="solicitud_id">
                             @endif
+                            @include($pasos[$paso - 1]['view'], ['token' => $solicitud->number])
+
                             {{-- @include($pasos[intval($paso)-1]['view'],[
                 'conciliacion'=>$conciliacion,
                 'tipo_usuario_id'=>$pasos[$paso-1]['tipo_usuario']
@@ -135,8 +151,7 @@
             </div>
         </div>
     </div>
-    @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
-    @include('myforms.conciliaciones.componentes.modal_create_document')
+    @include('myforms.recepcion.expedientes.chat.frm_modal_create_document')
 
 @endsection
 @php
@@ -150,7 +165,17 @@
     <script type="module" src={{asset("js/users.js")}}></script>
     --}}
     <script src="{{ asset('/plugins/dropzone59/dropzone59.js') }}"></script>
-    <script src={{ asset('js/dropzone_anexos.js') }}></script>
+    <script src={{ asset('js/dropzone_anexos_solicitudes.js') }}></script>
 
     <script type="module" src={{ asset('js/recepcion_expedientes.js') }}></script>
+    <script>
+        var channel = Echo.channel('cambiosEstadoSolicitud');
+
+        channel.listen('.solicitud-estados', function(data) {
+            var myTk = $("#solicitudTk").val()
+            if (myTk == data.data.token) {
+                location.reload()
+            }
+        });
+    </script>
 @endpush

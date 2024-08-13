@@ -580,3 +580,15 @@ function validateNotas(form) {
     });
     return errors
 } 
+function ocultarCompDiscapUser() {
+    $(".discaform").hide();
+    $("#has_apoyo").prop("disabled", true).val("");
+    $("#acept_ter").prop("disabled", true).prop("checked", false);
+    $(".has_apoyo").hide()
+}
+
+function mostrarCompDiscapUser() {
+    $(".discaform").show();
+    $(".has_apoyo").hide()
+    $("#has_apoyo").prop("disabled", false)
+}

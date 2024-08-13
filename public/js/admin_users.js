@@ -183,6 +183,51 @@ $(document).ready(function () {
   });
 
 
+  $("#myFormChangeEmailAccount").on("submit", async function (e) {
+    e.preventDefault()
+    var errors = validateForm("myFormChangeEmailAccount");
+
+    if (errors.length <= 0) {
+      var request = convertFormToJSON("myFormChangeEmailAccount");
+      
+      $("#wait").show();
+      let response = await userService.updateEmail(request);
+      if (response.errors) {
+        response.errors.forEach(error => {
+          toastr.error(error, "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+          });
+        });
+      } else {
+        Swal.fire({
+          title: "La solicitud se ha creado con éxito!",
+          html: `<h5>Hemos enviado un correo electrónico con el enlace 
+        para activar la cuenta.</h5>`,
+          type: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Continuar..!",
+          allowOutsideClick: false, // Permitir clic fuera del modal
+          allowEscapeKey: false, // Permitir escape para cerrar el modal
+          backdrop: true // Mostrar el backdrop (fondo sombreado)
+
+      }).then((result) => {
+          if (result.value) {
+              // console.log(response);
+              window.location = "/login";
+          }
+      });
+      }
+     // window.location.reload();
+    } else {
+      toastr.error("Revisa en los demas formularios que no hayan campos obligatorios sin registrar", "", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+    }
+    $("#wait").hide();
+  });
+
   $("#btn_actualizar_usuario").on("click", async function (e) {
 
     var errors = validateForm("myFormUserEdit");
@@ -217,6 +262,9 @@ $(document).ready(function () {
       });
     }
   });
+
+
+
   $("#update_profile_picture").on("click", function (e) {
     $("#file_picture").trigger("click");
 
@@ -277,7 +325,7 @@ $(document).ready(function () {
     var response = await userService.findUserByJson(request);
     if (response) {
       console.log(response);
-      var user = response.find((user) => (user.cedula == request.idnumber && user.cod_alumno == request.codigo_estudiantil));
+      var user = response.find((user) => (user.identificacion == request.idnumber && user.codigo_alumno == request.codigo_estudiantil));
       if (user != undefined) {
         let timerInterval
         Swal.fire({
@@ -294,7 +342,7 @@ $(document).ready(function () {
             }, 100);
 
             request['idrol'] = 6;
-            request['active'] = 1;
+            //request['active'] = 0;
             request['name'] = user.nombres;
             request['lastname'] = user.apellidos;
             request['password'] = 'udenarcj'

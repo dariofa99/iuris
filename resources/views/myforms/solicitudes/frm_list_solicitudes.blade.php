@@ -2,7 +2,10 @@
 @section('titulo_area')
     Solicitudes
 @endsection
-
+@section('navbar')
+    <!-- aqui va el menu de cada vista -->
+    @include('content.navbar')
+@endsection
 @section('area_forms')
 
     @include('msg.success')
@@ -17,8 +20,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link urlactive" id="historial" data-toggle="tab" href="#historial-tab"
-                        role="tab" aria-controls="historial" aria-selected="false">
+                    <a class="nav-link urlactive" id="historial" data-toggle="tab" href="#historial-tab" role="tab"
+                        aria-controls="historial" aria-selected="false">
                         Historial
                     </a>
                 </li>
@@ -30,14 +33,26 @@
             <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
 
                 <div class="tab-pane fade active show" id="revisar-tab" role="tabpanel" aria-labelledby="revisar-tab">
-                        @include('myforms.solicitudes.frm_list_solicitudes_ajax')
+                    @include('myforms.solicitudes.frm_list_solicitudes_ajax')
                 </div>
 
                 <div class="tab-pane fade" id="historial-tab" role="tabpanel" aria-labelledby="historial-tab">
-                        @include('myforms.solicitudes.frm_list_solicitudesh_ajax')
-               </div>
+                    @include('myforms.solicitudes.frm_list_solicitudesh_ajax')
+                </div>
             </div>
         </div>
     </div>
 
 @stop
+@push('scripts')
+    <script>
+        var channel = Echo.channel('recepcionStoreEvent');
+
+        channel.listen('.recepcion-storeEvent', function(data) {
+            $("#revisar-tab").html(data.data.view);
+            toastr.success("Se agregó una nueva solicitud", "", {
+                timeOut: "4000",
+            });
+        });
+    </script>
+@endpush
