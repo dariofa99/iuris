@@ -463,9 +463,10 @@ class UsersController extends Controller
   }
   public function activateAccount(Request $request, $token)
   {
-    $user = $this->userService->findWithFilter([
+    /* $user = $this->userService->findWithFilter([
       "confirm_token" => $token
-    ]);   
+    ]);  */  
+    $user = User::where("confirm_token",$token)->first();
     try {
     
 
