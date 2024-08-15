@@ -73,6 +73,18 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $this->applyValidateSede();
         return $this->query//->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
         ->where('expedientes.expidnumberest', '<>', 3030)  
+        ->where(function($query) use ($request) {
+            if (!$request->has('data') and 
+            !$request->has('search_onlyMy_exp')
+            || ($request->has('search_onlyMy_exp') 
+            and $request->input('search_onlyMy_exp') != 'off')){
+                $query->where([
+                    ["expestado_id","<>",2],
+                    ["expestado_id","<>",7],
+                    ["expestado_id","<>",8],                    
+                ]);
+            }
+        })  
         ->where(function ($query) use ($request) {
                 if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
                     and (!$request->has('search_onlyMy_exp') 
@@ -100,6 +112,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 }
             }) 
             ->Criterio($request)
+            ->orderByRaw($order)
             ->orderBy("expedientes.created_at","DESC")
             ->paginate(10);
     }

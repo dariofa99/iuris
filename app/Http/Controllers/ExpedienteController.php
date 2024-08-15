@@ -84,11 +84,11 @@ class ExpedienteController extends Controller
   public function index(Request $request)
   {
     if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
-
     $expedientes = $this->expedienteService->index($request);
-   // dd($request->all());
+   // $expedientes = [];
     $count_colors = [];// $this->expedienteService->getColorsAsesorias($request);
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+      //$expedientes = $this->expedienteService->index($request);   
       $res = [];
       $view = view('myforms.frm_expediente_list_ajax', compact('expedientes', 'count_colors'))->render();
       $res["view"] = $view;

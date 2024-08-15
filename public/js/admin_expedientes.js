@@ -3,6 +3,7 @@ import { ExpedientesService } from './services/expedientes.js';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
+    
     if ($("#expediente_id").val() != undefined) {
         $(":input").inputmask();
         set_tab();
