@@ -131,10 +131,15 @@ $(document).ready(function () {
 	$("#guardar_horario_doc").click(async function () {
 		var mydata = [];
 		var docidmunber = $("#select_doc_horario").val();
-		//console.log(dias);
+		console.log(dias);
 		if (dias.length > 0) { // insertar o eliminar dias
 			$(dias).each(function (key, value) {
+				console.log(value);
+				
 				var v_info_id = value.split("_");
+
+				console.log(v_info_id);
+
 				if ($("#" + value).prop('checked')) { //crea el registro
 					if (v_info_id.length == 2) {
 						var hora_ini_i = getTwentyFourHourTime($("#hora_ini_doc_" + v_info_id[1]).val());
@@ -211,6 +216,7 @@ $(document).ready(function () {
 		console.log(mydata);
 		if (mydata.length > 0) { //comprueba si hay informacion para guardar
 			let res = await horariosService.updateTurnosDocente(mydata);
+			dias=[];
 			consultar_horario(docidmunber);
 			Toast.fire({
 				title: 'Actualizado con éxito.',
