@@ -3,10 +3,14 @@ import { ExpedientesService } from './services/expedientes.js';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
-    
+
     if ($("#expediente_id").val() != undefined) {
         $(":input").inputmask();
         set_tab();
+        $("#myFormUserEditExpediente input[name='tel1']")
+            .prop("disabled", true).removeAttr("name");
+        $("#myFormUserEditExpediente input[name='tel2']")
+            .prop("disabled", true).removeAttr("name")
     }
     $("#search_onlyMy_exp").on("change", async function () {
         buscarExp()
@@ -25,7 +29,7 @@ $(document).ready(function () {
             request['search_onlyProJur'] = 'search_onlyProJur';
         }
         $("#wait").show();
-        var page = "expedientes";        
+        var page = "expedientes";
         let res = await index_page(page, request);
         $("#wait").hide();
     });
@@ -46,7 +50,7 @@ $(document).ready(function () {
         if (opselected != '' && opselected != null) request['tipo_busqueda'] = opselected;
         if (dataselected != '' && dataselected != null) request['data'] = dataselected;
         $("#wait").show();
-        var page = "expedientes";     
+        var page = "expedientes";
         let res = await index_page(page, request);
         $("#wait").hide();
     }
@@ -192,11 +196,11 @@ $(document).ready(function () {
         }
         $("#wait").show();
         let response = await expedientesService.getPausasExpediente(request);
-        
+
         if (response.length > 0) {
             var tr = "";
             response.forEach(pausa => {
-                const fechaInicial = moment(pausa.fecha_inicial); 
+                const fechaInicial = moment(pausa.fecha_inicial);
                 const fechaFinal = moment(pausa.fecha_final);
                 const diferenciaDias = fechaFinal.diff(fechaInicial, 'days');
                 tr += `
@@ -213,7 +217,7 @@ $(document).ready(function () {
                 </tr>
                 `;
             });
-            $("#tbl_list_p_c tbody").html(tr);           
+            $("#tbl_list_p_c tbody").html(tr);
         }
         $("#wait").hide();
         $("#mymodalPausarExpediente").modal("show")
@@ -836,7 +840,7 @@ $(document).ready(function () {
 
     $("#content_user_exp_asig")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-           
+
             if ($(this).val() == 1) {
                 //$(".discaform").show();
                 mostrarCompDiscapUser()
@@ -846,9 +850,9 @@ $(document).ready(function () {
             }
         });
 
-        $("#myModal_exp_user_edit")
+    $("#myModal_exp_user_edit")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-           
+
             if ($(this).val() == 1) {
                 //$(".discaform").show();
                 mostrarCompDiscapUser()
@@ -857,7 +861,7 @@ $(document).ready(function () {
 
             }
         });
-        $("#myModal_exp_user_edit")
+    $("#myModal_exp_user_edit")
         .on("change", "select[name='has_apoyo']", function (e) {
             if ($(this).val() == 1) {
                 $(".has_apoyo").show()
@@ -886,7 +890,7 @@ $(document).ready(function () {
         if (errors.length <= 0) {
             var request = convertFormToJSON("myFormUserCreateExpediente");
             var data = userService.getAditionalDataByForm("myFormUserCreateExpediente")
-            request["data"] = (data);           
+            request["data"] = (data);
             $("#wait").show();
             let response = await userService.registrar(request);
             if (response.errors) {
@@ -1524,7 +1528,7 @@ $(document).ready(function () {
         }
         Swal.fire({
             title: '¿Esta seguro de cambiar la actuación?',
-            html:"La actuación pasará como anexo en estado revisado. No se podrá revertir los cambios",
+            html: "La actuación pasará como anexo en estado revisado. No se podrá revertir los cambios",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1540,19 +1544,19 @@ $(document).ready(function () {
                     timeOut: "6000",
                 });
                 location.reload(true)
-               
+
             }
         });
 
 
-        
-              
+
+
 
 
 
 
     })
-   
+
 
     $(".buscar_actuacion").on("click", async function (e) {
         e.preventDefault();
@@ -2349,7 +2353,7 @@ $(document).ready(function () {
             var request = convertFormToJSON('myform_addnew_nota_final_expedientes');
             if ($("#nota_destino").val() == "cerrarPeriodo") {
                 errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 5);
-            }else{
+            } else {
                 errors = validarNotas(errors, 'myform_addnew_nota_final_expedientes', 3);
             }
             if (errors <= 0) {
