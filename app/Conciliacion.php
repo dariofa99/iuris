@@ -5,12 +5,13 @@ namespace App;
 use App\Http\Controllers\ConcHechosPretencionesController;
 use Illuminate\Database\Eloquent\Model;
 use App\ReferencesStaticData;
+use App\Traits\RefDataManage;
 use App\Traits\UploadFile;
 use Illuminate\Support\Facades\DB;
 
 class Conciliacion extends Model
 {
-    use UploadFile;
+    use UploadFile,RefDataManage;
 
     public $disk = 'conciliacion_files';
     protected $table = 'conciliaciones';
@@ -122,36 +123,6 @@ class Conciliacion extends Model
         ->withPivot('id','conciliacion_id','exp_id','type_status_id','user_id','actuacion_id')->withTimestamps(); 
      }
 
-    public function getStaticDataValByShortName($name,$section,$option_id=null){
-        $ref_data = ReferencesData::where(
-            ['short_name'=>$name,
-            'section'=>$section
-            ])->first();
-        
-
-         if ($ref_data) {           
-            $data = $this->aditional_static_data()
-            ->where([
-                'reference_data_id'=>$ref_data->id,
-                'reference_data_option_id'=>$option_id == null ? $ref_data->options[0]->id : $option_id
-                    ])->first();
-            if($data){               
-                return $data;
-            }
-        }
-        ;
-       return false;
-    }
-
-    public function getStaticDataLabel($name,$section){
-        $ref_data = ReferencesStaticData::where(['name'=>$name,'section'=>$section])->first();
-      //dd( $ref_data->options[0]);
-        if ($ref_data) {  
-                $ref_data->options ;//= $ref_data->options;     
-                return $ref_data;            
-        }
-       return false; 
-    }
 
     public function getUser($tipo_usuario){
       $user =  $this->usuarios()->where('tipo_usuario_id',$tipo_usuario)

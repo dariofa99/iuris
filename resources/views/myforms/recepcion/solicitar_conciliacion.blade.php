@@ -38,7 +38,7 @@ $pasos = [
     "tipo_usuario"=>000,
      "visible"=>true,
      "title"=>"Asunto",
-     "message"=>"Diligencia el siguiente formulario con la información del <b>asunto</b> de la conciliación. Recuerda que la cuantia no debe ser superior a dos salarios mínimos. Los campos marcados con (*) son obligatorios.",
+     "message"=>"Diligencia el siguiente formulario con la información del <b>asunto</b> de la conciliación. Recuerda que la cuantía debe ser máximo 50 salarios mínimos (tenga en cuenta que la cuantía es el valor que se genera al sumar el total de las pretensiones, si no es posible determinar el valor digitar indeterminada). Los campos marcados con (*) son obligatorios.",
      "view"=>"myforms.recepcion.frm_asunto"
   ],
   4=>[
@@ -62,7 +62,7 @@ $pasos = [
      "tipo_usuario"=>000,
      "visible"=>true,
      "title"=>"Asunto a conciliar",
-     "message"=>"Resuma los hechos y pretensiones de la conciliación y suba los siguientes archivos en pdf.<br>Copia de documento de identidad - Pruebas que apoyen el proceso.",
+     "message"=>"Recuerde enumerar los hechos al igual que las pretensiones. La cédula debe subirse de ambos lados y ser legible al igual que los anexos.",
      "view"=>"myforms.recepcion.frm_anexos"
   ]
  

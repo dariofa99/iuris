@@ -7,16 +7,43 @@ const conciliacionService = new ConciliacionService();
 const solicitudesService = new SolicitudesService();
 $(function () {
 
- if($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled',true)
+  if ($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled', true)
 
-  $("#content_data_conciliaciones select[name='tipodoc_id'] option").each(function() {
+  $("#myFormParteSolicitante select[name='tipodoc_id'] option").each(function () {
     var valor = $(this).val();
-    
+
     if (valor == "236" || valor == "248") {
-        $(this).remove(); // Elimina la opción
+      $(this).remove(); // Elimina la opción
     }
-    
-});
+
+  });
+
+  $("#myFormApoderado select[name='tipodoc_id'] option").each(function () {
+    var valor = $(this).val();
+
+    if (valor == "236" || valor == "248") {
+      $(this).remove(); // Elimina la opción
+    }
+
+  });
+
+  $("#myFormParteConvocada select[name='tipodoc_id'] option").each(function () {
+    var valor = $(this).val();
+
+    if (valor == "248") {
+      $(this).remove(); // Elimina la opción
+    }
+
+  });
+
+  $(".myFormParteConvocada select[name='tipodoc_id'] option").each(function () {
+    var valor = $(this).val();
+
+    if (valor == "236" || valor == "248") {
+      $(this).remove(); // Elimina la opción
+    }
+
+  });
 
   $("#btn_registrar_conc").on("click", async function (e) {
     e.preventDefault();
@@ -38,7 +65,11 @@ $(function () {
         html: 'Estamos registrando su solicitud',
         timer: 10000,
         timerProgressBar: true,
-        allowOutsideClick: false,
+
+        allowOutsideClick: false, // Permitir clic fuera del modal
+        allowEscapeKey: false, // Permitir escape para cerrar el modal
+        backdrop: true, // Mostrar el backdrop (fondo sombreado)
+
         didOpen: () => {
           Swal.showLoading()
           // const b = Swal.getHtmlContainer().querySelector('b')
@@ -54,7 +85,7 @@ $(function () {
         if (result.dismiss === Swal.DismissReason.timer) {
           console.log('I was closed by the timer')
         }
-      })
+      });
       var data = [];
       $(".input_user_ad").each((index, obj) => {
         data.push({
@@ -68,6 +99,7 @@ $(function () {
         });
       });
       request["data"] = (data);
+      request['active'] = 1;
       let response = await solicitudesService.solicitar(request);
       if (response.errors) {
         Swal.close();
@@ -86,6 +118,9 @@ $(function () {
           type: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Continuar..!",
+          allowOutsideClick: false, // Permitir clic fuera del modal
+          allowEscapeKey: false, // Permitir escape para cerrar el modal
+          backdrop: true // Mostrar el backdrop (fondo sombreado)
 
         }).then((result) => {
           if (result.value) {
@@ -111,6 +146,17 @@ $(function () {
 
   $("#myFormParteConvocada").on("focus", "input[name='idnumber']", validateTypeDoc);
 
+  $("#contentFormsParteCovocada").on("focus", "input[name='idnumber']", validateTypeDoc);
+
+  $("#contentFormsParteCovocada").on("change", "select[name='tipodoc_id']", async function (e) {
+    let value = $(this).val()
+    var formId = $(this).closest('.myFormParteConvocada').attr('id');
+    let idnumber = $("#" + formId + " input[name='idnumber']").val()
+    if (idnumber != '') {
+      resetForm(formId)
+      $(this).val(value)
+    }
+  });
 
 
   $("#myFormRepLegal").on("blur", "input[name='idnumber']", async function () {
@@ -148,38 +194,93 @@ $(function () {
       });
     }
   });
+  $("#contentFormsParteCovocada input[name='idnumber']").on("blur", async function (e) {
+    var formId = $(this).closest('.myFormParteConvocada').attr('id');
+    console.log($(this).val())
+    var lastidnumber = $(this).val();
+    userService.alertValidateUser(lastidnumber, formId);
+    $(this).val("");
+
+  });
+
+  $("#contentFormsParteCovocada").on("click", ".btn_disabled_email", async function (e) {
+    var formId = $(this).closest('.myFormParteConvocada').attr('id');
+    let idnumber = $("#" + formId + " input[name='idnumber']").val()
+    if (idnumber != '') {
+      if($("#" + formId + " input[name='id']").val()==undefined){
+        $("#" + formId + " input[name='email']").val(idnumber+"@mail.com")
+        .prop("readonly",true)
+      }
+      
+    }else{
+      toastr.error("", "Primero ingrese un número de documento valido", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+    }
+
+  });
 
   $("#btn_parte_convocada").on("click", async function () {
-    $("#wait").show();
+    // $("#wait").show();
     if (!$("#chk_not_parte").is(":checked")) {
-      $("#myFormParteConvocada textarea").prop('disabled', true);
-      var errors = validateForm("myFormParteConvocada");
-      if (errors.length <= 0) {
-        addUserByStep("myFormParteConvocada", this, 6)
-      }
-    } else {
-      if ($("#myFormParteConvocada textarea").val() != '') {
-        //validateForm("myFormParteConvocada");
-        var request = {};
-        request["conciliacion_id"] = $("#conciliacion_id").val();
-        var data = [];
-        $(".input_user_ad").each((index, obj) => {
-          data.push({
-            value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-            section: $(obj).attr("data-section"),
-            type: $(obj).attr("data-type"),
-            name: $(obj).attr("data-name"),
-            option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-            value_is_other: "",
-            conciliacion_id: $("#conciliacion_id").val()
-          });
+      let insert = true;
+      $(".myFormParteConvocada").each(async function (index, obj) {
+        var form = $(obj).attr("id")
+        var errors = validateForm(form);
+        if (errors.length > 0) {
+          insert = false;
+          // return
+        }
+      });
+      if (insert) {
+        let timerInterval
+        var response_
+        Swal.fire({
+          title: 'Espere por favor!',
+          html: 'Estamos registrando su solicitud',
+          timer: 5000,
+          timerProgressBar: true,
+
+          allowOutsideClick: false, // Permitir clic fuera del modal
+          allowEscapeKey: false, // Permitir escape para cerrar el modal
+          backdrop: true, // Mostrar el backdrop (fondo sombreado)
+
+          didOpen: () => {
+            Swal.showLoading()
+            // const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+              //b.textContent = Swal.getTimerLeft()
+            }, 100)
+          },
+          willClose: () => {
+            clearInterval(timerInterval)
+          }
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('I was closed by the timer')
+            window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + 6;
+
+          }
         });
-        request["data"] = (data);
-        let response_ = await conciliacionService.addAditionalData(request);
-        window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + 6;
-      } else {
-        var errors = validateForm("myFormParteConvocada");
+        let typeId = $(this).attr("data-type")
+        $(".myFormParteConvocada").each(async function (index, obj) {
+          var form = $(obj).attr("id")
+          var errors = validateForm(form);
+
+          if (errors.length <= 0) {
+            var request = convertFormToJSON(form);
+            request['conciliacion_id'] = $("#conciliacion_id").val()
+            request['tipo_usuario'] = typeId;
+            response_ = await conciliacionService.addUser(request);
+          }
+        });
+
       }
+
+    } else {
+     
     }
     $("#wait").hide();
   });
@@ -242,20 +343,20 @@ $(function () {
     $("#myformCreateHechoPretension input[name=tipo_id]").val($(this).attr('data-tipo'));
     $("#content_create_descrip_hepr").html("");
     $("#btn_add_he_pret_input").show()
-    var key = $(".count_input_descrip_hepr_"+$(this).attr('data-tipo')).length + 1;
-    var lbl="";
-    if($(this).attr('data-tipo') == 206) lbl = "Descripción de los hechos" ;
-    if($(this).attr('data-tipo') == 207) lbl = "Descripción de la pretensión" ;
-    if($(this).attr('data-tipo') == 208) lbl = "Descripción del acuerdo" ;
+    var key = $(".count_input_descrip_hepr_" + $(this).attr('data-tipo')).length + 1;
+    var lbl = "";
+    if ($(this).attr('data-tipo') == 206) lbl = "Descripción de los hechos";
+    if ($(this).attr('data-tipo') == 207) lbl = "Descripción de la pretensión";
+    if ($(this).attr('data-tipo') == 208) lbl = "Descripción del acuerdo";
 
-    if($(this).attr('data-tipo') == 206) $("#btn_add_he_pret_input").text("Agregar otro hecho") ;
-    if($(this).attr('data-tipo') == 207) $("#btn_add_he_pret_input").text("Agregar otra pretension") ;
-    if($(this).attr('data-tipo') == 208) $("#btn_add_he_pret_input").text("Agregar otro acuerdo") ;
+    if ($(this).attr('data-tipo') == 206) $("#btn_add_he_pret_input").text("Agregar otro hecho");
+    if ($(this).attr('data-tipo') == 207) $("#btn_add_he_pret_input").text("Agregar otra pretension");
+    if ($(this).attr('data-tipo') == 208) $("#btn_add_he_pret_input").text("Agregar otro acuerdo");
 
-   /*  var lbl = $(this).attr('data-tipo') == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones"
-    $(this).attr('data-tipo') == 206 ? $("#btn_add_he_pret_input").text("Agregar otro hecho") :
-    $("#btn_add_he_pret_input").text("Agregar otra pretension") */
-    
+    /*  var lbl = $(this).attr('data-tipo') == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones"
+     $(this).attr('data-tipo') == 206 ? $("#btn_add_he_pret_input").text("Agregar otro hecho") :
+     $("#btn_add_he_pret_input").text("Agregar otra pretension") */
+
     var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
         <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
@@ -268,39 +369,39 @@ $(function () {
     $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos" : "Agregando pretensiones")
   });
 
-  $(".btn_create_document").on("click",async function (e) {
+  $(".btn_create_document").on("click", async function (e) {
     $("#cont_files input[name=category_id]").remove();
     $("#cont_files").append(
-      $("<input>", { 
+      $("<input>", {
         type: 'hidden',
         value: $(this).attr("data-category"),
         name: "category_id",
-        id:"anexo_category_id"
+        id: "anexo_category_id"
       })
     )
 
     $("#cont_files").append(
-      $("<input>", { 
+      $("<input>", {
         type: 'hidden',
         value: 'anexos_ajax',
         name: "view_template",
-        id:"view_template"
+        id: "view_template"
       }));
 
     var request = {
-      'conciliacion_id':$("#conciliacion_id").val(),
-      'category_id':$(this).attr("data-category")
+      'conciliacion_id': $("#conciliacion_id").val(),
+      'category_id': $(this).attr("data-category")
     }
     var files = await conciliacionService.getFilesByCategory(request);
     files.files.forEach(element => {
-     if(element.pivot.concepto=='Documento de identidad'){
-      $("#actions_upload_logs span[id=documento_identidad]").remove();
-     }
-     if(element.pivot.concepto=='Cert. de existencia y Rep. legal'){
-      $("#actions_upload_logs span[id=registro]").remove();
-     }
+      if (element.pivot.concepto == 'Documento de identidad') {
+        $("#actions_upload_logs span[id=documento_identidad]").remove();
+      }
+      if (element.pivot.concepto == 'Cert. de existencia y Rep. legal') {
+        $("#actions_upload_logs span[id=registro]").remove();
+      }
     });
-    
+
     $("#myformCreateConciliacionAnexo button[type=submit]").text("Crear");
     $("#myModal_create_document .modal-title").text("Creando anexo");
     $("#myModal_create_document").modal("show");
@@ -308,10 +409,10 @@ $(function () {
 
   $("#myModalCreateConcHechosPretensiones").on("submit", '#myformCreateHechoPretension', async function (e) {
     e.preventDefault()
-   
+
     var errors = validateForm('myformCreateHechoPretension');
     console.log(errors);
-    if(errors.length<=0){
+    if (errors.length <= 0) {
       $("#myModalCreateConcHechosPretensiones").modal('hide');
       $("#wait").show();
       var request = convertFormToJSON("myformCreateHechoPretension");
@@ -323,16 +424,16 @@ $(function () {
       }
       $("#wait").hide();
     }
-   
+
   });
 
   $("#myModalCreateConcHechosPretensiones").on("click", '#btn_add_he_pret_input', async function (e) {
     e.preventDefault();
     var tipo = $("#myformCreateHechoPretension input[name='tipo_id']").val();
     console.log(tipo);
-    var key = $(".count_input_descrip_hepr_"+tipo).length + 1
+    var key = $(".count_input_descrip_hepr_" + tipo).length + 1
     var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
-    
+
     var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
         <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
@@ -391,13 +492,13 @@ $(function () {
     $("#myformEditHechoPretension input[name=tipo_id]").val(response.tipo_id)
     $("#btn_add_he_pret_input").hide()
     $("#content_create_descrip_hepr").html("");
-    var lbl="Actualizando";
+    var lbl = "Actualizando";
     var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
         <label for="description" id="lbl_descrip_hepr">${lbl}</label>
         <textarea name="descripcion" class="form-control required" rows="2">${response.descripcion}</textarea>
       </div>`;
-    $("#content_create_descrip_hepr").html(row);    
+    $("#content_create_descrip_hepr").html(row);
     $("#wait").hide();
     $("#myModalCreateConcHechosPretensiones").modal('show');
   });
@@ -466,8 +567,10 @@ $(function () {
 
   $("#btn_solicitar_conciliacion").on("click", function (e) {
     e.preventDefault();
-    var files = $(".files").length;
+    var files = $(".file-row").length;
     var anexos = $(".content_he_pret").length
+    console.log(files);
+    
     if (files <= 0) {
       Swal.fire({
         title: "Recuerda subir los anexos requeridos!",

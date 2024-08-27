@@ -50,6 +50,7 @@ myDropzone_log.on("addedfile", function (file) {
     }
     $(file.previewElement.querySelector("img")).css({ 'height': '70px', 'width': '80px' });
     $(file.previewElement.querySelector("button")).attr("data-clickeable", clickableId.id)
+    $(file.previewElement.querySelector("button")).attr("data-category", clickableId.id)
  
   } else {
     Swal.fire({

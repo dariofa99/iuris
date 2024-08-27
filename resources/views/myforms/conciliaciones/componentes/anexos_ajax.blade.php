@@ -11,12 +11,14 @@
                         </td>
                      
                             <td width="4%">
-                                <a class="btn btn-block btn-warning" toltip="Vista previa del  documento" target="_blank" href="/conciliaciones/download/file/{{$file->pivot->file_id}}">
-                                <i class="fa fa-download"></i>
+                                <a title="Descargar documento" class="btn btn-block btn-warning" toltip="Vista previa del  documento" target="_blank" href="/conciliaciones/download/file/{{$file->pivot->file_id}}">
+                                <i class="fa fa-download">
+                                    Descargar
+                                </i>
                                 </a>
                                 @if((currentUserInConciliacion($conciliacion->id,['autor'])))
-                                <a class="btn btn-block btn-danger btn_delete_anxcon" data-file="{{$file->pivot->file_id}}" toltip="Elimianr" href="#">
-                                    <i class="fa fa-trash"></i>
+                                <a class="btn btn-block btn-danger btn_delete_anxcon" data-file="{{$file->pivot->file_id}}" title="Eliminar documento" href="#">
+                                    <i class="fa fa-trash"> Eliminar</i>
                                     </a>
                                     @endif
 

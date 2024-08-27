@@ -3,7 +3,7 @@
         myModal_create_document
     @endslot
 
-    @slot('title') 
+    @slot('title')
         Agregando anexo
     @endslot
 
@@ -13,29 +13,29 @@
             <div class="col-12">
                 <div id="actions_upload_logs">
                     <!-- The fileinput-button span is used to style the file input field as button -->
-                    <span class="btn btn-primary btn-sm fileinputclickable" data-text="Documento de identidad"  id="documento_identidad">
+                    <span class="btn btn-primary btn-sm fileinputclickable" data-category="233" data-text="Documento de identidad"
+                        id="documento_identidad">
                         <i class="fa fa-upload"></i>
                         <span>Subir documento identidad</span>
-                    </span> 
-                    @php
-                    if(isset($conciliacion)){
-                        $parte_convx = $conciliacion->getUser(197);
-                    }
-                       
-                    @endphp
-                    @if(isset($conciliacion) and isset($parte_convx) and $parte_convx->tipopers_id==238)
-                    <span class="btn btn-primary btn-sm fileinputclickable" 
-                    data-text="Cert. de existencia y Rep. legal" id="registro">
-                        <i class="fa fa-upload"></i>
-                        <span>Cert. de existencia y Rep. legal</span>
                     </span>
+                    @php
+                        if (isset($conciliacion)) {
+                            $parte_convx = $conciliacion->getUser(197);
+                        }
+
+                    @endphp
+                    @if (isset($conciliacion) and isset($parte_convx) and $parte_convx->tipopers_id == 238)
+                        <span class="btn btn-primary btn-sm fileinputclickable" data-text="Cert. de existencia y Rep. legal"
+                            id="registro">
+                            <i class="fa fa-upload"></i>
+                            <span>Cert. de existencia y Rep. legal</span>
+                        </span>
                     @endif
-                    <span class="btn btn-primary btn-sm fileinputclickable" data-text="Otro" id="otro">
+                    <span class="btn btn-primary btn-sm fileinputclickable" data-category="232" data-text="Otro" id="otro">
                         <i class="fa fa-upload"></i>
                         <span>Subir otro</span>
                     </span>
-
-                   {{--  <button type="reset" class="btn btn-sm btn-default cancel">
+                    {{--  <button type="reset" class="btn btn-sm btn-default cancel">
                         <i class="fa fa-window-close-o"></i>
                         <span>Quitar archivos</span>
                     </button> --}}
@@ -49,18 +49,14 @@
 
             <div class="col-md-12 mt-3" id="cont_files">
                 <div class="table table-striped files" id="previews_logs">
-
                     <div id="template_3" class="file-row" style="display:block">
-
                         <div class="row">
                             <div class="col-md-3">
                                 <span class="preview"><img data-dz-thumbnail /></span>
-
                             </div>
                             <div class="col-md-4">
                                 <div class="dz-filename"><span data-dz-name class=""></span>
                                 </div>
-
                                 <div class="progress progress-striped active" role="progressbar" aria-valuemin="0"
                                     aria-valuemax="100" aria-valuenow="0">
                                     <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
@@ -69,7 +65,7 @@
                                 <p class="size" data-dz-size></p>
                             </div>
                             <div class="col-md-4">
-                               <input placeholder="Nombre del archivo"  type="text" readonly class="form-control-dropzone">
+                                <input placeholder="Nombre del archivo" type="text" readonly class="form-control-dropzone">
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-warning cancel" data-clickeable="sin">

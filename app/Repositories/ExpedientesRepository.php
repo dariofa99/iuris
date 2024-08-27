@@ -31,7 +31,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         Expediente $model,
         AsignacionDocenteCasosService $asignacionDocenteCasoService
     ) {
-        parent::__construct($model); 
+        parent::__construct($model);
         $this->periodoService = App::make(PeriodosService::class);
         $this->segmentoService = App::make(SegmentosService::class);
         $this->usersService = App::make(UsersService::class);
@@ -71,25 +71,27 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         }
 
         $this->applyValidateSede();
-        return $this->query//->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-        ->where('expedientes.expidnumberest', '<>', 3030)  
-        ->where(function($query) use ($request) {
-            if (!$request->has('data') and 
-            !$request->has('search_onlyMy_exp')
-            || ($request->has('search_onlyMy_exp') 
-            and $request->input('search_onlyMy_exp') != 'off')){
-                $query->where([
-                    ["expestado_id","<>",2],
-                    ["expestado_id","<>",7],
-                    ["expestado_id","<>",8],                    
-                ]);
-            }
-        })  
-        ->where(function ($query) use ($request) {
+        return $this->query //->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
+            ->where('expedientes.expidnumberest', '<>', 3030)
+            ->where(function ($query) use ($request) {
+                if (
+                    !$request->has('data') and
+                    !$request->has('search_onlyMy_exp')
+                    || ($request->has('search_onlyMy_exp')
+                        and $request->input('search_onlyMy_exp') != 'off')
+                ) {
+                    $query->where([
+                        ["expestado_id", "<>", 2],
+                        ["expestado_id", "<>", 7],
+                        ["expestado_id", "<>", 8],
+                    ]);
+                }
+            })
+            ->where(function ($query) use ($request) {
                 if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-                    and (!$request->has('search_onlyMy_exp') 
-                || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
-                ) {                    
+                    and (!$request->has('search_onlyMy_exp')
+                        || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
+                ) {
                     $query->whereHas('asignaciones.asig_docente', function ($q) {
                         $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
                             ->where('asignacion_docente_caso.activo', 1);
@@ -97,23 +99,22 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 } else if (currentUser()->hasRole('estudiante')) {
                     $query->whereHas('asignaciones', function ($q) {
                         $q->where('expedientes.expidnumberest', '=', currentUser()->idnumber)
-                        ->where('asignacion_caso.activo', '=', 1)
-                        ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
-                    }); 
-                    
+                            ->where('asignacion_caso.activo', '=', 1)
+                            ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
+                    });
                 }
             })
             ->where(function ($query) use ($request) {
                 if ($request->get('search_onlyProJur')) {
-                     $query->whereHas('asignaciones', function ($q) {
+                    $query->whereHas('asignaciones', function ($q) {
                         $q->where('asignacion_caso.procesojud_id', '<>', 1)
-                        ->where('asignacion_caso.activo', '=', 1);
-                    });                   
+                            ->where('asignacion_caso.activo', '=', 1);
+                    });
                 }
-            }) 
+            })
             ->Criterio($request)
             ->orderByRaw($order)
-            ->orderBy("expedientes.created_at","DESC")
+            ->orderBy("expedientes.created_at", "DESC")
             ->paginate(10);
     }
 
@@ -209,7 +210,12 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     public function asignarDocente(AsignacionCaso $asignacion_caso)
     {
         $asig_doc = DB::select(
-            DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
+            DB::raw("SELECT `docidnumber`, `name`,COUNT(`docidnumber`) AS num_casos,
+                    CASE 
+                        WHEN `docidnumber` = '98378318' THEN 4
+                       
+                        ELSE 16 -- Valor por defecto si el docidnumber no coincide con ninguno de los anteriores
+                    END AS num_hours FROM `asignacion_docente_caso`
                 JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
                 JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
                 JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
@@ -217,13 +223,13 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 JOIN role_user ON role_user.user_id = users.id
                 WHERE expedientes.exptipoproce_id = '1'
                 AND users.active = 1
-                AND users.idnumber <> 98378318
+               
                 AND  expedientes.expestado_id = '1'
                 AND (users.active_asignacion = 1)
                 AND sede_usuarios.sede_id =  '" . session('sede')->id_sede . "'
                 GROUP BY `docidnumber` ORDER BY num_casos ASC")
         );
-        
+
         $docentes = DB::table('users')
             ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
@@ -234,7 +240,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 $query->orwhere('users.active_asignacion', true);
             })
             ->where('users.active', true)
-            ->where('users.idnumber',"<>", 98378318)
+           // ->where('users.idnumber', "<>", 98378318)
             ->where('sedes.id_sede', session('sede')->id_sede)
             ->select(
                 'users.active',
@@ -248,6 +254,20 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ->orderBy('users.created_at', 'desc')
             ->groupBy('users.idnumber')->get();
 
+         /*    foreach ($asig_doc as $person) {
+                $person->num_casos = round($person->num_casos / $person->num_hours);
+            }
+            $min_casos = min(array_map(function ($person) {
+                return $person->num_casos;
+            }, $asig_doc));
+            // Filtra los elementos que tienen el valor mínimo de num_casos
+            $person_with_min_casos = array_filter($asig_doc, function ($person) use ($min_casos) {
+                return $person->num_casos == $min_casos;
+            });
+    
+            // Si necesitas solo uno de los resultados (en caso de empate)
+            $person_with_min_casos = reset($person_with_min_casos); */
+           // dd($docentes,$asig_doc,$person_with_min_casos);
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
@@ -258,6 +278,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 foreach ($docentes as $key => $docente) {
                     $found_key = array_search($docente->idnumber, array_column($asig_doc, 'docidnumber'));
                     if ($found_key === false) {
+                        
                         $this->request['docidnumber']  = $docente->idnumber;
                         $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                         break;
@@ -276,6 +297,37 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     private function getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama)
     {
         $segmento = $this->segmentoService->getSegmentoActivo();
+
+        return $asig_doc = DB::select(
+            DB::raw(
+                "SELECT `docidnumber`, `name`, COUNT(`docidnumber`) AS num_casos, 
+                    CASE 
+                        WHEN `docidnumber` = '98378318' THEN 4
+                       
+                        ELSE 16 -- Valor por defecto si el docidnumber no coincide con ninguno de los anteriores
+                    END AS num_hours
+                FROM `asignacion_docente_caso`
+                JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
+                JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
+                JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
+                JOIN user_has_ramasderecho ON user_has_ramasderecho.user_id = users.id
+                JOIN rama_derecho ON rama_derecho.id = user_has_ramasderecho.ramaderecho_id
+                JOIN periodo ON asignacion_caso.periodo_id = periodo.id        
+                JOIN sede_usuarios ON sede_usuarios.user_id = users.id
+                JOIN role_user ON role_user.user_id = users.id
+                WHERE expedientes.exptipoproce_id = '$tipoproce'        
+                AND users.active = 1 
+                AND expedientes.expestado_id = 1
+                AND (users.active_asignacion = 1)
+                AND asignacion_docente_caso.activo = 1
+                AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
+                AND rama_derecho.subrama = '" . $subRama . "'
+                GROUP BY `docidnumber` 
+                ORDER BY num_casos ASC"
+            )
+        );
+
+
         return $asig_doc = DB::select(
             DB::raw(
                 "SELECT `docidnumber`, `name`, COUNT(`docidnumber`) AS num_casos 
@@ -306,13 +358,26 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     public function asignargDocenteSeguimiento($asignacion_caso, $tipoproce)
     {
         $subRama =  $asignacion_caso->expediente->rama_derecho->subrama;
+        $antes = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
-       
+        foreach ($asig_doc as $person) {
+            $person->num_casos = round($person->num_casos / $person->num_hours);
+        }
+        $min_casos = min(array_map(function ($person) {
+            return $person->num_casos;
+        }, $asig_doc));
+        // Filtra los elementos que tienen el valor mínimo de num_casos
+        $person_with_min_casos = array_filter($asig_doc, function ($person) use ($min_casos) {
+            return $person->num_casos == $min_casos;
+        });
+
+        // Si necesitas solo uno de los resultados (en caso de empate)
+        $person_with_min_casos = reset($person_with_min_casos);
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
-                $this->request['docidnumber']  = $asig_doc[0]->docidnumber;
+                $this->request['docidnumber']  = $person_with_min_casos->docidnumber;
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                 return;
             } else {

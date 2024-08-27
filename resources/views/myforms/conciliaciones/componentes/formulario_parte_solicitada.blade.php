@@ -1,91 +1,98 @@
-<input type="hidden" name="id" value="{{isset($user) ? $user->id : ''}}">
+<input type="hidden" name="id" value="{{ isset($user) ? $user->id : '' }}">
 
 <div class="col-md-3">
     <div class="form-group has-feedback">
         <label for="idnumber">Tipo de Persona<span class="ast_required">*</span></label>
-      <select {{$disabled}}  required name="tipopers_id" id="tipopers_id" class="form-control form-control-sm required">
-          <option value="">Seleccione...</option>
-          @foreach($tipopers as $key => $doc)
-          <option {{(isset($user) and $user->tipopers_id == $key) ? "selected":"" }} value="{{$key}}">{{$doc}}</option>
-          @endforeach
-      </select>
+        <select {{ $disabled }} required name="tipopers_id" id="tipopers_id"
+            class="form-control form-control-sm required">
+            <option value="">Seleccione...</option>
+            @foreach ($tipopers as $key => $doc)
+                <option {{ (isset($user) and $user->tipopers_id == $key) ? 'selected' : '' }} value="{{ $key }}">
+                    {{ $doc }}</option>
+            @endforeach
+        </select>
     </div>
-  </div>
+</div>
 
-  <div class="col-md-3">
+<div class="col-md-3">
     <div class="form-group has-feedback"><label for="idnumber">Tipo documento<span class="ast_required">*</span></label>
-      <select {{$disabled}}  name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required" required>
-          <option value="">Seleccione...</option>
-          @foreach($tipodoc as $key => $doc)
-          <option  {{(isset($user) and $user->tipodoc_id == $key) ? "selected":"" }} value="{{$key}}">{{$doc}}</option>
-          @endforeach
-      </select>
+        <select {{ $disabled }} name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required"
+            required>
+            <option value="">Seleccione...</option>
+            @foreach ($tipodoc as $key => $doc)
+                <option {{ (isset($user) and $user->tipodoc_id == $key) ? 'selected' : '' }} value="{{ $key }}">
+                    {{ $doc }}</option>
+            @endforeach
+        </select>
     </div>
-  </div>
-  <div class="col-md-3">
+</div>
+<div class="col-md-3">
     <div class="form-group">
         <label>
-           No. Identificación<span class="ast_required">*</span>
+            No. Identificación<span class="ast_required">*</span>
         </label>
-        
-        <input name="idnumber" {{$disabled}}  data-name="idnumber"   required  type="text"
-        value="{{$user->idnumber}}"  class="form-control form-control-sm required"
-        >
-        
+
+        <input name="idnumber" {{ $disabled }} data-name="idnumber" required type="text"
+            value="{{ $user->idnumber }}" class="form-control form-control-sm required">
+
 
     </div>
 </div>
 <div class="col-md-3">
-<div class="form-group">
-    <label >  
-        Nombres<span class="ast_required">*</span></label>
-    <input  name="name"  {{$disabled}}  data-name="nombre"   required  type="text"
-     value="{{$user->name}}" class="form-control form-control-sm required"
-    @if(($conciliacion->estado_id!=177 and $conciliacion->estado_id!=179)  and !auth()->user()->can('act_conciliacion'))
-     
-    @endif>
+    <div class="form-group">
+        <label>
+            Nombres<span class="ast_required">*</span></label>
+        <input name="name" {{ $disabled }} data-name="nombre" required type="text"
+            value="{{ $user->name }}" class="form-control form-control-sm required"
+            @if ($conciliacion->estado_id != 177 and $conciliacion->estado_id != 179 and !auth()->user()->can('act_conciliacion'))  @endif>
 
-</div>
+    </div>
 </div>
 
 <div class="col-md-3">
-<div class="form-group">
-    <label >  
-        Apellidos<span class="ast_required">*</span></label>
-    <input  name="lastname"  {{$disabled}}  data-name="nombre"   required  type="text"
-     value="{{$user->lastname}}" class="form-control form-control-sm required"
-    @if(($conciliacion->estado_id!=177 and $conciliacion->estado_id!=179)  and !auth()->user()->can('act_conciliacion'))
-   
-     
-    @endif>
+    <div class="form-group">
+        <label>
+            Apellidos<span class="ast_required">*</span></label>
+        <input name="lastname" {{ $disabled }} data-name="nombre" required type="text"
+            value="{{ $user->lastname }}" class="form-control form-control-sm required"
+            @if ($conciliacion->estado_id != 177 and $conciliacion->estado_id != 179 and !auth()->user()->can('act_conciliacion'))  @endif>
 
-</div>
+    </div>
 </div>
 <div class="col-md-3">
-<div class="form-group">
-    <label >Teléfono<span class="ast_required">*</span>
-    </label>
-    <input  name="tel1"  {{$disabled}}  data-name="telefono"   required  type="text"
-    value="{{$user->tel1}}" class="form-control form-control-sm required"
-    @if(($conciliacion->estado_id!=177 and $conciliacion->estado_id!=179)  and !auth()->user()->can('act_conciliacion'))
-     
-     
-    
-     @endif>
-
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="form-group">
-    <label > Correo electrónico<span class="ast_required">*</span>
+    <div class="form-group">
+        <label>Teléfono
         </label>
-    <input  name="email"  {{$disabled}}  data-name="correo_electronico"   required  type="text"
-    value="{{$user->email}}"
-     
-     class="form-control form-control-sm required"
-   
-    >
+        <input name="tel1" {{ $disabled }} data-name="telefono" type="text"
+            value="{{ $user->tel1 }}" class="form-control form-control-sm"
+            @if ($conciliacion->estado_id != 177 and $conciliacion->estado_id != 179 and !auth()->user()->can('act_conciliacion'))  @endif>
+
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="form-group">
+        <label> Correo electrónico<span class="ast_required">*</span><i>
+            <a style="font-size: 10px !important;color:orange" class="btn_disabled_email">
+                No tengo el correo electrónico
+            </a>
+        </i>
+        </label>
+        <input name="email" {{ $disabled }} data-name="correo_electronico" required type="text"
+            value="{{ $user->email }}" class="form-control form-control-sm required">
+    </div>
+
 
 </div>
+
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
+    <div class="form-group has-feedback">
+        <label for="name">Dirección para notificaciones
+            </label>
+        <input {{ isset($disabled) ? $disabled : '' }} id='address'
+            value="{{ isset($user) ? $user->address : '' }}" name='address' required type="text"
+            class="form-control form-control-sm" data-toggle="tooltip" title="Dirección de residencia"
+            maxlength="200">
+
+    </div>
 </div>

@@ -27,7 +27,7 @@ export class SolicitudesService {
                 "Accept": "application/json",
                 "X-Requested-With": "XMLHttpRequest",
                 "X-CSRF-Token": $("#token").attr("content"),
-            },
+            }, 
             body: JSON.stringify(request)
         });
         if (response.status === 422) {

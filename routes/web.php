@@ -559,11 +559,16 @@ Route::get('/login', function () {
 
 Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 
-Route::get('/prueba/filter/{id}', 'ExpedienteController@pruebaasig');
+Route::get('/prueba/filter/{id}', 'ExpedienteController@prueba');
 
 Route::get('/prueba', function () {
-  $user = User::where('email', 'darioj99@udenar.edu.co')->first();
-  $conciliacion = Conciliacion::first();
+/*   $user = User::where('email', 'darioj99@udenar.edu.co')->first();
+  $conciliacion = Conciliacion::first(); */
+
+  $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
+  $docentes = $this->usersService->getDocentesByRama($subRama);
+ 
+  dd($docentes);
 
   Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
   dd($conciliacion);

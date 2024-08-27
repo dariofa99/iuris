@@ -130,7 +130,7 @@ export class UserService {
     return topics;
   }
   async alertValidateUser(lastidnumber, form) {
-    if (lastidnumber != '' && $("select[name='tipodoc_id']").val() != '') {
+    if (lastidnumber != '' && $("#"+form+" select[name='tipodoc_id']").val() != '') {
       Swal.fire({
         title: 'Vuelve a ingresar el número de documento',
         input: 'text',

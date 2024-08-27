@@ -844,12 +844,21 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
 
-        try {
-            $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
-            $user = $this->userService->setValidateSede(false)->find($request->user_id);
+        //return response()->json($request->all(), 200);
+
+        try { 
+            if($request->has('id') and $request->input("id")!=''){
+                $request["user_id"] = $request->input("id");
+                $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
+                $user = $this->userService->setValidateSede(false)->find($request->user_id);
+             }else{
+                $user = $this->userService->store($request);
+                $request["user_id"] = $user->id;
+                $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
+                           
+            }
             $this->userService->addSede($user);
             $conciliacion->usuarios;
-
             return response()->json($conciliacion, 200);
         } catch (\Throwable $th) {
             return response()->json([$th->getMessage()], 404);
