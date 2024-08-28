@@ -50,7 +50,7 @@ myDropzone_log.on("addedfile", function (file) {
     }
     $(file.previewElement.querySelector("img")).css({ 'height': '70px', 'width': '80px' });
     $(file.previewElement.querySelector("button")).attr("data-clickeable", clickableId.id)
-    $(file.previewElement.querySelector("button")).attr("data-category", clickableId.id)
+    $(file.previewElement.querySelector("button")).attr("data-category", $(clickableId).attr("data-category"))
  
   } else {
     Swal.fire({
@@ -107,6 +107,8 @@ myDropzone_log.on("sending", function (file, xhr, formData) {
   formData.append("conciliacion_id", $("#conciliacion_id").val());
   formData.append("category_id", $("#anexo_category_id").val())
   formData.append("view_template", $("#view_template").val())
+  formData.append("category_id", $(file.previewElement.querySelector("button")).attr("data-category"));
+  
   // And disable the start button
 
 });

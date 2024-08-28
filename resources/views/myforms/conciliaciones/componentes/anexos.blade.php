@@ -1,28 +1,26 @@
 <div class="row">
     <div class="col-md-12">
-       
-            <label>Anexos</label>
-       
- 
+
+        <label>Anexos</label>
+
+
         @if (
             $conciliacion->estado_id == 174 ||
                 $conciliacion->estado_id == 176 ||
                 $conciliacion->estado_id == 194 ||
-                ($conciliacion->estado_id == 240  
-                and currentUserInConciliacion($conciliacion->id, ['autor','solicitante'])))
+                ($conciliacion->estado_id == 240 and currentUserInConciliacion($conciliacion->id, ['autor', 'solicitante'])))
             @if (currentUser()->hasRole('diradmin') ||
                     currentUser()->hasRole('coord_centro_conciliacion') ||
                     currentUser()->hasRole('amatai') ||
-                    currentUserInConciliacion($conciliacion->id, 
-                    ['autor','solicitante']))
+                    currentUserInConciliacion($conciliacion->id, ['autor', 'solicitante']))
                 <button type="button" data-category="232" id="btn_create_document"
                     class="btn_create_document btn btn-primary btn-sm float-right">Subir documentos
                 </button>
-               {{--  <button type="button" data-category="232" id="btn_create_document"
+                {{--  <button type="button" data-category="232" id="btn_create_document"
                     class="btn_create_document mr-1 btn btn-primary btn-sm float-right">Subir pruebas
-                </button> --}}               
+                </button> --}}
             @endif
-        @endif 
+        @endif
 
     </div>
 </div>
@@ -44,9 +42,8 @@
                 </th>
             </thead>
             <tbody>
-                @include('myforms.conciliaciones.componentes.anexos_ajax', [
-                    'category' => 232,
-                ])
+                @include('myforms.conciliaciones.componentes.anexos_ajax')
+
             </tbody>
         </table>
     </div>

@@ -205,14 +205,14 @@ class ExpedienteController extends Controller
 
   public function prueba(Request $request)
   {
-    $asignacion_caso = AsignacionCaso::where('asigexp_id','2024B-1662')->first();
-    $this->expedienteService->asignarDocente($asignacion_caso);
+    $asignacion_caso = AsignacionCaso::where('asigexp_id','2024B-1675')->first();
+   // $this->expedienteService->asignarDocente($asignacion_caso);
     if ($request['exptipoproce_id'] == 1) {
       //solo para consultas de asesoria   
       $this->expedienteService->asignarDocente($asignacion_caso);
     } else { 
 
-      //$this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, 2); // si tiene en cuenta la rama del derecho
+      $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, 2); // si tiene en cuenta la rama del derecho
     }
   }
   /**

@@ -267,7 +267,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     
             // Si necesitas solo uno de los resultados (en caso de empate)
             $person_with_min_casos = reset($person_with_min_casos); */
-           // dd($docentes,$asig_doc,$person_with_min_casos);
+           // dd($docentes,$asig_doc);
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
@@ -361,22 +361,24 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $antes = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
-        foreach ($asig_doc as $person) {
-            $person->num_casos = round($person->num_casos / $person->num_hours);
-        }
-        $min_casos = min(array_map(function ($person) {
-            return $person->num_casos;
-        }, $asig_doc));
-        // Filtra los elementos que tienen el valor mínimo de num_casos
-        $person_with_min_casos = array_filter($asig_doc, function ($person) use ($min_casos) {
-            return $person->num_casos == $min_casos;
-        });
-
-        // Si necesitas solo uno de los resultados (en caso de empate)
-        $person_with_min_casos = reset($person_with_min_casos);
-        $this->request['asig_caso_id']  = $asignacion_caso->id;
+          $this->request['asig_caso_id']  = $asignacion_caso->id;
+      //  dd($docentes[0]['idnumber']);
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
+                foreach ($asig_doc as $person) {
+                    $person->num_casos = round($person->num_casos / $person->num_hours);
+                }
+                $min_casos = min(array_map(function ($person) {
+                    return $person->num_casos;
+                }, $asig_doc));
+                // Filtra los elementos que tienen el valor mínimo de num_casos
+                $person_with_min_casos = array_filter($asig_doc, function ($person) use ($min_casos) {
+                    return $person->num_casos == $min_casos;
+                });
+        
+                // Si necesitas solo uno de los resultados (en caso de empate)
+                $person_with_min_casos = reset($person_with_min_casos);
+
                 $this->request['docidnumber']  = $person_with_min_casos->docidnumber;
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                 return;
@@ -392,7 +394,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             }
         } elseif (count($docentes) > 0) {
             foreach ($docentes as $key => $docente) {
-                $this->request['docidnumber']  = $docente->idnumber;
+                $this->request['docidnumber']  = $docente['idnumber'];
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                 break;
             }

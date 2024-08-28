@@ -567,13 +567,21 @@ $(function () {
 
   $("#btn_solicitar_conciliacion").on("click", function (e) {
     e.preventDefault();
-    var files = $(".file-row").length;
+    var validfile = false;
+
     var anexos = $(".content_he_pret").length
-    console.log(files);
+    $(".files").each((element,obj) =>{
+      if($(obj).attr("data-type")==233){
+        validfile=true;
+      }
+      
+    })
     
-    if (files <= 0) {
+    
+    if (!validfile) {
       Swal.fire({
         title: "Recuerda subir los anexos requeridos!",
+        html:"Falta adjuntar el documento de identidad",
         icon: "warning",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
