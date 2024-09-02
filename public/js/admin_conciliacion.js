@@ -272,15 +272,7 @@ $(document).ready(function () {
       return;
     }
     if (type_status_id == 181) {
-      var audiencia = $("#conciliacion_audiencia_id").val()
-      if (audiencia == undefined) {
-        toastr.error(
-          "No se puede admitir la conciliación porque no hay una audiencia habilitada",
-          "Error",
-          { positionClass: "toast-top-right", timeOut: "5000" }
-        );
-      } else {
-        $("#wait").show()
+       $("#wait").show()
         const result = await conciliacionService.storeConciliacionEstado(request)
           .then((response) => {
             Swal.fire({
@@ -293,7 +285,6 @@ $(document).ready(function () {
             window.location.reload(true);
             e.preventDefault()
           });
-      }
     } else {
       $("#wait").show()
       const result = await conciliacionService.storeConciliacionEstado(request)
@@ -599,9 +590,9 @@ $(document).ready(function () {
       var user_id = $("#myUserConciliacionesForm input[name='id']").val();
       if (user_id != '') {
         var request = {
-          "user_id": user_id,
+          "id": user_id,
           "conciliacion_id": $("input[name='conciliacion_id']").val(),
-          "tipo_usuario": $("#myUserConciliacionesForm select[name='tipo_usuario_id']").val()
+          "tipo_usuario": $("#myUserConciliacionesForm select[name='tipo_usuario']").val()
         };
         $("#wait").show();
         let response_ = await conciliacionService.addUser(request);
@@ -609,47 +600,18 @@ $(document).ready(function () {
           positionClass: "toast-bottom-right",
           timeOut: "4000",
         });
-        window.location.reload(true);
+        window.location.reload(true)
       } else {
-
         var request = convertFormToJSON("myUserConciliacionesForm");
-        var data = [];
-        $("#myUserConciliacionesForm .input_user_ad").each((index, obj) => {
-          data.push({
-            value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-            section: $(obj).attr("data-section"),
-            type: $(obj).attr("data-type"),
-            name: $(obj).attr("data-name"),
-            option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-            value_is_other: $("#value_other_text-" + $(obj).val()).val(),
-            conciliacion_id: $("#conciliacion_id").val()
-          });
-        });
-        request["data"] = (data);
         $("#wait").show();
-        let response = await userService.registrar(request);
-        if (response.errors) {
-          $("#wait").hide();
-          response.errors.forEach(error => {
-            toastr.error(error, "", {
-              positionClass: "toast-top-right",
-              timeOut: "4000",
-            });
-          });
-        } else {
-          var request = {
-            "user_id": response.user.id,
-            "conciliacion_id": $("input[name='conciliacion_id']").val(),
-            "tipo_usuario": $("#myUserConciliacionesForm select[name='tipo_usuario_id']").val()
-          };
-          $("#wait").show();
-          let response_ = await conciliacionService.addUser(request);
-          toastr.success("Agregado correctamente!", "", {
-            positionClass: "toast-bottom-right",
-            timeOut: "4000",
-          });
-          window.location.reload(true);
-        }
+        request["data"] = userService.getAditionalDataByForm("myUserConciliacionesForm");
+        request["conciliacion_id"] = $("input[name='conciliacion_id']").val();
+        let response_ = await conciliacionService.addUser(request);
+        toastr.success("Agregado correctamente!", "", {
+          positionClass: "toast-bottom-right",
+          timeOut: "4000",
+        });
+        window.location.reload(true)
       }
     }
   });
@@ -831,6 +793,8 @@ $(document).ready(function () {
     $("#myFormNotificationSend div[id=row_mail_not]").html('');
     $("#content_notificacion_correo").summernote("code", "");
     $("#content_conc_notif").hide();
+    $(".fila_usuarios_not_selected").removeClass("fila_usuarios_not_selected").addClass("fila_usuarios_not");
+   
   });
   $("#btn_cancelar_conc_not").on("click", function (e) {
     e.preventDefault()

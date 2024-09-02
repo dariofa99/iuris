@@ -851,6 +851,11 @@ class ConciliacionesController extends Controller
                 $request["user_id"] = $request->input("id");
                 $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
                 $user = $this->userService->setValidateSede(false)->find($request->user_id);
+             }if($request->has('user_id') and $request->input("user_id")!=''){
+                $request["user_id"] = $request->input("user_id");
+                $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
+                $user = $this->userService->setValidateSede(false)->find($request->user_id);
+       
              }else{
                 $user = $this->userService->store($request);
                 $request["user_id"] = $user->id;
@@ -1142,7 +1147,7 @@ class ConciliacionesController extends Controller
             $user_created
         )
             ->onConnection('database')->onQueue('emails');;
-        //Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo ,$conciliacion , $request->asunto ));
+       // Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo,$conciliacion,$request->asunto,$user_created ));
 
         return response()->json([$users, $request->has('correo_send')]);
     }

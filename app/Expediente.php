@@ -608,7 +608,7 @@ class Expediente extends Model
     {
         if ($request->tipo_busqueda == "adv") {
 
-              
+
             return $query->where(['expidnumberest' => $request->expidnumberest])
                 ->where('exptipoproce_id', $request->exptipoproce_id)
                 ->where('expestado_id', $request->expestado_id);
@@ -617,9 +617,9 @@ class Expediente extends Model
                 //return $query->where('expestado_id', $data);
             }
             //dd("dd00");
-        } 
+        }
 
-        if ($request->has("data") and trim($request->data) != '' ) {
+        if ($request->has("data") and trim($request->data) != '') {
 
             $data = $request->data;
             switch ($request->tipo_busqueda) {
@@ -910,7 +910,8 @@ class Expediente extends Model
             }
             $dias = ($this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio) - $dias_v);
             $text = "Periodo de vacaciones activo. Días: " . ($dias);
-        } elseif ($huboVacaciones) {
+        } elseif (count($huboVacaciones) > 0) {
+
             $dias_v = 0;
             foreach ($huboVacaciones as $key => $vacacion) {
                 $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
@@ -918,10 +919,23 @@ class Expediente extends Model
             $dias_asig  = $this->getDaysAfterAsig();
             $dias = $dias_asig - $dias_v;
             $text =  "<b>Días transcurridos desde la asignación:</b> " . $dias;
+        } else if ($asig->periodo_id != $periodo->id) {
+            //SI tuvo pausas
+            $pausa = ExpedientePausas::whereHas("asignacion", function ($query) {
+                $query->where('asigexp_id', $this->expid);
+            })->orderBy('expedientes_pausa.created_at', 'desc')
+                ->first();
+            $dias = $this->difDays($periodo->prdfecha_inicio, now());
+            $text =  "<b>Días transcurridos desde el inicio de periodo:</b> " . $dias;
+            if ($pausa) {
+                $dias = $this->difDays(date("2024-09-02"), now());
+                $text =  "<b>Días transcurridos desde fin de pausa:</b> " . $dias;
+            }
         } else {
             $dias = $this->getDaysAfterAsig();
             $text =  "<b>Días transcurridos desde la asignación:</b> " . $dias;
         }
+
         switch ($item) {
             case 'dias':
                 return $dias;
@@ -980,9 +994,11 @@ class Expediente extends Model
             return $text;
         } else if ($pausa) {
             if ($act and ($act->actfecha > $pausa->fecha_final)) {
+
                 $dias = $this->difDays($act->actfecha, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde última actuación:</b>";
             } else {
+
                 $dias = $this->difDays($pausa->fecha_final, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde final de pausa:</b>";
             }
@@ -1008,10 +1024,15 @@ class Expediente extends Model
                     if (($hizoEnVacaciones)) {
                         $dias = $this->difDays($hizoEnVacaciones->fecha_fin, date('Y-m-d'));
                     } else {
-                        $dias = $this->difDays($act->actfecha, date('Y-m-d'));
+                        if ($act->actfecha < $periodo->prdfecha_inicio) {
+                            $dias = $this->difDays($periodo->prdfecha_inicio, date('Y-m-d'));
+                            $text =  "<b>Días transcurridos desde inicio de corte:</b>";
+                        } else {
+                            $dias = $this->difDays($act->actfecha, date('Y-m-d'));
+                            $text =  "<b>Días transcurridos desde última actuación:</b>";
+                        }
                     }
                 }
-                $text =  "<b>Días transcurridos desde última actuación:</b>";
             } else {
                 $asignacion = $this->asignacion;
                 $huboVacaciones = DB::table("vacaciones_periodo")
@@ -1019,14 +1040,32 @@ class Expediente extends Model
                     ->whereDate('fecha_fin', '<=', $now)
                     ->where("periodo_id", $periodo->id)
                     ->orderBy('created_at', 'desc')->get();
+
                 if ($huboVacaciones) {
                     $dias_v = 0;
                     foreach ($huboVacaciones as $key => $vacacion) {
                         $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
                     }
                 }
-                $dias = $this->getDaysAfterAsig() - $dias_v;
-                $text =  "<b>Días transcurridos desde la asignación:</b>";
+                $pausa = ExpedientePausas::with("asignacion")
+                    ->whereHas("asignacion", function ($query) {
+                        $query->where('asigexp_id', $this->expid);
+                    })->orderBy('expedientes_pausa.created_at', 'desc')
+                    ->first();
+
+                if ($pausa) {
+                    $dias = $this->difDays(date("2024-09-02"), now());
+                    $text =  "<b>Días transcurridos desde fin de pausa:</b> ";
+                } else {
+                    $dias = $this->getDaysAfterAsig() - $dias_v;
+                    if ($asignacion->periodo_id != $periodo->id) {
+                        $dias = $this->difDays($periodo->prdfecha_inicio, now());
+                        $text =  "<b>Días transcurridos desde inicio de corte:</b>";
+                    } else {
+                        $dias = $this->difDays(date("2024-09-02"), now());
+                        $text =  "<b>Días transcurridos desde la asignación:</b>";
+                    }
+                }
             }
         }
         if ($dias > 10) $color = 'orange';
@@ -1052,13 +1091,13 @@ class Expediente extends Model
 
     public function isValidOpenPeriodo()
     {
-      
-      
-            $asig_periodo = $this->asignacion->periodo;
-            $periodo = $this->getPeriodoActivo();
-            if ($asig_periodo and $periodo and $asig_periodo->id == $periodo->id) {
-                return true;
-            }       
+
+
+        $asig_periodo = $this->asignacion->periodo;
+        $periodo = $this->getPeriodoActivo();
+        if ($asig_periodo and $periodo and $asig_periodo->id == $periodo->id) {
+            return true;
+        }
 
         return false;
     }
@@ -1067,9 +1106,9 @@ class Expediente extends Model
     {
         $asignacion = $this->asignacion;
         $segmento = $this->getSegmentoActivo();
-        $asigCorte = $this->getSegmentoAsignacion($asignacion);       
-        if($segmento and $asigCorte and $segmento->id == $asigCorte ->id){
-           return true;
+        $asigCorte = $this->getSegmentoAsignacion($asignacion);
+        if ($segmento and $asigCorte and $segmento->id == $asigCorte->id) {
+            return true;
         }
         return false;
     }
@@ -1077,8 +1116,8 @@ class Expediente extends Model
     public function isValidNotaMax()
     {
         $asignacion = $this->asignacion;
-        $estado = $this->estados()->where('ref_estado_id',4)->first();
-        if($estado!=null){
+        $estado = $this->estados()->where('ref_estado_id', 4)->first();
+        if ($estado != null) {
             return true;
         }
         return false;

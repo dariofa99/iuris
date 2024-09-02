@@ -37,7 +37,7 @@
         if (!currentUser()->hasRole('estudiante')) {
             $disabled = 'disabled';
         } else {
-            if ($expediente->expestado_id == '1' or $expediente->expestado_id == '3') {
+            if ($expediente->expestado_id == '1' or $expediente->expestado_id == '3' or $expediente->expestado_id == '6') {
                 $disabled = '';
             } else {
                 $disabled = 'disabled';

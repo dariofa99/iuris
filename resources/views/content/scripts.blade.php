@@ -12,7 +12,12 @@
         @else
         //var message = getGeneralMessage();
         @endif
-        var message = getGeneralMessage();
+        var keyCir = localStorage.getItem("keyCircularActualPausas");
+        if (keyCir == null ) {
+            var message = getCircular();
+        } else {
+            var message = getGeneralMessage();
+        }
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
@@ -164,12 +169,12 @@
     }
 
     function getCircular() {
-        var keyCir = localStorage.getItem("keyCircNotas2Corte");
+        var keyCir = localStorage.getItem("keyCircularActualPausas");
         var message = '';
         if (keyCir == null) {
-            message = `<embed  src="{{ asset('recursos/CircularNotas2C.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message = `<embed  src="{{ asset('recursos/CircularActualPausas.pdf#toolbar=0') }}" id="pdfViewer" >`
             message +=
-                `<button class="btn btn-success" data-not="keyCircNotas2Corte" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+                `<button class="btn btn-success" data-not="keyCircularActualPausas" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
         }
         return message;
     }

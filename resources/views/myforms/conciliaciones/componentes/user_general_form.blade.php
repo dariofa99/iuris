@@ -15,7 +15,7 @@
          <div class="col-md-12">
              <div class="form-group">
                  <label for="tipo_usuario">Tipo de usuario</label>
-                 <select name="tipo_usuario_id" id="tipo_usuario" class="form-control required">
+                 <select name="tipo_usuario" id="tipo_usuario" class="form-control required">
                      <option value="">Seleccione</option>
                      @foreach (getReferencesTableByCategory('type_user_conciliacion') as $key => $value)
                          <option value="{{ $value->id }}">{{ $value->ref_nombre }}</option>

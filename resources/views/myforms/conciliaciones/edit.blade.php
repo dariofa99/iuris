@@ -54,8 +54,20 @@
             Estado: {{ $conciliacion->estado->ref_nombre }} {{ $conciliacion->estado->id }}</span>
         </div>
         <div class="col-md-1">
-            <button class="btn btn-info" id="openModEvSatisf">Evaluar satisfacción</button>
-        </div>
+            <div class="btn-group btn-group-vertical" role="group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-cog"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="#">Descargar resumen</a>
+                  <a class="dropdown-item" href="#">Dropdown link</a>
+                </div>
+              </div>
+              
+              
+            {{-- <button class="btn btn-info" id="openModEvSatisf">Evaluar satisfacción</button>
+     --}}    
+    </div>
     </div>
 
 

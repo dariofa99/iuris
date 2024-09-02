@@ -49,14 +49,14 @@
 </div>
 
 
-@if ($parte_solicitante->tipopers_id != 238)
+{{-- @if ($parte_solicitante->tipopers_id != 238)
     <div class="box_section">
         @include('myforms.conciliaciones.componentes.parte_solicitante_rep_legal', [
             'section' => 'representante_legal_solicitante',
             'tipo_usuario_id' => 195,
         ])
     </div>
-@endif
+@endif --}}
 
 <div class="box_section">
     @include('myforms.conciliaciones.componentes.apoderado_solicitante', [
@@ -69,10 +69,10 @@
         <strong>ASUNTO A CONCILIAR</strong>
     </h4>
     @include('myforms.conciliaciones.componentes.asunto', [
-        'section' => 'elementos_juridicos',
+        'section' => 'asunto',
         'disabled' => 'disabled',
     ])
-</div>
+</div> 
 
 
 <div class="box_section">

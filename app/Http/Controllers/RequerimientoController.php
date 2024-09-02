@@ -281,7 +281,7 @@ class RequerimientoController extends Controller
         $requerimiento = Requerimiento::find($id);
         $requerimiento->req_asistencia;
         $solicitante = $requerimiento->expediente->solicitante;
-        $requerimiento->notas_f = $requerimiento->get_notas();
+       // $requerimiento->notas_f = $requerimiento->get_notas();
         $requerimiento->fecha_corta = getSmallDate($requerimiento->created_at);
         $data = [
             'requerimiento' => $requerimiento,          

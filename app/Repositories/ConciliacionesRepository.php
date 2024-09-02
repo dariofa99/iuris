@@ -90,12 +90,12 @@ class ConciliacionesRepository extends BaseRepository implements ConciliacionesS
     public function addUser(Conciliacion $conciliacion, Request $request): Conciliacion
     {
         $user = $conciliacion->usuarios()->where([
-            'tipo_usuario_id' => $request->tipo_usuario,
+            'tipo_usuario_id' => $request->input("tipo_usuario"),
             'user_id' => $request->user_id,
         ])->first();
         if (!$user) {
             $conciliacion->usuarios()->attach($request->user_id, [
-                'tipo_usuario_id' => $request->tipo_usuario,
+                'tipo_usuario_id' => $request->input("tipo_usuario"),
                 'estado_id' => 1
             ]);
         }

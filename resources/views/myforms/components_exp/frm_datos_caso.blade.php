@@ -16,17 +16,19 @@
                 <div class="input-group-prepend">
 
                     @if (currentUser()->hasRole('estudiante') and !$readonly)
-                        <button value="{{ $expediente->solicitante->idnumber }}" data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button" id="btn_exp_user_carga"
-                            style="background-color: green" class="btn btn-success" data-toggle='modal'
-                            data-target='#myModal_exp_user_edit'>
+                        <button value="{{ $expediente->solicitante->idnumber }}"
+                            data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button"
+                            id="btn_exp_user_carga" style="background-color: green" class="btn btn-success"
+                            data-toggle='modal' data-target='#myModal_exp_user_edit'>
                             Editar
                         </button>
                     @elseif(!currentUser()->hasRole('estudiante') || $readonly)
-                        <button value="{{ $expediente->solicitante->idnumber }}" data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button" id="btn_exp_user_carga"
-                            style="background-color: green" class="btn btn-success" data-toggle='modal'
-                            data-target='#myModal_exp_user_details'>
+                        <button value="{{ $expediente->solicitante->idnumber }}"
+                            data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button"
+                            id="btn_exp_user_carga" style="background-color: green" class="btn btn-success"
+                            data-toggle='modal' data-target='#myModal_exp_user_details'>
                             Detalles
-                        </button> 
+                        </button>
                     @endif
 
                 </div>
@@ -98,14 +100,15 @@
             <div class="form-group">
                 {!! Form::label('Personas a cargo: ') !!}
                 <label class="lab-ast-req" title="Campo obligatorio"> * </label>
-                <select {{$disabled}} name="expperacargo" id="expperacargo" class="form-control required">
+                <select {{ $disabled }} name="expperacargo" id="expperacargo" class="form-control required">
                     @php $num=0 @endphp
                     <option value="">Seleccione</option>
                     @while ($num <= 9)
-                        <option {{$expediente->expperacargo != $num ?:"selected"}} value="{{ $num }}">{{ $num }}</option>
+                        <option {{ $expediente->expperacargo != $num ?: 'selected' }} value="{{ $num }}">
+                            {{ $num }}</option>
                         @php $num++ @endphp
                     @endwhile
-                    <option {{$expediente->expperacargo != 10 ?:"selected"}}  value="10">10 o más</option>
+                    <option {{ $expediente->expperacargo != 10 ?: 'selected' }} value="10">10 o más</option>
                 </select>
             </div>
         </div>
@@ -171,21 +174,24 @@
                     <div class="col-md-6" style="padding-left: 0px;">
                         {!! Form::label('Hechos: ') !!}
                     </div>
-                    
+
                     <div class="col-md-6" style="padding-left: 0px; text-align:end;">
                         @if ($expediente->fechaHistorialDatosCaso(141))
                             Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(141)) }}
                             <a id="modalhcaso" data-name="{{ $expediente->expid }}"
                                 style="cursor: pointer; border-bottom:1px solid rgb(206, 206, 206)"> Ver
                                 historial</a>
+                        @elseif($expediente->expestado_id == 6)
+                            <span class="badge bg-green">
+                                El caso esta en pausa.
+                            </span>
                         @else
-                           
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
                                 {!! $expediente->getTextForTH('mensaje') !!}
                             </span>
                         @endif
                     </div>
-                </div> 
+                </div>
 
                 {!! Form::textarea('exphechos', null, [
                     'class' => 'form-control',
@@ -209,6 +215,10 @@
                             <a style="cursor: pointer;border-bottom:1px solid rgb(206, 206, 206)"
                                 id="modalresestudiante" data-name="{{ $expediente->expid }}">
                                 Ver historial</a>
+                        @elseif($expediente->expestado_id == 6)
+                            <span class="badge bg-green">
+                                El caso esta en pausa.
+                            </span>
                         @else
                             Días despues de asignado:
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
@@ -226,7 +236,7 @@
             </div>
         </div>
     </div>
-    @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == '1' || $expediente->expestado_id == '3')
+    @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == '1' || $expediente->expestado_id == '3' || $expediente->expestado_id == '6')
         <div class="row">
             <div class="col-md-12" align="right">
                 <div class="form-group">

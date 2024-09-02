@@ -12,6 +12,7 @@ use App\Repositories\ConciliacionComentariosRepository;
 use App\Repositories\ConciliacionesRepository;
 use App\Repositories\EstadosCasoRepository;
 use App\Repositories\ExpedientesRepository;
+use App\Repositories\ExpEncuSatisfaccionRepository;
 use App\Repositories\LoginRepository;
 use App\Repositories\PausasRepository;
 use App\Repositories\PeriodosRepository;
@@ -33,6 +34,7 @@ use App\Services\ConciliacionComentarioService;
 use App\Services\ConciliacionesService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
+use App\Services\ExpEncuSatisfaccionService;
 use App\Services\LoginService;
 use App\Services\PausasService;
 use App\Services\PeriodosService;
@@ -86,6 +88,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(            
             UsersService::class,
             UsersRepository::class,       
+        );
+        $this->app->bind(            
+            ExpEncuSatisfaccionService::class,
+            ExpEncuSatisfaccionRepository::class,       
         );
         $this->app->bind(            
             LoginService::class,

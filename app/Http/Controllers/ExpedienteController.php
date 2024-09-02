@@ -85,8 +85,8 @@ class ExpedienteController extends Controller
   {
     if (currentUser()->hasRole("solicitante")) return redirect("/oficina/solicitante");
     $expedientes = $this->expedienteService->index($request);
-   // $expedientes = [];
-    $count_colors = [];// $this->expedienteService->getColorsAsesorias($request);
+    // $expedientes = [];
+    $count_colors = []; // $this->expedienteService->getColorsAsesorias($request);
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       //$expedientes = $this->expedienteService->index($request);   
       $res = [];
@@ -98,7 +98,7 @@ class ExpedienteController extends Controller
       }
       return response()->json($res);
     }
-    $request = $request->all(); 
+    $request = $request->all();
     return view('myforms.frm_expediente_list', compact('expedientes', 'count_colors'));
   }
 
@@ -148,7 +148,7 @@ class ExpedienteController extends Controller
     if ($request['exptipoproce_id'] == 1) {
       //solo para consultas de asesoria   
       $this->expedienteService->asignarDocente($asignacion_caso);
-    } else { 
+    } else {
 
       $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
     }
@@ -205,12 +205,25 @@ class ExpedienteController extends Controller
 
   public function prueba(Request $request)
   {
-    $asignacion_caso = AsignacionCaso::where('asigexp_id','2024B-1675')->first();
-   // $this->expedienteService->asignarDocente($asignacion_caso);
+    $pdf = \PDF::loadView(
+      'pdf.conciliacion_general',
+      [
+        "body" => "Hola"
+      ]
+    );
+    // ->setPaper($config->tipo_papel);
+    $path = public_path('/pdf_temp');
+    $fileName =  time() . '.' . 'pdf';
+    $pdf->save($path . '/' . $fileName);
+
+    return redirect('/pdf_temp' . '/' . $fileName);
+
+    $asignacion_caso = AsignacionCaso::where('asigexp_id', '2024B-1675')->first();
+    // $this->expedienteService->asignarDocente($asignacion_caso);
     if ($request['exptipoproce_id'] == 1) {
       //solo para consultas de asesoria   
       $this->expedienteService->asignarDocente($asignacion_caso);
-    } else { 
+    } else {
 
       $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, 2); // si tiene en cuenta la rama del derecho
     }
@@ -336,7 +349,6 @@ class ExpedienteController extends Controller
               $request['ref_motivo_estado_id'] = 12;
               $estado_caso = $this->estadoCasoService->store($request);
               Session::flash('message-danger', 'Atención! El sistema ha cerrado el caso');
-        
             } else {
               Session::flash('message-danger', 'Atención! No hay un segmento activo');
             }
@@ -359,26 +371,69 @@ class ExpedienteController extends Controller
         ->update([
           "estado_id" => 250
         ]);
+    } elseif ($expediente->expestado_id == '6' and !$expediente->isValidEvaPause()) {
+      //$asignaciones = $expediente->asignaciones;
+      $pausa = ExpedientePausas::with("asignacion")
+        ->whereHas("asignacion", function ($query) use ($expediente) {
+          $query->where('asigexp_id', $expediente->expid);
+        })->orderBy('expedientes_pausa.created_at', 'desc')
+        ->first();
+      //dd($pausa->asig_caso_id,$asignacion->id);
+      if ($pausa and $pausa->asig_caso_id!=$asignacion->id) {
+        $fechaCierre = Carbon::parse("2024-08-29");
+        if ($pausa->fecha_final < $fechaCierre) {
+
+          $request['expestado_id'] = 1;
+          $expediente = $this->expedienteService->update($expediente, $request);
+          $request['comentario'] = 'Fecha de pausa caducada';
+          $request['expidnumber'] = $expediente->expid;
+          $request['ref_estado_id'] = $expediente->expestado_id;
+          $request['ref_motivo_estado_id'] = 11;
+          $estado_caso = $this->estadoCasoService->store($request);
+          $estudiante->notification = 'Nueva notificación de caso';
+          $estudiante->link_to = '/expedientes/' . $expediente->expid . "/edit";
+          $estudiante->mensaje = 'Se ha abierto un caso que estaba pausado.';
+          $estudiante->notify(new UserNotification($estudiante));
+        } elseif ($pausa->fecha_final > $fechaCierre) {
+          //dd($pausa);
+          $periodo_act = $this->periodosService->getPeriodoActivo();
+          $request['fecha_inicial'] = $periodo_act->prdfecha_inicio;
+          $request['fecha_final'] = $pausa->fecha_final;
+          $request['userestud_id'] = $estudiante->id;
+          $request['asig_caso_id'] = $asignacion->id;
+          $asignacion = $this->expedienteService->pausarExpediente($expediente, $request);
+          $request['comentario'] = 'Renovación pausa inicio periodo';
+          $request['expidnumber'] = $expediente->expid;
+          $request['ref_estado_id'] = $expediente->expestado_id;
+          $request['ref_motivo_estado_id'] = 11;
+          $estado_caso = $this->estadoCasoService->store($request);
+          $estudiante->notification = 'Nueva notificación de caso';
+          $estudiante->link_to = '/expedientes/' . $expediente->expid . "/edit";
+          $estudiante->mensaje = 'Se ha renovado la pausa de un caso de sustitución.';
+          $estudiante->notify(new UserNotification($estudiante));
+        }
+      }
     }
     if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     if (currentUser()->hasRole("estudiante")) {
       if (Auth::user()->id != $estudiante->id) {
         return view('errors.error', compact('url'));
       }
-      if ($expediente->expestado_id != '1' 
-      and $expediente->expestado_id != '3'
-      and $expediente->expestado_id != '6') {
+      if (
+        $expediente->expestado_id != '1'
+        and $expediente->expestado_id != '3'
+        and $expediente->expestado_id != '6'
+      ) {
         //	Session::flash('message-success', 'Actualizado con éxito...!');
         return redirect('/expedientes/' . $expediente->expid);
       }
-     
     } elseif (currentUser()->hasRole("solicitante")) {
       if (Auth::user()->idnumber != $expediente->expidnumber) {
         $url = '/expedientes/';
         return view('errors.error', compact('url'));
       }
     }
-   /*  if (!currentUser()->can("admin_expedientes")) {
+    /*  if (!currentUser()->can("admin_expedientes")) {
       return redirect('/expedientes/' . $expediente->expid);
     } */
     $readonly = false;
@@ -1248,13 +1303,13 @@ class ExpedienteController extends Controller
     ->whereDate("expedientes_pausa.fecha_final","<",Carbon::now())
     ->where("expedientes.expestado_id",6)
   ->get(); */
- 
+
     //dd($exp);
     //dd(config()->get('app_config.diradminemail'));
     /*  $relations = $expediente->relationLoaded('solicitudes');
     dd(method_exists($expediente, 'sedes')); */
     //18478
-    $expediente = Expediente::where("expid","2024A-399")->first();
+    $expediente = Expediente::where("expid", "2024A-399")->first();
     //$user = User::where("email",env("NOTIFICATION_DIR_EMAIL"))->first();
     //Notification::send($user, new NotificarDirector($expediente,"Prueba"));
     /*  $this->expedienteService->findWithFilter([
@@ -1262,7 +1317,7 @@ class ExpedienteController extends Controller
     ]);
     
      */
-  /*   ProcessEmailSendNotificarDirector::dispatch($expediente)
+    /*   ProcessEmailSendNotificarDirector::dispatch($expediente)
       ->onConnection('database')->onQueue('emails'); */
     $asignacion_caso =  $expediente->asignacion;
     $segmento = $this->segmentosService->getSegmentoAsignacion($asignacion_caso);
@@ -1282,7 +1337,7 @@ class ExpedienteController extends Controller
 
     if ($expediente->exptipoproce_id == 1) {
       //solo para consultas de asesoria   
-       $this->expedienteService->asignarDocente($asignacion_caso);
+      $this->expedienteService->asignarDocente($asignacion_caso);
     } else {
 
       $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho

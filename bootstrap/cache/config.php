@@ -93,6 +93,10 @@
       'Image' => 'Intervention\\Image\\Facades\\Image',
     ),
   ),
+  'app_config' => 
+  array (
+    'diradminemail' => 'darioj99@udenar.edu.co',
+  ),
   'auth' => 
   array (
     'defaults' => 
@@ -134,7 +138,7 @@
   ),
   'broadcasting' => 
   array (
-    'default' => 'log',
+    'default' => 'pusher',
     'connections' => 
     array (
       'pusher' => 
@@ -693,7 +697,7 @@
   ),
   'queue' => 
   array (
-    'default' => 'sync',
+    'default' => 'database',
     'connections' => 
     array (
       'sync' => 

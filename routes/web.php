@@ -52,6 +52,8 @@ Route::get('conciliaciones/get/comentarios', 'ConciliacionesController@getComent
 
 Route::get('conciliacion/encuestas/start', 'ConcEncuSatisfaccionController@index');
 Route::get('encuestas/find/user', 'ConcEncuSatisfaccionController@findUser');
+Route::get('expediente/encuestas/start', 'ExpEncuSatisfaccionController@index');
+
 
 
 

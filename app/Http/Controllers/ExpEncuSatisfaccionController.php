@@ -43,7 +43,7 @@ class ExpEncuSatisfaccionController extends Controller
         $this->userService = $userService;
         $this->loginService = $loginService;
         $this->conciliacionesService = $conciliacionesService;
-        $this->middleware('auth', ['except' => ['index', 'findUser']]); //not work
+        $this->middleware('auth', ['except' => ['index', 'findUser','buscarExpedientes']]); //not work
     }
 
     public function renderForm(Request $request)

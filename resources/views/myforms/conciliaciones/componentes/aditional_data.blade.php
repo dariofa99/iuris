@@ -1,4 +1,5 @@
 @foreach ($data as $key => $reference)
+
     <div class="col-md-{{ isset($col) ? $col : '6' }}">
         <div class="form-group">
             <label>
