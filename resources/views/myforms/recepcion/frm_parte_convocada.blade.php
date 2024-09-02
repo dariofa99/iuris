@@ -4,7 +4,7 @@
     ->where("tipo_usuario_id",197)->get();
     $numConv = $conciliacion->getStaticDataValByShortName('no._convocados', 'asunto');
     $numConv = $numConv->value;
-    //dd($users);
+   // dd($numConv);
 @endphp
 
 <div id="contentFormsParteCovocada">

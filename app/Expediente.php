@@ -972,8 +972,8 @@ class Expediente extends Model
             ->orderBy('actuacions.actfecha', 'desc')->first();
         $color = 'green';
         $dias = 0;
-
         $periodo = $this->getPeriodoActivo();
+        $periodo->prdfecha_inicio = date("2024-08-26");
         $now = Carbon::now();
         $estamosVacaciones = DB::table("vacaciones_periodo")
             ->whereDate('fecha_inicio', '<=', $now)
@@ -994,11 +994,9 @@ class Expediente extends Model
             return $text;
         } else if ($pausa) {
             if ($act and ($act->actfecha > $pausa->fecha_final)) {
-
                 $dias = $this->difDays($act->actfecha, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde última actuación:</b>";
             } else {
-
                 $dias = $this->difDays($pausa->fecha_final, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde final de pausa:</b>";
             }
@@ -1024,6 +1022,7 @@ class Expediente extends Model
                     if (($hizoEnVacaciones)) {
                         $dias = $this->difDays($hizoEnVacaciones->fecha_fin, date('Y-m-d'));
                     } else {
+                        //dd($act->actfecha , $periodo->prdfecha_inicio);
                         if ($act->actfecha < $periodo->prdfecha_inicio) {
                             $dias = $this->difDays($periodo->prdfecha_inicio, date('Y-m-d'));
                             $text =  "<b>Días transcurridos desde inicio de corte:</b>";
@@ -1059,10 +1058,11 @@ class Expediente extends Model
                 } else {
                     $dias = $this->getDaysAfterAsig() - $dias_v;
                     if ($asignacion->periodo_id != $periodo->id) {
-                        $dias = $this->difDays($periodo->prdfecha_inicio, now());
+                        $dias = $this->difDays(date("2024-08-26"), now());
                         $text =  "<b>Días transcurridos desde inicio de corte:</b>";
                     } else {
-                        $dias = $this->difDays(date("2024-09-02"), now());
+                       // $dias = $this->difDays(date("2024-08-02"), now());
+                        $dias = $this->getDaysAfterAsig() - $dias_v;
                         $text =  "<b>Días transcurridos desde la asignación:</b>";
                     }
                 }

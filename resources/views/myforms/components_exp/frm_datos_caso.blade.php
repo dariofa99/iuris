@@ -220,7 +220,7 @@
                                 El caso esta en pausa.
                             </span>
                         @else
-                            Días despues de asignado:
+                            {{-- Días despues de asignado: --}}
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
                                 {!! $expediente->getTextForTH('text') !!}
                             </span>

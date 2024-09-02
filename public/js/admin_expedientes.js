@@ -2960,7 +2960,7 @@ function llenarModalDetailsReq(res) {
     $("#btn_cam_nt_req").hide();
     var segmento_id = $("#segmento_id").val();
     $("#btn_cam_nt_req").hide();
-    if (res.requerimiento.notas_f.encontrado) {
+    if (res.requerimiento.notas_f!=null && res.requerimiento.notas_f.encontrado) {
         $("#lbl_not_etireq").text(res.requerimiento.notas_f.nota_etica);
         $("#ntaconcepto_req").text(res.requerimiento.notas_f.nota_concepto);
         $("#cont_notas_req #lbldocevname").text(res.requerimiento.notas_f.docevname);
