@@ -34,7 +34,7 @@
 
 @section('area_forms')
     @php
-        if (!currentUser()->hasRole('estudiante')) {
+        if (!currentUser()->hasRole('estudiante') and currentUser()->hasRole('coordprac') ) {
             $disabled = 'disabled';
         } else {
             if ($expediente->expestado_id == '1' or $expediente->expestado_id == '3' or $expediente->expestado_id == '6') {
@@ -218,7 +218,7 @@
             'user_idnumber' => $expediente->expidnumber,
         ])
     @endif
-    @if (currentUser()->hasRole('estudiante'))
+    @if (currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante'))
         @include('myforms.frm_expediente_user_edit', [
             'user' => $expediente->solicitante,
         ])
@@ -236,4 +236,12 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
     <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
+    <script>
+        @if(currentUser()->hasRole('estudiante'))
+        $("#myFormUserEditExpediente input[name='tel1']")
+            .prop("disabled", true).removeAttr("name");
+        $("#myFormUserEditExpediente input[name='tel2']")
+            .prop("disabled", true).removeAttr("name")
+        @endif
+    </script>
 @endpush

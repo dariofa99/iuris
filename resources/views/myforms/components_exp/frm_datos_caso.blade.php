@@ -10,12 +10,12 @@
 <div @if (currentUser()->hasRole('estudiante')) id="cont_data_req" @endif>
     <div class="row">
         <div class="col-sm-4">
-            {!! Form::label('Identidicación: ') !!}
+            {!! Form::label('Identificación: ') !!}
             <label class="lab-ast-req" title="Campo obligatorio"> * </label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
 
-                    @if (currentUser()->hasRole('estudiante') and !$readonly)
+                    @if ((currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante')) and !$readonly)
                         <button value="{{ $expediente->solicitante->idnumber }}"
                             data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button"
                             id="btn_exp_user_carga" style="background-color: green" class="btn btn-success"

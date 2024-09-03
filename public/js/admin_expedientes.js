@@ -7,10 +7,7 @@ $(document).ready(function () {
     if ($("#expediente_id").val() != undefined) {
         $(":input").inputmask();
         set_tab();
-        $("#myFormUserEditExpediente input[name='tel1']")
-            .prop("disabled", true).removeAttr("name");
-        $("#myFormUserEditExpediente input[name='tel2']")
-            .prop("disabled", true).removeAttr("name")
+       
     }
     $("#search_onlyMy_exp").on("change", async function () {
         buscarExp()
