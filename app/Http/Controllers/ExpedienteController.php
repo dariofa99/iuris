@@ -1088,7 +1088,8 @@ class ExpedienteController extends Controller
 
 
       $estudiantes_fil = DB::table('asistencia')
-        ->leftJoin('expedientes',  'asistencia.astid_estudent', '=', 'expedientes.expidnumberest')
+        ->leftJoin('expedientes', 
+         'asistencia.astid_estudent', '=', 'expedientes.expidnumberest')
         //->join('users', 'users.idnumber', '=', 'asistencia.astid_estudent'  )
         ->select(
           'asistencia.astid_estudent',
@@ -1102,6 +1103,7 @@ class ExpedienteController extends Controller
         ->where('astid_lugar', '=', '130')
         ->Where(function ($query) {
           $query->orwhere('astid_tip_asist', '=', '121')
+            ->orwhere('astid_tip_asist', '=', '122')
             ->orwhere('astid_tip_asist', '=', '125')
             ->orwhere('astid_tip_asist', '=', '127')
             ->orwhere('astid_tip_asist', '=', '128');
@@ -1119,6 +1121,7 @@ class ExpedienteController extends Controller
         ->where('astid_lugar', '=', '130')
         ->Where(function ($query) {
           $query->orwhere('astid_tip_asist', '=', '121')
+            ->orwhere('astid_tip_asist', '=', '122')
             ->orwhere('astid_tip_asist', '=', '125')
             ->orwhere('astid_tip_asist', '=', '127')
             ->orwhere('astid_tip_asist', '=', '128');

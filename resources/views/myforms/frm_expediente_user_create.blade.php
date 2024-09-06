@@ -17,7 +17,7 @@
         @endsection
         @include('msg.ajax.success')
         <div style="display: none" id="content_infoexp" class="alert alert-warning alert-dismissible fade show" role="alert">
-            
+
 
             <span id="rl_user_solicitud">
             </span>
