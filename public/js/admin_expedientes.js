@@ -3010,12 +3010,14 @@ function llenarModalDetailsAct(res) {
     var segmento_id = $("#segmento_id").val();
     hideElement('btn_cam_nt_act');
     $("#cont_notas_ac").hide();
-    if (res.notas_f.encontrado) {
+    
+    if (Object.keys(res.notas_f).length>0) {
+         
         $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
         $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);
         $("#lbl_not_etiac").text(res.notas_f.nota_etica);
         $("#ntaconcepto_text").val(res.notas_f.nota_concepto);
-        $("#cont_notas_ac #lbldocevname").text(res.notas_f.docevname);
+        $("#cont_notas_ac #lbldocevname").text(res.notas_f.docente);
 
         showElement('cont_notas_ac');
         console.log('ids', segmento_id, res.notas_f.segmento_id, res.notas_f.can_edit)

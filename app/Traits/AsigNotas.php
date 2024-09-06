@@ -112,7 +112,8 @@ trait AsigNotas
         $notas =  $this->notas()
           ->where([
             'estidnumber' => $this->expidnumberest,
-            'orgntsid' => $this->origen, 'segid' => $segmento->segmento_id
+            'orgntsid' => $this->origen,
+            'segid' => $segmento->segmento_id
           ])
           ->get();
         //  dd($segmento->segmento_id,'si')  ;
@@ -132,9 +133,9 @@ trait AsigNotas
             'docidnumber' => $nota->docidnumber,
             'docevname' => $nota->docente_eva->name . ' ' . $nota->docente_eva->lastname,
             'estidnumber' => $nota->estidnumber,
-            'periodo' => ($nota->periodo !=null) ? $nota->periodo->prddes_periodo : 'El periodo no existe',
-            'segmento' => ($nota->segmento !=null) ? $nota->segmento->segnombre :'Algo paso con el corte',
-            'segmento_id' => ($nota->segmento !=null) ? $nota->segmento->id: '000',
+            'periodo' => ($nota->periodo != null) ? $nota->periodo->prddes_periodo : 'El periodo no existe',
+            'segmento' => ($nota->segmento != null) ? $nota->segmento->segnombre : 'Algo paso con el corte',
+            'segmento_id' => ($nota->segmento != null) ? $nota->segmento->id : '000',
             'created_at' => Carbon::parse($nota->created_at),
             'updated_at' => Carbon::parse($nota->updated_at),
           ];
@@ -319,5 +320,75 @@ trait AsigNotas
     }
 
     return $notas;
+  }
+
+  function getNotas()
+  {
+    $notas = DB::table("notas")
+      ->join("origen_notas", "origen_notas.id", "=", "notas.orgntsid")
+      ->join("users as docente", "docente.idnumber", "=", "notas.docidnumber")
+      ->join("cptonotas", "cptonotas.id", "=", "notas.cptnotaid")
+      ->select(
+        "nota",
+        "expidnumber",
+        "estidnumber",
+        "docidnumber",
+        "origen_notas.orgntsnombre",
+        "segid",
+        DB::raw("
+          LOWER(
+              REPLACE(
+                  REPLACE(
+                      REPLACE(
+                          REPLACE(
+                              REPLACE(
+                                REPLACE(cptonotas.cpntnombre, 'Á', 'A'), 
+                              'ó','o'),
+                          'É', 'E'), 
+                      'Í', 'I'), 
+                  'Ó', 'O'), 
+              'Ú', 'U')
+          ) as cpntnombre"),
+        "notas.id",
+        "notas.created_at",
+        DB::raw("concat(docente.name,' ',docente.lastname) as docente")
+      )
+      ->where("tbl_org_id", $this->id)
+      ->get()->toArray();
+    /*  Nota::where("tbl_org_id","75009")
+  ->select("nota")->get(); */
+    $notasFormateadas = [];
+    foreach ($notas as $nota) {
+      // dd($nota->cpntnombre);
+      switch ($nota->cpntnombre) {
+        case 'conocimiento':
+          $notasFormateadas['nota_conocimiento'] = number_format($nota->nota, 1, '.', '.');
+          $notasFormateadas['nota_conocimientoid'] = $nota->id; // Asegúrate de tener el ID correcto
+          break;
+        case 'etica':
+          $notasFormateadas['nota_etica'] = number_format($nota->nota, 1, '.', '.');
+          $notasFormateadas['nota_eticaid'] = $nota->id;
+          break;
+        case 'aplicacion':
+          $notasFormateadas['nota_aplicacion'] = number_format($nota->nota, 1, '.', '.');
+          $notasFormateadas['nota_aplicacionid'] = $nota->id;
+          break;
+        case 'concepto':
+          $notasFormateadas['nota_concepto'] = $nota->nota; // Aquí no aplicas number_format si es texto
+          $notasFormateadas['nota_conceptoid'] = $nota->id;
+          $notasFormateadas['docente'] = $nota->docente; // Aquí no aplicas number_format si es texto
+          $notasFormateadas['expidnumber'] = $nota->expidnumber;
+          $notasFormateadas['estidnumber'] = $nota->estidnumber;
+          $notasFormateadas['docidnumber'] = $nota->docidnumber;
+          $notasFormateadas['created_at'] = $nota->created_at;
+          $notasFormateadas['fecha_creacion'] = getSmallDate($nota->created_at);
+          $notasFormateadas['can_edit'] = (auth()->user()->idnumber === $nota->docidnumber) ? true : false;
+          $notasFormateadas['segmento_id'] = $nota->segid;
+
+          break;
+      }
+    }
+
+    return $notasFormateadas;
   }
 }

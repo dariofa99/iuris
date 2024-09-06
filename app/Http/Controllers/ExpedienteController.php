@@ -19,6 +19,7 @@ use App\Solicitud;
 use App\HistorialDatosCaso;
 use App\Jobs\ProcessEmailSendNotificarDirector;
 use App\Jobs\ProcessEmailSendPJ;
+use App\Nota;
 use App\Notifications\NotificarDirector;
 use App\Notifications\SolicitudDocenteCaso;
 use App\Notifications\SolicitudEstudiantesProcesosJuricosExp;
@@ -205,6 +206,73 @@ class ExpedienteController extends Controller
 
   public function prueba(Request $request)
   {
+    $actuacion = Actuacion::find(75009);
+
+    $notas = DB::table("notas")
+      ->join("origen_notas", "origen_notas.id", "=", "notas.orgntsid")
+      ->join("users as docente", "docente.idnumber", "=", "notas.docidnumber")
+      ->join("cptonotas", "cptonotas.id", "=", "notas.cptnotaid")
+      ->select(
+        "nota",
+        "expidnumber",
+        "estidnumber",
+        "docidnumber",
+        "origen_notas.orgntsnombre",
+        DB::raw("
+            LOWER(
+                REPLACE(
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                REPLACE(
+                                  REPLACE(cptonotas.cpntnombre, 'Á', 'A'), 
+                                'ó','o'),
+                            'É', 'E'), 
+                        'Í', 'I'), 
+                    'Ó', 'O'), 
+                'Ú', 'U')
+            ) as cpntnombre"),
+        "notas.id",
+        "notas.created_at",
+        DB::raw("concat(docente.name,' ',docente.lastname) as docente")
+      )
+      ->where("tbl_org_id", "75009")
+      ->get()->toArray();
+    /*  Nota::where("tbl_org_id","75009")
+    ->select("nota")->get(); */
+    $notasFormateadas = [];
+    foreach ($notas as $nota) {
+     // dd($nota->cpntnombre);
+      switch ($nota->cpntnombre) {
+        case 'conocimiento':
+          $notasFormateadas['nota_conocimiento'] = number_format($nota->nota, 1, '.', '.');
+          $notasFormateadas['nota_conocimientoid'] = $nota->id; // Asegúrate de tener el ID correcto
+          break;
+        case 'etica':
+          $notasFormateadas['nota_etica'] = number_format($nota->nota, 1, '.', '.');
+          $notasFormateadas['nota_eticaid'] = $nota->id;
+          break;
+        case 'aplicacion':
+          $notasFormateadas['nota_aplicacion'] = number_format($nota->nota, 1, '.', '.');
+          $notasFormateadas['nota_aplicacionid'] = $nota->id;
+          break;
+        case 'concepto':
+          $notasFormateadas['nota_concepto'] = $nota->nota; // Aquí no aplicas number_format si es texto
+          $notasFormateadas['nota_conceptoid'] = $nota->id;
+          $notasFormateadas['docente'] = $nota->docente; // Aquí no aplicas number_format si es texto
+          $notasFormateadas['expidnumber'] = $nota->expidnumber;
+          $notasFormateadas['estidnumber'] = $nota->estidnumber;
+          $notasFormateadas['docidnumber'] = $nota->docidnumber;
+          $notasFormateadas['created_at'] = $nota->created_at;
+          $notasFormateadas['fecha_creacion'] = getSmallDate($nota->created_at);
+          $notasFormateadas['can_edit'] = (auth()->user()->idnumber === $nota->docidnumber)?true:false;
+         
+          break;
+      }
+    }
+
+    dd($notasFormateadas);
+
     $pdf = \PDF::loadView(
       'pdf.conciliacion_general',
       [
@@ -379,7 +447,7 @@ class ExpedienteController extends Controller
         })->orderBy('expedientes_pausa.created_at', 'desc')
         ->first();
       //dd($pausa->asig_caso_id,$asignacion->id);
-      if ($pausa and $pausa->asig_caso_id!=$asignacion->id) {
+      if ($pausa and $pausa->asig_caso_id != $asignacion->id) {
         $fechaCierre = Carbon::parse("2024-08-29");
         if ($pausa->fecha_final < $fechaCierre) {
 
@@ -1288,6 +1356,7 @@ class ExpedienteController extends Controller
 
   public function pruebaasig(Request $request, $id)
   {
+
     /* $exp = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
       ->join("expedientes_pausa", "expedientes_pausa.asig_caso_id", "=", "asignacion_caso.id")
       ->select("expedientes.id as exp_id", "expedientes.expestado_id", "asignacion_caso.id as asigcaso_id", "expedientes.expid", "expedientes_pausa.fecha_final")

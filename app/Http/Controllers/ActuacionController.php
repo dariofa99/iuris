@@ -357,7 +357,7 @@ class ActuacionController extends Controller
       ->select('parent_rev_actid', 'rev_actid')
       ->where('rev_actid', $id)->first();
     $actuacion->parent = $parentId;
-    $actuacion->notas_f = [];// $actuacion->get_notas();
+    $actuacion->notas_f = $actuacion->getNotas();
     $actuacion->docente_update;
     $actuacion->user_created;
     $actuacion->estudiante;
