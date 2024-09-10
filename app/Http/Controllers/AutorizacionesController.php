@@ -162,7 +162,8 @@ class AutorizacionesController extends Controller
         $autorizacion =  Autorizacion::find($id);
        // dd($autorizacion);    
         if($autorizacion and $autorizacion->estado){
-            $pdf = PDF::loadView('pdf.autorizacion', ['autorizacion'=> $autorizacion]);
+            $pdf = PDF::loadView('pdf.autorizacion', 
+            ['autorizacion'=> $autorizacion]);
             return $pdf->stream('autorizacion.pdf'); 
         }else{
             $url = '/expedientes/'; 
