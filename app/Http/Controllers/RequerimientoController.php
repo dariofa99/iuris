@@ -213,12 +213,18 @@ class RequerimientoController extends Controller
     public function store(Request $request)
     {
 
-
         if ($request->ajax()) {
             $expediente_id = $request->id_control_list_req;
+            if(isset($request->reqfecha) and $request->reqfecha<=now()){
+                return response()->json([
+                    "errors"=>[
+                        "La fecha de Citación debe ser mayor a la fecha actual."
+                    ]
+                ]);
+            }
             if (isset($request->reqexpid)) {
-                if (isset($request->fechareq) and isset($request->horareq)) { //si existe fecha y hora de cita
-                    $reqfechahoracomp12 = $request->fechareq . " " . $request->horareq;
+                if (isset($request->reqfecha) and isset($request->horareq)) { //si existe fecha y hora de cita
+                    $reqfechahoracomp12 = $request->reqfecha . " " . $request->horareq;
                 } else {
                     $reqfechahoracomp12 = '';
                 }

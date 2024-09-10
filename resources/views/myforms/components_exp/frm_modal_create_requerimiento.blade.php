@@ -76,10 +76,12 @@
                      <div class="input-group-prepend">
                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                      </div>
+
                      {!! Form::date('reqfecha',null, [
                          'class' => 'form-control required',
                          'id' => 'reqfecha',
                          'required' => 'required',
+                         "min"=>date('Y-m-d', strtotime('+1 day'))
                          
                      ]) !!}
                  </div>

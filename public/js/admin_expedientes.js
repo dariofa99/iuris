@@ -1958,12 +1958,25 @@ $(document).ready(function () {
         if (errors.length <= 0) {
             var request = convertFormToJSON('myform_req');
             $("#wait").show()
-            await expedientesService.storeRequerimiento(request);
-            toastr.success("Actualizado con éxito", "", {
-                positionClass: "toast-top-right",
-                timeOut: "4000",
-            });
-            location.reload(true);
+            let response = await expedientesService.storeRequerimiento(request);
+            if(response.errors && response.errors.length > 0){
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+                $("#wait").hide()
+            }else{
+                toastr.success("Requerimiento creado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                location.reload(true);
+            }
+            
+            
+            //
         }
     });
     $(".btn_editar_req").on("click", async function (e) {
