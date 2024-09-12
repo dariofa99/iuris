@@ -434,6 +434,7 @@
                                         '<option value="121">Asistió</option>' +
                                         '<option value="122">Falta simple</option>' +
                                         '<option value="123">Falta doble</option>' +
+                                        '<option value="126">Falta reposición</option>'+
                                         '<option value="124">Permiso sin falta</option>' +
                                         '</select></td>' +
                                         '<td><select class="form-control  form-control-sm required" id="idlugarestasis' +
