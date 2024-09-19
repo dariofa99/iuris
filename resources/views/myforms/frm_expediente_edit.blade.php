@@ -243,5 +243,5 @@
         $("#myFormUserEditExpediente input[name='tel2']")
             .prop("disabled", true).removeAttr("name")
         @endif
-    </script>
+    </script> 
 @endpush

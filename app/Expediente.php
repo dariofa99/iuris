@@ -980,6 +980,7 @@ class Expediente extends Model
             ->whereDate('fecha_fin', '>=', $now)
             ->where("periodo_id", $periodo->id)
             ->orderBy('created_at', 'desc')->first();
+           
         if ($estamosVacaciones) {
             if ($act and ($act->actfecha < $estamosVacaciones->fecha_inicio)) {
                 $dias = $this->difDays($act->actfecha, $estamosVacaciones->fecha_inicio);
@@ -996,6 +997,9 @@ class Expediente extends Model
             if ($act and ($act->actfecha > $pausa->fecha_final)) {
                 $dias = $this->difDays($act->actfecha, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde última actuación:</b>";
+            }elseif($pausa->fecha_final <= $periodo->prdfecha_inicio){
+                $dias = $this->difDays($periodo->prdfecha_inicio, date('Y-m-d'));
+                $text =  "<b>Días transcurridos desde inicio de corte:</b>";
             } else {
                 $dias = $this->difDays($pausa->fecha_final, date('Y-m-d'));
                 $text =  "<b>Días transcurridos desde final de pausa:</b>";
