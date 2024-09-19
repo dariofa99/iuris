@@ -408,7 +408,7 @@ class SolicitudesController extends Controller
                 ->render();
             /* NewPush::channel('solicitudes_coord')
             ->message(['data'=>'mensaje','render'=>$render,'renderh'=>$renderh])->publish(); */
-
+ 
             if ($solicitud->type_status_id == 154) {
                 $solicitud->type_status_id = 155;
                 $solicitud->save();
