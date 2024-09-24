@@ -1,5 +1,7 @@
 import { UserService } from './services/users.js';
 import { ExpedientesService } from './services/expedientes.js';
+import { EncuestasService } from './services/encuestas.js';
+const encuestasService = new EncuestasService();
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
@@ -12,6 +14,41 @@ $(document).ready(function () {
     $("#search_onlyMy_exp").on("change", async function () {
         buscarExp()
     });
+
+    $(".btn_start_test").on("click", async function (e) {
+        e.preventDefault();
+        const expid = $("#expid").val()
+        const exp_id = $("#expediente_id").val()
+        Swal.fire({
+            title: 'Inicio encuesta de satisfacción',
+            html: `Se iniciará el proceso de evaluación de satisfacción
+             para el expediente ${expid}.<br><br>
+            Se cerrará la sesión actual.<br> ¿Desea continuar?
+              
+              `,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Si, Continuar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let request = {
+                    exp_id: exp_id
+                }
+                let response = await encuestasService.storeExpEncuSatisf(request);
+                const cleanToken = response.token.replace(/=/g, "");
+                const url = `/expediente/evaluar/encuesta/?token=${cleanToken}&expid=${exp_id}`;
+                window.location = url
+                //window.open(url, '_blank');
+                $("#wait").hide();
+                
+
+            }
+        });
+        // var response = await encuestasService.buscarConciliaciones(request);
+    })
 
     $("#content_count_asesorias_inlist").on("click", ".btn_search_color", async function (e) {
         var request = {

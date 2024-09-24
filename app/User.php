@@ -177,6 +177,11 @@ class User extends Authenticatable
         return $this->hasMany(Expediente::class, 'expidnumberest', 'idnumber');
     }
 
+    public function casosRevision()
+    {
+        return $this->hasMany(Expediente::class, 'expidnumber', 'idnumber');
+    }
+
     public function asig_caso()
     {
         return $this->hasMany(AsignacionCaso::class, 'asigest_id', 'idnumber');

@@ -120,6 +120,13 @@
                                         <p>Requerimientos</p>
                                     </a>
                                 </li>
+
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('expencuesta.index') }}" class="nav-link">
+                                        <p>Ver resultados de encuestas</p>
+                                    </a>
+                                </li>
+
                             @endif
                             @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
                                 <li class="nav-item ml-3">

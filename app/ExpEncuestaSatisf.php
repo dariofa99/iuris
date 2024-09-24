@@ -22,9 +22,9 @@ public function aditional_data()
     return $this->hasMany(ExpEncSatifAditionalData::class, 'exp_satisf_id', 'id');
 }
 
-public function conciliacion()
+public function expediente()
 {
-    return $this->belongsTo(Conciliacion::class, 'conciliacion_id', 'id');
+    return $this->belongsTo(Expediente::class, 'exp_id', 'id');
 }
 
 }

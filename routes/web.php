@@ -53,9 +53,12 @@ Route::get('conciliaciones/get/comentarios', 'ConciliacionesController@getComent
 Route::get('conciliacion/encuestas/start', 'ConcEncuSatisfaccionController@index');
 Route::get('encuestas/find/user', 'ConcEncuSatisfaccionController@findUser');
 Route::get('expediente/encuestas/start', 'ExpEncuSatisfaccionController@index');
-
-
-
+Route::get('expedientes/evaluar/buscar', 'ExpEncuSatisfaccionController@buscarExpedientes');
+Route::post('expedientes/evaluar/store', 'ExpEncuSatisfaccionController@store');
+Route::get('expediente/evaluar/encuesta', 'ExpEncuSatisfaccionController@renderForm');
+Route::get('expedientes/evaluar/reportes', 'ExpEncuSatisfaccionController@showResultados')->name("expencuesta.index");
+Route::get('expedientes/evaluar/data/chart', 'ExpEncuSatisfaccionController@getDataForChart');
+Route::post('expedientes/evaluar/update', 'ExpEncuSatisfaccionController@update');
 
 Route::get('videos', function () {
   return view('videos');

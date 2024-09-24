@@ -21,32 +21,51 @@ $(document).ready(function () {
     });
     $("#myEvaNivSatForm").on("submit", async function (e) {
         e.preventDefault();
-        var request = convertFormToJSON("myEvaNivSatForm");
-        var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
-        request["data"] = (data);
-        $("#wait").show();
-        var response = await encuestasService.updateEncuSatisfExp(request);
         Swal.fire({
-            title: 'Registrado con éxito',
-            text: "Gracias por su evaluación...",
+            title: 'Envío encuesta de satisfacción',
+            html: `¿Está seguro de enviar la encuesta de satisfacción?
+              
+              `,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Continuar',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Si, Continuar',
             cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                var request = convertFormToJSON("myEvaNivSatForm");
+                var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
+                request["data"] = (data);
+                $("#wait").show();
+                var response = await encuestasService.updateEncuSatisfExp(request);
+                Swal.fire({
+                    title: 'Registrado con éxito',
+                    text: "Gracias por su evaluación...",
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Continuar',
+                    cancelButtonText: 'Cancelar'
+                });
+                let html = `
+                <div class="alert alert-success" role="alert">
+                    ¡El registro se ha completado con éxito!
+               
+               <br>
+               <a href="/login"> Regresar </a>
+                    </div>
+                
+                `
+                $("#renderQuestion").html(html);
+                var url = window.location.hostname;
+                 history.pushState({}, "", "/login")
+                $("#wait").hide();
+                $("#wait").hide();
+                
+
+            }
         });
-        let html = `
-        <div class="alert alert-success" role="alert">
-            ¡El registro se ha completado con éxito!
        
-       <br>
-       <a href="/login"> Regresar </a>
-            </div>
-        
-        `
-        $("#renderQuestion").html(html);
-        var url = window.location.hostname;
-         history.pushState({}, "", "/login")
-        $("#wait").hide();
     })
 
     $("#myFormBuscarConciliacion").on("submit", async function (e) {

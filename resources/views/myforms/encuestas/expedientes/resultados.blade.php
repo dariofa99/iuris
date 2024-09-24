@@ -11,7 +11,7 @@ Administración de encuestas
 <h3>
    Consultorios Jurídicos
 </h3>
-@endsection
+@endsection 
 @section('navbar')
     @include('content.navbar')
 @endsection
@@ -97,8 +97,8 @@ Administración de encuestas
         </div>
     </div>
 
+   
     @include('myforms.categorias.partials.modals.create')
-
 
 
 

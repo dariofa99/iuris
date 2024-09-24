@@ -7,12 +7,37 @@ $(document).ready(async function () {
     set_tab()
     await getChart();
     
-    
+    $("#btn_new_categoryInExp").on("click", function (e) {
+        $("#myformEditRCategory").attr("id", "myformCreateCategory");
+        $("#myformCreateCategory").attr("id", "myformCreateInEnCategory");
+        $("#myformCreateInEnCategory")[0].reset();
+        $("#aditional_options_table tbody").html("");
+        $("#content_aditional_options").hide();
+        $("#myformCreateInEnCategory button[type=submit]")
+            .text("Guardar")
+            .removeClass("btn-warning")
+            .addClass("btn-primary");
+        //$(".select2").select2();
+        var inputElement = document.getElementById("short_name");
 
-    $("#myModal_create_category").on("submit", "#myformCreateInCategory", async function (e) {
+        // Accede al elemento padre con la clase 'form-group'
+        var formGroup = inputElement.parentElement;
+        formGroup.remove()
+
+        var inputElement = document.getElementById("table");
+
+        // Accede al elemento padre con la clase 'form-group'
+        var formGroup = inputElement.parentElement;
+        formGroup.remove()
+        $("#lbl_modal_title").text("Creando categoria");
+        $("#myModal_create_category input[name='short_name']").prop('readonly', true);
+        $("#myModal_create_category").modal("show");
+    });
+
+    $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
         e.preventDefault()
         $("#wait").show();
-        var request = convertFormToJSON('myformCreateInCategory');
+        var request = convertFormToJSON('myformCreateInEnCategory');
         request['table'] = 'exp_encuesta_satisf'
         let response = await referenciasService.storeReferencesData(request)
         window.location.reload()
@@ -24,20 +49,6 @@ $(document).ready(async function () {
         $("#myModal_create_category").modal("hide");
     });
 
-    $("#myModal_create_category").on("submit", "#myformCreateCategory", async function (e) {
-        e.preventDefault()
-        $("#wait").show();
-        var request = convertFormToJSON('myformCreateCategory');
-        //let response = await referenciasService.storeReferencesData(request)
-        Toast.fire({
-            title: "Categoría creada con éxito.",
-            icon: "success",
-            timer: 2000,
-        });
-        $("#myModal_create_category").modal("hide");
-        // $("#content_categories_list").html(response.render_view);
-        $("#wait").hide();
-    });
 
     $("#list_encuind").on('click', '.pagination a', async function (e) {
         e.preventDefault();

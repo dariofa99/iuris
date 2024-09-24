@@ -17,7 +17,7 @@ use App\Services\ExpEncuSatisfaccionService;
 use App\Services\LoginService;
 use App\Services\ReferenciasService;
 use App\Services\UsersService;
-
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -61,6 +61,7 @@ class ExpEncuSatisfaccionController extends Controller
             )->render();
             return response()->json($view);
         }
+        //dd($request->get('token'));
         return view('myforms.encuestas.expedientes.formulario', compact('encuesta'));
     }
 
@@ -103,6 +104,7 @@ class ExpEncuSatisfaccionController extends Controller
                 $user = false;
             }
         }
+       // return response()->json($user);
         if ($user) {
             $encontrado = true;
             Auth::login($user);
@@ -116,13 +118,35 @@ class ExpEncuSatisfaccionController extends Controller
 
     public function store(Request $request)
     {
+        $encuesta = ExpEncuestaSatisf::where('exp_id', $request->get('exp_id'))
+        ->first();
+       
+        if($encuesta){
+            $expe = Expediente::find($request->input("exp_id"));
+            if($expe){
+                $user = User::find($expe->solicitante->id);
+                Auth::login($user);
+            }
+            return response()->json($encuesta);
+        }else{
+            $request['user_id'] = auth()->user()->id;
+            if($request->has("exp_id")){
+                $expe = Expediente::find($request->input("exp_id"));
+                if($expe){
+                    $user = User::find($expe->solicitante->id);
+                    Auth::login($user);
+                    $request['user_id'] = $expe->solicitante->id;
+                }
+            }
+            
+            //$request['tipo_usuario_id'] = 1;
+            $encuesta = $this->encuestaService->store($request);
+            return response()->json($encuesta);
+        }
         // return response()->json($request->all());
-        $request['user_id'] = auth()->user()->id;
-        //$request['tipo_usuario_id'] = 1;
-        $encuesta = $this->encuestaService->store($request);
         // 
 
-        return response()->json($encuesta);
+        
     }
 
     public function update(Request $request)

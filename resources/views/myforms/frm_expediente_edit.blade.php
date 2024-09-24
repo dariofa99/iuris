@@ -26,18 +26,29 @@
 
 @section('area_buttons')
     <div class="float-right" style="float: right !important;">
+        @if(!currentUser()->hasRole('estudiante') and !currentUser()->hasRole('docente'))
+        <a href="#" class="btn_start_test  btn btn-info" style="color:#054c64">
+           Realizar encuesta</a>
+      @endif
         <a href="#" class="btn-atrasexed  btn bg-gray" style="color:#777">
             <i class="fa fa-backward"></i> Atrás</a>
+
+        
+
     </div>
-@endsection
+@endsection 
 
 
 @section('area_forms')
     @php
-        if (!currentUser()->hasRole('estudiante') and currentUser()->hasRole('coordprac') ) {
+        if (!currentUser()->hasRole('estudiante') and currentUser()->hasRole('coordprac')) {
             $disabled = 'disabled';
         } else {
-            if ($expediente->expestado_id == '1' or $expediente->expestado_id == '3' or $expediente->expestado_id == '6') {
+            if (
+                $expediente->expestado_id == '1' or
+                $expediente->expestado_id == '3' or
+                $expediente->expestado_id == '6'
+            ) {
                 $disabled = '';
             } else {
                 $disabled = 'disabled';
@@ -124,10 +135,10 @@
         <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
             <div class="row">
                 <div class="col-md-12 content_oficina_virtual" id="content_oficina_virtual">
-                    @include('myforms.components_exp.frm_oficina_virtual') 
+                    @include('myforms.components_exp.frm_oficina_virtual')
                 </div> <!-- /.md12-->
             </div>
-        </div> 
+        </div>
 
         <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
             @include('myforms.components_exp.frm_datos_caso')
@@ -237,11 +248,11 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
     <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
     <script>
-        @if(currentUser()->hasRole('estudiante'))
-        $("#myFormUserEditExpediente input[name='tel1']")
-            .prop("disabled", true).removeAttr("name");
-        $("#myFormUserEditExpediente input[name='tel2']")
-            .prop("disabled", true).removeAttr("name")
+        @if (currentUser()->hasRole('estudiante'))
+            $("#myFormUserEditExpediente input[name='tel1']")
+                .prop("disabled", true).removeAttr("name");
+            $("#myFormUserEditExpediente input[name='tel2']")
+                .prop("disabled", true).removeAttr("name")
         @endif
-    </script> 
+    </script>
 @endpush
