@@ -65,6 +65,11 @@
                                 general en cualquier asunto susceptible de transacción o desistimiento.
                             </li>
                         </ul>
+                        <br>
+                        <a id="tramites-continuar" href="#">
+                           Continuar
+                        </a>
+
                     </div>
 
                     <div class="tab-pane fade show" id="tramites_tab" role="tabpanel" aria-labelledby="tramites-tab">

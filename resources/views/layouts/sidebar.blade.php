@@ -29,7 +29,9 @@
             <div class="info">
                 <small>
                     <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
-                        title="Ingresar a perfil">{{ Auth::user()->name }}</a>
+                        title="Ingresar a perfil">{{ Auth::user()->name }}<br>
+                    Ver perfil
+                    </a>
                 </small>
 
                 @if (currentUser()->turno)
@@ -123,7 +125,7 @@
 
                                 <li class="nav-item ml-3">
                                     <a href="{{ route('expencuesta.index') }}" class="nav-link">
-                                        <p>Ver resultados de encuestas</p>
+                                        <p>Administrar encuestas</p>
                                     </a>
                                 </li>
 

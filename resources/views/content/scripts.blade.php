@@ -131,7 +131,7 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-danger" style="font-size:19px">';
+        message += '<div class="alert alert-info" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
@@ -139,7 +139,7 @@
                       con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 23 de septiembre de 2024 <br>
+        message += `<span> Últ. Actualización: 25 de septiembre de 2024 <br>
                         Si el problema persiste comuníquese al 310-6038006  
                       </span>`;
 

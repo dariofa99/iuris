@@ -1,4 +1,4 @@
-<div class="container">
+{{-- <div class="container">
     <div class="row">
         <div class="col-md-5 pt-3">
 
@@ -134,4 +134,47 @@
         </div>
 
     </div>
+</div> --}}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <h4 class="card-header bg-white" style="text-align: center">
+                    Consultorios Jurídicos
+                </h4>
+                <div class="card-body">
+                    <div class="card-login-body">
+                        <img src="{{asset('dist/img/online-justice.png')}}" alt=""><br>
+                    Solicite asesoría jurídica de manera virtual.
+                    </div>
+                </div>
+                <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
+                    <a href="/solicitudes/expedientes/recepcion/?paso=1" class="btn btn-warning" >
+                        CONTINUAR
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <h4 class="card-header bg-white" style="text-align: center">
+                    Centro de conciliación
+                </h4>
+                <div class="card-body">
+                    <div class="card-login-body">
+                        <img src="{{asset('dist/img/collaboration.png')}}" alt=""><br>
+                        Solicite y gestione de manera eficiente, rápida y segura un proceso conciliatorio.
+              
+                    </div>
+                </div>
+                <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
+                    <a href="#" class="btn btn-warning" id="btn_solicitar_conciliacion">
+                        CONTINUAR
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@include('myforms.frm_modal_login')

@@ -12,6 +12,7 @@
 @endsection
 
 @push('scripts')
+
 @if (config('app.name') != 'ConciliApp')
 <script type="module" src={{ asset('js/admin_login.js') }}></script>
 @endif   

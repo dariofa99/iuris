@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AdminEncuestas;
 use Illuminate\Http\Request;
 use App\Auditoria;
 use App\ConcEncSatifAditionalData;
@@ -73,6 +74,7 @@ class ExpEncuSatisfaccionController extends Controller
                 'categoria' => 'tipo_doc'
             ]
         );
+    
         return view('myforms.encuestas.expedientes.index', compact('tipodoc'));
         
     }
@@ -223,7 +225,10 @@ class ExpEncuSatisfaccionController extends Controller
             ];
             return response()->json($response);
         }
-        return view('myforms.encuestas.expedientes.resultados', compact('encuestas'));
+        
+        $admin_encuestas = AdminEncuestas::all();
+
+        return view('myforms.encuestas.expedientes.resultados', compact('encuestas','admin_encuestas'));
         //$encuestas = ConcEncuestaSatisf::orderBy('created_at', 'asc')->paginate(1);
 
 

@@ -4,12 +4,36 @@
             <img src="{{ asset('dist/img/udenarbl.png') }}" class="img" style="width: 250px;margin:10px;" alt="User Image">
         </a>
     </div>
-    <div class="col-md-6 " style="padding-top: 25px; text-align: center; font-size: 17px;">
+    <div class="col-md-7" style="padding-top: 25px; text-align: center; font-size: 17px;">
         <p style="color:#ffffff;     font-size: 20px; font-weight: 900;"><b>Consultorios Jurídicos y Centro de Conciliación<br>"Eduardo Alvarado Hurtado"</b></p> 
     </div>
+  {{--   <div class="col-md-2" style="padding: 25px;">
+        <a href="/">
+            Iniciar sesión    
+        </a>
+    </div> --}}
 </div>
-
-<div clas="row" style="text-align:center;margin:17px;">
-    <p style="color:#000000;     font-size: 20px;">
-       <b>Sistema de atención virtual</b></p>   
+<div class="container-fluid">
+  
+<div class="row" >
+           
+        <div class="col-md-5" style="padding-left: 35px;">
+            @if(Request::is("login"))
+            <h2>
+                <a href="#" class="btn_login">
+                    ¿Ya tienes una cuenta? Inicia sesión.
+                </a>
+            </h2> 
+            
+            @include('msg.alerts')
+            @endif
+        </div>
+     
+        <div class="col-md-6">
+            <p style="color:#000000;     font-size: 20px;">
+                <b>Sistema de atención virtual</b></p>  
+        </div>
+    </div>
+   
+     
 </div>     

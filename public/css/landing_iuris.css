@@ -17,7 +17,14 @@ body {
     margin-bottom: 100px;
     /* Margin bottom by footer height */
 }
-
+.card-login-body{
+  align-items: center;
+  text-align: center;
+  min-height: 257px;
+}
+.card-login-body img{
+  width: 50%;
+}
 .card-header {
     position: relative;
     font-size: 17px !important;

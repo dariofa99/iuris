@@ -9,7 +9,13 @@
                 <span class="text-muted"><a href="http://derecho.udenar.edu.co/" target="_blank">Facultad de Derecho y Ciencias Políticas</a><br>Acreditado en Alta Calidad<br>Res. 2160 05/02/2016</span>
             </div>
                 <div class="col-md-4" style="text-align: right;">
-                <span class="text-muted"><a href="/register">Registro (Estudiantes matriculados)</a><br><span style="font-size: 11px;">IURIS - AMATAI Ingeniería Informática SAS<br>© {{date('Y')}}</span></span>
+                <span class="text-muted">
+                    <a href="/register">Registro (Estudiantes matriculados)</a><br>
+                    <span style="font-size: 11px;">IURIS - AMATAI Ingeniería Informática SAS
+                        <br> darioj99@udenar.edu.co
+                        <br>© {{date('Y')}}
+                    </span>
+                </span>
             </div>
         </div>          
     </div>

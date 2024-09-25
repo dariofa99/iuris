@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    
     $("#btn_solicitar_conciliacion").on("click",function(e) {
         e.preventDefault();
         $("#myModal_detalles_login_conc").modal("show")
@@ -19,5 +20,11 @@ $(document).ready(function () {
             $("#btn_continuar_conciliacion").prop("disabled",false);
             $("#btn_continuar_expedientes").prop("disabled",false);
         }
+    })
+    $(".btn_login").on("click",function(e) {
+        $("#myModal_iniciar_sesion").modal("show")
+    })
+    $("#tramites-continuar").on("click",function(e) {
+        $("#tramites-tab").trigger("click")
     })
 });

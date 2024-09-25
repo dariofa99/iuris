@@ -20,22 +20,25 @@
                 'message' =>
                     "Diligencia el siguiente formulario con la información de la persona que solicita la asesoría, recuerda que si ya tienes una cuenta debes <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Todos los campos son obligatorios.",
                 'view' => 'myforms.recepcion.frm_solicitud_form',
+                'toltip'=>"Formulario inicial de solicitud"
             ],
             1 => [
                 'id' => 'btn_sala_espera',
                 'tipo_usuario' => 195,
                 'visible' => true,
                 'title' => 'Espera',
-                'message' => 'Espera el turno, cuando un asesor este disponible revisará la solicitud.',
+                'message' => 'Espera el turno, cuando la persona asesora este disponible revisará la solicitud.',
                 'view' => 'myforms.recepcion.expedientes.sala_espera.sala_espera',
+                 'toltip'=>"Proceso donde se evalua la solicitud por la persona asesora"
             ],
             2 => [
                 'id' => 'btn_culminar_regus',
                 'tipo_usuario' => 196,
                 'visible' => true,
                 'title' => 'Registro',
-                'message' => 'Para activar la sala de chat se necesita terminar el registro.',
+                'message' => 'Para activar la sala virtual se necesita terminar el registro.',
                 'view' => 'myforms.recepcion.expedientes.frm_parte_solicitante',
+                'toltip'=>"Proceso donde la persona solicitante cúlmina el registro de información"
             ],
             3 => [
                 'id' => 'btn_',
@@ -44,6 +47,7 @@
                 'title' => 'Virtual',
                 'message' => 'Recuerda tener activado el micrófono.',
                 'view' => 'myforms.recepcion.expedientes.chat.chat',
+                'toltip'=>"Proceso donde se asesora a la persona solicitante "
             ],
         ];
 
@@ -159,6 +163,8 @@
 @endphp
 @push('scripts')
     @include('myforms.conciliaciones.script')
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
     <script src="https://meet.jit.si/external_api.js"></script>
     {!! Html::script('js/config_jitsi.js?v=3') !!}
     {{-- <script type="module" src={{asset("js/conciliaciones.js")}}></script>
@@ -177,5 +183,7 @@
                 location.reload()
             }
         });
+        tippy('[data-tippy-content]');
+
     </script>
 @endpush
