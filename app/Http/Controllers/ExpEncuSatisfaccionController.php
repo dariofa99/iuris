@@ -142,7 +142,7 @@ class ExpEncuSatisfaccionController extends Controller
             }
             
             //$request['tipo_usuario_id'] = 1;
-            $encuesta = $this->encuestaService->store($request);
+            $encuesta = $this->encuestaService->store($request); 
             return response()->json($encuesta);
         }
         // return response()->json($request->all());

@@ -44,7 +44,7 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
 
     /* try { */
       $token = str_replace("/", "&&&",Crypt::encryptString(time()));
-      //$token =  str_replace("/", "&&&", $data_chat);
+      $token = rtrim($token, '=');
         
       $encuesta =  ExpEncuestaSatisf::create([
         'fecha_registro' => date('Y-m-d'),
