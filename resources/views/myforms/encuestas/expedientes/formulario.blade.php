@@ -17,9 +17,10 @@
                                 acceso y la atención brindada para satisfacer su necesidad jurídica. Por ello, a
                                 continuación encontrará algunos criterios que nos ayudaran a establecer la evaluación y
                                 mejora continua del servicio. Recuerde que su participación es voluntaria y muy valiosa.
-<br>
-Por favor marque de la manera más objetiva posible la respuesta que mejor represente su opinión.
-                               
+                                <br>
+                                Por favor marque de la manera más objetiva posible la respuesta que mejor represente su
+                                opinión.
+
 
 
                             </label>
@@ -30,14 +31,10 @@ Por favor marque de la manera más objetiva posible la respuesta que mejor repre
                         <div class="row justify-content-center">
                             <div class="col-md-8">
                                 <label>
-                                 <br>                   
-                                
-                                Persona usuaria: {{auth()->user()->name}} {{auth()->user()->lastname}}<br>
-                                Correo electrónico: {{auth()->user()->email}}<br>
-                                Fecha: {{ date('Y-m-d') }}<br>
-
-                               {{--  Número de expediente: {{Request::get("expid")}} --}}
-
+                                    <br>
+                                    Persona usuaria: {{ auth()->user()->name }} {{ auth()->user()->lastname }}<br>
+                                    Correo electrónico: {{ auth()->user()->email }}<br>
+                                    Fecha: {{ date('Y-m-d') }}<br>
                                 </label>
                             </div>
                         </div>
