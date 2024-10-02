@@ -71,7 +71,10 @@
                     </td>
                 </tr>
 
-                @if (currentUser()->hasRole('coordprac') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('amatai'))
+                @if (currentUser()->hasRole('monitor_consultorios') ||
+                currentUser()->hasRole('coordprac') 
+                || currentUser()->hasRole('diradmin') 
+                || currentUser()->hasRole('amatai'))
                     <tr>
                         <td>
                             Asistencia
