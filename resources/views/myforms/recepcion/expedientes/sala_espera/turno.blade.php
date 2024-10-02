@@ -31,7 +31,7 @@
                             @if ($solicitud->getTurnoEnAtencion() != 0)
                                 {{ $solicitud->getTurnoEnAtencion() }}
                             @else
-                                Espere...
+                                Espere un momento por favor...
                             @endif
 
                         @endif
@@ -41,13 +41,13 @@
         @elseif(isset($solicitud) and $solicitud->type_status_id == 155)
             <div class="content-turno">
                 <h3>
-                    La solicitud esta siendo revisada.
+                    La solicitud esta siendo revisada, por favor espere...
                 </h3>
             </div>
         @elseif(isset($solicitud) and $solicitud->type_status_id == 157)
-       <h3>
-        {{ $solicitud->mensaje }}
-        </h3>     
+            <h3>
+                {{ $solicitud->mensaje }}
+            </h3>
         @endif
     </div>
 

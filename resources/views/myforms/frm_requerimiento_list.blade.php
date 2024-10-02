@@ -141,10 +141,11 @@
 
                                         @if (
                                             !$req->evaluado and
+                                                (currentUser()->hasRole('monitor_consultorios') ||
                                                 currentUser()->hasRole('amatai') 
                                                 || currentUser()->hasRole('secretaria') 
                                                 || currentUser()->hasRole('coordprac')
-                                                || currentUser()->hasRole('diradmin'))
+                                                || currentUser()->hasRole('diradmin')))
                                             <a href='#' data-id="{{ $req->id }}"
                                                 data-estado="{{ $req->reqentregado }}"
                                                 class='btn  {{ $req->reqentregado ? 'btn-danger' : 'btn-primary' }}  btn-sm btn-block btn_cambiar_estado_requerimiento'
@@ -158,7 +159,8 @@
                                             class='btn_editar_req btn btn-success btn-sm btn-block' role='button'>
                                             Detalles
                                         </a>
-                                        @if (currentUser()->hasRole('coordprac') ||
+                                        @if (currentUser()->hasRole('monitor_consultorios') ||
+                                        currentUser()->hasRole('coordprac') ||
                                                 currentUser()->hasRole('amatai') ||
                                                 currentUser()->hasRole('diradmin')
                                                 || (currentUser()->hasRole('estudiante') and $req->expediente->expidnumberest == currentUser()->idnumber) ||

@@ -101,7 +101,10 @@
     @endif
     <div class="row">
         <div class="col-md-12">
-            <div class="form-group has-feedback"><label for="description">Descripción del caso</label>
+            <div class="form-group has-feedback">
+                <label for="description">Descripción del caso 
+                    <i data-tippy-content="Describa de manera clara y concisa su caso" class="fa fa-question-circle" aria-hidden="true"></i>
+                </label>
                 <textarea required name="description" placeholder="Describe tu caso antes de enviar la solicitud..." id="description"
                     class="form-control form-control-sm required" rows="5"></textarea>
             </div>

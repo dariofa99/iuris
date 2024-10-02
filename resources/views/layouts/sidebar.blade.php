@@ -30,7 +30,7 @@
                 <small>
                     <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
                         title="Ingresar a perfil">{{ Auth::user()->name }}<br>
-                    Ver perfil
+                        Ver perfil
                     </a>
                 </small>
 
@@ -112,7 +112,8 @@
                                     </a>
                                 </li>
                             @endif
-                            @if (currentUser()->hasRole('coordprac') ||
+                            @if (currentUser()->hasRole('monitor_consultorios') ||
+                                    currentUser()->hasRole('coordprac') ||
                                     currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral') ||
                                     currentUser()->hasRole('amatai') ||
@@ -122,14 +123,19 @@
                                         <p>Requerimientos</p>
                                     </a>
                                 </li>
+                            @endif
 
+                            @if (currentUser()->hasRole('coordprac') ||
+                                    currentUser()->hasRole('diradmin') ||
+                                    currentUser()->hasRole('dirgral') ||
+                                    currentUser()->hasRole('amatai'))
                                 <li class="nav-item ml-3">
                                     <a href="{{ route('expencuesta.index') }}" class="nav-link">
                                         <p>Administrar encuestas</p>
                                     </a>
                                 </li>
-
                             @endif
+
                             @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
                                 <li class="nav-item ml-3">
                                     <a href="/autorizaciones" class="nav-link">
@@ -210,8 +216,8 @@
                                         <p>Conciliaciones</p>
                                     </a>
                                 </li>
-                              
-                              
+
+
                             </ul>
                         </li>
                     @endif
@@ -297,15 +303,13 @@
                                     <p>Ver documentos activos</p>
                                 </a>
                             </li>
-                            @if(currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('dirgral'))
-                            <li class="nav-item ml-3">
-                                <a href="{{ url('/bibliotecas/inactivas/view') }}" class="nav-link">
+                            @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
+                                <li class="nav-item ml-3">
+                                    <a href="{{ url('/bibliotecas/inactivas/view') }}" class="nav-link">
 
-                                    <p>Ver historico</p>
-                                </a>
-                            </li>
+                                        <p>Ver historico</p>
+                                    </a>
+                                </li>
                             @endif
                             <li class="nav-item ml-3">
                                 <a href="/bibliotecas/create" class="nav-link">
@@ -333,8 +337,8 @@
                                     <a href="{{ route('graficas.index') }}" class="nav-link">
                                         <p>Gráficos</p>
                                     </a>
-                                </li> 
-                                    
+                                </li>
+
                             </ul>
                         </li>
                     @endif
