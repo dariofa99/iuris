@@ -19,3 +19,5 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /public/js/config.js
+/bootstrap/cache/config.php
+
