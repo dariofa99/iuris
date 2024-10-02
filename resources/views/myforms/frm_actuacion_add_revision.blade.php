@@ -16,7 +16,7 @@
             'files' => true,
         ]) !!}
         <div class="row">
-           
+
             <input type="hidden" name="parent_actuacion_id" value="" id="parent_actuacion_id">
             <input type="hidden" name="act_id" value="" id="act_id">
             {!! Form::hidden('actestado_id', '101', ['id' => 'actestado_id2', 'class' => 'form-control', 'readonly']) !!}
@@ -44,7 +44,7 @@
                     </div>
                     {!! Form::text('actfecha', fechaActual(), [
                         'class' => 'form-control',
-                        'required' => 'required',                       
+                        'required' => 'required',
                         'readonly',
                     ]) !!}
                 </div>
@@ -68,18 +68,18 @@
                 </div>
             </div>
             <div class="col-md-12">
-				{!! form::label('Archivo', 'Subir archivo') !!}
-                <div class="form-group">                 
+                {!! form::label('Archivo', 'Subir archivo') !!}
+                <div class="form-group">
                     {!! form::file('actdocnomgen', null, ['class' => 'form-control required', 'id' => 'actdocnomgen']) !!}
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="form-group">
                     <br>
-					<button id="myformCreateCorreccionActButton" class="btn btn-primary btn-sm" type="button">
-						Agregar corrección
-					</button>
-                 {{--    {!! link_to(
+                    <button id="myformCreateCorreccionActButton" class="btn btn-primary btn-sm" type="button">
+                        Agregar corrección
+                    </button>
+                    {{--    {!! link_to(
                         '#',
                         'Agregar Corrección',
                         $attributes = [
