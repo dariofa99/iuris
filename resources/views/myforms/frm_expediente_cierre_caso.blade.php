@@ -2,9 +2,10 @@
     <button disabled type="button" class="btn btn-danger btn-sm mb-2" id="btn_trigger_exp_edit_cierre_caso">
         Se debe solicitar la asignación del docente
     </button>
+
 @elseif(currentUser()->hasRole('estudiante') and
         ($expediente->exptipoproce_id == 1 and
-            $expediente->getDaysOrColorForClose('dias') >= 10 and
+            $expediente->getDaysOrColorForClose('dias') > 10 and
             $expediente->estado->id == 1 || $expediente->estado->id == 3) ||
             ($expediente->exptipoproce_id != 1 and $expediente->estado->id == 1 || $expediente->estado->id == 3) or
         (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral')) or
@@ -14,6 +15,8 @@
         Actualizar Solicitud de cierre
     </button>
 @endif
+
+
 
 @if (
     $expediente->exptipoproce_id == 1 and

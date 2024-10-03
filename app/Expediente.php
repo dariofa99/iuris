@@ -292,7 +292,7 @@ class Expediente extends Model
             $days = (30 - $dias);
             $mgs = $days . ' Días';
             if ($days >= 1) $color = '#DA443F !important';
-            if ($days >= 10) $color = '#F4D03F !important';
+            if ($days > 10) $color = '#F4D03F !important';
             if ($days >= 20) $color = '#0CA418 !important';
             if ($days < 1) {
                 $color = 'gray !important';
