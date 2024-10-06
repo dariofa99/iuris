@@ -247,7 +247,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('expedientes/get/pausas', 'ExpedienteController@getPausasExpediente');
     Route::delete('expedientes/delete/pausa/{id}', 'ExpedienteController@deletePausaExpediente');
     Route::put('expedientes/update/pausa/{id}', 'ExpedienteController@updatePausaExpediente');
-
+    Route::post('expediente/add/user', 'ExpedienteController@addUser');
 
 
     Route::get('expediente/createstream/{id}', 'ExpedienteController@createStream');

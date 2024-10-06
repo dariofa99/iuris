@@ -1,8 +1,6 @@
 @component('components.b4.modal_large')
-
-
     @slot('trigger')
-        myModal_exp_user_edit
+        myModal_exp_user_add
     @endslot
 
     @slot('title')
@@ -12,9 +10,6 @@
 
 
     @slot('body')
-        @section('msg-contenido')
-            Registrado
-        @endsection
         @include('msg.ajax.success')
         <div style="display: none" id="content_infoexp" class="alert alert-warning alert-dismissible fade show" role="alert">
 
@@ -29,8 +24,8 @@
 
             </ul>
         </div>
-        <div id="content_user_exp_asig">
-            @include('myforms.components_exp.frm_user_register')
+        <div id="content_user_exp_add">
+            @include('myforms.components_exp.frm_user_add')
         </div>
     @endslot
 @endcomponent

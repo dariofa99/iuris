@@ -224,6 +224,7 @@
     @include('myforms.components_exp.frm_modal_pausar_expediente')
     @include('myforms.components_exp.frm_modal_pausas_expediente')
     @include('myforms.components_exp.frm_modal_cerrar_nota_minima')
+    @include('myforms.components_exp.frm_modal_agregar_usuario')
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
             'user_idnumber' => $expediente->expidnumber,

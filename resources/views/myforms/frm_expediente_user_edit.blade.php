@@ -18,6 +18,8 @@
         @php
             if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('coordprac')) {
                 $disabled = '';
+            }else{
+                $disabled = 'disabled';
             }
         @endphp
         <form id="myFormUserEditExpediente" method="POST">
@@ -38,8 +40,9 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <button id="btnActualizarUserForEstudiante" type="button" class="btn btn-primary btn-sm btn-block">Actualizar
-                        datos</button>
+                    <button id="btnActualizarUserForEstudiante" type="button" class="btn btn-primary btn-sm btn-block">
+                        Actualizar datos
+                    </button>
                 </div>
             </div>
         </form>

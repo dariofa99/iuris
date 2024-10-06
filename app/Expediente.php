@@ -165,6 +165,13 @@ class Expediente extends Model
         return $this->belongsTo(Estado::class, 'expestado_id', 'id');
     }
 
+    
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class, 'expediente_has_users', 'expediente_id','user_id')
+            ->withPivot('tipo_usuario_id', 'estado_id')
+            ->withTimestamps();
+    }
 
 
     public function solicitudes()

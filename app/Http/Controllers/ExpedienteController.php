@@ -242,7 +242,7 @@ class ExpedienteController extends Controller
     ->select("nota")->get(); */
     $notasFormateadas = [];
     foreach ($notas as $nota) {
-     // dd($nota->cpntnombre);
+      // dd($nota->cpntnombre);
       switch ($nota->cpntnombre) {
         case 'conocimiento':
           $notasFormateadas['nota_conocimiento'] = number_format($nota->nota, 1, '.', '.');
@@ -265,8 +265,8 @@ class ExpedienteController extends Controller
           $notasFormateadas['docidnumber'] = $nota->docidnumber;
           $notasFormateadas['created_at'] = $nota->created_at;
           $notasFormateadas['fecha_creacion'] = getSmallDate($nota->created_at);
-          $notasFormateadas['can_edit'] = (auth()->user()->idnumber === $nota->docidnumber)?true:false;
-         
+          $notasFormateadas['can_edit'] = (auth()->user()->idnumber === $nota->docidnumber) ? true : false;
+
           break;
       }
     }
@@ -1088,8 +1088,12 @@ class ExpedienteController extends Controller
 
 
       $estudiantes_fil = DB::table('asistencia')
-        ->leftJoin('expedientes', 
-         'asistencia.astid_estudent', '=', 'expedientes.expidnumberest')
+        ->leftJoin(
+          'expedientes',
+          'asistencia.astid_estudent',
+          '=',
+          'expedientes.expidnumberest'
+        )
         //->join('users', 'users.idnumber', '=', 'asistencia.astid_estudent'  )
         ->select(
           'asistencia.astid_estudent',
@@ -1652,5 +1656,23 @@ class ExpedienteController extends Controller
 
     $pausa = $this->expedienteService->updatePausa($id, $request);
     return response()->json($pausa);
+  }
+
+  public function addUser(Request $request)
+  {
+    $expediente = $this->expedienteService->find($request->exp_id);
+    if ($request->has("id") and $request->input("id") == '') {
+      $user = $this->userService->store($request);
+    } else {
+      $user = $this->userService->find($request->input("id"));
+      $user = $this->userService->update($user,$request);
+    }
+    $expediente->usuarios()->syncWithoutDetaching([
+      $user->id => [
+        "tipo_usuario_id" => 1,
+        "estado_id" => 2
+      ]
+    ]);
+    return response()->json($request->all());
   }
 }

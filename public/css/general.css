@@ -1,3 +1,11 @@
+.person_intervienen{
+  -webkit-box-shadow: 0px 8px 24px -7px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 8px 24px -7px rgba(0,0,0,0.75);
+box-shadow: 0px 8px 24px -7px rgba(0,0,0,0.75);
+}
+.row_user_exp{
+  border-bottom: 1px solid rgb(223, 223, 223);
+}
 .ast_required {
     color: red;
 }

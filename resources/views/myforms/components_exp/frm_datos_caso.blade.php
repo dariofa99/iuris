@@ -8,50 +8,14 @@
 </div>
 <!--cont_data_req-->
 <div @if (currentUser()->hasRole('estudiante')) id="cont_data_req" @endif>
-    <div class="row">
-        <div class="col-sm-4">
-            {!! Form::label('Identificación: ') !!}
-            <label class="lab-ast-req" title="Campo obligatorio"> * </label>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
+   
+   
+   
+   @include('myforms.components_exp.usuarios_caso')
 
-                    @if ((currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante')) and !$readonly)
-                        <button value="{{ $expediente->solicitante->idnumber }}"
-                            data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button"
-                            id="btn_exp_user_carga" style="background-color: green" class="btn btn-success"
-                            data-toggle='modal' data-target='#myModal_exp_user_edit'>
-                            Editar
-                        </button>
-                    @elseif(!currentUser()->hasRole('estudiante') || $readonly)
-                        <button value="{{ $expediente->solicitante->idnumber }}"
-                            data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button"
-                            id="btn_exp_user_carga" style="background-color: green" class="btn btn-success"
-                            data-toggle='modal' data-target='#myModal_exp_user_details'>
-                            Detalles
-                        </button>
-                    @endif
 
-                </div>
-                {!! Form::text('expidnumber', $expediente->solicitante->idnumber, [
-                    'class' => 'form-control',
-                    'required' => 'required',
-                    'readonly',
-                ]) !!}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                {!! Form::label('Nombres: ') !!}
-                {!! Form::text('name', $expediente->solicitante->name, ['class' => 'form-control required', 'readonly']) !!}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                {!! Form::label('Apellidos: ') !!}
-                {!! Form::text('lastname', $expediente->solicitante->lastname, ['class' => 'form-control required', 'readonly']) !!}
-            </div>
-        </div>
-    </div>
+
+
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">

@@ -9,7 +9,7 @@ $(document).ready(function () {
     if ($("#expediente_id").val() != undefined) {
         $(":input").inputmask();
         set_tab();
-       
+
     }
     $("#search_onlyMy_exp").on("change", async function () {
         buscarExp()
@@ -43,7 +43,7 @@ $(document).ready(function () {
                 window.location = url
                 //window.open(url, '_blank');
                 $("#wait").hide();
-                
+
 
             }
         });
@@ -822,6 +822,59 @@ $(document).ready(function () {
         $("#content_infoexp").hide();
         ocultarCompDiscapUser();
     });
+    $("#add_user_exp").on("click", function (e) {
+        $("#myFormUserAddEditExpediente").attr("id", "myFormUserAddCreateExpediente");
+        $("#actualizar_exp_us_add").attr("id", "registrar_exp_us_add");
+        resetForm('myFormUserAddCreateExpediente');
+        $("#myFormUserAddCreateExpediente select[name='tipopers_id']").val(237);
+        $("#myFormUserAddCreateExpediente select[name='tipodoc_id']").val(2);
+        $("#content_infoexp").hide();
+        ocultarCompDiscapUser();
+    });
+
+    $("#content_user_exp_add").on("blur", "input[name='idnumber']", async function (e) {
+        var formulario = $(this).closest('form');
+        var formularioId = formulario.attr('id');
+        $("#" + formularioId + " input[name='email']").val($(this).val() + "@mail.com")
+        if ($(this).val() != '') {
+            let request = {
+                "tipodoc_id": $("#" + formularioId + " select[name='tipodoc_id']").val(),
+                "idnumber": $(this).val(),
+                "view": "myforms.components_exp.frm_user_add"
+            }
+            $("#wait").show();
+            let response = await userService.findUserWithFilter(request);
+            if (response.encontrado) {
+                $("#content_user_exp_add").html(response.view);
+                toastr.success("Usuario encontrado", "", {
+                    positionClass: "toast-top-center",
+                    timeOut: "4000",
+                });
+                var msg = `Se encontró al usuario ${response.user.name} 
+                ${response.user.lastname} con el rol: ${response.user.roles[0].display_name}.`
+                $("#rl_user_solicitud").text(msg)
+                if (response.expedientes && response.expedientes.length > 0) {
+
+                    var li = '';
+                    response.expedientes.forEach(exp => {
+                        li += `
+                       <li>
+                            ${exp.count} en estado ${exp.nombre_estado}
+                        </li>
+                       ` ;
+                    });
+                    $("#lbl_text_casosasig").text("Tiene los siguientes casos en calidad de solicitante")
+                    $("#list_casos_asignados").html(li)
+                } else {
+                    $("#lbl_text_casosasig").text("NO tiene casos")
+                    $("#list_casos_asignados").html("")
+                }
+                $("#content_infoexp").show()
+                $("#myFormUserAddEditExpediente input[name='idnumber']").prop('disabled', true);
+            }
+            $("#wait").hide()
+        }
+    });
 
     $("#content_user_exp_asig").on("blur", "input[name='idnumber']", async function (e) {
         var formulario = $(this).closest('form');
@@ -865,34 +918,49 @@ $(document).ready(function () {
             }
             $("#wait").hide()
         }
-
     });
 
 
     $("#content_user_exp_asig #myFormUserCreateExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
     $("#content_user_exp_asig #myFormUserEditExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
 
-    $("#content_user_exp_asig")
-        .on("change", "select[name='pbepersondiscap']", function (e) {
+    $("#content_user_exp_add #myFormUserAddCreateExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
+    $("#content_user_exp_add #myFormUserAddEditExpediente").on("focus", "input[name='idnumber']", validateTypeDoc);
 
-            if ($(this).val() == 1) {
-                //$(".discaform").show();
+
+    $("#content_user_exp_asig").on("change", "select[name='pbepersondiscap']", function (e) {
+            if ($(this).val() == 1) {               
                 mostrarCompDiscapUser()
             } else {
                 ocultarCompDiscapUser();
+            }
+        });
 
+    $("#content_user_exp_add")
+        .on("change", "select[name='pbepersondiscap']", function (e) {
+            if ($(this).val() == 1) {               
+                mostrarCompDiscapUser()
+            } else {
+                ocultarCompDiscapUser();
             }
         });
 
     $("#myModal_exp_user_edit")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-
-            if ($(this).val() == 1) {
-                //$(".discaform").show();
+            if ($(this).val() == 1) {        
                 mostrarCompDiscapUser()
             } else {
                 ocultarCompDiscapUser();
+            }
+        });
 
+
+    $("#myModal_exp_user_add")
+        .on("change", "select[name='pbepersondiscap']", function (e) {
+            if ($(this).val() == 1) {
+                mostrarCompDiscapUser()
+            } else {
+                ocultarCompDiscapUser();
             }
         });
     $("#myModal_exp_user_edit")
@@ -905,9 +973,28 @@ $(document).ready(function () {
                 $("#acept_ter").prop("disabled", true).prop("checked", false)
             }
         });
+    $("#myModal_exp_user_add")
+        .on("change", "select[name='has_apoyo']", function (e) {
+            if ($(this).val() == 1) {
+                $(".has_apoyo").show()
+                $("#acept_ter").prop("disabled", false)
+            } else {
+                $(".has_apoyo").hide()
+                $("#acept_ter").prop("disabled", true).prop("checked", false)
+            }
+        });
     $("#content_user_exp_asig")
         .on("change", "select[name='has_apoyo']", function (e) {
-
+            if ($(this).val() == 1) {
+                $(".has_apoyo").show()
+                $("#acept_ter").prop("disabled", false)
+            } else {
+                $(".has_apoyo").hide()
+                $("#acept_ter").prop("disabled", true).prop("checked", false)
+            }
+        });
+    $("#content_user_exp_add")
+        .on("change", "select[name='has_apoyo']", function (e) {
             if ($(this).val() == 1) {
                 $(".has_apoyo").show()
                 $("#acept_ter").prop("disabled", false)
@@ -917,16 +1004,41 @@ $(document).ready(function () {
             }
         });
 
+        $("#content_user_exp_asig").on("submit", '#myFormUserCreateExpediente', async function (e) {
+            e.preventDefault();
+            var errors = validateForm("myFormUserCreateExpediente");
+            if (errors.length <= 0) {
+                var request = convertFormToJSON("myFormUserCreateExpediente");
+                var data = userService.getAditionalDataByForm("myFormUserCreateExpediente")
+                request["data"] = (data);
+                $("#wait").show();
+                let response = await userService.registrar(request);
+                if (response.errors) {
+                    response.errors.forEach(error => {
+                        toastr.error(error, "", {
+                            positionClass: "toast-top-right",
+                            timeOut: "4000",
+                        });
+                    });
+                } else {
+                    resetForm('myFormUserEditExpediente');
+                    $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
+                    $("#myModal_exp_user_edit").modal("hide");
+                }
+                $("#wait").hide();
+            }
+        });
 
-    $("#content_user_exp_asig").on("submit", '#myFormUserCreateExpediente', async function (e) {
+    $("#content_user_exp_add").on("submit", '#myFormUserAddCreateExpediente', async function (e) {
         e.preventDefault();
-        var errors = validateForm("myFormUserCreateExpediente");
+        var errors = validateForm("myFormUserAddCreateExpediente");
         if (errors.length <= 0) {
-            var request = convertFormToJSON("myFormUserCreateExpediente");
-            var data = userService.getAditionalDataByForm("myFormUserCreateExpediente")
+            var request = convertFormToJSON("myFormUserAddCreateExpediente");
+            var data = userService.getAditionalDataByForm("myFormUserAddCreateExpediente")
             request["data"] = (data);
+            request["exp_id"] = $("#expediente_id").val()
             $("#wait").show();
-            let response = await userService.registrar(request);
+            let response = await expedientesService.addUser(request);
             if (response.errors) {
                 response.errors.forEach(error => {
                     toastr.error(error, "", {
@@ -934,15 +1046,68 @@ $(document).ready(function () {
                         timeOut: "4000",
                     });
                 });
+                $("#wait").hide();
             } else {
-                resetForm('myFormUserEditExpediente');
-                $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
-                $("#myModal_exp_user_edit").modal("hide");
+                resetForm('myFormUserAddCreateExpediente');               
+                $("#myModal_exp_user_add").modal("hide");
+                toastr.success("Usuario agregado con éxito", "", {
+                    positionClass: "toast-top-center",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
             }
-            $("#wait").hide();
+            
         }
     });
 
+    $("#content_user_exp_add").on("submit", '#myFormUserAddEditExpediente', async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myFormUserAddEditExpediente");
+        if (errors.length <= 0) {
+            var request = convertFormToJSON("myFormUserAddEditExpediente");
+            var data = userService.getAditionalDataByForm("myFormUserAddEditExpediente")
+            request["data"] = (data);
+            request["exp_id"] = $("#expediente_id").val()
+            $("#wait").show();
+            let response = await expedientesService.addUser(request);
+            if (response.errors) {
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+                $("#wait").hide();
+            } else {
+                resetForm('myFormUserAddCreateExpediente');               
+                $("#myModal_exp_user_add").modal("hide");
+                toastr.success("Usuario agregado con éxito", "", {
+                    positionClass: "toast-top-center",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+           
+        }
+    });
+
+    $(".search_user").on("click",async function  (e) {
+        e.preventDefault()
+        let request = {
+            "tipodoc_id": $(this).attr("data-tipo_doc"),
+            "idnumber": $(this).val(),
+            "view": "myforms.components_exp.frm_user_add"
+        }
+        $("#wait").show();
+        let response = await userService.findUserWithFilter(request);
+        $("#myModal_exp_user_add").modal("show");
+        if (response.encontrado) {
+            $("#content_user_exp_add").html(response.view);
+            $("#myFormUserAddEditExpediente input[name='idnumber']").prop('disabled', true)
+            .removeAttr("name");
+        }
+        $("#wait").hide();
+    })
 
     $("#myModal_exp_user_edit").on("click", '#btnActualizarUserForEstudiante', async function (e) {
         var errors = validateForm("myFormUserEditExpediente");
@@ -1996,7 +2161,7 @@ $(document).ready(function () {
             var request = convertFormToJSON('myform_req');
             $("#wait").show()
             let response = await expedientesService.storeRequerimiento(request);
-            if(response.errors && response.errors.length > 0){
+            if (response.errors && response.errors.length > 0) {
                 response.errors.forEach(error => {
                     toastr.error(error, "", {
                         positionClass: "toast-top-right",
@@ -2004,15 +2169,15 @@ $(document).ready(function () {
                     });
                 });
                 $("#wait").hide()
-            }else{
+            } else {
                 toastr.success("Requerimiento creado con éxito", "", {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
                 });
                 location.reload(true);
             }
-            
-            
+
+
             //
         }
     });
@@ -2683,6 +2848,11 @@ $(document).ready(function () {
         get_notas(actuacion_id, 2);
     });
 
+    $("#add_user_exp").on("click", function () {
+        $("#myModal_exp_user_add").modal("show");
+
+    });
+
 });//////////////////////////////////////////////
 function get_notas(tbl_id, origen) {
     var route = "/notas/" + tbl_id + "/edit";
@@ -3007,7 +3177,7 @@ function llenarModalDetailsReq(res) {
     $("#btn_cam_nt_req").hide();
     var segmento_id = $("#segmento_id").val();
     $("#btn_cam_nt_req").hide();
-    if (res.requerimiento.notas_f!=null && res.requerimiento.notas_f.encontrado) {
+    if (res.requerimiento.notas_f != null && res.requerimiento.notas_f.encontrado) {
         $("#lbl_not_etireq").text(res.requerimiento.notas_f.nota_etica);
         $("#ntaconcepto_req").text(res.requerimiento.notas_f.nota_concepto);
         $("#cont_notas_req #lbldocevname").text(res.requerimiento.notas_f.docevname);
@@ -3060,9 +3230,9 @@ function llenarModalDetailsAct(res) {
     var segmento_id = $("#segmento_id").val();
     hideElement('btn_cam_nt_act');
     $("#cont_notas_ac").hide();
-    
-    if (Object.keys(res.notas_f).length>0) {
-         
+
+    if (Object.keys(res.notas_f).length > 0) {
+
         $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
         $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);
         $("#lbl_not_etiac").text(res.notas_f.nota_etica);
