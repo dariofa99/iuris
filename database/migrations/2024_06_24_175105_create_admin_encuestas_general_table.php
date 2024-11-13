@@ -18,7 +18,8 @@ class CreateAdminEncuestasGeneralTable extends Migration
             $table->string('nombre')->nullable();          
             $table->string('codigo')->nullable();   
             $table->string('version')->nullable();     
-            $table->date('fecha_vigencia')->nullable();                      
+            $table->date('fecha_vigencia')->nullable();   
+            $table->boolean('activo')->default(0);                    
             $table->integer('categoria_id')->unsigned();
             $table->foreign('categoria_id')->references('id')->on('referencias_tablas')
             ->onDelete('cascade')->onUpdate('cascade');        

@@ -11,7 +11,12 @@ Docente:<i style="font-size:15px">
  @if(!$readonly)
     
 
- @if((currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')) and $expediente->getDocenteAsig()->name!='Sin asignar')
+ @if((currentUser()->hasRole('diradmin') 
+ || currentUser()->hasRole('dirgral') 
+ || currentUser()->hasRole('amatai')) || (
+    currentUser()->hasRole('coordprac') and $expediente->exptipoproce_id != 1
+    )
+ and $expediente->getDocenteAsig()->name!='Sin asignar')
  <a href="#" class="btn_change_doc_exp" data-lastname="{{Auth::user()->lastname}}" data-name="{{Auth::user()->name}}" data-idnumber="{{Auth::user()->idnumber}}" id="btn_change_doc_exp">
  Cambiar</a>
 

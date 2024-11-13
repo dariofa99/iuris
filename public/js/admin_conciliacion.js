@@ -1,7 +1,10 @@
 import { UserService } from './services/users.js';
 import { ConciliacionService } from './services/conciliaciones.js';
 import { FormatosService } from './services/formatos_documentos.js';
+import { HorariosService } from "./services/turnos.js";
 
+
+const horariosService = new HorariosService();
 const userService = new UserService();
 const conciliacionService = new ConciliacionService();
 const formatosService = new FormatosService();
@@ -823,7 +826,7 @@ $(document).ready(function () {
 
   });
 
-  $("#table_list_estudiantes_aud").on("click", ".btn_asignar_estudiante_audiencia", async function (e) {
+  $("#list_turno_estudiantes_conciliacion").on("click", ".btn_asignar_estudiante_audiencia", async function (e) {
     var idnumber = $(this).attr("data-id");
     var idrol = $(this).attr("data-rol");
     $("#wait").show();
@@ -896,7 +899,7 @@ $(document).ready(function () {
     $("#myModal_respuestas_asignaciones").modal("show");
   });
 
-  $("#table_list_estudiantes_aud").on("click", '.btn_hide_edit_rol_conciliacion_est', function (e) {
+  $("#list_turno_estudiantes_conciliacion").on("click", '.btn_hide_edit_rol_conciliacion_est', function (e) {
     var idnumber = $(this).attr("data-id");
     $("#label_rol_est_conciliacion" + idnumber).show();
     $("#btn_habilityEditRol_Est" + idnumber).show();
@@ -1239,7 +1242,7 @@ $(document).ready(function () {
     myPopupWindow.close();
     $("#bgtransparent").remove();
   });
-  $("#table_list_estudiantes_aud").on("click", '.btn_update_rol_est', async function (e) {
+  $("#list_turno_estudiantes_conciliacion").on("click", '.btn_update_rol_est', async function (e) {
     var idnumber = $(this).attr("data-id");
     var idrol = $("#select_rol_est_conciliacion" + idnumber).val()
     var idconciliacion = $("#select_rol_est_conciliacion" + idnumber).attr('data-id')
@@ -1595,11 +1598,39 @@ $(document).ready(function () {
               timer: 2000,
             });
           }
-  })
+  });
 
+
+  $("#myFormBuscarTurno select[name='tipo_busqueda']").on("change",function (e) {
+    var data = JSON.parse($("#data_colores_turno").val())
+    if($(this).val()=='trnid_color'){
+      var data = JSON.parse($("#data_colores_turno").val())
+    }else if($(this).val()=='trnid_curso'){
+      var data = JSON.parse($("#data_cursando_turno").val())
+    }
+    var options = $("#myFormBuscarTurno select[name='data']");
+    options.empty(); 
+    data.forEach(element => {
+      options.append(new Option(element.ref_nombre, element.id));
+    });    
+});
+
+$("#myFormBuscarTurno").on("submit",async function (e) {
+  e.preventDefault()
+  var request = convertFormToJSON("myFormBuscarTurno");
+  request["conciliacion_id"] = $("#conciliacion_id").val();
+  $("#wait").show()
+  var response = await horariosService.search(request);
+  $("#list_turno_estudiantes_conciliacion").html(response.view);
+  $("#wait").hide()
+
+  
+});
   getReportesForNotifications();
   getActasCreadas();
   getActasForStatus();
+
+
 
 });//fin document ready
 

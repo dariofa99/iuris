@@ -15,8 +15,9 @@ class TurnosRepository extends BaseRepository implements TurnosService {
     }
 
     public function index(Request $request){
-      
-        $turnos = $this->model->whereHas('estudiante',function($query){
+        
+        $turnos = $this->model->
+        search($request)->whereHas('estudiante',function($query){
             return $query->whereHas('sedes',function($query){
                     $query->where('sede_id',session('sede')->id_sede);
             });

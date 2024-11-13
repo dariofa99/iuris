@@ -13,7 +13,8 @@ class ExpEncuestaSatisf extends Model
     'fecha_registro',
     'exp_id',
     'user_id',  
-    'token' 
+    'token',
+    "encuesta_id"
 ];
 
 
@@ -25,6 +26,11 @@ public function aditional_data()
 public function expediente()
 {
     return $this->belongsTo(Expediente::class, 'exp_id', 'id');
+}
+
+public function encuesta()
+{
+    return $this->belongsTo(AdminEncuestas::class, 'encuesta_id', 'id');
 }
 
 }

@@ -94,7 +94,7 @@
                         'class' => 'form-control form-control-sm',
                         'id' => 'reqfecha_ed',
                         'required' => 'required',
-                        
+                        "min"=>date('Y-m-d', strtotime('+1 day'))
                     ]) !!}
                 </div>
                 <!-- /.input group -->

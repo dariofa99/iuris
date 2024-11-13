@@ -206,85 +206,11 @@ class ExpedienteController extends Controller
 
   public function prueba(Request $request)
   {
-    $actuacion = Actuacion::find(75009);
+    $exp = Expediente::where("expid","2024B-2478")->first();
+    $this->expedienteService->asignargDocenteSeguimiento($exp->asignacion, 2);
+ 
 
-    $notas = DB::table("notas")
-      ->join("origen_notas", "origen_notas.id", "=", "notas.orgntsid")
-      ->join("users as docente", "docente.idnumber", "=", "notas.docidnumber")
-      ->join("cptonotas", "cptonotas.id", "=", "notas.cptnotaid")
-      ->select(
-        "nota",
-        "expidnumber",
-        "estidnumber",
-        "docidnumber",
-        "origen_notas.orgntsnombre",
-        DB::raw("
-            LOWER(
-                REPLACE(
-                    REPLACE(
-                        REPLACE(
-                            REPLACE(
-                                REPLACE(
-                                  REPLACE(cptonotas.cpntnombre, 'Á', 'A'), 
-                                'ó','o'),
-                            'É', 'E'), 
-                        'Í', 'I'), 
-                    'Ó', 'O'), 
-                'Ú', 'U')
-            ) as cpntnombre"),
-        "notas.id",
-        "notas.created_at",
-        DB::raw("concat(docente.name,' ',docente.lastname) as docente")
-      )
-      ->where("tbl_org_id", "75009")
-      ->get()->toArray();
-    /*  Nota::where("tbl_org_id","75009")
-    ->select("nota")->get(); */
-    $notasFormateadas = [];
-    foreach ($notas as $nota) {
-      // dd($nota->cpntnombre);
-      switch ($nota->cpntnombre) {
-        case 'conocimiento':
-          $notasFormateadas['nota_conocimiento'] = number_format($nota->nota, 1, '.', '.');
-          $notasFormateadas['nota_conocimientoid'] = $nota->id; // Asegúrate de tener el ID correcto
-          break;
-        case 'etica':
-          $notasFormateadas['nota_etica'] = number_format($nota->nota, 1, '.', '.');
-          $notasFormateadas['nota_eticaid'] = $nota->id;
-          break;
-        case 'aplicacion':
-          $notasFormateadas['nota_aplicacion'] = number_format($nota->nota, 1, '.', '.');
-          $notasFormateadas['nota_aplicacionid'] = $nota->id;
-          break;
-        case 'concepto':
-          $notasFormateadas['nota_concepto'] = $nota->nota; // Aquí no aplicas number_format si es texto
-          $notasFormateadas['nota_conceptoid'] = $nota->id;
-          $notasFormateadas['docente'] = $nota->docente; // Aquí no aplicas number_format si es texto
-          $notasFormateadas['expidnumber'] = $nota->expidnumber;
-          $notasFormateadas['estidnumber'] = $nota->estidnumber;
-          $notasFormateadas['docidnumber'] = $nota->docidnumber;
-          $notasFormateadas['created_at'] = $nota->created_at;
-          $notasFormateadas['fecha_creacion'] = getSmallDate($nota->created_at);
-          $notasFormateadas['can_edit'] = (auth()->user()->idnumber === $nota->docidnumber) ? true : false;
-
-          break;
-      }
-    }
-
-    dd($notasFormateadas);
-
-    $pdf = \PDF::loadView(
-      'pdf.conciliacion_general',
-      [
-        "body" => "Hola"
-      ]
-    );
-    // ->setPaper($config->tipo_papel);
-    $path = public_path('/pdf_temp');
-    $fileName =  time() . '.' . 'pdf';
-    $pdf->save($path . '/' . $fileName);
-
-    return redirect('/pdf_temp' . '/' . $fileName);
+    dd($exp);
 
     $asignacion_caso = AsignacionCaso::where('asigexp_id', '2024B-1675')->first();
     // $this->expedienteService->asignarDocente($asignacion_caso);
@@ -1364,27 +1290,6 @@ class ExpedienteController extends Controller
   public function pruebaasig(Request $request, $id)
   {
 
-    /* $exp = DB::table("expedientes")->join("asignacion_caso", "expedientes.expid", "=", "asignacion_caso.asigexp_id")
-      ->join("expedientes_pausa", "expedientes_pausa.asig_caso_id", "=", "asignacion_caso.id")
-      ->select("expedientes.id as exp_id", "expedientes.expestado_id", "asignacion_caso.id as asigcaso_id", "expedientes.expid", "expedientes_pausa.fecha_final")
-      ->whereDate("expedientes_pausa.fecha_final", "<", Carbon::now())
-      ->whereDate("expedientes.updated_at", Carbon::now())
-      ->where("expedientes_pausa.estado_id", 249)
-      ->where("expedientes.expestado_id", 6)
-      ->get(); */
-
-    /* $exp = DB::table('expedientes')->join("asignacion_caso","expedientes.expid","=","asignacion_caso.asigexp_id")
-    ->join("expedientes_pausa","expedientes_pausa.asig_caso_id","=","asignacion_caso.id")
-    ->select("expedientes.expestado_id","asignacion_caso.id","expedientes.expid","expedientes_pausa.fecha_final")
-    ->whereDate("expedientes_pausa.fecha_final","<",Carbon::now())
-    ->where("expedientes.expestado_id",6)
-  ->get(); */
-
-    //dd($exp);
-    //dd(config()->get('app_config.diradminemail'));
-    /*  $relations = $expediente->relationLoaded('solicitudes');
-    dd(method_exists($expediente, 'sedes')); */
-    //18478
     $expediente = Expediente::where("expid", "2024A-399")->first();
     //$user = User::where("email",env("NOTIFICATION_DIR_EMAIL"))->first();
     //Notification::send($user, new NotificarDirector($expediente,"Prueba"));

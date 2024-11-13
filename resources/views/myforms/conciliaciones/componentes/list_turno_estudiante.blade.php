@@ -29,7 +29,7 @@
             <tbody>
                 @foreach ($turnos as $turno)
                     <tr>
-                        <td>
+                        <td> 
                             {{ $turno->estudiante->idnumber }}
                         </td>
 

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\AdminEncuestas;
 use App\ConcEncSatifAditionalData;
 use App\ConcEncuestaSatisf;
 use App\ExpEncSatifAditionalData;
@@ -43,27 +44,35 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
   {
 
     /* try { */
-      $token = str_replace("/", "&&&",Crypt::encryptString(time()));
-      $token = rtrim($token, '=');
-        
-      $encuesta =  ExpEncuestaSatisf::create([
-        'fecha_registro' => date('Y-m-d'),
-        'exp_id' => $request->has('exp_id') ? $request->input('exp_id') : null,
-        'user_id' => $request->has('user_id') ? $request->input('user_id') : null,
-        'token' => $token
-      ]);
-      if ($request->has('data') and is_array($request->data)) {
-        $requestData = $request->data;
-        foreach ($request->data as $key => $rq) {
-          $rq['exp_satisf_id'] = $encuesta->id;
-          $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
-          if ($ref_data) {
-            $this->storeData($ref_data, $rq, $requestData);
+     
+      $encuestaAct = AdminEncuestas::where("activo",1)->first();
+
+      if($encuestaAct){
+        $token = str_replace("/", "&&&",Crypt::encryptString(time()));
+        $token = rtrim($token, '=');
+        $encuesta =  ExpEncuestaSatisf::create([
+          'fecha_registro' => date('Y-m-d'),
+          'exp_id' => $request->has('exp_id') ? $request->input('exp_id') : null,
+          'user_id' => $request->has('user_id') ? $request->input('user_id') : null,
+          'token' => $token,
+          'encuesta_id' => $encuestaAct->id
+        ]); 
+        if ($request->has('data') and is_array($request->data)) {
+          $requestData = $request->data;
+          foreach ($request->data as $key => $rq) {
+            $rq['exp_satisf_id'] = $encuesta->id;
+            $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
+            if ($ref_data) {
+              $this->storeData($ref_data, $rq, $requestData);
+            }
           }
+          //Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
         }
-        //Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
+        return $encuesta;
       }
-      return $encuesta;
+
+
+      return false;
     /* } catch (\Throwable $th) {
       return $th->getMessage();
     } */

@@ -144,12 +144,12 @@
                 </h4>
                 <div class="card-body">
                     <div class="card-login-body">
-                        <img src="{{asset('dist/img/online-justice.png')}}" alt=""><br>
-                    Solicite asesoría jurídica de manera virtual.
+                        <img src="{{ asset('dist/img/online-justice.png') }}" alt=""><br>
+                        Solicite asesoría jurídica de manera virtual.
                     </div>
                 </div>
                 <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
-                    <a href="/solicitudes/expedientes/recepcion/?paso=1" class="btn btn-warning" >
+                    <a href="/solicitudes/expedientes/recepcion/?paso=1" class="btn btn-warning">
                         CONTINUAR
                     </a>
                 </div>
@@ -162,9 +162,9 @@
                 </h4>
                 <div class="card-body">
                     <div class="card-login-body">
-                        <img src="{{asset('dist/img/collaboration.png')}}" alt=""><br>
+                        <img src="{{ asset('dist/img/collaboration.png') }}" alt=""><br>
                         Solicite y gestione de manera eficiente, rápida y segura un proceso conciliatorio.
-              
+
                     </div>
                 </div>
                 <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
@@ -173,6 +173,13 @@
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <a target="_blank" style="border-bottom:1px solid gray;color: black;font-size:14px" href="/videos">
+                Ver videos de ayuda
+            </a>
         </div>
     </div>
 </div>

@@ -19,6 +19,9 @@ $(document).ready(function () {
          $("#renderQuestion").html(response.view)
          console.log(response); */
     });
+
+   
+
     $("#myEvaNivSatForm").on("submit", async function (e) {
         e.preventDefault();
         Swal.fire({

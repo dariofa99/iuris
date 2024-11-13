@@ -6,23 +6,8 @@ $user = $conciliacion->getUser(196);
     <div class="col-md-12">
         <h4 align="center">
             <strong>APODERADO DE LA PARTE SOLICITANTE</strong>
-          
-           @if(((currentUser()->hasRole('diradmin') || currentUser()->hasRole('coord_centro_conciliacion') || currentUser()->hasRole('amatai')))
-           || ((currentUserInConciliacion($conciliacion->id,['autor','auxiliar','conciliador'])))) 
-          @if(($conciliacion->estado_id==174 || $conciliacion->estado_id==176 || $conciliacion->estado_id==194))
-          @if($user->idnumber==null and !Request::has('paso')) 
-                <button data-form="form_apoderado" type="button" @if($user->idnumber!=null) data-user="{{$user->idnumber}}" @endif data-section="apoderado_solicitante" data-type="196" class="btn btn-primary btn-sm btn_asinar_usuario_conciliacion pull-right">  
-                    <i class="fa fa-plus"> </i> {{$user->idnumber!=null ? 'Actualizar' : 'Agregar'}} 
-                </button>
-        @endif 
-      
-                @if($user->idnumber!=null )  
-                <button type="button" data-user="{{$user->idnumber}}" data-pivot="{{$user->pivot->id}}" class="btn btn-danger btn-sm btn_delete_usuario_conciliacion pull-right">  
-                    <i class="fa fa-trash"> </i> <small style="color:aliceblue"></small>
-                </button>
-               @endif
-           @endif    
-            @endif
+           
+            
         </h4>
 
     </div>

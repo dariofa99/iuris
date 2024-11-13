@@ -2200,12 +2200,24 @@ $(document).ready(function () {
             var id = $("#reqid").val();;
             var request = convertFormToJSON('myform_req_edit');
             $("#wait").show()
-            await expedientesService.updateRequerimiento(request, id);
-            toastr.success("Actualizado con éxito", "", {
-                positionClass: "toast-top-right",
-                timeOut: "4000",
-            });
-            location.reload(true);
+            let response = await expedientesService.updateRequerimiento(request, id);
+            if (response.errors && response.errors.length > 0) {
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+                $("#wait").hide()
+            }else{
+                toastr.success("Actualizado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                location.reload(true);
+            }
+            
+            
         }
     });
     $("#btn_update_requerimiento").on("click", async function (e) {
@@ -2852,6 +2864,8 @@ $(document).ready(function () {
         $("#myModal_exp_user_add").modal("show");
 
     });
+
+   
 
 });//////////////////////////////////////////////
 function get_notas(tbl_id, origen) {

@@ -99,6 +99,9 @@ Administración de encuestas
 
    
     @include('myforms.categorias.partials.modals.create')
+    @include('myforms.encuestas.expedientes.frm_modal_create_encuesta')
+
+    @include('myforms.encuestas.preguntas.frm_modal_add_pregunta_encuesta')
 
 
 

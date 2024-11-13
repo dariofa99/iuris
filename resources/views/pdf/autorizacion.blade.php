@@ -105,7 +105,7 @@
         <tr>
             <td></td>
             <td>
-                <p><b style="font-family:arial;font-size:13.333px">VIGILADO Ministerio del interior y Justicia.</b></p>
+                <p><b style="font-family:arial;font-size:13.333px">VIGILADO Ministerio de Justicia y del Derecho.</b></p>
             </td>
         </tr>
     </table>

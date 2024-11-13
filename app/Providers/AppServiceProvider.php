@@ -17,6 +17,7 @@ use App\Repositories\LoginRepository;
 use App\Repositories\PausasRepository;
 use App\Repositories\PeriodosRepository;
 use App\Repositories\ProcesoJudicialExpRepository;
+use App\Repositories\ReferencesDataRepository;
 use App\Repositories\ReferenciasRepository;
 use App\Repositories\RequerimientosRepository;
 use App\Repositories\SedesRepository;
@@ -39,6 +40,7 @@ use App\Services\LoginService;
 use App\Services\PausasService;
 use App\Services\PeriodosService;
 use App\Services\ProcesoJudicialExpService;
+use App\Services\ReferencesDataService;
 use App\Services\ReferenciasService;
 use App\Services\RequerimientosService;
 use App\Services\SedesService;
@@ -84,6 +86,10 @@ class AppServiceProvider extends ServiceProvider
         });  */
         $this->app->bind(   
             BaseRepository::class
+        );
+        $this->app->bind(            
+            ReferencesDataService::class,
+            ReferencesDataRepository::class,       
         );
         $this->app->bind(            
             UsersService::class,

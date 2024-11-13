@@ -7,22 +7,31 @@ use App\ReferencesData;
 use DB;
 use Illuminate\Http\Request;
 use App\ReferenceDataOptions;
+use App\Services\ReferencesDataService;
 
 class ReferencesDataController extends Controller
 {
+    protected $referencesDataService;
+    public function __construct(
+        ReferencesDataService $referencesDataService
+    ) {
+        $this->referencesDataService = $referencesDataService;
+    }
+
     /**
      * Display a listing of the resource.
      *  
      * @return \Illuminate\Http\Response
      */
-    public function index()  
+    public function index()
     {
         $categories = $this->getCategories();
-        return view('myforms.categorias.index',compact('categories'));
+        return view('myforms.categorias.index', compact('categories'));
     }
 
-    private function getCategories(){
-       return $categories = ReferencesData::orderBy('categories','asc')->get();
+    private function getCategories()
+    {
+        return $categories = ReferencesData::orderBy('categories', 'asc')->get();
     }
 
     /**
@@ -43,56 +52,76 @@ class ReferencesDataController extends Controller
      */
     public function store(Request $request)
     {
-       // return response()->json($request->all());
+        //return response()->json("esste");
         $this->guardar($request);
         $categories = $this->getCategories();
-        $view =  view('myforms.categorias.partials.ajax.index',compact('categories'))->render();
-        $response=[];
+        $view =  view('myforms.categorias.partials.ajax.index', compact('categories'))->render();
+        $response = [];
         $response['render_view'] = $view;
         return response()->json($response);
-
     }
 
+    public function getByRefDataFilter(Request $request)
+    {
+        //return response()->json("esste");
+        $preguntasSinEncuesta = ReferencesData::with("options")->whereNotIn('id', function ($query) use ($request) {
+            $query->select('pregunta_id')
+                  ->from('encuestas_preguntas')
+                  ->where('encuesta_id', $request->encuesta_id);
+        })
+        ->where([
+            'categories' => $request->categories,
+            'table' => $request->table,
+        ])
+        ->get();
+
+       
+        $response = [];
+        $response['view'] = view('myforms.encuestas.preguntas.preguntas', [
+            'data' => $preguntasSinEncuesta,
+            'col' => 12,
+            'design' => 'select_question',
+        ])->render();
+        return response()->json($response);
+    }
     public function storeFromReports(Request $request)
     {
-       //dd($request->all());
-        $this->guardar($request);
-        $categories_report = getReferencesDataBySection('personalizado','pdf_reportes');
+        //dd($request->all());
+        $this->referencesDataService->store($request);
+        $categories_report = getReferencesDataBySection('personalizado', 'pdf_reportes');
         $mySummernote = $request->summernote;
-        $view =  view('myforms.conciliaciones.componentes.categories_ajax',compact('categories_report','mySummernote'))->render();
-        $response=[];
+        $view =  view('myforms.conciliaciones.componentes.categories_ajax', compact('categories_report', 'mySummernote'))->render();
+        $response = [];
         $response['view'] = $view;
-        return response()->json( $response);
-
+        return response()->json($response);
     }
 
-   
 
-    private function guardar(Request $request){
+
+    private function guardar(Request $request)
+    {
         $request['categories'] = $request->table;
         $request['short_name'] = sanear_string($request->name);
         $referencia = ReferencesData::create($request->all());
-  
-        if($request->has('option_name')){
+
+        if ($request->has('option_name')) {
             foreach ($request->option_name as $key => $option) {
                 $insert = DB::table("references_data_options")
-                ->insert([ 
-                    'value'=>$option,
-                    'references_data_id'=>$referencia->id,
-                    'active_other_input'=>$request->active_other_input[$key]
-                ]);
+                    ->insert([
+                        'value' => $option,
+                        'references_data_id' => $referencia->id,
+                        'active_other_input' => $request->active_other_input[$key]
+                    ]);
             }
-        }else{
+        } else {
             $insert = DB::table("references_data_options")
                 ->insert([
-                    'value'=>$request->name,
-                    'references_data_id'=>$referencia->id,
-                    'active_other_input'=>0
+                    'value' => $request->name,
+                    'references_data_id' => $referencia->id,
+                    'active_other_input' => 0
                 ]);
         }
-        if ($request->table=='conciliacion') {
-          
-           
+        if ($request->table == 'conciliacion') {
         }
     }
 
@@ -115,8 +144,8 @@ class ReferencesDataController extends Controller
      */
     public function edit($id)
     {
-        $referencia = ReferencesData::find($id);     
-        $referencia->options; 
+        $referencia = ReferencesData::find($id);
+        $referencia->options;
         $referencia->partes;
         return response()->json($referencia);
     }
@@ -128,83 +157,79 @@ class ReferencesDataController extends Controller
      * @param  \App\ReferencesData  $referencesData
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
 
-           
-           // return response()->json($items_deleted); 
-            $request['categories'] = $request->table;
-            $referencia = ReferencesData::find($id);
-            $older_type_data = $referencia->type_data_id; 
-            $referencia->fill($request->all());
-            $referencia->save();
-            $referencia->options;   
-            $items_deleted = json_decode($request->items_deleted);
-            if(count($items_deleted)>0){
-                foreach ($items_deleted as $key => $item_d) {               
-                    $option_o = ReferenceDataOptions::find($item_d->id)->delete();
-                }
-            }         
-            if($request->has('option_name')){
-                if($older_type_data == 168 || $older_type_data==173 || $older_type_data== 174){
-                    $referencia->options()->delete();
-                }
-                foreach ($request->option_name as $key => $option) {
-                    if($request->options_id[$key]!='null'){
-                        $option_o = ReferenceDataOptions::find($request->options_id[$key]);                       
-                        if($option_o){
-                            $option_o->value = $option;
-                            $option_o->active_other_input = $request->active_other_input[$key];
-                            $option_o->save();
-                        }
-                    }else{ 
-                        $insert = DB::table("references_data_options")
-                        ->insert([
-                            'value'=>$option,
-                            'references_data_id'=>$referencia->id,
-                            'active_other_input'=>$request->active_other_input[$key]
-                        ]);
-                    }
-                   
-                   
-                }
-            }elseif(!$request->has('option_name')){
-                if($older_type_data != 168 && $older_type_data != 173 && $older_type_data != 174){
-                    $referencia->options()->delete();
-                    $insert = DB::table("references_data_options")
-                    ->insert([
-                        'value'=>$request->name,
-                        'references_data_id'=>$referencia->id,
-                        'active_other_input'=>0
-                    ]);
-                }else{
-                    $insert = DB::table("references_data_options")
-                    ->where("references_data_id",$referencia->id)
-                    ->update([
-                        'value'=>$request->display_name,
-                        'references_data_id'=>$referencia->id,
-                        'active_other_input'=>0
-                    ]);  
-                }            
-            }
-            if ($request->table=='conciliacion') {
-                $delete = DB::table('conciliacion_user_form')
-                ->where('reference_data_id',$referencia->id)->delete();
-                foreach ($request->parte as $key => $parte) {
-                    $insert = ConciliacionUserForm::create([
-                        'parte'=>$parte,
-                        'reference_data_id'=>$referencia->id,                    
-                    ]);
-                }
-               
-            }
 
-            $categories = $this->getCategories();
-            $view =  view('myforms.categories.partials.ajax.index',compact('categories'))->render();
-            $response=[];
-            $response['render_view'] = $view;
-            return response()->json($response);
-        
+        // return response()->json($items_deleted); 
+        $request['categories'] = $request->table;
+        $referencia = ReferencesData::find($id);
+        $older_type_data = $referencia->type_data_id;
+        $referencia->fill($request->all());
+        $referencia->save();
+        $referencia->options;
+        $items_deleted = json_decode($request->items_deleted);
+        if (count($items_deleted) > 0) {
+            foreach ($items_deleted as $key => $item_d) {
+                $option_o = ReferenceDataOptions::find($item_d->id)->delete();
+            }
+        }
+        if ($request->has('option_name')) {
+            if ($older_type_data == 168 || $older_type_data == 173 || $older_type_data == 174) {
+                $referencia->options()->delete();
+            }
+            foreach ($request->option_name as $key => $option) {
+                if ($request->options_id[$key] != 'null') {
+                    $option_o = ReferenceDataOptions::find($request->options_id[$key]);
+                    if ($option_o) {
+                        $option_o->value = $option;
+                        $option_o->active_other_input = $request->active_other_input[$key];
+                        $option_o->save();
+                    }
+                } else {
+                    $insert = DB::table("references_data_options")
+                        ->insert([
+                            'value' => $option,
+                            'references_data_id' => $referencia->id,
+                            'active_other_input' => $request->active_other_input[$key]
+                        ]);
+                }
+            }
+        } elseif (!$request->has('option_name')) {
+            if ($older_type_data != 168 && $older_type_data != 173 && $older_type_data != 174) {
+                $referencia->options()->delete();
+                $insert = DB::table("references_data_options")
+                    ->insert([
+                        'value' => $request->name,
+                        'references_data_id' => $referencia->id,
+                        'active_other_input' => 0
+                    ]);
+            } else {
+                $insert = DB::table("references_data_options")
+                    ->where("references_data_id", $referencia->id)
+                    ->update([
+                        'value' => $request->display_name,
+                        'references_data_id' => $referencia->id,
+                        'active_other_input' => 0
+                    ]);
+            }
+        }
+        if ($request->table == 'conciliacion') {
+            $delete = DB::table('conciliacion_user_form')
+                ->where('reference_data_id', $referencia->id)->delete();
+            foreach ($request->parte as $key => $parte) {
+                $insert = ConciliacionUserForm::create([
+                    'parte' => $parte,
+                    'reference_data_id' => $referencia->id,
+                ]);
+            }
+        }
+
+        $categories = $this->getCategories();
+        $view =  view('myforms.categories.partials.ajax.index', compact('categories'))->render();
+        $response = [];
+        $response['render_view'] = $view;
+        return response()->json($response);
     }
 
     /**

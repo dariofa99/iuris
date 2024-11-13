@@ -50,19 +50,21 @@ class ExpEncuSatisfaccionController extends Controller
     public function renderForm(Request $request)
     {
         $encuesta = ExpEncuestaSatisf::where('token', $request->get('token'))->first();
-        if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
+        
+        dd($encuesta);
+        
+        
+        if ($request->ajax() 
+        || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $paginate = true;
-            $data = getReferencesDataBySection(
-                'personalizado',
-                'exp_encuesta_satisf'
-            );
+            $data = $encuesta->encuesta->preguntas;
             $view = view(
                 'myforms.categorias.refs_aditional_data',
                 compact('data', 'encuesta')
             )->render();
             return response()->json($view);
         }
-        //dd($request->get('token'));
+        //dd($encuesta->encuesta->preguntas);
         return view('myforms.encuestas.expedientes.formulario', compact('encuesta'));
     }
 
@@ -74,7 +76,7 @@ class ExpEncuSatisfaccionController extends Controller
                 'categoria' => 'tipo_doc'
             ]
         );
-    
+      
         return view('myforms.encuestas.expedientes.index', compact('tipodoc'));
         
     }
@@ -227,10 +229,18 @@ class ExpEncuSatisfaccionController extends Controller
         }
         
         $admin_encuestas = AdminEncuestas::all();
-
+      
         return view('myforms.encuestas.expedientes.resultados', compact('encuestas','admin_encuestas'));
         //$encuestas = ConcEncuestaSatisf::orderBy('created_at', 'asc')->paginate(1);
 
 
+    }
+    function getQuestionsById(Request $request,$id){
+        $encuesta = AdminEncuestas::find($id);
+        $view = view("myforms.encuestas.expedientes.preguntas_form",compact("encuesta"))->render();
+        return response()->json([
+           
+            "view"=>$view
+        ]);
     }
 }

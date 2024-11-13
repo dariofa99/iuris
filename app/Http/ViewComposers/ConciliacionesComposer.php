@@ -2,31 +2,41 @@
 namespace App\Http\ViewComposers;
 
 use Illuminate\View\View;
-use App\RamaDerecho;
-use App\User;
-use App\Segmento;
-use App\MotivoEstadoCaso;
-use App\Estado;
-use App\ReqAsistencia;
+
 use App\Periodo;
-use App\Role;
-use App\RefAsignacionCaso;
-use App\MotivoAsigCaso;
-use DB;
-use App\Sede;
+use App\Services\ReferenciasService;
 use App\TablaReferencia;
-use App\ReferencesData;
-
-
+use Illuminate\Support\Facades\App;
 
 /**
 *  
 */
 class ConciliacionesComposer
 {
+
+	private $referenciasService;
+
+
+	public function __construct()
+	{
+		
+		$this->referenciasService = App::make(ReferenciasService::class);
+		
+	}
 	
 	public function compose(View $view)
 	{
+
+		$colores_turno = $this->referenciasService->getReferenciasByFilter(
+			['tabla_ref' => 'turnos',
+			 'categoria' => 'color']
+		);
+
+		$cursando_turno = $this->referenciasService->getReferenciasByFilter(
+			['tabla_ref' => 'turnos',
+			 'categoria' => 'cursando']
+		);
+
 
 		$tipopers = TablaReferencia::where(['categoria'=>'tipo_persona','tabla_ref'=>'users'])
 		->where('ref_nombre','<>','Sin definir')
@@ -70,9 +80,10 @@ class ConciliacionesComposer
 			'types_status'=>$types_status,
 			'types_users'=>$types_users,
 			'types_status_pretension'=>$types_status_pretension,
-			/* 'categories_report'=>$categories_report, */
+			'colores_turno'=>$colores_turno,
 			'types_categories_report'=>$types_categories_report,
-			'periodo'=>$periodo
+			'periodo'=>$periodo,
+			"cursando_turno"=>$cursando_turno
 		]);
 	}
 

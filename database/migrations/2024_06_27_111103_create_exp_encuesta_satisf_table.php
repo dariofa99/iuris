@@ -18,6 +18,12 @@ class CreateExpEncuestaSatisfTable extends Migration
            
             $table->date('fecha_registro'); 
             $table->string('token');           
+
+            $table->integer('encuesta_id')->unsigned();
+            $table->foreign('encuesta_id')
+            ->references('id')->on('admin_encuestas_general')
+            ->onDelete('cascade')->onUpdate('cascade');
+
             $table->integer('exp_id')->unsigned();
             $table->foreign('exp_id')
             ->references('id')->on('expedientes')

@@ -614,12 +614,9 @@ class Expediente extends Model
     public function scopeCriterio($query, $request, $search_all_exp = false)
     {
         if ($request->tipo_busqueda == "adv") {
-
-
             return $query->where(['expidnumberest' => $request->expidnumberest])
                 ->where('exptipoproce_id', $request->exptipoproce_id)
                 ->where('expestado_id', $request->expestado_id);
-
             if ($request->estado_id) {
                 //return $query->where('expestado_id', $data);
             }

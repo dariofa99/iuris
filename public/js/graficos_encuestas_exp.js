@@ -2,12 +2,13 @@ import { EncuestasService } from './services/encuestas.js';
 const encuestasService = new EncuestasService();
 import { ReferenciasService } from "./services/referencias.js";
 const referenciasService = new ReferenciasService();
-
+let encId = 0;
 $(document).ready(async function () {
     set_tab()
     await getChart();
-    
+
     $("#btn_new_categoryInExp").on("click", function (e) {
+        e.preventDefault()
         $("#myformEditRCategory").attr("id", "myformCreateCategory");
         $("#myformCreateCategory").attr("id", "myformCreateInEnCategory");
         $("#myformCreateInEnCategory")[0].reset();
@@ -19,32 +20,55 @@ $(document).ready(async function () {
             .addClass("btn-primary");
         //$(".select2").select2();
         var inputElement = document.getElementById("short_name");
-
-        // Accede al elemento padre con la clase 'form-group'
-        var formGroup = inputElement.parentElement;
-        formGroup.remove()
-
-        var inputElement = document.getElementById("table");
-
-        // Accede al elemento padre con la clase 'form-group'
-        var formGroup = inputElement.parentElement;
-        formGroup.remove()
+        if (inputElement) {
+            var formGroup = inputElement.parentElement;
+            formGroup.remove();
+            var inputElement = document.getElementById("table");
+            // Accede al elemento padre con la clase 'form-group'
+            var formGroup = inputElement.parentElement;
+            formGroup.remove()
+        }
         $("#lbl_modal_title").text("Creando categoria");
         $("#myModal_create_category input[name='short_name']").prop('readonly', true);
         $("#myModal_create_category").modal("show");
     });
 
+    $("#btn_load_categoryInExp").on("click",async function (e) {
+        e.preventDefault();
+        var request = {
+            "table":"exp_encuesta_satisf",
+            "categories":"exp_encuesta_satisf",
+            "encuesta_id":encId
+        }
+        
+        let response = await referenciasService.getByRefDataFilter(request);     
+        $("#list_preguntas_add_test").html(response.view);
+        $("#myModal_encuesta_add_preguntas").modal("show")
+    
+       
+    })
+    $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
+        e.preventDefault();
+        var request = convertFormToJSON('myFormAddPreguntasEncuestas');
+        request['encuesta_id'] = encId
+        let response = await encuestasService.addPreguntasEncuesta(request); 
+       
+        console.log(request);
+        
+    })
     $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
         e.preventDefault()
-        $("#wait").show();
+        //$("#wait").show();
         var request = convertFormToJSON('myformCreateInEnCategory');
         request['table'] = 'exp_encuesta_satisf'
-        let response = await referenciasService.storeReferencesData(request)
-        window.location.reload()
-        toastr.success(
-            "La pregunta se creó con éxito",
-            "",
-            { positionClass: "toast-top-right", timeOut: "50000" }
+        request['encuesta_id'] = encId
+        let response = await encuestasService.storeReferencesData(request);     
+        if (response.view || response.view == '') {
+            $("#sortable_questions").html(response.view);
+            $("#lblTestName").text($(this).attr("data-name"))
+        }
+        toastr.success("La pregunta se creó con éxito","",
+            { positionClass: "toast-top-right", timeOut: "5000" }
         );
         $("#myModal_create_category").modal("hide");
     });
@@ -87,8 +111,64 @@ $(document).ready(async function () {
         });
     });
 
-    
-    
+    $("#tblListaEncuestas").on("click", ".btnIconSelEnc", async function (e) {
+        e.preventDefault();
+        encId = $(this).closest("tr").attr("data-id")
+        $(".btnRowSelEnc").removeClass("row_esc_act")
+        $(this).closest("tr").addClass("row_esc_act")
+        if(encId!=null){
+            $("#btn_new_categoryInExp").show()
+        }
+        $("#wait").show()
+        let response = await encuestasService.getQuestionsById(encId);
+        if (response.view || response.view == '') {
+            $("#sortable_questions").html(response.view);
+            $("#lblTestName").text($(this).closest("tr").attr("data-name"))
+        }
+        $("#wait").hide()
+
+    });
+
+    $("#tblListaEncuestas").on("change", ".radioChangeActiveEncuesta", async function (e) {
+        e.preventDefault();
+        encId = $(this).closest("tr").attr("data-id")
+        var request = {
+            activo:1
+        }
+        //$("#wait").show()
+        let response = await encuestasService.update(request,encId);
+        $("#wait").hide()
+
+    });
+
+
+    $("#btnCreateEncuesta").on("click", function (e) {
+        e.preventDefault();
+        $("#myModal_encuesta_create").modal("show")
+    });
+    $("#myFormCreateEncuestaExp").on("submit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myFormCreateEncuestaExp");
+
+        if (errors <= 0) {
+            $("#wait").show()
+            var request = convertFormToJSON('myFormCreateEncuestaExp');
+            request["categoria_id"] = 1;
+            let response = await encuestasService.store(request)
+            if (response.view || response.view == '') {
+                $("#tblListaEncuestas").html(response.view)
+            }
+            $("#wait").hide()
+            $("#myModal_encuesta_create").modal("hide")
+            toastr.success(
+                "La encuesta se creó con éxito",
+                "",
+                { positionClass: "toast-top-right", timeOut: "5000" }
+            );
+        }
+    })
+
+
 });
 var getChart = async () => {
     let response = await encuestasService.getChartDataExp({});

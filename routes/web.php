@@ -60,6 +60,11 @@ Route::get('expedientes/evaluar/reportes', 'ExpEncuSatisfaccionController@showRe
 Route::get('expedientes/evaluar/data/chart', 'ExpEncuSatisfaccionController@getDataForChart');
 Route::post('expedientes/evaluar/update', 'ExpEncuSatisfaccionController@update');
 
+
+
+
+
+
 Route::get('videos', function () {
   return view('videos');
 });
@@ -119,6 +124,13 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('conciliacion/evaluar/update', 'ConcEncuSatisfaccionController@update');
   Route::get('conciliacion/evaluar/reportes', 'ConcEncuSatisfaccionController@showResultados')->name("cencuesta.index");
   Route::get('conciliacion/evaluar/data/chart', 'ConcEncuSatisfaccionController@getDataForChart');
+
+  Route::get('expediente/encuesta/preguntas/{id}', 'ExpEncuSatisfaccionController@getQuestionsById');
+  //EncuestasSatisfaccionController
+  Route::post('encuestas/general/store', 'EncuestasSatisfaccionController@store');
+  Route::post('encuesta/insert/categoria', 'EncuestasSatisfaccionController@storeCategoria');
+  Route::put('encuesta/general/update/{id}', 'EncuestasSatisfaccionController@update');
+  Route::post('encuesta/add/preguntas', 'EncuestasSatisfaccionController@addPreguntasEncuesta');
 
   Route::group(['middleware' => ["vaccount", 'confirm_email', 'perfil']], function () {
 
@@ -203,6 +215,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('turnos', 'TurnosController');
     Route::delete('turnos/delete/all', 'TurnosController@deleteAllTurnos');
     Route::get('turnos/descargar/curso', 'TurnosController@descargarTurnosExcel');
+    Route::get('turnos/buscar/index', 'TurnosController@buscar');
 
     //Excel usuarios
     Route::get('usuarios/importar', 'ExcelusuariosController@getImport');
@@ -440,6 +453,7 @@ Route::group(['middleware' => ['auth']], function () {
     //ReferencesData
     Route::resource('categorias', 'ReferencesDataController');
     Route::post('categorias/store/from/reports', 'ReferencesDataController@storeFromReports');
+    Route::get('categorias/get/by/filter', 'ReferencesDataController@getByRefDataFilter');
 
     //ReferencesStaticData
     Route::resource('categories', 'ReferencesStaticDataController');

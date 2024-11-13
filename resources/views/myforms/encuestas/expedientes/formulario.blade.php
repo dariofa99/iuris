@@ -44,9 +44,7 @@
                                     <input type="hidden" name="encuesta_id" value="{{ $encuesta->id }}">
                                     <div class="row" id="renderQuestion">
                                         @include('myforms.categorias.refs_aditional_data', [
-                                            'data' => getReferencesDataBySection(
-                                                'personalizado',
-                                                'exp_encuesta_satisf'),
+                                            'data' => $encuesta->encuesta->preguntas,
                                             'col' => 12,
                                             'model' => $encuesta,
                                             'design' => 'card_question',

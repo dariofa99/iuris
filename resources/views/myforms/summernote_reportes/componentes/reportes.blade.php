@@ -183,6 +183,10 @@
                         </option>
                         <option value="apoderado_solicitante_{{ $view }}">Apoderado parte
                             solicitante</option>
+
+                        <option value="apoderado_solicitada_{{ $view }}">Apoderado parte
+                            solicitada</option>
+
                         <option value="solicitada_{{ $view }}">Parte solicitada</option>
                         <option value="conciliador_{{ $view }}">Conciliador</option>
                         <option value="asistente_{{ $view }}">Asistente</option>
@@ -245,6 +249,16 @@
                     @include('myforms.summernote_reportes.componentes.reportes_values', [
                         'tipo_usuario_id' => 196,
                         'parte' => 'apoderado_solicitante',
+                        'view' => 'user_values',
+                        'mySummernote' => $mySummernote,
+                    ])
+                </div>
+
+                <div class="content_values_{{ $view }}" style="display: none"
+                    id="apoderado_solicitada_{{ $view }}">
+                    @include('myforms.summernote_reportes.componentes.reportes_values', [
+                        'tipo_usuario_id' => 196,
+                        'parte' => 'apoderado_solicitada',
                         'view' => 'user_values',
                         'mySummernote' => $mySummernote,
                     ])

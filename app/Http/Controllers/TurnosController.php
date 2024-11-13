@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Conciliacion;
 use Illuminate\Http\Request;
 use App\Turno;
 use App\Periodo;
@@ -11,17 +12,19 @@ use App\Oficina;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\EstudiantesCursosExport;
 use App\Services\PeriodosService;
+use App\Services\TurnosService;
 use Illuminate\Support\Facades\DB;
 
 class TurnosController extends Controller
 {
-
     private $periodosService;
-  
+    private $turnosService;
     public function __construct(
-      PeriodosService $periodosService      
+        PeriodosService $periodosService,
+        TurnosService $turnosService
     ) {
-      $this->periodosService = $periodosService;
+        $this->periodosService = $periodosService;
+        $this->turnosService = $turnosService;
     }
 
 
@@ -124,10 +127,14 @@ class TurnosController extends Controller
         //dd($colores[0]->amarillo);
         //dd($estudiantes);
         return  view('myforms.frm_turnos_students_list', [
-            'dias' => $dias, 'oficinas' => $oficinas, 'ref_horarios' => $ref_horarios,
+            'dias' => $dias,
+            'oficinas' => $oficinas,
+            'ref_horarios' => $ref_horarios,
             'ref_color' => $ref_color,
-            'turnos' => $turnos, 'cursando' => $cursando,
-            'colores' => $colores, 'data_search' => $data_search,
+            'turnos' => $turnos,
+            'cursando' => $cursando,
+            'colores' => $colores,
+            'data_search' => $data_search,
             'estudiantes' => $estudiantes
         ]);
     }
@@ -157,9 +164,7 @@ class TurnosController extends Controller
     }
 
 
-    public function edit($id)
-    {
-    }
+    public function edit($id) {}
 
     public function update(Request $request, $id)
     {
@@ -235,7 +240,15 @@ class TurnosController extends Controller
 
         return ($users);
     }
+    public function buscar(Request $request)
+    {
+        $conciliacion = Conciliacion::find($request->conciliacion_id);
+        $turnos = $this->turnosService->index($request);
+        $view = view("myforms.conciliaciones.componentes.list_turno_estudiante",compact("turnos",'conciliacion'))
+        ->render();
+        return response()->json(["view"=>$view]);
 
+    }
     public function getEstudiante($request)
     {
 
@@ -285,10 +298,10 @@ class TurnosController extends Controller
                 DB::raw('SUM(IF(asistencia.astid_tip_asist = 125, 1, 0)) AS reposicion'),
                 'users.idnumber'
             )
-            ->where(function($query) use ($request){
-                if($request->has('name') and $request->input('name')!=''){
+            ->where(function ($query) use ($request) {
+                if ($request->has('name') and $request->input('name') != '') {
                     return $query->orWhere('users.lastname', 'like', "%{$request->name}%")
-                    ->orWhere('users.name', 'like', "%{$request->name}%");
+                        ->orWhere('users.name', 'like', "%{$request->name}%");
                 }
             })
             ->where('users.active', true)

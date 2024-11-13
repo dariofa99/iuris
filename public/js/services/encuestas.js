@@ -9,6 +9,47 @@ class EncuestasService {
         }
 
     }
+
+    async store(request) {
+        const response = await fetch(BASE_URL + "encuestas/general/store", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+    async update(request, id) {
+        const response = await fetch(BASE_URL + "encuesta/general/update/" + id, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
     getQuestions() {
         return this.questions
     }
@@ -16,6 +57,48 @@ class EncuestasService {
     setQuestion(question) {
         this.questions.push(question);
         localStorage.setItem("questions", JSON.stringify(this.questions))
+    }
+
+    async getQuestionsById(id) {
+        const response = await fetch(BASE_URL + "expediente/encuesta/preguntas/" + id, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+
+        });
+
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+    async storeReferencesData(request) {
+        const response = await fetch(BASE_URL + 'encuesta/insert/categoria', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+
     }
 
     async buscarConciliaciones(request) {
@@ -181,6 +264,25 @@ class EncuestasService {
 
     async storeExpEncuSatisf(request) {
         const response = await fetch(BASE_URL + "expedientes/evaluar/store", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+   async addPreguntasEncuesta(request) {
+        const response = await fetch(BASE_URL + "encuesta/add/preguntas", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

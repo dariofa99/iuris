@@ -201,8 +201,11 @@ class ConciliacionesController extends Controller
             ->pluck('ref_nombre', 'id');
 
         $estudiantes = $this->getEstudiantes();
+       // dd($request);
+
         $turnos = $this->turnosService->index($request);
 
+        //dd($turnos);
         $numusers =  $conciliacion->usuarios->count();
         $audiencia = AudienciaConciliacion::where('id_conciliacion', $conciliacion->id)->first();
         $salaalterna = SalasAlternasConciliacion::where(['idnumber' => Auth::user()->idnumber, "id_conciliacion" => $conciliacion->id])->first();

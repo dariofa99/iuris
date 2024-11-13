@@ -265,6 +265,12 @@
                                 class='btn btn-primary btn-block btn-sm buscar_actuacion'>
                                 Revisar
                             </button>
+
+                            <button type='button' value="{{ $hijo->id }}"
+                                class='btn btn-warning btn-block btn-sm cambiar_actuacion_anexo'>
+                                Es anexo
+                            </button>
+
                         @endif
                         @if (
                             $hijo->actestado_id == 102 and

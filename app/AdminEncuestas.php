@@ -13,7 +13,8 @@ class AdminEncuestas extends Model
     'nombre',
     'codigo',
     'version',
-    'fecha_vegencia',  
+    "activo",
+    'fecha_vigencia',  
     'categoria_id' 
 ];
 

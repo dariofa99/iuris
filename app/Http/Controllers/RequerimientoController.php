@@ -307,6 +307,13 @@ class RequerimientoController extends Controller
         //   return response()->json($request->all());  
 
         $requerimiento = Requerimiento::find($id);
+        if(isset($request->reqfecha) and $request->reqfecha<=now()){
+            return response()->json([
+                "errors"=>[
+                    "La fecha de Citación debe ser mayor a la fecha actual."
+                ]
+            ]);
+        }
         $requerimiento->fill($request->all());
         if (isset($request->ntaetica) and isset($request->ntaconcepto)) {
             $data = [

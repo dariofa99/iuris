@@ -304,7 +304,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                     CASE 
                         WHEN `docidnumber` = '98378318' THEN 4
                        
-                        ELSE 16 -- Valor por defecto si el docidnumber no coincide con ninguno de los anteriores
+                        ELSE 16
                     END AS num_hours
                 FROM `asignacion_docente_caso`
                 JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
@@ -358,11 +358,11 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     public function asignargDocenteSeguimiento($asignacion_caso, $tipoproce)
     {
         $subRama =  $asignacion_caso->expediente->rama_derecho->subrama;
-        $antes = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
+        //$antes = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
-          $this->request['asig_caso_id']  = $asignacion_caso->id;
-      //  dd($docentes[0]['idnumber']);
+        $this->request['asig_caso_id']  = $asignacion_caso->id;
+        dd($asig_doc);
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
                 foreach ($asig_doc as $person) {
