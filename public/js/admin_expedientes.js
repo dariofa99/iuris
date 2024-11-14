@@ -929,16 +929,16 @@ $(document).ready(function () {
 
 
     $("#content_user_exp_asig").on("change", "select[name='pbepersondiscap']", function (e) {
-            if ($(this).val() == 1) {               
-                mostrarCompDiscapUser()
-            } else {
-                ocultarCompDiscapUser();
-            }
-        });
+        if ($(this).val() == 1) {
+            mostrarCompDiscapUser()
+        } else {
+            ocultarCompDiscapUser();
+        }
+    });
 
     $("#content_user_exp_add")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-            if ($(this).val() == 1) {               
+            if ($(this).val() == 1) {
                 mostrarCompDiscapUser()
             } else {
                 ocultarCompDiscapUser();
@@ -947,7 +947,7 @@ $(document).ready(function () {
 
     $("#myModal_exp_user_edit")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-            if ($(this).val() == 1) {        
+            if ($(this).val() == 1) {
                 mostrarCompDiscapUser()
             } else {
                 ocultarCompDiscapUser();
@@ -1004,30 +1004,30 @@ $(document).ready(function () {
             }
         });
 
-        $("#content_user_exp_asig").on("submit", '#myFormUserCreateExpediente', async function (e) {
-            e.preventDefault();
-            var errors = validateForm("myFormUserCreateExpediente");
-            if (errors.length <= 0) {
-                var request = convertFormToJSON("myFormUserCreateExpediente");
-                var data = userService.getAditionalDataByForm("myFormUserCreateExpediente")
-                request["data"] = (data);
-                $("#wait").show();
-                let response = await userService.registrar(request);
-                if (response.errors) {
-                    response.errors.forEach(error => {
-                        toastr.error(error, "", {
-                            positionClass: "toast-top-right",
-                            timeOut: "4000",
-                        });
+    $("#content_user_exp_asig").on("submit", '#myFormUserCreateExpediente', async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myFormUserCreateExpediente");
+        if (errors.length <= 0) {
+            var request = convertFormToJSON("myFormUserCreateExpediente");
+            var data = userService.getAditionalDataByForm("myFormUserCreateExpediente")
+            request["data"] = (data);
+            $("#wait").show();
+            let response = await userService.registrar(request);
+            if (response.errors) {
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
                     });
-                } else {
-                    resetForm('myFormUserEditExpediente');
-                    $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
-                    $("#myModal_exp_user_edit").modal("hide");
-                }
-                $("#wait").hide();
+                });
+            } else {
+                resetForm('myFormUserEditExpediente');
+                $("#myFormExpsStore input[name='expidnumber']").val(response.user.idnumber)
+                $("#myModal_exp_user_edit").modal("hide");
             }
-        });
+            $("#wait").hide();
+        }
+    });
 
     $("#content_user_exp_add").on("submit", '#myFormUserAddCreateExpediente', async function (e) {
         e.preventDefault();
@@ -1048,7 +1048,7 @@ $(document).ready(function () {
                 });
                 $("#wait").hide();
             } else {
-                resetForm('myFormUserAddCreateExpediente');               
+                resetForm('myFormUserAddCreateExpediente');
                 $("#myModal_exp_user_add").modal("hide");
                 toastr.success("Usuario agregado con éxito", "", {
                     positionClass: "toast-top-center",
@@ -1056,7 +1056,7 @@ $(document).ready(function () {
                 });
                 window.location.reload(true)
             }
-            
+
         }
     });
 
@@ -1079,7 +1079,7 @@ $(document).ready(function () {
                 });
                 $("#wait").hide();
             } else {
-                resetForm('myFormUserAddCreateExpediente');               
+                resetForm('myFormUserAddCreateExpediente');
                 $("#myModal_exp_user_add").modal("hide");
                 toastr.success("Usuario agregado con éxito", "", {
                     positionClass: "toast-top-center",
@@ -1087,11 +1087,11 @@ $(document).ready(function () {
                 });
                 window.location.reload(true)
             }
-           
+
         }
     });
 
-    $(".search_user").on("click",async function  (e) {
+    $(".search_user").on("click", async function (e) {
         e.preventDefault()
         let request = {
             "tipodoc_id": $(this).attr("data-tipo_doc"),
@@ -1104,7 +1104,7 @@ $(document).ready(function () {
         if (response.encontrado) {
             $("#content_user_exp_add").html(response.view);
             $("#myFormUserAddEditExpediente input[name='idnumber']").prop('disabled', true)
-            .removeAttr("name");
+                .removeAttr("name");
         }
         $("#wait").hide();
     })
@@ -1641,8 +1641,10 @@ $(document).ready(function () {
     });
 
     $("#myformCreateActButton").on("click", async function (e) {
-        var errors = validateForm('myformCreateAct')
+        var errors = validateForm('myformCreateAct');
+
         if (errors.length <= 0) {
+
             const body = new FormData(document.getElementById('myformCreateAct'));
             const archivo = body.get('actdocnomgen');
             var userauth = JSON.parse($("#authdata").val());
@@ -1884,6 +1886,17 @@ $(document).ready(function () {
         }
     });
 
+    $("#myform_act_edit_docente input[name='fecha_limit_doc']").on("change", function (e) {
+        const fechaSeleccionada = moment(this.value); // Captura la fecha del input
+        const fechaActual = moment().startOf('day'); // Fecha actual al inicio del día
+
+        if (fechaSeleccionada.isSameOrBefore(fechaActual)) {
+            document.getElementById('error-message').style.display = 'block';
+        } else {
+            document.getElementById('error-message').style.display = 'none';
+        }
+    })
+
     $("#btn_act_edit_docen").click(async function (e) {
         e.preventDefault();
         if ($("#actestado").val() != 104) {
@@ -1895,12 +1908,23 @@ $(document).ready(function () {
         var notaet = $("#myform_act_edit_docente input[name='ntaetica']").val();
         var fecha_limit = $("#myform_act_edit_docente input[name='fecha_limit_doc']").val();
         if (!existeFecha(fecha_limit) && $("#actestado").val() == 102) {
+
             toastr.error("Por favor, verifíque que el año de fecha limite no sea inferior o superior a un año con respecto al año actual.", "", {
                 positionClass: "toast-top-right",
                 timeOut: "6000",
             });
             errors = 1;
         }
+        var fecha_limit = document.getElementById("fecha_limit_doc");
+        const fechaSeleccionada = moment(fecha_limit.value); // Captura la fecha del input
+        const fechaActual = moment().startOf('day'); // Fecha actual al inicio del día
+        if (fechaSeleccionada.isSameOrBefore(fechaActual)) {
+            toastr.error("Por favor, verifíque que la fecha limite no sea inferior o superior a un día con respecto al día actual.", "", {
+                positionClass: "toast-top-right",
+                timeOut: "6000",
+            });
+            return
+        }       
         if (notaapl > 5 || notacon > 5 || notaet > 5) {
             toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
                 positionClass: "toast-top-right",
@@ -2209,15 +2233,15 @@ $(document).ready(function () {
                     });
                 });
                 $("#wait").hide()
-            }else{
+            } else {
                 toastr.success("Actualizado con éxito", "", {
                     positionClass: "toast-top-right",
                     timeOut: "4000",
                 });
                 location.reload(true);
             }
-            
-            
+
+
         }
     });
     $("#btn_update_requerimiento").on("click", async function (e) {
@@ -2865,7 +2889,7 @@ $(document).ready(function () {
 
     });
 
-   
+
 
 });//////////////////////////////////////////////
 function get_notas(tbl_id, origen) {

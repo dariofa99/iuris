@@ -58,7 +58,7 @@
                         <span class="input-group-text" id="inputGroup-sizing-default">
                             <i class="fa fa-calendar"></i>
                         </span>
-                    </div>
+                    </div> 
                     {!! Form::text('actfecha', fechaActual(), [
                         'class' => 'form-control',
                         'required' => 'required',

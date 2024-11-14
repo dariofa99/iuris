@@ -362,7 +362,6 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
         $this->request['asig_caso_id']  = $asignacion_caso->id;
-        dd($asig_doc);
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
                 foreach ($asig_doc as $person) {

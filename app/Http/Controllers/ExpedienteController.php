@@ -507,12 +507,11 @@ class ExpedienteController extends Controller
       if ($request->exptipoproce_id == 1) {
         if ($expediente->getDocenteAsig()->idnumber == 'Sin asignar') {
           if ($asignacion_caso != null) {
-            $date = Carbon::now();
-            $days = $expediente->getDaysOrColorForClose('dias');
+            $date = Carbon::now();            
             $this->expedienteService->asignarDocente($asignacion_caso);
           }
         }
-      } else if ($request->exptipoproce_id == 2) {
+      } else if ($request->exptipoproce_id != 1) {
         if ($expediente->getDocenteAsig()->idnumber != 'Sin asignar') {
           $asignacion_caso->asig_docente()->delete();
           $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);     // si tiene en cuenta la rama del derecho     

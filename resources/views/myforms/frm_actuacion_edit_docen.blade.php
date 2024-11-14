@@ -119,7 +119,7 @@
 
                 </div>
             </div>
-
+ 
             <div class="col-md-12">
                 <div class="form-group">
                     {!! Form::label('Fecha límite de entrega:') !!}
@@ -131,6 +131,8 @@
                         'disabled',
                     ]) !!}
                 </div>
+                <p id="error-message" style="color: red; display: none;">La fecha debe ser superior al día actual.</p>
+
             </div>
 
 
