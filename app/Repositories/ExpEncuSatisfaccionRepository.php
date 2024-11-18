@@ -40,10 +40,10 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
   }
 
 
-  public function store(Request $request): ExpEncuestaSatisf
+  public function store(Request $request)
   {
 
-    /* try { */
+     try { 
      
       $encuestaAct = AdminEncuestas::where("activo",1)->first();
 
@@ -73,9 +73,9 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
 
 
       return false;
-    /* } catch (\Throwable $th) {
+     } catch (\Throwable $th) {
       return $th->getMessage();
-    } */
+    } 
 
 
     /*  */

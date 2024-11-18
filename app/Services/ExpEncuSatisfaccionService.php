@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 interface ExpEncuSatisfaccionService {
  
-    public function store(Request $request):ExpEncuestaSatisf;
+    public function store(Request $request);
     public function update(Request $request,$encuesta):ExpEncuestaSatisf;
         
    

@@ -38,10 +38,57 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="row justify-content-center ">
+                            
+                            <div class="col-md-8 d-none d-md-block">
+                                <table style="font-family:arial;font-size:13.333px;width:100%">
+                                    <tr>
+                                        <td align="center" style="border:1px solid black">
+                                            <img src="{{ asset('/img/logoudenar_2.png') }}" width="100"
+                                                height="100" />
+                                        </td>
+
+                                        </td>
+                                        <td align="center" style="border:1px solid black;font-style:bold">
+                                            UNIVERSIDAD DE NARIÑO<br>
+                                            CONSULTORIOS JURIDICOS - CENTRO DE CONCILIACIÓN <br>
+                                            “EDUARDO ALVARADO HURTADO”<br>
+                                            Facultad de Derecho y Ciencias Políticas<br>
+                                            <br>
+                                            ENCUESTA DE SATISFACCIÓN DE USUARIOS <br>
+                                            CONSULTORIOS JURÍDICOS
+
+                                        </td>
+                                        <td style="border:1px solid black">
+                                            <span
+                                                style="padding:2px;display:block;text-align:left;border-bottom:1px solid black">
+                                                Código:
+                                                {{$encuesta->encuesta->codigo}}</span>
+                                            <span
+                                                style="padding:2px;display:block;text-align:left;border-bottom:1px solid black">
+                                                Página:
+                                                1 de 1</span>
+                                            <span
+                                                style="padding:2px;display:block;text-align:left;border-bottom:1px solid black">
+                                                Versión:
+                                                {{$encuesta->encuesta->version}}
+                                            </span>
+                                            <span
+                                                style="padding:2px;display:block;text-align:left;border-bottom:1px solid black">Vigente
+                                                a Partir de:<br>
+                                                {{ date($encuesta->encuesta->fecha_vigencia) }}
+                                            </span>
+
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
                         <div class="row justify-content-center">
                             <div class="col-md-8">
                                 <form id="myEvaNivSatForm">
-                                    <input type="hidden" name="encuesta_id" value="{{ $encuesta->id }}">
+                                    <input type="hidden" name="expencuesta_id" value="{{ $encuesta->id }}">
                                     <div class="row" id="renderQuestion">
                                         @include('myforms.categorias.refs_aditional_data', [
                                             'data' => $encuesta->encuesta->preguntas,

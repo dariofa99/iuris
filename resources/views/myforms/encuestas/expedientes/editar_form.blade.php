@@ -27,16 +27,14 @@
                 </h3>
                   <div class="card-tools">
                     
-                      <a style="display: block"  id="btn_new_categoryInExp" href="#" class="btn btn-tool btn-sm">
-                          <i class="fas fa-plus">
+                      <a style="display: none"  id="btn_new_categoryInExp" href="#" class="btn btn-tool btn-sm">
+                          
                               Nueva Pregunta
-                          </i>
+                         
                       </a>
 
-                      <a style="display: block"  id="btn_load_categoryInExp" href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-plus">
-                            Cargar Pregunta
-                        </i>
+                      <a style="display: none"  id="btn_load_categoryInExp" href="#" class="btn btn-tool btn-sm">
+                        Cargar Pregunta
                     </a>
 
                   </div>

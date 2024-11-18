@@ -3,4 +3,4 @@
         'encuesta' => $encuesta,
     ])
 @endforeach
-{{ $encuestas->appends(request()->query())->links() }}
+{{ $encuestas->appends(request()->query())->links() }} 

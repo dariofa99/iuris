@@ -955,7 +955,7 @@ class Expediente extends Model
 
     public function getDaysForNexAct()
     {
-        $pausa = $this->asignacion->pausas()->orderBy('created_at', 'desc')->first();
+         $pausa = $this->asignacion->pausas()->orderBy('created_at', 'desc')->first();
         if ($this->expestado_id == 6) {
             if ($pausa) {
                 $fecha = "desde " . getSmallDate($pausa->fecha_inicial) . " hasta " . getSmallDate($pausa->fecha_final);
@@ -984,7 +984,8 @@ class Expediente extends Model
             ->whereDate('fecha_fin', '>=', $now)
             ->where("periodo_id", $periodo->id)
             ->orderBy('created_at', 'desc')->first();
-           
+            $asignacion = $this->asignacion;
+            //dd($this->asignacion);   
         if ($estamosVacaciones) {
             if ($act and ($act->actfecha < $estamosVacaciones->fecha_inicio)) {
                 $dias = $this->difDays($act->actfecha, $estamosVacaciones->fecha_inicio);
@@ -1010,6 +1011,7 @@ class Expediente extends Model
             }
         } else {
             if ($act) {
+                
                 $huboVacaciones = DB::table("vacaciones_periodo")
                     ->whereDate('fecha_inicio', '>=', $act->actfecha)
                     ->whereDate('fecha_fin', '<=', $now)
@@ -1030,18 +1032,26 @@ class Expediente extends Model
                     if (($hizoEnVacaciones)) {
                         $dias = $this->difDays($hizoEnVacaciones->fecha_fin, date('Y-m-d'));
                     } else {
-                        //dd($act->actfecha , $periodo->prdfecha_inicio);
+                       
                         if ($act->actfecha < $periodo->prdfecha_inicio) {
                             $dias = $this->difDays($periodo->prdfecha_inicio, date('Y-m-d'));
                             $text =  "<b>Días transcurridos desde inicio de corte:</b>";
                         } else {
-                            $dias = $this->difDays($act->actfecha, date('Y-m-d'));
-                            $text =  "<b>Días transcurridos desde última actuación:</b>";
-                        }
+                            if($asignacion->fecha_asig > $act->actfecha){
+                                $dias = $this->difDays($asignacion->fecha_asig, date('Y-m-d'));
+                                $text =  "<b>Días transcurridos desde asignación:</b>";
+                          
+                            }else{
+                                $dias = $this->difDays($act->actfecha, date('Y-m-d'));
+                                $text =  "<b>Días transcurridos desde última actuación:</b>";
+                          
+                            }
+                              }
                     }
                 }
             } else {
-                $asignacion = $this->asignacion;
+                
+               
                 $huboVacaciones = DB::table("vacaciones_periodo")
                     ->whereDate('fecha_inicio', '>=', $asignacion->fecha_asig)
                     ->whereDate('fecha_fin', '<=', $now)

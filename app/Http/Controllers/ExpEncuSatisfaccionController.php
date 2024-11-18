@@ -50,10 +50,6 @@ class ExpEncuSatisfaccionController extends Controller
     public function renderForm(Request $request)
     {
         $encuesta = ExpEncuestaSatisf::where('token', $request->get('token'))->first();
-        
-        dd($encuesta);
-        
-        
         if ($request->ajax() 
         || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $paginate = true;
@@ -64,7 +60,7 @@ class ExpEncuSatisfaccionController extends Controller
             )->render();
             return response()->json($view);
         }
-        //dd($encuesta->encuesta->preguntas);
+        //dd($encuesta->encuesta);
         return view('myforms.encuestas.expedientes.formulario', compact('encuesta'));
     }
 
@@ -145,6 +141,11 @@ class ExpEncuSatisfaccionController extends Controller
             
             //$request['tipo_usuario_id'] = 1;
             $encuesta = $this->encuestaService->store($request); 
+            if(!$encuesta){
+                return response()->json([
+                    "errors"=>["No hay una encuesta activa"]
+                ]);
+            }
             return response()->json($encuesta);
         }
         // return response()->json($request->all());
@@ -155,7 +156,8 @@ class ExpEncuSatisfaccionController extends Controller
 
     public function update(Request $request)
     {
-        $encuesta = $this->encuestaService->find($request->encuesta_id);
+        //return response()->json($request->all());
+        $encuesta = $this->encuestaService->find($request->expencuesta_id);
         $encuesta = $this->encuestaService->update($request, $encuesta);
         return response()->json($encuesta);
     }
@@ -183,12 +185,15 @@ class ExpEncuSatisfaccionController extends Controller
 
     public function getDataForChart(Request $request)
     {
+        $encuestaAct = AdminEncuestas::where("activo",1)->first();
+
         $resultados = DB::table('references_data')
             ->join('references_data_options', 'references_data.id', '=', 'references_data_options.references_data_id')
             ->leftJoin('expencsat_aditional_data', function ($join) {
                 $join->on('references_data.id', '=', 'expencsat_aditional_data.reference_data_id')
                     ->on('references_data_options.id', '=', 'expencsat_aditional_data.reference_data_option_id');
             })
+            ->join("exp_encuesta_satisf","exp_encuesta_satisf.id","=","expencsat_aditional_data.exp_satisf_id")
             ->select(
                 'references_data.id as pregunta_id',
                 'references_data.name as pregunta',
@@ -196,6 +201,7 @@ class ExpEncuSatisfaccionController extends Controller
                 'references_data_options.value as opcion',
                 DB::raw('COUNT(expencsat_aditional_data.id) as conteo')
             )
+            ->where("encuesta_id",$encuestaAct->id)
             ->where('categories', 'exp_encuesta_satisf')
             ->groupBy('references_data.id', 'references_data_options.id')
             ->get();
@@ -218,7 +224,11 @@ class ExpEncuSatisfaccionController extends Controller
     }
     public function showResultados(Request $request)
     {
-        $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')->paginate(1);
+        $encuestaAct = AdminEncuestas::where("activo",1)->first();
+
+        $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
+        ->where("encuesta_id",$encuestaAct->id)
+        ->paginate(1);
    
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $view_re = view('myforms.encuestas.expedientes.resultados_individual_ajax', compact('encuestas'))->render();

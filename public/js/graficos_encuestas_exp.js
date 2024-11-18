@@ -118,6 +118,7 @@ $(document).ready(async function () {
         $(this).closest("tr").addClass("row_esc_act")
         if(encId!=null){
             $("#btn_new_categoryInExp").show()
+            $("#btn_load_categoryInExp").show()
         }
         $("#wait").show()
         let response = await encuestasService.getQuestionsById(encId);

@@ -467,7 +467,7 @@ class ExpedienteController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //return response()->json($request->all());
+    
     $expediente = $this->expedienteService->find($id);
     if ($request->has('exphechos') and $expediente->exphechos != $request['exphechos']) {
       $historial = HistorialDatosCaso::insert([
@@ -497,13 +497,13 @@ class ExpedienteController extends Controller
     }
 
     $asignacion_caso = $this->asignacionCasoService->findWithFilter([
-      'asigest_id' => $request->oldexpidnumberest,
+      'asigest_id' => $expediente->estudiante->idnumber,
       'activo' => 1,
       'asigexp_id' => $expediente->expid,
     ]);
 
 
-    if ($request->exptipoproce_id != $expediente->exptipoproce_id) {
+    if ($request->has("exptipoproce_id") and $request->exptipoproce_id != $expediente->exptipoproce_id) {
       if ($request->exptipoproce_id == 1) {
         if ($expediente->getDocenteAsig()->idnumber == 'Sin asignar') {
           if ($asignacion_caso != null) {
@@ -517,6 +517,7 @@ class ExpedienteController extends Controller
           $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);     // si tiene en cuenta la rama del derecho     
         }
       }
+      //return response()->json([$request->all(),$asignacion_caso]);
     }
 
 

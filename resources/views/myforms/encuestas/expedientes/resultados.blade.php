@@ -19,30 +19,31 @@ Administración de encuestas
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link urlactive active" id="general-tab" data-toggle="tab" href="#general_tab" role="tab"
+            <a class="nav-link urlactive active" id="edit_form-tab" data-toggle="tab" href="#edit_form_tab" role="tab"
+                aria-controls="edit_form_tab" aria-selected="false">
+                Administrar formularios
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link urlactive" id="general-tab" data-toggle="tab" href="#general_tab" role="tab"
                 aria-controls="general_tab" aria-selected="true">
-                General
+                Resultados
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link urlactive" id="individual-tab" data-toggle="tab" href="#individual_tab" role="tab"
                 aria-controls="individual_tab" aria-selected="false">
-                Individual
+                Resultados Individual
             </a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link urlactive" id="edit_form-tab" data-toggle="tab" href="#edit_form_tab" role="tab"
-                aria-controls="edit_form_tab" aria-selected="false">
-                Editar formulario
-            </a>
-        </li>
+       
     </ul>
 
     <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
 
-        <div class="tab-pane fade active show" id="general_tab" role="tabpanel" aria-labelledby="general-tab">
+        <div class="tab-pane fade " id="general_tab" role="tabpanel" aria-labelledby="general-tab">
             <div class="row">
                 <div class="col-md-5">
                     <label for="select_table">Tabla Principal</label>
@@ -75,7 +76,7 @@ Administración de encuestas
                 </div>
             </div>
             <div class="row" id="content-grafs">
-
+ 
             </div>
         </div>
 
@@ -89,7 +90,7 @@ Administración de encuestas
 
         </div>
 
-        <div class="tab-pane fade" id="edit_form_tab" role="tabpanel" aria-labelledby="edit_form-tab">
+        <div class="tab-pane fade active show" id="edit_form_tab" role="tabpanel" aria-labelledby="edit_form-tab">
 
             @include('myforms.encuestas.expedientes.editar_form')
               
