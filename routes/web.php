@@ -403,6 +403,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('conciliacion/chat/{chatroom}', 'AudienciaController@getChangeChatRoom');
 
 
+    ///////////////////////Agendas
+    Route::get('search/citas/for/calendar', 'AgendasController@searchCitasForCalendar');
+    Route::get('form/citas/for/calendar', 'AgendasController@formCitasForCalendar')->name("ag.cedoc");
+    
     //PDF >Reportes
 
     Route::get('pdf/reportes/get', 'PdfReportesController@getReportes');

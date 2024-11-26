@@ -270,7 +270,6 @@
                                 class='btn btn-warning btn-block btn-sm cambiar_actuacion_anexo'>
                                 Es anexo
                             </button>
-
                         @endif
                         @if (
                             $hijo->actestado_id == 102 and
@@ -292,7 +291,8 @@
                                 ($hijo->actusercreated == currentUser()->idnumber and $vencido == false) ||
                                     (currentUser()->hasRole('amatai') ||
                                         currentUser()->hasRole('diradmin') ||
-                                        currentUser()->hasRole('dirgral')))
+                                        currentUser()->hasRole('dirgral')) ||
+                                    ($hijo->actestado_id == 136 and $hijo->actusercreated == currentUser()->idnumber))
                             <button data-modal="#myModal_act_edit" type='button' value="{{ $hijo->id }}"
                                 class='btn btn-primary btn-sm buscar_actuacion btn-block'>
                                 Editar
@@ -300,11 +300,12 @@
                         @endif
                         @if (
                             $hijo->actestado_id == 101 || $hijo->actestado_id == 136 and
-                                $hijo->actusercreated == currentUser()->idnumber ||
-                                    currentUser()->hasRole('amatai') ||
-                                    currentUser()->hasRole('diradmin') ||
-                                    currentUser()->hasRole('dirgral') and
-                                !$vencido)
+                                ($hijo->actusercreated == currentUser()->idnumber and $vencido == false) ||
+                                    (currentUser()->hasRole('amatai') ||
+                                        currentUser()->hasRole('diradmin') ||
+                                        currentUser()->hasRole('dirgral')) ||
+                                    ($hijo->actestado_id == 136 and $hijo->actusercreated == currentUser()->idnumber))
+                    
                             <button type='button' value="{{ $hijo->id }}"
                                 class='btn btn-danger btn-block btn-sm delete_act'>
                                 Eliminar

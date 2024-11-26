@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use Illuminate\Support\Facades\Session;
 
 use App\Mail\ValidateAccount as MailValidateAccount;
 use Closure;
@@ -25,7 +25,10 @@ class ValidateAccount
     $user = Auth::user();
     $user->role;
     if (count($user->role) > 0 and !$user->hasRole('solicitante') and $user->active == false and $user->confirm_token == "") {
-        $user->confirm_token = str_replace("/", "", bcrypt(\Str::random(5)));
+      
+     
+      
+      $user->confirm_token = str_replace("/", "", bcrypt(\Str::random(5)));
         $user->save();
         //Session::flash('message-danger', 'Error! Recuerda escribir un correo electrónico valido, ya que se enviará una confirmación.');
         Mail::to($user->email)->send(new MailValidateAccount($user,$user->email));

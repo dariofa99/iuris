@@ -44,14 +44,16 @@ class ExpEncuSatisfaccionController extends Controller
         $this->userService = $userService;
         $this->loginService = $loginService;
         $this->conciliacionesService = $conciliacionesService;
-        $this->middleware('auth', ['except' => ['index', 'findUser','buscarExpedientes']]); //not work
+        $this->middleware('auth', ['except' => ['index', 'findUser', 'buscarExpedientes']]); //not work
     }
 
     public function renderForm(Request $request)
     {
         $encuesta = ExpEncuestaSatisf::where('token', $request->get('token'))->first();
-        if ($request->ajax() 
-        || $request->header('X-Requested-With') == 'XMLHttpRequest') {
+        if (
+            $request->ajax()
+            || $request->header('X-Requested-With') == 'XMLHttpRequest'
+        ) {
             $paginate = true;
             $data = $encuesta->encuesta->preguntas;
             $view = view(
@@ -72,9 +74,8 @@ class ExpEncuSatisfaccionController extends Controller
                 'categoria' => 'tipo_doc'
             ]
         );
-      
+
         return view('myforms.encuestas.expedientes.index', compact('tipodoc'));
-        
     }
     public function findUser(Request $request)
     {
@@ -104,7 +105,7 @@ class ExpEncuSatisfaccionController extends Controller
                 $user = false;
             }
         }
-       // return response()->json($user);
+        // return response()->json($user);
         if ($user) {
             $encontrado = true;
             Auth::login($user);
@@ -119,31 +120,31 @@ class ExpEncuSatisfaccionController extends Controller
     public function store(Request $request)
     {
         $encuesta = ExpEncuestaSatisf::where('exp_id', $request->get('exp_id'))
-        ->first();
-       
-        if($encuesta){
+            ->first();
+
+        if ($encuesta) {
             $expe = Expediente::find($request->input("exp_id"));
-            if($expe){
+            if ($expe) {
                 $user = User::find($expe->solicitante->id);
                 Auth::login($user);
             }
             return response()->json($encuesta);
-        }else{
+        } else {
             $request['user_id'] = auth()->user()->id;
-            if($request->has("exp_id")){
+            if ($request->has("exp_id")) {
                 $expe = Expediente::find($request->input("exp_id"));
-                if($expe){
+                if ($expe) {
                     $user = User::find($expe->solicitante->id);
                     Auth::login($user);
                     $request['user_id'] = $expe->solicitante->id;
                 }
             }
-            
+
             //$request['tipo_usuario_id'] = 1;
-            $encuesta = $this->encuestaService->store($request); 
-            if(!$encuesta){
+            $encuesta = $this->encuestaService->store($request);
+            if (!$encuesta) {
                 return response()->json([
-                    "errors"=>["No hay una encuesta activa"]
+                    "errors" => ["No hay una encuesta activa"]
                 ]);
             }
             return response()->json($encuesta);
@@ -151,7 +152,7 @@ class ExpEncuSatisfaccionController extends Controller
         // return response()->json($request->all());
         // 
 
-        
+
     }
 
     public function update(Request $request)
@@ -185,27 +186,31 @@ class ExpEncuSatisfaccionController extends Controller
 
     public function getDataForChart(Request $request)
     {
-        $encuestaAct = AdminEncuestas::where("activo",1)->first();
-
+        $encuestaAct = AdminEncuestas::where("activo", 1)->first();
         $resultados = DB::table('references_data')
             ->join('references_data_options', 'references_data.id', '=', 'references_data_options.references_data_id')
-            ->leftJoin('expencsat_aditional_data', function ($join) {
-                $join->on('references_data.id', '=', 'expencsat_aditional_data.reference_data_id')
-                    ->on('references_data_options.id', '=', 'expencsat_aditional_data.reference_data_option_id');
+            ->leftJoin('expencsat_aditional_data', 'references_data_options.id', '=', 'expencsat_aditional_data.reference_data_option_id')
+            ->leftJoin('exp_encuesta_satisf', function ($join) use ($encuestaAct) {
+                $join->on('exp_encuesta_satisf.id', '=', 'expencsat_aditional_data.exp_satisf_id')
+                    ->where('exp_encuesta_satisf.encuesta_id', $encuestaAct->id);
             })
-            ->join("exp_encuesta_satisf","exp_encuesta_satisf.id","=","expencsat_aditional_data.exp_satisf_id")
             ->select(
                 'references_data.id as pregunta_id',
                 'references_data.name as pregunta',
                 'references_data_options.id as opcion_id',
                 'references_data_options.value as opcion',
-                DB::raw('COUNT(expencsat_aditional_data.id) as conteo')
+                DB::raw('COALESCE(COUNT(expencsat_aditional_data.id), 0) as conteo')
             )
-            ->where("encuesta_id",$encuestaAct->id)
-            ->where('categories', 'exp_encuesta_satisf')
-            ->groupBy('references_data.id', 'references_data_options.id')
+            ->where('references_data.categories', 'exp_encuesta_satisf')
+            ->groupBy(
+                'references_data.id',
+                'references_data.name',
+                'references_data_options.id',
+                'references_data_options.value'
+            )
             ->get();
-        $resultadosAgrupados = $resultados->groupBy('pregunta_id')->map(function ($items, $key) {
+        // Agrupamos los resultados por pregunta
+        $resultadosAgrupados = $resultados->groupBy('pregunta_id')->map(function ($items) {
             return [
                 'id' => $items->first()->pregunta_id,
                 'pregunta' => $items->first()->pregunta,
@@ -213,23 +218,22 @@ class ExpEncuSatisfaccionController extends Controller
                     return [
                         'id' => $item->opcion_id,
                         'label' => $item->opcion,
-                        'value' => $item->conteo,
+                        'value' => $item->conteo ?? 0, // Mostrar conteo 0 si no hay respuestas
                     ];
-                })->values()
+                })->values(),
             ];
         })->values();
-
 
         return response()->json($resultadosAgrupados);
     }
     public function showResultados(Request $request)
     {
-        $encuestaAct = AdminEncuestas::where("activo",1)->first();
+        $encuestaAct = AdminEncuestas::where("activo", 1)->first();
 
         $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
-        ->where("encuesta_id",$encuestaAct->id)
-        ->paginate(1);
-   
+            ->where("encuesta_id", $encuestaAct->id)
+            ->paginate(1);
+
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $view_re = view('myforms.encuestas.expedientes.resultados_individual_ajax', compact('encuestas'))->render();
             $response = [
@@ -237,20 +241,21 @@ class ExpEncuSatisfaccionController extends Controller
             ];
             return response()->json($response);
         }
-        
+
         $admin_encuestas = AdminEncuestas::all();
-      
-        return view('myforms.encuestas.expedientes.resultados', compact('encuestas','admin_encuestas'));
+
+        return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas'));
         //$encuestas = ConcEncuestaSatisf::orderBy('created_at', 'asc')->paginate(1);
 
 
     }
-    function getQuestionsById(Request $request,$id){
+    function getQuestionsById(Request $request, $id)
+    {
         $encuesta = AdminEncuestas::find($id);
-        $view = view("myforms.encuestas.expedientes.preguntas_form",compact("encuesta"))->render();
+        $view = view("myforms.encuestas.expedientes.preguntas_form", compact("encuesta"))->render();
         return response()->json([
-           
-            "view"=>$view
+
+            "view" => $view
         ]);
     }
 }

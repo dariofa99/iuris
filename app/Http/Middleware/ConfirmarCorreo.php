@@ -18,8 +18,8 @@ class ConfirmarCorreo
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if(count($user->roles)>0 and $user->hasRole("amatai") and !$user->active){
-            Session::flash('message-danger', 'La fecha de matrículas ya venció, deberá comunicarse con dirección general para habilitar el proceso.');
+        if(count($user->roles)>0 and $user->hasRole("estudiante") and !$user->active){
+            Session::flash('message-danger', 'La fecha de matrículas ya venció, deberá comunicarse con dirección general para habilitar la cuenta.');
              Auth::logout();
             return redirect('/login');             
          }else if(count($user->roles)<=0){

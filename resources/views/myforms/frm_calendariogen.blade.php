@@ -3,7 +3,6 @@
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/fullcalendar/fullcalendar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
-  
 @endpush
 @section('navbar')
     <!-- aqui va el menu de cada vista -->
@@ -71,7 +70,7 @@
     {!! Html::script('plugins/fullcalendar/fullcalendar.min.js') !!}
     {!! Html::script('plugins/fullcalendar/dist/locale/es.js') !!}
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-    
+
     <script type="module" src={{ asset('js/admin_horarios.js') }}></script>
 
     <!-- Page specific script -->
@@ -182,8 +181,8 @@
                 dayClick: function(date, jsEvent, view) {
 
                     // change the day's background color just for fun
-                    @if ((currentUser()->hasRole('amatai') ||
-                     currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')) and $tipo == 'docentes')
+                    @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') and
+                            $tipo == 'docentes')
                         var dataasisdoc = {};
                         var dateevent = date.format();
                         dataasisdoc.fecha = dateevent;
@@ -250,7 +249,6 @@
                             // Puedes realizar acciones en consecuencia 
                             $('#mymodaldoc').modal('show');
                         }
-                       
                     @endif
                 }
             })
@@ -434,7 +432,7 @@
                                         '<option value="121">Asistió</option>' +
                                         '<option value="122">Falta simple</option>' +
                                         '<option value="123">Falta doble</option>' +
-                                        '<option value="126">Falta reposición</option>'+
+                                        '<option value="126">Falta reposición</option>' +
                                         '<option value="124">Permiso sin falta</option>' +
                                         '</select></td>' +
                                         '<td><select class="form-control  form-control-sm required" id="idlugarestasis' +
@@ -793,55 +791,55 @@
 
             var v_users = [];
 
-     /* 
+            /* 
 
 
-           
+                  
 
-            function getEstudiantes() {
-                var route = "/students/get";
-                $.ajax({
-                    url: route,
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    },
-                    type: 'POST',
-                    datatype: 'json',
-                    //data: {'id':id},
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-                        //$("#wait").css("display", "block");
-                    },
-                    success: function(res) {
+                   function getEstudiantes() {
+                       var route = "/students/get";
+                       $.ajax({
+                           url: route,
+                           headers: {
+                               'X-CSRF-TOKEN': token
+                           },
+                           type: 'POST',
+                           datatype: 'json',
+                           //data: {'id':id},
+                           cache: false,
+                           contentType: false,
+                           processData: false,
+                           
+                           beforeSend: function(xhr) {
+                               xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+                               //$("#wait").css("display", "block");
+                           },
+                           success: function(res) {
 
-                        $(res).each(function(key, value) {
-                            user = {
-                                "idnumber": value.idnumber,
-                                "full_name": value.full_name,
-                                "ref_nombre_curso": value.ref_nombre
-                            }
-                            v_users.push(user);
-                            //console.log(value.idnumber+'---'+value.full_name);
-                        });
-                        //console.log(v_users);
-                        llenarDatos();
+                               $(res).each(function(key, value) {
+                                   user = {
+                                       "idnumber": value.idnumber,
+                                       "full_name": value.full_name,
+                                       "ref_nombre_curso": value.ref_nombre
+                                   }
+                                   v_users.push(user);
+                                   //console.log(value.idnumber+'---'+value.full_name);
+                               });
+                               //console.log(v_users);
+                               llenarDatos();
 
-                    },
-                    error: function(xhr, textStatus, thrownError) {
-                        alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
-                        $("#wait").css("display", "block");
-                    }
-                });
-            } */
+                           },
+                           error: function(xhr, textStatus, thrownError) {
+                               alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+                               $("#wait").css("display", "block");
+                           }
+                       });
+                   } */
 
-         
-        
 
-         
+
+
+
 
             $("#tbl_turnos_list").on('click', '.btn_delete_row', function() {
                 var id = getIdAttr($(this).attr('id'), '-');
@@ -879,34 +877,34 @@
 
             /////store
 
-           /*  function store_asistencia(data) {
+            /*  function store_asistencia(data) {
 
-                var route = "/horarios";
-                $.ajax({
-                    url: route,
-                    type: 'POST',
-                    datatype: 'json', 
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                   
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-                        $("#wait").css("display", "block");
-                    },
-                    success: function(res) {
-                        $("#wait").css("display", "none");
-                        // console.log(res);
+                 var route = "/horarios";
+                 $.ajax({
+                     url: route,
+                     type: 'POST',
+                     datatype: 'json', 
+                     data: data,
+                     cache: false,
+                     contentType: false,
+                     processData: false,
+                    
+                     beforeSend: function(xhr) {
+                         xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+                         $("#wait").css("display", "block");
+                     },
+                     success: function(res) {
+                         $("#wait").css("display", "none");
+                         // console.log(res);
 
-                    },
-                    error: function(xhr, textStatus, thrownError) {
-                        alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
-                        $("#wait").css("display", "none");
-                    }
-                });
+                     },
+                     error: function(xhr, textStatus, thrownError) {
+                         alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
+                         $("#wait").css("display", "none");
+                     }
+                 });
 
-            } */
+             } */
 
             function parImpar(numero) {
                 if (numero % 2 == 0) {

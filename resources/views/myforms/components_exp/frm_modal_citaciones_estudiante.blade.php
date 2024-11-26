@@ -16,12 +16,20 @@
                     <div class="form-row">
                         <div class=" col-md-12">
                             <label for="fecha">Estudiante:</label>
-                            <span id="lbl_nombre_estudiante">{{ $expediente->estudiante->name }}
-                                {{ $expediente->estudiante->lastname }} </span>
+                            <span id="lbl_nombre_estudiante">
+                                @if(isset($expediente))
+                                {{ $expediente->estudiante->name }}
+                                {{ $expediente->estudiante->lastname }}
+                                @endif
+                             </span>
                         </div>
                         <div class=" col-md-12">
                             <label for="fecha">No Expediente:</label>
-                            <span id="lbl_expid">{{ $expediente->expid }}</span>
+                            <span id="lbl_expid">
+                                @if(isset($expediente))
+                                {{ $expediente->expid }}
+                                @endif
+                            </span>
                         </div>
                     </div>
                     <div class="form-row">

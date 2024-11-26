@@ -157,6 +157,28 @@
                         </ul>
                     </li>
 
+                    @if (currentUser()->hasRole('docente')
+                     or currentUser()->hasRole('amatai'))
+                    <li
+                        class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-calendar"></i>
+                            <p>
+                                Agenda
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('ag.cedoc') }}" class="nav-link">
+                                    <p>Citaciones estudiantes</p>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                @endif
+
                     @if (currentUser()->can('ver_conciliaciones') ||
                             currentUser()->hasRole('amatai') ||
                             currentUser()->hasRole('visitante_conciliacion') ||

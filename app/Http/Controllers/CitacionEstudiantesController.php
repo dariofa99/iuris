@@ -62,10 +62,10 @@ class CitacionEstudiantesController extends Controller
     public function store(Request $request)
     {
         $expediente = $this->expedienteService->findWithFilter([
-            'expid'=> $request->exp_id
+            'expid' => $request->exp_id
         ]);
-  //      return response()->json($expediente);
-      
+        //      return response()->json($expediente);
+
         // Expediente::where('expid', $request->exp_id)->first();
         $asignacion = $expediente->getAsignacion();
         $docente_as = $expediente->getDocenteAsig();
@@ -141,7 +141,7 @@ class CitacionEstudiantesController extends Controller
     {
         //return $request->all();
         $expediente = $this->expedienteService->findWithFilter([
-            'expid'=> $request->exp_id
+            'expid' => $request->exp_id
         ]);
         $asignacion = $expediente->getAsignacion();
         $docente_as = $expediente->getDocenteAsig();
@@ -192,6 +192,9 @@ class CitacionEstudiantesController extends Controller
         return response()->json($citas);
     }
 
+
+
+
     public function citasAutomatic(Request $request)
     {
 
@@ -208,11 +211,6 @@ class CitacionEstudiantesController extends Controller
         $data = [];
         $dataest = [];
         $newestudiates = [];
-
-
-
-
-
 
         foreach ($estudiantes as $key => $estudiante) {
             if ($estudiante->asignado == 0) {
