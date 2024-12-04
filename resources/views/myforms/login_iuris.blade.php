@@ -149,9 +149,9 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
-                    <a href="/solicitudes/expedientes/recepcion/?paso=1" class="btn btn-warning">
+                    {{-- <a href="/solicitudes/expedientes/recepcion/?paso=1" class="btn btn-warning">
                         CONTINUAR
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>
@@ -168,9 +168,9 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
-                    <a href="#" class="btn btn-warning" id="btn_solicitar_conciliacion">
+                    {{-- <a href="#" class="btn btn-warning" id="btn_solicitar_conciliacion">
                         CONTINUAR
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>

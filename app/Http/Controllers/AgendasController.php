@@ -46,6 +46,30 @@ class AgendasController extends Controller
 
         return response()->json($events);
     }
+
+    public function searchCitasOfDay(Request $request)
+    {
+        $events = CitacionEstudiantes::with('asignacion')
+        ->where([
+            "docidnumber"=>auth()->user()->idnumber
+        ])
+        ->whereDate("fecha_corta",Carbon::now())
+        ->get()
+        ->map(function ($citacion) {
+            $hora = $this->parseHora($citacion->hora);
+            return [
+                'title' => $citacion->asignacion->estudiante->name." ".$citacion->asignacion->estudiante->lastname."-".$citacion->asignacion->asigexp_id ?? 'Sin nombre', // Nombre desde 'exp'
+                'start' => $citacion->fecha_corta,   // Fecha + Hora
+                'end' => $citacion->fecha_corta,                            // Opcional si hay una hora final
+                'motivo' => $citacion->motivo,                  // Campo adicional
+                'docente' => $citacion->docidnumber, 
+                'fecha_larga' => $citacion->fecha." ". $hora,          // Campo adicional
+            ];
+        });
+
+        return response()->json($events);
+    }
+
     function parseHora($hora) {
         // Verificar si la hora ya contiene "AM" o "PM"
         if (stripos($hora, 'AM') !== false || stripos($hora, 'PM') !== false) {

@@ -405,6 +405,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     ///////////////////////Agendas
     Route::get('search/citas/for/calendar', 'AgendasController@searchCitasForCalendar');
+    Route::get('search/citas/of/day', 'AgendasController@searchCitasOfDay');
     Route::get('form/citas/for/calendar', 'AgendasController@formCitasForCalendar')->name("ag.cedoc");
     
     //PDF >Reportes

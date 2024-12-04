@@ -3,13 +3,42 @@
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/fullcalendar/fullcalendar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+    <style>
+        table {
+            border: 1px solid #ddd;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        caption {
+            caption-side: top; /* Asegura que el caption esté arriba */
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 10px; /* Espacio opcional */
+        }
+
+    </style>
 @endpush
 @section('navbar')
     <!-- aqui va el menu de cada vista -->
     @include('content.navbar')
 @endsection
 @section('titulo_area')
-    Agenda
+    Agenda <a href="#" id="consultar_citas_dia">Consultar citas del día</a>
 @endsection
 @section('area_buttons')
 
@@ -25,6 +54,7 @@
     </div>
 
     @include('myforms.components_exp.frm_modal_citaciones_agenda_estudiante')
+    @include('myforms.components_exp.frm_modal_lista_citas_dia')
 @stop
 @push('styles')
     <style>

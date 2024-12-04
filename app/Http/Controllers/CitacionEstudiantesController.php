@@ -68,7 +68,7 @@ class CitacionEstudiantesController extends Controller
 
         // Expediente::where('expid', $request->exp_id)->first();
         $asignacion = $expediente->getAsignacion();
-        $docente_as = $expediente->getDocenteAsig();
+        $docente_as = auth()->user();
 
         $citacion = new Citacion();
         $citacion->hora = $request->hora;
@@ -93,14 +93,6 @@ class CitacionEstudiantesController extends Controller
         $citacion_notify->notify(new CitacionEstudiantes($citacion_notify));
 
         return response()->json($expediente);
-
-        $expediente = Expediente::where('expid', $request->exp_id)->first(['expid']);
-        //$estudiante = $expediente->estudiante;
-        //$estudiante = currentUser();
-        $expediente->email = 'darioj99@gmail.com';
-
-        $expediente->notify(new CitacionEstudiantes($expediente));
-
         // return $expediente->estudiante;
 
 

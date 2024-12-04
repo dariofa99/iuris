@@ -1,4 +1,8 @@
-@if (!$readonly and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
+@if (!$readonly and 
+$expediente->getDocenteAsig()->idnumber == currentUser()->idnumber
+or (currentUser()->hasRole("amatai") or currentUser()->hasRole("diradmin")
+or currentUser()->hasRole("dirgral"))
+)
     <div class="row">
         <div class="col-md-2">
             <input type="button" id="btn_nueva_cita" value="Nueva cita" class="btn-block btn btn-primary btn-sm">

@@ -1,6 +1,6 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircCierreCaso");
+        localStorage.removeItem("keyCircularActualPausas");
 
         @if(currentUser()->hasRole('docente'))
         var keyCir = localStorage.getItem("keyCircCierreCaso");
@@ -12,12 +12,8 @@
         @else
         //var message = getGeneralMessage();
         @endif
-        var keyCir = localStorage.getItem("keyCircularActualPausas");
-        if (keyCir == null ) {
-            var message = getCircular();
-        } else {
-            var message = getGeneralMessage();
-        }
+        
+        var message = getMantenimientoMessage();
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
     @endif
@@ -131,15 +127,15 @@
 
     function getGeneralMessage() {
         var message = '';
-        message += '<div class="alert alert-success" style="font-size:19px">';
+        message += '<div class="alert alert-danger" style="font-size:19px">';
         message += `<h4>
                       <strong style="border-bottom:1px solid white">
                         Bienvendido a {{ Str::upper(config('app.name')) }}!</strong> <br>
-                      Recuerde que estamos actualizando la plataforma, si se presenta algún problema refresque el navegador
-                      con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
+                        Recuerde que estamos actualizando la plataforma, si se presenta algún problema refresque el navegador
+                        con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 25 de noviembre de 2024 <br>
+        message += `<span> Últ. Actualización: 2 de diciembre de 2024 <br>
                         Si el problema persiste comuníquese al 310-6038006  
                       </span>`;
 
@@ -148,22 +144,25 @@
 
     function getMantenimientoMessage() {
         var message = '';
-        message += '<div class="alert alert-info" style="font-size:19px">';
-        message += `<h4>
-                      <strong >
+        message += '<div class="alert alert-default" style="font-size:19px">';
+        message += `<h1>
+                    <strong >
                         Atención!<br>
                         Teniendo en cuenta que Iuris entrará en periodo de 
                         vacaciones a partir del día
-                        8 de diciembre del año en curso, se recuerda que
-                        se pausaran los días en los que evalua el sistema a
-                        excepción de las fechas solicitadas por el docente 
+                        6 de diciembre del año en curso, se recuerda que
+                        se pausaran los días en los que evalua el sistema <b> a
+                        excepción de las fechas solicitadas por el docente </b>
                         para realizar correcciones en los respectivos casos o actuaciones.
-                   </strong>
+                    </strong>
                     <br>
                           <br>
                       
-                    </h4> </div>`;
-        message += ``;
+                    </h1> </div>`;
+        message += `<hr>`;
+        message += `<span> Últ. Actualización: 4 de diciembre de 2024 <br>
+                         
+                      </span>`;
 
         return message;
     }

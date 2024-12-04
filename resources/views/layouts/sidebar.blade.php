@@ -158,7 +158,9 @@
                     </li>
 
                     @if (currentUser()->hasRole('docente')
-                     or currentUser()->hasRole('amatai'))
+                     or currentUser()->hasRole('amatai')
+                     or currentUser()->hasRole('dirgral')
+                     or currentUser()->hasRole('diradmin'))
                     <li
                         class="nav-item has-treeview">
                         <a href="#" class="nav-link">

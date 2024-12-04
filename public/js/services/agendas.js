@@ -1,7 +1,7 @@
 class AgendasService {
 
-    async searchCitasForCalendar(){
-        const response = await fetch(BASE_URL + "search/citas/for/calendar", {
+    async searchCitasOfDay(){
+        const response = await fetch(BASE_URL + "search/citas/of/day", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
