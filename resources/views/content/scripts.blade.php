@@ -148,7 +148,7 @@
         message += `<h1>
                     <strong >
                         Atención!<br>
-                        Teniendo en cuenta que Iuris entrará en periodo de 
+                        Teniendo en cuenta que IURIS entrará en periodo de 
                         vacaciones a partir del día
                         6 de diciembre del año en curso, se recuerda que
                         se pausaran los días en los que evalua el sistema <b> a
