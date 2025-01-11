@@ -41,7 +41,7 @@ trait AsigNotas
         'docidnumber' => $request['docidnumber'],
         'tbl_org_id' => $request['tbl_org_id'],
       ]);
-    }
+    } 
 
     Nota::create([
 

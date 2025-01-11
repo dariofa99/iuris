@@ -29,11 +29,13 @@ use App\Services\AsignacionCasosService;
 use App\Services\AsignacionDocenteCasosService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
+use App\Services\PausasService;
 use App\Services\PeriodosService;
 use App\Services\ProcesoJudicialExpService;
 use App\Services\SegmentosService;
 use App\Services\SolicitudesService;
 use App\Services\UsersService;
+use App\Services\VacacionesService;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -52,8 +54,10 @@ class ExpedienteController extends Controller
   private $segmentosService;
   private $procjucicialService;
   private $periodosService;
-
+  private $vacacionesService;
+  private $pausaService;
   public function __construct(
+    VacacionesService $vacacionesService,
     PeriodosService $periodosService,
     AsignacionCasosService $asignacionCasoService,
     SolicitudesService $solicitudService,
@@ -62,8 +66,11 @@ class ExpedienteController extends Controller
     AsignacionDocenteCasosService $asignacionDocenteCasoService,
     EstadosCasoService $estadoCasoService,
     SegmentosService $segmentosService,
-    ProcesoJudicialExpService $procjucicialService
+    ProcesoJudicialExpService $procjucicialService,
+    PausasService $pausaService
   ) {
+    $this->pausaService = $pausaService;
+    $this->vacacionesService = $vacacionesService;
     $this->periodosService = $periodosService;
     $this->asignacionCasoService = $asignacionCasoService;
     $this->solicitudService = $solicitudService;
@@ -206,11 +213,61 @@ class ExpedienteController extends Controller
 
   public function prueba(Request $request)
   {
-    $exp = Expediente::where("expid","2024B-2478")->first();
-    $this->expedienteService->asignargDocenteSeguimiento($exp->asignacion, 2);
- 
 
-    dd($exp);
+    $expediente = Expediente::where("expid", "2024B-3226")->first();
+    $asignacion = $expediente->asignacion;
+    //$this->expedienteService->asignargDocenteSeguimiento($exp->asignacion, 2);
+    $historial =  HistorialDatosCaso::select('historial_datos_casos.created_at')
+      ->where('hisdc_idnumberest_id', $expediente->expidnumberest)
+      ->where('hisdc_expidnumber', $expediente->expid)
+      ->orderBy('historial_datos_casos.created_at', 'ASC')
+      ->first();
+    //Verificar si tiene hechos    
+
+    if ($historial) {
+      $fecha_1 = Carbon::parse($asignacion->fecha_asig)->startOfDay();
+      $fecha_2 = Carbon::parse($historial->created_at)->endOfDay();
+      $evaluar = $this->expedienteService->getDaysForEval($asignacion, $fecha_1, $fecha_2, 5);
+      if ($evaluar['dias_pausado'] > 5) {
+        return ("Se evalua");
+      }
+      dd($evaluar);
+    } else {
+      //dd("No tiene hechos");
+      $fecha_1 = Carbon::parse($asignacion->fecha_asig);
+      $fecha_2 = Carbon::now();
+      $dias_sin_hechos = $this->expedienteService->getDaysForEval($asignacion, $fecha_1, $fecha_2, 5);
+
+      if ($dias_sin_hechos > 5) {
+        dd("Se evalua", $dias_sin_hechos);
+      }
+      dd($dias_sin_hechos);
+    }
+    //////Evaluar con actuaciones
+    // $fecha_1 = Carbon::parse($asignacion->fecha_asig)->startOfDay();
+    $fecha_2 = Carbon::now()->endOfDay();
+    $actuacionsmes = DB::table('actuacions')
+      ->select(DB::raw("date_format(actfecha, '%Y-%m-%d') as fecha"))
+      ->where('actexpid', $expediente->expid)
+      ->whereIn('actestado_id', [101, 102, 103, 104, 138, 139])
+      ->where('actidnumberest', $expediente->expidnumberest)
+      ->where('actusercreated', $expediente->expidnumberest)
+      ->where('actfecha', '>=', $fecha_1)
+      ->orderBy('actfecha', 'desc')
+      ->first();
+    if ($actuacionsmes) {
+      $fecha_1 = $actuacionsmes->fecha;
+      $dias_sin_hechos = $this->expedienteService->getDaysForEval($asignacion, $fecha_1, $fecha_2, 5);
+      $asignacion->fecha_eva = Carbon::now();
+      //$asignacion->save(); 
+      dd($dias_sin_hechos, $actuacionsmes, $fecha_2, $asignacion->fecha_eva);
+    } else {
+      dd("No hay actuaciones");
+    }
+    dd("s", $actuacionsmes);
+
+
+    // dd($dias_sin_hechos,$fecha_1,$fecha_2);
 
     $asignacion_caso = AsignacionCaso::where('asigexp_id', '2024B-1675')->first();
     // $this->expedienteService->asignarDocente($asignacion_caso);
@@ -467,7 +524,7 @@ class ExpedienteController extends Controller
    */
   public function update(Request $request, $id)
   {
-    
+
     $expediente = $this->expedienteService->find($id);
     if ($request->has('exphechos') and $expediente->exphechos != $request['exphechos']) {
       $historial = HistorialDatosCaso::insert([
@@ -507,7 +564,7 @@ class ExpedienteController extends Controller
       if ($request->exptipoproce_id == 1) {
         if ($expediente->getDocenteAsig()->idnumber == 'Sin asignar') {
           if ($asignacion_caso != null) {
-            $date = Carbon::now();            
+            $date = Carbon::now();
             $this->expedienteService->asignarDocente($asignacion_caso);
           }
         }
@@ -1143,8 +1200,13 @@ class ExpedienteController extends Controller
       ->where('hisdc_tipo_datos_caso', $tipo)
       ->orderBy('historial_datos_casos.id', 'DESC')
       ->get();
+
+    $expediente = Expediente::where('expid', $exp)->first();
     return response()->json(
-      $historial
+      [
+        "historial" => $historial,
+        "num_dias" => $expediente->getDaysForEvaHechos(),   
+      ]
     );
   }
 
@@ -1570,7 +1632,7 @@ class ExpedienteController extends Controller
       $user = $this->userService->store($request);
     } else {
       $user = $this->userService->find($request->input("id"));
-      $user = $this->userService->update($user,$request);
+      $user = $this->userService->update($user, $request);
     }
     $expediente->usuarios()->syncWithoutDetaching([
       $user->id => [

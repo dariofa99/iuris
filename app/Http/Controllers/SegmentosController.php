@@ -184,7 +184,7 @@ class SegmentosController extends Controller
 			$segmentoact->save();
 
 			$response = [
-				'success' => true,
+				'success' => true,     
 				'msj' => 'Correcto',
 				'statusfc' => $segmentoact->act_fc,
 				'seg' => $segmentoact->id
@@ -203,7 +203,8 @@ class SegmentosController extends Controller
 
 		foreach ($expedientes as $key => $expediente) {
 			//$expediente = $expedientes[1];
-			if (($expediente->exptipoproce_id == 3 and $expediente->exphechos == 0)
+			if (($expediente->exptipoproce_id == 3
+					and $expediente->exphechos == 0)
 				|| ($expediente->exptipoproce_id != 3 and
 					($expediente->exphechos == 0 || $expediente->exprtaest == 0))
 			) {
@@ -230,12 +231,13 @@ class SegmentosController extends Controller
 						'docidnumber' => $docente_id,
 						'tbl_org_id' => $expediente->id,
 					];
+
+					$this->Asignotasnewdatos($data);
+					$asignacion->evaluado_hechos = 1;
+					$asignacion->save();
+					Log::info("Evaluado {$expediente->expidnumberest}");
+					Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 				}
-				$this->Asignotasnewdatos($data);
-				$asignacion->evaluado_hechos = 1;
-				$asignacion->save();
-				Log::info("Evaluado {$expediente->expidnumberest}");
-				Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 			} else {
 
 				//cuanto tiempo paso al llenar la informacion desde asignado el caso
@@ -315,7 +317,9 @@ class SegmentosController extends Controller
 					//Error en el historial
 				}
 			}
-			$asigdocencaso = AsigDocenteCaso::where(['asig_caso_id' => $expediente->asig_caso_id, 'activo' => '1'])
+			$asigdocencaso = AsigDocenteCaso::where([
+				'asig_caso_id' => $expediente->asig_caso_id,
+				 'activo' => '1'])
 				->first();
 			if (!$asigdocencaso) {
 				$data = [
@@ -424,7 +428,6 @@ class SegmentosController extends Controller
 									$this->Asignotasnewdatos($data);
 									Log::info("Evaluado {$expediente->expidnumberest}");
 									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
-								
 								}
 							}
 						}
@@ -446,17 +449,16 @@ class SegmentosController extends Controller
 								)
 							 AND actidnumberest = '" . $expediente->expidnumberest . "' 
 							 AND actusercreated = '" . $expediente->expidnumberest . "' 
-						 
-						 AND (actfecha >= '" . $dateiniciocorte . "' 
-						 AND  actfecha <= '" . $datefinalcortereal . "') 
-						 GROUP BY 1 ORDER BY 1 ASC"));
+							 AND (actfecha >= '" . $dateiniciocorte . "' 
+						 	 AND  actfecha <= '" . $datefinalcortereal . "') 
+						 	 GROUP BY 1 ORDER BY 1 ASC"));
 					//$iseva = $this->isActuacionEval($actuacionsmes,$dateiniciocorte,$segmento->fecha_fin);
-					
+
 					//eturn (['sjsj',$actuacionsmes]);
 					$res_act = $this->isActuacionEval($actuacionsmes, $dateiniciocorte, $segmento->fecha_fin, $expediente);
-					
+
 					//return ([$res_act]); 
-						 
+
 					if ($res_act[0]) {
 						$data = [
 							'ntaaplicacion' => 0,
@@ -475,7 +477,6 @@ class SegmentosController extends Controller
 						$this->Asignotasnewdatos($data);
 						Log::info("Evaluado {$expediente->expidnumberest}");
 						Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
-					
 					}
 				}
 			}
@@ -503,7 +504,7 @@ class SegmentosController extends Controller
 								'docidnumber' => Auth::user()->idnumber,
 								'tbl_org_id' => $expedientemodel->id,
 							];
-						
+
 							$expedientemodel->asignarNotas($data);
 							$expedientemodel->expestado_id = 5;
 							$expedientemodel->save();
@@ -513,8 +514,7 @@ class SegmentosController extends Controller
 							$request['ref_motivo_estado_id'] = 12;
 							$estado_caso = $this->estadoCasoService->store($request);
 							Log::info("Evaluado {$expediente->expidnumberest}");
-								Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
-							
+							Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 						}
 					}
 				}
@@ -541,7 +541,8 @@ class SegmentosController extends Controller
 			//return response()->json(['errors' => ["No hay una fecha de corte activa"]]);
 		}
 		$now = Carbon::now();
-		$dateiniciocorte = Carbon::parse($segmento->fecha_inicio)->startOfDay(); // Asegura que la fecha de inicio sea a las 00:00:00
+		//$dateiniciocorte = Carbon::parse($segmento->fecha_inicio)->startOfDay(); // Asegura que la fecha de inicio sea a las 00:00:00
+		$dateiniciocorte = Carbon::parse("26-08-2024")->startOfDay();
 		$fechaFinalCorte = Carbon::parse($segmento->fecha_fin)->endOfDay(); // Asegura que la fecha de corte sea a las 23:59:59
 		//consulta sobre todos los casos asignados antes del corte
 		//Estos casos son viejos
@@ -562,27 +563,30 @@ class SegmentosController extends Controller
 		 order by asignacion_caso.fecha_asig desc");
 		///////////////fin foreach todos los casos
 		$data = $this->evaluarExpedientes($expedientes, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
-		//return response()->json(['saved' => true, 'view' => $view]);
+		return response()->json([
+			'saved' => true,
+			'view' => $expedientes
+		]);
 		//consulta sobre los casos asignados solo durante el corte para notas sobre tiempos limites de inicio
 		///return response()->json([$data]);
 
 		$expedientescorte = DB::select(DB::Raw(
 			"Select asignacion_caso.fecha_asig,asignacion_caso.evaluado_hechos,
-		expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id 
-		from expedientes
-		join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid 
-		join `users` on expedientes.expidnumberest = users.idnumber 
-		join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
-		where expedientes.expidnumberest = asignacion_caso.asigest_id 
-		and expedientes.expidnumberest  <> 3030
-		and (expestado_id != 5 and expestado_id != 2 and expestado_id != 8)		
-		AND (fecha_asig BETWEEN '" . $dateiniciocorte . "' AND '" . $fechaFinalCorte . "')   
-		and asignacion_caso.periodo_id = " . $segmento->perid . " 
-		and sede_expedientes.sede_id=" . session('sede')->id_sede . "
-		order by asignacion_caso.fecha_asig desc"
+			expedientes.id , expid , expedientes.expidnumberest, if(expedientes.exphechos!='',1,0) as exphechos, if(expedientes.exprtaest!='',1,0) as exprtaest, asignacion_caso.id as asig_caso_id, exptipoproce_id, expestado_id 
+			from expedientes
+			join asignacion_caso on asignacion_caso.asigexp_id = expedientes.expid 
+			join `users` on expedientes.expidnumberest = users.idnumber 
+			join sede_expedientes on expedientes.id = sede_expedientes.expediente_id
+			where expedientes.expidnumberest = asignacion_caso.asigest_id 
+			and expedientes.expidnumberest  <> 3030
+			and (expestado_id != 5 and expestado_id != 2 and expestado_id != 8)		
+			AND (fecha_asig BETWEEN '" . $dateiniciocorte . "' AND '" . $fechaFinalCorte . "')   
+			and asignacion_caso.periodo_id = " . $segmento->perid . " 
+			and sede_expedientes.sede_id=" . session('sede')->id_sede . "
+			order by asignacion_caso.fecha_asig desc"
 
 		));
-		
+
 
 		$data = $this->evaluarExpedientes($expedientescorte, $segmento, $dateiniciocorte, $fechaFinalCorte, $request);
 
@@ -695,8 +699,6 @@ class SegmentosController extends Controller
 				]);
 				$dias_vacaciones = 0;
 				if (count($_vacaciones) > 0) {
-					Log::info("Paso el {$pausa->asig_caso_id}");
-
 					$dias_vacaciones = $this->vacacionesService->getDays($_vacaciones);
 					$dias_vacaciones_p = $dias_vacaciones_p + $dias_vacaciones;
 				}
@@ -762,7 +764,7 @@ class SegmentosController extends Controller
 			'activo' => 1
 		])->first();
 
-		if($asignacion->fecha_asig > $fecha_asig ){
+		if ($asignacion->fecha_asig > $fecha_asig) {
 			$fecha_asig = $asignacion->fecha_asig;
 		}
 
@@ -773,9 +775,9 @@ class SegmentosController extends Controller
 		$act_i->fechas = Carbon::parse($fecha_fin)->format("Y-m-d");
 		array_push($array, $act_i);
 		$dias_sin_act = 0;
-		
+
 		foreach ($array as $key => $fechacalc) {
-			
+
 			$fecha1 = Carbon::parse($fechacalc->fechas);
 			$fecha2 = Carbon::parse($fecha_fin);
 			if (array_key_exists($key + 1, $array)) {
@@ -906,7 +908,7 @@ class SegmentosController extends Controller
 			['operador' => ">=", "value" => $fecha2]
 		]);
 
-		Log::info($esta_pausado);
+		//Log::info($esta_pausado);
 		//La actuacion se venció mientras estaba en vacaciones
 		$esta_vacaciones = $this->vacacionesService->getByDates([
 			['operador' => "<=", "value" => $fecha2],
@@ -979,7 +981,7 @@ class SegmentosController extends Controller
 		Log::info("Evaluado {$request['expidnumber']}");
 
 		Nota::create([
-
+    
 			'nota' => $request['ntaconocimiento'], //cotrte1
 			'cptnotaid' => 1, //competencia
 			'orgntsid' => $request['orgntsid'], //expedientes
@@ -1012,22 +1014,6 @@ class SegmentosController extends Controller
 			'segid' => $request['segid'], //id tabla asignaciones
 			'tpntid' => $request['tpntid'],
 			'perid' => $request['perid'], //id tabla procedencia
-			'estidnumber' => $request['estidnumber'],
-			'expidnumber' => $request['expidnumber'],
-			'docidnumber' => $request['docidnumber'],
-			'tbl_org_id' => $request['tbl_org_id'],
-		]);
-		Nota::create([
-			'nota' => $request['ntaconcepto'], //corte
-			'cptnotaid' => 4, //competencia
-			'orgntsid' => $request['orgntsid'], //expedientes
-			'segid' => $request['segid'], //id tabla asignaciones
-			'tpntid' => $request['tpntid'],
-			'perid' => $request['perid'], //id tabla procedencia
-			'estidnumber' => $request['estidnumber'],
-			'expidnumber' => $request['expidnumber'],
-			'docidnumber' => $request['docidnumber'],
-			'tbl_org_id' => $request['tbl_org_id'],
 		]);
 	}
-}
+}	

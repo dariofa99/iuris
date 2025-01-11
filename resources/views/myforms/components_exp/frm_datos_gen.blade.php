@@ -91,10 +91,10 @@
                 @if (
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->asignacion->procesojud_id == 1 and
-                        ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
+                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('amatai')))
+                            currentUser()->hasRole('amatai'))
                     <a href="#" id="btn_act_proc_jur"
                         class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
                         Activar como proceso jurídico
@@ -109,14 +109,22 @@
                             currentUser()->hasRole('dirgral') ||
                             currentUser()->hasRole('amatai'))
                     @if ($expediente->expestado_id == 1)
-                        <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
-                            Activar pausa
-                        </a>
+                        @if ($expediente->validateVacations())
+                            {!! $expediente->validateVacations() !!}
+                        @else
+                            <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
+                                Activar pausa
+                            </a>
+                        @endif
                     @endif
                     @if ($expediente->expestado_id == 6)
-                        <a href="#" id="btn_quit_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
-                            Admin. pausa
-                        </a>
+                        @if ($expediente->validateVacations())
+                            {!! $expediente->validateVacations() !!}
+                        @else         
+                            <a href="#" id="btn_quit_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
+                                Admin. pausa
+                            </a>
+                        @endif
                     @endif
                 @endif
 
@@ -136,7 +144,7 @@
 </div>
 <div class="row">
     <div class="col-md-2">
-        @if (currentUser()->hasRole("estudiante"))
+        @if (currentUser()->hasRole('estudiante'))
             <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
                 Ver pausas
             </a>
@@ -144,7 +152,7 @@
     </div>
 </div>
 <div class="row">
-   
+
     <div class="col-md-2">
         <div class="form-group">
             {!! Form::label('Número expediente') !!}

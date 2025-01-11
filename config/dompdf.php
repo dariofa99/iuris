@@ -199,7 +199,7 @@ return array(
          * @var bool
          */
         "enable_php" => false,
-
+        'log_output_file' => storage_path('logs/log.htm'),
         /**
          * Enable inline Javascript
          *

@@ -3008,10 +3008,8 @@ function fillModalHistoryDataCase(response) {
         $("#modal-conten-js").html('No hay información registrada');
     } else {
         var inforhis = "";
-        $(response).each(function (key, value) {
-            var fecha1 = moment($("#expediente_fecha_asig").val()).startOf('day');
-            var fecha2 = moment(value.created_at).startOf('day');
-            var fecha = fecha1.diff(fecha2, 'days') * -1;
+        $(response.historial).each(function (key, value) {
+            var fecha = response.num_dias;
             inforhis += `
             <div class="row">   
                 <div class="col-md-7">

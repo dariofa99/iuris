@@ -171,19 +171,33 @@ class ActuacionController extends Controller
     if ($request->actexpid and $validForCreate < 2) {
 
       if ($request->hasFile('actdocnomgen')) {
+
+          
         $docum = $request->file('actdocnomgen');
+
+        // Guardar el archivo temporalmente en el disco 'temp'
+        $tempFilePath = Storage::disk('temp')->putFile('', $docum);
+    
+        // Procesar el archivo como antes
         $nombre_arch = $docum->getClientOriginalName();
         $nombre_arch = htmlentities($nombre_arch);
         $nombre_arch = preg_replace('/\&(.)[^;]*;/', '\\1', $nombre_arch);
         $file_name = preg_replace('([^A-Za-z0-9. ])', '', $nombre_arch);
         $actdocnompropio = $file_name;
-        $extencion = $request->file('actdocnomgen')->extension();
+        $extencion = $docum->extension();
         $file_name = md5($file_name) . '.' . $extencion;
         $file_route = time() . "_" . $file_name;
-        Storage::disk('files_actuaciones')->put($file_route, file_get_contents($docum->getRealPath()));
+    
+        // Mover el archivo desde el disco 'temp' al disco 'files_actuaciones'
+        $tempFileFullPath = Storage::disk('temp')->path($tempFilePath);
+        Storage::disk('files_actuaciones')->put($file_route, file_get_contents($tempFileFullPath));
+    
+        // Eliminar el archivo temporal
+        Storage::disk('temp')->delete($tempFilePath);
+    
+        // Guardar los datos del archivo en tu lógica
         $actdocnomgen = $file_route;
-        $actdocruta = Storage::disk('files_actuaciones')->url($file_route);
-                            
+        $actdocruta = Storage::disk('files_actuaciones')->url($file_route);                 
       } else {
         if (currentUser()->hasRole('estudiante')) {
 

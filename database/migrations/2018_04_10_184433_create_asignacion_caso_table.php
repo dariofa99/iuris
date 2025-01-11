@@ -16,6 +16,7 @@ class CreateAsignacionCasoTable extends Migration
         Schema::create('asignacion_caso', function (Blueprint $table) {
             $table->increments('id');
             $table->string('anotacion');
+            $table->date('fecha_eva')->nullable();
             $table->boolean('activo')->default(1);
             $table->boolean('evaluado_hechos')->default(0);
             

@@ -21,11 +21,11 @@
         @endif
     </div>
 
-    <div class="col-md-4" style="border-bottom: 1px solid rgb(233, 233, 233);padding-bottom:3px">
+    <div class="col-md-4" align="right">
         @if ($expediente->exptipoproce_id != '1')
-            {!! $expediente->getDaysForNexAct() !!}
-        @endif
-    </div>
+            Días sin actuaciones {!! $expediente->getDaysForNexAct() !!}
+        @endif   
+    </div>    
 
 
 

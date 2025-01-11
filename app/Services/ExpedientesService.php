@@ -24,6 +24,7 @@ interface ExpedientesService {
     public function deletePausa($id);
     public function updatePausa($id, Request $request);
     public function getExpeUser(User $user);
+    public function getDaysForEval($asignacion,$fecha1,$fecha2,$numeval);
    
    
 }

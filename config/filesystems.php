@@ -42,7 +42,12 @@ return [
     */
 
     'disks' => [
-        
+        'temp' => [
+            'driver' => 'local',
+            'root' => '/mnt/SAN/tmp',
+            'url' => '/mnt/SAN/tmp',
+            'visibility' => 'private',
+        ],
         'files_actuaciones' => [
             'driver' => 'local',
             'root' => storage_path('app/files_actuaciones'),

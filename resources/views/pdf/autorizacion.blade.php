@@ -7,7 +7,7 @@
         </td>
         <td align="center" style="border:1px solid black;font-style:bold">
             UNIVERSIDAD DE NARIÑO<br>
-            CONSULTORIOS JURIDICOS - CENTRO DE CONCILIACIÓN <br>           
+            CONSULTORIOS JURIDICOS - CENTRO DE CONCILIACIÓN <br>
             “EDUARDO ALVARADO HURTADO”<br>
             Facultad de Derecho y Ciencias Políticas<br>
             <br>
@@ -61,7 +61,7 @@
                     de Nariño, aprobado mediante Resolución
                     Nro. 1808 de 3 de Octubre de 1991 del Honorable Tribunal Superior del Distrito
                     Judicial de Pasto, para que actúe en calidad de
-                     {{ $autorizacion->calidad_de }}.
+                    {{ $autorizacion->calidad_de }}.
                     Proceso No. {{ $autorizacion->num_radicado }}, que cursa en el
                     {{ $autorizacion->juzgado }}.
                 </p>
@@ -84,7 +84,8 @@
     <table style="width:100%">
         <tr>
             <td align="center" width="50%">
-                <img src="{{ public_path('/img/firma.png') }}" width="160" height="90" />
+                <img src="{{ public_path('/img/firma.jpg') }}" style="background-color: white;" width="160"
+                    height="105" />
             </td>
             <td>
             </td>
@@ -105,7 +106,8 @@
         <tr>
             <td></td>
             <td>
-                <p><b style="font-family:arial;font-size:13.333px">VIGILADO Ministerio de Justicia y del Derecho.</b></p>
+                <p><b style="font-family:arial;font-size:13.333px">VIGILADO Ministerio de Justicia y del Derecho.</b>
+                </p>
             </td>
         </tr>
     </table>

@@ -9,7 +9,7 @@
 <!--cont_data_req-->
 <div @if (currentUser()->hasRole('estudiante')) id="cont_data_req" @endif>
    
-   
+        
    
    @include('myforms.components_exp.usuarios_caso')
 
@@ -149,9 +149,9 @@
                             <span class="badge bg-green">
                                 El caso esta en pausa.
                             </span>
-                        @else
+                        @else       
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
-                                {!! $expediente->getTextForTH('mensaje') !!}
+                                {!! $expediente->getDaysForEvaHechos() !!}   
                             </span>
                         @endif
                     </div>
@@ -175,18 +175,19 @@
                     </div>
                     <div class="col-md-6" style="padding-left: 0px; text-align:end;">
                         @if ($expediente->fechaHistorialDatosCaso(142))
-                            Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(142)) }}
+                           Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(142)) }}
                             <a style="cursor: pointer;border-bottom:1px solid rgb(206, 206, 206)"
                                 id="modalresestudiante" data-name="{{ $expediente->expid }}">
-                                Ver historial</a>
+                                Ver historial</a> 
+                               
                         @elseif($expediente->expestado_id == 6)
                             <span class="badge bg-green">
-                                El caso esta en pausa.
+                                El caso esta en pausa.     
                             </span>
                         @else
                             {{-- Días despues de asignado: --}}
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
-                                {!! $expediente->getTextForTH('text') !!}
+                                {!! $expediente->getDaysForEvaHechos() !!}    
                             </span>
                         @endif
                     </div>

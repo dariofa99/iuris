@@ -27,7 +27,8 @@ class AsignacionCaso extends Model
                             'periodo_id',
                             'fecha_asig',
 							'ref_asig_id',
-                            'ref_mot_asig_id'
+                            'ref_mot_asig_id',
+                            'fecha_eva'
 						];
 
 /*
