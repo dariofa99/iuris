@@ -290,7 +290,9 @@ class SegmentosController extends Controller
 								}
 							}
 							if ($dias_sin_hechos > 5) {
-
+								Log::info("Evaluadorr {$expediente->expidnumberest}");
+								//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+					
 								$data = [
 									'ntaaplicacion' => 0,
 									'ntaconocimiento' => 0,
@@ -312,7 +314,7 @@ class SegmentosController extends Controller
 								Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 							}
 						}
-					}
+					} 
 				} else {
 					//Error en el historial
 				}
@@ -1014,6 +1016,24 @@ class SegmentosController extends Controller
 			'segid' => $request['segid'], //id tabla asignaciones
 			'tpntid' => $request['tpntid'],
 			'perid' => $request['perid'], //id tabla procedencia
+			'estidnumber' => $request['estidnumber'],
+			'expidnumber' => $request['expidnumber'],
+			'docidnumber' => $request['docidnumber'],
+			'tbl_org_id' => $request['tbl_org_id'],
+		]);
+
+		Nota::create([
+
+			'nota' => $request['ntaconcepto'], //cotrte1
+			'cptnotaid' => 4, //competencia
+			'orgntsid' => $request['orgntsid'], //expedientes
+			'segid' => $request['segid'], //id tabla asignaciones
+			'tpntid' => $request['tpntid'],
+			'perid' => $request['perid'], //id tabla procedencia
+			'estidnumber' => $request['estidnumber'],
+			'expidnumber' => $request['expidnumber'],
+			'docidnumber' => $request['docidnumber'],
+			'tbl_org_id' => $request['tbl_org_id'],
 		]);
 	}
 }	

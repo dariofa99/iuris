@@ -23,9 +23,12 @@
 
     <div class="col-md-4" align="right">
         @if ($expediente->exptipoproce_id != '1')
-            Días sin actuaciones {!! $expediente->getDaysForNexAct() !!}
-        @endif   
-    </div>    
+            Días sin actuaciones <label
+                class="badge badge-{{ getColorByPercent(getPercent(30, $expediente->getDaysForNexAct())) }}">
+                {!! $expediente->getDaysForNexAct() !!}
+            </label>
+        @endif
+    </div>
 
 
 

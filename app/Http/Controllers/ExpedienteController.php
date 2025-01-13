@@ -371,7 +371,7 @@ class ExpedienteController extends Controller
     $asignacion = $expediente->asignacion;
     if ($expediente->exptipoproce_id ==  1) {
       $days = $expediente->getDaysOrColorForClose('dias');
-      if ($days <= 0 || $days === true) {
+      if ($days <= 0 || $days === true) { 
         if ($expediente->expestado_id != 5 and $expediente->expestado_id != 2) {
           $notas =  $expediente->get_has_nota_final();
           if (count($notas) <= 0) {

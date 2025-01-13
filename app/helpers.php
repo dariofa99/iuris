@@ -33,7 +33,21 @@ if (!function_exists('currentUserInConciliacion')) {
 }
 
 
+function getPercent($total, $part)
+{
+    return ($part * 100) / $total;
+} 
 
+function getColorByPercent($percent)
+{
+    if ($percent >= 0 && $percent <= 40) {
+        return 'success';
+    } elseif ($percent > 40 && $percent <= 70) {
+        return 'warning';
+    } elseif ($percent > 70 && $percent <= 100) {
+        return 'danger';
+    }
+}
 
 function fechasSem($criterio)
 {
@@ -363,8 +377,20 @@ function quitarAcentos($cadena)
 function ramasDerechoNotificar()
 {
     return [
-        15, 17,
-        18, 19, 20, 21, 22, 23, 24, 25, 31, 32, 33, 35,
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        31,
+        32,
+        33,
+        35,
         37,
         39,
         40,
@@ -550,13 +576,41 @@ function sanear_string($string)
     //Esta parte se encarga de eliminar cualquier caracter extraño
     $string = str_replace(
         array(
-            "/", "¨", "º", "-", "~",
-            "#", "@", "|", "!", "",
-            "·", "$", "%", "&", "/",
-            "(", ")", "?", "'", "¡",
-            "¿", "[", "^", "<code>", "]",
-            "+", "}", "{", "¨", "´",
-            ">", "< ", ";", ",", ":",
+            "/",
+            "¨",
+            "º",
+            "-",
+            "~",
+            "#",
+            "@",
+            "|",
+            "!",
+            "",
+            "·",
+            "$",
+            "%",
+            "&",
+            "/",
+            "(",
+            ")",
+            "?",
+            "'",
+            "¡",
+            "¿",
+            "[",
+            "^",
+            "<code>",
+            "]",
+            "+",
+            "}",
+            "{",
+            "¨",
+            "´",
+            ">",
+            "< ",
+            ";",
+            ",",
+            ":",
             "."
         ),
         '',
