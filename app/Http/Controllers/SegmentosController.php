@@ -184,7 +184,7 @@ class SegmentosController extends Controller
 			$segmentoact->save();
 
 			$response = [
-				'success' => true,     
+				'success' => true,
 				'msj' => 'Correcto',
 				'statusfc' => $segmentoact->act_fc,
 				'seg' => $segmentoact->id
@@ -292,7 +292,7 @@ class SegmentosController extends Controller
 							if ($dias_sin_hechos > 5) {
 								Log::info("Evaluadorr {$expediente->expidnumberest}");
 								//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
-					
+
 								$data = [
 									'ntaaplicacion' => 0,
 									'ntaconocimiento' => 0,
@@ -314,14 +314,15 @@ class SegmentosController extends Controller
 								Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 							}
 						}
-					} 
+					}
 				} else {
 					//Error en el historial
 				}
 			}
 			$asigdocencaso = AsigDocenteCaso::where([
 				'asig_caso_id' => $expediente->asig_caso_id,
-				 'activo' => '1'])
+				'activo' => '1'
+			])
 				->first();
 			if (!$asigdocencaso) {
 				$data = [
@@ -393,6 +394,9 @@ class SegmentosController extends Controller
 										'tbl_org_id' => $expediente->id,
 									];
 									$this->Asignotasnewdatos($data);
+									$fecha_eva = Carbon::now();
+									$asignacion->fecha_eva = $fecha_eva;
+									$asignacion->save();
 									Log::info("Evaluado {$expediente->expidnumberest}");
 									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 								}
@@ -428,6 +432,9 @@ class SegmentosController extends Controller
 										'tbl_org_id' => $expediente->id,
 									];
 									$this->Asignotasnewdatos($data);
+									$fecha_eva = Carbon::now();
+									$asignacion->fecha_eva = $fecha_eva;
+									$asignacion->save();
 									Log::info("Evaluado {$expediente->expidnumberest}");
 									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 								}
@@ -477,6 +484,9 @@ class SegmentosController extends Controller
 							'tbl_org_id' => $expediente->id,
 						];
 						$this->Asignotasnewdatos($data);
+						$fecha_eva = Carbon::now();
+						$asignacion->fecha_eva = $fecha_eva;
+						$asignacion->save();
 						Log::info("Evaluado {$expediente->expidnumberest}");
 						Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 					}
@@ -983,7 +993,7 @@ class SegmentosController extends Controller
 		Log::info("Evaluado {$request['expidnumber']}");
 
 		Nota::create([
-    
+
 			'nota' => $request['ntaconocimiento'], //cotrte1
 			'cptnotaid' => 1, //competencia
 			'orgntsid' => $request['orgntsid'], //expedientes
@@ -1036,4 +1046,4 @@ class SegmentosController extends Controller
 			'tbl_org_id' => $request['tbl_org_id'],
 		]);
 	}
-}	
+}
