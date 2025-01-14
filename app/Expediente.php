@@ -1110,7 +1110,7 @@ class Expediente extends Model
             } else {
                 $fecha_1 = Carbon::parse($act->actfecha);
                 if ($fecha_1 < Carbon::parse("13-01-2025")) {
-                    $fecha_1 = Carbon::parse("13-01-2025");                 
+                   // $fecha_1 = Carbon::parse("13-01-2025");                 
                 }  
             }
         } else if ($asignacion and $asignacion->fecha_eva != null) {
