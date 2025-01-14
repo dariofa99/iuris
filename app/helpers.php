@@ -35,7 +35,10 @@ if (!function_exists('currentUserInConciliacion')) {
 
 function getPercent($total, $part)
 {
-    return ($part * 100) / $total;
+    if(is_numeric($total) && is_numeric($part)){
+        return ($part * 100) / $total;
+    }
+    return 0;
 } 
 
 function getColorByPercent($percent)
