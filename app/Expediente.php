@@ -1107,16 +1107,20 @@ class Expediente extends Model
         if (($act) and $asignacion) {
             if ($asignacion->fecha_eva != null and $asignacion->fecha_eva  > $act->actfecha) {
                 $fecha_1 = Carbon::parse($asignacion->fecha_eva);
+                if ($fecha_1 < Carbon::parse("13-01-2025")) {
+                    $fecha_1 = Carbon::parse("13-01-2025");                 
+                } 
             } else {
                 $fecha_1 = Carbon::parse($act->actfecha);
+                
                 if ($fecha_1 < Carbon::parse("13-01-2025")) {
-                   // $fecha_1 = Carbon::parse("13-01-2025");                 
+                    $fecha_1 = Carbon::parse("13-01-2025");                 
                 }  
             }
         } else if ($asignacion and $asignacion->fecha_eva != null) {
             $fecha_1 = Carbon::parse($asignacion->fecha_eva);
         }
-
+        
         $_vacaciones = $this->vacacionesService()->getByDates([
             ['operador' => "<=", "value" => $fecha_1],
             ['operador' => ">=", "value" => $fecha_1]
@@ -1127,6 +1131,8 @@ class Expediente extends Model
             ['operador' => "<=", "value" => $fecha_1],
             ['operador' => ">=", "value" => $fecha_1]
         ]);
+
+
 
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
@@ -1145,18 +1151,20 @@ class Expediente extends Model
             $fecha_1 = Carbon::parse($pausas[0]->fecha_final);
         }        
         $fecha_2 = Carbon::now();
+       // dd($fecha_1, $fecha_2);
         $evaluar = $this->getExpedienteService()
-            ->getDaysForEval($asignacion, $fecha_1, $fecha_2, 100);
+            ->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
 
 
 
         if ($evaluar['dias_pausado'] > 30) {
+            $fecha_eva = Carbon::parse($fecha_1)->addDays(31);
             $segmento = $this->getSegmentoActivo();
             $expediente = $this;
-            $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte.";
+            $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. ".$fecha_1." - ".$fecha_eva;
             $docente_id = Auth::user()->idnumber;
             $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
-            $fecha_eva = Carbon::parse($asignacion->fecha_asig)->addDays(31);
+           
             $asignacion->fecha_eva = $fecha_eva;
             $asignacion->save();
             return $evaluar['dias_pausado'];
