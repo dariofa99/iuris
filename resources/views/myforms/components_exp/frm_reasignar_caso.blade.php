@@ -93,6 +93,11 @@
                          <th>
                              Estudiante Asignado
                          </th>
+
+                         <th>
+                            Administrador
+                        </th>
+
                          <th>
                              Motivo Asignación
                          </th>
@@ -111,7 +116,12 @@
                                  </td>
                                  <td>
                                      {{ $asignacion->estudiante->name }} {{ $asignacion->estudiante->lastname }}
-                                 </td>
+                                 </td> 
+
+                                 <td>
+                                    {{ $asignacion->user_asig->name }} {{ $asignacion->user_asig->lastname }}
+                                </td>
+
                                  <td>
                                      {{ $asignacion->motivo_asig->nom_motivo }}
                                  </td>
@@ -119,7 +129,7 @@
                                  <td>
                                      {{ $asignacion->tipo_asig->nombre_asig }}
                                  </td>
-                                 <td>
+                                 <td width="30%">
                                     {{ $asignacion->anotacion }} 
                                  </td>
                              </tr>

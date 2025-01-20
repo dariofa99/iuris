@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AsignacionCaso extends Model
 {
-       /**
+    /**
      * The database table used by the model.
      *
      * @var string
@@ -19,23 +19,23 @@ class AsignacionCaso extends Model
      * @var array
      */
     protected $fillable = [
-							'anotacion',
-							'asigest_id',
-                            'procesojud_id',
-							'asiguser_id',
-							'asigexp_id',
-                            'periodo_id',
-                            'fecha_asig',
-							'ref_asig_id',
-                            'ref_mot_asig_id',
-                            'fecha_eva'
-						];
+        'anotacion',
+        'asigest_id',
+        'procesojud_id',
+        'asiguser_id',
+        'asigexp_id',
+        'periodo_id',
+        'fecha_asig',
+        'ref_asig_id',
+        'ref_mot_asig_id',
+        'fecha_eva'
+    ];
 
-/*
-public function estudianteact()
+
+    public function user_asig()
     {
-        return $this->belongsTo(User::class, 'asigest_id', 'idnumber');
-    }*/
+        return $this->belongsTo(User::class, 'asiguser_id', 'idnumber');
+    }
 
     public function estudiante()
     {
@@ -60,7 +60,7 @@ public function estudianteact()
     public function asig_docente()
     {
         return $this->hasOne(AsigDocenteCaso::class, 'asig_caso_id', 'id')
-        ->where('activo',1);
+            ->where('activo', 1);
     }
 
     public function citaciones()
@@ -95,8 +95,7 @@ public function estudianteact()
     public function estadosProcJudCount()
     {
         $esprocesos = $this->procesosJudiciales()
-        ->where('estado_id', '=', $this->procesojud_id)->get();
+            ->where('estado_id', '=', $this->procesojud_id)->get();
         return count($esprocesos);
     }
-
 }
