@@ -100,14 +100,14 @@
                              Tipo Asignación
                          </th>
                          <th>
-                             Acción
+                             Anotación
                          </th>
                      </thead>
                      <tbody>
                          @foreach ($expediente->asignaciones as $asignacion)
                              <tr>
                                  <td>
-                                     {{ $asignacion->created_at }}
+                                     {{ getSmallDate($asignacion->created_at) }} 
                                  </td>
                                  <td>
                                      {{ $asignacion->estudiante->name }} {{ $asignacion->estudiante->lastname }}
@@ -120,7 +120,7 @@
                                      {{ $asignacion->tipo_asig->nombre_asig }}
                                  </td>
                                  <td>
-                                     <a class="btn btn-success">Detalles</a>
+                                    {{ $asignacion->anotacion }} 
                                  </td>
                              </tr>
                          @endforeach

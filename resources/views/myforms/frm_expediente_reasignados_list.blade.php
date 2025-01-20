@@ -11,6 +11,7 @@ Reasignaciones
 @include('msg.success')
 
 <div class="row">
+
   <div class="col-md-12">
   <div class="box-body table-responsive no-padding">
     <table class="table">
@@ -36,9 +37,10 @@ Reasignaciones
       </thead>
       <tbody>
         @foreach($expreasignados as $asignacion)
+
           <tr>
             <td>
-              {{ $asignacion->asigexp_id }}
+              {{ $asignacion->asigexp_id }} 
             </td>
             <td>
               {{$asignacion->estudiante->name}} {{$asignacion->estudiante->lastname}}

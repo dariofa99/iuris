@@ -207,12 +207,12 @@ $(function () {
     var formId = $(this).closest('.myFormParteConvocada').attr('id');
     let idnumber = $("#" + formId + " input[name='idnumber']").val()
     if (idnumber != '') {
-      if($("#" + formId + " input[name='id']").val()==undefined){
-        $("#" + formId + " input[name='email']").val(idnumber+"@mail.com")
-        .prop("readonly",true)
+      if ($("#" + formId + " input[name='id']").val() == undefined) {
+        $("#" + formId + " input[name='email']").val(idnumber + "@mail.com")
+          .prop("readonly", true)
       }
-      
-    }else{
+
+    } else {
       toastr.error("", "Primero ingrese un número de documento valido", {
         positionClass: "toast-top-right",
         timeOut: "4000",
@@ -220,6 +220,20 @@ $(function () {
     }
 
   });
+  let validEmail = (email, idnumber) => {
+    var re = /\S+@\S+\.\S+/;
+    var partsMail = email.split("@");
+    if (partsMail[0] == idnumber && partsMail[1] == "mail.com") {
+      return false;
+    }
+    return true;
+  }
+
+  let validatePhone = (phone) => {
+    var re = /^[0-9]{10}$/;
+    return re.test(phone);
+  }
+
 
   $("#btn_parte_convocada").on("click", async function () {
     // $("#wait").show();
@@ -231,8 +245,27 @@ $(function () {
         if (errors.length > 0) {
           insert = false;
           // return
+        } else {
+          //validar que el telefono sea valido, el email y la direccion, si hay uno invalido no insertar
+          var request = convertFormToJSON(form);
+          var phone = request.tel1;
+          var email = request.email;
+          var address = request.address;
+          var idnumber = request.idnumber;          
+                  
+          if (!validatePhone(phone) && address == '' && !validEmail(email, idnumber)) {
+            toastr.error("", "Debe ingresar al menos un dato de contacto válido para la persona "+(index + 1)+".<br>Teléfono, correo o dirección.", {
+              positionClass: "toast-top-right",
+              timeOut: "5000",
+            });
+            insert = false;
+          }
         }
       });
+
+
+
+
       if (insert) {
         let timerInterval
         var response_
@@ -280,7 +313,7 @@ $(function () {
       }
 
     } else {
-     
+
     }
     $("#wait").hide();
   });
@@ -570,18 +603,18 @@ $(function () {
     var validfile = false;
 
     var anexos = $(".content_he_pret").length
-    $(".files").each((element,obj) =>{
-      if($(obj).attr("data-type")==233){
-        validfile=true;
+    $(".files").each((element, obj) => {
+      if ($(obj).attr("data-type") == 233) {
+        validfile = true;
       }
-      
+
     })
-    
-    
+
+
     if (!validfile) {
       Swal.fire({
         title: "Recuerda subir los anexos requeridos!",
-        html:"Falta adjuntar el documento de identidad",
+        html: "Falta adjuntar el documento de identidad",
         icon: "warning",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
