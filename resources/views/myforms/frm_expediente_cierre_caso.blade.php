@@ -39,12 +39,13 @@
         @endif
     @elseif(
         $expediente->expestado_id == 1 || $expediente->expestado_id == 3 and
-            $expediente->getDaysOrColorForClose('dias') < 10)
+            $expediente->getDaysOrColorForClose('dias') <= 10)
         <button type="button" data-estado="{{ $expediente->expestado_id }}" class="btn btn-warning btn-sm mb-2"
             id="btn_reabrir_caso">
             Evaluar caso
         </button>
     @endif
+
 @endif
 @if (
     $expediente->expestado_id != 2 and
