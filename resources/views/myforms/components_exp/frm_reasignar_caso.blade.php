@@ -99,10 +99,10 @@
                         </th>
 
                          <th>
-                             Motivo Asignación
+                             Motivo
                          </th>
                          <th>
-                             Tipo Asignación
+                             Tipo
                          </th>
                          <th>
                              Anotación

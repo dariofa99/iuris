@@ -979,6 +979,10 @@ class Expediente extends Model
             return $validVacations;
         }
 
+        if($this->expestado_id != 1 and $this->expestado_id != 3 and $this->expestado_id != 4){
+            return "No aplica para evaluación";
+        }
+
         $historial =  HistorialDatosCaso::select('historial_datos_casos.created_at')
             ->where('hisdc_idnumberest_id', $this->expidnumberest)
             ->where('hisdc_expidnumber', $this->expid)
@@ -1024,7 +1028,7 @@ class Expediente extends Model
 
     public function evaluarExpd($segmento, $expediente, $message, $docente_id)
     {
-        //dd($segmento);         
+                 
         $data = [
             'ntaaplicacion' => 0,
             'ntaconocimiento' => 0,
@@ -1090,7 +1094,9 @@ class Expediente extends Model
         if ($validVacations) {
             return $validVacations;
         }
-
+        if($this->expestado_id != 1 and $this->expestado_id != 3 and $this->expestado_id != 4){
+            return "No aplica para evaluación";
+        }
         $act = $this->actuacion()
             ->where(['actusercreated' => $this->expidnumberest])
             ->where(function ($q) {

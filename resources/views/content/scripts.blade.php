@@ -19,7 +19,6 @@
     $("#mymodalShowAlerts").on("click", '#btnNotFalse', function(e) {
         var item = $(this).attr("data-not")
         localStorage.setItem(item, true);
-
         $("#mymodalShowAlerts").modal("hide");
         e.preventDefault();
 
@@ -133,7 +132,7 @@
                         con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 20 de enero de 2025 <br>
+        message += `<span> Últ. Actualización: 24 de enero de 2025 <br>
                         Si el problema persiste comuníquese al 310-6038006  
                       </span>`;
 
