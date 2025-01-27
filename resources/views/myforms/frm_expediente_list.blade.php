@@ -76,7 +76,9 @@
                             <select name="tipo_busqueda" id='tipo_busqueda' class="form-control form-control-sm"
                                 placeholder="Seleccione..." required="required">
                                 <option value="">Seleccione...</option>
-                                @if (currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral') or currentUser()->hasRole('amatai'))
+                                @if (currentUser()->hasRole('diradmin')
+                                 or currentUser()->hasRole('dirgral') 
+                                 or currentUser()->hasRole('amatai')  or currentUser()->hasRole('coordprac'))
                                     <option
                                         {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'idnumber_doc' ? 'selected' : '') }}
                                         value="idnumber_doc">
