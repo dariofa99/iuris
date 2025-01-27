@@ -171,13 +171,15 @@
                         Ag. Corrección </button>
                 @endif
                 @if (
-                    $actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
+                    ($actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
                         $actuacion->actusercreated == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
                             currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') and
                         $hayactuaciones === false and
-                        ($haycorrecciones === false and $hayhijos === false))
+                        ($haycorrecciones === false and $hayhijos === false)) ||
+                        (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') and
+                            ($haycorrecciones === false and $hayhijos === false)))
                     <button type='button' value="{{ $actuacion->id }}"
                         class='btn btn-danger btn-block btn-sm delete_act'>
                         Eliminar
@@ -299,13 +301,13 @@
                             </button>
                         @endif
                         @if (
-                            $hijo->actestado_id == 101 || $hijo->actestado_id == 136 and
-                                ($hijo->actusercreated == currentUser()->idnumber and $vencido == false) ||
+                            (($hijo->actestado_id == 101 || $hijo->actestado_id == 136)
+                             and
+                                ($hijo->actusercreated == currentUser()->idnumber and $vencido == false))
+                                 ||
                                     (currentUser()->hasRole('amatai') ||
                                         currentUser()->hasRole('diradmin') ||
-                                        currentUser()->hasRole('dirgral')) ||
-                                    ($hijo->actestado_id == 136 and $hijo->actusercreated == currentUser()->idnumber))
-                    
+                                        currentUser()->hasRole('dirgral')))
                             <button type='button' value="{{ $hijo->id }}"
                                 class='btn btn-danger btn-block btn-sm delete_act'>
                                 Eliminar
