@@ -19,7 +19,7 @@
             <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
                 data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
                 id="btn_change_doc_exp">
-                Cambiar</a>
+                Cambiar</a> 
 
             <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
                 data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"

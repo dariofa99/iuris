@@ -94,8 +94,9 @@
 						<input type="checkbox" name="valida_regla" id="valida_regla">
 						<label for="valida_regla" style="font-weight: normal">Comprendo los terminos y condiciones</label><br>
 						<button id="btn_continuar_conciliacion" disabled  class="btn btn-primary m-2">
-							Continuar
+							Continuar (en periodo de prueba)
 						</button> 
+
                        
                     </div>
 

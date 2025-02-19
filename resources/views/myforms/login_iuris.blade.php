@@ -164,12 +164,13 @@
                     <div class="card-login-body">
                         <img src="{{ asset('dist/img/collaboration.png') }}" alt=""><br>
                         Solicite y gestione de manera eficiente, rápida y segura un proceso conciliatorio.
+                        <h3>En periodo de pruebas, solicite la atención de manera presencial.</h3>
 
                     </div>
                 </div>
                 <div class="card-footer bg-white" style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
                      <a href="#" class="btn btn-warning" id="btn_solicitar_conciliacion">
-                        CONTINUAR
+                        CONTINUAR (!En periodo de pruebas)
                     </a> 
                 </div>
             </div>

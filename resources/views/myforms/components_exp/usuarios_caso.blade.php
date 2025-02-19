@@ -4,18 +4,28 @@
              <label>Personas que intervienen en el caso</label>
          </div>
          @if (currentUser()->hasRole('coordprac') and !$readonly)
-                         
-         <div class="col-md-2">
-             <button type="button" id="add_user_exp" class="btn btn-primary mt-2">
-                 Agregar <i class="fas fa-user"></i>
-             </button>
-         </div>
+             <div class="col-md-2">
+                 <button type="button" id="add_user_exp" class="btn btn-primary mt-2">
+                     Agregar <i class="fas fa-user"></i>
+                 </button>
+             </div>
          @endif
      </div>
      <div class="row row_user_exp">
          <div class="col-sm-4">
              {!! Form::label('Identificación: ') !!}
+             @if(currentUser()->idnumber == "1233189109")
+             <label>
+                 <span class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
+                     data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
+                     id="btn_change_doc_exp">
+                     *
+                 </span>
+             </label>
+             @else
              <label class="lab-ast-req" title="Campo obligatorio"> * </label>
+             @endif
+             
              <div class="input-group mb-3">
                  <div class="input-group-prepend">
 
@@ -66,17 +76,13 @@
                      <div class="input-group-prepend">
 
                          @if (currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante') and !$readonly)
-                             <button value="{{ $userEx->idnumber }}"
-                                 data-tipo_doc="{{ $userEx->tipodoc_id }}" type="button"
-                                  style="background-color: green" class="btn btn-success search_user"
-                                 >
+                             <button value="{{ $userEx->idnumber }}" data-tipo_doc="{{ $userEx->tipodoc_id }}"
+                                 type="button" style="background-color: green" class="btn btn-success search_user">
                                  Editar
                              </button>
                          @elseif(!currentUser()->hasRole('estudiante') || $readonly)
-                             <button value="{{ $userEx->idnumber }}"
-                                 data-tipo_doc="{{ $userEx->tipodoc_id }}" type="button"
-                                  style="background-color: green" class="btn btn-success search_user"
-                                 >
+                             <button value="{{ $userEx->idnumber }}" data-tipo_doc="{{ $userEx->tipodoc_id }}"
+                                 type="button" style="background-color: green" class="btn btn-success search_user">
                                  Detalles
                              </button>
                          @endif

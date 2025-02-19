@@ -117,7 +117,7 @@
                             </a>
                         @endif
                     @endif
-                    @if ($expediente->expestado_id == 6)
+                    
                         @if ($expediente->validateVacations())
                             {!! $expediente->validateVacations() !!}
                         @else         
@@ -125,7 +125,7 @@
                                 Admin. pausa
                             </a>
                         @endif
-                    @endif
+                   
                 @endif
 
                 @if (!$readonly)

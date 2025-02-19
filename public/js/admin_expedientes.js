@@ -1341,7 +1341,7 @@ $(document).ready(function () {
 
     });
 
-    $("#btn_change_doc_exp").on("click", async function (e) {
+    $(".btn_change_doc_exp").on("click", async function (e) {
         e.preventDefault();
         $("#titulo_modal").text("Cambiando docente");
         $("#myform_change_docente_exp>#tipo_cambio").val(1);
