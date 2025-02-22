@@ -61,7 +61,7 @@ class EstadosCasoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
+    {
 
         if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
 
@@ -88,7 +88,7 @@ class EstadosCasoController extends Controller
                                 'mensaje' => 'El Caso NO tiene notas asignadas',
                                 'guardado' => false,
                                 'exp' => $expediente,
-                                'role' => $role, 
+                                'role' => $role,
                             ];
                             return response()->json(($response));
                         }
@@ -158,6 +158,7 @@ class EstadosCasoController extends Controller
                         }
                     }
                 }
+
                 if ((count($acts) > 0 || count($reqs) > 0) and $request->new_expestado == 4) {
                     if ($expediente->exptipoproce_id != 1) {
                         $mensaje = '';
@@ -223,10 +224,15 @@ class EstadosCasoController extends Controller
                             }
                         }
                     }
+                    if($request->new_expestado == 3){
+                        $expediente->asignacion->fecha_eva = Carbon::now();
+                        $expediente->asignacion->save();    
+                        
+                    }
                     $estadoCaso = $this->estadoCasoService->store($request);
                     $expediente->save();
                     $response = [
-                        'mensaje' => 'El Caso fue actualizo con éxito',
+                        'mensaje' => 'El Caso fue actualizo con éxitoss',
                         'guardado' => true,
                         'exp' => $expediente,
                         'role' => $role,
@@ -256,7 +262,7 @@ class EstadosCasoController extends Controller
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->expid
         ]);
-     
+
         if ($expediente) {
             $segmento = $this->segmentosService->find($request->segid);
             if ($segmento) {
@@ -283,7 +289,7 @@ class EstadosCasoController extends Controller
                     'tbl_org_id' => $expediente->id,
                 ];
                 $expediente->asignarNotas($data);
-                $request['comentario'] = $request->ntaconcepto != "" ? $request->ntaconcepto :"Cerrado despues de vencido el plazo para cierre";
+                $request['comentario'] = $request->ntaconcepto != "" ? $request->ntaconcepto : "Cerrado despues de vencido el plazo para cierre";
                 $request['expidnumber'] = $request->expid;
                 $request['ref_estado_id'] = 2;
                 $request['ref_motivo_estado_id'] = 8;
@@ -301,14 +307,14 @@ class EstadosCasoController extends Controller
 
     public function cerrarCasoNotaMinima(Request $request)
     {
-        
+
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->expid
         ]);
-    
-         if ($expediente and ($expediente->isValidOpenPeriodo())) {
+
+        if ($expediente and ($expediente->isValidOpenPeriodo())) {
             $asignacion = $expediente->asignacion;
-            $segmento = $this->segmentosService->getSegmentoAsignacion($asignacion);  
+            $segmento = $this->segmentosService->getSegmentoAsignacion($asignacion);
             if ($segmento) {
                 $notas =  $expediente->notas()
                     ->where([
@@ -334,7 +340,7 @@ class EstadosCasoController extends Controller
                     'tbl_org_id' => $expediente->id,
                 ];
                 $expediente->asignarNotas($data);
-                $request['comentario'] = $request->ntaconcepto != "" ? $request->ntaconcepto :"Cerrado despues de vencido el plazo para cierre";
+                $request['comentario'] = $request->ntaconcepto != "" ? $request->ntaconcepto : "Cerrado despues de vencido el plazo para cierre";
                 $request['expidnumber'] = $request->expid;
                 $request['ref_estado_id'] = 2;
                 $request['ref_motivo_estado_id'] = 8;

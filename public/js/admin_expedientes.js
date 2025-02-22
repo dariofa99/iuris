@@ -1341,7 +1341,7 @@ $(document).ready(function () {
 
     });
 
-    $(".btn_change_doc_exp").on("click", async function (e) {
+    $("#btn_change_doc_exp").on("click", async function (e) {
         e.preventDefault();
         $("#titulo_modal").text("Cambiando docente");
         $("#myform_change_docente_exp>#tipo_cambio").val(1);
@@ -1363,6 +1363,28 @@ $(document).ready(function () {
         }
     });
 
+    $("#btn_change").on("click", async function (e) {
+        e.preventDefault();
+        $("#titulo_modal").text("Cambiando docente");
+        $("#myform_change_docente_exp>#tipo_cambio").val(1);
+        $("#myform_change_docente_exp input[type='submit']").val("Cambiar docente");
+        $("#wait").show();
+        let response = await userService.getUsersByRole({ 'role': 'docente', 'active': 1 });
+        $("#wait").hide();
+        if (response.encontrado) {
+            var opcion_busq = '';
+            $("#new_docente_id").html('')
+            $(response.users).each(function (key, value) {
+                opcion_busq += '<option value="' + value.idnumber + '">' + value.full_name + '</option>';
+            });
+            var userauth = JSON.parse($("#authdata").val())
+            opcion_busq += '<option value="' + userauth.idnumber + '">' + userauth.name + ' ' + userauth.lastname + '</option>'
+
+            $("#new_docente_id").html(opcion_busq).selectpicker("refresh");;
+            $("#myModal_change_docente_exp").modal("show");
+        }
+    });
+    
     $("#btn_delete_doc_exp").on("click", function (e) {
         e.preventDefault();
         Swal.fire({

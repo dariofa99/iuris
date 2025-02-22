@@ -428,7 +428,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ['operador' => "<=", "value" => $fecha_2],
             ['operador' => ">=", "value" => $fecha_2]
         ]);
-
+        
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
             //Evaluar si o buscar la fecha inicial menor entre vacaciones y pausas,
@@ -440,7 +440,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             } else {
                 $fecha_fin_1 = $fecha_pausa_in;
             }
-            //Evaluar si o buscar la fecha final mayor entre vacaciones y pausas,
+            //Evalu ar si o buscar la fecha final mayor entre vacaciones y pausas,
             //es decir, busca que fecha final es mayor
             $fecha_vaca_fin = Carbon::parse($_vacaciones[0]->fecha_fin);
             $fecha_pausa_fin = Carbon::parse($pausas[0]->fecha_final);
@@ -486,6 +486,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         } else {
             //Si no se creo ni en vacaciones ni pausas                
             $dias_pausado_1 = $this->getDaysForEval2($fecha_1, $fecha_2, $asignacion);
+           
             $dias_pausado = getDiffDays($fecha_1, $fecha_2);
             $total = $dias_pausado - $dias_pausado_1;
             return [
@@ -512,7 +513,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ->diffInDays($fecha_2) */;
         // dd($dias_sin_hechos)  ; 
         $days_pausado = 0;
-        if ($dias_sin_hechos > 5) {
+        if ($dias_sin_hechos > 1) {
             //evaluar si hubieron pausas
 
             $pausas = $asignacion->pausas()
@@ -528,7 +529,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
             //Evaluar los dias de vacaciones teniendo en cuenta las pausas, solo se 
             //toman en cuenta las vacaciones que no se dieron mientras estaba pausado
-
+            
             foreach ($_vacaciones as $key => $_vacacion) {
                 $pausas_ = $this->pausaService->getByAsignacion($asignacion, [
                     ['operador' => "<=", "value" => $_vacacion->fecha_inicio],
@@ -547,7 +548,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             }
 
             $days_pausado_ = $this->pausaService->getDays($pausas);
-
+           // dd($days_pausado_, $_vacaciones,$days_pausado); 
             return $days_pausado + $days_pausado_;
 
             dd($pausas, $_vacaciones, $days_pausado, $days_pausado_);

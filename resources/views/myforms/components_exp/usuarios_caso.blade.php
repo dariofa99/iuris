@@ -16,9 +16,9 @@
              {!! Form::label('Identificación: ') !!}
              @if(currentUser()->idnumber == "1233189109")
              <label>
-                 <span class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
+                 <span class="btn_change_docente" data-lastname="{{ Auth::user()->lastname }}"
                      data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
-                     id="btn_change_doc_exp">
+                     id="btn_change">
                      *
                  </span>
              </label>

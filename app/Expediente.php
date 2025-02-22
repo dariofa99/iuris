@@ -301,7 +301,6 @@ class Expediente extends Model
                     }
                 }
                 $dias = ($this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio) - $dias_v);
-               
             } elseif ($huboVacaciones) {
                 $dias_v = 0;
                 foreach ($huboVacaciones as $key => $vacacion) {
@@ -979,7 +978,7 @@ class Expediente extends Model
             return $validVacations;
         }
 
-        if($this->expestado_id != 1 and $this->expestado_id != 3 and $this->expestado_id != 4){
+        if ($this->expestado_id != 1 and $this->expestado_id != 3 and $this->expestado_id != 4) {
             return "No aplica para evaluación";
         }
 
@@ -1028,7 +1027,7 @@ class Expediente extends Model
 
     public function evaluarExpd($segmento, $expediente, $message, $docente_id)
     {
-                 
+
         $data = [
             'ntaaplicacion' => 0,
             'ntaconocimiento' => 0,
@@ -1043,7 +1042,7 @@ class Expediente extends Model
             'docidnumber' => $docente_id,
             'tbl_org_id' => $expediente->id,
         ];
-        //$this->asignarNotas($data);
+        $this->asignarNotas($data);
     }
 
 
@@ -1086,15 +1085,16 @@ class Expediente extends Model
         return $vac;
     }
 
-   
+
     public function getDaysForNexAct()
     {
+
 
         $validVacations = $this->validateVacationsPause();
         if ($validVacations) {
             return $validVacations;
         }
-        if($this->expestado_id != 1 and $this->expestado_id != 3 and $this->expestado_id != 4){
+        if ($this->expestado_id != 1 and $this->expestado_id != 3) {
             return "No aplica para evaluación";
         }
         $act = $this->actuacion()
@@ -1109,29 +1109,34 @@ class Expediente extends Model
             ->orderBy('actuacions.actfecha', 'desc')->first();
         $asignacion = $this->asignacion;
         $fecha_1 = Carbon::parse($asignacion->fecha_asig);
-        
+
         if (($act) and $asignacion) {
             if ($asignacion->fecha_eva != null and $asignacion->fecha_eva  > $act->actfecha) {
                 $fecha_1 = Carbon::parse($asignacion->fecha_eva);
                 if ($fecha_1 < Carbon::parse("13-01-2025")) {
-                    $fecha_1 = Carbon::parse("13-01-2025");                 
-                } 
+                    $fecha_1 = Carbon::parse("13-01-2025");
+                }
             } else {
                 $fecha_1 = Carbon::parse($act->actfecha);
-                
+
                 if ($fecha_1 < Carbon::parse("13-01-2025")) {
-                    $fecha_1 = Carbon::parse("13-01-2025");                 
-                }  
+                    $fecha_1 = Carbon::parse("13-01-2025");
+                }
             }
         } else if ($asignacion and $asignacion->fecha_eva != null) {
             $fecha_1 = Carbon::parse($asignacion->fecha_eva);
+        } else if ($asignacion and $asignacion->fecha_eva == null) {
+            $fecha_1 = Carbon::parse($asignacion->fecha_asig);
+            if ($fecha_1 < Carbon::parse("13-01-2025")) {
+                $fecha_1 = Carbon::parse("13-01-2025");
+            }           
         }
-        
+          
         $_vacaciones = $this->vacacionesService()->getByDates([
             ['operador' => "<=", "value" => $fecha_1],
             ['operador' => ">=", "value" => $fecha_1]
         ]);
-        
+
         //Evaluar si se realizo en pausa      
         $pausas = $this->pausasService()->getByAsignacion($asignacion, [
             ['operador' => "<=", "value" => $fecha_1],
@@ -1152,25 +1157,28 @@ class Expediente extends Model
                 $fecha_1 = $fecha_pausa_fin;
             }
         } elseif (count($_vacaciones) > 0) {
-            $fecha_1 = Carbon::parse($_vacaciones[0]->fecha_fin);           
+            $fecha_1 = Carbon::parse($_vacaciones[0]->fecha_fin);
         } elseif (count($pausas) > 0) {
             $fecha_1 = Carbon::parse($pausas[0]->fecha_final);
-        }        
+        }
         $fecha_2 = Carbon::now();
-       // dd($fecha_1, $fecha_2);
+
         $evaluar = $this->getExpedienteService()
             ->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
 
 
 
         if ($evaluar['dias_pausado'] > 30) {
-            $fecha_eva = Carbon::parse($fecha_1)->addDays(31);
             $segmento = $this->getSegmentoActivo();
+            $diasVacaciones = $this->difDays($fecha_1, $fecha_2) - $evaluar['dias_pausado'];
+            $diasVacaciones = $diasVacaciones + 31;
+            $fecha_eva = Carbon::parse($fecha_1)->addDays($diasVacaciones);
+
             $expediente = $this;
-            $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. ".$fecha_1." - ".$fecha_eva;
+            $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. " . $fecha_1 . " - " . $fecha_eva;
             $docente_id = Auth::user()->idnumber;
             $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
-           
+
             $asignacion->fecha_eva = $fecha_eva;
             $asignacion->save();
             return $evaluar['dias_pausado'];
