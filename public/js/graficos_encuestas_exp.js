@@ -33,28 +33,28 @@ $(document).ready(async function () {
         $("#myModal_create_category").modal("show");
     });
 
-    $("#btn_load_categoryInExp").on("click",async function (e) {
+    $("#btn_load_categoryInExp").on("click", async function (e) {
         e.preventDefault();
         var request = {
-            "table":"exp_encuesta_satisf",
-            "categories":"exp_encuesta_satisf",
-            "encuesta_id":encId
+            "table": "exp_encuesta_satisf",
+            "categories": "exp_encuesta_satisf",
+            "encuesta_id": encId
         }
-        
-        let response = await referenciasService.getByRefDataFilter(request);     
+
+        let response = await referenciasService.getByRefDataFilter(request);
         $("#list_preguntas_add_test").html(response.view);
         $("#myModal_encuesta_add_preguntas").modal("show")
-    
-       
+
+
     })
     $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
         e.preventDefault();
         var request = convertFormToJSON('myFormAddPreguntasEncuestas');
         request['encuesta_id'] = encId
-        let response = await encuestasService.addPreguntasEncuesta(request); 
-       
+        let response = await encuestasService.addPreguntasEncuesta(request);
+
         console.log(request);
-        
+
     })
     $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
         e.preventDefault()
@@ -62,12 +62,12 @@ $(document).ready(async function () {
         var request = convertFormToJSON('myformCreateInEnCategory');
         request['table'] = 'exp_encuesta_satisf'
         request['encuesta_id'] = encId
-        let response = await encuestasService.storeReferencesData(request);     
+        let response = await encuestasService.storeReferencesData(request);
         if (response.view || response.view == '') {
             $("#sortable_questions").html(response.view);
             $("#lblTestName").text($(this).attr("data-name"))
         }
-        toastr.success("La pregunta se creó con éxito","",
+        toastr.success("La pregunta se creó con éxito", "",
             { positionClass: "toast-top-right", timeOut: "5000" }
         );
         $("#myModal_create_category").modal("hide");
@@ -116,7 +116,7 @@ $(document).ready(async function () {
         encId = $(this).closest("tr").attr("data-id")
         $(".btnRowSelEnc").removeClass("row_esc_act")
         $(this).closest("tr").addClass("row_esc_act")
-        if(encId!=null){
+        if (encId != null) {
             $("#btn_new_categoryInExp").show()
             $("#btn_load_categoryInExp").show()
         }
@@ -134,10 +134,10 @@ $(document).ready(async function () {
         e.preventDefault();
         encId = $(this).closest("tr").attr("data-id")
         var request = {
-            activo:1
+            activo: 1
         }
         //$("#wait").show()
-        let response = await encuestasService.update(request,encId);
+        let response = await encuestasService.update(request, encId);
         $("#wait").hide()
 
     });
@@ -180,7 +180,16 @@ var getChart = async () => {
         <div class="col-md-6">
         <div class="card">
             <div class="card-header">
+            <div class="row">
+            <div class="col-md-10">
+                <h4 class="card-title">
                 ${pregunta.pregunta}
+                </h4>
+            </div>
+                <div class="col-md-2">
+                    <i class="fa fa-eye"></i>
+                </div>
+            </div>                
             </div>
             <div class="card-body">
                 <div style="min-height:400px" class="graf" id="graf-${pregunta.id}">
@@ -191,13 +200,109 @@ var getChart = async () => {
     </div>
         `
             $("#content-grafs").append(card);
-            pie_chart(pregunta, "graf-" + pregunta.id)
+            bar_chart(pregunta, "graf-" + pregunta.id)
+
+
         });
 
 
     }
 
 }
+function bar_chart(res, content) {
+    
+    var chart = new AmCharts.AmSerialChart();
+
+    // Configuración básica del gráfico
+    chart.categoryField = "label";
+    chart.startDuration = 1;
+    
+    // Eje X
+    var categoryAxis = chart.categoryAxis;
+    categoryAxis.labelRotation = 45; // Rotación de etiquetas para mayor legibilidad
+    categoryAxis.gridPosition = "start";
+    
+    // Eje Y
+    var valueAxis = new AmCharts.ValueAxis();
+    var wordsPerLine = 6;
+    
+    // Formatear la pregunta para que se ajuste en varias líneas
+    var words = res.pregunta.split(" ");
+    var formattedQuestion = "";
+    for (var i = 0; i < words.length; i++) {
+        formattedQuestion += words[i] + " ";
+        if ((i + 1) % wordsPerLine === 0) {
+            formattedQuestion += "\n";
+        }
+    }
+    valueAxis.title = formattedQuestion;
+    valueAxis.titleFontSize = 11;
+    valueAxis.minimum = 0;
+    valueAxis.titleMargin = 20; // Margen entre el título y el eje
+    chart.addValueAxis(valueAxis);
+    
+    // Colores personalizados
+    var colorsArray = [
+        "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
+        "#FF8C33", "#33FF8C", "#8C33FF", "#FF5733", "#33A1FF",
+        "#A1FF33", "#FFA133", "#33FFA1", "#FF33FF", "#A1A1FF"
+    ];
+    
+    // Calcular el total de los valores
+    var total = res.resultados.reduce((sum, item) => sum + item.value, 0);
+    
+    // Asignar colores y calcular porcentajes
+    for (var i = 0; i < res.resultados.length; i++) {
+        res.resultados[i].color = colorsArray[i % colorsArray.length];
+        res.resultados[i].percentage = ((res.resultados[i].value / total) * 100).toFixed(2) + "%"; // Calcular porcentaje
+    }
+    
+    // Asignar el dataProvider al gráfico
+    chart.dataProvider = res.resultados;
+    
+    // Serie de datos (barras)
+    var graph = new AmCharts.AmGraph();
+    graph.valueField = "value";
+    graph.type = "column"; // Tipo de gráfico: barras
+    graph.fillAlphas = 0.8;
+    graph.lineAlpha = 0.2;
+    graph.balloonText = "[[category]]: <b>[[value]]</b> ([[percentage]])"; // Mostrar valor y porcentaje en el globo
+    graph.colorField = "color"; // Usar el campo "color" del dataProvider
+    
+    // Mostrar el porcentaje en las barras
+    graph.labelText = "[[percentage]]"; // Mostrar el porcentaje en las etiquetas
+    graph.labelPosition = "top"; // Posición de la etiqueta (arriba de la barra)
+    graph.fontSize = 12; // Tamaño de la fuente
+    graph.labelColor = "#000000"; // Color del texto
+    
+    chart.addGraph(graph);
+    
+    // Configuración de exportación
+    chart.export = {
+        enabled: true,
+        menu: [{
+            class: "export-main",
+            menu: [{
+                label: "Descargar como PNG",
+                format: "png"
+            }, {
+                label: "Descargar como JPG",
+                format: "jpg"
+            }, {
+                label: "Descargar como SVG",
+                format: "svg"
+            }, {
+                label: "Descargar como CSV",
+                format: "csv"
+            }]
+        }]
+    };
+    
+    // Escribir gráfico
+    chart.write(content);
+
+}
+
 function pie_chart(res, content) {
     var chart = new AmCharts.AmPieChart();
     // title of the chart

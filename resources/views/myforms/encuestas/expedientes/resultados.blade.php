@@ -3,6 +3,7 @@
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('/plugins/jquery-ui/jquery-ui.min.css') }}">
+    <link  type="text/css" href="{{asset("/plugins/amcharts/plugins/export/export.css")}}" rel="stylesheet">
 
     @endpush
 
@@ -118,12 +119,13 @@ Administración de encuestas
         $(document).ready(function() {
             $(".selectpicker").selectpicker()
         }); --}}
+
     {!! Html::script('plugins/amcharts/amcharts.js') !!}
     {!! Html::script('plugins/amcharts/serial.js') !!}
     {!! Html::script('plugins/amcharts/pie.js') !!}
     {!! Html::script('plugins/jquery-ui/jquery-ui.min.js') !!}
+    {!! Html::script('plugins/amcharts/plugins/export/export.min.js') !!}
     <script type="module" src={{ asset('js/admin_categorias.js') }}></script>
-  
     <script type="module" src={{ asset('js/graficos_encuestas_exp.js') }}></script>
 
     </script>

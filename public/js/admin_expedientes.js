@@ -5,16 +5,13 @@ const encuestasService = new EncuestasService();
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
-
     if ($("#expediente_id").val() != undefined) {
         $(":input").inputmask();
         set_tab();
-
     }
     $("#search_onlyMy_exp").on("change", async function () {
         buscarExp()
     });
-
     $(".btn_start_test").on("click", async function (e) {
         e.preventDefault();
         const expid = $("#expid").val()
@@ -23,9 +20,7 @@ $(document).ready(function () {
             title: 'Inicio encuesta de satisfacción',
             html: `Se iniciará el proceso de evaluación de satisfacción
              para el expediente ${expid}.<br><br>
-            Se cerrará la sesión actual.<br> ¿Desea continuar?
-              
-              `,
+            Se cerrará la sesión actual.<br> ¿Desea continuar?`,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             /* cancelButtonColor: '#d33', */
