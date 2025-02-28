@@ -115,7 +115,9 @@
                                         {{ $req->reqmotivo }}
                                     </td>
                                     <td>
-                                        {{ $req->expediente->expid }}
+                                      <a target="_blank" href="{{url("/expedientes/{$req->expediente->expid}/edit")}}">
+                                          {{ $req->expediente->expid }}
+                                      </a>
                                     </td>
                                     <td>
                                         {{ getSmallDate($req->reqfecha) }}
