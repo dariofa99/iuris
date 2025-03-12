@@ -35,7 +35,10 @@ class Chat extends GuzzleHttpRequest
     public function render(){
       
         $data = $this->get('/applications/'.$this->getBcryptData(),$this->data());
-       // dd("data");
+        
+        if($data == null){
+            $data = (object) ['url' => '/notfound'];
+        } 
         return view($this->view,compact('data'));
     }
  

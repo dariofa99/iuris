@@ -1042,7 +1042,7 @@ class Expediente extends Model
             'docidnumber' => $docente_id,
             'tbl_org_id' => $expediente->id,
         ];
-        //$this->asignarNotas($data);
+        $this->asignarNotas($data);
     }
 
 

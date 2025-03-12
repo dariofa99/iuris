@@ -108,7 +108,7 @@
                             currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
                             currentUser()->hasRole('amatai'))
-                    @if ($expediente->expestado_id == 1)
+                    @if ($expediente->expestado_id == 1 || $expediente->expestado_id == 3)
                         @if ($expediente->validateVacations())
                             {!! $expediente->validateVacations() !!}
                         @else

@@ -6,6 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario Completo</title>
     <style>
+        @page {
+            margin: 160px 50px 50px 50px;
+            /* Espacio para el encabezado */
+        }
+
+        header {
+            border: 2px solid red;
+            position: fixed;
+            top: -145px;
+            /* Ajusta según sea necesario */
+            left: 0;
+            right: 0;
+            height: 100px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -13,59 +31,82 @@
 
         th,
         td {
-            border: 1px solid black;
-            padding: 8px;
+            border: 1px solid rgb(0, 0, 0);
+            padding: 5px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            box-sizing: border-box;
+            background-color: #ffffff;
         }
     </style>
 </head>
 
 <body>
+    @php
+        $parte_solicitante = $conciliacion->getUser(205); //Solicitante
+    @endphp
 
-    <h2>INFORMACIÓN PERSONAL Y DE CONTACTO</h2>
-    <table>
+    <header>
+        <img src="{{ public_path('dist/img/udenar-ti.png') }}" alt="">
+    </header>
+
+    <table border="1">
         <tr>
             <th>Fecha</th>
-            <td><input type="text" placeholder="Haga clic aquí o pulse para escribir una fecha."></td>
+            <td colspan="5">
+                <label>
+                    {{ $conciliacion->created_at }}
+                </label>
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" align="center">
+                <h4 style="display: block;text-align:center">
+                    INFORMACIÓN PERSONAL Y DE CONTACTO
+                </h4>
+            </td>
         </tr>
         <tr>
             <th>Nombre:</th>
-            <td><input type="text" placeholder="NOMBRE DE LA PARTE CONVOCANTE."></td>
+            <td colspan="5">{{ $parte_solicitante->name }} {{ $parte_solicitante->lastname }}</td>
         </tr>
         <tr>
             <th>Identificación</th>
             <td>
-                <select>
-                    <option>Elija tipo de documento.</option>
-                </select>
-                <input type="text" placeholder="No. Número y Ciudad.">
-                <input type="text" placeholder="Fecha nacimiento">
-                <select>
-                    <option>Pulse para elegir.</option>
-                </select>
+                {{ $parte_solicitante->tipo_doc->ref_nombre }} de
+                @if ($parte_solicitante->getDataValWShort('lugar_exp._documento'))
+                    {{ $parte_solicitante->getDataValWShort('lugar_exp._documento')->value }}
+                @else
+                    Sin datos
+                @endif
+            </td>
+
+            <th>No</th>
+            <td>
+                {{ $parte_solicitante->idnumber }}
+            </td>
+
+            <th>Fecha de nacimiento</th>
+            <td>
+                {{ getSmallDate($parte_solicitante->fechanacimien) }}
             </td>
         </tr>
         <tr>
             <th>Dirección para notificaciones:</th>
-            <td><input type="text" placeholder="Escriba la dirección de domicilio."></td>
-        </tr>
-        <tr>
-            <th>Teléfono</th>
-            <td><input type="text" placeholder="Teléfono."></td>
+            <td colspan="3">
+                {{ $parte_solicitante->address }}
+            </td>
+
+            <th>Celular</th>
+            <td>{{ $parte_solicitante->tel1 }} - {{ $parte_solicitante->tel2 }}</td>
         </tr>
         <tr>
             <th>Correo electrónico:</th>
-            <td><input type="text" placeholder="Escriba correo electrónico."></td>
+            <td colspan="5">
+                {{ $parte_solicitante->id }}
+            </td>
         </tr>
     </table>
 
@@ -73,15 +114,20 @@
     <table>
         <tr>
             <th>Nombre identitario</th>
-            <td><input type="text" placeholder="Haga clic o pulse aquí para escribir texto."></td>
+            <td>
+
+                @if ($parte_solicitante->getDataValWShort('nombre_identitario'))
+                    {{ $parte_solicitante->getDataValWShort('nombre_identitario')->value }}
+                @else
+                    Sin datos
+                @endif
+            </td>
+
         </tr>
         <tr>
             <th>Sexo</th>
             <td>
-                <input type="radio" name="sexo" value="Hombre"> Hombre
-                <input type="radio" name="sexo" value="Mujer"> Mujer
-                <input type="radio" name="sexo" value="Intersexual"> Intersexual
-                <input type="radio" name="sexo" value="Indeterminado"> Indeterminado
+                {{ $parte_solicitante->genero->ref_nombre }}
             </td>
         </tr>
         <tr>
