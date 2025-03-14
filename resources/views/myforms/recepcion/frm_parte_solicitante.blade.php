@@ -2,6 +2,7 @@
     <div class="row">
         @include('myforms.users.formulario_registro')
         @include('myforms.components_user.identitaria')
+        @include('myforms.components_user.discapacidad')
         @include('myforms.components_user.socioeconomica')
         @if (config('app.name') != 'ConciliApp')
         <input type="hidden" id="tipopersvalidate_id" name="tipopers_id" value="236">

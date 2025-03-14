@@ -15,7 +15,7 @@
                     data-section="{{ $reference->section }}"
                     class="form-control form-control-sm input_user_ad data_input_select" data-id="{{ $reference->id }}">
                     <option value="">Seleccione...</option>
-                    @foreach ($reference->options as $opt)
+                    @foreach ($reference->options()->where('status',1)->get() as $opt)
                         @php
                             if (
                                 isset($user) and

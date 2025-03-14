@@ -6,7 +6,25 @@ const userService = new UserService();
 const conciliacionService = new ConciliacionService();
 const solicitudesService = new SolicitudesService();
 $(function () {
-
+  ocultarCompDiscapUser();
+  $("#myFormParteSolicitante")
+  .on("change", "select[name='pbepersondiscap']", function (e) {
+      if ($(this).val() == 1) {
+          mostrarCompDiscapUser()
+      } else {
+          ocultarCompDiscapUser();
+      }
+  });
+  $("#myFormParteSolicitante")
+        .on("change", "select[name='has_apoyo']", function (e) {
+            if ($(this).val() == 1) {
+                $(".has_apoyo").show()
+                $("#acept_ter").prop("disabled", false)
+            } else {
+                $(".has_apoyo").hide()
+                $("#acept_ter").prop("disabled", true).prop("checked", false)
+            }
+        });
   if ($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled', true)
 
   $("#myFormParteSolicitante select[name='tipodoc_id'] option").each(function () {

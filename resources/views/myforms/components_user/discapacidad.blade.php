@@ -14,7 +14,7 @@
                </select>
            </div>
        </div>
-       <div style="display: {{ (isset($user) and $user->pbepersondiscap == 0) ? 'none' : 'block' }}"
+       <div style="display: {{ ((isset($user) and $user->pbepersondiscap == 0) || (!isset($user))) ? 'none' : 'block' }}"
            class="col-md-{{ isset($col) ? $col : '12' }} discaform">
            <div class="form-group">
                <label for="has_apoyo">¿Cuenta con persona de apoyo?<span class="ast_required">*</span></label>
@@ -60,9 +60,6 @@
 
            </div>
        </div>
-
-
-
        @include('myforms.components_user.aditional_data', [
            'data' => getReferencesDataBySection('discapacidad', 'users'),
            'discaform' => 'discaform',
