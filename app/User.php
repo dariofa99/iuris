@@ -12,12 +12,13 @@ use App\Traits\ColorTurnos;
 use App\Traits\AsigNotasExt;
 
 use App\Notifications\MyResetPassword;
+use App\Traits\RefDataManage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
 
 class User extends Authenticatable
 {
-    use Notifiable, AsigNotasExt;
+    use Notifiable, AsigNotasExt ,RefDataManage;
     use EntrustUserTrait; // add this trait to your user model
     use AsigTurno;
     use AsigDocEst;
@@ -288,7 +289,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public function getDataValWShort($short_name)
+  /*   public function getDataValWShort($short_name)
     {
         $ref_data = $this->aditional_data()
             ->join('references_data', 'references_data.id', 'user_aditional_data.reference_data_id')
@@ -300,7 +301,7 @@ class User extends Authenticatable
         }
 
         return false;
-    }
+    } */
 
     public function getNotificaciones($item = '')
     {

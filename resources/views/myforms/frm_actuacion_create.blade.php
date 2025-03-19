@@ -27,6 +27,11 @@
                 class="badge badge-{{ getColorByPercent(getPercent(31, $expediente->getDaysForNexAct())) }}">
                 {!! $expediente->getDaysForNexAct() !!}
             </label>
+            @if(currentUser()->hasRole('amatai'))
+             <i id="btn_chg_date" class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+                title="Actualizar fecha de última actuación.">
+            </i>
+            @endif
         @endif
     </div>
 

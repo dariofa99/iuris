@@ -76,11 +76,11 @@
             <th>Identificación</th>
             <td>
                 {{ $parte_solicitante->tipo_doc->ref_nombre }} de
-                @if ($parte_solicitante->getDataValWShort('lugar_exp._documento'))
+                {{--  @if ($parte_solicitante->getDataValWShort('lugar_exp._documento'))
                     {{ $parte_solicitante->getDataValWShort('lugar_exp._documento')->value }}
                 @else
                     Sin datos
-                @endif
+                @endif --}}
             </td>
 
             <th>No</th>
@@ -116,11 +116,11 @@
             <th>Nombre identitario</th>
             <td>
 
-                @if ($parte_solicitante->getDataValWShort('nombre_identitario'))
+                {{--  @if ($parte_solicitante->getDataValWShort('nombre_identitario'))
                     {{ $parte_solicitante->getDataValWShort('nombre_identitario')->value }}
                 @else
                     Sin datos
-                @endif
+                @endif --}}
             </td>
 
         </tr>
@@ -133,9 +133,31 @@
         <tr>
             <th>Género</th>
             <td>
-                <input type="radio" name="genero" value="Masculino"> Masculino
-                <input type="radio" name="genero" value="Femenino"> Femenino
-                <input type="radio" name="genero" value="Transgénero"> Transgénero
+                @if (getAditionalDataByShortName('identidad_de_genero', 'users'))
+                    @php
+                        $aditional_data = getAditionalDataByShortName('identidad_de_genero', 'users');
+                        $options = getAditionalDataByShortName('identidad_de_genero', 'users')->options;
+                    @endphp
+                    @foreach ($options as $option)
+                        {{-- <input
+                            {{ ($parte_solicitante->getDataVal($aditional_data->id,$option->id)->value == $option->value) ? 'checked' : '' }}
+                            type="radio" name="genero" value="{{ $option->value }}">
+ --}}
+                        {{ ($parte_solicitante->getDataVal(
+
+                            getAditionalDataByShortName('identidad_de_genero', 'users')->id, $option->id
+                            
+                            )->id ?? "Si" ) }}
+
+
+                        {{--  {{$parte_solicitante->getDataValWShort('identidad_de_genero')->id}}
+
+                        {{$option->id}} --}}
+                    @endforeach
+                @else
+                    Sin datos
+                @endif
+
             </td>
         </tr>
         <tr>

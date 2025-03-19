@@ -216,14 +216,14 @@ class ExpedienteController extends Controller
   {
 
     $conciliacion = Conciliacion::where('id', 96)->first();
-    $pdf = PDF::loadView('pdf.conciliacion_form',[
-      'conciliacion'=>$conciliacion
+    $pdf = PDF::loadView('pdf.conciliacion_form', [
+      'conciliacion' => $conciliacion
     ]);
     return $pdf->stream('invoice.pdf');
-    
+
 
     return view('pdf.conciliacion_form', compact('fecha_1'));
-    dd($fecha_1);  
+    dd($fecha_1);
 
 
     // dd($dias_sin_hechos,$fecha_1,$fecha_2);
@@ -310,6 +310,26 @@ class ExpedienteController extends Controller
     return $id;
   }
 
+  public function cambiarFechaEvaluacion(Request $request)
+  {
+    $expediente = $this->expedienteService->find($request->expid);
+    try {
+      if ($request->has('newfecha') and $request->newfecha != "") {
+        $expediente->asignacion->fecha_eva = $request->newfecha;
+        $expediente->asignacion->save();
+      } else {
+        $expediente->asignacion->fecha_eva = null;
+        $expediente->asignacion->save();
+      }   
+      return response()->json($expediente);
+    } catch (\Throwable $th) {
+      return response()->json(['errors' => ["Error al cambiar la fecha"]], 500);
+     
+    }
+   
+  }
+
+
   /**
    * Show the form for editing the specified resource.
    *
@@ -330,7 +350,7 @@ class ExpedienteController extends Controller
     $asignacion = $expediente->asignacion;
     if ($expediente->exptipoproce_id ==  1) {
       $days = $expediente->getDaysOrColorForClose('dias');
-      if ($days <= 0 || $days === true) { 
+      if ($days <= 0 || $days === true) {
         if ($expediente->expestado_id != 5 and $expediente->expestado_id != 2) {
           $notas =  $expediente->get_has_nota_final();
           if (count($notas) <= 0) {
@@ -1164,7 +1184,7 @@ class ExpedienteController extends Controller
     return response()->json(
       [
         "historial" => $historial,
-        "num_dias" => $expediente->getDaysForEvaHechos(),   
+        "num_dias" => $expediente->getDaysForEvaHechos(),
       ]
     );
   }

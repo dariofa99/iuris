@@ -239,6 +239,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Expedientes
     Route::resource('expedientes', 'ExpedienteController');
+    Route::post('expedientes/cambiar/fecha/evaluacion', 'ExpedienteController@cambiarFechaEvaluacion');
+    
     Route::get('expedientes/historial/{exp}/{tipo}', 'ExpedienteController@historialDatosCaso');
     Route::get('expedientes/selectconest/{texcon}', 'ExpedienteController@selectest');
     Route::post('expedientes/coordinador/update/{id}', 'ExpedienteController@update');

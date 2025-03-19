@@ -5,6 +5,40 @@ const encuestasService = new EncuestasService();
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
+
+    $("#btn_chg_date").on("click", function (e) {
+        e.preventDefault();
+        $("#myModal_chg_date").modal("show");
+    });
+
+    $("#frm_chg_date").on("submit",async function (e) {
+        e.preventDefault();
+        let request = convertFormToJSON("frm_chg_date");
+        request['expid'] = $("#expediente_id").val();
+        $("#wait").show();
+        let response = await expedientesService.cambiarFechaEvaluacion(request);
+        if (response.error) {
+            toastr.error(response.error, "", {
+                timeOut: "4000",
+            });
+        }else{
+            toastr.success("Se actualizó con éxito", "Espere", {
+                timeOut: "4000",
+            });
+            window.location.reload(true);
+        };
+
+
+    });
+
+    $("#frm_chg_date").on("change","input[name='hability']", function (e) {
+        e.preventDefault();
+        $("#frm_chg_date input[name='newfecha']").prop("disabled", true);
+        if ($(this).is(":checked")) {
+        $("#frm_chg_date input[name='newfecha']").prop("disabled", false);
+        }
+    });
+
     if ($("#expediente_id").val() != undefined) {
         $(":input").inputmask();
         set_tab();
