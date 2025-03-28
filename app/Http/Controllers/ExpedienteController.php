@@ -215,7 +215,7 @@ class ExpedienteController extends Controller
   public function prueba(Request $request)
   {
 
-    $conciliacion = Conciliacion::where('id', 96)->first();
+    $conciliacion = Conciliacion::where('id', 101)->first();
     $pdf = PDF::loadView('pdf.conciliacion_form', [
       'conciliacion' => $conciliacion
     ]);

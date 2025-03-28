@@ -1,50 +1,75 @@
-@php
-    $user = $conciliacion->getUser($tipo_usuario_id);
-@endphp
-<div class="row">
-    <div class="col-md-12">
-        <h4>
-            Representante Legal (Diligenciar solo para personas jurídicas, o naturales incapaces)
-            @if (currentUser()->can('ver_asignaciones_conciliacion'))
-                @if ($user->idnumber == null and !Request::has('paso'))
-                   {{--  <button data-form="form_rep_legal" type="button"
-                        @if ($user->idnumber != null) data-user="{{ $user->idnumber }}" @endif
-                        data-section="rep_legal_solicitante" data-type="{{ $tipo_usuario_id }}"
-                        class="btn btn-primary btn-sm btn_asinar_usuario_conciliacion pull-right">
-                        <i class="fa fa-plus"> </i> {{ $user->idnumber != null ? 'Actualizar' : 'Agregar' }}
-                    </button> 
-                    --}}
-                @endif
+@foreach ($conciliacion->usuarios()->where('tipo_usuario_id', 197)->get() as $key => $parte_)
+    @if ($parte_->tipo_persona->id == 238)
+        <div class="row">
+            <div class="col-md-10">
+                <h4>
+                    Representante Legal para el Convocado:
+                    {{ $parte_->name }} {{ $parte_->lastname }}
 
-                @if ($user->idnumber != null)
-                    <button type="button" data-user="{{ $user->idnumber }}" data-pivot="{{ $user->pivot->id }}"
-                        class="btn btn-danger btn-sm btn_delete_usuario_conciliacion pull-right">
-                        <i class="fa fa-trash"> </i>
-                    </button>
-                @endif
 
-            @endif
+                </h4>
+            </div>
 
-        </h4>
-    </div>
-</div>
-<div class="row" id="form_rep_legal">
-    <div class="col-md-offset-9 col-md-3" id="ctbotones-{{ $tipo_usuario_id }}" style="display: none">
-        <button data-form="form_rep_legal" style="margin: 1px" type="button"
-            @if ($user->idnumber != null) data-user="{{ $user->idnumber }}" @endif
-            data-type="{{ $tipo_usuario_id }}"
-            class="btn btn-default btn-sm btn_cancel_usuario_conciliacion pull-right">
-            Cancelar
-        </button>
+            <div class="col-md-2">
+                <button id="btn_opaddrpl-{{$key }}" data-key="{{$key}}" class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
+                    <i class="fa fa-user"></i>
+                    Agregar
+                </button>
+            </div>
+        </div>
+        @forelse ($parte_->conc_rep_legal as $key_ => $conciliacion_rep_legal)
+            @php
+                $rep_legal = $conciliacion->getUserByFilter([
+                    'tipo_usuario_id' => 198,
+                    'user_id' => $conciliacion_rep_legal->pivot->user_replegal_id,
+                ]);
+            @endphp
 
-        <button data-form="myUserRepLegalForm" style="margin: 1px" type="button"
-            @if ($user->idnumber != null) data-user="{{ $user->idnumber }}" @endif data-section="rep_legal"
-            data-type="{{ $tipo_usuario_id }}"
-            class="btn btn-success btn-sm btn_agregar_usuario_conciliacion pull-right">
-            <i class="fa fa-plus"> </i> {{ $user->idnumber != null ? 'Actualizar' : 'Agregar' }}
-        </button>
-    </div>
-</div>
-<div id="user_rep_legal_form">
+
+            <div class="card card card-outline card-success p-2 list_user_rep_legal_form-{{ $key }}">
+                <div class="row">
+                    @include('myforms.conciliaciones.componentes.formulario_rep_legal', [
+                        'disabled' => 'disabled',
+                        'user' => $rep_legal,
+                    ])
+                </div>
+            </div>
+           
+
+
+
+
+        @empty
+            Todavia no hay usuarios
+        @endforelse
+
+        <div class="card card-outline card-success" id="user_rep_legal_form-{{ $key }}" style="display: none;">
+            <div class="card-header">
+                <h4> Agregar Representante Legal </h4>
+            </div>
+            <div class="card-body">
+                <form class="myUserRepLegalForm" id="myUserRepLegalForm-{{ $key }}"
+                    data-view="user_replegal_form" data-juridico="{{ $parte_->id }}">
+                    <div class="row">
+                        @include('myforms.conciliaciones.componentes.formulario_rep_legal', [
+                            'disabled' => 'disabled',
+                        ])
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="button" data-type="198"
+                                class="btn btn-primary btn-xs btn-block btn_add_replegal" data-key="{{ $key }}"
+                                id="btn_add_replegal">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
+@endforeach
+
+{{-- <div id="user_rep_legal_form">
     @include('myforms.conciliaciones.componentes.user_replegal_form')
-</div>
+</div> --}}

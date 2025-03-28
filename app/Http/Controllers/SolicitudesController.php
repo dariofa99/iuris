@@ -298,7 +298,7 @@ class SolicitudesController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        //  return response()->json($request->all());//
+        //   return response()->json($request->all());//
 
         $this->sedesService->setSede($request);
         $user = $this->userService->store($request);

@@ -142,6 +142,14 @@ class Conciliacion extends Model
           return $users;
       }
 
+      public function getUserByFilter($filter){
+        $users =  $this->usuarios()->where($filter)->first(); 
+          if(!$users){ 
+              $users = new User();
+          }        
+          return $users;
+      }
+
     public function scopeFilter($query,$request){
 
         if($request->tipo_busqueda!='all' and $request->tipo_busqueda!='idnumber' and $request->tipo_busqueda != 'fecha_rango'){

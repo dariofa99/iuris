@@ -3,7 +3,7 @@
         'section'=>'elementos_juridicos' 
     ])
   
-</div>
+</div> 
 <div class="box_section">
     @include('myforms.conciliaciones.componentes.anexos',[     
         'section'=>'anexos'

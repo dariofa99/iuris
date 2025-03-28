@@ -1,4 +1,7 @@
 @foreach($conciliacion->hechos_pretensiones()->where('tipo_id',$tipo_id)->get() as $key => $hecho)
+<span class="badge badge-info">
+  {{ $key + 1 }}                   
+</span>
 <div class="content_he_pret count_input_descrip_hepr count_input_descrip_hepr_{{$tipo_id}}">
   <textarea disabled @if(($conciliacion->estado_id!=177 and $conciliacion->estado_id!=179)  and !auth()->user()->can('act_conciliacion'))
     disabled 

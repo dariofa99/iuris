@@ -11,8 +11,11 @@
             /* Espacio para el encabezado */
         }
 
+        header, img{
+            width: 100%;
+        }
         header {
-            border: 2px solid red;
+           
             position: fixed;
             top: -145px;
             /* Ajusta según sea necesario */
@@ -44,11 +47,11 @@
 
 <body>
     @php
-        $parte_solicitante = $conciliacion->getUser(205); //Solicitante
+        $parte_ = $conciliacion->getUser(205); //Solicitante
     @endphp
 
     <header>
-        <img src="{{ public_path('dist/img/udenar-ti.png') }}" alt="">
+        <img src="{{ public_path('dist/img/headersolconc.png') }}" alt="">
     </header>
 
     <table border="1">
@@ -56,7 +59,7 @@
             <th>Fecha</th>
             <td colspan="5">
                 <label>
-                    {{ $conciliacion->created_at }}
+                    {{ getLongDateWithHour($conciliacion->created_at) }}
                 </label>
 
             </td>
@@ -70,125 +73,68 @@
         </tr>
         <tr>
             <th>Nombre:</th>
-            <td colspan="5">{{ $parte_solicitante->name }} {{ $parte_solicitante->lastname }}</td>
+            <td colspan="5">{{ $parte_->name }} {{ $parte_->lastname }}</td>
         </tr>
         <tr>
             <th>Identificación</th>
             <td>
-                {{ $parte_solicitante->tipo_doc->ref_nombre }} de
-                {{--  @if ($parte_solicitante->getDataValWShort('lugar_exp._documento'))
-                    {{ $parte_solicitante->getDataValWShort('lugar_exp._documento')->value }}
-                @else
-                    Sin datos
-                @endif --}}
+                {{ $parte_->tipo_doc->ref_nombre }} de
+
+                {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
             </td>
 
             <th>No</th>
             <td>
-                {{ $parte_solicitante->idnumber }}
+                {{ $parte_->idnumber }}
             </td>
 
             <th>Fecha de nacimiento</th>
             <td>
-                {{ getSmallDate($parte_solicitante->fechanacimien) }}
+                {{ getSmallDate($parte_->fechanacimien) }}
             </td>
         </tr>
         <tr>
             <th>Dirección para notificaciones:</th>
             <td colspan="3">
-                {{ $parte_solicitante->address }}
+                {{ $parte_->address }}
             </td>
 
             <th>Celular</th>
-            <td>{{ $parte_solicitante->tel1 }} - {{ $parte_solicitante->tel2 }}</td>
+            <td>{{ $parte_->tel1 }} - {{ $parte_->tel2 }}</td>
         </tr>
         <tr>
             <th>Correo electrónico:</th>
             <td colspan="5">
-                {{ $parte_solicitante->id }}
+                {{ $parte_->email }}
             </td>
         </tr>
     </table>
 
     <h2>INFORMACIÓN IDENTITARIA Y DE INCLUSIVIDAD</h2>
     <table>
-        <tr>
-            <th>Nombre identitario</th>
-            <td>
-
-                {{--  @if ($parte_solicitante->getDataValWShort('nombre_identitario'))
-                    {{ $parte_solicitante->getDataValWShort('nombre_identitario')->value }}
-                @else
-                    Sin datos
-                @endif --}}
-            </td>
-
-        </tr>
-        <tr>
-            <th>Sexo</th>
-            <td>
-                {{ $parte_solicitante->genero->ref_nombre }}
-            </td>
-        </tr>
-        <tr>
-            <th>Género</th>
-            <td>
-                @if (getAditionalDataByShortName('identidad_de_genero', 'users'))
-                    @php
-                        $aditional_data = getAditionalDataByShortName('identidad_de_genero', 'users');
-                        $options = getAditionalDataByShortName('identidad_de_genero', 'users')->options;
-                    @endphp
-                    @foreach ($options as $option)
-                        {{-- <input
-                            {{ ($parte_solicitante->getDataVal($aditional_data->id,$option->id)->value == $option->value) ? 'checked' : '' }}
-                            type="radio" name="genero" value="{{ $option->value }}">
- --}}
-                        {{ ($parte_solicitante->getDataVal(
-
-                            getAditionalDataByShortName('identidad_de_genero', 'users')->id, $option->id
-                            
-                            )->id ?? "Si" ) }}
-
-
-                        {{--  {{$parte_solicitante->getDataValWShort('identidad_de_genero')->id}}
-
-                        {{$option->id}} --}}
-                    @endforeach
-                @else
-                    Sin datos
-                @endif
-
-            </td>
-        </tr>
-        <tr>
-            <th>¿Posee algún tipo de discapacidad?</th>
-            <td>
-                <input type="radio" name="discapacidad" value="SI"> SI
-                <input type="radio" name="discapacidad" value="NO"> NO
-            </td>
-        </tr>
-        <tr>
-            <th>¿Requiere algún tipo de apoyo? P.e. Intérprete de lengua de señas, lector de pantalla, etc.</th>
-            <td>
-                <input type="radio" name="apoyo" value="SI"> SI
-                <input type="radio" name="apoyo" value="NO"> NO
-                <input type="text" placeholder="¿Cuál? Haga clic o pulse aquí para escribir texto.">
-            </td>
-        </tr>
-        <tr>
-            <th>¿Pertenece a algún grupo étnico?</th>
-            <td>
-                <input type="radio" name="etnico" value="SI"> SI
-                <input type="radio" name="etnico" value="NO"> NO
-            </td>
-        </tr>
-        <tr>
-            <th>¿Es líder, lideresa, defensor o defensora de DD.HH?</th>
-            <td>
-                <input type="radio" name="lider" value="SI"> SI
-                <input type="radio" name="lider" value="NO"> NO
-            </td>
-        </tr>
+        <td>Sexo</td>
+        <td>
+            {{ $parte_->genero->ref_nombre }}
+        </td>
+        @include('pdf.conciliacion_form_adquestion', [
+            'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
+            'discaform' => 'discaform',
+            'user' => $parte_,
+        ])
+        <td>¿Posee algún tipo de discapacidad?</td>
+        <td>
+            SI
+            <input type="radio" @if ($parte_->pbepersondiscap) checked @endif name="discapacidad" value="SI">
+            NO
+            <input type="radio" name="discapacidad" value="NO">
+        </td>
+        @if ($parte_->pbepersondiscap)
+            @include('pdf.conciliacion_form_adquestion', [
+                'data' => getReferencesDataBySection('discapacidad', 'users'),
+                'discaform' => 'discaform',
+                'user' => $parte_,
+            ])
+        @endif
     </table>
 
     <h2>INFORMACIÓN SOCIOECONÓMICA</h2>
@@ -196,203 +142,267 @@
         <tr>
             <th>Estado civil:</th>
             <td>
-                <input type="radio" name="estado_civil" value="Soltero(a)"> Soltero(a)
-                <input type="radio" name="estado_civil" value="Casado(a)"> Casado(a)
-                <input type="radio" name="estado_civil" value="Divorciado(a)"> Divorciado(a)
-                <input type="radio" name="estado_civil" value="Viudo(a)"> Viudo(a)
-                <input type="radio" name="estado_civil" value="UMH (Declarada)"> UMH (Declarada)
-                <input type="radio" name="estado_civil" value="Unión libre"> Unión libre
+                {{ $parte_->estado_civil->ref_nombre }}
             </td>
         </tr>
-        <tr>
-            <th>Tipo de vivienda:</th>
-            <td>
-                <input type="radio" name="vivienda" value="Propia"> Propia
-                <input type="radio" name="vivienda" value="Arrendada"> Arrendada
-                <input type="radio" name="vivienda" value="Familiar"> Familiar
-                <input type="text" placeholder="Estrato 1 2 3 4">
-            </td>
-        </tr>
-        <tr>
-            <th>Personas a cargo:</th>
-            <td>
-                <input type="radio" name="personas_cargo" value="1"> 1
-                <input type="radio" name="personas_cargo" value="2"> 2
-                <input type="radio" name="personas_cargo" value="3"> 3
-                <input type="radio" name="personas_cargo" value="4"> 4
-                <input type="radio" name="personas_cargo" value="5+"> 5+
-                <input type="radio" name="sisben" value="SI"> Sisbén SI
-                <input type="radio" name="sisben" value="NO"> NO
-                <select>
-                    <option>Elija un elemento.</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>Escolaridad:</th>
-            <td>
-                <select>
-                    <option>Elija un elemento.</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>Ingreso mensual:</th>
-            <td>
-                <input type="text" placeholder="$ Pulse aquí para escribir texto.">
-                <input type="text" placeholder="Egresos/Gastos mensuales $ Pulse aquí para escribir texto.">
-            </td>
-        </tr>
+        @include('pdf.conciliacion_form_adquestion', [
+            'data' => getReferencesDataBySection('socio_economica', 'users'),
+            'discaform' => 'discaform',
+            'user' => $parte_,
+        ])
     </table>
-
+    @php
+        $parte_ = $conciliacion->getUser(196); //Apoderado
+    @endphp
     <h2>INFORMACIÓN APODERADO (A)</h2>
     <table>
-        <tr>
-            <th>Nombre:</th>
-            <td><input type="text" placeholder="NOMBRE DEL APODERADO."></td>
-        </tr>
-        <tr>
-            <th>Identificación:</th>
-            <td>
-                <select>
-                    <option>Elija tipo de documento.</option>
-                </select>
-                <input type="text" placeholder="No. Identificación.">
-            </td>
-        </tr>
-        <tr>
-            <th>Tarjeta Profesional No.:</th>
-            <td><input type="text" placeholder="No. De tarjeta profesional."></td>
-        </tr>
-        <tr>
-            <th>Teléfono:</th>
-            <td><input type="text" placeholder="Teléfono."></td>
-        </tr>
-        <tr>
-            <th>Dirección para notificaciones:</th>
-            <td><input type="text" placeholder="Escriba la dirección de domicilio."></td>
-        </tr>
-        <tr>
-            <th>Correo electrónico:</th>
-            <td><input type="text" placeholder="Escriba correo electrónico para notificaciones."></td>
-        </tr>
+
+        @if ($parte_->idnumber != null)
+            <tr>
+                <th>Nombre:</th>
+                <td colspan="5">{{ $parte_->name }} {{ $parte_->lastname }}</td>
+            </tr>
+            <tr>
+                <th>Identificación</th>
+                <td>
+                    {{ $parte_->tipo_doc->ref_nombre }} de
+
+                    {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
+                </td>
+
+                <th>No</th>
+                <td colspan="3">
+                    {{ $parte_->idnumber }}
+                </td>
+
+
+            </tr>
+            <tr>
+                <th>Dirección para notificaciones:</th>
+                <td>
+                    {{ $parte_->address }}
+                </td>
+
+                <th>Celular</th>
+                <td colspan="3">{{ $parte_->tel1 }} - {{ $parte_->tel2 }}</td>
+            </tr>
+            <tr>
+                <th>Correo electrónico:</th>
+                <td colspan="5">
+                    {{ $parte_->email }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Tarjeta Profesional No:</th>
+                <td colspan="5">
+                    {{ $parte_->codigo_estudiantil }}
+                </td>
+            </tr>
+        @else
+            <tr>
+                <th colspan="2">
+                    Sin registro
+                </th>
+            </tr>
+        @endif
     </table>
 
     <h2>INFORMACIÓN DEL ASUNTO</h2>
     <table>
-        <tr>
-            <th>Cuantía:</th>
-            <td><input type="text" placeholder="$ Valor."></td>
-        </tr>
-        <tr>
-            <th>No. Convocados:</th>
-            <td>
-                <input type="radio" name="convocados" value="1"> 1
-                <input type="radio" name="convocados" value="2"> 2
-                <input type="radio" name="convocados" value="3"> 3
-                <input type="radio" name="convocados" value="4"> 4
-                <input type="radio" name="convocados" value="5+"> 5+
-                <select>
-                    <option>Inicio del conflicto Elija un elemento.</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>Finalidad de adquisición del servicio</th>
-            <td>
-                <input type="radio" name="finalidad" value="Resolver de manera alternativa el conflicto"> Resolver
-                de manera alternativa el conflicto
-                <input type="radio" name="finalidad" value="Cumplir requisito de procedibilidad"> Cumplir requisito
-                de procedibilidad
-            </td>
-        </tr>
-        <tr>
-            <th>Modalidad de la audiencia de conciliación</th>
-            <td>
-                <input type="radio" name="modalidad" value="Virtual"> Virtual
-                <input type="radio" name="modalidad" value="Presencial"> Presencial
-            </td>
-        </tr>
+        @include('pdf.conciliacion_form_adquestion', [
+            'data' => getReferencesDataBySection('asunto', 'conciliaciones'),
+            'user' => $conciliacion,
+        ])
     </table>
 
-    <h2>PARTE CONVOCADA</h2>
+    <h2>INFORMACIÓN DE PARTE CONVOCADA</h2>
     <table>
-        <tr>
-            <th>Nombre:</th>
-            <td><input type="text" placeholder="NOMBRE DE LA PARTE CONVOCADA."></td>
-        </tr>
-        <tr>
-            <th>Tipo de persona</th>
-            <td>
-                <select>
-                    <option>Elija un elemento.</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>Identificación</th>
-            <td>
-                <select>
-                    <option>Elija tipo de documento.</option>
-                </select>
-                <input type="text" placeholder="No. Número y Ciudad.">
-            </td>
-        </tr>
-        <tr>
-            <th>Dirección para notificaciones</th>
-            <td><input type="text" placeholder="Escriba la dirección de domicilio."></td>
-        </tr>
-        <tr>
-            <th>Celular</th>
-            <td><input type="text" placeholder="Celular."></td>
-        </tr>
-        <tr>
-            <th>Correo electrónico:</th>
-            <td><input type="text" placeholder="Escriba correo electrónico."></td>
-        </tr>
-        <tr>
-            <th>Teléfono</th>
-            <td><input type="text" placeholder="Teléfono fijo."></td>
-        </tr>
+        @foreach ($conciliacion->usuarios()->where('tipo_usuario_id', 197)->get() as $key => $parte_)
+            <tr>
+
+                <th colspan="6" style="text-align: center !important;">
+                    Parte convocada {{ $key + 1 }}
+
+                </th>
+
+
+
+            </tr>
+            @if ($parte_->idnumber != null)
+                <tr>
+                    <th>Nombre:</th>
+                    <td colspan="3">{{ $parte_->name }} {{ $parte_->lastname }}</td>
+
+                    <th>Tipo de persona</th>
+                    <td>
+                        {{ $parte_->tipo_persona->ref_nombre }}
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <th>Identificación</th>
+                    <td>
+                        {{ $parte_->tipo_doc->ref_nombre }} de
+
+                        {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
+                    </td>
+
+
+
+                    <th>No</th>
+                    <td colspan="3">
+                        {{ $parte_->idnumber }}
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <th>Dirección para notificaciones:</th>
+                    <td colspan="3">
+                        {{ $parte_->address }}
+                    </td>
+
+                    <th>Celular</th>
+                    <td>{{ $parte_->tel1 }} - {{ $parte_->tel2 }}</td>
+                </tr>
+                <tr>
+                    <th>Correo electrónico:</th>
+                    <td colspan="5">
+                        {{ $parte_->email }}
+                    </td>
+                </tr>
+            @else
+                <tr>
+                    <th colspan="2">
+                        Sin registro
+                    </th>
+                </tr>
+            @endif
+        @endforeach
+
     </table>
 
     <h2>REPRESENTACIÓN LEGAL (Solo para personas jurídicas)</h2>
     <table>
-        <tr>
-            <th>Nombre:</th>
-            <td><input type="text" placeholder="NOMBRE DEL REPRESENTANTE LEGAL DE LA PERSONA JURÍDICA."></td>
-        </tr>
-        <tr>
-            <th>Identificación:</th>
-            <td>
-                <select>
-                    <option>Elija tipo de documento.</option>
-                </select>
-                <input type="text" placeholder="No. Identificación.">
-            </td>
-        </tr>
+        @foreach ($conciliacion->usuarios()->where('tipo_usuario_id', 197)->get() as $key => $personajuridica)
+            @if ($personajuridica->tipo_persona->id == 238)
+                <tr>
+                    <th colspan="6" style="text-align: center !important;">
+                        Rep. legal de parte convocada {{ $personajuridica->name }} {{ $personajuridica->lastname }}
+                    </th>
+                </tr>
+                @forelse ($personajuridica->conc_rep_legal as $key_ => $conciliacion_rep_legal)
+                    @php
+                        $parte_ = $conciliacion->getUserByFilter([
+                            'tipo_usuario_id' => 198,
+                            'user_id' => $conciliacion_rep_legal->pivot->user_replegal_id,
+                        ]);
+                    @endphp
+
+                    @if ($parte_->idnumber != null)
+                        <tr>
+                            <th colspan="6" style="text-align: center !important;">
+                                Rep. legal {{ $key_ + 1 }}
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <th>Nombre:</th>
+                            <td colspan="3">{{ $parte_->name }} {{ $parte_->lastname }}</td>
+                            <th>Tipo de persona</th>
+                            <td>
+                                {{ $parte_->tipo_persona->ref_nombre }}
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <th>Identificación</th>
+                            <td>
+                                {{ $parte_->tipo_doc->ref_nombre }} de
+
+                                {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
+                            </td>
+
+
+
+                            <th>No</th>
+                            <td colspan="3">
+                                {{ $parte_->idnumber }}
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <th>Dirección para notificaciones:</th>
+                            <td colspan="3">
+                                {{ $parte_->address }}
+                            </td>
+
+                            <th>Celular</th>
+                            <td>{{ $parte_->tel1 }} - {{ $parte_->tel2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Correo electrónico:</th>
+                            <td colspan="5">
+                                {{ $parte_->email }}
+                            </td>
+                        </tr>
+                    @else
+                        <tr>
+                            <th colspan="2">
+                                Sin registro
+                            </th>
+                        </tr>
+                    @endif
+
+                @empty
+                    Todavia no hay usuarios
+                @endforelse
+            @endif
+        @endforeach
     </table>
 
     <h2>ASUNTO A CONCILIAR</h2>
     <table>
         <tr>
-            <th>HECHOS (No diligenciar si se encuentran en petición adjunta)</th>
-            <td>
-                <textarea rows="4" placeholder="Describa los hechos aquí."></textarea>
-            </td>
+            <th colspan="3">HECHOS</th>
         </tr>
+        @foreach ($conciliacion->hechos_pretensiones()->where('tipo_id', 206)->get() as $key => $hecho)
+            <tr>
+                <td colspan="3">
+                    {{ $hecho->descripcion }}
+                </td>
+            </tr>
+        @endforeach
         <tr>
-            <th>PRETENSIONES (No diligenciar si se encuentran en petición adjunta)</th>
-            <td>
-                <textarea rows="4" placeholder="Describa las pretensiones aquí."></textarea>
-            </td>
+            <th colspan="3">PRETENSIONES</th>
+
         </tr>
+        @foreach ($conciliacion->hechos_pretensiones()->where('tipo_id', 207)->get() as $key => $hecho)
+            <tr>
+                <td colspan="3">
+                    {{ $hecho->descripcion }}
+                </td>
+            </tr>
+        @endforeach
         <tr>
-            <th>ANEXOS (No diligenciar si se encuentran en petición adjunta)</th>
-            <td>
-                <textarea rows="4" placeholder="Describa los anexos aquí."></textarea>
-            </td>
+            <th colspan="3">ANEXOS</th>
         </tr>
+        @foreach ($conciliacion->files as $key => $file)
+            <tr class="files" data-type="{{ $file->pivot->category_id }}">
+                <td colspan="2">
+                    {{ $file->pivot->concepto }}
+                </td>
+                <td width="4%">
+                    <a  target="_blank"
+                        href="/conciliaciones/download/file/{{ $file->pivot->file_id }}">
+                        Descargar
+                    </a>
+                </td>
+            </tr>
+        @endforeach
     </table>
 
 </body>

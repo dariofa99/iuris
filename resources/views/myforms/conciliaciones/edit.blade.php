@@ -48,25 +48,21 @@
 
 @section('titulo_area')
     <div class="row">
-        <div class="col-md-11">
+        <div class="col-md-10">
             Número: <strong>{{ $conciliacion->num_conciliacion }}</strong><br>
             <span style="color:#ffffff;background-color: {{ $conciliacion->estado->color }}" class="badge">
             Estado: {{ $conciliacion->estado->ref_nombre }} {{ $conciliacion->estado->id }}</span>
         </div>
-        <div class="col-md-1">
-            <div class="btn-group btn-group-vertical" role="group">
+        <div class="col-md-2">
+            <div class="btn-group btn-group-vertical float-right" role="group">
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-cog"></i>
+                  <i class="fas fa-cog"></i> Opciones
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#">Descargar resumen</a>
-                  <a class="dropdown-item" href="#">Dropdown link</a>
+                  <a href="{{url('/conciliacion/resumen/'.$conciliacion->id)}}" class="dropdown-item" target="_blank" >Descargar resumen</a>
+                  
                 </div>
-              </div>
-              
-              
-            {{-- <button class="btn btn-info" id="openModEvSatisf">Evaluar satisfacción</button>
-     --}}    
+              </div>     
     </div>
     </div>
 

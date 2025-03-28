@@ -65,13 +65,21 @@
 </div>
 
 <div class="box_section">
-    <h4 align="center">
-        <strong>ASUNTO A CONCILIAR</strong>
-    </h4>
-    @include('myforms.conciliaciones.componentes.asunto', [
-        'section' => 'asunto',
-        'disabled' => 'disabled',
-    ])
+    <div class="card card-outline card-info" id="asunto_conciliacion">
+        <div class="card-header">
+            <h4 align="center">
+                <strong>ASUNTO A CONCILIAR</strong>
+            </h4>
+        </div>
+        <div class="card-body">
+            @include('myforms.conciliaciones.componentes.asunto', [
+                'section' => 'asunto',
+                'disabled' => 'disabled',
+            ])
+        </div>
+    </div>
+    
+   
 </div> 
 
 
@@ -100,6 +108,7 @@
 
 </div>
 <div class="box_section">
+   
     @include('myforms.conciliaciones.componentes.anexos', [
         'section' => 'anexos',
     ])

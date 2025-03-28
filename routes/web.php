@@ -393,6 +393,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('conciliacion/send/notification/mail', 'ConciliacionesController@enviarNotificacionesCorreo');
     Route::get('get/files/by/category', 'ConciliacionesController@getFilesByCategory');
     Route::post('crear/actas/by/status', 'ConciliacionesController@crearActa');
+    Route::get('conciliacion/resumen/{id}', 'ConciliacionesController@verResumenPdf');
 
     Route::post('conciliacion/audiencia/create', 'AudienciaController@audienciaCreate');
     Route::get('conciliacion/users/salasalternasaudiencia/{id}/{cont}', 'AudienciaController@getSalasAudiencia');
@@ -403,6 +404,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('conciliacion/update/est/rolconciliacion', 'AudienciaController@postConciliacionEstRolUpate');
     Route::get('conciliacion/turnos/estudiantes/asig/{data}/{id}', 'AudienciaController@getConciliacionTurnosEst');
     Route::get('conciliacion/chat/{chatroom}', 'AudienciaController@getChangeChatRoom');
+   
 
 
     ///////////////////////Agendas

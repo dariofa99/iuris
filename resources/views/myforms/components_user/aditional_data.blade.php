@@ -39,7 +39,7 @@
                     $option_id = 0;
                 @endphp
                
-                @foreach ($reference->options as $opt)
+                @foreach ($reference->options()->where('status',1)->get() as $opt)
                     @php
                         if (
                             isset($user) and

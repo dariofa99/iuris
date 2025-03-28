@@ -108,6 +108,13 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function conc_rep_legal()
+    {
+        return $this->belongsToMany(Conciliacion::class, 'conc_users_has_replegal', 'user_convocado_id', 'conciliacion_id')
+            ->withPivot('id','user_convocado_id', 'user_replegal_id', 'conciliacion_id')
+            ->withTimestamps();
+    }
+
     public function estado_civil()
     {
         return $this->belongsTo(TablaReferencia::class, 'estadocivil_id');
@@ -140,11 +147,16 @@ class User extends Authenticatable
         /* return $this->hasMany(NotaExt::class, 'estidnumber', 'idnumber'); */
     }
 
-    public function aditional_data()
+  /*   public function aditional_data()
     {
         return $this->hasMany(UserAditionalData::class, 'user_id', 'id');
-    }
+    } */
 
+    public function aditional_static_data()
+    {
+        return $this->hasMany(UserAditionalData::class, 'user_id', 'id');
+    } 
+    
     public function docente_asignado()
     {
 
@@ -277,7 +289,7 @@ class User extends Authenticatable
 
     public function getDataVal($ref_id, $ref_option)
     {
-        $ref_data = $this->aditional_data()
+        $ref_data = $this->aditional_static_data()
             ->where([
                 'reference_data_id' => $ref_id,
                 'reference_data_option_id' => $ref_option

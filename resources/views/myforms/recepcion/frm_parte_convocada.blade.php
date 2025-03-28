@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id="content_solicitada"
+                <div class="row" id="content_solicitada" 
                     style="display: {{ ($user->idnumber == null and $conciliacion->getStaticDataValByShortName('informacion_parte_convocada_(ej._nombres,_direccion,_telefono)', 'parte_solicitada')) ? 'none' : 'auto' }}">
                     @include('myforms.conciliaciones.componentes.formulario_parte_solicitada', [
                         'disabled' => $user->idnumber == null ?: 'disabled',

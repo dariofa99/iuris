@@ -8,23 +8,23 @@ const solicitudesService = new SolicitudesService();
 $(function () {
   ocultarCompDiscapUser();
   $("#myFormParteSolicitante")
-  .on("change", "select[name='pbepersondiscap']", function (e) {
+    .on("change", "select[name='pbepersondiscap']", function (e) {
       if ($(this).val() == 1) {
-          mostrarCompDiscapUser()
+        mostrarCompDiscapUser()
       } else {
-          ocultarCompDiscapUser();
+        ocultarCompDiscapUser();
       }
-  });
+    });
   $("#myFormParteSolicitante")
-        .on("change", "select[name='has_apoyo']", function (e) {
-            if ($(this).val() == 1) {
-                $(".has_apoyo").show()
-                $("#acept_ter").prop("disabled", false)
-            } else {
-                $(".has_apoyo").hide()
-                $("#acept_ter").prop("disabled", true).prop("checked", false)
-            }
-        });
+    .on("change", "select[name='has_apoyo']", function (e) {
+      if ($(this).val() == 1) {
+        $(".has_apoyo").show()
+        $("#acept_ter").prop("disabled", false)
+      } else {
+        $(".has_apoyo").hide()
+        $("#acept_ter").prop("disabled", true).prop("checked", false)
+      }
+    });
   if ($("#tipopersvalidate_id")) $("#myFormParteSolicitante select[name='tipopers_id']").val('237').prop('disabled', true)
 
   $("#myFormParteSolicitante select[name='tipodoc_id'] option").each(function () {
@@ -104,20 +104,10 @@ $(function () {
           console.log('I was closed by the timer')
         }
       });
-      var data = [];
-      $(".input_user_ad").each((index, obj) => {
-        data.push({
-          value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-          section: $(obj).attr("data-section"),
-          type: $(obj).attr("data-type"),
-          name: $(obj).attr("data-name"),
-          option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).attr('data-reference_id')).val(),
-          conciliacion_id: $("#conciliacion_id").val()
-        });
-      });
+      var data = userService.getAditionalDataByForm('myFormParteSolicitante');
       request["data"] = (data);
       request['active'] = 1;
+      request['tipopers_id'] = 237;
       let response = await solicitudesService.solicitar(request);
       if (response.errors) {
         Swal.close();
@@ -142,7 +132,7 @@ $(function () {
 
         }).then((result) => {
           if (result.value) {
-            window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
+            //window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
           }
         });
       }
@@ -166,6 +156,8 @@ $(function () {
 
   $("#contentFormsParteCovocada").on("focus", "input[name='idnumber']", validateTypeDoc);
 
+  $(".myUserRepLegalForm").on("focus", "input[name='idnumber']", validateTypeDoc);
+
   $("#contentFormsParteCovocada").on("change", "select[name='tipodoc_id']", async function (e) {
     let value = $(this).val()
     var formId = $(this).closest('.myFormParteConvocada').attr('id');
@@ -176,10 +168,16 @@ $(function () {
     }
   });
 
-
   $("#myFormRepLegal").on("blur", "input[name='idnumber']", async function () {
     var lastidnumber = $(this).val();
     userService.alertValidateUser(lastidnumber, "myFormRepLegal");
+    $(this).val("");
+  });
+
+  $(".myUserRepLegalForm").on("blur", "input[name='idnumber']", async function () {
+    var formId = $(this).closest('.myUserRepLegalForm').attr('id');
+    var lastidnumber = $(this).val();
+    userService.alertValidateUser(lastidnumber, formId);
     $(this).val("");
   });
 
@@ -195,10 +193,13 @@ $(function () {
     $(this).val("");
   });
 
-  $("#btn_registrar_replegal_sol").on("click", async function () {
-    var errors = validateForm("myFormRepLegal");
+  $(".btn_add_replegal").on("click", async function () {
+    var key = $(this).attr("data-key");
+    var formId = "myUserRepLegalForm-" + key;
+    var juridico_id = $("#" + formId).attr('data-juridico');
+    var errors = validateForm(formId);
     if (errors.length <= 0) {
-      addUserByStep("myFormRepLegal", this, $(this).attr("data-step"))
+      addUserByStep(formId, this, 7, juridico_id)
     }
   });
   $("#btn_registrar_apod_sol").on("click", async function () {
@@ -269,10 +270,10 @@ $(function () {
           var phone = request.tel1;
           var email = request.email;
           var address = request.address;
-          var idnumber = request.idnumber;          
-                  
+          var idnumber = request.idnumber;
+
           if (!validatePhone(phone) && address == '' && !validEmail(email, idnumber)) {
-            toastr.error("", "Debe ingresar al menos un dato de contacto válido para la persona "+(index + 1)+".<br>Teléfono, correo o dirección.", {
+            toastr.error("", "Debe ingresar al menos un dato de contacto válido para la persona " + (index + 1) + ".<br>Teléfono, correo o dirección.", {
               positionClass: "toast-top-right",
               timeOut: "5000",
             });
@@ -281,16 +282,13 @@ $(function () {
         }
       });
 
-
-
-
       if (insert) {
         let timerInterval
         var response_
         Swal.fire({
           title: 'Espere por favor!',
           html: 'Estamos registrando su solicitud',
-          timer: 5000,
+          timer: 3000,
           timerProgressBar: true,
 
           allowOutsideClick: false, // Permitir clic fuera del modal
@@ -336,6 +334,15 @@ $(function () {
     $("#wait").hide();
   });
 
+  $("#btn_registrar_rep_legal").on("click", async function () {
+    var key = $(this).attr("data-key");
+    var formId = "myUserRepLegalForm-" + key;
+    var juridico_id = $("#" + formId).attr('data-juridico');
+    var errors = validateForm(formId);
+    if (errors.length <= 0) {
+      //addUserByStep(formId, this, 7, juridico_id)
+    }
+  });
 
   $("#btn_registrar_asunto").on("click", async function () {
     var errors = validateForm("myFormAsunto");
@@ -343,18 +350,7 @@ $(function () {
     if (errors.length <= 0) {
       $("#wait").show();
       request["conciliacion_id"] = $("#conciliacion_id").val();
-      var data = [];
-      $("#myFormAsunto .input_user_ad").each((index, obj) => {
-        data.push({
-          value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
-          section: $(obj).attr("data-section"),
-          type: $(obj).attr("data-type"),
-          name: $(obj).attr("data-name"),
-          option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).attr('data-reference_id')).val(),
-
-        });
-      });
+      var data = userService.getAditionalDataByForm('myFormAsunto');
       request["data"] = (data);
       let response_ = await conciliacionService.addAditionalData(request);
       window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + 5;
@@ -693,9 +689,15 @@ $(function () {
     $("#myFormParteSolicitante input[name='sede_id']").val($(this).attr('data-id'));
   });
 
+  $(".btn_opaddrpl").on("click", function (e) {
+    var key = $(this).attr("data-key");
+    $("#user_rep_legal_form-" + key).toggle();
+    $(".list_user_rep_legal_form-" + key).toggle();
+  });
+
 });//fin document ready
 
-async function addUserByStep(form, obj, step) {
+async function addUserByStep(form, obj, step, userJuridico = null) {
   $("#wait").show();
 
   if ($("#" + form + " input[name='id']").val() != undefined && $("#" + form + " input[name='id']").val() != "") {
@@ -706,6 +708,9 @@ async function addUserByStep(form, obj, step) {
       "tipo_usuario": $(obj).attr("data-type")
     };
 
+    if (userJuridico != null) {
+      request["user_judirico_id"] = userJuridico;
+    }
     let response_ = await conciliacionService.addUser(request);
     if (response_) {
       window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
@@ -731,12 +736,14 @@ async function addUserByStep(form, obj, step) {
         "conciliacion_id": $("input[name='conciliacion_id']").val(),
         "tipo_usuario": $(obj).attr("data-type")
       };
-
+      if (userJuridico != null) {
+        request["user_judirico_id"] = userJuridico;
+      }
       let response_ = await conciliacionService.addUser(request);
       window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
 
     }
   }
-  $("#wait").show();
+  $("#wait").hide();
 
 }

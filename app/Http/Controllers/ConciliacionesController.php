@@ -847,7 +847,7 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
 
-        //return response()->json($request->all(), 200);
+       // return response()->json($request->all(), 200);
 
         try { 
             if($request->has('id') and $request->input("id")!=''){
@@ -866,11 +866,32 @@ class ConciliacionesController extends Controller
                            
             }
             $this->userService->addSede($user);
+            if($request->has("user_judirico_id")){           
+                $user->conc_rep_legal()->syncWithoutDetaching([
+                    $conciliacion->id => [
+                        'user_convocado_id' => $request->input("user_judirico_id"),
+                        'user_replegal_id' => $user->id
+                    ]
+                ]);      
+            }
             $conciliacion->usuarios;
             return response()->json($conciliacion, 200);
         } catch (\Throwable $th) {
             return response()->json([$th->getMessage()], 404);
         }
+    }
+
+    public function verResumenPdf($id){
+        $conciliacion = Conciliacion::where('id', $id)->first();
+        if($conciliacion){
+            $pdf = PDF::loadView('pdf.conciliacion_form', [
+                'conciliacion' => $conciliacion
+              ]);
+              return $pdf->stream('invoice.pdf');
+        }else{
+            return response()->json(['error' => 'No se encontró la conciliacion'], 404);
+        }
+       
     }
 
     public function sancionarUser(Request $request)
