@@ -11,7 +11,7 @@ trait RefDataManage
 {
     public function getDataVal($ref_id, $ref_option)
     {
-        $ref_data = $this->aditional_static_data()
+        $ref_data = $this->aditional_data()
             ->where([
                 'reference_data_id' => $ref_id,
                 'reference_data_option_id' => $ref_option

@@ -396,7 +396,7 @@
                     {{ $file->pivot->concepto }}
                 </td>
                 <td width="4%">
-                    <a  target="_blank"
+                    <a rel="noopener noreferrer"  target="_blank"
                         href="/conciliaciones/download/file/{{ $file->pivot->file_id }}">
                         Descargar
                     </a>

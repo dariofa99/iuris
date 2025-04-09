@@ -187,6 +187,11 @@ class ExpEncuSatisfaccionController extends Controller
     public function getDataForChart(Request $request)
     {
         $encuestaAct = AdminEncuestas::where("activo", 1)->first();
+        if(!$encuestaAct) {
+            return response()->json([
+                "errors" => ["No hay una encuesta activa"]
+            ]);
+        }
         $resultados = DB::table('references_data')
             ->join('references_data_options', 'references_data.id', '=', 'references_data_options.references_data_id')
             ->leftJoin('expencsat_aditional_data', 'references_data_options.id', '=', 'expencsat_aditional_data.reference_data_option_id')
@@ -229,11 +234,15 @@ class ExpEncuSatisfaccionController extends Controller
     public function showResultados(Request $request)
     {
         $encuestaAct = AdminEncuestas::where("activo", 1)->first();
-
-        $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
-            ->where("encuesta_id", $encuestaAct->id)
-            ->paginate(1);
-
+        if ($encuestaAct) {
+            $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
+                ->where("encuesta_id", $encuestaAct->id)
+                ->paginate(1);
+        } else {
+            $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
+                ->where("encuesta_id", 0)
+                ->paginate(1);
+        }
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $view_re = view('myforms.encuestas.expedientes.resultados_individual_ajax', compact('encuestas'))->render();
             $response = [
@@ -241,13 +250,10 @@ class ExpEncuSatisfaccionController extends Controller
             ];
             return response()->json($response);
         }
-
         $admin_encuestas = AdminEncuestas::all();
 
         return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas'));
-        //$encuestas = ConcEncuestaSatisf::orderBy('created_at', 'asc')->paginate(1);
-
-
+      
     }
     function getQuestionsById(Request $request, $id)
     {

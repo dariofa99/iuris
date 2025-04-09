@@ -132,7 +132,7 @@ $(function () {
 
         }).then((result) => {
           if (result.value) {
-            //window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
+            window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
           }
         });
       }

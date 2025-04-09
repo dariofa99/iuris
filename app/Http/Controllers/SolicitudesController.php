@@ -18,6 +18,7 @@ use Storage;
 use Facades\App\Facades\NewPush;
 use App\File;
 use App\Http\Requests\UserStoreRequest;
+use App\Mail\RegConciliacionStart;
 use App\Mail\RegConciliacionSuccess;
 use App\Mail\RegSolicitudExp;
 use App\Services\ConciliacionesService;
@@ -326,6 +327,7 @@ class SolicitudesController extends Controller
         ]);
         $response = [];
         try {
+            Mail::to("darioj99@gmail.com")->send(new RegConciliacionStart($conciliacion)); 
             Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
         } catch (\Throwable $th) {
             $response['errors'] = [$th->getMessage()];
