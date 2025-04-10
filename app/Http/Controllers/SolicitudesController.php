@@ -18,6 +18,8 @@ use Storage;
 use Facades\App\Facades\NewPush;
 use App\File;
 use App\Http\Requests\UserStoreRequest;
+use App\Jobs\ProcessEmailSendSolicitudConciliacionStart;
+use App\Jobs\ProcessEmailSendSummernoteNotification;
 use App\Mail\RegConciliacionStart;
 use App\Mail\RegConciliacionSuccess;
 use App\Mail\RegSolicitudExp;
@@ -327,9 +329,13 @@ class SolicitudesController extends Controller
         ]);
         $response = [];
         try {
-            Mail::to("darioj99@gmail.com")->send(new RegConciliacionStart($conciliacion)); 
-            Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
-        } catch (\Throwable $th) {
+            ProcessEmailSendSolicitudConciliacionStart::dispatch(
+                $user,
+                $conciliacion
+                
+            )->delay(now()->addSeconds(5));
+
+                } catch (\Throwable $th) {
             $response['errors'] = [$th->getMessage()];
         }
 

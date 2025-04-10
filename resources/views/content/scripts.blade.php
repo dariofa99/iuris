@@ -1,11 +1,11 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualPausas");
+        localStorage.removeItem("keyCircularActualCortes");
 
         
-        var keyCir = localStorage.getItem("keyCircularActualCortes");
+        var keyCir = localStorage.getItem("keyCircularActualSS");
         if (keyCir == null ) {
-            var message = getCircular();
+            var message = getMantenimientoMessage();
         } else {
             var message = getGeneralMessage();
         }
@@ -141,15 +141,16 @@
 
     function getMantenimientoMessage() {
         var message = '';
-        message += '<div class="alert alert-default" style="font-size:19px">';
+        message += '<div class="alert alert-info" style="font-size:19px">';
         message += `<h1>
                     <strong >
                         Atención!<br>
                         Teniendo en cuenta que IURIS entrará en periodo de 
-                        vacaciones a partir del día
-                        6 de diciembre del año en curso, se recuerda que
-                        se pausaran los días en los que evalua el sistema <b> a
-                        excepción de las fechas solicitadas por el docente </b>
+                        vacaciones a partir de las cero horas del día
+                        sábado 12 de abril hasta las veinticuatro horas del día domingo
+                        20 de abril, se recuerda que
+                        se pausaran los días en los que evalúa el sistema <b> A
+                        EXECPCIÓN de las fechas solicitadas por el DOCENTE </b>
                         para realizar correcciones en los respectivos casos o actuaciones.
                     </strong>
                     <br>
@@ -157,7 +158,7 @@
                       
                     </h1> </div>`;
         message += `<hr>`;
-        message += `<span> Últ. Actualización: 4 de diciembre de 2024 <br>
+        message += `<span> Últ. Actualización: 10 de abril de 2025 <br>
                          
                       </span>`;
 
