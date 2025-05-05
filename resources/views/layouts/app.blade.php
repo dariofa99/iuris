@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="{{ asset('css/general.css') }}">
 
     <link rel="stylesheet"
-        href="{{ config('app.name') != 'ConciliApp' ? asset('css/landing_iuris.css') : asset('css/conciliappfront.css') }}">
+        href="{{ config('app.name') != 'ConciliApp' ? asset('css/landing_iuris.css?v=1') : asset('css/conciliappfront.css') }}">
 
     @stack('styles')
 </head>

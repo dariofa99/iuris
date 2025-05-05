@@ -167,6 +167,10 @@ class Expediente extends Model
         return $this->belongsTo(Estado::class, 'expestado_id', 'id');
     }
 
+    public function encuesta()
+    {
+        return $this->belongsTo(ExpEncuestaSatisf::class, 'id', 'exp_id');
+    }
 
     public function usuarios()
     {
