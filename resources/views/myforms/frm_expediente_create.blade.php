@@ -113,5 +113,5 @@
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-    <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
+    <script type="module" src={{ asset('js/admin_expedientes.js?v='. config('app_config.asset_version')) }}></script>
 @endpush

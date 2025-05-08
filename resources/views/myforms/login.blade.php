@@ -14,6 +14,6 @@
 @push('scripts')
 
 @if (config('app.name') != 'ConciliApp')
-<script type="module" src={{ asset('js/admin_login.js') }}></script>
+<script type="module" src={{ asset('js/admin_login.js?v='. config('app_config.asset_version')) }}></script>
 @endif   
 @endpush

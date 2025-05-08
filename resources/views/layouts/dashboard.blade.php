@@ -51,8 +51,8 @@ if (!isset($modo_nav_crl)) {
 
 
     <!-- Custom -->
-    {!! Html::style('/css/general.css?v=1') !!}
-    {!! Html::style('/css/styles.css?v=4.0') !!}
+    {!! Html::style('/css/general.css?v=' . config('app_config.asset_version')) !!}
+    {!! Html::style('/css/styles.css?v='. config('app_config.asset_version')) !!}
 
     <style>
         body {
@@ -150,9 +150,9 @@ if (!isset($modo_nav_crl)) {
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src={{ asset('js/config.js?v=1') }}></script>
-    {!! Html::script('js/application.js?v=1') !!}
-    <script type="module" src="{{ asset('js/scripts.js?v=1') }}"></script>
+    <script src={{ asset('js/config.js?v='. config('app_config.asset_version')) }}></script>
+    {!! Html::script('js/application.js?v='. config('app_config.asset_version')) !!}
+    <script type="module" src="{{ asset('js/scripts.js?v='. config('app_config.asset_version')) }}"></script>
 
     <script>
         //para que funcionen los tooltip

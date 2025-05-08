@@ -214,5 +214,5 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
-    <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
+    <script type="module"   src={{asset("js/admin_expedientes.js?v=". config('app_config.asset_version'))}}></script>
 @endpush

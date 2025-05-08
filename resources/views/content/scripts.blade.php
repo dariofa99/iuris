@@ -1,14 +1,10 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualCortes");
+        localStorage.removeItem("keyCircularActualSS");
 
+     
+            var message = getGeneralMessage();
         
-        var keyCir = localStorage.getItem("keyCircularActualSS");
-        if (keyCir == null ) {
-            var message = getGeneralMessage();
-        } else {
-            var message = getGeneralMessage();
-        }
       
         
         //var message = getMantenimientoMessage();
@@ -132,7 +128,7 @@
                         con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 30 de abril de 2025 <br>
+        message += `<span> Últ. Actualización: 08 de de mayo de 2025 <br>
                         Si el problema persiste comuníquese al 310-6038006  
                       </span>`;
 
@@ -158,7 +154,7 @@
                       
                     </h1> </div>`;
         message += `<hr>`;
-        message += `<span> Últ. Actualización: 10 de abril de 2025 <br>
+        message += `<span> Últ. Actualización: 08 de mayo de 2025 <br>
                          
                       </span>`;
 

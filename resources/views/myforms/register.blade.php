@@ -99,5 +99,5 @@
 @endsection
 @push('scripts')
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-    <script type="module" src={{ asset('js/admin_users.js') }}></script>
+    <script type="module" src={{ asset('js/admin_users.js?v='. config('app_config.asset_version')) }}></script>
 @endpush

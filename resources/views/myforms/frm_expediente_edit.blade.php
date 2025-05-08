@@ -27,30 +27,27 @@
 @section('area_buttons')
 
     <div class="float-right" style="float: right !important;">
-       
-@if($expediente->encuesta == null and $expediente->expfecha == date("Y-m-d"))
-        @if(!currentUser()->hasRole('estudiante') and !currentUser()->hasRole('docente'))
-        <a href="#" class="btn_start_test  btn btn-info" style="color:#054c64">
-           Realizar encuesta</a>
-      @endif
-@elseif($expediente->expfecha != date("Y-m-d"))
-<span class="badge bg-red">
-    El límite de tiempo para realizar la encuesta se ha vencido
-</span>
-    
-@else
-<span class="badge bg-green">
-    La encuesta ya fue realizada por la persona usuaria
-</span>
-@endif
-
+        @if (!currentUser()->hasRole('estudiante') and !currentUser()->hasRole('docente'))
+            @if ($expediente->encuesta == null and $expediente->expfecha == date('Y-m-d'))
+                <a href="#" class="btn_start_test  btn btn-info" style="color:#054c64">
+                    Realizar encuesta</a>
+            @elseif($expediente->expfecha != date('Y-m-d'))
+                <span class="badge bg-red">
+                    El límite de tiempo para realizar la encuesta se ha vencido
+                </span>
+            @else
+                <span class="badge bg-green">
+                    La encuesta ya fue realizada por la persona usuaria
+                </span>
+            @endif
+        @endif
         <a href="#" class="btn-atrasexed  btn bg-gray" style="color:#777">
             <i class="fa fa-backward"></i> Atrás</a>
 
-        
+
 
     </div>
-@endsection 
+@endsection
 
 
 @section('area_forms')
@@ -240,7 +237,7 @@
     @include('myforms.components_exp.frm_modal_cerrar_nota_minima')
     @include('myforms.components_exp.frm_modal_agregar_usuario')
     @include('myforms.components_exp.frm_modal_cambiar_fecha_evaluacion')
-   
+
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
             'user_idnumber' => $expediente->expidnumber,
@@ -263,7 +260,7 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
-    <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
+    <script type="module" src={{ asset('js/admin_expedientes.js?v='. config('app_config.asset_version')) }}></script>
     <script>
         @if (currentUser()->hasRole('estudiante'))
             $("#myFormUserEditExpediente input[name='tel1']")

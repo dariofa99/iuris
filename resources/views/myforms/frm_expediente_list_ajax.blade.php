@@ -65,7 +65,7 @@
 
                      </td>
                      <td>
-
+                         
                          @if ($expediente->expestado_id == '1')
                              <span class="pull-center badge bg-green dis-block">
                                  @if ($expediente->exptipoproce_id != '1')
@@ -129,6 +129,20 @@
                                      Sin revisión
                                  @endif
                              </span>
+                         @elseif($expediente->expestado_id == '6')
+                         @if($expediente->isValidEvaPause())
+                         <span class="pull-center badge bg-green dis-block">
+                         
+                            {{ "Abierto" }}
+                        </span>
+                             @else
+                             <span class="pull-center badge bg-orange dis-block">
+                                <div>
+                                </div>
+                                {{ $expediente->estado->nombre_estado }}
+                            </span>
+                         @endif
+                         
                          @else
                              <span class="pull-center badge bg-orange dis-block">
                                  <div>
