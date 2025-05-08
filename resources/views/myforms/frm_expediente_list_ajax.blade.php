@@ -139,7 +139,7 @@
                              <span class="pull-center badge bg-orange dis-block">
                                 <div>
                                 </div>
-                                {{ $expediente->estado->nombre_estado }}
+                                {{ $expediente->estado->nombre_estado }} <small>(Días restantes {{$expediente->getDaysForEndPause()}})</small>
                             </span>
                          @endif
                          

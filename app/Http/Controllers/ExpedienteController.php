@@ -390,6 +390,10 @@ class ExpedienteController extends Controller
     
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     $expediente->setNotActLimit();
+
+
+    
+
     if ($expediente->isValidEvaPause()) {
       
       $request['expestado_id'] = 1;
@@ -414,7 +418,7 @@ class ExpedienteController extends Controller
       if ($pausa and $pausa->asig_caso_id != $asignacion->id) {
         $fechaCierre = Carbon::parse("2024-08-29");
         if ($pausa->fecha_final < $fechaCierre) {
-          dd($pausa);
+         // dd($pausa);
           $request['expestado_id'] = 1;
           $expediente = $this->expedienteService->update($expediente, $request);
           $request['comentario'] = 'Fecha de pausa caducada';

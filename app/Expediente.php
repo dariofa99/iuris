@@ -1362,15 +1362,23 @@ class Expediente extends Model
         if ($estado != null) {
             return true;
         }
-        return false;
-        /* $segmento = $this->getSegmentoActivo();
-        $asigCorte = $this->getSegmentoAsignacion($asignacion);
-        //$asigEva = $this->getSegmentoEvaluacion($asignacion); 
-        dd($estado);      
-        if($segmento and $asigCorte and $segmento->id == $asigCorte ->id){
-           return true;
+        return false;   
+    }
+
+    public function getDaysForEndPause()
+    {
+        $asignacion = $this->asignacion;
+        try {
+            $pausa = $asignacion->pausas()->orderBy("created_at","desc")->first();
+        
+            $days = $this->difDays(Carbon::now(), $pausa->fecha_final);
+           
+            
+            return$days; 
+        } catch (\Throwable $th) {
+            return "error";
         }
-        return false; */
+       
     }
 
     public function getCitas()
