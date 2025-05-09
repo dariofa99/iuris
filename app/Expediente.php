@@ -1187,7 +1187,6 @@ class Expediente extends Model
             $asignacion->save();
             return $evaluar['dias_pausado'];
         }
-        //dd($evaluar,$asignacion, $fecha_1, $fecha_2);
         return $evaluar['dias_pausado'];
 
 

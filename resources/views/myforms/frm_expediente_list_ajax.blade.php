@@ -133,7 +133,7 @@
                          @if($expediente->isValidEvaPause())
                          <span class="pull-center badge bg-green dis-block">
                          
-                            {{ "Abierto" }}
+                            {{ "Abierto" }} <small>(Días abierto {{($expediente->getDaysForEndPause() * -1)}})</small>
                         </span>
                              @else
                              <span class="pull-center badge bg-orange dis-block">
@@ -147,7 +147,7 @@
                              <span class="pull-center badge bg-orange dis-block">
                                  <div>
                                  </div>
-                                 {{ $expediente->estado->nombre_estado }}
+                                 {{ $expediente->estado->nombre_estado }} 
                              </span>
                          @endif
                      </td>
