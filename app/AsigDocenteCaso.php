@@ -14,11 +14,16 @@ class AsigDocenteCaso extends Model
 		'user_updated_id',
 		'user_created_id'
 	];
-				
+				 
 	public function docente()
     {
         return $this->hasOne(User::class, 'idnumber', 'docidnumber');
 	}
+	public function admin()
+    {
+        return $this->hasOne(User::class, 'idnumber', 'user_created_id');
+	}
+
 		public function asignacion_estudiante()
     {
         return $this->belongsTo(AsignacionCaso::class,'asig_caso_id');

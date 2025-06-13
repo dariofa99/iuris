@@ -240,7 +240,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Expedientes
     Route::resource('expedientes', 'ExpedienteController');
     Route::post('expedientes/cambiar/fecha/evaluacion', 'ExpedienteController@cambiarFechaEvaluacion');
-    
+
     Route::get('expedientes/historial/{exp}/{tipo}', 'ExpedienteController@historialDatosCaso');
     Route::get('expedientes/selectconest/{texcon}', 'ExpedienteController@selectest');
     Route::post('expedientes/coordinador/update/{id}', 'ExpedienteController@update');
@@ -263,6 +263,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('expedientes/delete/pausa/{id}', 'ExpedienteController@deletePausaExpediente');
     Route::put('expedientes/update/pausa/{id}', 'ExpedienteController@updatePausaExpediente');
     Route::post('expediente/add/user', 'ExpedienteController@addUser');
+
+    Route::get('expedientes/get/teachers', 'ExpedienteController@getTeacherCases');
 
 
     Route::get('expediente/createstream/{id}', 'ExpedienteController@createStream');
@@ -404,14 +406,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('conciliacion/update/est/rolconciliacion', 'AudienciaController@postConciliacionEstRolUpate');
     Route::get('conciliacion/turnos/estudiantes/asig/{data}/{id}', 'AudienciaController@getConciliacionTurnosEst');
     Route::get('conciliacion/chat/{chatroom}', 'AudienciaController@getChangeChatRoom');
-   
+
 
 
     ///////////////////////Agendas
     Route::get('search/citas/for/calendar', 'AgendasController@searchCitasForCalendar');
     Route::get('search/citas/of/day', 'AgendasController@searchCitasOfDay');
     Route::get('form/citas/for/calendar', 'AgendasController@formCitasForCalendar')->name("ag.cedoc");
-    
+
     //PDF >Reportes
 
     Route::get('pdf/reportes/get', 'PdfReportesController@getReportes');
@@ -590,12 +592,12 @@ Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 Route::get('/prueba/filter/{id}', 'ExpedienteController@prueba');
 
 Route::get('/prueba', function () {
-/*   $user = User::where('email', 'darioj99@udenar.edu.co')->first();
+  /*   $user = User::where('email', 'darioj99@udenar.edu.co')->first();
   $conciliacion = Conciliacion::first(); */
 
   $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
   $docentes = $this->usersService->getDocentesByRama($subRama);
- 
+
   dd($docentes);
 
   Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));

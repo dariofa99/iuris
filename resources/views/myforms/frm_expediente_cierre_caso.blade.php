@@ -62,6 +62,7 @@
         $expediente->expestado_id != 7 and
         currentUser()->hasRole('dirgral') ||
             currentUser()->hasRole('amatai') ||
+            currentUser()->hasRole('coordprac') ||
             currentUser()->hasRole('diradmin'))
     <button type="button" class="btn btn-info btn-sm mb-2" id="btn_revisar_dr_caso">
         Pasar a revisión

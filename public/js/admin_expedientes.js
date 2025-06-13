@@ -11,7 +11,7 @@ $(document).ready(function () {
         $("#myModal_chg_date").modal("show");
     });
 
-    $("#frm_chg_date").on("submit",async function (e) {
+    $("#frm_chg_date").on("submit", async function (e) {
         e.preventDefault();
         let request = convertFormToJSON("frm_chg_date");
         request['expid'] = $("#expediente_id").val();
@@ -21,7 +21,7 @@ $(document).ready(function () {
             toastr.error(response.error, "", {
                 timeOut: "4000",
             });
-        }else{
+        } else {
             toastr.success("Se actualizó con éxito", "Espere", {
                 timeOut: "4000",
             });
@@ -31,11 +31,11 @@ $(document).ready(function () {
 
     });
 
-    $("#frm_chg_date").on("change","input[name='hability']", function (e) {
+    $("#frm_chg_date").on("change", "input[name='hability']", function (e) {
         e.preventDefault();
         $("#frm_chg_date input[name='newfecha']").prop("disabled", true);
         if ($(this).is(":checked")) {
-        $("#frm_chg_date input[name='newfecha']").prop("disabled", false);
+            $("#frm_chg_date input[name='newfecha']").prop("disabled", false);
         }
     });
 
@@ -1370,6 +1370,7 @@ $(document).ready(function () {
 
     });
 
+
     $("#btn_change_doc_exp").on("click", async function (e) {
         e.preventDefault();
         $("#titulo_modal").text("Cambiando docente");
@@ -1390,6 +1391,52 @@ $(document).ready(function () {
             $("#new_docente_id").html(opcion_busq).selectpicker("refresh");;
             $("#myModal_change_docente_exp").modal("show");
         }
+    });
+
+    $("#btn_historial_doc_exp").on("click", async function (e) {
+        e.preventDefault();
+        $("#myModal_general #titulo_modal").text("Historial de cambios");
+        var request = {
+            "expid": $("#form_expediente_edit input[name='expediente_id']").val(),
+
+        }
+        let response = await expedientesService.getTeacherCases(request);
+
+        $("#myModal_general #content-data").empty();
+
+        // Crear tabla correctamente
+        const $table = $("<table>", {
+            class: "table table-striped table-bordered table-hover",
+            id: "table_historial_doc",
+        }).append(`
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Docente</th>
+                    <th>Cambió</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `);
+        // Agregar tabla al modal
+        $("#myModal_general #content-data").append($table);
+
+        // Agregar filas si hay datos
+        if (response.length > 0) {       
+            let html = '';
+            $(response).each(function (key, value) {
+                html += '<tr>';
+                html += '<td>' + value.created_at + '</td>';
+                html += '<td>' + value.docente.name +" "+value.docente.lastname + '</td>';
+                html += '<td>' + value.admin.name +" "+value.admin.lastname + '</td>';
+                html += '</tr>';
+            });
+
+            // Insertar las filas en tbody
+            $("#myModal_general #table_historial_doc tbody").html(html);
+        }
+        $("#myModal_general").modal("show");
+
     });
 
     $("#btn_change").on("click", async function (e) {
@@ -1413,7 +1460,7 @@ $(document).ready(function () {
             $("#myModal_change_docente_exp").modal("show");
         }
     });
-    
+
     $("#btn_delete_doc_exp").on("click", function (e) {
         e.preventDefault();
         Swal.fire({
@@ -1975,7 +2022,7 @@ $(document).ready(function () {
                 timeOut: "6000",
             });
             return
-        }       
+        }
         if (notaapl > 5 || notacon > 5 || notaet > 5) {
             toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
                 positionClass: "toast-top-right",

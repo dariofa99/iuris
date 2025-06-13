@@ -166,7 +166,7 @@ class UsersRepository extends BaseRepository implements UsersService
       })
       ->where(function ($query) use ($verify_status) {
         if ($verify_status) {
-          return $query->where('users.active', true);
+          //return $query->where('users.active', true);
         }
       })->select(
         'users.active',

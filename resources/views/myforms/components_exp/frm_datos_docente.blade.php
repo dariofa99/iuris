@@ -12,19 +12,22 @@
     @if (!$readonly)
 
 
-        @if (currentUser()->hasRole('diradmin') ||
-                currentUser()->hasRole('dirgral') ||
-                currentUser()->hasRole('amatai') and
-                $expediente->getDocenteAsig()->name != 'Sin asignar') 
+        @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') and
+                $expediente->getDocenteAsig()->name != 'Sin asignar')
             <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
                 data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
                 id="btn_change_doc_exp">
-                Cambiar</a> 
+                Cambiar</a>
 
             <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
                 data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
                 id="btn_delete_doc_exp">
                 Eliminar</a>
+
+            <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
+                data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
+                id="btn_historial_doc_exp">
+                Historial</a>
         @endif
 
         @if (

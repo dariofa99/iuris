@@ -85,6 +85,7 @@
     @if ((currentUser()->hasRole('docente') 
     || currentUser()->hasRole('amatai') ||
      currentUser()->hasRole('diradmin') ||
+      currentUser()->hasRole('coordprac') ||
      currentUser()->hasRole('dirgral')))
         <div class="col-md-6">
             <hr>

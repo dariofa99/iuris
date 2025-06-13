@@ -327,7 +327,7 @@ class UsersController extends Controller
     //return  response()->json(['encontrado'=>$request->all()]);
 
     $users = $this->userService->findUserByNameOrLastNameAndRole(
-      $request->name,
+      $request->name, 
       $request->role,
       $request->has('active') ? $request->get('active') : true
     );

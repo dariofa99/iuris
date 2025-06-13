@@ -237,6 +237,7 @@
     @include('myforms.components_exp.frm_modal_cerrar_nota_minima')
     @include('myforms.components_exp.frm_modal_agregar_usuario')
     @include('myforms.components_exp.frm_modal_cambiar_fecha_evaluacion')
+    @include('myforms.frm_modal_general')
 
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [

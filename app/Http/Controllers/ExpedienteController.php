@@ -1450,9 +1450,15 @@ class ExpedienteController extends Controller
       $notify->notify(new SolicitudDocenteCaso($notify));
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
     } elseif ($request->tipo_cambio == 1) {
-      $request['docidnumber'] = $request->new_docente_id;
+     /* $request['docidnumber'] = $request->new_docente_id;
       $request['cambio_docidnumber'] = null;
-      $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
+      $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);*/
+      $asig_doc->activo = 0;
+      $request['activo'] = 1;
+      $request['docidnumber'] = $request->new_docente_id;
+      $request['asig_caso_id'] = $asig_doc->asig_caso_id;
+      $asignacion = $this->asignacionDocenteCasoService->store($request);
+      $asig_doc->save();
     } elseif ($request->tipo_cambio == 2) {
       $request['cambio_docidnumber'] = null;
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
@@ -1545,6 +1551,13 @@ class ExpedienteController extends Controller
       "error" => true,
       "message" => "No hay un docente de pruebas activo"
     ]);
+  }
+
+  public function getTeacherCases(Request $request)
+  {
+    $exp = $this->expedienteService->find($request->expid);
+    $docentes = $exp->asignacion->docentes->load(["docente","admin"]);
+    return response()->json($docentes); 
   }
 
   public function pausarExpediente(Request $request)

@@ -98,4 +98,10 @@ class AsignacionCaso extends Model
             ->where('estado_id', '=', $this->procesojud_id)->get();
         return count($esprocesos);
     }
+
+       public function docentes()
+    {
+        return $this->hasMany(AsigDocenteCaso::class, 'asig_caso_id', 'id');
+    }
+
 }

@@ -162,6 +162,7 @@ class Expediente extends Model
         return $this->hasMany(EstadoCaso::class, 'expidnumber', 'expid');
     }
 
+   
     public function estado()
     {
         return $this->belongsTo(Estado::class, 'expestado_id', 'id');
