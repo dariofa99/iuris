@@ -1,3 +1,4 @@
+
 <form id="myEvaNivSatForm{{ $encuesta->id }}">
     <input type="hidden" name="encuesta_id" value="{{ $encuesta->id }}">
     <div class="row" id="renderQuestion">

@@ -72,7 +72,7 @@ class EstadosCasoController extends Controller
             $date = Carbon::now()->format('Y-m-d');
             $acts =  $expediente->verifyNotAct($date);
             $reqs =  $expediente->verifyNotReq($date);
-            //return response()->json($acts); 
+            return response()->json($acts); 
             $request['expidnumber'] = $request->expid;
             $request['ref_estado_id'] = $request->new_expestado;
             $request['ref_motivo_estado_id'] = $request->motivo_estado;

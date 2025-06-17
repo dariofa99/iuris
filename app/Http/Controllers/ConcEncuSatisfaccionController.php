@@ -177,6 +177,7 @@ class ConcEncuSatisfaccionController extends Controller
   public function showResultados(Request $request)
   { 
     $encuestas = ConcEncuestaSatisf::orderBy('created_at','asc')->paginate(1);
+    
     if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
       $view = view('myforms.encuestas.conciliaciones.resultados_individual_ajax',compact('encuestas'))->render();
       $response=[

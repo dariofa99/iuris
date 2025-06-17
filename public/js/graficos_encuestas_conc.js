@@ -64,6 +64,12 @@ $(document).ready(async function () {
         $("#wait").hide();
     });
 
+    
+    $("#btnCreateEncuesta").on("click", function (e) {
+        e.preventDefault();
+        $("#myModal_encuesta_create").modal("show")
+    });
+    
     $("#list_encuind").on('click', '.pagination a', async function (e) {
         e.preventDefault();
         let url = $(this).attr('href');

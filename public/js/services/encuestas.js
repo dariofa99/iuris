@@ -23,7 +23,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -43,7 +43,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+           
             throw new Error(message);
         }
         const topics = await response.json();
@@ -73,7 +73,7 @@ class EncuestasService {
 
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+         
             throw new Error(message);
         }
         const topics = await response.json();
@@ -93,7 +93,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+          
             throw new Error(message);
         }
         const topics = await response.json();
@@ -115,7 +115,7 @@ class EncuestasService {
 
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+           
             throw new Error(message);
         }
         const topics = await response.json();
@@ -135,7 +135,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -155,7 +155,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -175,7 +175,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -195,7 +195,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -215,7 +215,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -235,7 +235,7 @@ class EncuestasService {
 
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -255,7 +255,7 @@ class EncuestasService {
 
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -275,7 +275,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();
@@ -294,7 +294,7 @@ class EncuestasService {
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;
-            console.log(response);
+            
             throw new Error(message);
         }
         const topics = await response.json();

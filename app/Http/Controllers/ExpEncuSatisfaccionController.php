@@ -16,6 +16,7 @@ use App\Services\ConcEncuSatisfaccionService;
 use App\Services\ConciliacionesService;
 use App\Services\ExpEncuSatisfaccionService;
 use App\Services\LoginService;
+use App\Services\PeriodosService;
 use App\Services\ReferenciasService;
 use App\Services\UsersService;
 use App\User;
@@ -31,19 +32,21 @@ class ExpEncuSatisfaccionController extends Controller
     private $referenciasService;
     private $loginService;
     private $conciliacionesService;
-
+    private $periodosService;
     public function __construct(
         ConciliacionesService $conciliacionesService,
         LoginService $loginService,
         ReferenciasService $referenciasService,
         UsersService $userService,
-        ExpEncuSatisfaccionService $encuestaService
+        ExpEncuSatisfaccionService $encuestaService,
+        PeriodosService $periodosService
     ) {
         $this->encuestaService = $encuestaService;
         $this->referenciasService = $referenciasService;
         $this->userService = $userService;
         $this->loginService = $loginService;
         $this->conciliacionesService = $conciliacionesService;
+        $this->periodosService = $periodosService;
         $this->middleware('auth', ['except' => ['index', 'findUser', 'buscarExpedientes']]); //not work
     }
 
@@ -187,7 +190,7 @@ class ExpEncuSatisfaccionController extends Controller
     public function getDataForChart(Request $request)
     {
         $encuestaAct = AdminEncuestas::where("activo", 1)->first();
-        if(!$encuestaAct) {
+        if (!$encuestaAct) {
             return response()->json([
                 "errors" => ["No hay una encuesta activa"]
             ]);
@@ -207,6 +210,7 @@ class ExpEncuSatisfaccionController extends Controller
                 DB::raw('COALESCE(COUNT(expencsat_aditional_data.id), 0) as conteo')
             )
             ->where('references_data.categories', 'exp_encuesta_satisf')
+            ->where('exp_encuesta_satisf.periodo_id', $request->periodo)
             ->groupBy(
                 'references_data.id',
                 'references_data.name',
@@ -233,16 +237,26 @@ class ExpEncuSatisfaccionController extends Controller
     }
     public function showResultados(Request $request)
     {
+        $periodos = $this->periodosService->index($request);
+        $periodo_activo = $this->periodosService->getPeriodoActivo();
         $encuestaAct = AdminEncuestas::where("activo", 1)->first();
-        if ($encuestaAct) {
-            $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
-                ->where("encuesta_id", $encuestaAct->id)
-                ->paginate(1);
-        } else {
-            $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
-                ->where("encuesta_id", 0)
-                ->paginate(1);
-        }
+        $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
+            ->where(function ($query) use ($request, $encuestaAct) {
+                if ($encuestaAct) {
+                    $query->where("encuesta_id", $encuestaAct->id);
+                } else {
+                    $query->where("encuesta_id", 0);
+                }
+            })
+            ->where(function ($query) use ($request, $periodo_activo) {
+                if ($request->has('periodo') && $request->periodo != '') {
+                    $query->where('periodo_id', $request->periodo);
+                } else {
+                    $query->where('periodo_id', 8);
+                }
+            })
+            ->paginate(1); 
+
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $view_re = view('myforms.encuestas.expedientes.resultados_individual_ajax', compact('encuestas'))->render();
             $response = [
@@ -252,8 +266,7 @@ class ExpEncuSatisfaccionController extends Controller
         }
         $admin_encuestas = AdminEncuestas::all();
 
-        return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas'));
-      
+        return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas', 'periodos'));
     }
     function getQuestionsById(Request $request, $id)
     {

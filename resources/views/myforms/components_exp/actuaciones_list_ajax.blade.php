@@ -29,7 +29,7 @@
                 if (
                     $hijo->actestado_id == '101' ||
                     $hijo->actestado_id == '104' ||
-                    $hijo->actestado_id == '234' ||
+                   // $hijo->actestado_id == '234' ||
                     $hijo->actestado_id == '139'
                 ) {
                     $haycorrecciones = false;

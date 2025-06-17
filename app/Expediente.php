@@ -456,8 +456,12 @@ class Expediente extends Model
         ORDER BY rev_actid DESC LIMIT 1"),
             );
 
-            if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->actfecha <= $date and $hijosAct[0]->actfecha >= '2018-08-21') {
+            if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and
+             $hijosAct[0]->actestado_id != 139 and 
+             $hijosAct[0]->actfecha <= $date and
+             $hijosAct[0]->actfecha >= '2018-08-21') {
                 $hijos[] = $hijosAct;
+                return $hijos;
             }
         }
 

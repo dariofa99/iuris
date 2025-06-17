@@ -3,6 +3,7 @@ const encuestasService = new EncuestasService();
 import { ReferenciasService } from "./services/referencias.js";
 const referenciasService = new ReferenciasService();
 let encId = 0;
+var dataChart = {};
 $(document).ready(async function () {
     set_tab()
     await getChart();
@@ -147,6 +148,7 @@ $(document).ready(async function () {
         e.preventDefault();
         $("#myModal_encuesta_create").modal("show")
     });
+    
     $("#myFormCreateEncuestaExp").on("submit", async function (e) {
         e.preventDefault();
         var errors = validateForm("myFormCreateEncuestaExp");
@@ -171,62 +173,120 @@ $(document).ready(async function () {
 
 
 });
-var getChart = async () => {
-    let response = await encuestasService.getChartDataExp({});
+$("select[name='select_periodo']").on("change", async function (e) {
+    e.preventDefault();
+    $("#content-grafs").html("");
+    let url = '/expedientes/evaluar/reportes/?periodo=' + $(this).val();
+    $("#wait").show()
+    let response = await index_page(url);
+    $(".list_encuind").html(response.view);
+    $("#wait").hide()
+    url += "#" + get_tab()
+    window.history.pushState(null, '', url);
+    $("#wait").hide();
+    await getChart($(this).val());
+    $("select[name='select_periodo']").val($(this).val());
+});
+
+$(".changeToPieChart").on("click", async function (e) {
+    e.preventDefault();
+    if (dataChart.length > 0) {
+        $("#content-grafs").html("");
+        $("#wait").show();
+        var card = "";
+        dataChart.forEach(pregunta => {
+            card = getCardToChart(pregunta);
+            $("#content-grafs").append(card);
+            pie_chart(pregunta, "graf-" + pregunta.id);
+        });
+    } else {
+        $("#content-grafs").html("<h3 class='text-center ml-5 mt-5'>No hay datos para mostrar</h3>");
+    }
+    $("#wait").hide();
+
+});
+
+
+$(".changeToBarChart").on("click", async function (e) {
+    e.preventDefault();
+    if (dataChart.length > 0) {
+        $("#content-grafs").html("");
+        $("#wait").show();
+        var card = "";
+        dataChart.forEach(pregunta => {
+            card = getCardToChart(pregunta);
+            $("#content-grafs").append(card);
+            bar_chart(pregunta, "graf-" + pregunta.id);
+        });
+    } else {
+        $("#content-grafs").html("<h3 class='text-center ml-5 mt-5'>No hay datos para mostrar</h3>");
+    }
+    $("#wait").hide();
+
+});
+
+var getChart = async (id) => {
+
+    var periodo = id;
+    $("#wait").show();
+
+    let response = await encuestasService.getChartDataExp({ "periodo": periodo });
     if (response.length > 0) {
+        dataChart = response;
         var card = "";
         response.forEach(pregunta => {
-            card = `
-        <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-            <div class="row">
-            <div class="col-md-10">
-                <h4 class="card-title">
-                ${pregunta.pregunta}
-                </h4>
-            </div>
-                <div class="col-md-2">
-                    <i class="fa fa-eye"></i>
-                </div>
-            </div>                
-            </div>
-            <div class="card-body">
-                <div style="min-height:400px" class="graf" id="graf-${pregunta.id}">
-
-                </div>
-            </div>
-        </div>
-    </div>
-        `
+            card = getCardToChart(pregunta);
             $("#content-grafs").append(card);
-            bar_chart(pregunta, "graf-" + pregunta.id)
-
-
+            bar_chart(pregunta, "graf-" + pregunta.id);
         });
 
 
+    } else {
+        $("#content-grafs").html("<h3 class='text-center ml-5 mt-5'>No hay datos para mostrar</h3>");
     }
-
+    $("#wait").hide();
 }
-function bar_chart(res, content) {
-    
-    var chart = new AmCharts.AmSerialChart();
 
-    // Configuración básica del gráfico
+function getCardToChart(pregunta) {
+    return `
+                <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                    <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="card-title">
+                        ${pregunta.pregunta}
+                        </h4>
+                    </div>
+                        <div class="col-md-2">
+                
+                            
+                        </div>
+                    </div>                
+                    </div>
+                    <div class="card-body">
+                        <div style="min-height:400px" class="graf" id="graf-${pregunta.id}">
+
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+}
+
+
+function bar_chart(res, content) {
+    var chart = new AmCharts.AmSerialChart();
     chart.categoryField = "label";
     chart.startDuration = 1;
-    
+
     // Eje X
     var categoryAxis = chart.categoryAxis;
-    categoryAxis.labelRotation = 45; // Rotación de etiquetas para mayor legibilidad
+    categoryAxis.labelRotation = 45;
     categoryAxis.gridPosition = "start";
-    
+
     // Eje Y
     var valueAxis = new AmCharts.ValueAxis();
     var wordsPerLine = 6;
-    
-    // Formatear la pregunta para que se ajuste en varias líneas
     var words = res.pregunta.split(" ");
     var formattedQuestion = "";
     for (var i = 0; i < words.length; i++) {
@@ -238,70 +298,69 @@ function bar_chart(res, content) {
     valueAxis.title = formattedQuestion;
     valueAxis.titleFontSize = 11;
     valueAxis.minimum = 0;
-    valueAxis.titleMargin = 20; // Margen entre el título y el eje
+    valueAxis.titleMargin = 20;
     chart.addValueAxis(valueAxis);
-    
-    // Colores personalizados
+
     var colorsArray = [
         "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
-        "#FF8C33", "#33FF8C", "#8C33FF", "#FF5733", "#33A1FF",
-        "#A1FF33", "#FFA133", "#33FFA1", "#FF33FF", "#A1A1FF"
+        "#FF8C33", "#33FF8C", "#8C33FF", "#33A1FF", "#A1FF33"
     ];
-    
-    // Calcular el total de los valores
+
+    // Calcular total
     var total = res.resultados.reduce((sum, item) => sum + item.value, 0);
-    
-    // Asignar colores y calcular porcentajes
+
+    // Crear un solo objeto en dataProvider
+    var dataItem = { label: "Total" };
+
     for (var i = 0; i < res.resultados.length; i++) {
-        res.resultados[i].color = colorsArray[i % colorsArray.length];
-        res.resultados[i].percentage = ((res.resultados[i].value / total) * 100).toFixed(2) + "%"; // Calcular porcentaje
+        var resultado = res.resultados[i];
+        var valueField = "value_" + i;
+        var percentage = ((resultado.value / total) * 100).toFixed(2);
+
+        dataItem[valueField] = resultado.value;
+
+        var graph = new AmCharts.AmGraph();
+        graph.valueField = valueField;
+        graph.title = resultado.label + " (" + resultado.value + ")";
+        graph.type = "column";
+        graph.fillAlphas = 0.8;
+        graph.lineAlpha = 0.2;
+        graph.balloonText = resultado.label + ": <b>[[value]]</b> (" + percentage + "%)";
+        graph.labelText = percentage + "%"; // 👈 Aquí mostramos el porcentaje
+        graph.labelPosition = "top";
+        graph.fontSize = 12;
+        graph.labelColor = "#000000";
+        graph.color = "#000000";
+        graph.fillColors = colorsArray[i % colorsArray.length];
+
+        chart.addGraph(graph);
     }
-    
-    // Asignar el dataProvider al gráfico
-    chart.dataProvider = res.resultados;
-    
-    // Serie de datos (barras)
-    var graph = new AmCharts.AmGraph();
-    graph.valueField = "value";
-    graph.type = "column"; // Tipo de gráfico: barras
-    graph.fillAlphas = 0.8;
-    graph.lineAlpha = 0.2;
-    graph.balloonText = "[[category]]: <b>[[value]]</b> ([[percentage]])"; // Mostrar valor y porcentaje en el globo
-    graph.colorField = "color"; // Usar el campo "color" del dataProvider
-    
-    // Mostrar el porcentaje en las barras
-    graph.labelText = "[[percentage]]"; // Mostrar el porcentaje en las etiquetas
-    graph.labelPosition = "top"; // Posición de la etiqueta (arriba de la barra)
-    graph.fontSize = 12; // Tamaño de la fuente
-    graph.labelColor = "#000000"; // Color del texto
-    
-    chart.addGraph(graph);
-    
-    // Configuración de exportación
+
+    chart.dataProvider = [dataItem];
+
+    // Leyenda
+    var legend = new AmCharts.AmLegend();
+    legend.useGraphSettings = true;
+    chart.addLegend(legend);
+
+    // Exportar
     chart.export = {
         enabled: true,
         menu: [{
             class: "export-main",
-            menu: [{
-                label: "Descargar como PNG",
-                format: "png"
-            }, {
-                label: "Descargar como JPG",
-                format: "jpg"
-            }, {
-                label: "Descargar como SVG",
-                format: "svg"
-            }, {
-                label: "Descargar como CSV",
-                format: "csv"
-            }]
+            menu: [
+                { label: "Descargar como PNG", format: "png" },
+                { label: "Descargar como JPG", format: "jpg" },
+                { label: "Descargar como SVG", format: "svg" },
+                { label: "Descargar como CSV", format: "csv" }
+            ]
         }]
     };
-    
-    // Escribir gráfico
-    chart.write(content);
 
+    chart.write(content);
 }
+
+
 
 function pie_chart(res, content) {
     var chart = new AmCharts.AmPieChart();
@@ -335,7 +394,26 @@ function pie_chart(res, content) {
     legend.switchType = undefined;
     legend.align = "left";
     chart.addLegend(legend);
-
+    // Configuración de exportación
+    chart.export = {
+        enabled: true,
+        menu: [{
+            class: "export-main",
+            menu: [{
+                label: "Descargar como PNG",
+                format: "png"
+            }, {
+                label: "Descargar como JPG",
+                format: "jpg"
+            }, {
+                label: "Descargar como SVG",
+                format: "svg"
+            }, {
+                label: "Descargar como CSV",
+                format: "csv"
+            }]
+        }]
+    };
     // WRITE
     chart.write(content);
 }
