@@ -29,7 +29,7 @@
                   </div>
               </div>
               <div class="card-body table-responsive p-0" id="tblListaEncuestas">
-               {{--  @include('myforms.encuestas.expedientes.encuestas_list_ajax')  --}}
+                 @include('myforms.encuestas.conciliaciones.encuestas_list_ajax')  
               </div>
           </div>
       </div>

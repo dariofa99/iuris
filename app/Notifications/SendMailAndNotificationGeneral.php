@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 
-class SolicitudRadicarConciliacion extends Notification
+class SendMailAndNotificationGeneral extends Notification
 {
     use Queueable;
 
@@ -19,12 +19,16 @@ class SolicitudRadicarConciliacion extends Notification
      *
      * @return void
      */
-    public $conciliacion;
+    public $concepto;
     public $user_created;
-    public function __construct(ConciliacionEstado $conciliacion,$user_created)
-    {
-       $this->conciliacion = $conciliacion;
-       $this->user_created = $user_created;        
+    public $subject;
+    public $url ;
+
+    public function __construct($concepto,$user_created,$subject, $url){
+       $this->concepto = $concepto;
+       $this->user_created = $user_created;    
+       $this->subject = $subject;
+       $this->url = $url; 
     }
 
     /**
@@ -48,10 +52,10 @@ class SolicitudRadicarConciliacion extends Notification
     {
         
         return (new MailMessage($notifiable))
-        ->subject('Solicitud de radicado conciliación')
+        ->subject($this->subject)
         ->view('myforms.mails.formato_correo',[
-                'mensaje'=>$this->conciliacion->concepto,
-                'url'=>url('/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit'),
+                'mensaje'=>$this->concepto,
+                'url'=>url($this->url),
                 'user_created'=>$this->user_created
         ]);
 
@@ -70,9 +74,10 @@ class SolicitudRadicarConciliacion extends Notification
            'link_to'=>'/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit',
            'mensaje'=>auth()->user()->name.''.auth()->user()->lastname */
 
-           'type_notification'=>'Solicitud de radicado conciliación',          
-           'message'=>auth()->user()->name.''.auth()->user()->lastname,
-           'url'=>'/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit',
+           'type_notification'=>$this->subject,  
+           //se recorta el concepto a 10 caracteres        
+           'message'=>substr($this->concepto, 0, 10),
+           'url'=>$this->url,
            'created_at'=>date("Y-m-d H:i:s"),
            'icon'=>'fas fa-user'
 

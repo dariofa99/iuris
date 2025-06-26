@@ -4,10 +4,57 @@ import { UserService } from './services/users.js'
 const conciliacionService = new ConciliacionService();
 const encuestasService = new EncuestasService();
 const userService = new UserService();
-
+let encId = 0;
 
 $(document).ready(function () {
     
+    
+    $("#btn_new_categoryInExp").on("click", function (e) {
+        e.preventDefault()
+        $("#myformEditRCategory").attr("id", "myformCreateCategory");
+        $("#myformCreateCategory").attr("id", "myformCreateInEnCategory");
+        $("#myformCreateInEnCategory")[0].reset();
+        $("#aditional_options_table tbody").html("");
+        $("#content_aditional_options").hide();
+        $("#myformCreateInEnCategory button[type=submit]")
+            .text("Guardar")
+            .removeClass("btn-warning")
+            .addClass("btn-primary");
+        //$(".select2").select2();
+        var inputElement = document.getElementById("short_name");
+        if (inputElement) {
+            var formGroup = inputElement.parentElement;
+            formGroup.remove();
+            var inputElement = document.getElementById("table");
+            // Accede al elemento padre con la clase 'form-group'
+            var formGroup = inputElement.parentElement;
+            formGroup.remove()
+        }
+        $("#lbl_modal_title").text("Creando categoria");
+        $("#myModal_create_category input[name='short_name']").prop('readonly', true);
+        $("#myModal_create_category").modal("show");
+    });
+    
+       
+    $("#tblListaEncuestas").on("click", ".btnIconSelEnc", async function (e) {
+        e.preventDefault();
+        encId = $(this).closest("tr").attr("data-id")
+        $(".btnRowSelEnc").removeClass("row_esc_act")
+        $(this).closest("tr").addClass("row_esc_act")
+        if (encId != null) {
+            $("#btn_new_categoryInExp").show()
+            $("#btn_load_categoryInExp").show()
+        }
+        $("#wait").show()
+        let response = await encuestasService.getQuestionsById(encId);
+        if (response.view || response.view == '') {
+            $("#sortable_questions").html(response.view);
+            $("#lblTestName").text($(this).closest("tr").attr("data-name"))
+        }
+        $("#wait").hide()
+
+    });
+
     $("#myEvaNivSatForm").on("click", ".btn_pagq", async function (e) {
         e.preventDefault();
         /*  //var request = convertFormToJSON("myEvaNivSatForm");

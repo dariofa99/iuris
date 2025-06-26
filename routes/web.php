@@ -11,9 +11,11 @@
 |
 */
 
+use App\AdminEncuestas;
 use App\Conciliacion;
 use App\ConciliacionEstado;
 use App\Expediente;
+use App\Jobs\ProcessSendNotificationGeneral;
 use App\Mail\Firma;
 use App\Mail\RegConciliacionSuccess;
 use App\Notifications\NotificarDirector;
@@ -592,16 +594,24 @@ Route::get('/pruebaaj', 'ConciliacionesController@prueba');
 Route::get('/prueba/filter/{id}', 'ExpedienteController@prueba');
 
 Route::get('/prueba', function () {
-  /*   $user = User::where('email', 'darioj99@udenar.edu.co')->first();
-  $conciliacion = Conciliacion::first(); */
 
-  $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
-  $docentes = $this->usersService->getDocentesByRama($subRama);
+$user = Auth::user();
+$url = url('/solicitudes/recepcion/conciliacion/123?id=10&paso=2');
+$subject = "Solicitud de conciliación jurídica recibida";
+$concepto =  "Espero que te encuentres bien. <br><br>
+ Hemos recibido tu solicitud de conciliación jurídica y queremos asegurarte que estamos aquí para ayudarte.
+ Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>
+ Nuestro equipo legal está preparado para guiarte a lo largo de todo el proceso de conciliación, brindándote el apoyo necesario y respondiendo todas tus preguntas o inquietudes.
+ 
+ ";
+$user_created = "Dario Narvaez";
+//$user->notify(new \App\Notifications\SendMailAndNotificationGeneral($concepto,$user_created,$subject, $url));
 
-  dd($docentes);
+ProcessSendNotificationGeneral::dispatch($user, $concepto, $user_created, $subject, $url)
+ ->onConnection('database')->onQueue('emails');
 
-  Mail::to($user)->send(new RegConciliacionSuccess($conciliacion));
-  dd($conciliacion);
+dd($user);
+
   $message = "Espero que te encuentres bien. <br><br>
  Hemos recibido tu solicitud de conciliación jurídica y queremos asegurarte que estamos aquí para ayudarte.
  Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>

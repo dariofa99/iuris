@@ -189,7 +189,8 @@ class ExpEncuSatisfaccionController extends Controller
 
     public function getDataForChart(Request $request)
     {
-        $encuestaAct = AdminEncuestas::where("activo", 1)->first();
+        $encuestaAct = AdminEncuestas::where("categoria_id", 256)
+        ->where("activo", 1)->first();
         if (!$encuestaAct) {
             return response()->json([
                 "errors" => ["No hay una encuesta activa"]
@@ -239,7 +240,8 @@ class ExpEncuSatisfaccionController extends Controller
     {
         $periodos = $this->periodosService->index($request);
         $periodo_activo = $this->periodosService->getPeriodoActivo();
-        $encuestaAct = AdminEncuestas::where("activo", 1)->first();
+        $encuestaAct = AdminEncuestas::where("categoria_id", 256)
+        ->where("activo", 1)->first();
         $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
             ->where(function ($query) use ($request, $encuestaAct) {
                 if ($encuestaAct) {
@@ -264,7 +266,7 @@ class ExpEncuSatisfaccionController extends Controller
             ];
             return response()->json($response);
         }
-        $admin_encuestas = AdminEncuestas::all();
+        $admin_encuestas = AdminEncuestas::where("categoria_id", 256)->get();
 
         return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas', 'periodos'));
     }

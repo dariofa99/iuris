@@ -43,7 +43,7 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
      */
     public function handle()
     {
-        Log::info($this->cuerpo_correo);
+        
         Notification::send($this->users, new NotificationsSummernote(
             $this->cuerpo_correo,
             $this->conciliacion,

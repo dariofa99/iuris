@@ -2,7 +2,7 @@ import { EncuestasService } from './services/encuestas.js';
 const encuestasService = new EncuestasService();
 import { ReferenciasService } from "./services/referencias.js";
 const referenciasService = new ReferenciasService();
-
+let encId = 0;
 $(document).ready(async function () {
     set_tab()
     await getChart();
@@ -34,20 +34,43 @@ $(document).ready(async function () {
         $("#myModal_create_category").modal("show");
     });
 
-    $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
+  $("#btn_load_categoryInExp").on("click", async function (e) {
+        e.preventDefault();
+        var request = {
+            "table": "conc_encuesta_satisf",
+            "categories": "conc_encuesta_satisf",
+            "encuesta_id": encId
+        }
+        let response = await referenciasService.getByRefDataFilter(request);
+        $("#list_preguntas_add_test").html(response.view);
+        $("#myModal_encuesta_add_preguntas").modal("show");
+    })
+
+      $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
+        e.preventDefault();
+        var request = convertFormToJSON('myFormAddPreguntasEncuestas');
+        request['encuesta_id'] = encId
+        let response = await encuestasService.addPreguntasEncuesta(request);
+
+
+    })
+
+         $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
         e.preventDefault()
-        $("#wait").show();
+        //$("#wait").show();
         var request = convertFormToJSON('myformCreateInEnCategory');
         request['table'] = 'conc_encuesta_satisf'
-        let response = await referenciasService.storeReferencesData(request)
-        window.location.reload()
-                toastr.success(
-                    "La pregunta se creó con éxito",
-                    "",
-                    { positionClass: "toast-top-right", timeOut: "50000" }
-                );
+        request['encuesta_id'] = encId
+        let response = await encuestasService.storeReferencesData(request);
+        if (response.view || response.view == '') {
+            $("#sortable_questions").html(response.view);
+            $("#lblTestName").text($(this).attr("data-name"))
+        }
+        toastr.success("La pregunta se creó con éxito", "",
+            { positionClass: "toast-top-right", timeOut: "5000" }
+        );
         $("#myModal_create_category").modal("hide");
-      });
+    });
 
     $("#myModal_create_category").on("submit", "#myformCreateCategory", async function (e) {
         e.preventDefault()
@@ -70,6 +93,28 @@ $(document).ready(async function () {
         $("#myModal_encuesta_create").modal("show")
     });
     
+    $("#myFormCreateEncuestaExp").on("submit", async function (e) {
+        e.preventDefault();
+        var errors = validateForm("myFormCreateEncuestaExp");
+
+        if (errors <= 0) {
+            $("#wait").show()
+            var request = convertFormToJSON('myFormCreateEncuestaExp');
+            request["categoria_id"] = 257;
+            let response = await encuestasService.store(request)
+            if (response.view || response.view == '') {
+                $("#tblListaEncuestas").html(response.view)
+            }
+            $("#wait").hide()
+            $("#myModal_encuesta_create").modal("hide")
+            toastr.success(
+                "La encuesta se creó con éxito",
+                "",
+                { positionClass: "toast-top-right", timeOut: "5000" }
+            );
+        }
+    })
+
     $("#list_encuind").on('click', '.pagination a', async function (e) {
         e.preventDefault();
         let url = $(this).attr('href');
@@ -80,6 +125,9 @@ $(document).ready(async function () {
         url += "#" + get_tab()
         window.history.pushState(null, '', url);
     });
+
+ 
+
     $("#edit_form_tab").on("click", ".btn_delete_category", async function (e) {
         let id = $(this).attr("data-id");
         e.preventDefault();

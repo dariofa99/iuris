@@ -68,6 +68,7 @@
 
     @include('myforms.encuestas.expedientes.frm_modal_create_encuesta')
 
+    @include('myforms.encuestas.preguntas.frm_modal_add_pregunta_encuesta')
 
 
 
@@ -85,6 +86,7 @@
     {!! Html::script('plugins/amcharts/amcharts.js') !!}
     {!! Html::script('plugins/amcharts/serial.js') !!}
     {!! Html::script('plugins/amcharts/pie.js') !!}
+    <script type="module" src={{ asset('js/admin_encuestas.js') }}></script>
     <script type="module" src={{ asset('js/admin_categorias.js') }}></script>
   
     <script type="module" src={{ asset('js/graficos_encuestas_conc.js') }}></script>

@@ -43,7 +43,7 @@ class EncuestasSatisfaccionController extends Controller
 
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $encuesta = AdminEncuestas::create($request->all());
-            $admin_encuestas = AdminEncuestas::all();
+             $admin_encuestas = AdminEncuestas::where("categoria_id", $request->categoria_id)->get();
 
             $view = view('myforms.encuestas.expedientes.encuestas_list_ajax', compact('admin_encuestas'))->render();
 
@@ -70,7 +70,7 @@ class EncuestasSatisfaccionController extends Controller
                 $encuesta->preguntas()->attach($pregunta, [
                     "orden" => $orden,
                 ]);
-            }
+            } 
 
             $encuesta = AdminEncuestas::find($request->encuesta_id);
             $view = view("myforms.encuestas.expedientes.preguntas_form", compact("encuesta"))->render();

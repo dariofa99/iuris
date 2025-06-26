@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AdminEncuestas;
 use Illuminate\Http\Request;
 use App\Auditoria;
 use App\ConcEncSatifAditionalData;
@@ -177,6 +178,8 @@ class ConcEncuSatisfaccionController extends Controller
   public function showResultados(Request $request)
   { 
     $encuestas = ConcEncuestaSatisf::orderBy('created_at','asc')->paginate(1);
+    $admin_encuestas = AdminEncuestas::where("categoria_id", 257)->get();
+
     
     if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
       $view = view('myforms.encuestas.conciliaciones.resultados_individual_ajax',compact('encuestas'))->render();
@@ -186,7 +189,7 @@ class ConcEncuSatisfaccionController extends Controller
       return response()->json($response);
 
     }
-    return view('myforms.encuestas.conciliaciones.resultados',compact('encuestas'));
+    return view('myforms.encuestas.conciliaciones.resultados',compact('encuestas','admin_encuestas'));
   }
 
 }

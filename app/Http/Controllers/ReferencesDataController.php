@@ -61,7 +61,7 @@ class ReferencesDataController extends Controller
         return response()->json($response);
     }
 
-    public function getByRefDataFilter(Request $request)
+    public function getByRefDataFilter(Request $request) 
     {
         //return response()->json("esste");
         $preguntasSinEncuesta = ReferencesData::with("options")->whereNotIn('id', function ($query) use ($request) {

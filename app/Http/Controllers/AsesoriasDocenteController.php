@@ -25,6 +25,9 @@ class AsesoriasDocenteController extends Controller
                                     'expidnumber'=> $request->expid,                                    
                                  ]);
 
+
+								 
+
 		return response()->json($request->all());
 	}
 
