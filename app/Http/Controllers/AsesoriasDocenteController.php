@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Expediente;
 use DB;
 use App\AsesoriaDocente;
+use App\Jobs\ProcessSendNotificationGeneral;
+use Illuminate\Support\Facades\Auth;
 
 class AsesoriasDocenteController extends Controller
 {
@@ -16,7 +18,7 @@ class AsesoriasDocenteController extends Controller
 		$expediente = Expediente::where('expid',$request->expid)->first();
 		$estudiante_id = $expediente->estudiante->idnumber;
 		$docente_id = \Auth::user()->idnumber;
-		AsesoriaDocente::create([                                    
+		$asesoriaDocente = AsesoriaDocente::create([                                    
                                     'comentario'=>$request->comentario, 
                                     'estado'=>1, 
                                     'apl_shared'=>$request->apl_shared,
@@ -25,8 +27,17 @@ class AsesoriasDocenteController extends Controller
                                     'expidnumber'=> $request->expid,                                    
                                  ]);
 
+		if($request->apl_shared == 1){
+			$user =$asesoriaDocente->estudiante;
+			$concepto = $request->comentario;
+			$user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+			$subject = 'Se ha creado una nueva asesoría';
+			$url = url("/expedientes/{$expediente->expid}/edit");
+			ProcessSendNotificationGeneral::dispatch($user, $concepto, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+		}
 
-								 
+		
+						 
 
 		return response()->json($request->all());
 	}

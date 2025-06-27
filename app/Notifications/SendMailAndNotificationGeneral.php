@@ -75,8 +75,8 @@ class SendMailAndNotificationGeneral extends Notification
            'mensaje'=>auth()->user()->name.''.auth()->user()->lastname */
 
            'type_notification'=>$this->subject,  
-           //se recorta el concepto a 10 caracteres        
-           'message'=>substr($this->concepto, 0, 10),
+           //se recorta el concepto a 50 caracteres        
+           'message'=>substr($this->concepto, 0, 60) . '...',
            'url'=>$this->url,
            'created_at'=>date("Y-m-d H:i:s"),
            'icon'=>'fas fa-user'
