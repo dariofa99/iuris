@@ -75,6 +75,8 @@ class AsesoriasDocenteController extends Controller
 
 			return response()->json($asesoria);
 	}
+    
 
+	
 
 }
