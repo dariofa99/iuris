@@ -266,6 +266,10 @@ class ExpEncuSatisfaccionController extends Controller
             ];
             return response()->json($response);
         }
+
+
+        
+
         $admin_encuestas = AdminEncuestas::where("categoria_id", 256)->get();
 
         return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas', 'periodos'));
