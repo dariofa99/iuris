@@ -56,7 +56,7 @@
     </div>
 </div>
 
-
+ 
  --}}
 
 @php 
@@ -140,3 +140,4 @@
     </div>
 </div>
 @include('myforms.frm_modal_login')
+@include('myforms.frm_modal_solicitud_atencion_virtual')

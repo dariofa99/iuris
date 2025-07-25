@@ -59,7 +59,12 @@
                   <i class="fas fa-cog"></i> Opciones
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="{{url('/conciliacion/resumen/'.$conciliacion->id)}}" class="dropdown-item" target="_blank" >Descargar resumen</a>
+                  <a href="{{url('/conciliacion/resumen/'.$conciliacion->id)}}" class="dropdown-item" target="_blank" >
+                    Descargar resumen
+                 </a>
+                  <a href="{{url('/conciliacion/resumen/'.$conciliacion->id)}}" class="dropdown-item" target="_blank" >
+                    Realizar encueasta de satisfacción
+                 </a>
                   
                 </div>
               </div>     

@@ -6,7 +6,10 @@
             
         </div>
         <div class="col-md-1">
-            <i class="fas fa-times-circle btn_delete_category" data-id="{{$reference->id}}"></i>
+            <i class="fas fa-trash btn_delete_category" data-id="{{$reference->id}}"></i>
+
+            <i class="fas fa-times-circle btn_delete_categoryInSurvey" data-id="{{$reference->id}}"></i>
+
         </div>
     </div>
     @endif

@@ -65,7 +65,7 @@ class ExpEncuSatisfaccionController extends Controller
             )->render();
             return response()->json($view);
         }
-        //dd($encuesta->encuesta);
+       // dd($encuesta->encuesta);
         return view('myforms.encuestas.expedientes.formulario', compact('encuesta'));
     }
 
@@ -124,7 +124,8 @@ class ExpEncuSatisfaccionController extends Controller
     {
         $encuesta = ExpEncuestaSatisf::where('exp_id', $request->get('exp_id'))
             ->first();
-
+        $periodo_activo = $this->periodosService->getPeriodoActivo();
+        $request['periodo_id'] = $periodo_activo->id;
         if ($encuesta) {
             $expe = Expediente::find($request->input("exp_id"));
             if ($expe) {
@@ -160,9 +161,10 @@ class ExpEncuSatisfaccionController extends Controller
 
     public function update(Request $request)
     {
-        //return response()->json($request->all());
+     //   return response()->json($request->all());
         $encuesta = $this->encuestaService->find($request->expencuesta_id);
         $encuesta = $this->encuestaService->update($request, $encuesta);
+         Auth::logout();
         return response()->json($encuesta);
     }
 
@@ -190,7 +192,7 @@ class ExpEncuSatisfaccionController extends Controller
     public function getDataForChart(Request $request)
     {
         $encuestaAct = AdminEncuestas::where("categoria_id", 256)
-        ->where("activo", 1)->first();
+            ->where("activo", 1)->first();
         if (!$encuestaAct) {
             return response()->json([
                 "errors" => ["No hay una encuesta activa"]
@@ -241,7 +243,7 @@ class ExpEncuSatisfaccionController extends Controller
         $periodos = $this->periodosService->index($request);
         $periodo_activo = $this->periodosService->getPeriodoActivo();
         $encuestaAct = AdminEncuestas::where("categoria_id", 256)
-        ->where("activo", 1)->first();
+            ->where("activo", 1)->first();
         $encuestas = ExpEncuestaSatisf::orderBy('created_at', 'asc')
             ->where(function ($query) use ($request, $encuestaAct) {
                 if ($encuestaAct) {
@@ -257,7 +259,7 @@ class ExpEncuSatisfaccionController extends Controller
                     $query->where('periodo_id', 8);
                 }
             })
-            ->paginate(1); 
+            ->paginate(1);
 
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $view_re = view('myforms.encuestas.expedientes.resultados_individual_ajax', compact('encuestas'))->render();
@@ -268,19 +270,12 @@ class ExpEncuSatisfaccionController extends Controller
         }
 
 
-        
+
 
         $admin_encuestas = AdminEncuestas::where("categoria_id", 256)->get();
 
         return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas', 'periodos'));
     }
-    function getQuestionsById(Request $request, $id)
-    {
-        $encuesta = AdminEncuestas::find($id);
-        $view = view("myforms.encuestas.expedientes.preguntas_form", compact("encuesta"))->render();
-        return response()->json([
 
-            "view" => $view
-        ]);
-    }
+
 }

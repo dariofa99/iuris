@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\AdminEncuestas;
 use App\ConcEncSatifAditionalData;
 use App\ConcEncuestaSatisf;
 use App\Mail\ConfirmarCorreo;
@@ -36,19 +37,27 @@ class ConcEncuSatisfaccionRepository extends BaseRepository implements ConcEncuS
   }
 
 
-  public function store(Request $request): ConcEncuestaSatisf
+  public function store(Request $request)
   {
 
-    /* try { */
+    $encuestaAct = AdminEncuestas::where("categoria_id", 257)
+            ->where("activo", 1)->first();
+
+        //    return $encuestaAct;
+
+    if ($encuestaAct) {
+
       $token = str_replace("/", "&&&",Crypt::encryptString(time()));
-      //$token =  str_replace("/", "&&&", $data_chat);
+   
         
-      $encuesta =  ConcEncuestaSatisf::create([
+      $encuesta =  ConcEncuestaSatisf::create([ 
         'fecha_registro' => date('Y-m-d'),
         'tipo_usuario_id' => $request->has('tipo_usuario_id') ? $request->input('tipo_usuario_id') : null,
         'conciliacion_id' => $request->has('conciliacion_id') ? $request->input('conciliacion_id') : null,
         'user_id' => $request->has('user_id') ? $request->input('user_id') : null,
-        'token' => $token
+        'encuesta_id' => $encuestaAct->id,
+        'token' => $token,
+        'periodo_id' => $request->has('periodo_id') ? $request->input('periodo_id') : null
       ]);
       if ($request->has('data') and is_array($request->data)) {
         $requestData = $request->data;
@@ -63,12 +72,10 @@ class ConcEncuSatisfaccionRepository extends BaseRepository implements ConcEncuS
         Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
       }
       return $encuesta;
-    /* } catch (\Throwable $th) {
-      return $th->getMessage();
-    } */
-
-
-    /*  */
+    } else {
+      return false;
+    }
+    
   }
 
   public function update(Request $request,$encuesta): ConcEncuestaSatisf

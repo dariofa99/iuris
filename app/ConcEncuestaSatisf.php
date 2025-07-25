@@ -14,6 +14,8 @@ class ConcEncuestaSatisf extends Model
     'tipo_usuario_id',
     'conciliacion_id',
     'user_id',  
+    'encuesta_id',
+    'periodo_id',
     'token' 
 ];
 
@@ -27,5 +29,8 @@ public function conciliacion()
 {
     return $this->belongsTo(Conciliacion::class, 'conciliacion_id', 'id');
 }
-
+ public function encuesta()
+{
+    return $this->belongsTo(AdminEncuestas::class, 'encuesta_id', 'id');
+}
 }

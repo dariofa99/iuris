@@ -11,6 +11,7 @@ use App\Conciliacion;
 use App\ConciliacionEstado;
 use App\ConciliacionPdfTemporal;
 use App\Expediente;
+use App\Jobs\ProcessSendNotificationGeneral;
 use Carbon\Carbon;
 use App\Segmento;
 use App\Notifications\UserNotification;
@@ -78,9 +79,7 @@ class ActuacionController extends Controller
   }
 
 
-  function vacations()
-  {
-  }
+  function vacations() {}
 
 
   public function index(Request $request)
@@ -172,12 +171,12 @@ class ActuacionController extends Controller
 
       if ($request->hasFile('actdocnomgen')) {
 
-          
+
         $docum = $request->file('actdocnomgen');
 
         // Guardar el archivo temporalmente en el disco 'temp'
         $tempFilePath = Storage::disk('temp')->putFile('', $docum);
-    
+
         // Procesar el archivo como antes
         $nombre_arch = $docum->getClientOriginalName();
         $nombre_arch = htmlentities($nombre_arch);
@@ -187,17 +186,17 @@ class ActuacionController extends Controller
         $extencion = $docum->extension();
         $file_name = md5($file_name) . '.' . $extencion;
         $file_route = time() . "_" . $file_name;
-    
+
         // Mover el archivo desde el disco 'temp' al disco 'files_actuaciones'
         $tempFileFullPath = Storage::disk('temp')->path($tempFilePath);
         Storage::disk('files_actuaciones')->put($file_route, file_get_contents($tempFileFullPath));
-    
+
         // Eliminar el archivo temporal
         Storage::disk('temp')->delete($tempFilePath);
-    
+
         // Guardar los datos del archivo en tu lógica
         $actdocnomgen = $file_route;
-        $actdocruta = Storage::disk('files_actuaciones')->url($file_route);                 
+        $actdocruta = Storage::disk('files_actuaciones')->url($file_route);
       } else {
         if (currentUser()->hasRole('estudiante')) {
 
@@ -247,18 +246,31 @@ class ActuacionController extends Controller
 
       if ($actuacion->actestado_id == 140) {
         $user = $expediente->estudiante;
-        $user->notification = 'Nueva notificación de caso';
-        $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
-        $user->mensaje = 'Se ha asignado una nueva actuación. Exp: ' . $expediente->expid;
-        $user->notify(new UserNotification($user));
+        $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+        $concepto = "Se ha creado una nueva actuación en el expediente {$expediente->expid} por " .  $user_created;
+        $concepto .= "\nNombre: 
+        " . $actuacion->actnombre;
+        $concepto .= "\nDescripción: " . $actuacion->actdescrip;
+        $concepto .= "\nFecha límite: " . getLongDateWithHour($actuacion->fecha_limit);
+        $concepto_html = nl2br(e($concepto));
+        $subject = 'Se ha creado una nueva actuación';
+        $url = url("/expedientes/{$expediente->expid}/edit");
+        ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+
+
+        //$user->notify(new UserNotification($user));
       }
 
-      if ($actuacion->actestado_id == 136) {
+      if ($actuacion->actestado_id == 101) {
         $user = $expediente->getDocenteAsig();
-        $user->notification = 'Nueva notificación de caso';
-        $user->link_to = '/expedientes/' . $expediente->expid . '/edit';
-        $user->mensaje = 'Se ha creado un anexo. Exp: ' . $expediente->expid;
-        $user->notify(new UserNotification($user));
+        $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+        $concepto = "Se ha creado una nueva actuación en el expediente {$expediente->expid} por " .  $user_created;
+        $subject = 'Se ha creado una nueva actuación';
+        $concepto .= "\nNombre: " . $actuacion->actnombre;
+        $concepto .= "\nDescripción:" . $actuacion->actdescrip;
+        $concepto_html = nl2br(e($concepto));
+        $url = url("/expedientes/{$expediente->expid}/edit");
+        ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
       }
 
       //  $actuaciones = $this->getActuacionesExp($request['actexpid'],0);
@@ -365,7 +377,7 @@ class ActuacionController extends Controller
   public function edit($id)
   {
     $userSession = Auth::user()->id_number;
-    $actuacion = Actuacion::find($id); 
+    $actuacion = Actuacion::find($id);
 
     $parentId = DB::table('revisiones_actuacion')
       ->select('parent_rev_actid', 'rev_actid')

@@ -75,8 +75,9 @@ class ReferenciasService {
         }
         const topics = await response.json();
         return topics;
-
     }
+
+ 
 
     async deleteReferencesData(id) {
         const response = await fetch(BASE_URL + 'categorias/'+id, {

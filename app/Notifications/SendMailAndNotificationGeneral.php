@@ -70,12 +70,7 @@ class SendMailAndNotificationGeneral extends Notification
     public function toDatabase($notifiable)
     {      
         return [
-          /*  'type_notification'=>'Solicitud de radicado conciliación',
-           'link_to'=>'/conciliaciones/'.$this->conciliacion->conciliacion_id.'/edit',
-           'mensaje'=>auth()->user()->name.''.auth()->user()->lastname */
-
-           'type_notification'=>$this->subject,  
-           //se recorta el concepto a 50 caracteres        
+           'type_notification'=>$this->subject,                  
            'message'=>substr($this->concepto, 0, 60) . '...',
            'url'=>$this->url,
            'created_at'=>date("Y-m-d H:i:s"),

@@ -45,7 +45,8 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
 
      try { 
      
-      $encuestaAct = AdminEncuestas::where("activo",1)->first();
+      $encuestaAct = AdminEncuestas::where("categoria_id", 256)
+            ->where("activo", 1)->first();
 
       if($encuestaAct){
         $token = str_replace("/", "&&&",Crypt::encryptString(time()));
@@ -55,7 +56,8 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
           'exp_id' => $request->has('exp_id') ? $request->input('exp_id') : null,
           'user_id' => $request->has('user_id') ? $request->input('user_id') : null,
           'token' => $token,
-          'encuesta_id' => $encuestaAct->id
+          'encuesta_id' => $encuestaAct->id,
+          'periodo_id' => $request->has('periodo_id') ? $request->input('periodo_id') : null
         ]); 
         if ($request->has('data') and is_array($request->data)) {
           $requestData = $request->data;

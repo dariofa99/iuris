@@ -127,13 +127,13 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('conciliacion/evaluar/reportes', 'ConcEncuSatisfaccionController@showResultados')->name("cencuesta.index");
   Route::get('conciliacion/evaluar/data/chart', 'ConcEncuSatisfaccionController@getDataForChart');
 
-  Route::get('expediente/encuesta/preguntas/{id}', 'ExpEncuSatisfaccionController@getQuestionsById');
+  Route::get('expediente/encuesta/preguntas/{id}', 'EncuestasSatisfaccionController@getQuestionsById');
   //EncuestasSatisfaccionController
   Route::post('encuestas/general/store', 'EncuestasSatisfaccionController@store');
   Route::post('encuesta/insert/categoria', 'EncuestasSatisfaccionController@storeCategoria');
   Route::put('encuesta/general/update/{id}', 'EncuestasSatisfaccionController@update');
   Route::post('encuesta/add/preguntas', 'EncuestasSatisfaccionController@addPreguntasEncuesta');
-
+  Route::post('encuesta/delete/pregunta/{id}', 'EncuestasSatisfaccionController@deletePreguntaEncuesta');
   Route::group(['middleware' => ["vaccount", 'confirm_email', 'perfil']], function () {
 
 
@@ -595,22 +595,22 @@ Route::get('/prueba/filter/{id}', 'ExpedienteController@prueba');
 
 Route::get('/prueba', function () {
 
-$user = Auth::user();
-$url = url('/solicitudes/recepcion/conciliacion/123?id=10&paso=2');
-$subject = "Solicitud de conciliación jurídica recibida";
-$concepto =  "Espero que te encuentres bien. <br><br>
+  $user = Auth::user();
+  $url = url('/solicitudes/recepcion/conciliacion/123?id=10&paso=2');
+  $subject = "Solicitud de conciliación jurídica recibida";
+  $concepto =  "Espero que te encuentres bien. <br><br>
  Hemos recibido tu solicitud de conciliación jurídica y queremos asegurarte que estamos aquí para ayudarte.
  Entendemos lo importante que es resolver este asunto de manera justa y equitativa, por lo que nos comprometemos a trabajar de cerca contigo para buscar una solución amigable y satisfactoria para todas las partes involucradas.<br>
  Nuestro equipo legal está preparado para guiarte a lo largo de todo el proceso de conciliación, brindándote el apoyo necesario y respondiendo todas tus preguntas o inquietudes.
  
  ";
-$user_created = "Dario Narvaez";
-//$user->notify(new \App\Notifications\SendMailAndNotificationGeneral($concepto,$user_created,$subject, $url));
+  $user_created = "Dario Narvaez";
+  //$user->notify(new \App\Notifications\SendMailAndNotificationGeneral($concepto,$user_created,$subject, $url));
 
-ProcessSendNotificationGeneral::dispatch($user, $concepto, $user_created, $subject, $url)
- ->onConnection('database')->onQueue('emails');
+  ProcessSendNotificationGeneral::dispatch($user, $concepto, $user_created, $subject, $url)
+    ->onConnection('database')->onQueue('emails');
 
-dd($user);
+  dd($user);
 
   $message = "Espero que te encuentres bien. <br><br>
  Hemos recibido tu solicitud de conciliación jurídica y queremos asegurarte que estamos aquí para ayudarte.

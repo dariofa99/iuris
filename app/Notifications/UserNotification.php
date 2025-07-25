@@ -32,7 +32,7 @@ class UserNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database']; 
     }
 
     /**
@@ -44,9 +44,13 @@ class UserNotification extends Notification
     public function toMail($notifiable)
     {
 
-        return (new Mailable($notifiable))
-            ->subject('Notificación')
-            ->to($notifiable->email);
+         return (new MailMessage($notifiable))
+        ->subject($this->subject)
+        ->view('myforms.mails.formato_correo',[
+                'mensaje'=>$this->concepto,
+                'url'=>url($this->url),
+                'user_created'=>$this->user_created
+        ]);
     }
 
     /**

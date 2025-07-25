@@ -33,7 +33,7 @@ class EncuestasSatisfaccionController extends Controller
             )->render();
             return response()->json(["view" => $view]);
         }
-        
+
         return view('myforms.encuestas.conciliaciones.formulario');
     }
 
@@ -43,7 +43,7 @@ class EncuestasSatisfaccionController extends Controller
 
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $encuesta = AdminEncuestas::create($request->all());
-             $admin_encuestas = AdminEncuestas::where("categoria_id", $request->categoria_id)->get();
+            $admin_encuestas = AdminEncuestas::where("categoria_id", $request->categoria_id)->get();
 
             $view = view('myforms.encuestas.expedientes.encuestas_list_ajax', compact('admin_encuestas'))->render();
 
@@ -70,10 +70,10 @@ class EncuestasSatisfaccionController extends Controller
                 $encuesta->preguntas()->attach($pregunta, [
                     "orden" => $orden,
                 ]);
-            } 
+            }
 
             $encuesta = AdminEncuestas::find($request->encuesta_id);
-            $view = view("myforms.encuestas.expedientes.preguntas_form", compact("encuesta"))->render();
+            $view = view("myforms.encuestas.preguntas.preguntas_form", compact("encuesta"))->render();
             return response()->json([
                 "view" => $view
             ]);
@@ -87,6 +87,7 @@ class EncuestasSatisfaccionController extends Controller
 
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             DB::table("admin_encuestas_general")
+                ->where("categoria_id", $request->categoria_id)
                 ->update([
                     "activo" => false
                 ]);
@@ -110,15 +111,47 @@ class EncuestasSatisfaccionController extends Controller
             }
             foreach ($request->input("pregunta_id") as $key => $pregunta) {
 
-                $encuesta->preguntas()->attach($pregunta, [
-                    'orden' => $orden
+                $encuesta->preguntas()->syncWithoutDetaching([
+                    $pregunta => ['orden' => $orden]
                 ]);
                 $orden++;
             }
         }
+        $encuesta = AdminEncuestas::find($request->encuesta_id);
+        $view = view("myforms.encuestas.preguntas.preguntas_form", compact("encuesta"))->render();
         return response()->json([
-            "view" => $request->all(),
+            "view" => $view,
             "encuesta" => $encuesta
         ]);
+    }
+
+    function getQuestionsById(Request $request, $id)
+    {
+        $encuesta = AdminEncuestas::find($id);
+        $view = view("myforms.encuestas.preguntas.preguntas_form", compact("encuesta"))->render();
+        return response()->json([
+
+            "view" => $view
+        ]);
+    }
+
+    function deletePreguntaEncuesta(Request $request, $id)
+    {
+        if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
+            $encuesta = AdminEncuestas::find($id);
+            if ($encuesta) {
+                $encuesta->preguntas()->detach($request->pregunta_id);
+                $encuesta = AdminEncuestas::find($id);
+                $view = view("myforms.encuestas.preguntas.preguntas_form", compact("encuesta"))->render();
+                return response()->json([
+                    "view" => $view,
+                    "encuesta" => $encuesta
+                ]);
+            } else {
+                return response()->json([
+                    "errors" => ["No se encontró la pregunta"]
+                ]);
+            }
+        }
     }
 }

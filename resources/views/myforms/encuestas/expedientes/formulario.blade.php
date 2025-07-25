@@ -86,6 +86,7 @@
                             </div>
                         </div>
                         <div class="row justify-content-center">
+                         
                             <div class="col-md-8">
                                 <form id="myEvaNivSatForm">
                                     <input type="hidden" name="expencuesta_id" value="{{ $encuesta->id }}">

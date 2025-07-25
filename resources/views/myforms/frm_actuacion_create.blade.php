@@ -8,7 +8,7 @@
                 @if ($expediente->expestado_id != '2' and $expediente->expestado_id != '4')
                     @if ($expediente->exptipoproce_id != '1')
                         <button type="button"
-                            @if (currentUser()->hasRole('docente')) id="btn_new_act_doct" @else id="btn_new_act" @endif
+                            @if (currentUser()->hasRole('docente') || $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber) id="btn_new_act_doct" @else id="btn_new_act" @endif
                             class="btn btn-primary btn-sm btn_new_act" data-toggle="modal"
                             data-titulo_modal="Nueva actuación" data-target="#myModal_act_create">Nueva actuación</button>
                     @endif
@@ -21,16 +21,16 @@
         @endif
     </div>
 
-    <div class="col-md-4" align="right"> 
+    <div class="col-md-4" align="right">
         @if ($expediente->exptipoproce_id != '1')
             Días sin actuaciones <label
                 class="badge badge-{{ getColorByPercent(getPercent(31, $expediente->getDaysForNexAct())) }}">
                 {!! $expediente->getDaysForNexAct() !!}
             </label>
-            @if(currentUser()->hasRole('amatai'))
-             <i id="btn_chg_date" class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
-                title="Actualizar fecha de última actuación.">
-            </i>
+            @if (currentUser()->hasRole('amatai'))
+                <i id="btn_chg_date" class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+                    title="Actualizar fecha de última actuación.">
+                </i>
             @endif
         @endif
     </div>

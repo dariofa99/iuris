@@ -20,12 +20,7 @@ $(document).ready(async function () {
         $("#list_preguntas_add_test").html(response.view);
         $("#myModal_encuesta_add_preguntas").modal("show");
     })
-    $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
-        e.preventDefault();
-        var request = convertFormToJSON('myFormAddPreguntasEncuestas');
-        request['encuesta_id'] = encId
-        let response = await encuestasService.addPreguntasEncuesta(request);
-    })
+
     $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
         e.preventDefault()
         //$("#wait").show();
@@ -54,45 +49,23 @@ $(document).ready(async function () {
         url += "#" + get_tab()
         window.history.pushState(null, '', url);
     });
-    $("#edit_form_tab").on("click", ".btn_delete_category", async function (e) {
-        let id = $(this).attr("data-id");
-        e.preventDefault();
-        Swal.fire({
-            title: '¡Atención!',
-            text: "¿Esta seguro de eliminar la pregunta?\nSe eliminará toda la información asociada.",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            /* cancelButtonColor: '#d33', */
-            confirmButtonText: 'Continuar',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.value) {
-                $("#wait").show();
-                let response = await referenciasService.deleteReferencesData(id);
-                window.location.reload()
-                toastr.success(
-                    "La pregunta se eliminó con éxito",
-                    "",
-                    { positionClass: "toast-top-right", timeOut: "50000" }
-                );
-
-
-            }
-        });
-    });
-
    
+
+
 
     $("#tblListaEncuestas").on("change", ".radioChangeActiveEncuesta", async function (e) {
         e.preventDefault();
         encId = $(this).closest("tr").attr("data-id")
         var request = {
-            activo: 1
+            activo: 1,
+            categoria_id: 256
         }
-        //$("#wait").show()
+        $("#wait").show()
         let response = await encuestasService.update(request, encId);
         $("#wait").hide()
-
+        toastr.success("Asignado con éxito", "",
+            { positionClass: "toast-bottom-right", timeOut: "5000" }
+        );
     });
 
 
@@ -100,11 +73,10 @@ $(document).ready(async function () {
         e.preventDefault();
         $("#myModal_encuesta_create").modal("show")
     });
-    
+
     $("#myFormCreateEncuestaExp").on("submit", async function (e) {
         e.preventDefault();
         var errors = validateForm("myFormCreateEncuestaExp");
-
         if (errors <= 0) {
             $("#wait").show()
             var request = convertFormToJSON('myFormCreateEncuestaExp');
@@ -121,10 +93,9 @@ $(document).ready(async function () {
                 { positionClass: "toast-top-right", timeOut: "5000" }
             );
         }
-    })
-
-
+    });
 });
+
 $("select[name='select_periodo']").on("change", async function (e) {
     e.preventDefault();
     $("#content-grafs").html("");

@@ -81,14 +81,14 @@
                     {!! Form::text('actnombre', null, ['class' => 'form-control required', 'maxlength' => '60']) !!}
                 </div>
             </div>
-            @if (currentUser()->hasRole('docente'))
+            @if (currentUser()->hasRole('docente') || $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
                 <div class="col-md-12">
                     <div class="form-group">
                         {!! Form::label('fecha_limit', 'Fecha limite de entrega', ['id' => 'fecha']) !!}
                         {!! Form::date('fecha_limit',null, ['class' => 'form-control required', 'maxlength' => '60',"min"=> \Carbon\Carbon::now()->addDay(1)->format("Y-m-d")]) !!}
                     </div>
                 </div>
-            @endif
+            @endif 
 
             <div class="col-md-12">
                 <div class="form-group">

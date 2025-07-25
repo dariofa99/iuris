@@ -1,14 +1,16 @@
 import { EncuestasService } from './services/encuestas.js';
 import { ConciliacionService } from './services/conciliaciones.js';
-import { UserService } from './services/users.js'
+import { UserService } from './services/users.js';
+import { ReferenciasService } from "./services/referencias.js";
 const conciliacionService = new ConciliacionService();
 const encuestasService = new EncuestasService();
 const userService = new UserService();
+const referenciasService = new ReferenciasService();
 let encId = 0;
 
 $(document).ready(function () {
-    
-    
+
+
     $("#btn_new_categoryInExp").on("click", function (e) {
         e.preventDefault()
         $("#myformEditRCategory").attr("id", "myformCreateCategory");
@@ -34,8 +36,8 @@ $(document).ready(function () {
         $("#myModal_create_category input[name='short_name']").prop('readonly', true);
         $("#myModal_create_category").modal("show");
     });
-    
-       
+
+
     $("#tblListaEncuestas").on("click", ".btnIconSelEnc", async function (e) {
         e.preventDefault();
         encId = $(this).closest("tr").attr("data-id")
@@ -49,10 +51,93 @@ $(document).ready(function () {
         let response = await encuestasService.getQuestionsById(encId);
         if (response.view || response.view == '') {
             $("#sortable_questions").html(response.view);
-            $("#lblTestName").text($(this).closest("tr").attr("data-name"))
+            $("#lblTestName").text($(this).closest("tr").attr("data-name") + "-" + encId)
         }
         $("#wait").hide()
 
+    });
+
+
+    $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
+        e.preventDefault();
+        var request = convertFormToJSON('myFormAddPreguntasEncuestas');
+        request['encuesta_id'] = encId
+        $("#wait").show();
+        let response = await encuestasService.addPreguntasEncuesta(request);
+        if (response.view || response.view == '') {
+            $("#sortable_questions").html(response.view);
+            $("#lblTestName").text($(this).closest("tr").attr("data-name"))
+        }
+        $("#wait").hide()
+        toastr.success("Preguntas agregadas con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+    });
+
+    $("#edit_form_tab").on("click", ".btn_delete_category", async function (e) {
+        let id = $(this).attr("data-id");
+        e.preventDefault();
+        Swal.fire({
+            title: '¡Atención!',
+            html: `¿Esta seguro de eliminar la pregunta?<br>
+            <h3>Tenga en cuenta que se eliminará la pregunta y toda la información asociada.</h3>
+            <br>Esta acción no se puede deshacer.`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let response = await referenciasService.deleteReferencesData(id);
+                window.location.reload()
+                toastr.success(
+                    "La pregunta se eliminó con éxito",
+                    "",
+                    { positionClass: "toast-top-right", timeOut: "5000" }
+                );
+
+
+            }
+        });
+    });
+
+    $("#edit_form_tab").on("click", ".btn_delete_categoryInSurvey", async function (e) {
+        let id = $(this).attr("data-id");
+        e.preventDefault();
+        Swal.fire({
+            title: '¡Atención!',
+            html:  `¿Esta seguro de eliminar la pregunta?<br>
+            <h3>Tenga en cuenta que se eliminará toda la información asociada pero se mantendrá la pregunta para futuras encuestas.</h3>
+            <br>Esta acción no se puede deshacer.`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                let request = {
+                    pregunta_id: id
+                }
+                $("#wait").show();
+                let response = await encuestasService.deleteReferencesDataInSurvey(request, encId);
+                if (response.view || response.view == '') {
+                    $("#sortable_questions").html(response.view);
+                    $("#lblTestName").text($(this).closest("tr").attr("data-name"))
+                }
+                $("#wait").hide();               
+                toastr.success(
+                    "La pregunta se eliminó con éxito",
+                    "",
+                    { positionClass: "toast-top-right", timeOut: "50000" }
+                );
+
+
+            }
+        });
     });
 
     $("#myEvaNivSatForm").on("click", ".btn_pagq", async function (e) {
@@ -88,7 +173,7 @@ $(document).ready(function () {
         `
         $("#renderQuestion").html(html);
         var url = window.location.hostname;
-         history.pushState({}, "", "/login")
+        history.pushState({}, "", "/login")
         $("#wait").hide();
     })
 
@@ -123,7 +208,7 @@ $(document).ready(function () {
                 let request = {
                     tipo_usuario_id: tipo_usuario_id,
                     conciliacion_id: conciliacion_id
-                }
+                } 
                 let response = await encuestasService.storeEncuSatisf(request);
                 window.location = `/conciliacion/evaluar/encuesta/?token=${response.token}&cid=${conciliacion_id}`
                 $("#wait").hide();

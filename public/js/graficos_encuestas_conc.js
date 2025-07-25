@@ -3,10 +3,11 @@ const encuestasService = new EncuestasService();
 import { ReferenciasService } from "./services/referencias.js";
 const referenciasService = new ReferenciasService();
 let encId = 0;
+var dataChart = {};
 $(document).ready(async function () {
     set_tab()
     await getChart();
-    
+
     $("#btn_new_category").on("click", function (e) {
         $("#myformEditRCategory").attr("id", "myformCreateCategory");
         $("#myformCreateCategory").attr("id", "myformCreateInEnCategory");
@@ -34,7 +35,7 @@ $(document).ready(async function () {
         $("#myModal_create_category").modal("show");
     });
 
-  $("#btn_load_categoryInExp").on("click", async function (e) {
+    $("#btn_load_categoryInExp").on("click", async function (e) {
         e.preventDefault();
         var request = {
             "table": "conc_encuesta_satisf",
@@ -46,16 +47,23 @@ $(document).ready(async function () {
         $("#myModal_encuesta_add_preguntas").modal("show");
     })
 
-      $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
+
+    $("#tblListaEncuestas").on("change", ".radioChangeActiveEncuesta", async function (e) {
         e.preventDefault();
-        var request = convertFormToJSON('myFormAddPreguntasEncuestas');
-        request['encuesta_id'] = encId
-        let response = await encuestasService.addPreguntasEncuesta(request);
+        encId = $(this).closest("tr").attr("data-id")
+        var request = {
+            activo: 1,
+            categoria_id: 257
+        }
+        $("#wait").show()
+        let response = await encuestasService.update(request, encId);
+        $("#wait").hide()
+        toastr.success("Asignado con éxito", "",
+            { positionClass: "toast-bottom-right", timeOut: "5000" }
+        );
+    });
 
-
-    })
-
-         $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
+    $("#myModal_create_category").on("submit", "#myformCreateInEnCategory", async function (e) {
         e.preventDefault()
         //$("#wait").show();
         var request = convertFormToJSON('myformCreateInEnCategory');
@@ -87,12 +95,12 @@ $(document).ready(async function () {
         $("#wait").hide();
     });
 
-    
+
     $("#btnCreateEncuesta").on("click", function (e) {
         e.preventDefault();
         $("#myModal_encuesta_create").modal("show")
     });
-    
+
     $("#myFormCreateEncuestaExp").on("submit", async function (e) {
         e.preventDefault();
         var errors = validateForm("myFormCreateEncuestaExp");
@@ -126,35 +134,114 @@ $(document).ready(async function () {
         window.history.pushState(null, '', url);
     });
 
- 
-
-    $("#edit_form_tab").on("click", ".btn_delete_category", async function (e) {
-        let id = $(this).attr("data-id");
+    $("select[name='select_periodo']").on("change", async function (e) {
         e.preventDefault();
-        Swal.fire({
-            title: '¡Atención!',
-            text: "¿Esta seguro de eliminar la pregunta?\nSe eliminará toda la información asociada",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            /* cancelButtonColor: '#d33', */
-            confirmButtonText: 'Continuar',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.value) {
-                $("#wait").show();
-                let response = await referenciasService.deleteReferencesData(id);
-                window.location.reload()
-                toastr.success(
-                    "La pregunta se eliminó con éxito",
-                    "",
-                    { positionClass: "toast-top-right", timeOut: "50000" }
-                );
-               
-
-            }
-        });
+        $("#content-grafs").html("");
+        let url = '/conciliacion/evaluar/reportes/?periodo=' + $(this).val();
+        $("#wait").show()
+        let response = await index_page(url);
+        $(".list_encuind").html(response.view);
+        $("#wait").hide()
+        url += "#" + get_tab()
+        window.history.pushState(null, '', url);
+        $("#wait").hide();
+        await getChart($(this).val());
+        $("select[name='select_periodo']").val($(this).val());
     });
+
+    $(".changeToPieChart").on("click", async function (e) {
+        e.preventDefault();
+        if (dataChart.length > 0) {
+            $("#content-grafs").html("");
+            $("#wait").show();
+            var card = "";
+            dataChart.forEach(pregunta => {
+                card = getCardToChart(pregunta);
+                $("#content-grafs").append(card);
+                pie_chart(pregunta, "graf-" + pregunta.id);
+            });
+        } else {
+            $("#content-grafs").html("<h3 class='text-center ml-5 mt-5'>No hay datos para mostrar</h3>");
+        }
+        $("#wait").hide();
+
+    });
+
+
+    $(".changeToBarChart").on("click", async function (e) {
+        e.preventDefault();
+        if (dataChart.length > 0) {
+            $("#content-grafs").html("");
+            $("#wait").show();
+            var card = "";
+            dataChart.forEach(pregunta => {
+                card = getCardToChart(pregunta);
+                $("#content-grafs").append(card);
+                bar_chart(pregunta, "graf-" + pregunta.id);
+            });
+        } else {
+            $("#content-grafs").html("<h3 class='text-center ml-5 mt-5'>No hay datos para mostrar</h3>");
+        }
+        $("#wait").hide();
+
+    });
+
+
+
 });
+
+
+
+var getChart = async (id) => {
+
+    var periodo = id;
+    $("#wait").show();
+
+    let response = await encuestasService.getChartData({ "periodo": periodo });
+    if (response.length > 0) {
+        dataChart = response;
+        var card = "";
+        response.forEach(pregunta => {
+            card = getCardToChart(pregunta);
+            $("#content-grafs").append(card);
+            bar_chart(pregunta, "graf-" + pregunta.id);
+        });
+
+
+    } else {
+        $("#content-grafs").html("<h3 class='text-center ml-5 mt-5'>No hay datos para mostrar</h3>");
+    }
+    $("#wait").hide();
+}
+
+function getCardToChart(pregunta) {
+    return `
+                <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                    <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="card-title">
+                        ${pregunta.pregunta}
+                        </h4>
+                    </div>
+                        <div class="col-md-2">
+                
+                            
+                        </div>
+                    </div>                
+                    </div>
+                    <div class="card-body">
+                        <div style="min-height:400px" class="graf" id="graf-${pregunta.id}">
+
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+}
+
+
+/*
 var getChart = async () => {
     let response = await encuestasService.getChartData({});
     if (response.length > 0) {
@@ -181,7 +268,95 @@ var getChart = async () => {
 
     }
 
+}*/
+function bar_chart(res, content) {
+    var chart = new AmCharts.AmSerialChart();
+    chart.categoryField = "label";
+    chart.startDuration = 1;
+
+    // Eje X
+    var categoryAxis = chart.categoryAxis;
+    categoryAxis.labelRotation = 45;
+    categoryAxis.gridPosition = "start";
+
+    // Eje Y
+    var valueAxis = new AmCharts.ValueAxis();
+    var wordsPerLine = 6;
+    var words = res.pregunta.split(" ");
+    var formattedQuestion = "";
+    for (var i = 0; i < words.length; i++) {
+        formattedQuestion += words[i] + " ";
+        if ((i + 1) % wordsPerLine === 0) {
+            formattedQuestion += "\n";
+        }
+    }
+    valueAxis.title = formattedQuestion;
+    valueAxis.titleFontSize = 11;
+    valueAxis.minimum = 0;
+    valueAxis.titleMargin = 20;
+    chart.addValueAxis(valueAxis);
+
+    var colorsArray = [
+        "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
+        "#FF8C33", "#33FF8C", "#8C33FF", "#33A1FF", "#A1FF33"
+    ];
+
+    // Calcular total
+    var total = res.resultados.reduce((sum, item) => sum + item.value, 0);
+
+    // Crear un solo objeto en dataProvider
+    var dataItem = { label: "Total" };
+
+    for (var i = 0; i < res.resultados.length; i++) {
+        var resultado = res.resultados[i];
+        var valueField = "value_" + i;
+        var percentage = ((resultado.value / total) * 100).toFixed(2);
+
+        dataItem[valueField] = resultado.value;
+
+        var graph = new AmCharts.AmGraph();
+        graph.valueField = valueField;
+        graph.title = resultado.label + " (" + resultado.value + ")";
+        graph.type = "column";
+        graph.fillAlphas = 0.8;
+        graph.lineAlpha = 0.2;
+        graph.balloonText = resultado.label + ": <b>[[value]]</b> (" + percentage + "%)";
+        graph.labelText = percentage + "%"; // 👈 Aquí mostramos el porcentaje
+        graph.labelPosition = "top";
+        graph.fontSize = 12;
+        graph.labelColor = "#000000";
+        graph.color = "#000000";
+        graph.fillColors = colorsArray[i % colorsArray.length];
+
+        chart.addGraph(graph);
+    }
+
+    chart.dataProvider = [dataItem];
+
+    // Leyenda
+    var legend = new AmCharts.AmLegend();
+    legend.useGraphSettings = true;
+    chart.addLegend(legend);
+
+    // Exportar
+    chart.export = {
+        enabled: true,
+        menu: [{
+            class: "export-main",
+            menu: [
+                { label: "Descargar como PNG", format: "png" },
+                { label: "Descargar como JPG", format: "jpg" },
+                { label: "Descargar como SVG", format: "svg" },
+                { label: "Descargar como CSV", format: "csv" }
+            ]
+        }]
+    };
+
+    chart.write(content);
 }
+
+
+
 function pie_chart(res, content) {
     var chart = new AmCharts.AmPieChart();
     // title of the chart
@@ -214,11 +389,29 @@ function pie_chart(res, content) {
     legend.switchType = undefined;
     legend.align = "left";
     chart.addLegend(legend);
-
+    // Configuración de exportación
+    chart.export = {
+        enabled: true,
+        menu: [{
+            class: "export-main",
+            menu: [{
+                label: "Descargar como PNG",
+                format: "png"
+            }, {
+                label: "Descargar como JPG",
+                format: "jpg"
+            }, {
+                label: "Descargar como SVG",
+                format: "svg"
+            }, {
+                label: "Descargar como CSV",
+                format: "csv"
+            }]
+        }]
+    };
     // WRITE
     chart.write(content);
 }
-
 async function index_page(route, request) {
     const page = route;
     const response = await fetch(page, {

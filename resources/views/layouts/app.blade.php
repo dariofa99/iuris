@@ -22,6 +22,8 @@
 
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+  
+
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/general.css') }}">
@@ -81,10 +83,13 @@
 
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+  <script src="{{ asset('plugins/qr-code-styling/qr-code-styling.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 
 <script src={{ asset('js/config.js?v=1') }}></script>
 {!! Html::script('js/application.js?v=1') !!}
+
+ @include('layouts.scripts')
 
 @stack('scripts')
 

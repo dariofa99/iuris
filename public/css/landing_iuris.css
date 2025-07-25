@@ -198,3 +198,28 @@ a {
     transform: scale(1.02);
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
+
+
+.btn-solicitud {
+  background-color: #025d69;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-solicitud i {
+  font-size: 18px;
+}
+
+.btn-solicitud:hover {
+  background-color: #222d32;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}

@@ -81,7 +81,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
         $this->applyValidateSede();
         return $this->query //->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-            ->where('expedientes.expidnumberest', '<>', 3030)
+           // ->where('expedientes.expidnumberest', '<>', 3030)
             ->where(function ($query) use ($request) {
                 if (
                     !$request->has('data') and

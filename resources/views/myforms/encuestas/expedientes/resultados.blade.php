@@ -47,9 +47,7 @@
             <div class="row">
                 <div class="col-md-5">
                     <label for="select_table">Periodo</label>
-
                     <div class="input-group">
-
                         <select class="form-control form-control-sm generate_graf" id="select_periodo"
                             name="select_periodo">
                             <option value="" selected="selected">Seleccione...</option>
@@ -59,7 +57,6 @@
                             @endforeach
                         </select>
                         <div class="input-group-append">
-
                             <button type="button"
                                 class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                                 data-toggle="dropdown" aria-expanded="false">
@@ -70,31 +67,10 @@
                                 <a class="dropdown-item changeToPieChart" href="#"><i class="fa fa-chart-pie"></i> Cambiar a torta</a>
                                 <div role="separator" class="dropdown-divider"></div>
                                 <a class="dropdown-item changeToBarChart" href="#"><i class="fa fa-chart-bar"></i> Cambiar a barras</a>
-
                             </div>
                         </div>
                     </div>
-
-                </div>
-                {{--  <div class="col-md-1"><br>
-                    <label for="">Hab. Rango</label>
-                    <input type="checkbox" id="check_hab_rango" class="generate_graf">
-                </div>
-                <div class="col-md-5">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="fecha_ini">Fecha Inicial</label>
-                            <input class="form-control form-control-sm" id="fecha_ini" disabled="" name="fecha_ini"
-                                type="date" value="2024-06-05">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="fecha_fin">Fecha Final</label>
-
-                            <input class="form-control form-control-sm generate_graf" id="fecha_fin" disabled=""
-                                name="fecha_fin" type="date" value="2024-06-12">
-                        </div>
-                    </div>
-                </div> --}}
+                </div>               
             </div>
             <div class="row" id="content-grafs">
 

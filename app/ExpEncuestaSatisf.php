@@ -14,7 +14,8 @@ class ExpEncuestaSatisf extends Model
     'exp_id',
     'user_id',  
     'token',
-    "encuesta_id"
+    "encuesta_id",
+    'periodo_id'
 ];
 
 

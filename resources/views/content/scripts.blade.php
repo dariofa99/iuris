@@ -18,7 +18,7 @@
         $("#mymodalShowAlerts").modal("hide");
         e.preventDefault();
 
-    })
+    })   
 
     function getCarrousel() {
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">

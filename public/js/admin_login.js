@@ -27,4 +27,12 @@ $(document).ready(function () {
     $("#tramites-continuar").on("click",function(e) {
         $("#tramites-tab").trigger("click")
     })
+    $("#btn_solicitud_atencion_virtual").on("click",function(e) {
+        e.preventDefault();
+        $("#mymodalSolicitudAtencionVirtual").modal("show")
+    });
+
+  
+
+
 });

@@ -26,7 +26,9 @@
 
 @section('area_buttons')
 
+
     <div class="float-right" style="float: right !important;">
+                         
         @if (!currentUser()->hasRole('estudiante') and !currentUser()->hasRole('docente'))
             @if ($expediente->encuesta == null and $expediente->expfecha == date('Y-m-d'))
                 <a href="#" class="btn_start_test  btn btn-info" style="color:#054c64">
