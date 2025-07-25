@@ -10,9 +10,9 @@
     },
     image: "{{ asset('dist/img/udenar-pdf.png') }}", // 👉 tu logo (mejor en PNG o SVG)
     imageOptions: {
-      crossOrigin: "anonymous", // Necesario si la imagen está en otro dominio
-      margin: 1,               // Margen entre el QR y la imagen
-      imageSize: 0.9            // Tamaño relativo (0.9 = 90% del QR)
+     // crossOrigin: "anonymous", // Necesario si la imagen está en otro dominio
+      margin: 2,               // Margen entre el QR y la imagen
+      imageSize: 0.4         // Tamaño relativo (0.9 = 90% del QR)
     },
     backgroundOptions: {
       color: "#ffffff",
@@ -35,9 +35,9 @@
     },
     image: "{{ asset('dist/img/udenar-pdf.png') }}", // 👉 tu logo (mejor en PNG o SVG)
     imageOptions: {
-      crossOrigin: "anonymous", // Necesario si la imagen está en otro dominio
-      margin: 1,               // Margen entre el QR y la imagen
-      imageSize: 0.9            // Tamaño relativo (0.9 = 90% del QR)
+     // crossOrigin: "anonymous", // Necesario si la imagen está en otro dominio
+      margin: 2,               // Margen entre el QR y la imagen
+      imageSize: 0.4            // Tamaño relativo (0.9 = 90% del QR)
     },
   });
 
