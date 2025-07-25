@@ -26,10 +26,16 @@
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/general.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/general.css?v='. config('app_config.asset_version')) }}">
 
-    <link rel="stylesheet"
-        href="{{ config('app.name') != 'ConciliApp' ? asset('css/landing_iuris.css?v=1') : asset('css/conciliappfront.css') }}">
+    @if(config('app.name') == 'ConciliApp')
+        <link rel="stylesheet" href="{{ asset('css/conciliappfront.css?v='. config('app_config.asset_version')) }}">
+    @else
+        <link rel="stylesheet" href="{{ asset('css/landing_iuris.css?v='. config('app_config.asset_version')) }}">
+    @endif
+
+
+    
 
     @stack('styles')
 </head>
@@ -86,8 +92,8 @@
   <script src="{{ asset('plugins/qr-code-styling/qr-code-styling.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 
-<script src={{ asset('js/config.js?v=1') }}></script>
-{!! Html::script('js/application.js?v=1') !!}
+<script src={{ asset('js/config.js?v='. config('app_config.asset_version')) }}></script>
+{!! Html::script('js/application.js?v='. config('app_config.asset_version')) !!}
 
  @include('layouts.scripts')
 

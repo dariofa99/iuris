@@ -7,7 +7,7 @@
     @endslot
 
     @slot('title')
-        <h3>Información importante!</h3>
+        <h3>Atención Virtual</h3>
     @endslot
     @push('styles')
         <!-- aqui van los estilos de cada vista -->
@@ -76,7 +76,7 @@
 
 
                 <div class="row justify-content-center">
-                {{--     <div class="col-md-5">
+                   <div class="col-md-5">
                         <div class="card">
                             <h4 class="card-header bg-white" style="text-align: center">
                                 Encuestas de satisfacción - Consultorios Jurídicos
@@ -91,7 +91,7 @@
                             </div>
 
                         </div>
-                    </div> --}}
+                    </div> 
                     <div class="col-md-5">
                         <div class="card ">
                             <h4 class="card-header bg-white" style="text-align: center">

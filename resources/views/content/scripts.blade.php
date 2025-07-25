@@ -128,7 +128,7 @@
                         con las teclas CTRL+F5 <i>o</i> CTRL+fn+F5 (portátiles). Tener en cuenta para conexión desde dispositivos móviles. <br>
                       
                     </h4> </div>`;
-        message += `<span> Últ. Actualización: 08 de de mayo de 2025 <br>
+        message += `<span> Últ. Actualización: 24 de julio de 2025 <br>
                         Si el problema persiste comuníquese al 310-6038006  
                       </span>`;
 
