@@ -324,7 +324,7 @@ $(document).ready(function () {
     $("#wait").show();
     var response = await userService.findUserByJson(request);
     if (response) {
-      console.log(response);
+      console.log(request);
       var user = response.find((user) => (user.identificacion == request.idnumber && user.codigo_alumno == request.codigo_estudiantil));
       if (user != undefined) {
         let timerInterval
@@ -346,6 +346,7 @@ $(document).ready(function () {
             request['name'] = user.nombres;
             request['lastname'] = user.apellidos;
             request['password'] = 'udenarcj'
+            request['active'] = 1;
             let response = await userService.registrar(request);
             if (response.errors && response.errors.length > 0) {
               response.errors.forEach(error => {

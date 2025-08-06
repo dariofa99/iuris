@@ -162,7 +162,7 @@ class Expediente extends Model
         return $this->hasMany(EstadoCaso::class, 'expidnumber', 'expid');
     }
 
-   
+
     public function estado()
     {
         return $this->belongsTo(Estado::class, 'expestado_id', 'id');
@@ -329,6 +329,7 @@ class Expediente extends Model
                 $mgs = "Evaluado por sistema";
             }
 
+
             switch ($item) {
                 case 'color':
                     return $color;
@@ -456,10 +457,12 @@ class Expediente extends Model
         ORDER BY rev_actid DESC LIMIT 1"),
             );
 
-            if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and
-             $hijosAct[0]->actestado_id != 139 and 
-             $hijosAct[0]->actfecha <= $date and
-             $hijosAct[0]->actfecha >= '2018-08-21') {
+            if (
+                count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and
+                $hijosAct[0]->actestado_id != 139 and
+                $hijosAct[0]->actfecha <= $date and
+                $hijosAct[0]->actfecha >= '2018-08-21'
+            ) {
                 $hijos[] = $hijosAct;
                 return $hijos;
             }
@@ -896,7 +899,13 @@ class Expediente extends Model
         $asig = $this->asignacion;
         if ($asig) {
             $fecha_ini = Carbon::now();
-            return $fecha_ini->diffInDays($asig->fecha_asig, false) * -1;
+            $periodo = $this->getPeriodoActivo();
+            $fecha_fin = Carbon::parse($asig->fecha_asig);
+            if ($asig->fecha_asig < $periodo->prdfecha_inicio) {
+
+                $fecha_fin = Carbon::parse($periodo->prdfecha_inicio);
+            }
+            return $fecha_ini->diffInDays($fecha_fin, false) * -1;
         }
         return 0;
     }
@@ -997,8 +1006,13 @@ class Expediente extends Model
             ->orderBy('historial_datos_casos.created_at', 'ASC')
             ->first();
         $asignacion = $this->asignacion;
+        $periodo = $this->getPeriodoActivo();
+        $fecha_1 = Carbon::parse($asignacion->fecha_asig)->startOfDay();
+        if ($asignacion->fecha_asig < $periodo->prdfecha_inicio) {
+            $fecha_1 = Carbon::parse($periodo->prdfecha_inicio);
+        }
         if ($historial) {
-            $fecha_1 = Carbon::parse($asignacion->fecha_asig)->startOfDay();
+
             $fecha_2 = Carbon::parse($historial->created_at)->endOfDay();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
@@ -1015,10 +1029,10 @@ class Expediente extends Model
             return $evaluar['dias_pausado'];
         } else {
 
-            $fecha_1 = Carbon::parse($asignacion->fecha_asig);
+            //$fecha_1 = $this->getDaysAfterAsig();; // Carbon::parse($asignacion->fecha_asig);
             $fecha_2 = Carbon::now();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
-
+            
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
 
                 $segmento = $this->getSegmentoActivo();
@@ -1138,9 +1152,9 @@ class Expediente extends Model
             $fecha_1 = Carbon::parse($asignacion->fecha_asig);
             if ($fecha_1 < Carbon::parse("13-01-2025")) {
                 $fecha_1 = Carbon::parse("13-01-2025");
-            }           
+            }
         }
-          
+
         $_vacaciones = $this->vacacionesService()->getByDates([
             ['operador' => "<=", "value" => $fecha_1],
             ['operador' => ">=", "value" => $fecha_1]
@@ -1208,7 +1222,7 @@ class Expediente extends Model
         $color = 'green';
         $dias = 0;
         $periodo = $this->getPeriodoActivo();
-        $periodo->prdfecha_inicio = date("2024-08-26");
+        $periodo->prdfecha_inicio = date("2025-08-03");
         $now = Carbon::now();
         $estamosVacaciones = DB::table("vacaciones_periodo")
             ->whereDate('fecha_inicio', '<=', $now)
@@ -1366,23 +1380,22 @@ class Expediente extends Model
         if ($estado != null) {
             return true;
         }
-        return false;   
+        return false;
     }
 
     public function getDaysForEndPause()
     {
         $asignacion = $this->asignacion;
         try {
-            $pausa = $asignacion->pausas()->orderBy("created_at","desc")->first();
-        
+            $pausa = $asignacion->pausas()->orderBy("created_at", "desc")->first();
+
             $days = $this->difDays(Carbon::now(), $pausa->fecha_final);
-           
-            
-            return$days; 
+
+
+            return $days;
         } catch (\Throwable $th) {
             return "error";
         }
-       
     }
 
     public function getCitas()

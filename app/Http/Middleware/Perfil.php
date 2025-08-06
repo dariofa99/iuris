@@ -47,7 +47,7 @@ class Perfil
       $correo = explode("@", $user->email);
       if (isset($correo[1])) {
         if (($user->tel1 == '' and $user->tel2 == '') || $user->tipodoc_id == '1' || $user->idnumber == '' || $user->name == '' || $user->lastname == '' || $user->fechanacimien == '' || $user->address == ''  || $correo[1] == 'mail.com' || $user->cursando_id == '1' || $user->genero_id == '5' || $user->genero_id == '1') {
-          Session::flash('message-danger', 'Recuerda! Primero necesitamos que actualices tu información personal, como correo, contraseña y curso.');
+          Session::flash('message-danger', 'Recuerda! Si sigues mirando este mensaje, necesitamos que actualices tu información personal, como correo, si termina en @mail.com, contraseña o curso, si aún no se asignado.');
           return redirect('users/' . $user->id . '/edit');
         } elseif (Hash::check('udenarcj', $user->password)) {
           Session::flash('message-danger', 'Recuerda! Falta actualizar la contraseña.');

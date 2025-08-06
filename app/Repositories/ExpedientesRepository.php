@@ -534,7 +534,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 $pausas_ = $this->pausaService->getByAsignacion($asignacion, [
                     ['operador' => "<=", "value" => $_vacacion->fecha_inicio],
                     ['operador' => ">=", "value" => $_vacacion->fecha_inicio]
-                ]);
+                ]); 
                 if (count($pausas_) > 0) {
                     if ($_vacacion->fecha_fin > $pausas_[0]->fecha_final) {
                         $days_pausado += getDiffDays($pausas_[0]->fecha_final, $_vacacion->fecha_fin);
