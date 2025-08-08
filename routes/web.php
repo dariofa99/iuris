@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Session;
 
 Route::get('webservice', 'WebServicesController@index');
 
+Route::get('webservice/movies', 'WebServicesController@guzzleAPI');
+
 Route::post('webservice', 'WebServicesController@index');
 Route::get('autorizacion', 'AutorizacionesController@verificar');
 Route::post('autorizacion/verificar', 'AutorizacionesController@verificarPdf');

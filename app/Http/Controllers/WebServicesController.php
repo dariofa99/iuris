@@ -10,6 +10,7 @@ use Auth;
 use Redirect;
 use Validator;
 use App\Mail\ConfirmarCorreo;
+use App\Movie;
 use App\Sede;
 use Illuminate\Support\Facades\Mail;
 
@@ -86,5 +87,16 @@ class WebServicesController extends Controller
                 ->withInput();
        
     }
+
+
+    //metodo para consumir modelo de peliculas Movie
+    public function guzzleAPI(Request $request)
+    {
+        //apligar paginate and limit
+
+        $movies = Movie::paginate($request->get('limit', 10));
+        return response()->json($movies);
+    }
+   
 
 }
