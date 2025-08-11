@@ -570,7 +570,7 @@ class Expediente extends Model
 
         $hijos = [];
         $segmento = $this->getSegmentoActivo();
-
+ 
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")
@@ -608,7 +608,10 @@ class Expediente extends Model
                         }
                     }
 
-                    if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 and $hijosAct[0]->actestado_id != 101 and $hijosAct[0]->actestado_id != 139 and $hijosAct[0]->fecha_limit !== null and $hijosAct[0]->fecha_limit < $date) {
+                    if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 
+                    and $hijosAct[0]->actestado_id != 101 
+                    and $hijosAct[0]->actestado_id != 139 
+                    and $hijosAct[0]->fecha_limit !== null and $hijosAct[0]->fecha_limit < $date) {
 
                         $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
@@ -627,10 +630,11 @@ class Expediente extends Model
                             'tbl_org_id' => $actuacion->id,
                         ];
                         //
+                        dd($actuacion);
                         $actuacion->actestado_id = 139;
                         $actuacion->actuserupdated = Auth::user()->idnumber;
-                        $actuacion->save();
-                        $actuacion->asignarNotas($data);
+                        //$actuacion->save();
+                        //$actuacion->asignarNotas($data);
                     }
                 }
             }
@@ -1153,6 +1157,11 @@ class Expediente extends Model
             if ($fecha_1 < Carbon::parse("13-01-2025")) {
                 $fecha_1 = Carbon::parse("13-01-2025");
             }
+        }
+
+        $periodo = $this->getPeriodoActivo();
+        if($fecha_1 < Carbon::parse($periodo->prdfecha_inicio)){
+            $fecha_1 = Carbon::parse($periodo->prdfecha_inicio);
         }
 
         $_vacaciones = $this->vacacionesService()->getByDates([

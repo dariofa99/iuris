@@ -90,13 +90,13 @@ class WebServicesController extends Controller
 
 
     //metodo para consumir modelo de peliculas Movie
-    public function guzzleAPI(Request $request)
+  /*   public function guzzleAPI(Request $request)
     {
         //apligar paginate and limit
 
         $movies = Movie::paginate($request->get('limit', 10));
         return response()->json($movies);
-    }
+    } */
    
 
 }

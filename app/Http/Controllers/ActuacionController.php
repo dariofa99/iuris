@@ -140,8 +140,7 @@ class ActuacionController extends Controller
   public function create()
   {
     $expediente = Expediente::where('expid', '2019B-11')->first();
-    $actuaciones = $expediente->setNotActLimit();
-
+   
     //dd($actuaciones);
     //
   }

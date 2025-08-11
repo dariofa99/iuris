@@ -426,7 +426,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         //Evaluar si se realizo en pausa
         $pausas = $this->pausaService->getByAsignacion($asignacion, [
             ['operador' => "<=", "value" => $fecha_2],
-            ['operador' => ">=", "value" => $fecha_2]
+            ['operador' => ">=", "value" => $fecha_2] 
         ]);
         
         //SI HAY VACACIONES y PAUSAS
