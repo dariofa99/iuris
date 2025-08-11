@@ -597,7 +597,7 @@ Route::get('/prueba', function () {
 
   $expediente = Expediente::where('expid', 'PRF-80522-2023-42933')->first();
 
- $expediente->setNotActLimit();
+// $expediente->setNotActLimit();
 
 
   dd($expediente);

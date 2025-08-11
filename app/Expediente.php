@@ -630,11 +630,11 @@ class Expediente extends Model
                             'tbl_org_id' => $actuacion->id,
                         ];
                         //
-                        dd($actuacion);
+                        
                         $actuacion->actestado_id = 139;
                         $actuacion->actuserupdated = Auth::user()->idnumber;
-                        //$actuacion->save();
-                        //$actuacion->asignarNotas($data);
+                        $actuacion->save();
+                        $actuacion->asignarNotas($data);
                     }
                 }
             }
