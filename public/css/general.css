@@ -7,7 +7,10 @@
 .row_user_exp {
   border-bottom: 1px solid rgb(223, 223, 223);
 }
-
+.btn_historial {
+  color: blue !important;
+  text-decoration: underline;
+}
 .ast_required {
   color: red;
 }

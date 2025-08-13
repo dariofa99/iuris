@@ -1,10 +1,10 @@
-@component('components.b4.modal_large')
+@component('components.b4.modal_extra_large')
 
 	@slot('trigger')
 		mymodalShowAlerts
 	@endslot
 	@slot('size')
-	modal-dialog modal-lg
+	modal-dialog modal-lg 
 	@endslot
 
 	@slot('title')

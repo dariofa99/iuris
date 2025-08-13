@@ -8,10 +8,10 @@
 </div>
 <!--cont_data_req-->
 <div @if (currentUser()->hasRole('estudiante')) id="cont_data_req" @endif>
-   
-        
-   
-   @include('myforms.components_exp.usuarios_caso')
+
+
+
+    @include('myforms.components_exp.usuarios_caso')
 
 
 
@@ -140,29 +140,30 @@
                     </div>
 
                     <div class="col-md-6" style="padding-left: 0px; text-align:end;">
-                        @if ($expediente->fechaHistorialDatosCaso(141))
-                            Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(141)) }}
-                            <a id="modalhcaso" data-name="{{ $expediente->expid }}"
+                        <a class="btn_historial" id="modalhcaso" data-name="{{ $expediente->expid }}"
                                 style="cursor: pointer; border-bottom:1px solid rgb(206, 206, 206)"> Ver
                                 historial</a>
+                        @if ($expediente->fechaHistorialDatosCaso(141))
+                            Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(141)) }}
+                            
                         @elseif($expediente->expestado_id == 6)
                             <span class="badge bg-green">
                                 El caso esta en pausa.
                             </span>
-                        @else       
+                        @else
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
-                                {!! $expediente->getDaysForEvaHechos() !!}   
+                                {!! $expediente->getDaysForEvaHechos() !!}
                             </span>
                         @endif
                     </div>
                 </div>
 
-                {!! Form::textarea('exphechos', null, [
-                    'class' => 'form-control',
-                    'maxlength' => '100000',
-                    'id' => 'exp_hechos',
-                    $disabled,
-                ]) !!}
+                <textarea {{ $disabled }} name="exphechos" maxlength="10000" class="form-control" id="exp_hechos" cols="30"
+                    rows="10">
+@if ($expediente->historialHechosRespuesta()->where('hisdc_tipo_datos_caso', 141)->where('hisdc_idnumberest_id', $expediente->expidnumberest)->get()->isNotEmpty())
+{{ old('exphechos', $expediente->exphechos) }}
+@endif
+</textarea>
             </div>
         </div>
     </div>
@@ -174,34 +175,39 @@
                         {!! Form::label('Respuesta estudiante: ') !!}
                     </div>
                     <div class="col-md-6" style="padding-left: 0px; text-align:end;">
+                        <a class="btn_historial" style="cursor: pointer;border-bottom:1px solid rgb(206, 206, 206)" id="modalresestudiante"
+                            data-name="{{ $expediente->expid }}">
+                            Ver historial</a>
                         @if ($expediente->fechaHistorialDatosCaso(142))
-                           Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(142)) }}
-                            <a style="cursor: pointer;border-bottom:1px solid rgb(206, 206, 206)"
-                                id="modalresestudiante" data-name="{{ $expediente->expid }}">
-                                Ver historial</a> 
-                               
+                            Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(142)) }}
                         @elseif($expediente->expestado_id == 6)
                             <span class="badge bg-green">
-                                El caso esta en pausa.     
+                                El caso esta en pausa.
                             </span>
                         @else
                             {{-- Días despues de asignado: --}}
                             <span class="badge bg-{{ $expediente->getTextForTH('dias') > 5 ? 'red' : 'green' }}">
-                                {!! $expediente->getDaysForEvaHechos() !!}    
+                                {!! $expediente->getDaysForEvaHechos() !!}
                             </span>
                         @endif
                     </div>
                 </div>
-                {!! Form::textarea('exprtaest', null, [
-                    'class' => 'form-control',
-                    'maxlength' => '100000',
-                    'id' => 'exp_resp_est',
-                    $disabled,
-                ]) !!}
+
+
+
+
+                <textarea {{ $disabled }} name="exprtaest" maxlength="10000" class="form-control" id="exp_resp_est" cols="30"
+                    rows="10">
+@if ($expediente->historialHechosRespuesta()->where('hisdc_tipo_datos_caso', 142)->where('hisdc_idnumberest_id', $expediente->expidnumberest)->get()->isNotEmpty())
+{{ old('exprtaest', $expediente->exprtaest) }}
+@endif
+</textarea>
+
             </div>
         </div>
     </div>
-    @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == '1' || $expediente->expestado_id == '3' || $expediente->expestado_id == '6')
+    @if (currentUser()->hasRole('estudiante') and
+            $expediente->expestado_id == '1' || $expediente->expestado_id == '3' || $expediente->expestado_id == '6')
         <div class="row">
             <div class="col-md-12" align="right">
                 <div class="form-group">

@@ -111,6 +111,11 @@ class Expediente extends Model
         return $this->belongsTo(RamaDerecho::class, 'expramaderecho_id', 'id');
     }
 
+     public function historialHechosRespuesta()
+    {
+        return $this->hasMany(HistorialDatosCaso::class, 'hisdc_expidnumber', 'expid');
+    }
+
     public function solicitante()
     {
         return $this->belongsTo(User::class, 'expidnumber', 'idnumber');

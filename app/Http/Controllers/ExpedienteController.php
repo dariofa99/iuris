@@ -320,13 +320,11 @@ class ExpedienteController extends Controller
       } else {
         $expediente->asignacion->fecha_eva = null;
         $expediente->asignacion->save();
-      }   
+      }
       return response()->json($expediente);
     } catch (\Throwable $th) {
       return response()->json(['errors' => ["Error al cambiar la fecha"]], 500);
-     
     }
-   
   }
 
 
@@ -386,16 +384,16 @@ class ExpedienteController extends Controller
         }
       }
     }
-   
-    
+
+
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     $expediente->setNotActLimit();
 
 
-    
+
 
     if ($expediente->isValidEvaPause()) {
-      
+
       $request['expestado_id'] = 1;
       $expediente = $this->expedienteService->update($expediente, $request);
       $request['comentario'] = 'Fecha de pausa caducada';
@@ -414,11 +412,11 @@ class ExpedienteController extends Controller
           $query->where('asigexp_id', $expediente->expid);
         })->orderBy('expedientes_pausa.created_at', 'desc')
         ->first();
-     
+
       if ($pausa and $pausa->asig_caso_id != $asignacion->id) {
         $fechaCierre = Carbon::parse("2024-08-29");
         if ($pausa->fecha_final < $fechaCierre) {
-         // dd($pausa);
+          // dd($pausa);
           $request['expestado_id'] = 1;
           $expediente = $this->expedienteService->update($expediente, $request);
           $request['comentario'] = 'Fecha de pausa caducada';
@@ -1178,18 +1176,48 @@ class ExpedienteController extends Controller
   public function historialDatosCaso($exp, $tipo)
   {
 
-    $historial = HistorialDatosCaso::where('hisdc_expidnumber', $exp)
+    $expediente = Expediente::where('expid', $exp)->first();
+    $asignacion = $expediente->getAsignacion();
+    $periodo = $this->periodosService->getPeriodoActivo();
+    $fecha_inicio = Carbon::parse($asignacion->fecha_asig);
+    if ($asignacion->fecha_asig < $periodo->prdfecha_inicio) {
+      $fecha_inicio = Carbon::parse($periodo->prdfecha_inicio);
+    }
+    /* $historial = HistorialDatosCaso::where('hisdc_expidnumber', $exp)
       ->join('users', 'users.idnumber', '=', 'historial_datos_casos.hisdc_idnumberest_id')
       ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'historial_datos_casos.hisdc_expidnumber')
       ->select('hisdc_idnumberest_id', 'name', 'lastname', 'hisdc_datos_caso', 'historial_datos_casos.created_at')
       ->where('hisdc_tipo_datos_caso', $tipo)
       ->orderBy('historial_datos_casos.id', 'DESC')
+      ->get(); */
+    $historial = $expediente->historialHechosRespuesta()
+      ->where('hisdc_idnumberest_id', $expediente->expidnumberest)
+      ->where('hisdc_tipo_datos_caso', $tipo)
+      ->orderBy('historial_datos_casos.id', 'DESC')
       ->get();
 
-    $expediente = Expediente::where('expid', $exp)->first();
+    $historial->each(function ($item) use ($fecha_inicio) {
+      $item->name = $item->estudiante->name;
+      $item->lastname = $item->estudiante->lastname;
+      $item->afterdays = getDiffDays($fecha_inicio, $item->created_at);
+    });
+
+    $historialOld = $expediente->historialHechosRespuesta()
+      ->where('hisdc_idnumberest_id','<>', $expediente->expidnumberest)
+      ->where('hisdc_tipo_datos_caso', $tipo)
+      ->orderBy('historial_datos_casos.id', 'DESC')
+      ->get();
+
+       $historialOld->each(function ($item) use ($fecha_inicio) {
+      $item->name = $item->estudiante->name;
+      $item->lastname = $item->estudiante->lastname;
+      $item->afterdays = getDiffDays($fecha_inicio, $item->created_at);
+    });
+
     return response()->json(
       [
         "historial" => $historial,
+        "historial_old" => $historialOld,
         "num_dias" => $expediente->getDaysForEvaHechos(),
       ]
     );
@@ -1450,7 +1478,7 @@ class ExpedienteController extends Controller
       $notify->notify(new SolicitudDocenteCaso($notify));
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
     } elseif ($request->tipo_cambio == 1) {
-     /* $request['docidnumber'] = $request->new_docente_id;
+      /* $request['docidnumber'] = $request->new_docente_id;
       $request['cambio_docidnumber'] = null;
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);*/
       $asig_doc->activo = 0;
@@ -1556,8 +1584,8 @@ class ExpedienteController extends Controller
   public function getTeacherCases(Request $request)
   {
     $exp = $this->expedienteService->find($request->expid);
-    $docentes = $exp->asignacion->docentes->load(["docente","admin"]);
-    return response()->json($docentes); 
+    $docentes = $exp->asignacion->docentes->load(["docente", "admin"]);
+    return response()->json($docentes);
   }
 
   public function pausarExpediente(Request $request)

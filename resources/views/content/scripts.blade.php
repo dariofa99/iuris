@@ -2,11 +2,11 @@
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircularActualSS");
 
-     
-            var message = getGeneralMessage();
-        
-      
-        
+
+        var message = getMantenimientoMessage();
+
+
+
         //var message = getMantenimientoMessage();
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
@@ -18,7 +18,7 @@
         $("#mymodalShowAlerts").modal("hide");
         e.preventDefault();
 
-    })   
+    })
 
     function getCarrousel() {
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -137,24 +137,21 @@
 
     function getMantenimientoMessage() {
         var message = '';
-        message += '<div class="alert alert-info" style="font-size:19px">';
+        message += '<div class="" style="font-size:19px">';
         message += `<h1>
                     <strong >
                         Atención!<br>
-                        Teniendo en cuenta que IURIS entrará en periodo de 
-                        vacaciones a partir de las cero horas del día
-                        sábado 12 de abril hasta las veinticuatro horas del día domingo
-                        20 de abril, se recuerda que
-                        se pausaran los días en los que evalúa el sistema <b> A
-                        EXECPCIÓN de las fechas solicitadas por el DOCENTE </b>
-                        para realizar correcciones en los respectivos casos o actuaciones.
+                        Instrucción para la reasignación de casos. <br></h1>
+                        Estimados estudiantes recuerden que, en caso de que un asunto o caso le sea reasignado, es su deber y obligación actualizar la información registrada en los campos de “Datos del caso”, Hechos y Respuesta de estudiante.
+                        Para ello, deberá contactar a la persona usuaria con el fin de verificar, confirmar o complementar la información previamente redactada por el/la estudiante anterior.
+Esta actualización debe reflejar, con sus propias palabras, los hechos y la respuesta, asegurando que el registro sea claro, preciso y fidedigno a lo manifestado por la persona usuaria.
                     </strong>
                     <br>
                           <br>
                       
-                    </h1> </div>`;
+                     </div>`;
         message += `<hr>`;
-        message += `<span> Últ. Actualización: 08 de mayo de 2025 <br>
+        message += `<span> Últ. Actualización: 12 de agosto de 2025 <br>
                          
                       </span>`;
 
@@ -171,6 +168,4 @@
         }
         return message;
     }
-    
- 
 </script>

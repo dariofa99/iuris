@@ -18,4 +18,10 @@ class HistorialDatosCaso extends Model
         'created_at',
         'updated_at'
         ];
+
+        public function estudiante()
+    {
+        return $this->belongsTo(User::class, 'hisdc_idnumberest_id', 'idnumber');
+    }
+
 }

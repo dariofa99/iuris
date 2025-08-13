@@ -1422,13 +1422,13 @@ $(document).ready(function () {
         $("#myModal_general #content-data").append($table);
 
         // Agregar filas si hay datos
-        if (response.length > 0) {       
+        if (response.length > 0) {
             let html = '';
             $(response).each(function (key, value) {
                 html += '<tr>';
                 html += '<td>' + value.created_at + '</td>';
-                html += '<td>' + value.docente.name +" "+value.docente.lastname + '</td>';
-                html += '<td>' + value.admin.name +" "+value.admin.lastname + '</td>';
+                html += '<td>' + value.docente.name + " " + value.docente.lastname + '</td>';
+                html += '<td>' + value.admin.name + " " + value.admin.lastname + '</td>';
                 html += '</tr>';
             });
 
@@ -3107,7 +3107,7 @@ function fillModalHistoryDataCase(response) {
     } else {
         var inforhis = "";
         $(response.historial).each(function (key, value) {
-            var fecha = response.num_dias;
+            var fecha = value.afterdays < 0 ? 0 : value.afterdays;
             inforhis += `
             <div class="row">   
                 <div class="col-md-7">
@@ -3125,19 +3125,74 @@ function fillModalHistoryDataCase(response) {
             <div class="row">
                 <div class="col-md-12">
                     <div class="cont-text">                                     
-                        <textarea class="form-control textarea-asesorias-docente" readonly="" name="asesorias_docente" cols="50" rows="10">`+ value.hisdc_datos_caso + `</textarea>
+                        <textarea id="miTextareas" class="form-control textarea-asesorias-docente" readonly="" name="asesorias_docente" cols="50" rows="10">`+ value.hisdc_datos_caso + `</textarea>
                     </div>                                        
                     <div class="cont-fecha">
                     <i>	`+ value.created_at + `</i>
                 </div>
                 </div>
             </div><hr>`;
-
-
-
         });
+        if(response.historial_old.length > 0){
+            inforhis += `
+        <div class="row">  
+             <div class="col-md-5">
+               <button id="btnVerAnterior" class="btn btn-info btn-sm btn-block">              
+               Ver redacción del anterior estudiante</button>
+             </div>
+             </div> `;
+        }
+        inforhis += `<div id="historial_old" style="display:none">`;
+        $(response.historial_old).each(function (key, value) {
+            var fecha = 0;
+            inforhis += `          
+            <div class="row">   
+                <div class="col-md-7">
+                    <label title="C.C. ${value.hisdc_idnumberest_id}">` + value.name + ' ' + value.lastname + ` </label>
+                </div> 
+                <div class="col-md-5">
+                <label> Días después de la asignación: 
+                <span class="badge ${fecha > 5 ? 'bg-red' : 'bg-green'} ">  ${fecha} </span>
+                </label>
+                </div>
+                <div class="col-md-1">
+                           
+                </div>                        
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="cont-text">                                     
+                        <textarea id="miTextarea" class="form-control textarea-asesorias-docente" readonly="" name="asesorias_docente" cols="50" rows="10">`+ value.hisdc_datos_caso + `</textarea>
+                    </div>                                        
+                    <div class="cont-fecha">
+                    <i>	`+ value.created_at + `</i>
+                </div>
+                </div>
+            </div>
+            `;
+        });
+        inforhis += `</div>
+            <hr>`;
         $("#modal-conten-js").html(inforhis);
         $("#mymodaljs").modal("show");
+        $("#modal-conten-js")
+            .on("paste copy cut", "textarea.textarea-asesorias-docente", function (e) {
+                e.preventDefault();
+                // Opcional: usa un toast; evita alert en cada tecla para no molestar
+            })
+            .on("contextmenu", "textarea.textarea-asesorias-docente", function (e) {
+                e.preventDefault(); // bloquea clic derecho
+            })
+            .on("keydown", "textarea.textarea-asesorias-docente", function (e) {
+                // Extra: bloquea atajos Ctrl/Cmd + C/X/V
+                if ((e.ctrlKey || e.metaKey) && ["c", "x", "v"].includes(e.key.toLowerCase())) {
+                    e.preventDefault();
+                }
+            });
+
+        $("#btnVerAnterior").on("click", function () {
+            $("#historial_old").toggle();
+        });
     }
 }
 function validarNotasUpdate(errors, form) {

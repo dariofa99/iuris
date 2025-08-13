@@ -142,11 +142,12 @@
                         {!! Form::label('Hechos: ') !!}
                     </div>
                     <div class="col-md-6" style="padding-left: 0px; text-align:end;">
-                        @if ($expediente->fechaHistorialDatosCaso(141))
-                            Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(141)) }}
-                            <a id="modalhcaso" data-name="{{ $expediente->expid }}"
+                         <a class="btn_historial" id="modalhcaso" data-name="{{ $expediente->expid }}"
                                 style="cursor: pointer; border-bottom:1px solid rgb(206, 206, 206)"> Ver
                                 historial</a>
+                        @if ($expediente->fechaHistorialDatosCaso(141))
+                            Última actualización {{ getSmallDate($expediente->fechaHistorialDatosCaso(141)) }}
+                           
                         @else
                             Días despues de asignado
                             <span class="badge bg-{{ $expediente->getDaysAfterAsig() > 5 ? 'red' : 'green' }}">
@@ -155,13 +156,13 @@
                         @endif
                     </div>
                 </div>
-                {!! Form::label('Resumen del Caso: ') !!}
-                {!! Form::textarea('exphechos', null, [
-                    $disabled,
-                    'class' => 'form-control',
-                    'maxlength' => '100000',
-                    'id' => 'exp_hechos',
-                ]) !!}
+                     <textarea {{ $disabled }} name="exphechos" maxlength="10000" class="form-control" id="exp_hechos" cols="30"
+                    rows="10">
+@if ($expediente->historialHechosRespuesta()->where('hisdc_tipo_datos_caso', 141)->where('hisdc_idnumberest_id', $expediente->expidnumberest)->get()->isNotEmpty())
+{{ old('exphechos', $expediente->exphechos) }}
+@endif
+</textarea>
+              
             </div>
         </div>
     </div>
