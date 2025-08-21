@@ -104,14 +104,15 @@
      <tr>
 
             <td colspan="2" width="48%" >
-                <span style="border-bottom: 1px solid black;display: block;">William Alejandro Calvache Romero</span><br>
-                Nombre:<br>
+                <span style="border-bottom: 1px solid black;display: block;">
+                    </span>
+                
               <span align="center" style="display: block; text-align: center;"> DIRECCIÓN ADMINISTRATIVA </span>
             </td>
             <td width="4%"></td>
             
             <td colspan="2">
-                 <span style="border-bottom: 1px solid black;display:block;height: 20px;"></span><br>
+                 <span style="border-bottom: 1px solid black;display:block;height: 20px;"></span>
                 Nombre:<br>
                <span align="center" style="display: block; text-align: center;"> ESTUDIANTE </span>
 

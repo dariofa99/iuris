@@ -107,6 +107,18 @@
         </div>
     </div>
 
+    <div class="col-md-{{ isset($col) ? $col : '6' }}">
+        <div class="form-group has-feedback">
+            <label for="name">Fecha de Nacimiento<span class="ast_required">*</span></label>
+            <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='fechanacimien'
+                value="{{ isset($user) ? $user->tel2 : '' }}" name='fechanacimien' required type="text"
+                class="form-control form-control-sm onlynumber required" data-toggle="tooltip" data-mask
+                title="Fecha de nacimiento" placeholder="Fecha de nacimiento" data-inputmask="'alias': 'yyyy/mm/dd'">
+        </div>
+    </div>
+
+
+
     @include('myforms.components_user.aditional_data', [
         'data' => getReferencesDataBySection('datos_personales', 'users'),
     ])
