@@ -11,7 +11,8 @@
             </div>
 
             <div class="col-md-2">
-                <button id="btn_opaddrpl-{{$key }}" data-key="{{$key}}" class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
+                <button id="btn_opaddrpl-{{ $key }}" data-key="{{ $key }}"
+                    class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
                     <i class="fa fa-user"></i>
                     Agregar
                 </button>
@@ -32,9 +33,18 @@
                         'disabled' => 'disabled',
                         'user' => $rep_legal,
                     ])
+                    @include('myforms.components_user.identitaria',[
+                        'user'=>$rep_legal,
+                         'disabled' => 'disabled',
+                    ])
+                    @include('myforms.components_user.discapacidad',[
+                        'user'=>$rep_legal,
+                        'disabled' => 'disabled',
+                        'discaform' => 'discaform',
+                    ])
                 </div>
             </div>
-           
+
 
 
 
@@ -52,8 +62,18 @@
                     data-view="user_replegal_form" data-juridico="{{ $parte_->id }}">
                     <div class="row">
                         @include('myforms.conciliaciones.componentes.formulario_rep_legal', [
-                            'disabled' => 'disabled',
+                            'disabled' => '',
                         ])
+                        @include('myforms.components_user.identitaria',[
+                            'disabled' => '',
+                           
+
+                        ])
+                        @include('myforms.components_user.discapacidad',[
+                            'disabled' => '',
+                            'discaform' => 'discaform',
+                        ])
+                     
                     </div>
                     <div class="row">
                         <div class="col-md-3">

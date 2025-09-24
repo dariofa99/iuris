@@ -4,9 +4,7 @@
             'disabled' => isset($user) ? 'disabled' : '',
             'col' => 4,
         ])
-    </div>
-
-    <div class="row">
+    
         <div class="col-md-4">
             <div class="form-group">
                 {!! Form::label('Contraseña: ') !!}
@@ -24,24 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                {!! Form::label('Fecha Nacimiento: ') !!}
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div>
-                    {!! Form::date('fechanacimien', null, [
-                        'class' => 'form-control form-control-sm',
-                        'required' => 'required',
-                        isset($user) ? 'disabled' : '',
-                    ]) !!}
-                </div>
-                <!-- /.input group -->
-            </div>
-        </div>
+       
         <div class="col-md-4">
             <div class="form-group">
                 {!! Form::label('Rol de Usuario: *') !!}

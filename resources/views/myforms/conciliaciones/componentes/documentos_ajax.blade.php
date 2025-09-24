@@ -32,4 +32,4 @@
                             @endif
                         </td>
                     </tr>
-                @endforeach
+                @endforeach 

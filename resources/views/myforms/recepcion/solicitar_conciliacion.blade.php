@@ -84,9 +84,15 @@
             }
 
             if ($paso >= '6') {
-                $user_ = $conciliacion->getUser(197); //solicitado
-
-                if ($user_->tipopers_id == 238) {
+                //$user_ = $conciliacion->getUser(197); //solicitado
+                $users_s = $conciliacion->usuarios()->where('tipo_usuario_id', 197)->get();
+                $hasJuridico = false;
+                foreach ($users_s as $user_) {
+                    if ($user_->tipopers_id == 238) {
+                        $hasJuridico = true;
+                    }
+                }
+                if (!$hasJuridico) {
                     $pasos[5]['visible'] = true;
                 }
             }
@@ -154,7 +160,8 @@
                                     </a>
                                 @else
                                     <button type="button" data-step="{{ intval($paso) + 1 }}" class="btn btn-success"
-                                        data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}" id="{{ $pasos[$paso - 1]['id'] }}">
+                                        data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}"
+                                        id="{{ $pasos[$paso - 1]['id'] }}">
                                         Siguiente
                                     </button>
                                 @endif

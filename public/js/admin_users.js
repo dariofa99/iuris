@@ -8,7 +8,15 @@ $(document).ready(function () {
   $(".select2_ramas").selectpicker("refresh");
   $("#myFormUserEdit input[name='idnumber']").prop("disabled", true).removeAttr('name');
  
- 
+   $("#myFormUserEdit")
+    .on("change", "select[name='pbepersondiscap']", function (e) {
+      if ($(this).val() == 1) {
+        mostrarCompDiscapUser('myFormUserEdit')
+      } else {
+        ocultarCompDiscapUser('myFormUserEdit');
+      }
+    });
+
   $("#table_list_model").on("click", ".btn_switch_estdoc", async function (e) {
     e.preventDefault();
     var id = $(this).attr("id");

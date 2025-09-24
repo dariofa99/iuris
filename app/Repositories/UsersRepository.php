@@ -100,8 +100,10 @@ class UsersRepository extends BaseRepository implements UsersService
       'estrato_id' => $request->has('estrato_id') ? $request['estrato_id'] : '9',
       'estadocivil_id' => $request->has('estadocivil_id') ? $request['estadocivil_id'] : '16',
       'address' => $request->has('address') ? $request['address'] : '',
-      'fechanacimien' => $request->has('estrato') ? $request['fechanacimien'] : null,
+      'fechanacimien' => $request->has('fechanacimien') ? $request['fechanacimien'] : null,
       'datecreated' => Carbon::now()->format('Y-m-d'),
+      'pbepersondiscap' => $request->has('pbepersondiscap') ? $request['pbepersondiscap'] : 0,
+      'has_apoyo' => $request->has('has_apoyo') ? $request['has_apoyo'] : 0,
     ]);
 
     if ($request->has('data') and is_array($request->data)) {

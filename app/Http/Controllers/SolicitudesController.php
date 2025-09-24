@@ -104,7 +104,7 @@ class SolicitudesController extends Controller
                 if ($request->paso == 2) {
                     $user = $conciliacion->getUser(205); //solicitante
                     Auth::login($user);
-                    //natural
+            
                     if ($user->tipopers_id != 238) {
 
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
@@ -127,9 +127,14 @@ class SolicitudesController extends Controller
                     }
                 }
                 if ($request->paso == 6) {
-                    $user = $conciliacion->getUser(197); //solicitado                   
-                    //natural
-                    if ($user->tipopers_id != 238) {
+                    $users = $conciliacion->usuarios()->where('tipo_usuario_id', 197)->get();
+                    $hasJuridico = false;
+                    foreach ($users as $user) {
+                        if ($user->tipopers_id == 238) {
+                            $hasJuridico = true;
+                        }
+                    }
+                    if (!$hasJuridico) {
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
                     }
                 }
@@ -162,7 +167,7 @@ class SolicitudesController extends Controller
         if ($request->paso <= 3) {
             if ($solicitud->type_status_id == 165) {
                 if (Auth::guest()) {
-                   return redirect("/solicitudes/expedientes/recepcion?paso=1");
+                    return redirect("/solicitudes/expedientes/recepcion?paso=1");
                 }
                 $user = $solicitud->user;
                 return redirect("/solicitudes/recepcion/expedientes/$solicitud->token?paso=4");
@@ -330,12 +335,11 @@ class SolicitudesController extends Controller
         $response = [];
         try {
             ProcessEmailSendSolicitudConciliacionStart::dispatch(
-                $user,
+                $user->email,
                 $conciliacion
-                
-            )->delay(now()->addSeconds(5));
 
-                } catch (\Throwable $th) {
+            )->delay(now()->addSeconds(5));
+        } catch (\Throwable $th) {
             $response['errors'] = [$th->getMessage()];
         }
 
@@ -353,9 +357,9 @@ class SolicitudesController extends Controller
         }
         $solicitudes = $this->get_solicitudes();
         $render = view('myforms.solicitudes.frm_list_solicitudes_ajax', compact('solicitudes'))->render();
-        NewPush::channel('solicitudes_coord')
+        /* NewPush::channel('solicitudes_coord')
             ->message(['data' => 'mensaje', 'render' => $render])
-            ->publish();
+            ->publish(); */
         return  redirect()->action('SolicitudesController@waitRoom', $solicitud->token);
     }
 
@@ -416,7 +420,7 @@ class SolicitudesController extends Controller
                 ->render();
             /* NewPush::channel('solicitudes_coord')
             ->message(['data'=>'mensaje','render'=>$render,'renderh'=>$renderh])->publish(); */
- 
+
             if ($solicitud->type_status_id == 154) {
                 $solicitud->type_status_id = 155;
                 $solicitud->save();

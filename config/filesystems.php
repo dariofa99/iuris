@@ -73,6 +73,12 @@ return [
             'url' => 'app/conciliacion_files',
         ],
 
+         'coment_files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/coment_files'),
+            'url' => 'app/coment_files',
+        ],
+
         'exp_procjfiles' => [
             'driver' => 'local',
             'root' => storage_path('app/exp_procjfiles'),

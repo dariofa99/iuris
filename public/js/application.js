@@ -6,29 +6,32 @@ const Toast = Swal.mixin({
 });
 function activeOtherInput(e) {
     var elementType = $(e.target).prop("tagName").toLowerCase(); // Detecta si es select
-    var active, id;
+    var active, id, formParent;
     if (elementType === "select") {
         var selectedOption = $(this).find("option:selected");
         active = selectedOption.attr("data-active_other");
         id = $(this).attr("data-id");
+        formParent = $(this).closest("form"); // <-- accede al form padre
     } else if ($(this).attr("type") === "checkbox" || $(this).attr("type") === "radio") {
         active = $(this).attr("data-active_other");
         id = $(this).attr("data-id");
+        formParent = $(this).closest("form");
     }
-    $("#lbl_other-" + id).hide();
-    $("#value_other_text-" + id).attr("type", "hidden");
+
     if (elementType === "select" || $(this).is(":checked")) {
+        formParent.find("#lbl_other-" + id).hide();
+        formParent.find("#value_other_text-" + id).attr("type", "hidden");
         if (active == 1) {
-            $("#lbl_other-" + id).show();
-            $("#value_other_text-" + id).attr("type", "text");
+            formParent.find("#lbl_other-" + id).show();
+            formParent.find("#value_other_text-" + id).attr("type", "text");
         } else {
-            $("#lbl_other-" + id).hide();
-            $("#value_other_text-" + id).attr("type", "hidden");
+            formParent.find("#lbl_other-" + id).hide();
+            formParent.find("#value_other_text-" + id).attr("type", "hidden");
         }
-    } 
+    }
 }
 $(document).ready(function () {
-    $(document).on("change",".input_user_ad",activeOtherInput);
+    $(document).on("change", ".input_user_ad", activeOtherInput);
 
     $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
@@ -314,7 +317,7 @@ async function index_pagination(route) {
     }
     window.history.pushState(null, "", route);
     return topics;
-} 
+}
 
 async function index_page(route, request) {
     const page = BASE_URL + route + "?" + new URLSearchParams(request);
@@ -579,16 +582,16 @@ function validateNotas(form) {
 
     });
     return errors
-} 
-function ocultarCompDiscapUser() {
-    $(".discaform").hide();
-    $("#has_apoyo").prop("disabled", true).val("");
-    $("#acept_ter").prop("disabled", true).prop("checked", false);
-    $(".has_apoyo").hide()
+}
+function ocultarCompDiscapUser(formId) {
+    $("#" + formId + " .discaform").hide();
+    $("#" + formId + " #has_apoyo").prop("disabled", true).val("");
+    $("#" + formId + " #acept_ter").prop("disabled", true).prop("checked", false);
+    $("#" + formId + " .has_apoyo").hide()
 }
 
-function mostrarCompDiscapUser() {
-    $(".discaform").show();
-    $(".has_apoyo").hide()
-    $("#has_apoyo").prop("disabled", false)
+function mostrarCompDiscapUser(formId) {
+    $("#" + formId + " .discaform").show();
+    $("#" + formId + " .has_apoyo").hide();
+    $("#" + formId + " #has_apoyo").prop("disabled", false);
 }

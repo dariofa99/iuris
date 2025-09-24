@@ -1,6 +1,7 @@
 <form id="myFormParteSolicitante" method="POST">
     <div class="row">
         @include('myforms.users.formulario_registro')
+        
         @include('myforms.components_user.identitaria')
         @include('myforms.components_user.discapacidad')
         @include('myforms.components_user.socioeconomica')

@@ -127,7 +127,7 @@ class UsersController extends Controller
 
 
     if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()->all()]);
+      return response()->json(['errors' => $validator->errors()->all()]); 
     }
     $user = $this->userService->store($request);
     if (Auth::guest()) Auth::login($user);

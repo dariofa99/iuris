@@ -849,7 +849,7 @@ $(document).ready(function () {
         $("#myFormUserCreateExpediente select[name='tipopers_id']").val(237);
         $("#myFormUserCreateExpediente select[name='tipodoc_id']").val(2);
         $("#content_infoexp").hide();
-        ocultarCompDiscapUser();
+        ocultarCompDiscapUser('myFormUserCreateExpediente');
     });
     $("#add_user_exp").on("click", function (e) {
         $("#myFormUserAddEditExpediente").attr("id", "myFormUserAddCreateExpediente");
@@ -858,7 +858,7 @@ $(document).ready(function () {
         $("#myFormUserAddCreateExpediente select[name='tipopers_id']").val(237);
         $("#myFormUserAddCreateExpediente select[name='tipodoc_id']").val(2);
         $("#content_infoexp").hide();
-        ocultarCompDiscapUser();
+        ocultarCompDiscapUser('myFormUserAddCreateExpediente');
     });
 
     $("#content_user_exp_add").on("blur", "input[name='idnumber']", async function (e) {
@@ -958,38 +958,42 @@ $(document).ready(function () {
 
 
     $("#content_user_exp_asig").on("change", "select[name='pbepersondiscap']", function (e) {
+         var formId = $(this).closest('form').attr('id');
         if ($(this).val() == 1) {
-            mostrarCompDiscapUser()
+            mostrarCompDiscapUser(formId)
         } else {
-            ocultarCompDiscapUser();
+            ocultarCompDiscapUser(formId);
         }
     });
 
     $("#content_user_exp_add")
         .on("change", "select[name='pbepersondiscap']", function (e) {
+                var formId = $(this).closest('form').attr('id');
             if ($(this).val() == 1) {
-                mostrarCompDiscapUser()
+                mostrarCompDiscapUser(formId)
             } else {
-                ocultarCompDiscapUser();
+                ocultarCompDiscapUser(formId);
             }
         });
 
     $("#myModal_exp_user_edit")
         .on("change", "select[name='pbepersondiscap']", function (e) {
+                var formId = $(this).closest('form').attr('id');
             if ($(this).val() == 1) {
-                mostrarCompDiscapUser()
+                mostrarCompDiscapUser(formId)
             } else {
-                ocultarCompDiscapUser();
+                ocultarCompDiscapUser(formId);
             }
         });
 
 
     $("#myModal_exp_user_add")
         .on("change", "select[name='pbepersondiscap']", function (e) {
+                var formId = $(this).closest('form').attr('id');
             if ($(this).val() == 1) {
-                mostrarCompDiscapUser()
+                mostrarCompDiscapUser(formId)
             } else {
-                ocultarCompDiscapUser();
+                ocultarCompDiscapUser(formId);
             }
         });
     $("#myModal_exp_user_edit")

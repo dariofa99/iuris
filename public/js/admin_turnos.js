@@ -61,9 +61,15 @@ $(document).ready(function () {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Si, eliminar!',
-			cancelButtonText: 'No, cancelar'
+			cancelButtonText: 'No, cancelar',
+			html: `
+					<div style="margin-top:10px; text-align:left;">
+					<input type="checkbox" id="confirmCheck">
+					<label for="confirmCheck"> Notificar por correo</label>
+					</div>
+  				`
 		}).then(async (result) => {
-			if (result.value) {
+			if (result.value) {}
 				$("#wait").show();
 				let response = await horariosService.deleteTurno(id);
 				toastr.success("Eliminado con éxito", "", {
@@ -135,7 +141,7 @@ $(document).ready(function () {
 		if (dias.length > 0) { // insertar o eliminar dias
 			$(dias).each(function (key, value) {
 				console.log(value);
-				
+
 				var v_info_id = value.split("_");
 
 				console.log(v_info_id);
@@ -216,7 +222,7 @@ $(document).ready(function () {
 		console.log(mydata);
 		if (mydata.length > 0) { //comprueba si hay informacion para guardar
 			let res = await horariosService.updateTurnosDocente(mydata);
-			dias=[];
+			dias = [];
 			consultar_horario(docidmunber);
 			Toast.fire({
 				title: 'Actualizado con éxito.',
@@ -346,14 +352,14 @@ $(document).ready(function () {
 
 	$('#myFormBuscarEstudiante').on('keyup', '.select_data_users', async function (e) {
 		let name = $(this).val();
-		if (name != '' && name.length >= 3) {			
+		if (name != '' && name.length >= 3) {
 			var opcion_busq = '<option value="' + name + '">' + name + '</option>';
-			$("#select_data_users").html(opcion_busq);			
+			$("#select_data_users").html(opcion_busq);
 			let request = {
 				'name': name,
 			}
 			getAsistenciaReport(request);
-		} else if(name == ''){
+		} else if (name == '') {
 			getAsistenciaReport();
 		}
 	});
@@ -377,9 +383,9 @@ async function getAsistenciaReport(request = {}) {
 				'<td><button type="button" class="btn btn-success btn-sm btn_det_rasis" data-idnumber=' + value.idnumber + ' id="dt_rasis-' + value.idnumber + '" name="' + value.name + ' ' + value.lastname + '">Detalles</button></td>' +
 				'</tr>';
 		});
-		$("#tableEstAsistencia tbody").html(datosasis);		
-	}else{
-		$("#tableEstAsistencia tbody").html('<tr><td colspan="8">No se encontraron resultados</td></tr>');	
+		$("#tableEstAsistencia tbody").html(datosasis);
+	} else {
+		$("#tableEstAsistencia tbody").html('<tr><td colspan="8">No se encontraron resultados</td></tr>');
 	}
 	$("#loader_inidiv").hide()
 }

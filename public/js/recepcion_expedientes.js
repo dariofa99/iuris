@@ -22,9 +22,9 @@ $(function () {
 
             if ($(this).val() == 1) {
                 //$(".discaform").show();
-                mostrarCompDiscapUser()
+                mostrarCompDiscapUser('myFormParteSolicitante')
             } else {
-                ocultarCompDiscapUser();
+                ocultarCompDiscapUser('myFormParteSolicitante');
 
             }
         });

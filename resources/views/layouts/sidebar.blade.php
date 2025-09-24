@@ -157,29 +157,28 @@
                         </ul>
                     </li>
 
-                    @if (currentUser()->hasRole('docente')
-                     or currentUser()->hasRole('amatai')
-                     or currentUser()->hasRole('dirgral')
-                     or currentUser()->hasRole('diradmin'))
-                    <li
-                        class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-calendar"></i>
-                            <p>
-                                Agenda
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item ml-3">
-                                <a href="{{ route('ag.cedoc') }}" class="nav-link">
-                                    <p>Citaciones estudiantes</p>
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </li>
-                @endif
+                    @if (currentUser()->hasRole('docente') or
+                            currentUser()->hasRole('amatai') or
+                            currentUser()->hasRole('dirgral') or
+                            currentUser()->hasRole('diradmin'))
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-calendar"></i>
+                                <p>
+                                    Agenda
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('ag.cedoc') }}" class="nav-link">
+                                        <p>Citaciones estudiantes</p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    @endif
 
                     @if (currentUser()->can('ver_conciliaciones') ||
                             currentUser()->hasRole('amatai') ||
@@ -206,16 +205,18 @@
                                         </a>
                                     </li>
                                 @endif
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('audiencias.agenda') }}" class="nav-link">
-                                        <p>Agenda de conciliaciones</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('cencuesta.index') }}" class="nav-link">
-                                        <p>Ver resultados de encuestas</p>
-                                    </a>
-                                </li>
+                                @if (currentUser()->can('admin_actasandmail') || currentUser()->hasRole('visitante_conciliacion'))
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('audiencias.agenda') }}" class="nav-link">
+                                            <p>Agenda de conciliaciones</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('cencuesta.index') }}" class="nav-link">
+                                            <p>Ver resultados de encuestas</p>
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif
@@ -311,7 +312,7 @@
                         </li>
                     @endif
                     <li class="nav-item has-treeview">
-                        @if (!currentUser()->hasRole('visitante_conciliacion'))
+                        @if (!currentUser()->hasRole('visitante_conciliacion') and !currentUser()->hasRole('solicitante'))
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-file-word"></i>
                                 <p>

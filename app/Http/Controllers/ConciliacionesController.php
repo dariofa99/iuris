@@ -126,7 +126,7 @@ class ConciliacionesController extends Controller
     public function store(Request $request)
     {
         //$conciliacion = Conciliacion::find(10);
-         //return response()->json($request->all());
+        //return response()->json($request->all());
         try {
             $periodo = $this->periodoService->getPeriodoActivo();
             $request['periodo_id'] =  $periodo->id;
@@ -134,7 +134,7 @@ class ConciliacionesController extends Controller
             if ($request->has('solicitante_id') and currentUser()->hasRole('solicitante')) {
                 $conciliacion->usuarios()->attach($request->get('solicitante_id'), [
                     'tipo_usuario_id' => 205,
-                    'estado_id' => 1 
+                    'estado_id' => 1
                 ]);
             }
             $estado = ConciliacionEstado::create([
@@ -201,7 +201,7 @@ class ConciliacionesController extends Controller
             ->pluck('ref_nombre', 'id');
 
         $estudiantes = $this->getEstudiantes();
-       // dd($request);
+        // dd($request);
 
         $turnos = $this->turnosService->index($request);
 
@@ -267,25 +267,25 @@ class ConciliacionesController extends Controller
             'temporales',
             function (Builder $query) use ($request) {
                 $query->where("conciliacion_id", $request->conciliacion_id)
-                ->where('parent_reporte_pdf_id', $request->reporte_id);
+                    ->where('parent_reporte_pdf_id', $request->reporte_id);
             }
         )->where(([
             "status_id" => $request->type_status_id,
             "tabla_destino" => "226"
         ]))->get();
-       
-       // return response()->json(['generate'=>false,'rq'=>$request->all(),'rep'=>$conc_estado]);
-        if(count($reportes)<=0){
+
+        // return response()->json(['generate'=>false,'rq'=>$request->all(),'rep'=>$conc_estado]);
+        if (count($reportes) <= 0) {
             $data = PdfReporte::where('is_copy', 0)
-            ->where('id', $request->reporte_id)->first();
-            $repo = $this->crearCopiasFormatoEstado($request,$conciliacion,$data);
-            return response()->json(['generate'=>$repo]);
+                ->where('id', $request->reporte_id)->first();
+            $repo = $this->crearCopiasFormatoEstado($request, $conciliacion, $data);
+            return response()->json(['generate' => $repo]);
         }
-        return response()->json(['generate'=>false]);
+        return response()->json(['generate' => false]);
     }
-    private function crearCopiasFormatoEstado(Request $request, Conciliacion $conciliacion,$reporte)
+    private function crearCopiasFormatoEstado(Request $request, Conciliacion $conciliacion, $reporte)
     {
-       /*  $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
+        /*  $reportes = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
             $query->where('is_copy', 1);
         })->whereHas('temporales', function (Builder $query) use ($request) {
             $query->where("conciliacion_id", $request->conciliacion_id);
@@ -293,7 +293,7 @@ class ConciliacionesController extends Controller
             "status_id" => $request->type_status_id,
             "tabla_destino" => "226"
         ]))->get(); */
-       
+
         /*     $data = PdfReporteDestino::whereHas('reporte', function (Builder $query) {
                 $query->where('is_copy', 0);
             })
@@ -302,52 +302,51 @@ class ConciliacionesController extends Controller
                     "tabla_destino" => "226"
                 ])->get(); */
 
-           // $data->each(function ($data) use ($request, $conciliacion) {
-                //  $reporte_or = PdfReporte::find($reporte->id);
-                $conc_estado = ConciliacionEstado::where([
-                    'type_status_id'=>$request->type_status_id,
-                    'conciliacion_id'=>$conciliacion->id
-                ])->orderBy('created_at','desc')->first();
-                $copy_reporte = PdfReporte::create(
-                    [
-                        'reporte' => $reporte->reporte,
-                        'report_keys' => $reporte->report_keys,
-                        'nombre_reporte' => $reporte->nombre_reporte,
-                        'configuraciones' => $reporte->configuraciones,
-                        'is_copy' => 1,
-                        'categoria_id' =>  $reporte->categoria_id
-                    ]
-                );
-                $reporDest = PdfReporteDestino::create([
-                    "status_id" => $request->type_status_id,
-                    "tabla_destino" => "226",
-                    "reporte_id" => $copy_reporte->id
-                ]);
-                $co_pdf = ConciliacionPdfTemporal::create([
-                    'reporte_pdf_id' => $copy_reporte->id,
-                    'status_id' => $request->type_status_id,
-                    'parent_reporte_pdf_id' => $reporte->id,
-                    'conciliacion_id' => $conciliacion->id,
-                    'conc_estado_id' => $conc_estado->id
-                ]);
+        // $data->each(function ($data) use ($request, $conciliacion) {
+        //  $reporte_or = PdfReporte::find($reporte->id);
+        $conc_estado = ConciliacionEstado::where([
+            'type_status_id' => $request->type_status_id,
+            'conciliacion_id' => $conciliacion->id
+        ])->orderBy('created_at', 'desc')->first();
+        $copy_reporte = PdfReporte::create(
+            [
+                'reporte' => $reporte->reporte,
+                'report_keys' => $reporte->report_keys,
+                'nombre_reporte' => $reporte->nombre_reporte,
+                'configuraciones' => $reporte->configuraciones,
+                'is_copy' => 1,
+                'categoria_id' =>  $reporte->categoria_id
+            ]
+        );
+        $reporDest = PdfReporteDestino::create([
+            "status_id" => $request->type_status_id,
+            "tabla_destino" => "226",
+            "reporte_id" => $copy_reporte->id
+        ]);
+        $co_pdf = ConciliacionPdfTemporal::create([
+            'reporte_pdf_id' => $copy_reporte->id,
+            'status_id' => $request->type_status_id,
+            'parent_reporte_pdf_id' => $reporte->id,
+            'conciliacion_id' => $conciliacion->id,
+            'conc_estado_id' => $conc_estado->id
+        ]);
 
-                $file_en = $reporte->files()->where('seccion', 'encabezado')->first();
-                if ($file_en) {
-                    $reporte->files()->attach($file_en, [
-                        'seccion' => 'encabezado',
-                        'configuracion' => $file_en->pivot->configuracion
-                    ]);
-                }
-                $file_pie = $reporte->files()->where('seccion', 'pie')->first();
-                if ($file_pie) {
-                    $reporte->files()->attach($file_pie, [
-                        'seccion' => 'pie',
-                        'configuracion' => $file_pie->pivot->configuracion
-                    ]);
-                }
-           // });
-            return true;
-        
+        $file_en = $reporte->files()->where('seccion', 'encabezado')->first();
+        if ($file_en) {
+            $reporte->files()->attach($file_en, [
+                'seccion' => 'encabezado',
+                'configuracion' => $file_en->pivot->configuracion
+            ]);
+        }
+        $file_pie = $reporte->files()->where('seccion', 'pie')->first();
+        if ($file_pie) {
+            $reporte->files()->attach($file_pie, [
+                'seccion' => 'pie',
+                'configuracion' => $file_pie->pivot->configuracion
+            ]);
+        }
+        // });
+        return true;
     }
 
     public function insertEstado(Request $request)
@@ -628,7 +627,7 @@ class ConciliacionesController extends Controller
         }
         $category = $request->category_id;
         $conciliacion = Conciliacion::find($request->conciliacion_id);
-        $view = view("myforms.conciliaciones.componentes.".$request->view_template, compact("conciliacion", 'category'))->render();
+        $view = view("myforms.conciliaciones.componentes." . $request->view_template, compact("conciliacion", 'category'))->render();
         return response()->json([
             'view' => $view
         ]);
@@ -748,7 +747,7 @@ class ConciliacionesController extends Controller
             ->get(); */
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $partes = $conciliacion->usuarios;
-       /*  $compartidos = ConciliacionEstadoFileCompartido::where([
+        /*  $compartidos = ConciliacionEstadoFileCompartido::where([
             'conciliacion_id' => $conciliacion->id,
             'status_id' =>   $request->status_id
         ])->get();
@@ -765,7 +764,7 @@ class ConciliacionesController extends Controller
         ];
         return response()->json($response);
     }
-    
+
     public function getEstadosFiles(Request $request)
     {
         /* $estado = ConciliacionEstado::find($request->conc_estado_id);
@@ -777,22 +776,22 @@ class ConciliacionesController extends Controller
         $conciliacion->files = $conciliacion->files()
             ->where('file_id', $request->conc_file_id)
             ->get();
-         $compartidos = ConciliacionEstadoFileCompartido::whereHas('files',function($query) use ($request){
-            $query->where("file_id",$request->conc_file_id);
-         })->where([
+        $compartidos = ConciliacionEstadoFileCompartido::whereHas('files', function ($query) use ($request) {
+            $query->where("file_id", $request->conc_file_id);
+        })->where([
             'conciliacion_id' => $conciliacion->id,
             'status_id' =>   $request->status_id
-        ])->get(); 
+        ])->get();
 
         $view = view('myforms.conciliaciones.componentes.conciliacion_estados_files_ajax', compact('conciliacion'))->render();
         $view_compartidos = view('myforms.conciliaciones.componentes.files_conciliacion_compartidos_ajax', compact('compartidos'))->render();
- 
+
         $response = [
             "view_compartidos" => $view_compartidos,
-            "compartidos" => $compartidos, 
+            "compartidos" => $compartidos,
             "partes" => $partes,
-             "conciliacion" => $conciliacion,
-            "view" => $view 
+            "conciliacion" => $conciliacion,
+            "view" => $view
         ];
         return response()->json($response);
     }
@@ -847,32 +846,32 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
 
-       // return response()->json($request->all(), 200);
+        // return response()->json($request->all(), 200);
 
-        try { 
-            if($request->has('id') and $request->input("id")!=''){
+        try {
+            if ($request->has('id') and $request->input("id") != '') {
                 $request["user_id"] = $request->input("id");
                 $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
                 $user = $this->userService->setValidateSede(false)->find($request->user_id);
-             }if($request->has('user_id') and $request->input("user_id")!=''){
+            }
+
+            if ($request->has('user_id') and $request->input("user_id") != '') {
                 $request["user_id"] = $request->input("user_id");
                 $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
                 $user = $this->userService->setValidateSede(false)->find($request->user_id);
-       
-             }else{
+            } else {
                 $user = $this->userService->store($request);
                 $request["user_id"] = $user->id;
                 $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
-                           
             }
             $this->userService->addSede($user);
-            if($request->has("user_judirico_id")){           
+            if ($request->has("user_judirico_id")) {
                 $user->conc_rep_legal()->syncWithoutDetaching([
                     $conciliacion->id => [
                         'user_convocado_id' => $request->input("user_judirico_id"),
                         'user_replegal_id' => $user->id
                     ]
-                ]);      
+                ]);
             }
             $conciliacion->usuarios;
             return response()->json($conciliacion, 200);
@@ -881,17 +880,17 @@ class ConciliacionesController extends Controller
         }
     }
 
-    public function verResumenPdf($id){
+    public function verResumenPdf($id)
+    {
         $conciliacion = Conciliacion::where('id', $id)->first();
-        if($conciliacion){
+        if ($conciliacion) {
             $pdf = PDF::loadView('pdf.conciliacion_form', [
                 'conciliacion' => $conciliacion
-              ]);
-              return $pdf->stream('invoice.pdf');
-        }else{
+            ]);
+            return $pdf->stream('invoice.pdf');
+        } else {
             return response()->json(['error' => 'No se encontró la conciliacion'], 404);
         }
-       
     }
 
     public function sancionarUser(Request $request)
@@ -946,8 +945,10 @@ class ConciliacionesController extends Controller
                 ->get();
             foreach ($pdfs as $key_1 => $pdf_repor) {
                 //obtengo el pdf temporal            
-                $reporte_t = ConciliacionPdfTemporal::where('reporte_pdf_id',
-                 $pdf_repor->reporte_id)
+                $reporte_t = ConciliacionPdfTemporal::where(
+                    'reporte_pdf_id',
+                    $pdf_repor->reporte_id
+                )
                     ->first();
                 if ($reporte_t) {
                     $reporte =     $reporte_t->reporte_child;
@@ -1005,7 +1006,7 @@ class ConciliacionesController extends Controller
                 $file->size = '0000';
                 $file->hash = $hash;
                 $file->save();
-               /*  $estado->files()->attach($file, [
+                /*  $estado->files()->attach($file, [
                     'conciliacion_id' => $conciliacion->id,
                     'user_id'=>currentUser()->id,
                     'category_id'=>212
@@ -1163,15 +1164,26 @@ class ConciliacionesController extends Controller
             $update->pivot->estado_id = $request->user_estado_id;
             $update->pivot->save();
         }
+        $path = "";
+        if ($request->has("adjunto_not")) {
+            $file = $comentario->uploadFile($request->file('adjunto_not'), '/conc_coment_' . $conciliacion->id . '/adjunto_' . $comentario->id);
+            $comentario->files()->attach(
+                $file,
+                ['comentario_id' => $comentario->id]
+            );
+            $path = storage_path($comentario->files->first()->path);
+        }
+
         ProcessEmailSendSummernoteNotification::dispatch(
             $users,
             $request->cuerpo_correo,
             $conciliacion,
             $request->asunto,
-            $user_created
+            $user_created,
+            $path// nombre original
         )
-            ->onConnection('database')->onQueue('emails');;
-       // Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo,$conciliacion,$request->asunto,$user_created ));
+            ->onConnection('database')->onQueue('emails');
+        // Notification::send($users, new NotificationsSummernote( $request->cuerpo_correo,$conciliacion,$request->asunto,$user_created ));
 
         return response()->json([$users, $request->has('correo_send')]);
     }

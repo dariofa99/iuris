@@ -163,6 +163,8 @@ export class UserService {
               $("#" + form + " select[name='tipopers_id']").val(response.user.tipopers_id).prop("disabled", true)
               $("#" + form + " input[name='email']").val(response.user.email).prop("disabled", true)
               $("#" + form + " select[name='genero_id']").val(response.user.genero_id).prop("disabled", true)
+               $("#" + form + " select[name='pbepersondiscap']").val(response.user.pbepersondiscap).prop("disabled", true)
+              $("#" + form + " .input_user_ad").prop("disabled", true);
             } else {
               $("#" + form + " input[name='id']").remove();
               $("#" + form + " input[name='idnumber']").val(lastidnumber);
@@ -170,6 +172,9 @@ export class UserService {
               $("#" + form + " input[name='lastname']").val("");
               $("#" + form + " input[name='tel1']").val("");
               $("#" + form + " input[name='address']").val("");
+              $("#" + form + " .input_user_ad").prop("disabled", false);
+             
+
             }
           } else {
             toastr.info("Los valores no coinciden", "!Atención", {
@@ -314,14 +319,15 @@ export class UserService {
     $("#" + form + " .input_user_ad").each((index, obj) => {
       if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170) && $(obj).is(":checked"))
         || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
+       var formParent = $(obj).closest("form");
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
           section: $(obj).attr("data-section"),
           type: $(obj).attr("data-type"),
           name: $(obj).attr("data-name"),
           option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other: $("#value_other_text-" + $(obj).attr("data-id")).val(),
-          conciliacion_id: $("#conciliacion_id").val()
+          value_is_other:  formParent.find("#value_other_text-" + $(obj).attr("data-id")).val(),// $("#value_other_text-" + $(obj).attr("data-id")).val(),
+          //conciliacion_id: $("#conciliacion_id").val()
         });
       }
     });

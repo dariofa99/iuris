@@ -12,7 +12,7 @@
     </div>
 </div>
 <div class="col-md-3">
-    <div class="form-group">
+    <div class="form-group"> 
         <label>
             No. Documento *
         </label>

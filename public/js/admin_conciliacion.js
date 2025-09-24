@@ -275,19 +275,19 @@ $(document).ready(function () {
       return;
     }
     if (type_status_id == 181) {
-       $("#wait").show()
-        const result = await conciliacionService.storeConciliacionEstado(request)
-          .then((response) => {
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: "Actualizado con éxito!",
-              showConfirmButton: false,
-              timer: 2500
-            });
-            window.location.reload(true);
-            e.preventDefault()
+      $("#wait").show()
+      const result = await conciliacionService.storeConciliacionEstado(request)
+        .then((response) => {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: "Actualizado con éxito!",
+            showConfirmButton: false,
+            timer: 2500
           });
+          window.location.reload(true);
+          e.preventDefault()
+        });
     } else {
       $("#wait").show()
       const result = await conciliacionService.storeConciliacionEstado(request)
@@ -383,7 +383,7 @@ $(document).ready(function () {
     $("#btn_cancelar_estado").hide();
     $("#btn_cambiar_estado").show();
     $("#content_form_estado_c").hide();
-    $("#content_list_estado_c").show(); 
+    $("#content_list_estado_c").show();
   });
 
   $("#categoria_notifica__id").on("change", async function (e) {
@@ -572,6 +572,7 @@ $(document).ready(function () {
       $("#btn_env_not").prop("disabled", true)
       if (length >= 0) {
         $("#btn_env_not").prop("disabled", false)
+
       }
     }
 
@@ -768,8 +769,11 @@ $(document).ready(function () {
       .trim();
     if (errors.length <= 0 && formatVal != "<p><br></p>" && formatVal != "") {
       $("#myFormNotificationSend input[name=cuerpo_correo]").val(formatVal);
-      var request = convertFormToJSON("myFormNotificationSend");
-      request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
+      //var request = convertFormToJSON("myFormNotificationSend");
+     // request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
+      let request = new FormData(this);
+      request.append('conciliacion_id', $("input[name='conciliacion_id']").val());
+
       $("#wait").show();
       let response = await conciliacionService.sendNotification(request);
       let comentarios = await conciliacionService.getComentarios({ "conciliacion_id": $("input[name='conciliacion_id']").val() });
@@ -794,10 +798,25 @@ $(document).ready(function () {
     $("#myFormNotificationSend select[name=reporte_id]").val('');
     $("#myFormNotificationSend input[name=asunto]").val('');
     $("#myFormNotificationSend div[id=row_mail_not]").html('');
-    $("#content_notificacion_correo").summernote("code", "");
+    $("#content_notificacion_correo").summernote({
+      height: 250, // alto del editor
+      toolbar: [
+        // aquí defines los grupos de botones que quieres mostrar
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        // ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        //  ['color', ['color']],
+        ['height', ['height']],
+        ['table', ['table']], // 👈 aquí NO pongo link, picture ni video
+        ['view', ['fullscreen']]
+      ]
+    });
+
+
     $("#content_conc_notif").hide();
     $(".fila_usuarios_not_selected").removeClass("fila_usuarios_not_selected").addClass("fila_usuarios_not");
-   
+
   });
   $("#btn_cancelar_conc_not").on("click", function (e) {
     e.preventDefault()
@@ -1576,56 +1595,56 @@ $(document).ready(function () {
     $("#myModal_add_nota_conciliaciones").modal("show")
   });
 
-  $("#openModEvSatisf").on("click",function(e) {
+  $("#openModEvSatisf").on("click", function (e) {
     $("#myModal_form_evnivelsatisfaccion").modal("show")
   })
 
-  $("#myEvaNivSatForm").on("submit",async function(e){
+  $("#myEvaNivSatForm").on("submit", async function (e) {
     e.preventDefault();
-        var errors = validateForm("myEvaNivSatForm");
-        if (errors.length <= 0) {
-            var request = convertFormToJSON("myEvaNivSatForm");
-            request['conciliacion_id'] = $("#conciliacion_id").val();
-            var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
-            request["data"] = (data);
-            $("#wait").show()
-            let response = await conciliacionService.storeEncuSatisf(request);
-            $("#wait").hide();
-            $("#myModal_form_evnivelsatisfaccion").modal("hide")
-            Toast.fire({
-              title: 'La encuesta se ha enviado con éxito.',
-              icon: 'success',
-              timer: 2000,
-            });
-          }
+    var errors = validateForm("myEvaNivSatForm");
+    if (errors.length <= 0) {
+      var request = convertFormToJSON("myEvaNivSatForm");
+      request['conciliacion_id'] = $("#conciliacion_id").val();
+      var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
+      request["data"] = (data);
+      $("#wait").show()
+      let response = await conciliacionService.storeEncuSatisf(request);
+      $("#wait").hide();
+      $("#myModal_form_evnivelsatisfaccion").modal("hide")
+      Toast.fire({
+        title: 'La encuesta se ha enviado con éxito.',
+        icon: 'success',
+        timer: 2000,
+      });
+    }
   });
 
 
-  $("#myFormBuscarTurno select[name='tipo_busqueda']").on("change",function (e) {
+  $("#myFormBuscarTurno select[name='tipo_busqueda']").on("change", function (e) {
     var data = JSON.parse($("#data_colores_turno").val())
-    if($(this).val()=='trnid_color'){
+    if ($(this).val() == 'trnid_color') {
       var data = JSON.parse($("#data_colores_turno").val())
-    }else if($(this).val()=='trnid_curso'){
+    } else if ($(this).val() == 'trnid_curso') {
       var data = JSON.parse($("#data_cursando_turno").val())
     }
     var options = $("#myFormBuscarTurno select[name='data']");
-    options.empty(); 
+    options.empty();
     data.forEach(element => {
       options.append(new Option(element.ref_nombre, element.id));
-    });    
-});
+    });
+  });
 
-$("#myFormBuscarTurno").on("submit",async function (e) {
-  e.preventDefault()
-  var request = convertFormToJSON("myFormBuscarTurno");
-  request["conciliacion_id"] = $("#conciliacion_id").val();
-  $("#wait").show()
-  var response = await horariosService.search(request);
-  $("#list_turno_estudiantes_conciliacion").html(response.view);
-  $("#wait").hide()
+  $("#myFormBuscarTurno").on("submit", async function (e) {
+    e.preventDefault()
+    var request = convertFormToJSON("myFormBuscarTurno");
+    request["conciliacion_id"] = $("#conciliacion_id").val();
+    $("#wait").show()
+    var response = await horariosService.search(request);
+    $("#list_turno_estudiantes_conciliacion").html(response.view);
+    $("#wait").hide()
 
-  
-});
+
+  });
   getReportesForNotifications();
   getActasCreadas();
   getActasForStatus();
@@ -1798,7 +1817,7 @@ function copiarAlPortapapeles(idDelDiv) {
 }
 async function getActasForStatus() {
   var user = JSON.parse($("#authdata").val());
-console.log(user);
+  console.log(user);
   if ($("#estado_conciliacion_id").val() != "") {
     var request = {
       tabla_destino: "226",
@@ -1813,7 +1832,7 @@ console.log(user);
 
       var conid = $("#conciliacion_id").val();
       response.forEach(destino => {
-        if(user.role[0].name == 'visitante_conciliacion'){
+        if (user.role[0].name == 'visitante_conciliacion') {
           tr += `
           <tr>
             <td>
@@ -1825,7 +1844,7 @@ console.log(user);
               </a>                      
             </td>
           </tr>`
-        }else{
+        } else {
           tr += `
           <tr>
             <td>
@@ -1841,7 +1860,7 @@ console.log(user);
             </td>
           </tr>`
         }
-        
+
       });
     } else {
       tr += `

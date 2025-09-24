@@ -69,7 +69,7 @@
     <div class="col-md-8">
         <div class="panel panel-default" style="margin-bottom: 25px;">
             <div class="panel-body">
-                <form id="myFormNotificationSend">
+                <form id="myFormNotificationSend" enctype="multipart/form-data">
                     <input type="hidden" name="cuerpo_correo">
                
                 <label> Seleccione un formato </label>
@@ -89,6 +89,12 @@
                 <div id="content_notificacion_correo" class="summernote required">
                         
                 </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="adjunto_not">Adjuntar archivo</label>
+                        <input type="file" name="adjunto_not" id="adjunto_not">
+                    </div>
+                </div>
                 <div class="mt-2">
                     <button disabled id="btn_env_not" class="btn btn-primary">Enviar notificación</button>
                 </div>
@@ -104,9 +110,9 @@
 
 
 <div class="row" id="content_conc_notif">
-    <div class="col-md-12 table-responsive no-padding">
-        <table class="table" id="table_list_comentarios">
-            <thead>
+    <div class="col-md-12 table-responsive no-padding mailbox-messages">
+        <table class="table table-hover table-striped" id="table_list_comentarios">
+            {{-- <thead>
                 <th>
                     Asunto
                 </th>
@@ -119,7 +125,7 @@
                 <th>
                     Acciones
                 </th>
-            </thead>
+            </thead> --}}
             <tbody>
                @include('myforms.conciliaciones.componentes.solicitud_comentarios_ajax')
             </tbody>

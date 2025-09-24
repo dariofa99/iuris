@@ -20,13 +20,19 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
     protected $conciliacion;
     protected $asunto;
     protected $user_created;
-   
+    protected $getRealPath;
+    protected $getClientOriginalName;
+
+
     public function __construct(
         $users,
         $cuerpo_correo,
         Conciliacion $conciliacion,
         $asunto,
-        $user_created
+        $user_created,
+        $getRealPath = ""
+       
+
     ) {
        // Log::info($users);
         $this->users = $users;
@@ -34,6 +40,8 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
         $this->conciliacion = $conciliacion;
         $this->asunto = $asunto;
         $this->user_created = $user_created;
+        $this->getRealPath = $getRealPath;
+        
     }
 
     /**
@@ -48,7 +56,9 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
             $this->cuerpo_correo,
             $this->conciliacion,
             $this->asunto,
-            $this->user_created
+            $this->user_created,
+            $this->getRealPath
+            
         ));
     }
 }

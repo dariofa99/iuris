@@ -1,5 +1,5 @@
 @foreach ($data as $key => $reference)
-    <div class="col-md-{{ isset($col) ? $col : '6' }} {{ isset($discaform) ? $discaform : '' }}" style="display: {{((isset($user) and isset($discaform)) and $user->pbepersondiscap == 0) ? "none":"block" }}">
+    <div class="col-md-{{ isset($col) ? $col : '6' }} {{ isset($discaform) ? $discaform : '' }}" style="display: {{(((isset($user) and isset($discaform)) and $user->pbepersondiscap == 0) || (!isset($user) and isset($discaform))) ? "none":"block" }}">
         <div class="form-group">
             <label>
                 {{ $reference->name }}

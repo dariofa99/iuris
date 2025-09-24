@@ -55,7 +55,7 @@
                                 'placeholder' => 'Seleccione...',
                                 'required',
                             ]) !!}
-                        </div>
+                        </div> 
                     </div>
 
 

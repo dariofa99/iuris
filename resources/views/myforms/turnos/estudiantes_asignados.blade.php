@@ -90,7 +90,7 @@
                     <th width="13%">
                         Dia
                     </th>
-                    @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
+                    @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('coordprac'))
                         <th width="11%">
                             Acciones
                         </th>
@@ -177,7 +177,7 @@
                                     {{ $turno->dia_nombre }}
                                 </label>
                             </td>
-                            @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
+                            @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('coordprac'))
                                 <td>
                                     <a style="display: none;" class="btn btn-success  btn-block btn-sm btn_updatecolor"
                                         data-id="{{ $turno->id }}" id="btnUpdatecolor_{{ $turno->id }}">

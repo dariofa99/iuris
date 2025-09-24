@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class ProcessEmailSendSolicitudConciliacionStart implements ShouldQueue
@@ -29,7 +30,7 @@ class ProcessEmailSendSolicitudConciliacionStart implements ShouldQueue
         
     ) {
        
-        $this->user = $user;
+        $this->users = $user;
        
         $this->conciliacion = $conciliacion;
        
@@ -42,9 +43,9 @@ class ProcessEmailSendSolicitudConciliacionStart implements ShouldQueue
      */
     public function handle()
     {
-        
+        Log::info("Enviando correo de registro de conciliacion a " . $this->users);
         Mail::to("darioj99@gmail.com")->send(new RegConciliacionStart($this->conciliacion)); 
-        Mail::to($this->user)->send(new RegConciliacionSuccess($this->conciliacion));
+        Mail::to($this->users)->send(new RegConciliacionSuccess($this->conciliacion));
 
         
     }

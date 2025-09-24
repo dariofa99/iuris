@@ -28,6 +28,8 @@ class ConciliacionComentariosRepository extends BaseRepository implements Concil
             'reporte_id'=>$request->input('reporte_id'), 
             'conciliacion_id'=>$request->input('conciliacion_id')
         ]);
+
+    
       
         return $conciliacion;
     }

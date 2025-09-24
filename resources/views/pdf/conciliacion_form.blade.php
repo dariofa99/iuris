@@ -11,11 +11,13 @@
             /* Espacio para el encabezado */
         }
 
-        header, img{
+        header,
+        img {
             width: 100%;
         }
+
         header {
-           
+
             position: fixed;
             top: -145px;
             /* Ajusta según sea necesario */
@@ -54,7 +56,7 @@
         <img src="{{ public_path('dist/img/headersolconc.png') }}" alt="">
     </header>
 
-    <table border="1">
+    <table class="table" border="1">
         <tr>
             <th>Fecha</th>
             <td colspan="5">
@@ -78,9 +80,9 @@
         <tr>
             <th>Identificación</th>
             <td>
-                {{ $parte_->tipo_doc->ref_nombre }} de
+                {{ $parte_->tipo_doc->ref_nombre }}
 
-                {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
+                {{-- de  {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }} --}}
             </td>
 
             <th>No</th>
@@ -126,7 +128,7 @@
             SI
             <input type="radio" @if ($parte_->pbepersondiscap) checked @endif name="discapacidad" value="SI">
             NO
-            <input type="radio" name="discapacidad" value="NO">
+            <input type="radio" @if (!$parte_->pbepersondiscap) checked @endif name="discapacidad" value="NO">
         </td>
         @if ($parte_->pbepersondiscap)
             @include('pdf.conciliacion_form_adquestion', [
@@ -273,6 +275,57 @@
                         {{ $parte_->email }}
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="6">
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                    <h2>INFORMACIÓN IDENTITARIA Y DE INCLUSIVIDAD</h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sexo</td>
+                                <td>
+                                    {{ $parte_->genero->ref_nombre }}
+                                </td>
+                            </tr>
+                            @include('pdf.conciliacion_form_adquestion', [
+                                'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
+                                'discaform' => 'discaform',
+                                'user' => $parte_,
+                            ])
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="6">
+                        <table>
+                            <tr>
+                                <td>
+                                    ¿Posee algún tipo de discapacidad?
+                                </td>
+                                <td>
+                                    SI
+                                    <input type="radio" @if ($parte_->pbepersondiscap) checked @endif
+                                        name="discapacidad" value="SI">
+                                    NO
+                                    <input type="radio" @if (!$parte_->pbepersondiscap) checked @endif
+                                        name="discapacidad" value="NO">
+                                </td>
+                            </tr>
+                            @if ($parte_->pbepersondiscap)
+                                @include('pdf.conciliacion_form_adquestion', [
+                                    'data' => getReferencesDataBySection('discapacidad', 'users'),
+                                    'discaform' => 'discaform',
+                                    'user' => $parte_,
+                                ])
+                            @endif
+
+                        </table>
+                    </td>
+
+                </tr>
             @else
                 <tr>
                     <th colspan="2">
@@ -349,6 +402,57 @@
                                 {{ $parte_->email }}
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="6">
+                                <h2>INFORMACIÓN IDENTITARIA Y DE INCLUSIVIDAD</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <table>
+
+                                    <tr>
+                                        <td>Sexo</td>
+                                        <td>
+                                            {{ $parte_->genero->ref_nombre }}
+                                        </td>
+                                    </tr>
+                                    @include('pdf.conciliacion_form_adquestion', [
+                                        'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
+                                        'discaform' => 'discaform',
+                                        'user' => $parte_,
+                                    ])
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            ¿Posee algún tipo de discapacidad?
+                                        </td>
+                                        <td>
+                                            SI
+                                            <input type="radio" @if ($parte_->pbepersondiscap) checked @endif
+                                                name="discapacidad" value="SI">
+                                            NO
+                                            <input type="radio" @if (!$parte_->pbepersondiscap) checked @endif
+                                                name="discapacidad" value="NO">
+                                        </td>
+                                    </tr>
+                                    @if ($parte_->pbepersondiscap)
+                                        @include('pdf.conciliacion_form_adquestion', [
+                                            'data' => getReferencesDataBySection('discapacidad', 'users'),
+                                            'discaform' => 'discaform',
+                                            'user' => $parte_,
+                                        ])
+                                    @endif
+
+                                </table>
+                            </td>
+
+                        </tr>
                     @else
                         <tr>
                             <th colspan="2">
@@ -396,7 +500,7 @@
                     {{ $file->pivot->concepto }}
                 </td>
                 <td width="4%">
-                    <a rel="noopener noreferrer"  target="_blank"
+                    <a rel="noopener noreferrer" target="_blank"
                         href="/conciliaciones/download/file/{{ $file->pivot->file_id }}">
                         Descargar
                     </a>

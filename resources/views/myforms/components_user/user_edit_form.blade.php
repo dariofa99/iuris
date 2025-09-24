@@ -45,27 +45,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6"> 
-        <div class="form-group">
-            {!! Form::label('Fecha Nacimiento: ') !!}
-            <span class="ast_required">*</span>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="fa fa-calendar"></i>
-                    </span>
-                </div>
-                {!! Form::date('fechanacimien', isset($user) ? $user->fechanacimien : '', [
-                    'class' => 'form-control form-control-sm',
-                    'required' => 'required',
-                    'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                    'data-mask',
-                    isset($user) ? '' : '',
-                ]) !!}
-            </div>
-            <!-- /.input group -->
-        </div>
-    </div>
+  
     @if (currentUser()->hasRole('amatai') ||
             currentUser()->hasRole('coordprac') ||
             currentUser()->hasRole('diradmin') ||
