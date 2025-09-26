@@ -15,7 +15,7 @@ class CreateConcComentHasFilesTable extends Migration
     {
         Schema::create('conc_coment_has_files', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('comentario_id')->unsigned();
+            $table->bigInteger('comentario_id')->unsigned();
             $table->foreign('comentario_id')->references('id')->on('conciliaciones_comentarios')
             ->onDelete('cascade')->onUpdate('cascade'); 
             $table->integer('file_id')->unsigned();

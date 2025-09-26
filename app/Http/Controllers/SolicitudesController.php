@@ -132,7 +132,7 @@ class SolicitudesController extends Controller
                     foreach ($users as $user) {
                         if ($user->tipopers_id == 238) {
                             $hasJuridico = true;
-                        }
+                        } 
                     }
                     if (!$hasJuridico) {
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");

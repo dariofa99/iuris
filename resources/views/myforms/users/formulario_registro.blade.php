@@ -120,7 +120,7 @@
                     </span>
                 </div>
                  <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='fechanacimien'
-                value="{{ isset($user) ? $user->fechanacimien : '' }}" name='fechanacimien' required type="text"
+                value="{{ isset($user) ? $user->fechanacimien : '' }}" name='fechanacimien' required type="date"
                 class="form-control form-control-sm  required" data-toggle="tooltip"
                 title="Fecha de nacimiento" data-mask data-inputmask = "'alias': 'yyyy/mm/dd'" placeholder="Fecha de nacimiento" maxlength="10">
 

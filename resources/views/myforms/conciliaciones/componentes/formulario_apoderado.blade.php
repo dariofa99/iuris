@@ -91,7 +91,7 @@
         'col' => 3,
         'required' => true,
         'model'=>$user
-    ])
+    ]) 
 
 <div class="col-md-3">
     <div class="form-group">

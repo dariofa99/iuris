@@ -30,7 +30,7 @@
             2 => [
                 'id' => 'btn_registrar_apod_sol',
                 'tipo_usuario' => 196,
-                'visible' => true,
+                'visible' => true, 
                 'title' => 'Apoderado',
                 'message' =>
                     'Diligencia el siguiente formulario con la información de la persona que actúa como <b>apoderado</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.',

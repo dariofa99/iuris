@@ -305,9 +305,14 @@ if (!function_exists('icon_link_to_route')) {
 }
 function getAditionalDataByShortName($short_name, $table)
 {
-    return $aditional_data = ReferencesData::where('short_name', $short_name)
+    $aditional_data = ReferencesData::where('short_name', $short_name)
         ->where('table', $table)
         ->first();
+        if ($aditional_data) {
+            return $aditional_data;
+        }
+        return $short_name;
+  
 }
 
 function getReferencesStaticTableBySection($section, $table)
