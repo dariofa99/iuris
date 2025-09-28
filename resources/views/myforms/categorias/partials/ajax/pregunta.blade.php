@@ -28,6 +28,7 @@
                     </label>
 
                     @if ($reference->type_data_id == 251)
+                
                         @php
                             $is_active = false;
                             $option_id = 0;

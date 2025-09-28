@@ -24,29 +24,7 @@
         @include('msg.ajax.success')
         <div>
             <div class="container">
-                <div class="row justify-content-center">
-                  {{--   <div class="col-md-5">
-                        <div class="card">
-                            <h4 class="card-header bg-white" style="text-align: center">
-                                Consultorios Jurídicos
-                            </h4>
-                            <div class="card-body">
-                                 <div class="card-login-body">
-                                    <img src="{{ asset('dist/img/online-justice.png') }}" alt=""><br>
-                                    Solicite asesoría jurídica de manera virtual.
-                                </div>
-
-                                <div class="card-footer bg-white"
-                                    style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
-                                    <a href="/solicitudes/expedientes/recepcion/?paso=1" class="btn btn-warning">
-                                        CONTINUAR
-                                    </a>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div> --}}
+                <div class="row justify-content-center">              
                     <div class="col-md-5">
                         <div class="card">
                             <h4 class="card-header bg-white" style="text-align: center">

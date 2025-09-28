@@ -95,7 +95,7 @@
 
 <div class="col-md-3">
     <div class="form-group">
-        <label>Tarj. Profesional<span class="ast_required">*</span>
+        <label>No.Tarj. Profesional<span class="ast_required">*</span>
         </label>
         <input {{ isset($disabled) ? $disabled : '' }} data-name="codigo_estudiantil" name="codigo_estudiantil" required type="text"
             value="{{ $user->codigo_estudiantil }}" class="form-control form-control-sm required">

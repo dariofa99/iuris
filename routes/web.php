@@ -43,6 +43,10 @@ Route::resource('logout', 'LogoutController');
 Route::get('terminosycondiciones', function () {
   return view('auth.terminosycondiciones');
 });
+Route::get('terminos/conciliacion', function () {
+  return view('myforms.recepcion.terminos_conciliacion');
+});
+
 Route::get('/validar/cuenta/mensaje', function () {
   return view('myforms.mensaje_validar_cuenta');
 });

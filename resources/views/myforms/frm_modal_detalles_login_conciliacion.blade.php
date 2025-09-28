@@ -17,7 +17,7 @@
         @endsection
         @include('msg.ajax.success')
 
-
+ 
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
