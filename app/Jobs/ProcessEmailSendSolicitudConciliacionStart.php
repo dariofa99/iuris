@@ -44,7 +44,7 @@ class ProcessEmailSendSolicitudConciliacionStart implements ShouldQueue
     public function handle()
     {
         Log::info("Enviando correo de registro de conciliacion a " . $this->users);
-        Mail::to("darioj99@gmail.com")->send(new RegConciliacionStart($this->conciliacion)); 
+       // Mail::to("centrodeconciliacion@udenar.edu.co")->send(new RegConciliacionStart($this->conciliacion)); 
         Mail::to($this->users)->send(new RegConciliacionSuccess($this->conciliacion));
 
         

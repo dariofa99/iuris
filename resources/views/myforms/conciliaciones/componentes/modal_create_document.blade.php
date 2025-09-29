@@ -25,7 +25,7 @@
 
                     @endphp
                     @if (isset($conciliacion) and isset($parte_convx) and $parte_convx->tipopers_id == 238)
-                        <span class="btn btn-primary btn-sm fileinputclickable" data-text="Cert. de existencia y Rep. legal"
+                        <span class="btn btn-primary btn-sm fileinputclickable" data-category="233" data-text="Cert. de existencia y Rep. legal"
                             id="registro">
                             <i class="fa fa-upload"></i>
                             <span>Cert. de existencia y Rep. legal</span>

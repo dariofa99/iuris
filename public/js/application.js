@@ -5,20 +5,42 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 function activeOtherInput(e) {
-    var elementType = $(e.target).prop("tagName").toLowerCase(); // Detecta si es select
+     var elementType = $(e.target).prop("tagName").toLowerCase(); // Detecta si es select
     var active, id, formParent;
     if (elementType === "select") {
         var selectedOption = $(this).find("option:selected");
         active = selectedOption.attr("data-active_other");
         id = $(this).attr("data-id");
         formParent = $(this).closest("form"); // <-- accede al form padre
-    } else if ($(this).attr("type") === "checkbox" || $(this).attr("type") === "radio") {
+    } else if ($(this).attr("type") === "radio") {
         active = $(this).attr("data-active_other");
         id = $(this).attr("data-id");
         formParent = $(this).closest("form");
+    } else if ($(this).attr("type") === "checkbox") {
+        // Si es checkbox recorres todas las opciones del mismo name
+        formParent = $(this).closest("form");
+        var name = $(this).attr("name");
+        var checkedOption = $("#" + formParent.attr("id") + " input[name='" + name + "']:checked");
+        var hay = 0;
+        checkedOption.each(function () {
+            var element = $(this);
+            // Aquí puedes acceder a cada elemento seleccionado
+            hay = $(element).attr("data-active_other");
+            if (hay == 1 && $(element).is(":checked")) {
+                active = 1;
+                return;
+            }
+
+        });
+        id = $(this).attr("data-id");
+        
+        // 
+
     }
 
-    if (elementType === "select" || $(this).is(":checked")) {
+
+
+    if (elementType === "select" || $(this).is(":checked") || ($(this).attr("type") === "checkbox")) {
         formParent.find("#lbl_other-" + id).hide();
         formParent.find("#value_other_text-" + id).attr("type", "hidden");
         if (active == 1) {
@@ -29,6 +51,11 @@ function activeOtherInput(e) {
             formParent.find("#value_other_text-" + id).attr("type", "hidden");
         }
     }
+
+
+
+
+
 }
 $(document).ready(function () {
     $(document).on("change", ".input_user_ad", activeOtherInput);

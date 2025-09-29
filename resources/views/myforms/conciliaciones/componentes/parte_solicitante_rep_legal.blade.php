@@ -9,7 +9,8 @@
 
                 </h4>
             </div>
-
+        </div>
+        <div class="row">
             <div class="col-md-2">
                 <button id="btn_opaddrpl-{{ $key }}" data-key="{{ $key }}"
                     class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
@@ -18,6 +19,7 @@
                 </button>
             </div>
         </div>
+
         @forelse ($parte_->conc_rep_legal as $key_ => $conciliacion_rep_legal)
             @php
                 $rep_legal = $conciliacion->getUserByFilter([
@@ -33,12 +35,12 @@
                         'disabled' => 'disabled',
                         'user' => $rep_legal,
                     ])
-                    @include('myforms.components_user.identitaria',[
-                        'user'=>$rep_legal,
-                         'disabled' => 'disabled',
+                    @include('myforms.components_user.identitaria', [
+                        'user' => $rep_legal,
+                        'disabled' => 'disabled',
                     ])
-                    @include('myforms.components_user.discapacidad',[
-                        'user'=>$rep_legal,
+                    @include('myforms.components_user.discapacidad', [
+                        'user' => $rep_legal,
                         'disabled' => 'disabled',
                         'discaform' => 'discaform',
                     ])
@@ -64,21 +66,19 @@
                         @include('myforms.conciliaciones.componentes.formulario_rep_legal', [
                             'disabled' => '',
                         ])
-                        @include('myforms.components_user.identitaria',[
+                        @include('myforms.components_user.identitaria', [
                             'disabled' => '',
-                           
-
                         ])
-                        @include('myforms.components_user.discapacidad',[
+                        @include('myforms.components_user.discapacidad', [
                             'disabled' => '',
                             'discaform' => 'discaform',
                         ])
-                     
+
                     </div>
                     <div class="row">
                         <div class="col-md-3">
                             <button type="button" data-type="198"
-                                class="btn btn-primary btn-xs btn-block btn_add_replegal" data-key="{{ $key }}"
+                                class="btn btn-primary btn-lg btn-block btn_add_replegal" data-key="{{ $key }}"
                                 id="btn_add_replegal">
                                 Guardar
                             </button>

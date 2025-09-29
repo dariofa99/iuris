@@ -5,4 +5,4 @@
                 @if ($is_active) type="text" @else type="hidden" @endif
                 @if (isset($model) and $model != null and $model->getDataVal($reference->id, $option_id)) value="{{ $model->getDataVal($reference->id, $option_id)->value_is_other }}" @endif
                 class="form-control form-control-sm" placeholder="¿Cuál o por qué...?">
-  
+   

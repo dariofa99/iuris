@@ -105,7 +105,7 @@ myDropzone_log.on("sending", function (file, xhr, formData) {
 
   formData.append("concept", $(file.previewElement.querySelector("input")).val());
   formData.append("conciliacion_id", $("#conciliacion_id").val());
-  formData.append("category_id", $("#anexo_category_id").val())
+ // formData.append("category_id", $("#anexo_category_id").val())
   formData.append("view_template", $("#view_template").val())
   formData.append("category_id", $(file.previewElement.querySelector("button")).attr("data-category"));
   

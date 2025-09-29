@@ -54,7 +54,7 @@ class NotificationsSummernote extends Notification
      */
     public function toMail($notifiable)
     {
-
+ 
         $mail = (new MailMessage($notifiable))->subject($this->asunto)
             ->view('myforms.mails.formato_correo', [
                 'mensaje' => $this->mensaje,

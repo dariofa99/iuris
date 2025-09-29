@@ -33,11 +33,11 @@ class RegConciliacionStart extends Mailable
     public function build()
     {
         $message = "<br><br>
-        Se ha comenzado a crear una solicitud de conciliación.<br>        
+        Se ha enviado una solicitud de conciliación.<br>        
         Con el siguiente enlace puede seguir la solicitud.";
         return $this->view('myforms.mails.formato_correo',[
             "mensaje"=> $message,
-            "url"=>url("/solicitudes/recepcion/conciliacion/".$this->notification->token."?id=".$this->notification->id."&paso=2")
+            "url"=>url("/conciliaciones/".$this->notification->id."/edit")
         ])
         ->subject("Incio de solicitud de conciliación");
     }

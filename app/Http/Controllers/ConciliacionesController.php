@@ -20,6 +20,7 @@ use App\Expediente;
 use App\Jobs\ProcessEmailSendConciliacionResponse;
 use App\Jobs\ProcessEmailSendSummernoteNotification;
 use App\Mail\RegConciliacionCorregir;
+use App\Mail\RegConciliacionStart;
 use App\Mail\RegConciliacionSuccess;
 use App\Mail\VerifyPdfReportConciliacion;
 use App\Notifications\NotificationsSummernote;
@@ -40,6 +41,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
@@ -400,6 +402,7 @@ class ConciliacionesController extends Controller
                 }
             }
             if ($request->has("send_notification")) {
+                 Mail::to("centrodeconciliacion@udenar.edu.co")->send(new RegConciliacionStart($conciliacion)); 
                 $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
                 ProcessEmailSendSummernoteNotification::dispatch(
                     $users,
@@ -611,7 +614,7 @@ class ConciliacionesController extends Controller
         }
         return response()->json($request->all());
     }
-
+ 
     public function storeAnexo(Request $request)
     {
         //return response()->json($request->all());
@@ -1174,6 +1177,8 @@ class ConciliacionesController extends Controller
             $path = storage_path($comentario->files->first()->path);
         }
 
+
+        
         ProcessEmailSendSummernoteNotification::dispatch(
             $users,
             $request->cuerpo_correo,
