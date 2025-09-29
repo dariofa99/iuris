@@ -38,7 +38,7 @@ export class HorariosService {
         return topics;
 
     }
-    async deleteTurno(id) {
+    async deleteTurno(id, request={}) {
         const response = await fetch(BASE_URL + "turnos/" + id, {
             method: 'DELETE',
             headers: {
@@ -46,7 +46,8 @@ export class HorariosService {
                 "Accept": "application/json",
                 "X-Requested-With": "XMLHttpRequest",
                 "X-CSRF-Token": $("#token").attr("content"),
-            }
+            },
+            body: JSON.stringify(request)
         });
         if (!response.ok) {
             const message = `An error has occured: ${response.status}`;

@@ -63,15 +63,17 @@ $(document).ready(function () {
 			confirmButtonText: 'Si, eliminar!',
 			cancelButtonText: 'No, cancelar',
 			html: `
-					<div style="margin-top:10px; text-align:left;">
-					<input type="checkbox" id="confirmCheck">
+					<div class="alert alert-warning" style="margin-top:10px; text-align:left;">
+					<input type="checkbox" id="confirmCheck" checked />
 					<label for="confirmCheck">¿Inactivar estudiante?</label>
 					</div>
   				`
 		}).then(async (result) => {
 			if (result.value) {
 				$("#wait").show();
-				let response = await horariosService.deleteTurno(id);
+				let inactivarEstudiante = document.getElementById("confirmCheck").checked;
+				let estudiante_id = $(this).attr("data-estudiante");
+				let response = await horariosService.deleteTurno(id, {inactivarEstudiante: inactivarEstudiante, estudiante_id: estudiante_id });
 				toastr.success("Eliminado con éxito", "", {
 					positionClass: "toast-top-right",
 					timeOut: "4000",

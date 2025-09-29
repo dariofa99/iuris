@@ -193,7 +193,7 @@
                                         data-id="{{ $turno->id }}" id="btn_habilityupdatecolor{{ $turno->id }}">
                                         <i class="fa fa-edit"></i>Editar</a>
 
-                                    <a class="btn btn-danger  btn-block btn-sm btn_delete_turno"
+                                    <a class="btn btn-danger  btn-block btn-sm btn_delete_turno" data-estudiante="{{ $turno->estudiante_id }}"
                                         data-id="{{ $turno->id }}" id="btn_delete_turno-{{ $turno->id }}">
                                         <i class="fa fa-edit"></i>Eliminar</a>
 

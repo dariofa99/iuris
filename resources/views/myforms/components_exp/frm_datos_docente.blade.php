@@ -23,13 +23,14 @@
                 data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
                 id="btn_delete_doc_exp">
                 Eliminar</a>
-
-            <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
-                data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
-                id="btn_historial_doc_exp">
-                Historial</a>
         @endif
-
+        @if ((currentUser()->hasRole('coordprac') || currentUser()->hasRole('diradmin') ||  currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')) and
+                $expediente->getDocenteAsig()->name != 'Sin asignar')
+        <a href="#" class="btn_change_doc_exp" data-lastname="{{ Auth::user()->lastname }}"
+            data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}"
+            id="btn_historial_doc_exp">
+            Historial</a>
+        @endif
         @if (
             $expediente->getAsignacion()->asig_docente !== null and
                 currentUser()->idnumber == $expediente->getAsignacion()->asig_docente->cambio_docidnumber)

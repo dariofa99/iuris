@@ -169,6 +169,7 @@ class TurnosController extends Controller
     public function update(Request $request, $id)
     {
 
+
         $user = User::find($request->estudiante_id);
         $user->cursando_id = $request->cursando_id;
         $user->save();
@@ -183,9 +184,14 @@ class TurnosController extends Controller
         return response()->json($request->all());
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-
+        //return response()->json($request->all());
+        if(isset($request->inactivarEstudiante) and $request->inactivarEstudiante){
+            $user = User::where('id', $request->estudiante_id)->first();
+            $user->active = false;
+            $user->save();
+        }
         $turno = Turno::find($id);
         $turno->delete();
         return response()->json($id);
@@ -244,10 +250,9 @@ class TurnosController extends Controller
     {
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $turnos = $this->turnosService->index($request);
-        $view = view("myforms.conciliaciones.componentes.list_turno_estudiante",compact("turnos",'conciliacion'))
-        ->render();
-        return response()->json(["view"=>$view]);
-
+        $view = view("myforms.conciliaciones.componentes.list_turno_estudiante", compact("turnos", 'conciliacion'))
+            ->render();
+        return response()->json(["view" => $view]);
     }
     public function getEstudiante($request)
     {

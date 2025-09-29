@@ -1203,12 +1203,12 @@ class ExpedienteController extends Controller
     });
 
     $historialOld = $expediente->historialHechosRespuesta()
-      ->where('hisdc_idnumberest_id','<>', $expediente->expidnumberest)
+      ->where('hisdc_idnumberest_id', '<>', $expediente->expidnumberest)
       ->where('hisdc_tipo_datos_caso', $tipo)
       ->orderBy('historial_datos_casos.id', 'DESC')
       ->get();
 
-       $historialOld->each(function ($item) use ($fecha_inicio) {
+    $historialOld->each(function ($item) use ($fecha_inicio) {
       $item->name = $item->estudiante->name;
       $item->lastname = $item->estudiante->lastname;
       $item->afterdays = getDiffDays($fecha_inicio, $item->created_at);
@@ -1478,14 +1478,18 @@ class ExpedienteController extends Controller
       $notify->notify(new SolicitudDocenteCaso($notify));
       $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
     } elseif ($request->tipo_cambio == 1) {
-      /* $request['docidnumber'] = $request->new_docente_id;
-      $request['cambio_docidnumber'] = null;
-      $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);*/
-      $asig_doc->activo = 0;
-      $request['activo'] = 1;
-      $request['docidnumber'] = $request->new_docente_id;
-      $request['asig_caso_id'] = $asig_doc->asig_caso_id;
-      $asignacion = $this->asignacionDocenteCasoService->store($request);
+      if (auth()->user()->idnumber == 1233189109) {
+        $request['docidnumber'] = $request->new_docente_id;
+        $request['cambio_docidnumber'] = null;
+        $asig_doc =  $this->asignacionDocenteCasoService->update($asig_doc, $request);
+      } else {
+        $asig_doc->activo = 0;
+        $request['activo'] = 1;
+        $request['docidnumber'] = $request->new_docente_id;
+        $request['asig_caso_id'] = $asig_doc->asig_caso_id;
+        $asignacion = $this->asignacionDocenteCasoService->store($request);
+      }
+      
       $asig_doc->save();
     } elseif ($request->tipo_cambio == 2) {
       $request['cambio_docidnumber'] = null;

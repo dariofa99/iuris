@@ -40,7 +40,7 @@
 
                                 <div class="card-footer bg-white"
                                     style="text-align: center;border-top:1px solid rgb(235, 235, 235)">
-                                    <a href="#" class="btn btn-warning" id="btn_solicitar_conciliacion">
+                                    <a href="{{url('/terminos/conciliacion')}}" class="btn btn-warning" id="btn_solicitar_conciliacion_">
                                         CONTINUAR (En periodo de pruebas)
                                     </a>
                                 </div>

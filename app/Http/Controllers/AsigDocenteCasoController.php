@@ -91,9 +91,9 @@ class AsigDocenteCasoController extends Controller
     
     public function update(Request $request,$id)
     {
-     // return response()->json($request->all());
+      return response()->json($request->all());
         $expediente = Expediente::find($id);
-        $asig = $expediente->asignaciones()
+        $asig = $expediente->asignaciones() 
         ->where('asigest_id',$expediente->estudiante->idnumber)
         ->where('activo',1)
         ->first();
