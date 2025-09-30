@@ -107,9 +107,9 @@
         </div>
     </div>
 
-   
 
-  <div class="col-md-{{ isset($col) ? $col : '6' }}"> 
+
+    <div class="col-md-{{ isset($col) ? $col : '6' }}">
         <div class="form-group">
             {!! Form::label('Fecha Nacimiento: ') !!}
             <span class="ast_required">*</span>
@@ -119,18 +119,12 @@
                         <i class="fa fa-calendar"></i>
                     </span>
                 </div>
-                 <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='fechanacimien'
-                value="{{ isset($user) ? $user->fechanacimien : '' }}" name='fechanacimien' required type="date"
-                class="form-control form-control-sm  required" data-toggle="tooltip"
-                title="Fecha de nacimiento" data-mask data-inputmask = "'alias': 'yyyy/mm/dd'" placeholder="Fecha de nacimiento" maxlength="10">
-
-                {{-- {!! Form::date('fechanacimien', isset($user) ? $user->fechanacimien : '', [
-                    'class' => 'form-control form-control-sm required',
-                    'required' => 'required',
-                    'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                    'data-mask',
+                <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='fechanacimien'
+                    value="{{ isset($user) ? $user->fechanacimien : '' }}" name='fechanacimien' required
+                    type="date" class="form-control form-control-sm  required" title="Fecha de nacimiento"
+                 placeholder="Fecha de nacimiento"
+                    maxlength="10">
                     
-                ]) !!} --}}
             </div>
             <!-- /.input group -->
         </div>

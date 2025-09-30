@@ -22,7 +22,7 @@
             </span>
             <ul id="list_casos_asignados">
 
-            </ul>
+            </ul> 
         </div>
         <div id="content_user_exp_add">
             @include('myforms.components_exp.frm_user_add')

@@ -237,7 +237,7 @@
     @include('myforms.components_exp.frm_modal_pausar_expediente')
     @include('myforms.components_exp.frm_modal_pausas_expediente')
     @include('myforms.components_exp.frm_modal_cerrar_nota_minima')
-    @include('myforms.components_exp.frm_modal_agregar_usuario')
+    @include('myforms.components_exp.frm_modal_agregar_usuario') 
     @include('myforms.components_exp.frm_modal_cambiar_fecha_evaluacion')
     @include('myforms.frm_modal_general')
 

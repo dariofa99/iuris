@@ -849,6 +849,8 @@ $(document).ready(function () {
         $("#myFormUserCreateExpediente select[name='tipopers_id']").val(237);
         $("#myFormUserCreateExpediente select[name='tipodoc_id']").val(2);
         $("#content_infoexp").hide();
+        $("#myFormUserCreateExpediente input[name='fechanacimien']").removeAttr('required').removeClass('required');
+        
         ocultarCompDiscapUser('myFormUserCreateExpediente');
     });
     $("#add_user_exp").on("click", function (e) {
@@ -857,6 +859,7 @@ $(document).ready(function () {
         resetForm('myFormUserAddCreateExpediente');
         $("#myFormUserAddCreateExpediente select[name='tipopers_id']").val(237);
         $("#myFormUserAddCreateExpediente select[name='tipodoc_id']").val(2);
+        $("#myFormUserAddCreateExpediente input[name='fechanacimien']").removeAttr('required').removeClass('required');
         $("#content_infoexp").hide();
         ocultarCompDiscapUser('myFormUserAddCreateExpediente');
     });

@@ -3,7 +3,7 @@
          <div class="col-md-10">
              <label>Personas que intervienen en el caso</label>
          </div>
-         @if (currentUser()->hasRole('coordprac') and !$readonly)
+         @if ((currentUser()->hasRole('amatai') || currentUser()->hasRole('coordprac')) and !$readonly)
              <div class="col-md-2">
                  <button type="button" id="add_user_exp" class="btn btn-primary mt-2">
                      Agregar <i class="fas fa-user"></i>
