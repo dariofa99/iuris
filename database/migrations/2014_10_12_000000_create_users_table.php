@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('lastname', 60)->nullable();
             $table->string('email', 60)->unique();
             $table->string('password', 60);
-            $table->string('accesofvir', 1)->default('0');
+            $table->integer('min_atencion',3)->default('40');
             $table->string('description', 80)->nullable();
             $table->string('tel1', 12)->nullable();
             $table->string('tel2', 12)->nullable();

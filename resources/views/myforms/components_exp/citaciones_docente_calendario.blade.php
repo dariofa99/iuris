@@ -24,13 +24,15 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
         caption {
-            caption-side: top; /* Asegura que el caption esté arriba */
+            caption-side: top;
+            /* Asegura que el caption esté arriba */
             font-weight: bold;
             text-align: left;
-            margin-bottom: 10px; /* Espacio opcional */
+            margin-bottom: 10px;
+            /* Espacio opcional */
         }
-
     </style>
 @endpush
 @section('navbar')
@@ -38,7 +40,18 @@
     @include('content.navbar')
 @endsection
 @section('titulo_area')
-    Agenda <a href="#" id="consultar_citas_dia">Consultar citas del día</a>
+    @if (currentUser()->hasRole('estudiante') or currentUser()->hasRole("amatai"))        
+        <h3>Agenda: Seleccione un docente para ver su horario</h3>
+
+        <select name="docente_id" id="docente_id" class="form-control selectpicker" data-live-search="true" data-size="7"
+            data-style="btn-info" data-width="auto">
+            <option value="">-- Seleccione un docente --</option>
+            @foreach ($docentes as $docente)
+                <option value="{{ $docente->idnumber }}"> {{ strtoupper($docente->full_name) }}
+                </option>
+            @endforeach
+        </select>
+    @endif
 @endsection
 @section('area_buttons')
 
@@ -53,8 +66,8 @@
         </div>
     </div>
 
-    @include('myforms.components_exp.frm_modal_citaciones_agenda_estudiante')
-    @include('myforms.components_exp.frm_modal_lista_citas_dia')
+    @include('myforms.components_exp.frm_modal_citaciones_agenda_docente')
+
 @stop
 @push('styles')
     <style>
@@ -91,9 +104,12 @@
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
     <!-- Latest compiled and minified JavaScript -->
+    {!! Html::script('plugins/moment/moment.min.js') !!}
+    {!! Html::script('plugins/moment/locales.min.js') !!}
     {!! Html::script('plugins/fullcalendar/fullcalendar.min.js') !!}
     {!! Html::script('plugins/fullcalendar/dist/locale/es.js') !!}
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 
-    <script type="module" src={{ asset('js/admin_cal_cita_est.js?v='. config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/admin_cal_cita_docentes.js?v='. config('app_config.asset_version')) }}></script>
 @endpush
+ 

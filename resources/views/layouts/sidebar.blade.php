@@ -159,6 +159,7 @@
 
                     @if (currentUser()->hasRole('docente') or
                             currentUser()->hasRole('amatai') or
+                            //currentUser()->hasRole('estudiante') or
                             currentUser()->hasRole('dirgral') or
                             currentUser()->hasRole('diradmin'))
                         <li class="nav-item has-treeview">
@@ -170,12 +171,31 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('ag.cedoc') }}" class="nav-link">
-                                        <p>Citaciones estudiantes</p>
-                                    </a>
-                                </li>
-
+                                @if (currentUser()->hasRole('docente') or
+                                        currentUser()->hasRole('amatai') or
+                                        currentUser()->hasRole('dirgral') or
+                                        currentUser()->hasRole('diradmin'))
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('ag.cedoc') }}" class="nav-link">
+                                            <p>Citaciones a estudiantes</p>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (currentUser()->hasRole('docente') or
+                                        currentUser()->hasRole('amatai') or
+                                        //currentUser()->hasRole('estudiante') or
+                                        currentUser()->hasRole('dirgral') or
+                                        currentUser()->hasRole('diradmin'))
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('ag.cestu') }}" class="nav-link">
+                                            @if (currentUser()->hasRole('estudiante'))
+                                                <p>Turnos docentes</p>
+                                            @else
+                                                <p>Turnos estudiantes</p>
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\turnos_docentes;
+use App\TurnosDocente;
 use App\Periodo;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class TurnosDocentesController extends Controller
 {
@@ -55,7 +55,7 @@ class TurnosDocentesController extends Controller
 		->where('sp.sede_id',session('sede')->id_sede)
         ->where('estado',1)
         ->first();
-        $turnos_doc = turnos_docentes::where('trnd_docidnumber',$request->id)->where('trndid_periodo',$periodo->id)->orderBy('trnd_hora_inicio','ASC')->get();
+        $turnos_doc = TurnosDocente::where('trnd_docidnumber',$request->id)->where('trndid_periodo',$periodo->id)->orderBy('trnd_hora_inicio','ASC')->get();
         return response()->json(
 
             $turnos_doc->toArray()
@@ -145,14 +145,14 @@ class TurnosDocentesController extends Controller
         //
         foreach ($request->all() as $key => $info) { //recibe el json y se dispone a ver las actividades a realizar
             if ($info['accion'] == 'eliminar') {
-                $turnos_doc = turnos_docentes::where('trnd_hora_inicio',$info['hora_i'])
+                $turnos_doc = TurnosDocente::where('trnd_hora_inicio',$info['hora_i'])
                     ->where('trnd_hora_fin',$info['hora_f'])
                     ->where('trnd_dia',$info['value'])
                     ->where('trnd_docidnumber',$info['usuario'])
                     ->delete();
             } elseif ($info['accion'] == 'crear') {
                 $periodo = Periodo::where('estado',1)->first();
-                $turnos_doc = turnos_docentes::insert([
+                $turnos_doc = TurnosDocente::insert([
                     "trnd_docidnumber"=>$info['usuario'],
                     "trnd_dia"=>$info['value'],
                     "trnd_hora_inicio"=>$info['hora_i'],
@@ -161,7 +161,7 @@ class TurnosDocentesController extends Controller
                     ]);
             } elseif ($info['accion'] == 'actualizar') {
                 if (is_array($info['value'])) {
-                    $turnos_doc = turnos_docentes::where('trnd_hora_inicio',$info['hora_i'])
+                    $turnos_doc = TurnosDocente::where('trnd_hora_inicio',$info['hora_i'])
                     ->where('trnd_hora_fin',$info['hora_f'])
                     ->where('trnd_docidnumber',$info['usuario'])
                     ->update(["trnd_hora_inicio"=>$info['value'][0],"trnd_hora_fin"=>$info['value'][1]]);        

@@ -109,6 +109,16 @@ function getLongDateWithHour($date)
     return $fecha;
 }
 
+function getLongDate($date)
+{
+    $created_at = Carbon::parse($date);
+
+    $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    $fecha = $created_at->day . ' ' . $meses[($created_at->month) - 1] . " del " . $created_at->year;
+
+    return $fecha;
+}
+
 function getMonthAndYear($date)
 {
     $created_at = Carbon::parse($date);

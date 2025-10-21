@@ -68,6 +68,7 @@
      </div>
 
      @foreach ($expediente->usuarios as $key => $userEx)
+     
          <div class="row row_user_exp">
              <div class="col-sm-4">
                  {!! Form::label('Identificación: ') !!}
@@ -101,10 +102,20 @@
                      {!! Form::text('name', $userEx->name, ['class' => 'form-control required', 'readonly']) !!}
                  </div>
              </div>
-             <div class="col-md-4">
+             <div class="col-md-3">
                  <div class="form-group">
                      {!! Form::label('Apellidos: ') !!}
                      {!! Form::text('lastname', $userEx->lastname, ['class' => 'form-control required', 'readonly']) !!}
+                 </div>
+             </div>
+             <div class="col-md-1">
+                 <div class="form-group">
+                     <label for="id">Quitar</label>
+                        @if ((currentUser()->hasRole('amatai') || currentUser()->hasRole('coordprac')) and !$readonly)
+                            <button type="button" data-pivot="{{ $userEx->pivot->id }}" class="btn btn-danger btn_remove_user_exp" title="Eliminar usuario">
+                                <i class="fas fa-user-times"></i>
+                            </button>
+                        @endif
                  </div>
              </div>
          </div>

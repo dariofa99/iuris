@@ -267,6 +267,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('expedientes/pausar', 'ExpedienteController@pausarExpediente');
     Route::get('expedientes/get/pausas', 'ExpedienteController@getPausasExpediente');
     Route::delete('expedientes/delete/pausa/{id}', 'ExpedienteController@deletePausaExpediente');
+    Route::delete('expedientes/remove/user/{id}', 'ExpedienteController@deleteUserExpediente');
     Route::put('expedientes/update/pausa/{id}', 'ExpedienteController@updatePausaExpediente');
     Route::post('expediente/add/user', 'ExpedienteController@addUser');
 
@@ -418,10 +419,18 @@ Route::group(['middleware' => ['auth']], function () {
     ///////////////////////Agendas
     Route::get('search/citas/for/calendar', 'AgendasController@searchCitasForCalendar');
     Route::get('search/citas/of/day', 'AgendasController@searchCitasOfDay');
-    Route::get('form/citas/for/calendar', 'AgendasController@formCitasForCalendar')->name("ag.cedoc");
+    Route::get('calendar/citas/by/teacher', 'AgendasController@formCitasByTeacher')->name("ag.cedoc");
 
+    Route::get('calendar/citas/by/student', 'AgendasController@formCitasByStudent')->name("ag.cestu");
+
+    Route::get('search/turn/of/teachers', 'AgendasController@searchTurnTeachers');
     //PDF >Reportes
 
+    //turnos estudiantes
+    Route::post('/agendar/turnos/estudiantes', 'TurnoEstudianteDocenteController@store');
+    Route::put('/actualizar/turnos/estudiantes/{id}', 'TurnoEstudianteDocenteController@update');
+    Route::delete('/eliminar/turnos/estudiantes/{id}', 'TurnoEstudianteDocenteController@destroy');
+    /////////////////////////////////////////////////////////////////////////////////////
     Route::get('pdf/reportes/get', 'PdfReportesController@getReportes');
     Route::get('pdf/reportes/by/category', 'PdfReportesController@getReportesByCategory');
     Route::get('pdf/reportes/for/destinos', 'PdfReportesController@getDestinosForReport');
@@ -601,7 +610,7 @@ Route::get('/prueba', function () {
 
   $expediente = Expediente::where('expid', 'PRF-80522-2023-42933')->first();
 
-// $expediente->setNotActLimit();
+  // $expediente->setNotActLimit();
 
 
   dd($expediente);

@@ -215,7 +215,7 @@ class UsersRepository extends BaseRepository implements UsersService
         'roles.display_name'
       )->orderBy('users.created_at', 'desc')->get();
 
-    return $users->toArray();
+    return $users->toArray(); 
   }
 
   public function getEstudiantes(): array

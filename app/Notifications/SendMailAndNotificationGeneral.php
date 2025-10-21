@@ -24,7 +24,7 @@ class SendMailAndNotificationGeneral extends Notification
     public $subject;
     public $url ;
 
-    public function __construct($concepto,$user_created,$subject, $url){
+    public function __construct($concepto,$user_created,$subject, $url = null){
        $this->concepto = $concepto;
        $this->user_created = $user_created;    
        $this->subject = $subject;
@@ -55,7 +55,7 @@ class SendMailAndNotificationGeneral extends Notification
         ->subject($this->subject)
         ->view('myforms.mails.formato_correo',[
                 'mensaje'=>$this->concepto,
-                'url'=>url($this->url),
+                'url'=>$this->url != null ? url($this->url) : null,
                 'user_created'=>$this->user_created
         ]);
 
@@ -72,7 +72,7 @@ class SendMailAndNotificationGeneral extends Notification
         return [
            'type_notification'=>$this->subject,                  
            'message'=>substr($this->concepto, 0, 60) . '...',
-           'url'=>$this->url,
+           'url'=>$this->url != null ? url($this->url) : "#",
            'created_at'=>date("Y-m-d H:i:s"),
            'icon'=>'fas fa-user'
 

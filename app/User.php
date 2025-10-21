@@ -47,7 +47,7 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
-        'accesofvir',
+        'min_atencion',
         'description',
         'codigo_estudiantil',
         'tel1',

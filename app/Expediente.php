@@ -181,7 +181,7 @@ class Expediente extends Model
     public function usuarios()
     {
         return $this->belongsToMany(User::class, 'expediente_has_users', 'expediente_id', 'user_id')
-            ->withPivot('tipo_usuario_id', 'estado_id')
+            ->withPivot('tipo_usuario_id', 'estado_id', 'id')
             ->withTimestamps();
     }
 

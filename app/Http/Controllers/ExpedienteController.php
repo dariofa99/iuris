@@ -1489,7 +1489,7 @@ class ExpedienteController extends Controller
         $request['asig_caso_id'] = $asig_doc->asig_caso_id;
         $asignacion = $this->asignacionDocenteCasoService->store($request);
       }
-      
+
       $asig_doc->save();
     } elseif ($request->tipo_cambio == 2) {
       $request['cambio_docidnumber'] = null;
@@ -1671,5 +1671,13 @@ class ExpedienteController extends Controller
       ]
     ]);
     return response()->json($request->all());
+  }
+
+  public function deleteUserExpediente(Request $request, $id)
+  {
+
+    DB::table('expediente_has_users')->where('id', $id)->delete();
+    return response()->json(['message' => 'Usuario retirado del caso']);
+
   }
 }

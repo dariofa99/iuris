@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Turno;
-use App\turnos_docentes;
+use App\TurnosDocente;
 use App\AsistenciaDocentes;
 use App\Services\UsersService;
 use App\User;

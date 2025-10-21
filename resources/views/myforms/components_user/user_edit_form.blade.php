@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') 
-        || currentUser()->hasRole('dirgral'))
+        @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
             <div class="form-group" align="right">
                 {!! Form::hidden('active_asignacion', '0') !!}
                 <input value="1" type="checkbox" {{ $user->active_asignacion == '1' ? 'checked' : '' }}
@@ -45,7 +44,7 @@
             </div>
         </div>
     </div>
-  
+
     @if (currentUser()->hasRole('amatai') ||
             currentUser()->hasRole('coordprac') ||
             currentUser()->hasRole('diradmin') ||
@@ -57,7 +56,8 @@
                     class="form-control form-control-sm required">
                     <option value="">Seleccione...</option>
                     @foreach ($roles as $key => $rol)
-                        <option {{ (isset($user) and count($user->roles)>0 and $user->roles[0]->id == $key) ? 'selected' : '' }}
+                        <option
+                            {{ (isset($user) and count($user->roles) > 0 and $user->roles[0]->id == $key) ? 'selected' : '' }}
                             value="{{ $key }}">{{ $rol }}</option>
                     @endforeach
                 </select>
@@ -69,8 +69,8 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('Año Cursando ') !!} 
-                <span class="ast_required">*</span> 
+                {!! Form::label('Año Cursando ') !!}
+                <span class="ast_required">*</span>
                 {!! Form::select('cursando_id', $cursando, $user->cursando_id, [
                     'placeholder' => 'Selecciona...',
                     'class' => 'form-control form-control-sm',
@@ -103,7 +103,9 @@
                 <select multiple class="form-control form-control-sm select2_ramas selectpicker" name="sede_id[]">
                     @foreach ($sedes as $key => $sede)
                         @php
-                            $selected = in_array($sede->id_sede, $user->sedes->pluck('pivot.sede_id')->toArray()) ? 'selected' : '';
+                            $selected = in_array($sede->id_sede, $user->sedes->pluck('pivot.sede_id')->toArray())
+                                ? 'selected'
+                                : '';
                         @endphp
                         <option {{ $selected }} value="{{ $sede->id_sede }}">{{ $sede->nombre }}
                         </option>
@@ -122,7 +124,9 @@
                     id="ramaderecho_id">
                     @foreach ($ramas_derecho as $id => $rama)
                         @php
-                            $selected = in_array($id, $user->ramas_derecho->pluck('pivot.ramaderecho_id')->toArray()) ? 'selected' : '';
+                            $selected = in_array($id, $user->ramas_derecho->pluck('pivot.ramaderecho_id')->toArray())
+                                ? 'selected'
+                                : '';
                         @endphp
                         <option {{ $selected }} value="{{ $id }}">{{ $rama }}
                         </option>
@@ -131,6 +135,23 @@
             </div>
         </div>
     @endif
+
+    @if (
+        $user->hasRole('docente') ||
+            (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')))
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! form::label('min_atencion', 'Minutos de atención a estudiantes') !!}
+                {!! Form::number('min_atencion', $user->min_atencion, [
+                    'placeholder' => 'Ej. 1234',
+                    'class' => 'form-control form-control-sm',
+                    'required' => 'required',
+                    'max'=>40
+                ]) !!}
+            </div>
+        </div>
+    @endif
+
     <div class="col-md-6">
         <div class="form-group">
             <label>
@@ -147,4 +168,4 @@
         'data' => getReferencesDataBySection('datos_personales', 'users'),
     ])
 
-</div> 
+</div>

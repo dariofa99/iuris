@@ -850,7 +850,7 @@ $(document).ready(function () {
         $("#myFormUserCreateExpediente select[name='tipodoc_id']").val(2);
         $("#content_infoexp").hide();
         $("#myFormUserCreateExpediente input[name='fechanacimien']").removeAttr('required').removeClass('required');
-        
+
         ocultarCompDiscapUser('myFormUserCreateExpediente');
     });
     $("#add_user_exp").on("click", function (e) {
@@ -862,6 +862,33 @@ $(document).ready(function () {
         $("#myFormUserAddCreateExpediente input[name='fechanacimien']").removeAttr('required').removeClass('required');
         $("#content_infoexp").hide();
         ocultarCompDiscapUser('myFormUserAddCreateExpediente');
+    });
+
+    $(".btn_remove_user_exp").on("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: '¿Esta seguro de eliminar el usuario del caso?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+                let response = await expedientesService.removeUserExpediente($(this).data("pivot"));
+                if (response) {
+                    toastr.success("Eliminado con éxito", "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                    window.location.reload(true);
+                }
+            }
+
+        });
+
     });
 
     $("#content_user_exp_add").on("blur", "input[name='idnumber']", async function (e) {
@@ -961,7 +988,7 @@ $(document).ready(function () {
 
 
     $("#content_user_exp_asig").on("change", "select[name='pbepersondiscap']", function (e) {
-         var formId = $(this).closest('form').attr('id');
+        var formId = $(this).closest('form').attr('id');
         if ($(this).val() == 1) {
             mostrarCompDiscapUser(formId)
         } else {
@@ -971,7 +998,7 @@ $(document).ready(function () {
 
     $("#content_user_exp_add")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-                var formId = $(this).closest('form').attr('id');
+            var formId = $(this).closest('form').attr('id');
             if ($(this).val() == 1) {
                 mostrarCompDiscapUser(formId)
             } else {
@@ -981,7 +1008,7 @@ $(document).ready(function () {
 
     $("#myModal_exp_user_edit")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-                var formId = $(this).closest('form').attr('id');
+            var formId = $(this).closest('form').attr('id');
             if ($(this).val() == 1) {
                 mostrarCompDiscapUser(formId)
             } else {
@@ -992,7 +1019,7 @@ $(document).ready(function () {
 
     $("#myModal_exp_user_add")
         .on("change", "select[name='pbepersondiscap']", function (e) {
-                var formId = $(this).closest('form').attr('id');
+            var formId = $(this).closest('form').attr('id');
             if ($(this).val() == 1) {
                 mostrarCompDiscapUser(formId)
             } else {
@@ -3140,7 +3167,7 @@ function fillModalHistoryDataCase(response) {
                 </div>
             </div><hr>`;
         });
-        if(response.historial_old.length > 0){
+        if (response.historial_old.length > 0) {
             inforhis += `
         <div class="row">  
              <div class="col-md-5">

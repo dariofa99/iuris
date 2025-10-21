@@ -243,8 +243,17 @@ $(document).ready(function () {
     if (errors.length <= 0) {
       var request = convertFormToJSON("myFormUserEdit");
       var data = userService.getAditionalDataByForm('myFormUserEdit');
+      if(request.min_atencion && request.min_atencion > 40){
+         toastr.error("Los minutos de atención no deben ser superiores a 40", "Atención!", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+          });
+          return;
+      }
       request["data"] = (data);
+
       $("#wait").show();
+
       let response = await userService.update(request);
       if (response.errors) {
         response.errors.forEach(error => {
