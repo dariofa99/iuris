@@ -1,9 +1,8 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualSS");
+        localStorage.removeItem("keyCircularActualPausas");
 
-
-        var message = getMantenimientoMessage();
+        var message = getMotivationalMessage();
 
 
 
@@ -64,6 +63,14 @@
         return carrousel;
     }
 
+    function MostrarGuia() {
+        // $("#mymodalShowAlerts").modal("hide");
+        var message = getCarrouselDocentes();
+        //var message = getMantenimientoMessage();
+        $("#modal-show-alerts-content").html(message);
+        $("#mymodalShowAlerts").modal("show");
+
+    }
 
     function getCarrouselDocentes() {
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -112,7 +119,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCircCierreCaso"
+            "data-not": "keyCircularActualTurnos"
         }))
 
         return carrousel;
@@ -158,13 +165,130 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
         return message;
     }
 
+    function getMotivationalMessage() {
+
+        const frases = [{
+                texto: "La única manera de hacer un gran trabajo es amar lo que haces.",
+                autor: "Steve Jobs"
+            },
+            {
+                texto: "Confía en tu potencial. ¡Puedes hacer mucho más de lo que piensas!",
+                autor: ""
+            },
+            {
+                texto: "Confía en tu esfuerzo, estás abriendo puertas que aún no ves.",
+                autor: ""
+            },
+            {
+                texto: "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
+                autor: ""
+            },
+            {
+                texto: "No te compares con los demás, eres único y valioso.",
+                autor: ""
+            },
+            {
+                texto: "No importa que vayas despacio, lo importante es que no te detengas.",
+                autor: ""
+            },
+            {
+                texto: "A la cima no se llega superando a los demás, sino superándote a ti mismo.",
+                autor: ""
+            },
+            {
+                texto: "La educación es el arma más poderosa que puedes usar para cambiar el mundo.",
+                autor: "Nelson Mandela"
+            },
+            {
+                texto: "Hoy es un gran día para empezar algo nuevo. ¡Confía en ti y da el primer paso!",
+                autor: ""
+            },
+            {
+                texto: "Eres capaz de lograr cosas increíbles. Confía en el proceso y sigue adelante.",
+                autor: ""
+            },
+            {
+                texto: "El fracaso no es el fin, sino la señal de que estás intentando algo grandioso.",
+                autor: ""
+            },
+            {
+                texto: "El esfuerzo puede ser invisible, pero los resultados siempre brillan.",
+                autor: ""
+            }
+        ];
+
+
+
+
+        const randomIndex = Math.floor(Math.random() * frases.length);
+        const frase = frases[randomIndex];
+
+
+
+        var message = '';
+        message += `
+  <div style="
+    background: linear-gradient(135deg, #ffffff, #f5f7ff);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.6s ease;
+  ">
+    <p id="textoFrase" style="
+      font-size: 1.4rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 15px;
+    ">
+      “${frase.texto}”
+    </p>
+    <p id="autorFrase" style="
+      font-weight: 600;
+      color: #5563DE;
+      font-size: 1rem;
+      margin-bottom: 0;
+    ">
+      ${frase.autor ? `– ${frase.autor}` : ''}
+    </p>
+    <hr style="
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #5563DE, #74ABE2);
+      margin: 20px 0;
+    ">
+    <span style="
+      font-size: 0.9rem;
+      color: #777;
+      display: block;
+    ">
+      🕒 Últ. actualización: <b>22 de octubre de 2025</b><br>
+      Soporte: 314-7404937 - 310-6038006, darioj99@udenar.edu.co
+    </span>
+  </div>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+`;
+        return message;
+    }
+
     function getCircular() {
-        var keyCir = localStorage.getItem("keyCircularActualCortes");
+        var keyCir = localStorage.getItem("keyCircularActualTurnos");
         var message = '';
         if (keyCir == null) {
-            message = `<embed  src="{{ asset('recursos/CircularActualPausas.pdf#toolbar=0') }}" id="pdfViewer" >`
+            message = `<embed  src="{{ asset('recursos/CircularActualTurnos.pdf#toolbar=0') }}" id="pdfViewer" >`
+            /* message +=
+                `<button class="btn btn-success" data-not="keyCircularActualTurnos" id="btnNotFalse" sandbox >No volver a mostrar!</button>` */
             message +=
-                `<button class="btn btn-success" data-not="keyCircularActualCortes" id="btnNotFalse" sandbox >No volver a mostrar!</button>`
+                `<button class="btn btn-info" onclick='MostrarGuia()'  id="btnMostrarGuia" >Ver guia de usuario</button>`
         }
         return message;
     }
