@@ -2,7 +2,13 @@
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircularActualPausas");
 
+        var keyCir = localStorage.getItem("keyCircularActualTurnos");
+        var message = '';
         var message = getMotivationalMessage();
+        if (keyCir == null) {
+            message = getCircular();
+        }
+        
 
 
 
