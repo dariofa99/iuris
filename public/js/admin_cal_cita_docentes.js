@@ -260,7 +260,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const horaInicio = start.format("HH:mm");
                 const horaFin = end.format("HH:mm");
                 $("#info_adicional_turno").hide();
-                if (calEvent.role_user == 'estudiante') {
+                $("#motivo").val("").hide();
+                console.log(calEvent);
+                
+                if (calEvent.role_user == 'estudiante' || calEvent.role_user == 'amatai') {
+                    $("#motivo").show();
                     if (calEvent.estado !== 'libre') {
                         $("#ct_forcitaest_btn button[id='btn_asig_turno']").remove(); // Quitar el botón de enviar si está ocupado
                     } else {
@@ -272,7 +276,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     if (calEvent.can_delete === true && (calEvent.estado == 260 || calEvent.estado == 262)) {
+                        $("#motivo").val(calEvent.motivo);
                         $("#ct_forcitaest_btn button[id='btn_delete_turno']").remove();
+
                         const boton = `<button type="button" data-id="${calEvent.turno_id}" id="btn_delete_turno" class="btn btn-danger btn-block"><i class="fas fa-trash"></i> Eliminar turno</button>`;
                         $("#ct_forcitaest_btn").append(boton);
 
@@ -288,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 if (calEvent.role_user == 'docente') {
 
-
+                    $("#motivo").val(calEvent.motivo).show();
                     if (calEvent.tipo === "normal") {
                         $("#ct_forcitaest_btn input[name='turno_id']").remove();
                         $("#ct_forcitaest_btn .btn_act_turno").remove(); // Quitar el botón de enviar si está ocupado

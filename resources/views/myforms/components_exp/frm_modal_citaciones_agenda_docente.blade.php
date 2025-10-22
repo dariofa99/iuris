@@ -25,8 +25,11 @@
                         <!-- Título del evento -->
                         <h5 class="event-title mb-3" id="title">Juan Pérez - EXP001</h5>
 
-                        {{-- <label>Motivo</label>
-                        <p class="event-motivo mb-2" id="motivo">Motivo: Reunión con padres</p> --}}
+                        <label>Motivo</label>
+                     
+                            <textarea class="form-control form-control-sm" name="motivo" id="motivo" cols="5" rows="10" placeholder="Motivo: Solicitar cierre de caso y revisión de actuaciones de 
+                             expedientes 2025A-302"></textarea>
+                            
 
                         <label>Fecha</label>
                         <p class="event-date" id="fecha_larga">Fecha: 30 de noviembre de 2024, 10:00 AM</p>

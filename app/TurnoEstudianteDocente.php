@@ -17,7 +17,7 @@ class TurnoEstudianteDocente extends Model
         'hora_inicio',
         'hora_fin',
         'estado_id',
-        //'observacion',
+        'motivo',
     ];
 
     public function estudiante()

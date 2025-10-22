@@ -123,7 +123,7 @@ class AgendasController extends Controller
             ->get();
 
         // Traemos todos los turnos ya asignados del docente entre el rango (una sola consulta)
-        $turnosAsignados = TurnoEstudianteDocente::where('docente_id', $docenteId)
+        $turnosAsignados = TurnoEstudianteDocente::where('docente_id', $docente->id)
             ->whereBetween('fecha', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->get();
 

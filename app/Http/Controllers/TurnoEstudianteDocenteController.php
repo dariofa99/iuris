@@ -42,7 +42,9 @@ class TurnoEstudianteDocenteController extends Controller
     {
 
 
+        $docente = User::where('idnumber', $request->input('docente_id'))->first();
 
+        $request->merge(['docente_id' => $docente->id]);
         //comprobar que no exista un turno para el mismo docente en la misma fecha y hora_inicio
         $existingTurn = TurnoEstudianteDocente::where('docente_id', $request->input('docente_id'))
             ->where('fecha', $request->input('fecha'))
@@ -75,7 +77,7 @@ class TurnoEstudianteDocenteController extends Controller
                 'hora_inicio' => $request->input('hora_inicio'),
                 'hora_fin' => $request->input('hora_fin'),
                 'estado_id' => 260,
-                // 'observacion' => "SIN MOTIVO",
+                'motivo' => $request->input('motivo'),
             ]
         );
 
