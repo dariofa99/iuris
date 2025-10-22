@@ -202,11 +202,12 @@ class AgendasController extends Controller
                         'end' => $bloqueTo->format('Y-m-d\TH:i:s'),
                         'color' => $asignado ?  $asignado->estado->color : '#CCCCCC',
                         'estado' => $asignado ? $asignado->estado_id : 'libre',
+                        'motivo' => $asignado ? $asignado->motivo : 'Disponible',
                         'tipo' => "normal",
                         'docente' => $docenteId,
                         'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
                         'turno_id' => $asignado ? $asignado->id : null,
-                        'motivo' => $asignado ? ($asignado->observacion ?? '') : 'Sin motivo',
+                        'motivo_txt' => $asignado ? $asignado->motivo : '',
                         'fecha_larga' => getLongDateWithHour($bloqueInicio),
                         'role_user' => currentUser()->roles[0]->name,
                         'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
@@ -282,6 +283,7 @@ class AgendasController extends Controller
                                 'motivo' => 'Turno adicional',
                                 'fecha_larga' => getLongDate($extraInicio) . " a las " . $hora,
                                 'role_user' => currentUser()->roles[0]->name,
+                                'motivo_txt' => $asignado ? $asignado->motivo : '',
                                 'turno_id' => $asignado ? $asignado->id : null,
                                 'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
                             ];

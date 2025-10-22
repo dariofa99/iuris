@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const horaInicio = start.format("HH:mm");
                 const horaFin = end.format("HH:mm");
                 $("#info_adicional_turno").hide();
-                $("#motivo").val("").hide();
+                $("#motivo").val("").hide().prop("disabled", false);
                 console.log(calEvent);
                 
                 if (calEvent.role_user == 'estudiante' || calEvent.role_user == 'amatai') {
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     if (calEvent.can_delete === true && (calEvent.estado == 260 || calEvent.estado == 262)) {
-                        $("#motivo").val(calEvent.motivo);
+                        $("#motivo").val(calEvent.motivo).prop("disabled", true);
                         $("#ct_forcitaest_btn button[id='btn_delete_turno']").remove();
 
                         const boton = `<button type="button" data-id="${calEvent.turno_id}" id="btn_delete_turno" class="btn btn-danger btn-block"><i class="fas fa-trash"></i> Eliminar turno</button>`;
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 if (calEvent.role_user == 'docente') {
 
-                    $("#motivo").val(calEvent.motivo).show();
+                    $("#motivo").val(calEvent.motivo).show().prop("disabled", true);
                     if (calEvent.tipo === "normal") {
                         $("#ct_forcitaest_btn input[name='turno_id']").remove();
                         $("#ct_forcitaest_btn .btn_act_turno").remove(); // Quitar el botón de enviar si está ocupado
