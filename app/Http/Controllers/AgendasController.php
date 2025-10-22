@@ -115,7 +115,7 @@ class AgendasController extends Controller
             return response()->json([]); // sin docente, no hay eventos
         }
         $docente = User::where('idnumber', $docenteId)->first();
-        $min_atencion = $docente->min_atencion; // != null and $docente->min_atencion != "" ? $docente->min_atencion : 40;
+        $min_atencion = $docente->min_atencion != null && $docente->min_atencion != "" && $docente->min_atencion < 40 && $docente->min_atencion > 20 ? $docente->min_atencion : 40;
         $horarios = TurnosDocente::where([
             "trnd_docidnumber" => $docenteId
         ])
