@@ -1,5 +1,5 @@
 <script>
-    @if (!Session::has('message-information') && config('app.name') != 'ConciliApp')
+    @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircularActualPausas");
 
         var keyCir = localStorage.getItem("keyCircularActualTurnos");
