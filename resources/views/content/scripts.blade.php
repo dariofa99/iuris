@@ -27,7 +27,11 @@
     })
 
     function getCarrousel(start, end) {
+ const d = new Date("2021-03-25");
+d.getFullYear();
+console.log(d.getFullYear());
 
+ 
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                           <ol class="carousel-indicators">`;
 
@@ -36,7 +40,7 @@
                 carrousel += `<li data-target="#carouselExampleIndicators"  data-slide-to="` + i +
                     `" class="active "></li>`;
             } else {
-                carrousel += `<li style="background-color: black;" data-target="#carouselExampleIndicators" data-slide-to="` + i + `"></li>`;
+                carrousel += `<li  data-target="#carouselExampleIndicators" data-slide-to="` + i + `"></li>`;
             }
         }
 
@@ -47,14 +51,14 @@
             if (i == start) {
                 carrousel +=
                     `<div class="carousel-item active">
-                                      <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG') }}" alt="Slide ` +
+                                      <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG?v=${d.getTime()}') }}" alt="Slide ` +
                     i + `">
                     </div>
                              `       ;
             } else {
                 carrousel +=
                     `<div class="carousel-item">
-                                      <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG') }}" alt="Slide ` +
+                                      <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG?v=${d.getTime()}') }}" alt="Slide ` +
                     i + `"></div>`
 
             }
