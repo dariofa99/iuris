@@ -188,7 +188,7 @@
                                         currentUser()->hasRole('diradmin'))
                                     <li class="nav-item ml-3">
                                         <a href="{{ route('ag.cestu') }}" class="nav-link">
-                                            @if (currentUser()->hasRole('estudiante'))
+                                            @if (currentUser()->hasRole('estudiante') or currentUser()->hasRole('amatai'))
                                                 <p>Turnos docentes</p>
                                             @else
                                                 <p>Turnos estudiantes</p>

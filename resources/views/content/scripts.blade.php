@@ -1,16 +1,17 @@
 <script>
-    @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
+    @if (!Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircularActualPausas");
 
         var keyCir = localStorage.getItem("keyCircularActualTurnos");
+         $("#modal_t").text("Información importante!");
         var message = '';
         var message = getMotivationalMessage();
         if (keyCir == null) {
             message = getCircular();
+        }else{
+           $("#modal_t").text("");
+            message = getMotivationalMessage();
         }
-        
-
-
 
         //var message = getMantenimientoMessage();
         $("#modal-show-alerts-content").html(message);
@@ -25,30 +26,42 @@
 
     })
 
-    function getCarrousel() {
+    function getCarrousel(start, end) {
+
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                          <ol class="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+                          <ol class="carousel-indicators">`;
+
+        for (let i = start; i < end; i++) {
+            if (i == start) {
+                carrousel += `<li data-target="#carouselExampleIndicators"  data-slide-to="` + i +
+                    `" class="active "></li>`;
+            } else {
+                carrousel += `<li style="background-color: black;" data-target="#carouselExampleIndicators" data-slide-to="` + i + `"></li>`;
+            }
+        }
+
+        carrousel += `                   
                           </ol>
-                          <div class="carousel-inner">
-                            <div class="carousel-item active">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva1.JPG') }}" alt="First slide">
-                            </div>
-                            <div class="carousel-item">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva2.JPG') }}" alt="Second slide">
-                            </div>
-                            <div class="carousel-item">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva3.JPG') }}" alt="Third slide">
-                            </div>
-                            <div class="carousel-item">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva4.JPG') }}" alt="Third slide">
-                            </div>
-                            <div class="carousel-item">
-                              <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva5.JPG') }}" alt="Third slide">
-                            </div>                            
+                          <div class="carousel-inner"> `;
+        for (let i = start; i < end; i++) {
+            if (i == start) {
+                carrousel +=
+                    `<div class="carousel-item active">
+                                      <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG') }}" alt="Slide ` +
+                    i + `">
+                    </div>
+                             `       ;
+            } else {
+                carrousel +=
+                    `<div class="carousel-item">
+                                      <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG') }}" alt="Slide ` +
+                    i + `"></div>`
+
+            }
+        }
+
+        carrousel += `
+                                                     
                           </div>
                           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -63,7 +76,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCirActualizaCierreClose"
+            "data-not": "keyCircularActualTurnos"
         }))
 
         return carrousel;
@@ -71,7 +84,12 @@
 
     function MostrarGuia() {
         // $("#mymodalShowAlerts").modal("hide");
-        var message = getCarrouselDocentes();
+        @if(currentUser()->hasRole('estudiante') or currentUser()->hasRole('amatai'))
+          var message = getCarrousel(1,13);
+          @else
+          var message = getCarrousel(13,28); 
+        @endif
+        //var message = getCarrousel();
         //var message = getMantenimientoMessage();
         $("#modal-show-alerts-content").html(message);
         $("#mymodalShowAlerts").modal("show");
@@ -116,7 +134,7 @@
                             <span style="background-color:black" class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                           </a>
-                          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                          <a class="btn btn-success carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
                             <span style="background-color:black" class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                           </a>

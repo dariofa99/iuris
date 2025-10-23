@@ -36,7 +36,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("#myFormAgendarTurnoDocente").on("click", ".btn_act_turno", async function (e) {
         e.preventDefault();
+
+
         var request = convertFormToJSON("myFormAgendarTurnoDocente");
+
         request["estado_id"] = $(this).attr("data-status")
         var mensaje_accion = "";
         if (request["estado_id"] == 261) mensaje_accion = "¿Esta segur@ de actualizar el turno?";
@@ -82,7 +85,16 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#myFormAgendarTurnoDocente").on("click", "#btn_asig_turno", async function (e) {
         e.preventDefault();
         var request = convertFormToJSON("myFormAgendarTurnoDocente");
-
+        var errors = validateForm("myFormAgendarTurnoDocente");
+        if (errors.length > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor complete los campos requeridos.',
+            });
+            return;
+        }
+        
         Swal.fire({
             title: '¿Esta segur@ de agendar el turno?',
             icon: 'info',
@@ -262,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $("#info_adicional_turno").hide();
                 $("#motivo").val("").hide().prop("disabled", false);
                 console.log(calEvent);
-                
+
                 if (calEvent.role_user == 'estudiante' || calEvent.role_user == 'amatai') {
                     $("#motivo").show();
                     if (calEvent.estado !== 'libre') {

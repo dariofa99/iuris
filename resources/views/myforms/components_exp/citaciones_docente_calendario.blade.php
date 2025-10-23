@@ -47,8 +47,11 @@
             data-style="btn-info" data-width="auto">
             <option value="">-- Seleccione un docente --</option>
             @foreach ($docentes as $docente)
+            @if($docente->idnumber == '27088946')
+                
                 <option value="{{ $docente->idnumber }}"> {{ strtoupper($docente->full_name) }}
                 </option>
+            @endif
             @endforeach
         </select>
     @endif

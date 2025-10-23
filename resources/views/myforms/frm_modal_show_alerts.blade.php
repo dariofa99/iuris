@@ -7,7 +7,7 @@
     @endslot
 
     @slot('title')
-        <h3>Información importante!</h3>
+        <h3 id="modal_t">Información importante!</h3>
     @endslot
     @push('styles')
         <!-- aqui van los estilos de cada vista -->
