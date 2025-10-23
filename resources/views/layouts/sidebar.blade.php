@@ -159,7 +159,7 @@
 
                     @if (currentUser()->hasRole('docente') or
                             currentUser()->hasRole('amatai') or
-                            //currentUser()->hasRole('estudiante') or
+                            currentUser()->hasRole('estudiante') or
                             currentUser()->hasRole('dirgral') or
                             currentUser()->hasRole('diradmin'))
                         <li class="nav-item has-treeview">
