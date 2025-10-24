@@ -222,9 +222,10 @@ class AgendasController extends Controller
                 $ocupados = collect($bloquesDelDia)
                     ->filter(fn($bloque) => !is_null($bloque['asignado']))
                     ->count();
-
+                Log::info("Día {$current->toDateString()}: {$ocupados}/{$totalBloques} ocupados.");
                 if ($totalBloques > 0 && $ocupados === $totalBloques) {
                     $extraInicio = $bloquesDelDia[$totalBloques - 1]['fin']->copy();
+                    Log::info($extraInicio);
                     // 🔹 Si la hora es mayor o igual a 14 (2 PM)
                     $extH = false;
                     if ($extraInicio->hour >= 18) {
@@ -236,61 +237,64 @@ class AgendasController extends Controller
                         $extraInicio->setTime(12, 0, 0);
                         $extH = true;
                     }
-                    for ($i = 0; $i < 2; $i++) {
-                        $extraFin = $extraInicio->copy()->addMinutes($min_atencion);
-                        $key = $extraInicio->toDateString() . '|' . $extraInicio->format('H:i:s');
-                        $asignado = $indexAsignados[$key] ?? null;
 
-                        $sig  = $bloquesDelDia[$i]["fin"];
-                        $sig->translatedFormat('l');
+                    if ($extH) {
+                        for ($i = 0; $i < 2; $i++) {
+                            $extraFin = $extraInicio->copy()->addMinutes($min_atencion);
+                            $key = $extraInicio->toDateString() . '|' . $extraInicio->format('H:i:s');
+                            $asignado = $indexAsignados[$key] ?? null;
 
-                        $fechaBuscada = $extraFin->format('H:i:s');
-                        $diaBuscado = $sig->translatedFormat('l');
+                            $sig  = $bloquesDelDia[$i]["fin"];
+                            Log::info("------------------");
+                            $fechaBuscada = $extraFin->format('H:i:s');
+                            $diaBuscado = $extraFin->translatedFormat('l');
+                            Log::info($fechaBuscada);
+                            $tieneHorario = $horarios->contains(function ($horario) use ($diaBuscado, $fechaBuscada) {
+                                return \Str::lower($horario->trnd_dia) === $diaBuscado
+                                    && $fechaBuscada >= $horario->trnd_hora_inicio
+                                    && $fechaBuscada <= $horario->trnd_hora_fin;
+                            });
+                            Log::info($tieneHorario);
+                            Log::info($diaBuscado);
+                            $existe = collect($eventos)->contains(function ($ev) use ($extraInicio, $extraFin) {
+                                return $ev['start'] === $extraInicio->format('Y-m-d\TH:i:s')
+                                    && $ev['end'] === $extraFin->format('Y-m-d\TH:i:s');
+                            });
+                            if (!$tieneHorario && !$existe) {
+                                $hora = Carbon::createFromTimeString($extraInicio)->format("g:i A");
+                                if ($extH) $hora = Carbon::createFromTimeString($extraInicio)->subHour()->format("g:i A");
+                                Log::info($hora);
+                                Log::info("------------------");
+                                $color = '#ffee00ff'; // valor por defecto
 
-                        $tieneHorario = $horarios->contains(function ($horario) use ($diaBuscado, $fechaBuscada) {
-                            return \Str::lower($horario->trnd_dia) === $diaBuscado
-                                && $fechaBuscada >= $horario->trnd_hora_inicio
-                                && $fechaBuscada <= $horario->trnd_hora_fin;
-                        });
-                        $existe = collect($eventos)->contains(function ($ev) use ($extraInicio, $extraFin) {
-                            return $ev['start'] === $extraInicio->format('Y-m-d\TH:i:s')
-                                && $ev['end'] === $extraFin->format('Y-m-d\TH:i:s');
-                        });
-                        if (!$tieneHorario && !$existe) {
-                            $hora = Carbon::createFromTimeString($extraInicio)->format("g:i A");
-                            if ($extH) $hora = Carbon::createFromTimeString($extraInicio)->subHour()->format("g:i A");
-
-                            $color = '#ffee00ff'; // valor por defecto
-
-                            if ($asignado) {
-                                if ($asignado->estado_id == 260) {
-                                    $color = '#9f02c7ff';
-                                } elseif (!empty($asignado->estado->color)) {
-                                    $color = $asignado->estado->color;
+                                if ($asignado) {
+                                    if ($asignado->estado_id == 260) {
+                                        $color = '#9f02c7ff';
+                                    } elseif (!empty($asignado->estado->color)) {
+                                        $color = $asignado->estado->color;
+                                    }
                                 }
+                                $eventos[] = [
+                                    'title' =>  $asignado
+                                        ? ('Turno reservado por:<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
+                                        : 'Disponible',
+                                    'start' => $extraInicio->format('Y-m-d\TH:i:s'),
+                                    'end' => $extraFin->format('Y-m-d\TH:i:s'),
+                                    'color' => $color,
+                                    'estado' => $asignado ? $asignado->estado_id : 'libre',
+                                    'tipo' => 'extra',
+                                    'docente' => $docenteId,
+                                    'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
+                                    'motivo' => 'Turno adicional',
+                                    'fecha_larga' => getLongDate($extraInicio) . " a las " . $hora,
+                                    'role_user' => currentUser()->roles[0]->name,
+                                    'motivo_txt' => $asignado ? $asignado->motivo : '',
+                                    'turno_id' => $asignado ? $asignado->id : null,
+                                    'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
+                                ];
                             }
-                            $eventos[] = [
-                                'title' =>  $asignado
-                                    ? ('Turno reservado por:<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
-                                    : 'Disponible',
-                                'start' => $extraInicio->format('Y-m-d\TH:i:s'),
-                                'end' => $extraFin->format('Y-m-d\TH:i:s'),
-                                'color' => $color,
-                                'estado' => $asignado ? $asignado->estado_id : 'libre',
-                                'tipo' => 'extra',
-                                'docente' => $docenteId,
-                                'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
-                                'motivo' => 'Turno adicional',
-                                'fecha_larga' => getLongDate($extraInicio) . " a las " . $hora,
-                                'role_user' => currentUser()->roles[0]->name,
-                                'motivo_txt' => $asignado ? $asignado->motivo : '',
-                                'turno_id' => $asignado ? $asignado->id : null,
-                                'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
-                            ];
+                            $extraInicio = $extraFin;
                         }
-
-
-                        $extraInicio = $extraFin;
                     }
                 }
             }

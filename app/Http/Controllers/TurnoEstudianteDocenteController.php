@@ -63,7 +63,7 @@ class TurnoEstudianteDocenteController extends Controller
             ->where('estado_id', 260)
             ->first();
         if ($existingTurn) {
-             return response()->json([
+            return response()->json([
                 'success' => false,
                 'message' => 'Ya tiene un turno pendiente con el docente.'
             ]);  
