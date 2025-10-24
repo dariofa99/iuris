@@ -278,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (calEvent.role_user == 'estudiante' || calEvent.role_user == 'amatai') {
                     $("#motivo").show();
                     if (calEvent.estado !== 'libre') {
+                         $("#motivo").val(calEvent.motivo).prop("disabled", true);
                         $("#ct_forcitaest_btn button[id='btn_asig_turno']").remove(); // Quitar el botón de enviar si está ocupado
                     } else {
                         //agregar el boton si no existe
@@ -285,6 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const boton = `<button type="button" id="btn_asig_turno" class="btn btn-success btn-block">Solicitar turno</button>`;
                             $("#ct_forcitaest_btn").append(boton);
                         }
+                        
                     }
 
                     if (calEvent.can_delete === true && (calEvent.estado == 260 || calEvent.estado == 262)) {
