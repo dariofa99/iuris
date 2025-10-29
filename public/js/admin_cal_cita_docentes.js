@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return;
         }
-        
+
         Swal.fire({
             title: '¿Esta segur@ de agendar el turno?',
             icon: 'info',
@@ -175,8 +175,168 @@ document.addEventListener('DOMContentLoaded', function () {
         $("#wait").hide()
     });
 
+    $("#myFormAgendarTurnoDocente").on("click", "#btn_notify_turno", async function (e) {
+
+        e.preventDefault();
+
+        var fecha = $("#turnoFecha").val();
+        var horaInicio = $("#turnoHoraInicio").val();
+        var horaFin = $("#turnoHoraFin").val();
+        var oldStart = moment(fecha + " " + horaInicio);
+        var event = {};
+        event.start = moment(fecha + " " + horaInicio);
+        event.end = moment(fecha + " " + horaFin);
+
+        var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.start.format('DD [de] MMMM [a las] hh:mm A')}.`;
+
+        actualizarTurnoDocente(fecha, horaInicio, horaFin, mensaje_accion, function () {
+
+        });
+
+
+    });
+
+
+
     showCalendar(1232541);
 
+    function actualizarTurnoDocente(fecha, horaInicio, horaFin, mensaje_accion, revertFunc) {
+        $("#mymodalAgendaCitacionWithDocente").modal("hide");
+        var request = convertFormToJSON("myFormAgendarTurnoDocente");
+        var fecha = fecha;
+        var horaInicio = horaInicio;
+        var horaFin = horaFin;
+
+
+
+        Swal.fire({
+            title: 'Reprogramar turno',
+            html: `
+                                    <div class="container text-left" style="font-size:16px;">
+                        <!-- Asunto -->
+                        <div class="mb-3">
+                            <label for="asuntoInput" class="form-label fw-bold">Se enviará un correo con el siguiente asunto:</label>
+                            <textarea id="asuntoInput"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Ej: Solicitud de orientación académica"
+                                style="resize:none; font-size:15px;">${mensaje_accion}</textarea>
+                        </div>
+
+                        <!-- Fecha y hora -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="fechaInicioInput" class="form-label fw-bold">Fecha:</label>
+                                <input type="date" 
+                                    id="fechaInicioInput" 
+                                    class="form-control"
+                                    value="${fecha}"
+                                    style="font-size:15px;">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="horaInicioInput" class="form-label fw-bold">Hora de inicio:</label>
+                                <input type="time" 
+                                    id="horaInicioInput" 
+                                    class="form-control"
+                                    value="${horaInicio}"
+                                    style="font-size:15px;">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="horaFinInput" class="form-label fw-bold">Hora fin:</label>
+                                <input type="time" 
+                                    id="horaFinInput" 
+                                    class="form-control"
+                                    value="${horaFin}"
+                                    style="font-size:15px;">
+                            </div>
+                        </div>
+</div>
+
+                `,
+            inputLabel: 'Asunto',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Notificar',
+            cancelButtonText: 'Cancelar',
+            didOpen: () => {
+                $('#fechaInicioInput, #horaInicioInput').on('change', function () {
+                    if (this.id == "fechaInicioInput" || this.id == "horaInicioInput") {
+                        var oldStart = moment(fecha + " " + horaInicio);
+                        var event = moment($("#fechaInicioInput").val() + " " + $("#horaInicioInput").val());
+                       // var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.format('DD [de] MMMM [a las] hh:mm A')}.`;
+
+                        //Agregar 40 minutos al final horaFinInput
+                        var newHoraFin = moment($("#fechaInicioInput").val() + " " + $("#horaInicioInput").val()).add(40, 'minutes').format("HH:mm");
+                        $("#horaFinInput").val(newHoraFin);
+                        var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.format('DD [de] MMMM [a las] hh:mm A')}.`;
+
+
+                        $("#asuntoInput").val(mensaje_accion + "\n");
+                    }
+                });
+            },
+            preConfirm: () => {
+                const asunto = Swal.getPopup().querySelector('#asuntoInput').value.trim();
+                if (!asunto) {
+                    Swal.showValidationMessage('Debes escribir un asunto antes de continuar.');
+                }
+                return asunto;
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const correo = result.value; // 💡 Aquí obtienes el correo ingresado
+
+                $("#wait").show();
+
+                // Añade el correo al request antes de enviarlo
+                request.motivo = correo;
+                request.newfecha = $("#fechaInicioInput").val();
+                request.newhoraInicio = $("#horaInicioInput").val();
+                request.newhoraFin = $("#horaFinInput").val();
+
+
+
+                try {
+                    var response = await agendasService.notificarTurnoDocente(request);
+
+                    if (!response.success) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                        });
+                        revertFunc(); // ⛔ Revierte el evento si hubo error
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Éxito',
+                            text: response.message,
+                        });
+                    }
+
+                } catch (err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error del servidor',
+                        text: 'No se pudo realizar la actualización.',
+                    });
+                    revertFunc(); // ⛔ Revierte el evento si falla la llamada
+                } finally {
+                    $('#calendar').fullCalendar('refetchEvents');
+                    $("#wait").hide();
+                }
+
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar('refetchEvents');
+                $("#mymodalAgendaCitacionWithDocente").modal("hide");
+                $("#wait").hide();
+            } else {
+                revertFunc(); // ⛔ Revierte el evento si el usuario cancela
+            }
+        });
+    }
     // showCalendar();
 
     function showCalendar(docente_id) {
@@ -230,10 +390,55 @@ document.addEventListener('DOMContentLoaded', function () {
             slotDuration: "00:40:00",
             //Random default events
             events: '/search/turn/of/teachers/',
-            editable: false,
-            droppable: true, // this allows things to be dropped onto the calendar !!!
-            drop: function (date, allDay) { // this function is called when something is dropped
+            editable: true,         // 🔹 Permite mover eventos (drag & drop)
+            // eventStartEditable: true, // 🔹 Permite mover el inicio del evento
+            eventDurationEditable: true, // 🔹 Permite cambiar la duración
+            droppable: true,         // 🔹 Permite arrastrar desde fuera si usas “external events”
+            eventOverlap: true,      // 🔹 Permite superponer eventos
+            eventConstraint: null,   // 🔹 Permite mover fuera del horario
+            eventDidMount: function (info) {
+                if (info.event.extendedProps.tipo === 'estudiante') {
+                    info.el.style.cursor = 'default'; // cambia el cursor
+                }
+                console.log(info);
+
             },
+            drop: function (date) {
+                alert("Dropped on " + date.format());
+            },
+            eventDrop: function (event, delta, revertFunc) {
+
+                if (event.role_user == 'estudiante' || event.role_user == 'amatai') {
+
+                    revertFunc();
+                    return;
+                }
+
+                if (event.role_user == 'docente' && event.estado != 260) {
+
+                    revertFunc();
+                    return;
+                }
+                
+                const oldStart = event.start.clone().subtract(delta);
+                const oldEnd = event.end.clone().subtract(delta);
+                const fecha = event.start.format("YYYY-MM-DD");
+                const horaInicio = event.start.format("HH:mm");
+                const horaFin = event.end.format("HH:mm");
+                $("#ct_forcitaest_btn input[name='turno_id']").remove();
+                $("#turnoFecha").val(oldStart.format("YYYY-MM-DD"));
+                $("#turnoHoraInicio").val(oldStart.format("HH:mm"));
+                $("#turnoHoraFin").val(oldEnd.format("HH:mm"));
+
+                const txtid = `<input type="hidden" value="${event.turno_id}" name="turno_id">`;
+                $("#ct_forcitaest_btn").append(txtid);
+                console.log(event);
+
+
+                var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.start.format('DD [de] MMMM [a las] hh:mm A')}.`;
+                actualizarTurnoDocente(fecha, horaInicio, horaFin, mensaje_accion, revertFunc);
+            },
+
             loading: function (isLoading) {
                 if (isLoading) {
                     $("#wait").show();  // Muestra el loader
@@ -278,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (calEvent.role_user == 'estudiante' || calEvent.role_user == 'amatai') {
                     $("#motivo").show();
                     if (calEvent.estado !== 'libre') {
-                         $("#motivo").val(calEvent.motivo).prop("disabled", true);
+                        $("#motivo").val(calEvent.motivo).prop("disabled", true);
                         $("#ct_forcitaest_btn button[id='btn_asig_turno']").remove(); // Quitar el botón de enviar si está ocupado
                     } else {
                         //agregar el boton si no existe
@@ -286,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const boton = `<button type="button" id="btn_asig_turno" class="btn btn-success btn-block">Solicitar turno</button>`;
                             $("#ct_forcitaest_btn").append(boton);
                         }
-                        
+
                     }
 
                     if (calEvent.can_delete === true && (calEvent.estado == 260 || calEvent.estado == 262)) {
@@ -311,6 +516,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     $("#motivo").val(calEvent.motivo).show().prop("disabled", true);
                     if (calEvent.tipo === "normal") {
                         $("#ct_forcitaest_btn input[name='turno_id']").remove();
+                        $("#ct_forcitaest_btn button[id='btn_notify_turno']").remove();
                         $("#ct_forcitaest_btn .btn_act_turno").remove(); // Quitar el botón de enviar si está ocupado
                         if (calEvent.estado === 260) {
                             $("#ct_forcitaest_btn .btn_act_turno").remove();
@@ -322,6 +528,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             $("#ct_forcitaest_btn").append(txtid);
                             // }
 
+                            const botonNotifi = `<br><button type="button" data-status="261" id="btn_notify_turno" class="btn btn-info btn-block btn_notify_turno">Notificar cambios</button>`;
+
+                            $("#ct_forcitaest_btn").append(botonNotifi);
                         }
                     }
 
@@ -365,10 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $("#turnoHoraFin").val(horaFin);
                 $("#turnoDocenteId").val(docenteId);
 
-                // Rellenar campos del modal
-                $("#turnoFecha").val(fecha);
-                $("#turnoHoraInicio").val(horaInicio);
-                $("#turnoHoraFin").val(horaFin);
+
 
 
                 $("#mymodalAgendaCitacionWithDocente").modal("show")

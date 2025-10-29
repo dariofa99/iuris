@@ -30,7 +30,7 @@
             2 => [
                 'id' => 'btn_registrar_apod_sol',
                 'tipo_usuario' => 196,
-                'visible' => true, 
+                'visible' => true,
                 'title' => 'Apoderado',
                 'message' =>
                     'Diligencia el siguiente formulario con la información de la persona que actúa como <b>apoderado</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.',
@@ -102,6 +102,20 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>SI presenta algún problema para diligenciar el formulario, por favor comuníquese al correo
+                       
+                     darioj99@udenar.edu.co  </strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="row justify-content-center">
+
             <div class="col-md-10">
 
                 <div class="card">

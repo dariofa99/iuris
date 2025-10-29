@@ -104,7 +104,7 @@ class SolicitudesController extends Controller
                 if ($request->paso == 2) {
                     $user = $conciliacion->getUser(205); //solicitante
                     Auth::login($user);
-            
+
                     if ($user->tipopers_id != 238) {
 
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
@@ -132,7 +132,7 @@ class SolicitudesController extends Controller
                     foreach ($users as $user) {
                         if ($user->tipopers_id == 238) {
                             $hasJuridico = true;
-                        } 
+                        }
                     }
                     if (!$hasJuridico) {
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
@@ -305,9 +305,18 @@ class SolicitudesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserStoreRequest $request)
+    public function store(Request $request)
     {
-        //   return response()->json($request->all());//
+ //return response()->json("lkjsdlkgjsdg");
+
+        $user = $this->userService->findWithFilter([
+            'idnumber' => $request->idnumber,
+            'email' => $request->email
+        ]);
+
+        return response()->json($user);
+
+       // return response()->json($request->all()); //
 
         $this->sedesService->setSede($request);
         $user = $this->userService->store($request);
@@ -522,22 +531,24 @@ class SolicitudesController extends Controller
         $messages = [
             'name.required' => 'El nombre es requerido.',
             'lastname.required' => 'El apellido es requerido.',
-            'email.unique' => 'El :attribute  ya existe en otra cuenta.',
+            //'email.unique' => 'El :attribute  ya existe en otra cuenta.',
             'email.required' => 'El :attribute es requerido.',
             'idnumber.required' => 'El número de documento es requerido.',
-            'idnumber.unique' => 'El número de documento ya existe en otra cuenta.',
+            //'idnumber.unique' => 'El número de documento ya existe en otra cuenta.',
         ];
         $validator = Validator::make($request->all(), [
             'name' => ['required'],
             'lastname' => ['required'],
-            'email' => ['required', 'unique:users'],
-            'idnumber' => ['required', 'unique:users']
+            'email' => ['required'],
+            'idnumber' => ['required']
         ], $messages);
+
 
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+
 
 
         $solicitud = $this->solicitudesService->find($request->solicitud_id);

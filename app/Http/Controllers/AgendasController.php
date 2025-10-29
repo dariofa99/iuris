@@ -163,7 +163,7 @@ class AgendasController extends Controller
             for ($current = $first->copy(); $current->lte($rangeEnd); $current->addWeek()) {
                 $horaInicio = Carbon::parse($horario->trnd_hora_inicio);
                 $horaFin = Carbon::parse($horario->trnd_hora_fin);
-
+                Log::info("Procesando día {$current->toDateString()} de {$horaInicio->format('H:i:s')} a {$horaFin->format('H:i:s')}");
                 $bloqueInicio = $current->copy()->setTime($horaInicio->hour, $horaInicio->minute, $horaInicio->second);
                 $bloqueFinToCompare = $current->copy()->setTime($horaFin->hour, $horaFin->minute, $horaFin->second);
 
@@ -299,6 +299,38 @@ class AgendasController extends Controller
                 }
             }
         }
+
+        foreach ($turnosAsignados as $turno) {
+            $key = $turno->fecha . '|' . Carbon::parse($turno->hora_inicio)->format('H:i:s');
+
+            // Verifica si ya fue incluido (es decir, si pertenece a un horario normal)
+            $existe = collect($eventos)->contains(function ($ev) use ($turno) {
+                return $ev['start'] === Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio)->format('Y-m-d\TH:i:s');
+            });
+
+            if (!$existe) {
+                // Este turno está fuera del horario habitual (reposiciones u otros)
+                $fechaInicio = Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio);
+                $fechaFin = Carbon::parse($turno->fecha . ' ' . $turno->hora_fin);
+
+                $eventos[] = [
+                    'title' => 'Turno reprogramado: <br>' . ($turno->estudiante->name . ' ' . $turno->estudiante->lastname),
+                    'start' => $fechaInicio->format('Y-m-d\TH:i:s'),
+                    'end' => $fechaFin->format('Y-m-d\TH:i:s'),
+                    'color' => $turno->estado->color, // color naranja para distinguirlo
+                    'estado' => $turno->estado_id,
+                    'tipo' => 'fuera_horario',
+                    'docente' => $docenteId,
+                    'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
+                    'motivo' => $turno->motivo ?? 'Reposición / fuera de horario',
+                    'fecha_larga' => getLongDateWithHour($fechaInicio),
+                    'role_user' => currentUser()->roles[0]->name,
+                    'turno_id' => $turno->id,
+                    'can_delete' => ($turno->estudiante_id == auth()->user()->id and $can_delete),
+                ];
+            }
+        }
+
         return response()->json($eventos);
     }
 

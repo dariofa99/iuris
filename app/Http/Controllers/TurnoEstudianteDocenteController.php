@@ -63,10 +63,10 @@ class TurnoEstudianteDocenteController extends Controller
             ->where('estado_id', 260)
             ->first();
         if ($existingTurn) {
-            return response()->json([
+            /*   return response()->json([
                 'success' => false,
                 'message' => 'Ya tiene un turno pendiente con el docente.'
-            ]);  
+            ]); */
         }
 
         $turno = TurnoEstudianteDocente::create(
@@ -81,14 +81,10 @@ class TurnoEstudianteDocenteController extends Controller
             ]
         );
 
-
-
-
-
-         return response()->json([
-                'success' => true,
-                'message' => 'Turno agendado con éxito.'
-            ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Turno agendado con éxito.'
+        ]);
     }
 
     /**
@@ -180,6 +176,63 @@ class TurnoEstudianteDocenteController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Eliminado con éxito"
+        ]);
+    }
+
+    public function notificarTurnoEstudiante(Request $request)
+    {
+        $turno = TurnoEstudianteDocente::find($request->input('turno_id'));
+        if (!$turno) {
+            return response()->json([
+                'success' => false,
+                'message' => "Ups! Hubo un error, consulte con el administrador"
+            ]);
+        }
+
+        $existingTurn = TurnoEstudianteDocente::where('docente_id', $turno->docente_id)
+            ->where('fecha', $request->newfecha)
+            ->where('hora_inicio', "<=", $request->newhoraInicio)
+            ->where('hora_fin', '>', $request->newhoraInicio)
+            ->first();
+        if ($existingTurn) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ya existe un turno en la misma fecha y hora de inicio.',
+                'data' => $existingTurn,
+            ]);
+        }
+
+
+      
+
+        $newTurno = TurnoEstudianteDocente::create(
+            [
+                'docente_id' => $turno->docente_id,
+                'estudiante_id' => $turno->estudiante_id,
+                'fecha' => $request->input('newfecha'),
+                'hora_inicio' => $request->input('newhoraInicio'),
+                'hora_fin' => $request->input('newhoraFin'),
+                'estado_id' => 260,
+                'motivo' => $turno->motivo,
+            ]
+        );
+
+        $user_created = Auth::user()->name . " " . Auth::user()->lastname;
+        $subject = "Recordatorio de turno agendado";
+        $user = $turno->estudiante;
+
+
+
+        $hora = Carbon::createFromTimeString($turno->hora_inicio)->format("g:i A");
+        $concepto = "";
+        $concepto .= "<br>" . $request->input('motivo');
+        $turno->estado_id = 264; //reprogramado
+        $turno->save();
+        $user->notify(new SendMailAndNotificationGeneral($concepto, $user_created, $subject));
+
+        return response()->json([
+            'success' => $turno,
+            'message' => "Notificación enviada con éxito"
         ]);
     }
 }

@@ -42,8 +42,8 @@ class UserStoreRequest extends FormRequest
         return [
             'name' => ['required'],
             'lastname' => ['required'],
-            'email' => ['required','unique:users'],
-            'idnumber' => ['required','unique:users']
+            'email' => ['required'],
+            'idnumber' => ['required']
         ];
     }
 
@@ -58,10 +58,10 @@ public function messages()
     return [
         'name.required' => 'El nombre es requerido.',
         'lastname.required' => 'El apellido es requerido.',
-        'email.unique' => 'El :attribute  ya existe en otra cuenta.',
+        //'email.unique' => 'El :attribute  ya existe en otra cuenta.',
         'email.required' => 'El :attribute es requerido.',
         'idnumber.required' => 'El número de documento es requerido.',
-        'idnumber.unique' => 'El número de documento ya existe en otra cuenta.'
+        //'idnumber.unique' => 'El número de documento ya existe en otra cuenta.'
     ];
 }
 }

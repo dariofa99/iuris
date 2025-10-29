@@ -36,7 +36,8 @@ class HorarioController extends Controller
 
   public function calendario($tipo)
   {
-    /*  $docentes = DB::table('users')
+/*
+  $docentes = DB::table('users')
   ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
   ->leftjoin('roles' , 'role_user.role_id','=','roles.id')
   ->leftjoin('referencias_tablas' , 'referencias_tablas.id','=','users.cursando_id')
@@ -49,8 +50,9 @@ class HorarioController extends Controller
   ->where('sedes.id_sede',session('sede')->id_sede)
   ->select('users.active','users.id','ref_nombre','users.idnumber',
     DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
-    ,'role_user.role_id', 'roles.display_name')->groupBy('users.idnumber')->orderBy('users.created_at', 'desc')->get();
-  */
+    ,'role_user.role_id', 'roles.display_name')->groupBy('users.idnumber')
+    ->orderBy('users.created_at', 'desc')->get();
+*/
     $docentes = $this->usersService->getUsersByRoleName('docente');
     // dd($docentes);
     $periodo = DB::table('periodo')
@@ -316,16 +318,13 @@ class HorarioController extends Controller
 
       //dd($events);
       $pdias = "";
-
-
       $active_calendar = 'active';
-
       return view('myforms.frm_calendariogen', compact('active_calendar', 'events', 'docentes', 'tipo'));
     } elseif ($tipo == "docentes") {
 
       $colores = array("#008000", "#13caca", "#008080", "#0000FF", "#000080", "#FFA07A", "#FF00FF", "#808080", "#000000", "#FF0000", "#800000", "#CD5C5C", "#aeae14", "#808000", "#1ae91a", "#800080", "#FA8072", "#9944e7", "#3adb1c", "#db1c63", "#1cafdb", "#8b144b", "#a5530d", "#a36a14", "#347e0e", "#c4ce2c");
 
-      $turnos_doc = turnos_docentes::join('users', 'turnos_docentes.trnd_docidnumber', '=', 'users.idnumber')
+      $turnos_doc = TurnosDocente::join('users', 'turnos_docentes.trnd_docidnumber', '=', 'users.idnumber')
         ->select('turnos_docentes.id', 'trnd_docidnumber', DB::raw("CONCAT(name,' ', lastname) AS nombre_completo"), 'name', 'trnd_dia', 'trnd_hora_inicio', 'trnd_hora_fin')
         ->where('trndid_periodo', $periodo->id)
         ->orderBy('trnd_docidnumber', 'DESC')
@@ -779,21 +778,21 @@ class HorarioController extends Controller
         } elseif ($horario == "112" || $horario == "113") {
           $horarioFijo = 119;
         }
-      /*   if ($horario == "110" || $horario == "111") {
+        /*   if ($horario == "110" || $horario == "111") {
           $curso2 = "117";
         } elseif ($horario == "112" || $horario == "113") {
           $curso2 = "116";
         } */
         $fechaDia = Carbon::parse($fecha)->format('l');
         $diasSemana = [
-          "Monday"=>144,
-          "Tuesday"=>145,
-          "Wednesday"=>146,
-          "Thursday"=>147,
-          "Friday"=>148
+          "Monday" => 144,
+          "Tuesday" => 145,
+          "Wednesday" => 146,
+          "Thursday" => 147,
+          "Friday" => 148
         ];
-        $trnid_dia = $diasSemana[$fechaDia]; 
-          $turnos = DB::table('turnos')
+        $trnid_dia = $diasSemana[$fechaDia];
+        $turnos = DB::table('turnos')
           ->join('users',  'users.idnumber', '=', 'turnos.trnid_estudent')
           ->join('referencias_tablas as ref', 'ref.id', '=', 'users.cursando_id')
           ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
@@ -801,30 +800,30 @@ class HorarioController extends Controller
           ->select('ref.ref_nombre', 'users.name', 'users.lastname', 'users.cursando_id', 'users.idnumber')
           ->where(function ($queryor) use ($color, $horario, $horarioFijo) {
             $queryor->where('turnos.trnid_color', '=', $color)
-              ->where(function($q) use ($horario, $horarioFijo){
-                $q->orWhere( 'turnos.trnid_horario', '=', $horario)
-                ->orWhere( 'turnos.trnid_horario', '=', $horarioFijo)
-                ->orWhere( 'turnos.trnid_horario', '=', $horarioFijo);
-              });                    
+              ->where(function ($q) use ($horario, $horarioFijo) {
+                $q->orWhere('turnos.trnid_horario', '=', $horario)
+                  ->orWhere('turnos.trnid_horario', '=', $horarioFijo)
+                  ->orWhere('turnos.trnid_horario', '=', $horarioFijo);
+              });
           })
           ->orWhere(function ($queryor) use ($horario, $trnid_dia, $horarioFijo) {
-            $queryor->where( 'turnos.trnid_dia', '=', $trnid_dia)
-                ->where(function($q)use ($horario, $horarioFijo) {
-                  $q->orWhere('turnos.trnid_horario', '=', $horario)
+            $queryor->where('turnos.trnid_dia', '=', $trnid_dia)
+              ->where(function ($q) use ($horario, $horarioFijo) {
+                $q->orWhere('turnos.trnid_horario', '=', $horario)
                   ->orWhere('turnos.trnid_horario', '=', $horarioFijo)
-                  ;
-                });                   
-            })
+                ;
+              });
+          })
           ->where('sedes.id_sede', session('sede')->id_sede)
           ->orderBy('users.cursando_id', 'asc')
           ->orderBy('users.idnumber', 'asc')
           ->get();
-          return response()->json(
+        return response()->json(
 
-            $turnos->toArray()
-  
-          );
-       /*    $turnos = DB::table('turnos')
+          $turnos->toArray()
+
+        );
+        /*    $turnos = DB::table('turnos')
           ->join('users',  'users.idnumber', '=', 'turnos.trnid_estudent')
           ->join('referencias_tablas as ref', 'ref.id', '=', 'users.cursando_id')
           ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
@@ -872,7 +871,7 @@ class HorarioController extends Controller
   {
 
     $fecha = Carbon::parse($fecha)->format('Y-m-d H:i:s');
-    $turnos_doc = turnos_docentes::join('users', 'turnos_docentes.trnd_docidnumber', '=', 'users.idnumber')
+    $turnos_doc = TurnosDocente::join('users', 'turnos_docentes.trnd_docidnumber', '=', 'users.idnumber')
       ->select('turnos_docentes.id as id', 'trnd_docidnumber as docidnumber', DB::raw("CONCAT(name,' ', lastname) AS nombre_completo"), 'name', 'trnd_dia as dia', 'trnd_hora_inicio as inicio', 'trnd_hora_fin as fin')
       ->where('turnos_docentes.id', $horario)
       ->get();

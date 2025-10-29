@@ -428,6 +428,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //turnos estudiantes
     Route::post('/agendar/turnos/estudiantes', 'TurnoEstudianteDocenteController@store');
+     Route::post('/notificar/turnos/estudiantes', 'TurnoEstudianteDocenteController@notificarTurnoEstudiante');
     Route::put('/actualizar/turnos/estudiantes/{id}', 'TurnoEstudianteDocenteController@update');
     Route::delete('/eliminar/turnos/estudiantes/{id}', 'TurnoEstudianteDocenteController@destroy');
     /////////////////////////////////////////////////////////////////////////////////////
