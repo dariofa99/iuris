@@ -29,4 +29,15 @@ class TurnoEstudianteDocente extends Model
     {
         return $this->belongsTo(TablaReferencia::class, 'estado_id', 'id');
     }
+    public function childs()
+    {
+        return $this->belongsToMany(TurnoEstudianteDocente::class, 'turnos_estdoc_reprogramados', 'teparent_id', 'techild_id')
+            ->withTimestamps();
+    }
+
+    public function parents()
+    {
+        return $this->belongsToMany(TurnoEstudianteDocente::class, 'turnos_estdoc_reprogramados', 'techild_id', 'teparent_id')
+            ->withTimestamps();
+    }
 }

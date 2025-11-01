@@ -163,12 +163,12 @@ class AgendasController extends Controller
             for ($current = $first->copy(); $current->lte($rangeEnd); $current->addWeek()) {
                 $horaInicio = Carbon::parse($horario->trnd_hora_inicio);
                 $horaFin = Carbon::parse($horario->trnd_hora_fin);
-                Log::info("Procesando día {$current->toDateString()} de {$horaInicio->format('H:i:s')} a {$horaFin->format('H:i:s')}");
+
                 $bloqueInicio = $current->copy()->setTime($horaInicio->hour, $horaInicio->minute, $horaInicio->second);
                 $bloqueFinToCompare = $current->copy()->setTime($horaFin->hour, $horaFin->minute, $horaFin->second);
 
                 $bloquesDelDia = []; // almacenamos los turnos del día
-
+                $restar = 0;
                 while ($bloqueInicio->lt($bloqueFinToCompare)) {
                     $can_delete = true;
                     $bloqueTo = $bloqueInicio->copy()->addMinutes($min_atencion);
@@ -193,16 +193,30 @@ class AgendasController extends Controller
                         'fin' => $bloqueTo->copy(),
                         'asignado' => $asignado,
                     ];
+                    $status = 'libre';
+                    $motivo = 'Disponible';
+                    $cld = '#CCCCCC';
+
+                    //validar que start con end sean mayores a 10 minutos y menores a min_atencion
+                    if ($bloqueTo->diffInMinutes($bloqueInicio) <= 10) {
+                        // Si la diferencia es menor a 10 minutos, ajustar el inicio
+                        $status = 'skip';
+                        $motivo = 'No disponible';
+                        $cld = '#727272ff';
+                        $restar++;
+                    }
+
+                 
 
                     $eventos[] = [
                         'title' => $asignado
-                            ? ('Turno reservado por:<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
-                            : 'Disponible',
+                            ? ($asignado->estado->ref_nombre . ':<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
+                            : $motivo,
                         'start' => $bloqueInicio->format('Y-m-d\TH:i:s'),
                         'end' => $bloqueTo->format('Y-m-d\TH:i:s'),
-                        'color' => $asignado ?  $asignado->estado->color : '#CCCCCC',
-                        'estado' => $asignado ? $asignado->estado_id : 'libre',
-                        'motivo' => $asignado ? $asignado->motivo : 'Disponible',
+                        'color' => $asignado ?  $asignado->estado->color : $cld,
+                        'estado' => $asignado ? $asignado->estado_id : $status,
+                        'motivo' => $asignado ? $asignado->motivo : $motivo,
                         'tipo' => "normal",
                         'docente' => $docenteId,
                         'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
@@ -210,6 +224,7 @@ class AgendasController extends Controller
                         'motivo_txt' => $asignado ? $asignado->motivo : '',
                         'fecha_larga' => getLongDateWithHour($bloqueInicio),
                         'role_user' => currentUser()->roles[0]->name,
+                        'have_childs' => count($asignado ? $asignado->childs : []) > 0 ? true : false,
                         'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
                     ];
 
@@ -222,10 +237,10 @@ class AgendasController extends Controller
                 $ocupados = collect($bloquesDelDia)
                     ->filter(fn($bloque) => !is_null($bloque['asignado']))
                     ->count();
-                Log::info("Día {$current->toDateString()}: {$ocupados}/{$totalBloques} ocupados.");
-                if ($totalBloques > 0 && $ocupados === $totalBloques) {
+
+                if ($totalBloques > 0 && ($ocupados + $restar) === $totalBloques) {
                     $extraInicio = $bloquesDelDia[$totalBloques - 1]['fin']->copy();
-                    Log::info($extraInicio);
+
                     // 🔹 Si la hora es mayor o igual a 14 (2 PM)
                     $extH = false;
                     if ($extraInicio->hour >= 18) {
@@ -244,18 +259,17 @@ class AgendasController extends Controller
                             $key = $extraInicio->toDateString() . '|' . $extraInicio->format('H:i:s');
                             $asignado = $indexAsignados[$key] ?? null;
 
-                            $sig  = $bloquesDelDia[$i]["fin"];
-                            Log::info("------------------");
+
+
                             $fechaBuscada = $extraFin->format('H:i:s');
                             $diaBuscado = $extraFin->translatedFormat('l');
-                            Log::info($fechaBuscada);
+
                             $tieneHorario = $horarios->contains(function ($horario) use ($diaBuscado, $fechaBuscada) {
                                 return \Str::lower($horario->trnd_dia) === $diaBuscado
                                     && $fechaBuscada >= $horario->trnd_hora_inicio
                                     && $fechaBuscada <= $horario->trnd_hora_fin;
                             });
-                            Log::info($tieneHorario);
-                            Log::info($diaBuscado);
+
                             $existe = collect($eventos)->contains(function ($ev) use ($extraInicio, $extraFin) {
                                 return $ev['start'] === $extraInicio->format('Y-m-d\TH:i:s')
                                     && $ev['end'] === $extraFin->format('Y-m-d\TH:i:s');
@@ -263,20 +277,19 @@ class AgendasController extends Controller
                             if (!$tieneHorario && !$existe) {
                                 $hora = Carbon::createFromTimeString($extraInicio)->format("g:i A");
                                 if ($extH) $hora = Carbon::createFromTimeString($extraInicio)->subHour()->format("g:i A");
-                                Log::info($hora);
-                                Log::info("------------------");
+
                                 $color = '#ffee00ff'; // valor por defecto
 
                                 if ($asignado) {
                                     if ($asignado->estado_id == 260) {
-                                        $color = '#9f02c7ff';
+                                        $color = $asignado->estado->color;
                                     } elseif (!empty($asignado->estado->color)) {
                                         $color = $asignado->estado->color;
                                     }
                                 }
                                 $eventos[] = [
                                     'title' =>  $asignado
-                                        ? ('Turno reservado por:<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
+                                        ? ($asignado->estado->ref_nombre . ':<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
                                         : 'Disponible',
                                     'start' => $extraInicio->format('Y-m-d\TH:i:s'),
                                     'end' => $extraFin->format('Y-m-d\TH:i:s'),
@@ -290,6 +303,7 @@ class AgendasController extends Controller
                                     'role_user' => currentUser()->roles[0]->name,
                                     'motivo_txt' => $asignado ? $asignado->motivo : '',
                                     'turno_id' => $asignado ? $asignado->id : null,
+                                    'have_childs' => count($asignado ? $asignado->childs : []) > 0 ? true : false,
                                     'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
                                 ];
                             }
@@ -314,7 +328,7 @@ class AgendasController extends Controller
                 $fechaFin = Carbon::parse($turno->fecha . ' ' . $turno->hora_fin);
 
                 $eventos[] = [
-                    'title' => 'Turno reprogramado: <br>' . ($turno->estudiante->name . ' ' . $turno->estudiante->lastname),
+                    'title' => $turno->estado_id !== 265 ? $turno->estado->ref_nombre . ': <br>' . ($turno->estudiante->name . ' ' . $turno->estudiante->lastname) : 'Turno Disponible',
                     'start' => $fechaInicio->format('Y-m-d\TH:i:s'),
                     'end' => $fechaFin->format('Y-m-d\TH:i:s'),
                     'color' => $turno->estado->color, // color naranja para distinguirlo
@@ -322,7 +336,7 @@ class AgendasController extends Controller
                     'tipo' => 'fuera_horario',
                     'docente' => $docenteId,
                     'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
-                    'motivo' => $turno->motivo ?? 'Reposición / fuera de horario',
+                    'motivo' => $turno->estado_id == 265 ? "" : $turno->motivo ?? 'Reposición / fuera de horario',
                     'fecha_larga' => getLongDateWithHour($fechaInicio),
                     'role_user' => currentUser()->roles[0]->name,
                     'turno_id' => $turno->id,

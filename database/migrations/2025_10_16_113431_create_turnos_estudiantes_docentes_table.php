@@ -18,6 +18,7 @@ class CreateTurnosEstudiantesDocentesTable extends Migration
             $table->date('fecha'); // Día exacto del turno
             $table->time('hora_inicio');
             $table->time('hora_fin');
+             $table->string('motivo')->nullable();
             $table->integer('docente_id')->unsigned(); // 
             $table->foreign('docente_id')->references('id')->on('users');
             $table->integer('estudiante_id')->unsigned(); // 
@@ -26,6 +27,18 @@ class CreateTurnosEstudiantesDocentesTable extends Migration
             $table->foreign('estado_id')->references('id')->on('referencias_tablas');
             $table->timestamps();
             $table->unique(['docente_id', 'fecha', 'hora_inicio'], 'turno_unico_por_docente');
+        });
+
+        Schema::create('turnos_estdoc_reprogramados', function (Blueprint $table) {
+            $table->bigIncrements('id');            
+            $table->integer('teparent_id')->unsigned(); // 
+            $table->foreign('teparent_id')->references('id')->on('turnos_estudiantes_docentes');
+
+            $table->integer('techild_id')->unsigned(); // 
+            $table->foreign('techild_id')->references('id')->on('turnos_estudiantes_docentes');
+
+            $table->timestamps();
+           
         });
     }
 
@@ -37,5 +50,6 @@ class CreateTurnosEstudiantesDocentesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('turnos_estudiantes_docentes');
+        Schema::dropIfExists('turnos_estdoc_reprogramados');
     }
 }

@@ -42,9 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         request["estado_id"] = $(this).attr("data-status")
         var mensaje_accion = "";
+        if (request["estado_id"] == 260) mensaje_accion = "¿Esta segur@ de agendar el turno?";
         if (request["estado_id"] == 261) mensaje_accion = "¿Esta segur@ de actualizar el turno?";
         if (request["estado_id"] == 262) mensaje_accion = "¿Esta segur@ de aprobar el turno?";
         if (request["estado_id"] == 263) mensaje_accion = "¿Esta segur@ de rechazar el turno?";
+        if (request["estado_id"] == 265) mensaje_accion = "¿Esta segur@ de liberar el turno?";
+        if (request["estado_id"] == 266) mensaje_accion = "¿Esta segur@ de marcar inasistencia?";
+
         Swal.fire({
             title: mensaje_accion,
             icon: 'info',
@@ -212,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
         Swal.fire({
             title: 'Reprogramar turno',
             html: `
-                                    <div class="container text-left" style="font-size:16px;">
+                    <div class="container text-left" style="font-size:16px;">
                         <!-- Asunto -->
                         <div class="mb-3">
                             <label for="asuntoInput" class="form-label fw-bold">Se enviará un correo con el siguiente asunto:</label>
@@ -252,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     style="font-size:15px;">
                             </div>
                         </div>
-</div>
+                    </div>
 
                 `,
             inputLabel: 'Asunto',
@@ -265,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (this.id == "fechaInicioInput" || this.id == "horaInicioInput") {
                         var oldStart = moment(fecha + " " + horaInicio);
                         var event = moment($("#fechaInicioInput").val() + " " + $("#horaInicioInput").val());
-                       // var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.format('DD [de] MMMM [a las] hh:mm A')}.`;
+                        // var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.format('DD [de] MMMM [a las] hh:mm A')}.`;
 
                         //Agregar 40 minutos al final horaFinInput
                         var newHoraFin = moment($("#fechaInicioInput").val() + " " + $("#horaInicioInput").val()).add(40, 'minutes').format("HH:mm");
@@ -414,12 +418,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                if (event.role_user == 'docente' && event.estado != 260) {
+                if (event.role_user == 'docente' && event.estado != 260 && event.estado != 265) {
 
                     revertFunc();
                     return;
                 }
-                
+
                 const oldStart = event.start.clone().subtract(delta);
                 const oldEnd = event.end.clone().subtract(delta);
                 const fecha = event.start.format("YYYY-MM-DD");
@@ -432,10 +436,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const txtid = `<input type="hidden" value="${event.turno_id}" name="turno_id">`;
                 $("#ct_forcitaest_btn").append(txtid);
-                console.log(event);
+                $("#ct_forcitaest_btn input[name='tipo_turno']").remove();
+                const tipo_turno = `<input type="hidden" value="${event.tipo}" name="tipo_turno">`;
+
+                $("#ct_forcitaest_btn").append(tipo_turno);
 
 
-                var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} será reprogramado para el día ${event.start.format('DD [de] MMMM [a las] hh:mm A')}.`;
+                var mensaje_accion = `El turno programado para el día ${oldStart.format('DD [de] MMMM [a las] hh:mm A')} ha sido reprogramado para el día ${event.start.format('DD [de] MMMM [a las] hh:mm A')}.`;
                 actualizarTurnoDocente(fecha, horaInicio, horaFin, mensaje_accion, revertFunc);
             },
 
@@ -450,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Personaliza el contenido del evento con un salto de línea
                 const start = moment(event.start).format('HH:mm');
                 const end = moment(event.end).format('HH:mm');
-                const estado = event.title == "" ? "Disponible" : "";
+                const estado = event.title == "" ? event.title : "";
                 element.find('.fc-time').html(`${start} - ${end}: ${estado}`);
                 if (event.tipo == "extra") {
                     element.find('.fc-time').html("Extra");
@@ -463,6 +470,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 $("#wait").hide();
             },
             eventClick: function (calEvent, jsEvent, view) {
+                if (calEvent.estado == 'skip') {
+                    return;
+                }
                 const formattedTitle = calEvent.title.replace("-", "<br>");
                 $("#ct_forcitaest h5[id='title']").html(formattedTitle)
                 $("#ct_forcitaest p[id='motivo']").text(calEvent.motivo)
@@ -478,28 +488,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 const horaFin = end.format("HH:mm");
                 $("#info_adicional_turno").hide();
                 $("#motivo").val("").hide().prop("disabled", false);
+                $("#ct_forcitaest_btn input[name='turno_id']").remove();
                 console.log(calEvent);
 
+                const txtid = `<input type="hidden" value="${calEvent.turno_id}" name="turno_id">`;
+                $("#ct_forcitaest_btn").append(txtid);
+                $("#ct_forcitaest_btn button[id='btn_asig_turno']").remove();
+                $("#ct_forcitaest_btn .btn_act_turno").remove();
                 if (calEvent.role_user == 'estudiante' || calEvent.role_user == 'amatai') {
                     $("#motivo").show();
-                    if (calEvent.estado !== 'libre') {
-                        $("#motivo").val(calEvent.motivo).prop("disabled", true);
-                        $("#ct_forcitaest_btn button[id='btn_asig_turno']").remove(); // Quitar el botón de enviar si está ocupado
+                    if (calEvent.estado == 'libre' || calEvent.estado == 265) {
+
+                        var boton = `<button type="button" id="btn_asig_turno" class="btn btn-success btn-block">Solicitar turno</button>`;
+                        if (calEvent.estado == 265) boton = `<button type="button" data-status="260" id="btn_act_turno" class="btn btn-success btn-block btn_act_turno">Solicitar turno</button>`;
+
+                        $("#ct_forcitaest_btn").append(boton);
+
                     } else {
                         //agregar el boton si no existe
-                        if ($("#ct_forcitaest_btn button[id='btn_asig_turno']").length === 0) {
-                            const boton = `<button type="button" id="btn_asig_turno" class="btn btn-success btn-block">Solicitar turno</button>`;
-                            $("#ct_forcitaest_btn").append(boton);
-                        }
 
+                        $("#motivo").val(calEvent.motivo).prop("disabled", true);
+                        $("#ct_forcitaest_btn button[id='btn_asig_turno']").remove(); // Quitar el botón de enviar si está ocupado
                     }
 
                     if (calEvent.can_delete === true && (calEvent.estado == 260 || calEvent.estado == 262)) {
                         $("#motivo").val(calEvent.motivo).prop("disabled", true);
                         $("#ct_forcitaest_btn button[id='btn_delete_turno']").remove();
 
-                        const boton = `<button type="button" data-id="${calEvent.turno_id}" id="btn_delete_turno" class="btn btn-danger btn-block"><i class="fas fa-trash"></i> Eliminar turno</button>`;
-                        $("#ct_forcitaest_btn").append(boton);
+                        if (calEvent.tipo == "fuera_horario") {
+                            const boton = `<button type="button" data-status="265" id="btn_act_turno" class="btn btn-danger btn-block btn_act_turno"><i class="fas fa-trash"></i> Liberar turno</button>`;
+                            $("#ct_forcitaest_btn").append(boton);
+                        } else {
+                            const boton = `<button type="button" data-id="${calEvent.turno_id}" id="btn_delete_turno" class="btn btn-danger btn-block"><i class="fas fa-trash"></i> Liberar turno</button>`;
+                            $("#ct_forcitaest_btn").append(boton);
+                        }
+
 
 
                     } else {
@@ -512,71 +535,89 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 if (calEvent.role_user == 'docente') {
-
+                    $("#ct_forcitaest_btn button[id='btn_notify_turno']").remove();
                     $("#motivo").val(calEvent.motivo).show().prop("disabled", true);
                     if (calEvent.tipo === "normal") {
-                        $("#ct_forcitaest_btn input[name='turno_id']").remove();
-                        $("#ct_forcitaest_btn button[id='btn_notify_turno']").remove();
+
+
                         $("#ct_forcitaest_btn .btn_act_turno").remove(); // Quitar el botón de enviar si está ocupado
                         if (calEvent.estado === 260) {
                             $("#ct_forcitaest_btn .btn_act_turno").remove();
-                            $("#ct_forcitaest_btn input[name='turno_id']").remove();
+
                             //if ($("#ct_forcitaest_btn button[id='btn_asig_turno']").length === 0) {
-                            const boton = `<button type="button" data-status="261" id="btn_act_turno" class="btn btn-success btn-block btn_act_turno">Marcar atendido</button>`;
-                            const txtid = `<input type="hidden" value="${calEvent.turno_id}" name="turno_id">`;
+                            const boton = `<button type="button" data-status="261" id="btn_act_turno" class="btn btn-success btn-block btn_act_turno">Marcar atendido</button>
+                                            <button type="button" data-status="266" id="btn_act_turno" class="btn btn-warning btn-block btn_act_turno">Marcar inasistencia</button>
+                            `;
+                            // const txtid = `<input type="hidden" value="${calEvent.turno_id}" name="turno_id">`;
                             $("#ct_forcitaest_btn").append(boton);
-                            $("#ct_forcitaest_btn").append(txtid);
+                            //  $("#ct_forcitaest_btn").append(txtid);
                             // }
 
-                            const botonNotifi = `<br><button type="button" data-status="261" id="btn_notify_turno" class="btn btn-info btn-block btn_notify_turno">Notificar cambios</button>`;
+                            const botonNotifi = `<br><button type="button" data-status="261" id="btn_notify_turno" class="btn btn-info btn-block btn_notify_turno">Reprogramar</button>`;
 
                             $("#ct_forcitaest_btn").append(botonNotifi);
                         }
                     }
+                    $("#ct_forcitaest_btn button[id='btn_delete_turno']").remove();
 
+                    if (calEvent.tipo === "extra" || calEvent.tipo === "fuera_horario") {
 
-                    if (calEvent.tipo === "extra") {
                         $("#ct_forcitaest_btn .btn_act_turno").remove();
                         $("#ct_forcitaest_btn").find(".btn_act_turno").remove();
-                        $("#ct_forcitaest_btn input[name='turno_id']").remove();
-                        if (calEvent.estado === 260) {
+                        // $("#ct_forcitaest_btn input[name='turno_id']").remove();
+                        if (calEvent.estado === 262) {
                             $("#ct_forcitaest_btn").find(".btn_act_turno").remove();
                             $("#ct_forcitaest_btn .btn_act_turno").remove();
-                            $("#ct_forcitaest_btn input[name='turno_id']").remove();
+
                             //if ($("#ct_forcitaest_btn button[id='btn_asig_turno']").length === 0) {
-                            const boton = `<button type="button" data-status="262" class="btn_act_turno btn btn-success btn-block">Aprobar turno</button>`;
+                            const boton = `<button type="button" data-status="260" class="btn_act_turno btn btn-success btn-block">Aprobar turno</button>`;
                             const botonD = `<button type="button" data-status="263" class="btn_act_turno btn btn-warning btn-block">Rechazar turno</button>`;
-                            const txtid = `<input type="hidden" value="${calEvent.turno_id}" name="turno_id">`;
+                            //const txtid = `<input type="hidden" value="${calEvent.turno_id}" name="turno_id">`;
                             $("#ct_forcitaest_btn").append(boton);
                             $("#ct_forcitaest_btn").append(botonD);
-                            $("#ct_forcitaest_btn").append(txtid);
+                            // $("#ct_forcitaest_btn").append(txtid);
                             // }
 
                         }
 
-                        if (calEvent.estado === 262) {
+                        if (calEvent.estado === 260 || calEvent.estado === 265) {
                             $("#ct_forcitaest_btn .btn_act_turno").remove();
-                            $("#ct_forcitaest_btn input[name='turno_id']").remove();
-                            //if ($("#ct_forcitaest_btn button[id='btn_asig_turno']").length === 0) {
-                            const boton = `<button type="button" data-status="261" id="btn_act_turno" class="btn btn-success btn-block btn_act_turno">Marcar atendido</button>`;
-                            const txtid = `<input type="hidden" value="${calEvent.turno_id}" name="turno_id">`;
-                            $("#ct_forcitaest_btn").append(boton);
-                            $("#ct_forcitaest_btn").append(txtid);
-                            // }
+                            if (calEvent.estado === 260) {
+
+
+                                const boton = `<button type="button" data-status="261" id="btn_act_turno" class="btn btn-success btn-block btn_act_turno">Marcar atendido</button>
+                            <button type="button" data-status="266" id="btn_act_turno" class="btn btn-warning btn-block btn_act_turno">Marcar inasistencia</button>
+               
+                            `;
+                                $("#ct_forcitaest_btn").append(boton);
+                            }
+
+                            const botonNotifi = `<br><button type="button" data-status="261" id="btn_notify_turno" class="btn btn-info btn-block btn_notify_turno">Reprogramar</button>`;
+                            $("#ct_forcitaest_btn").append(botonNotifi);
+
+                            if (calEvent.estado === 265) {
+
+
+                                const boton = `<button type="button" data-id="${calEvent.turno_id}" id="btn_delete_turno" class="btn btn-danger btn-block"><i class="fas fa-trash">
+                                </i> Liberar turno</button>`;
+
+
+                                $("#ct_forcitaest_btn").append(boton);
+                            }
 
                         }
                     }
 
                 }
+                $("#ct_forcitaest_btn input[name='tipo_turno']").remove();
+                const tipo_turno = `<input type="hidden" value="${calEvent.tipo}" name="tipo_turno">`;
+
+                $("#ct_forcitaest_btn").append(tipo_turno);
                 // Llenar campos del modal
                 $("#turnoFecha").val(fecha);
                 $("#turnoHoraInicio").val(horaInicio);
                 $("#turnoHoraFin").val(horaFin);
                 $("#turnoDocenteId").val(docenteId);
-
-
-
-
                 $("#mymodalAgendaCitacionWithDocente").modal("show")
             },
             dayClick: function (date, jsEvent, view) {
