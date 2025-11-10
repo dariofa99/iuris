@@ -294,7 +294,7 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
       color: #777;
       display: block;
     ">
-      🕒 Últ. actualización: <b>22 de octubre de 2025</b><br>
+      🕒 Últ. actualización: <b>10 de noviembre de 2025</b><br>
       Soporte: 314-7404937 - 310-6038006, darioj99@udenar.edu.co
     </span>
   </div>

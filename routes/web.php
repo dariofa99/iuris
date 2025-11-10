@@ -270,15 +270,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('expedientes/remove/user/{id}', 'ExpedienteController@deleteUserExpediente');
     Route::put('expedientes/update/pausa/{id}', 'ExpedienteController@updatePausaExpediente');
     Route::post('expediente/add/user', 'ExpedienteController@addUser');
-
     Route::get('expedientes/get/teachers', 'ExpedienteController@getTeacherCases');
-
-
     Route::get('expediente/createstream/{id}', 'ExpedienteController@createStream');
     Route::get('expediente/sharestream/{id}', 'ExpedienteController@shareStream');
-
     Route::post('expedientes/asignar/conciliacion', 'ExpedienteController@asigConciliacion');
-
+    Route::get('expedientes/get/exp/rama/student/{idnumber}', 'ExpedienteController@getExpedientesRamaEstudiante');
     //Ediar usuarios desde Expedientes
     Route::resource('expuser', 'ExpedienteUserController');
 

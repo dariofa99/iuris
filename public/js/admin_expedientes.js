@@ -3022,6 +3022,78 @@ $(document).ready(function () {
     });
 
 
+    $("#btn_detalles_estudiante").on("click", async function () {
+        var estudiante_id = $("#expidnumberest").val();
+        console.log(estudiante_id);
+
+        $("#wait").show();
+        let res = await expedientesService.getDetailsEstudiante(estudiante_id);
+
+        if (res == "") {
+            $("#modal-conten-js").html('No hay información registrada o no se ha seleccionado un estudiante');//limpia modal antes de mostrar
+            $("#mymodal-dinamyc-tittle").html("Detalles estudiante");
+        } else {
+
+            var table_html = `<table class="table table-bordered">
+            <thead>
+                <tr>    
+                    <th>Subrama</th>
+                    <th><h4>Total</h4></th>
+                    
+                </tr>
+            </thead>
+            <tbody>`;
+            res.forEach(element => {
+
+                table_html += `<tr>
+                    <td>${element.subrama}</td>
+                    <td><h4>${element.total}</h4></td>
+                     <td>
+                   `;
+
+                if (element.Abiertos != "0") {
+                    table_html += `
+                   (${element.Abiertos} Abierto)
+                    `;
+                }
+                if(element.Cerrados != "0"){
+                    table_html += `
+                    (${element.Cerrados} Cerrado)
+                    `;
+                }
+                if (element.Rechazados != "0") {
+                    table_html += `
+                     (${element.Rechazados} Rechazado)
+                    `;
+                }
+                if (element.En_solicitud_de_cierre != "0") {
+                    table_html += `
+                     (${element.En_solicitud_de_cierre} En solicitud de cierre)
+                    
+                    `;
+                }
+                if (element.Cerrado_sistema != "0") {
+                    table_html += `
+                     (${element.Cerrado_sistema} Cerrado sistema)
+                    `;
+                }
+                if (element.Pausados != "0") {
+                    table_html += `
+                     (${element.Pausados} Pausado)
+                    `;
+                }
+
+                table_html += `</td></tr>`;
+            });
+            table_html += `</tbody></table>`;
+
+            $("#modal-conten-js").html(table_html);
+            $("#mymodal-dinamyc-tittle").html("Detalles estudiante");
+        }
+        $("#mymodaljs").modal("show");
+        $("#wait").hide();
+    });
+
 
 });//////////////////////////////////////////////
 function get_notas(tbl_id, origen) {

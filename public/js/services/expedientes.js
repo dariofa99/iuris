@@ -149,6 +149,25 @@ export class ExpedientesService {
 
     }
 
+     async getDetailsEstudiante(estudiante_id) {
+        const response = await fetch(BASE_URL + 'expedientes/get/exp/rama/student/' + estudiante_id, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+
+    }
     
     async getTeacherCases(request) {
         const response = await fetch(BASE_URL + 'expedientes/get/teachers?'+ new URLSearchParams(request), {

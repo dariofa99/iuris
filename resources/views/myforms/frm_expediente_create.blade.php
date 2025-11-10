@@ -95,6 +95,12 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <br>
+                    <input type="button" value="Detalles asignación" class="btn btn-info mt-1" id="btn_detalles_estudiante">
+                </div>
+            </div>
         </div>
         <div class="col-md-12">
             <div class="form-group" align="right">
@@ -109,6 +115,7 @@
         </div>
     </form>
     @include('myforms.frm_expediente_user_create')
+    @include('myforms.frm_modal_dinamyc_js')
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
