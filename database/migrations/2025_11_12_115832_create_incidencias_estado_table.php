@@ -14,7 +14,7 @@ class CreateIncidenciasEstadoTable extends Migration
     public function up()
     {
         Schema::create('incidencias_estado', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('motivo')->nullable();
             $table->integer('incidencia_id')->unsigned();
             $table->foreign('incidencia_id')->references('id')->on('asignacion_caso');

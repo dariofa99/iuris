@@ -14,7 +14,7 @@ class CreateIncidenciasAsignacionTable extends Migration
     public function up()
     {
         Schema::create('incidencias_asignacion', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('incidencia_id')->unsigned();
             $table->foreign('incidencia_id')->references('id')->on('incidencias');
             $table->integer('asig_caso_id')->unsigned();

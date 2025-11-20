@@ -85,6 +85,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         View::composer([
             'myforms.frm_expediente_edit',
+             'myforms.frm_defensa_oficio_edit',
             'myforms.frm_expediente_show',
             'myforms.incidencias.*',
         ], 'App\Http\ViewComposers\IncidenciasComposer');
