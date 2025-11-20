@@ -18,7 +18,7 @@ class CreateTurnosEstudiantesDocentesTable extends Migration
             $table->date('fecha'); // Día exacto del turno
             $table->time('hora_inicio');
             $table->time('hora_fin');
-             $table->string('motivo')->nullable();
+            $table->string('motivo')->nullable();
             $table->integer('docente_id')->unsigned(); // 
             $table->foreign('docente_id')->references('id')->on('users');
             $table->integer('estudiante_id')->unsigned(); // 

@@ -104,4 +104,13 @@ class AsignacionCaso extends Model
         return $this->hasMany(AsigDocenteCaso::class, 'asig_caso_id', 'id');
     }
 
+     public function incidencias()
+    {
+   
+        return $this->belongsToMany(Incidencia::class, 'incidencias_asignacion', 'asig_caso_id', 'incidencia_id')
+            ->withPivot('incidencia_id', 'asig_caso_id', 'id')
+            ->withTimestamps();
+    
+    }
+
 }

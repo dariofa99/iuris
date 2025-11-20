@@ -428,6 +428,28 @@
                         </li>
                     @endif
 
+                     
+                        <li
+                            class="nav-item has-treeview {{ (!Route::is('periodos.index') and !Route::is('segmentos.index')) ?: 'menu-open' }}">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-comment-dots"></i>
+                                <p>
+                                    Incidencias
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('incidencias.index') }}" class="nav-link">
+                                        <p>Solicitar atención</p>
+                                    </a>
+                                </li>
+                              
+                            </ul>
+                        </li>
+                  
+
+
                 </ul>
                 </li>
                 </ul>

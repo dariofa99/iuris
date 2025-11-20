@@ -3,6 +3,8 @@
     @if ($expediente->getAsignacion())
         <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig"
             name="fecha_asig">
+        <input type="hidden" value="{{ $expediente->getAsignacion()->id }}" id="id_asig"
+            name="id_asig">
     @endif
     @if (!currentUser()->hasRole('estudiante'))
         <div class="col-md-4">
@@ -117,15 +119,15 @@
                             </a>
                         @endif
                     @endif
-                    
-                        @if ($expediente->validateVacations())
-                            {!! $expediente->validateVacations() !!}
-                        @else         
-                            <a href="#" id="btn_quit_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
-                                Admin. pausa
-                            </a>
-                        @endif
-                   
+
+                    @if ($expediente->validateVacations())
+                        {!! $expediente->validateVacations() !!}
+                    @else
+                        <a href="#" id="btn_quit_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
+                            Admin. pausa
+                        </a>
+                    @endif
+
                 @endif
 
                 @if (!$readonly)

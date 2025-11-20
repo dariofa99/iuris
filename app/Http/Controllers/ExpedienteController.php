@@ -1699,9 +1699,7 @@ group by rd.subrama ;*/
         DB::raw('SUM(IF(e.expestado_id = 3, 1,  0)) AS Rechazados'),
         DB::raw('SUM(IF(e.expestado_id = 4, 1, 0)) AS En_solicitud_de_cierre'),
         DB::raw('SUM(IF(e.expestado_id = 5, 1, 0)) AS Cerrado_sistema'),
-        DB::raw('SUM(IF(e.expestado_id = 6, 1, 0)) AS Pausados')
-
-      )
+        DB::raw('SUM(IF(e.expestado_id = 6, 1, 0)) AS Pausados'))
       ->groupBy('rd.subrama')
       ->get();
 

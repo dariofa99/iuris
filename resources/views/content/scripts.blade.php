@@ -1,16 +1,16 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualPausas");
+        localStorage.removeItem("keyCircularActualTurnos");
 
-        var keyCir = localStorage.getItem("keyCircularActualTurnos");
-         $("#modal_t").text("Información importante!");
+        var keyCir = localStorage.getItem("keyCircularActualIncidencias");
+        $("#modal_t").text("Información importante!");
         var message = '';
         var message = getMotivationalMessage();
         if (keyCir == null) {
-            message = getCircular();
-        }else{
-           $("#modal_t").text("");
-            message = getMotivationalMessage();
+            message = getHtmlCircular();
+        } else {
+            $("#modal_t").text("");
+            // message = getHtmlCircular();
         }
 
         //var message = getMantenimientoMessage();
@@ -26,12 +26,18 @@
 
     })
 
-    function getCarrousel(start, end) {
- const d = new Date("2021-03-25");
-d.getFullYear();
-console.log(d.getFullYear());
+    $("#mymodalShowAlerts").on('shown.bs.modal', function() {
+        $("#modal-announce").text("Información importante. Modal abierto con instrucciones sobre incidencias.");
+        $("#modalContentStart").focus();
+    });
 
- 
+
+    function getCarrousel(start, end) {
+        const d = new Date("2021-03-25");
+        d.getFullYear();
+        console.log(d.getFullYear());
+
+
         var carrousel = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                           <ol class="carousel-indicators">`;
 
@@ -54,7 +60,7 @@ console.log(d.getFullYear());
                                       <img class="d-block w-100" src="{{ asset('dist/img/update/Diapositiva`+i+`.JPG?v=${d.getTime()}') }}" alt="Slide ` +
                     i + `">
                     </div>
-                             `       ;
+                             `;
             } else {
                 carrousel +=
                     `<div class="carousel-item">
@@ -88,10 +94,10 @@ console.log(d.getFullYear());
 
     function MostrarGuia() {
         // $("#mymodalShowAlerts").modal("hide");
-        @if(currentUser()->hasRole('estudiante') or currentUser()->hasRole('amatai'))
-          var message = getCarrousel(1,13);
-          @else
-          var message = getCarrousel(13,28); 
+        @if (currentUser()->hasRole('estudiante') or currentUser()->hasRole('amatai'))
+            var message = getCarrousel(1, 13);
+        @else
+            var message = getCarrousel(13, 28);
         @endif
         //var message = getCarrousel();
         //var message = getMantenimientoMessage();
@@ -319,5 +325,393 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
                 `<button class="btn btn-info" onclick='MostrarGuia()'  id="btnMostrarGuia" >Ver guia de usuario</button>`
         }
         return message;
+    }
+
+    function getHtmlCircular() {
+        $("#contentNotButtonDis").append($("<button>", {
+            class: "btn btn-danger",
+            id: "btnNotFalse",
+            text: "No volver a mostrar",
+            "data-not": "keyCircularActualIncidencias"
+        }));
+
+        return `
+<div class="container-fluid">
+
+      <!-- Punto de enfoque para narrador -->
+    <div id="modalContentStart" tabindex="-1"></div>
+
+    <!-- Área invisible para narración automática -->
+    <div id="modal-announce" class="sr-only" aria-live="assertive" aria-atomic="true">
+        Información importante sobre la gestión de incidencias en la plataforma IURIS.
+    </div>
+
+    <div class="text-center mb-4">
+        <h4 class="font-weight-bold">
+            <i class="fas fa-exclamation-circle text-primary"></i>
+            Información importante sobre la gestión de incidencias
+        </h4>
+        <p class="text-muted">Plataforma IURIS</p>
+    </div>
+
+    <div class="alert alert-primary" role="alert" style="font-size: 15px;">
+        <i class="fas fa-info-circle"></i>
+        Estimados(as) administrativos, docentes y estudiantes:
+        Con el propósito de mejorar la claridad en las solicitudes de incidencias y fortalecer la trazabilidad,
+        se ha implementado una nueva función en la plataforma <strong>IURIS</strong>.
+    </div>
+
+    <p class="text-justify">
+        Esta actualización permite centralizar y organizar solicitudes como eliminación o modificación de notas,
+        cambios de docente, reapertura de casos, ajustes administrativos, entre otros.<br>
+       <b>Para garantizar exactitud y evitar errores, las solicitudes para eliminar notas requieren información detallada.</b>
+    </p>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-2">
+            <i class="fas fa-edit"></i>
+            Ejemplos de solicitud correcta
+        </div>
+        <div class="card-body">
+            <ul>
+                <li class="mb-2">
+                    “Eliminar nota de cero relacionada con la actuación "Demanda X".
+                    aplicada el <strong>15 de septiembre de 2025</strong> por vencimiento del plazo.
+                    ”
+
+                </li>
+
+                <li class="mb-2">
+                    “Eliminar notas de cero
+                     correspondientes al periodo
+                    <strong>10 de septiembre → 11 de noviembre de 2025</strong>.”
+                </li>
+
+                             
+
+            </ul>
+
+            <small class="text-secondary">
+                Ser explícito evita duplicidades, malos entendidos y solicitudes no autorizadas.
+            </small>
+        </div>
+    </div>
+
+    <h5 class="font-weight-bold mb-3">
+        <i class="fas fa-map-marker-alt text-danger"></i>
+        ¿Dónde encontrar la nueva función?
+    </h5>
+
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h6 class="font-weight-bold">
+                <i class="fas fa-folder-open text-info"></i>
+                1. Administración de Expedientes
+            </h6>
+            <h5 class="mb-2 text-justify mt-2">
+                 <i class="fas fa-paper-plane text-info"></i>
+                 <b>PASO UNO:</b>
+                Encontrará un botón para reportar incidencias directamente desde la gestión de expedientes.
+            </h5>
+            <div class="text-center">
+                <img src="{{ asset('dist/img/update/Diapositiva1.jpg?v=1') }}"
+                     class="img-fluid rounded shadow" style="max-height: 400px;"
+                     alt="Ubicación del botón en expedientes">
+            </div>
+             <h5 class="mb-2 text-justify mt-2">
+                <i class="fas fa-paper-plane text-info"></i>
+                <b>PASO DOS:</b> Pestaña “Reporte” — Reporte de incidencia
+            </h5>
+
+            <p class="text-justify">
+                Esta pestaña está destinada a la creación de una nueva solicitud de incidencia.
+                Aquí usted podrá realizar el reporte incluyendo todos los detalles importantes.
+            </p>
+
+            <p class="font-weight-bold mb-1">Opciones disponibles:</p>
+            <ul>
+                <li>Eliminación o modificación de nota</li>
+                <li>Cambio de docente</li>
+                <li>Reapertura de caso</li>
+                <li>Ajustes en turnos</li>
+                <li>Otros incidentes administrativos</li>
+            </ul>
+
+            <p class="text-justify">
+                Luego deberá redactar el motivo explicando claramente la situación.
+                Se recomienda incluir:
+            </p>
+
+            <ul>
+                <li>Código del expediente</li>
+                <li>Tipo de nota o actuación</li>
+                <li>Fechas o periodos involucrados</li>
+                <li>Detalles que eviten confusiones o rechazos</li>
+            </ul>
+
+            
+            <p class="text-justify">
+                Una vez enviada la solicitud, esta será revisada por el administrador y podrá recibir el estado:
+                <strong>Aprobada</strong>, <strong>Rechazada</strong> o <strong>Pendiente de revisión</strong>.
+            </p>
+
+                <h5 class="mb-2 text-justify mt-2">
+                <i class="fas fa-paper-plane text-info"></i>
+                <b>PASO TRES:</b> “Mis solicitudes” — Seguimiento y gestión
+            </h5>
+
+            <p class="text-justify">
+                Esta pestaña muestra todas las incidencias enviadas y su evolución.
+                Su diseño permite un seguimiento claro, accesible y ordenado.
+            </p>
+
+            <p class="font-weight-bold mb-1">Aquí podrá:</p>
+
+            <ul>
+                <li>Consultar el estado de cada solicitud:
+                    <strong>En revisión, Aprobada o Rechazada</strong>.</li>
+                <li>Leer los comentarios del administrador.</li>
+                <li>Editar una solicitud que aún esté en revisión.</li>
+                <li>Volver a solicitar revisión si fue rechazada y existe nueva información.</li>
+            </ul>
+
+            <p class="text-justify mb-0">
+                Este flujo permite que cada incidencia tenga un registro histórico completo,
+                facilitando la trazabilidad, la transparencia y el correcto manejo del expediente.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h6 class="font-weight-bold">
+                <i class="fas fa-list-alt text-success"></i>
+                2. Menú lateral → Incidencias
+            </h6>
+            <p class="mb-2 text-justify">
+                Para incidencias que no se relacionan con un caso, como turnos o cuentas, encontrará el enlace en el menú lateral, opción "Incidencias", enlace "Solicitar atención".
+                Siga las instrucciones mencionadas en los pasos anteriores.
+                <br>
+            </p>
+            <div class="text-center">
+                <img src="{{ asset('dist/img/update/Diapositiva2.jpg?v=1') }}"
+                     class="img-fluid rounded shadow" style="max-height: 400px;"
+                     alt="Ubicación del botón incidencias en menú lateral">
+            </div>
+        </div>
+    </div>
+
+    <div class="alert mt-4" role="alert">
+        <i class="fas fa-check-circle"></i>
+        Agradecemos su colaboración.
+    </div>
+
+</div>
+    `;
+
+    }
+
+    function getHtmlCircularD() {
+        return `
+<div class="container-fluid">
+
+    <div class="text-center mb-4">
+        <h4 class="font-weight-bold">
+            <i class="fas fa-exclamation-circle text-primary"></i>
+            Información importante sobre la gestión de incidencias
+        </h4>
+        <p class="text-muted">Plataforma IURIS</p>
+    </div>
+
+    <div class="alert alert-primary" role="alert" style="font-size: 15px;">
+        <i class="fas fa-info-circle"></i>
+        Estimados(as) administrativos, docentes y estudiantes:
+        Con el propósito de mejorar la claridad en las solicitudes de incidencias y fortalecer la trazabilidad,
+        se ha implementado una nueva función en la plataforma <strong>IURIS</strong>.
+    </div>
+
+    <p class="text-justify">
+        Esta actualización permite centralizar y organizar solicitudes como eliminación o modificación de notas,
+        cambios de docente, reapertura de casos, ajustes administrativos, entre otros.
+        Para garantizar exactitud y evitar errores, algunas solicitudes requieren información detallada.
+    </p>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-2">
+            <i class="fas fa-edit"></i>
+            Ejemplos de solicitud correcta
+        </div>
+        <div class="card-body">
+
+            <p class="text-muted mb-2">
+                Cuando solicite <strong>eliminación de notas con calificación cero</strong>, el mensaje debe incluir datos explícitos:
+            </p>
+
+            <ul>
+                <li class="mb-2">
+                    “Eliminar nota de cero en el expediente
+                    <strong>2025B-001</strong> relacionada con la actuación <em>‘Demanda X’</em>.”
+                </li>
+
+                <li class="mb-2">
+                    “Eliminar nota de cero en el expediente
+                    <strong>2025B-001</strong> correspondiente al periodo
+                    <strong>10 de septiembre → 11 de noviembre de 2025</strong>.”
+                </li>
+            </ul>
+
+            <small class="text-secondary">
+                Ser explícito evita duplicidades, malos entendidos y solicitudes no autorizadas.
+            </small>
+        </div>
+    </div>
+
+
+    <!-- ⭐⭐⭐ BLOQUE NUEVO AÑADIDO AQUÍ ⭐⭐⭐ -->
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white py-2">
+            <i class="fas fa-bell"></i>
+            Información sobre las pestañas de gestión de incidencias
+        </div>
+
+        <div class="card-body">
+
+            <!-- 🔵 SECCIÓN 1 — NOTIFICAR -->
+            <h5 class="font-weight-bold mb-3">
+                <i class="fas fa-paper-plane text-info"></i>
+                1. Pestaña “Notificar” — Reporte de incidencia
+            </h5>
+
+            <p class="text-justify">
+                Esta pestaña está destinada a la creación de una nueva solicitud de incidencia.
+                Aquí usted podrá realizar el reporte incluyendo todos los detalles importantes.
+            </p>
+
+            <p class="font-weight-bold mb-1">Opciones disponibles:</p>
+            <ul>
+                <li>Eliminación o modificación de nota</li>
+                <li>Cambio de docente</li>
+                <li>Reapertura de caso</li>
+                <li>Ajustes en turnos</li>
+                <li>Otros incidentes administrativos</li>
+            </ul>
+
+            <p class="text-justify">
+                Luego deberá redactar el motivo explicando claramente la situación.
+                Se recomienda incluir:
+            </p>
+
+            <ul>
+                <li>Código del expediente</li>
+                <li>Tipo de nota o actuación</li>
+                <li>Fechas o periodos involucrados</li>
+                <li>Detalles que eviten confusiones o rechazos</li>
+            </ul>
+
+            <p class="font-italic text-secondary">
+                Ejemplos sugeridos para usuarios con lector de pantalla:
+            </p>
+
+            <div class="bg-light p-3 rounded mb-3" style="border-left: 4px solid #007bff;">
+                <p class="mb-2">
+                    “Solicito eliminar la nota de cero registrada en el expediente
+                    <strong>2025B-001</strong> correspondiente a la actuación ‘Demanda X’.”
+                </p>
+
+                <p class="mb-0">
+                    “Solicito eliminar la nota de cero relacionada con el periodo del
+                    <strong>10 de septiembre</strong> al <strong>11 de noviembre de 2025</strong>.”
+                </p>
+            </div>
+
+            <p class="text-justify">
+                Una vez enviada la solicitud, esta será revisada por el administrador y podrá recibir el estado:
+                <strong>Aprobada</strong>, <strong>Rechazada</strong> o <strong>Pendiente de revisión</strong>.
+            </p>
+
+            <hr>
+
+            <!-- 🟢 SECCIÓN 2 — HISTORIAL -->
+            <h5 class="font-weight-bold mb-3">
+                <i class="fas fa-history text-success"></i>
+                2. Pestaña “Historial” — Seguimiento y gestión
+            </h5>
+
+            <p class="text-justify">
+                Esta pestaña muestra todas las incidencias enviadas y su evolución.
+                Su diseño permite un seguimiento claro, accesible y ordenado.
+            </p>
+
+            <p class="font-weight-bold mb-1">Aquí podrá:</p>
+
+            <ul>
+                <li>Consultar el estado de cada solicitud:
+                    <strong>En revisión, Aprobada o Rechazada</strong>.</li>
+                <li>Leer los comentarios del administrador.</li>
+                <li>Editar una solicitud que aún esté en revisión.</li>
+                <li>Volver a solicitar revisión si fue rechazada y existe nueva información.</li>
+            </ul>
+
+            <p class="text-justify mb-0">
+                Este flujo permite que cada incidencia tenga un registro histórico completo,
+                facilitando la trazabilidad, la transparencia y el correcto manejo del expediente.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- ⭐⭐⭐ FIN DEL BLOQUE NUEVO ⭐⭐⭐ -->
+
+
+    <!-- AQUÍ SIGUEN TUS IMÁGENES ORIGINALMENTE -->
+
+    <h5 class="font-weight-bold mb-3">
+        <i class="fas fa-map-marker-alt text-danger"></i>
+        ¿Dónde encontrar la nueva función?
+    </h5>
+
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h6 class="font-weight-bold">
+                <i class="fas fa-folder-open text-info"></i>
+                1. Administración de Expedientes
+            </h6>
+            <p class="mb-2 text-justify">
+                Encontrará un botón para reportar incidencias directamente desde el expediente,
+                lo que agiliza la verificación.
+            </p>
+            <div class="text-center">
+                <img src="TU_IMAGEN_1.png"
+                     class="img-fluid rounded shadow"
+                     alt="Ubicación del botón en expedientes">
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h6 class="font-weight-bold">
+                <i class="fas fa-list-alt text-success"></i>
+                2. Menú lateral → Incidencias
+            </h6>
+            <p class="mb-2 text-justify">
+                Para incidencias que no se relacionan con un caso, como turnos o cuentas.
+            </p>
+            <div class="text-center">
+                <img src="TU_IMAGEN_2.png"
+                     class="img-fluid rounded shadow"
+                     alt="Ubicación del botón incidencias en menú lateral">
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-success mt-4" role="alert">
+        <i class="fas fa-check-circle"></i>
+        Agradecemos su colaboración.
+    </div>
+
+</div>
+    `;
     }
 </script>

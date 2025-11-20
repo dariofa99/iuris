@@ -243,6 +243,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('file/download/{id}', 'FilesController@download')->name('file.download');
 
 
+    //
+    Route::resource('incidencias', 'IncidenciasController');
+    Route::get('incidencias/by/asignacion/{id}', 'IncidenciasController@getByAsigCaso');
     //Expedientes
     Route::resource('expedientes', 'ExpedienteController');
     Route::post('expedientes/cambiar/fecha/evaluacion', 'ExpedienteController@cambiarFechaEvaluacion');
@@ -424,7 +427,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //turnos estudiantes
     Route::post('/agendar/turnos/estudiantes', 'TurnoEstudianteDocenteController@store');
-     Route::post('/notificar/turnos/estudiantes', 'TurnoEstudianteDocenteController@notificarTurnoEstudiante');
+    Route::post('/notificar/turnos/estudiantes', 'TurnoEstudianteDocenteController@notificarTurnoEstudiante');
     Route::put('/actualizar/turnos/estudiantes/{id}', 'TurnoEstudianteDocenteController@update');
     Route::delete('/eliminar/turnos/estudiantes/{id}', 'TurnoEstudianteDocenteController@destroy');
     /////////////////////////////////////////////////////////////////////////////////////

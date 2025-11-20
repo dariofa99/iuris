@@ -95,6 +95,11 @@ return [
             'root' => storage_path('app/solicitud_files'),
             'url' => 'app/solicitud_files',
         ],
+        'incidencias_files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/incidencias_files'),
+            'url' => 'app/incidencias_files',
+        ],
 
         'files_bibliotecas' => [
             'driver' => 'local',

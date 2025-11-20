@@ -1,9 +1,13 @@
 import { UserService } from './services/users.js';
 import { ExpedientesService } from './services/expedientes.js';
 import { EncuestasService } from './services/encuestas.js';
+import { IncidenciasService } from './services/incidencias.js';
+
 const encuestasService = new EncuestasService();
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
+const incidenciasService = new IncidenciasService();
+
 $(document).ready(function () {
 
     $("#btn_chg_date").on("click", function (e) {
@@ -3056,7 +3060,7 @@ $(document).ready(function () {
                    (${element.Abiertos} Abierto)
                     `;
                 }
-                if(element.Cerrados != "0"){
+                if (element.Cerrados != "0") {
                     table_html += `
                     (${element.Cerrados} Cerrado)
                     `;
@@ -3092,6 +3096,196 @@ $(document).ready(function () {
         }
         $("#mymodaljs").modal("show");
         $("#wait").hide();
+    });
+
+    $("#btn_notificar_incidente").on("click", async function (e) {
+        e.preventDefault();
+        var res = await incidenciasService.getByAsigCaso($("#id_asig").val());
+        var tb = '';
+        res.incidencias.forEach(element => {
+            tb += `<tr style="font-size:13px !important" class="row-incidencia" id="row-incidencia-${element.id}">                    
+                            <td>${element.motivo}</td>
+                            <td></i>${element.user.name}</td>
+                            <td>
+                                <span class="badge badge-info">
+                                ${element.estado.ref_nombre}</span>
+                            </td>
+                            <td class="text-center">
+                                <button data-id="${element.id}" class="btn btn-sm btn-outline-primary btn_inmostradetalles" data-toggle="tooltip" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button>                               
+                            </td>
+                        </tr>`;
+
+            if (element.estados.length > 0) {
+                tb += `<tr id="deta-${element.id}" style="font-size:13px !important; display:none">                                             
+                            <td colspan="4">
+                            <ul class="incidencias_list">`
+
+                element.estados.forEach(estado => {
+
+                    tb += `<li>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <i class="fa fa-reply" style="transform:rotate(180deg)"> </i>
+                                        ${estado.motivo}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge badge-info">
+                                            ${element.estado.ref_nombre}
+                                        </span>
+                                    </div>
+                                </div>
+                                 <!-- <div class="row text-right">
+                                    <div class="col-md-12">
+                                         <button class="btn btn-success btn-xs" type="button">
+                                            Resuelta
+                                        </button>
+                                  
+                                        <button class="btn btn-warning btn-xs" type="button">
+                                            Rechazar
+                                        </button>
+                                    </div> 
+                                </div> --> 
+                            </li>                     
+                           `;
+                })
+                tb += `</ul>
+                     </td>                          
+                        </tr>`
+
+            }
+
+        });
+        // $("#tbl_incidencias tbody").html(tb)
+        tb += `<tr style="font-size:13px !important">
+                        <th><a target="_blank" href="/incidencias/?expid=${$("#expid").val()}"> Administrar incidencias </a></th>
+                       
+                    </tr>`;
+        $("#tbl_incidencias").html(res.html)
+        $("#myModal_notificar_incidencia").modal("show");
+    });
+
+
+    // Actualizar nombre del archivo
+    document.getElementById('archivo').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            document.getElementById('archivo_label').innerText = file.name;
+            document.getElementById('archivo_nombre').innerText = file.name;
+            document.getElementById('preview').classList.remove('d-none');
+        }
+    });
+
+    $("#check_file").on("click", function () {
+        $("#archivo").click();
+    });
+
+
+    $("#form_incidencia").on("submit", async function (e) {
+        e.preventDefault();
+        var formData = new FormData(document.getElementById("form_incidencia"));
+        formData.append('id_asig', $("#id_asig").val());
+        var res = await incidenciasService.store(formData);
+        toastr.success("Incidencia creada con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+        $("#myModal_notificar_incidencia").modal("hide");
+        location.reload();
+
+    });
+
+
+    $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {
+        e.preventDefault();
+        //Remover inputs previos
+        $("#myModal_actualizar_incidencia form input[name='is_update']").remove();
+        $("#myModal_actualizar_incidencia form input[name='hestado_id']").remove();
+        $("#myModal_actualizar_incidencia input[name='estado_id']").val($(this).data("estado"))
+        $("#myModal_actualizar_incidencia input[name='id']").val($(this).data("id"))
+        if ($(this).data("estado") == 273) {
+            Swal.fire({
+                title: '¿Estás seguro de marcar como resuelta la incidencia?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, resolver',
+                cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    // Aquí puedes agregar la lógica para eliminar la incidencia
+                    var request = convertFormToJSON("form_act_incidencia")
+                    request['motivo'] = "Incidencia resuelta";
+                    var res = await incidenciasService.update(request)
+                    $("#wait").hide()
+                    toastr.success("Actualizado con éxito", "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                    location.reload(true);
+                }
+            });
+        } else if ($(this).data("estado") == 'update') {
+            var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
+            $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
+            var input = `<input type="hidden" name="is_update" value="true">`;
+            var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
+            $("#myModal_actualizar_incidencia form").append(input);
+            $("#myModal_actualizar_incidencia form").append(inputId);
+            $("#myModal_actualizar_incidencia #lbl_title_fract").text("Actualizando incidencia");
+            $("#myModal_actualizar_incidencia").modal("show");
+            $("#myModal_notificar_incidencia").modal("hide");
+        } else if ($(this).data("estado") == 272) {
+            $("#myModal_notificar_incidencia").modal("hide");
+            $("#myModal_actualizar_incidencia #lbl_title_fract").text("Solicitar revisión de incidencia");
+            $("#myModal_actualizar_incidencia").modal("show");
+        } else {
+            $("#myModal_notificar_incidencia").modal("hide");
+            $("#myModal_actualizar_incidencia #lbl_title_fract").text("Rechazar incidencia");
+            $("#myModal_actualizar_incidencia").modal("show");
+
+        }
+    });
+
+    $("#form_act_incidencia").on("submit", async function (e) {
+        e.preventDefault();
+
+        var request = convertFormToJSON("form_act_incidencia")
+        request['id_asig'] = $("#id_asig").val();
+        $("#wait").show()
+        var res = await incidenciasService.update(request)
+        $("#wait").hide()
+        toastr.success("Actualizado con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+        location.reload(true);
+
+    });
+
+    $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
+        e.preventDefault()
+
+        const id = $(this).data("id");
+        const detalle = $("#deta-" + id);
+        const icon = $(this).find("i");
+
+        if (!detalle.is(":visible")) {
+            //$(".row-incidencia").hide()
+            icon.removeClass("fa-eye").addClass("fa-eye-slash");
+            $("#row-incidencia-" + id).show();
+            detalle.show();
+
+        } else {
+            icon.removeClass("fa-eye-slash").addClass("fa-eye");
+            $(".row-incidencia").show()
+            detalle.hide();
+        }
+
     });
 
 

@@ -28,7 +28,7 @@
 
 
     <div class="float-right" style="float: right !important;">
-                         
+
         @if (!currentUser()->hasRole('estudiante') and !currentUser()->hasRole('docente'))
             @if ($expediente->encuesta == null and $expediente->expfecha == date('Y-m-d'))
                 <a href="#" class="btn_start_test  btn btn-info" style="color:#054c64">
@@ -237,9 +237,14 @@
     @include('myforms.components_exp.frm_modal_pausar_expediente')
     @include('myforms.components_exp.frm_modal_pausas_expediente')
     @include('myforms.components_exp.frm_modal_cerrar_nota_minima')
-    @include('myforms.components_exp.frm_modal_agregar_usuario') 
+    @include('myforms.components_exp.frm_modal_agregar_usuario')
+    @include('myforms.components_exp.frm_modal_notificar_incidencia',[
+        'categorias_incidencia' => $categorias_incidencia,
+        
+    ])
     @include('myforms.components_exp.frm_modal_cambiar_fecha_evaluacion')
     @include('myforms.frm_modal_general')
+    @include('myforms.components_exp.frm_modal_actualizar_incidencia')
 
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
@@ -263,7 +268,8 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
-    <script type="module" src={{ asset('js/admin_expedientes.js?v='. config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/admin_expedientes.js?v=' . config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/incidencias.js?v=' . config('app_config.asset_version')) }}></script>
     <script>
         @if (currentUser()->hasRole('estudiante'))
             $("#myFormUserEditExpediente input[name='tel1']")

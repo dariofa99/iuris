@@ -26,7 +26,7 @@ class ProcessSendNotificationGeneral implements ShouldQueue
     private $url;
     private $user;
 
-    public function __construct(User $user, string $concepto, string $user_created, string $subject, string $url)
+    public function __construct(User $user, string $concepto, string $user_created, string $subject, string $url = null)
     {
         $this->concepto = $concepto;
         $this->user_created = $user_created;

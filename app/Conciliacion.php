@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class Conciliacion extends Model
 {
     use UploadFile,RefDataManage;
+    
 
     public $disk = 'conciliacion_files';
     protected $table = 'conciliaciones';

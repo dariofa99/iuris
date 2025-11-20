@@ -48,6 +48,9 @@ class ExpedientesComposer
 			['tabla_ref' => 'expediente_procesos',
 			 'categoria' => 'projudexp_estado']
 		);
+
+		
+
 		$cat_projexp = $this->referenciasService->getReferenciasByFilter(
 			['tabla_ref' => 'expediente_procesos', 'categoria' => 'projudexp_categoria']
 		);
@@ -118,7 +121,8 @@ class ExpedientesComposer
 			'rama_derecho' => $rama_derecho,
 			'cat_projexp' => $cat_projexp,
 			'est_projexp' => $est_projexp,
-			'reframa_derecho'=>$reframa_derecho          
+			'reframa_derecho'=>$reframa_derecho  ,
+			
 		])
 			->with(['rdata_enf_dif' => $rdata_enf_dif])
 			->with(['rdata_info_soc_ec' => $rdata_info_soc_ec])
