@@ -43,16 +43,21 @@ class ProcessSendNotificationGeneral implements ShouldQueue
      */
     public function handle()
     {
-        //Notification::send($this->users, new SendMailAndNotificationGeneral($this->concepto, $this->user_created, $this->subject, $this->url));
-        foreach ($this->users as $email) {
-            (new AnonymousNotifiable())
-                ->route('mail', $email)
-                ->notify(new SendMailAndNotificationGeneral(
-                    $this->concepto,
-                    $this->user_created,
-                    $this->subject,
-                    $this->url
-                ));
+        if (is_array($this->users) && count($this->users) > 0) {
+            foreach ($this->users as $email) {
+                (new AnonymousNotifiable())
+                    ->route('mail', $email)
+                    ->notify(new SendMailAndNotificationGeneral(
+                        $this->concepto,
+                        $this->user_created,
+                        $this->subject,
+                        $this->url
+                    ));
+            }
+        }else{
+            Notification::send($this->users, new SendMailAndNotificationGeneral($this->concepto, $this->user_created, $this->subject, $this->url));
         }
+        //Notification::send($this->users, new SendMailAndNotificationGeneral($this->concepto, $this->user_created, $this->subject, $this->url));
+
     }
 }
