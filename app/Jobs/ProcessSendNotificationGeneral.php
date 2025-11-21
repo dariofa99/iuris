@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -24,15 +25,15 @@ class ProcessSendNotificationGeneral implements ShouldQueue
     private $user_created;
     private $subject;
     private $url;
-    private $user;
+    private $users;
 
-    public function __construct(User $user, string $concepto, string $user_created, string $subject, string $url = null)
+    public function __construct($users, string $concepto, string $user_created, string $subject, string $url = null)
     {
         $this->concepto = $concepto;
         $this->user_created = $user_created;
         $this->subject = $subject;
         $this->url = $url;
-        $this->user = $user;
+        $this->users = $users;
     }
 
     /**
@@ -42,7 +43,16 @@ class ProcessSendNotificationGeneral implements ShouldQueue
      */
     public function handle()
     {
-        Notification::send($this->user,new SendMailAndNotificationGeneral($this->concepto,$this->user_created,$this->subject, $this->url));
-
+        //Notification::send($this->users, new SendMailAndNotificationGeneral($this->concepto, $this->user_created, $this->subject, $this->url));
+        foreach ($this->users as $email) {
+            (new AnonymousNotifiable())
+                ->route('mail', $email)
+                ->notify(new SendMailAndNotificationGeneral(
+                    $this->concepto,
+                    $this->user_created,
+                    $this->subject,
+                    $this->url
+                ));
+        }
     }
 }

@@ -66,7 +66,7 @@ class IncidenciasController extends Controller
             //'asig_caso_id' => $request->id_asig
         ]);
 
-       
+
 
 
 
@@ -87,25 +87,28 @@ class IncidenciasController extends Controller
             'user_id' => auth()->user()->id
         ]);
 
-         if ($request->hasFile('archivo')) {
+        if ($request->hasFile('archivo')) {
             $file = $incidenciaEs->uploadFile($request->file('archivo'), '/incidencias_' . $incidenciaEs->id);
             $incidenciaEs->files()->attach(
                 $file,
-                ['incidencia_id' => $incidenciaEs->id, 'user_id' => currentUser()->id, 'type_status_id' => 1
+                [
+                    'incidencia_id' => $incidenciaEs->id,
+                    'user_id' => currentUser()->id,
+                    'type_status_id' => 1
                 ]
             );
-
-           
         }
 
-        $user = User::where("email", "darioj99@gmail.com")->first();
+        $destinatarios = [
+            'darioj99@gmail.com',
+            'amatai.ingeinfo@gmail.com',
+        ];
         $concepto = $request->motivo;
         $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
         $subject = 'Se ha creado una nueva incidencia';
 
-        ProcessSendNotificationGeneral::dispatch($user, $concepto, $user_created, $subject, $url)
+        ProcessSendNotificationGeneral::dispatch($destinatarios, $concepto, $user_created, $subject, $url)
             ->onConnection('database')->onQueue('emails');
-
 
         return response()->json($incidencia);
     }
@@ -199,17 +202,23 @@ class IncidenciasController extends Controller
             $expediente = $asignacion->expediente;
             $url = url("/expedientes/{$expediente->expid}/edit");
         }
-        $user = $incidencia->user;
+
         $subject = 'Se ha actualizado una incidencia';
-        if ($request->estado_id == 272) {
-            $user = User::where("email", "darioj99@gmail.com")->first();
-            $subject = 'Se ha solicitado la revisión de una incidencia';
-        }
         $concepto = $request->motivo;
         $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+        if ($request->estado_id == 272) {
+            $destinatarios = [
+                'darioj99@gmail.com',
+                'amatai.ingeinfo@gmail.com',
+            ];
+            $subject = 'Se ha solicitado la revisión de una incidencia';
+        } else {
+            $user = $incidencia->user;
+            $destinatarios = [$user->email];
+        }
 
 
-        ProcessSendNotificationGeneral::dispatch($user, $concepto, $user_created, $subject, $url)
+        ProcessSendNotificationGeneral::dispatch($destinatarios, $concepto, $user_created, $subject, $url)
             ->onConnection('database')->onQueue('emails');
 
         return response()->json($incidencia);
