@@ -20,13 +20,23 @@
                      </span>
                      ({{ $incidencia->estado->ref_nombre }})
 
-                     @if ($incidencia->asignaciones->count() > 0)
+                     @if ($incidencia->asignaciones->count() > 0 and Route::is('incidencias.index'))
                          <br>
                          <strong>Expediente(s):</strong>
-                         @foreach ($incidencia->asignaciones as $expediente)
+                         @foreach ($incidencia->asignaciones as $asignacion)
                              <span class="badge badge-secondary">
-                                 {{ $expediente->expediente->expid }}
+                                 {{ $asignacion->expediente->expid }}
                              </span>
+                             @if ($asignacion->expediente->exptipoproce_id != 3)
+                                 <a href="{{ url('/expedientes/' . $asignacion->expediente->expid . '/edit') }}"
+                                     target="_blank" rel="noopener noreferrer">
+                                     <i class="fa fa-clone"></i> Ir al caso
+
+                                 </a>
+                             @else
+                                 <a href="{{ url('/defensas/oficio/' . $asignacion->expediente->expid . '/edit') }}"
+                                     target="_blank" rel="noopener noreferrer"><i class="fa fa-clone"></i> Ir al caso</a>
+                             @endif
                          @endforeach
                      @endif
 
@@ -53,19 +63,21 @@
                                          {{ $estado->motivo }}
                                      </div>
 
-                                      <div class="col-md-2 motivo">
-                                         @if($estado->files->count()>0)
-                                            <i class="fa fa-paperclip">
-                                               <a target="_blank" href="{{url('file/download',$estado->files->first()->id)}}">Archivo</a>
-                                            </i>
+                                     <div class="col-md-2 motivo">
+                                         @if ($estado->files->count() > 0)
+                                             <i class="fa fa-paperclip">
+                                                 <a target="_blank"
+                                                     href="{{ url('file/download', $estado->files->first()->id) }}">Archivo</a>
+                                             </i>
                                          @endif
-                                         
+
                                      </div>
 
                                      <!-- Usuario -->
                                      <div class="col-md-2 usuario">
                                          {{--  <i class="fa fa-user-circle"></i> --}}
-                                         {{ $estado->user->name }}
+                                         {{ $estado->user->name }} <br>
+                                         {{ $estado->user->lastname }}
                                      </div>
 
                                      <!-- Fecha -->
@@ -114,7 +126,7 @@
                                                      <button data-estado="272" data-id="{{ $incidencia->id }}"
                                                          title="Solicitar revisión"
                                                          class="btn btn-warning btn-xs btn-action btn-block btn_act_incidencia">
-                                                         <i class="fa fa-eye"></i>
+                                                         <i class="fa fa-reply-all"></i>
                                                      </button>
                                                  @endif
                                              @endif
