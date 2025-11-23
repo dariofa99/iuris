@@ -44,6 +44,7 @@ class ResetPasswordController extends Controller
         }
         );
 
+       
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
@@ -118,8 +119,14 @@ class ResetPasswordController extends Controller
 
     protected $redirectTo = '/login';
     protected function resetPassword($user, $password){
+         //dd($user);
         $user->password = $password;
         $user->save();
         Session::flash('message-success', 'La contraseña se ha actualizado con éxito!');
+     }
+
+     public function showRecoveryForm()
+     {
+         return view('auth.recovery');
      }
 }

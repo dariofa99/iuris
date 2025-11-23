@@ -15,7 +15,7 @@
                 'visible' => true,
                 'title' => 'Solicitud',
                 'message' =>
-                    "Diligencie el siguiente formulario con la información de la persona que solicita la conciliación, recuerde que si ya tiene una cuenta debe <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Tenga en cuenta que solo los campos marcados con (*) son obligatorios.",
+                    "Diligencie el siguiente formulario con la información de la persona que solicita la conciliación, recuerde, si ya tiene una cuenta debe <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Tenga en cuenta que solo los campos marcados con (*) son obligatorios. Si no tiene acceso a su cuenta, por favor realice el proceso de <a href='/recovery/account'>recuperación de cuenta</a>.",
                 'view' => 'myforms.recepcion.frm_parte_solicitante',
             ],
             1 => [

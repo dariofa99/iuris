@@ -90,7 +90,7 @@ Route::get('/firmar/get/status', 'ConciliacionesFirmasController@getStatus');
 Route::get('/firmar/digital/revocar/{token}/{codigo}', 'ConciliacionesFirmasController@firmaRevocar');
 Route::post('/firmar/revocar/ok', 'ConciliacionesFirmasController@firmaRevocarOk');
 Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirmaRevocar');
-
+Route::get('/recovery/account', 'Auth\ResetPasswordController@showRecoveryForm');
 
 ///rutas que requieren atenticación
 Route::group(['middleware' => ['auth']], function () {

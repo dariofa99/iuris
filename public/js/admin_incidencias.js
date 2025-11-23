@@ -20,6 +20,13 @@ $(document).ready(function () {
         $("#myModal_notificar_incidencia").modal("show");
     });
 
+    
+    $("textarea[name='motivo']").on("keyup", function () {
+       
+        var charCount = $(this).val().length;
+        $(".char_count").text(charCount + "/200");
+    });
+
     $("#form_incidencia").on("submit", async function (e) {
         e.preventDefault();
         var expid = $("#expid").val();
@@ -39,7 +46,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         var request = convertFormToJSON("form_act_incidencia")
-        //request['id_asig'] = $("#id_asig").val();
+        request['id_asig'] = $("#id_asig").val();
         $("#wait").show()
         var res = await incidenciasService.update(request)
         $("#wait").hide()
@@ -47,7 +54,7 @@ $(document).ready(function () {
             positionClass: "toast-top-right",
             timeOut: "4000",
         });
-        location.reload(true);
+        //location.reload(true);
 
     });
 
@@ -105,6 +112,7 @@ $(document).ready(function () {
         } else if ($(this).data("estado") == 'update') {
             var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
             $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
+             $(".char_count").text(old_motivo.length + "/200");
             var input = `<input type="hidden" name="is_update" value="true">`;
             var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
             $("#myModal_actualizar_incidencia form").append(input);

@@ -1,8 +1,8 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualTurnos");
+        localStorage.removeItem("keyCircularActualIncidencias");
 
-        var keyCir = localStorage.getItem("keyCircularActualIncidencias");
+        var keyCir = localStorage.getItem("keyCircularActualIncidenciasU");
         $("#modal_t").text("Información importante!");
         var message = '';
         var message = getMotivationalMessage();
@@ -333,7 +333,7 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCircularActualIncidencias"
+            "data-not": "keyCircularActualIncidenciasU"
         }));
 
         return `
@@ -415,7 +415,7 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
                 Encontrará un botón para reportar incidencias directamente desde la gestión de expedientes.
             </h5>
             <div class="text-center">
-                <img src="{{ asset('dist/img/update/Diapositiva1.jpg?v=1') }}"
+                <img src="{{ asset('dist/img/update/Diapositiva1.JPG') }}"
                      class="img-fluid rounded shadow" style="max-height: 400px;"
                      alt="Ubicación del botón en expedientes">
             </div>
@@ -495,7 +495,7 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
                 <br>
             </p>
             <div class="text-center">
-                <img src="{{ asset('dist/img/update/Diapositiva2.jpg?v=1') }}"
+                <img src="{{ asset('dist/img/update/Diapositiva2.JPG') }}"
                      class="img-fluid rounded shadow" style="max-height: 400px;"
                      alt="Ubicación del botón incidencias en menú lateral">
             </div>

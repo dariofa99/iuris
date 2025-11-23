@@ -3231,6 +3231,7 @@ $(document).ready(function () {
             });
         } else if ($(this).data("estado") == 'update') {
             var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
+            $(".char_count").text(old_motivo.length + "/200");
             $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
             var input = `<input type="hidden" name="is_update" value="true">`;
             var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
@@ -3251,7 +3252,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#form_act_incidencia").on("submit", async function (e) {
+   /*  $("#form_act_incidencia").on("submit", async function (e) {
         e.preventDefault();
 
         var request = convertFormToJSON("form_act_incidencia")
@@ -3265,7 +3266,7 @@ $(document).ready(function () {
         });
         location.reload(true);
 
-    });
+    }); */
 
     $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
         e.preventDefault()

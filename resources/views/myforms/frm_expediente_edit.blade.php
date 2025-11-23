@@ -269,7 +269,7 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
     <script type="module" src={{ asset('js/admin_expedientes.js?v=' . config('app_config.asset_version')) }}></script>
-    <script type="module" src={{ asset('js/incidencias.js?v=' . config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/admin_incidencias.js?v=' . config('app_config.asset_version')) }}></script>
     <script>
         @if (currentUser()->hasRole('estudiante'))
             $("#myFormUserEditExpediente input[name='tel1']")

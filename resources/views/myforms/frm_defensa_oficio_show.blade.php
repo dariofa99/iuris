@@ -122,7 +122,7 @@
         </div>
 
         <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
-            @include("myforms.components_exp.frm_datos_caso_dofi") 
+            @include('myforms.components_exp.frm_datos_caso_dofi')
             @include('myforms.components_exp.frm_asesorias_caso')
             @include('myforms.components_exp.frm_notas_caso')
         </div>
@@ -196,6 +196,10 @@
     @include('myforms.components_exp.frm_modal_gestion_judicial')
     @include('myforms.components_exp.frm_modal_pausar_expediente')
     @include('myforms.components_exp.frm_modal_pausas_expediente')
+    @include('myforms.components_exp.frm_modal_actualizar_incidencia')
+    @include('myforms.components_exp.frm_modal_notificar_incidencia', [
+        'categorias_incidencia' => $categorias_incidencia,
+    ])
 
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [
@@ -203,9 +207,9 @@
         ])
     @endif
     @if (currentUser()->hasRole('estudiante'))
-       @include('myforms.frm_expediente_user_edit',[
-            'user' => $expediente->solicitante
-        ]) 
+        @include('myforms.frm_expediente_user_edit', [
+            'user' => $expediente->solicitante,
+        ])
     @elseif(!currentUser()->hasRole('estudiante'))
         @include('myforms.frm_expediente_user_details')
     @endif
@@ -219,5 +223,6 @@
     {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
     {!! Html::script('plugins/input-mask/jquery.inputmask.extensions.js') !!}
-    <script type="module"   src={{asset("js/admin_expedientes.js")}}></script>
+    <script type="module" src={{ asset('js/admin_expedientes.js') }}></script>
+    <script type="module" src={{ asset('js/admin_incidencias.js?v=' . config('app_config.asset_version')) }}></script>
 @endpush

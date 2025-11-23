@@ -45,12 +45,12 @@
                                     <!-- Comentario -->
                                     <div class="form-group mb-4">
                                         <label for="motivo" class="font-weight-bold">Comentario</label>
-                                        <textarea class="form-control" id="motivo" name="motivo" rows="4" required
+                                        <textarea maxlength="200" class="form-control" id="motivo" name="motivo" rows="4" required
                                             placeholder="Describe brevemente la incidencia o cambio..." style="border-radius: 10px; padding: 12px;"></textarea>
                                         <small class="form-text text-muted">
                                             Sea lo más específico posible. Ejemplo: “Eliminar nota de cero relacionada a la
                                             actuación
-                                            'Demanda X'”.
+                                            'Demanda X'”. <span class="char_count">0/200</span>
                                         </small>
                                     </div>
 

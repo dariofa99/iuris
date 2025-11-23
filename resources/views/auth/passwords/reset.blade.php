@@ -13,7 +13,7 @@
           </div>
   
           <div class="card-body">
-            <form class="form-horizontal" id="myFormResetPassword" method="POST" action="{{ route('password.request') }}">
+            <form class="form-horizontal" id="myFormResetPassword" method="POST" action="{{ route('password.update') }}">
                 {{ csrf_field() }}
 
                 <input type="hidden" name="token" value="{{ $token }}">
@@ -71,13 +71,13 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        /* $(document).ready(function() {
            
             $("#myFormResetPassword").on("submit", function(e) {
                // e.preventDefault();
                 $("#wait").show()
             });
          
-        });
+        }); */
     </script>
 @endpush
