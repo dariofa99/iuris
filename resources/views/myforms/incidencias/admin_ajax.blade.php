@@ -11,14 +11,21 @@
      <tbody>
          @foreach ($incidencias as $key => $incidencia)
              <tr style="font-size:15px !important; border-bottom: 1px solid #dee2e6;" class="row-incidencia"
-                 id="row-incidencia-{{ $incidencia->id }}">
+                 data-id="{{ $incidencia->id }}" id="row-incidencia-{{ $incidencia->id }}">
                  <td class="cell-contenido">
                      <span class="badge badge-pill badge-success numero">{{ $key + 1 }}</span>
 
                      <span class="categoria-texto">
                          {{ $incidencia->categoria->ref_nombre }}
                      </span>
-                     ({{ $incidencia->estado->ref_nombre }})
+                     <span class="{{ $incidencia->estado_id == 272 ? 'badge badge-pill badge-success numero' : '' }}">
+
+                         ({{ $incidencia->estado->ref_nombre }})
+                     </span>
+
+                        
+                     <strong>Cédula:</strong> {{ $incidencia->user->idnumber }}
+
 
                      @if ($incidencia->asignaciones->count() > 0 and Route::is('incidencias.index'))
                          <br>
@@ -35,15 +42,17 @@
                                  </a>
                              @else
                                  <a href="{{ url('/defensas/oficio/' . $asignacion->expediente->expid . '/edit') }}"
-                                     target="_blank" rel="noopener noreferrer"><i class="fa fa-clone"></i> Ir al caso</a>
+                                     target="_blank" rel="noopener noreferrer"><i class="fa fa-clone"></i> Ir al
+                                     caso</a>
                              @endif
                          @endforeach
                      @endif
 
                  </td>
                  <td class="text-center">
-                     <button data-id="{{ $incidencia->id }}" class="btn btn-sm btn-outline-primary btn_inmostradetalles"
-                         data-toggle="tooltip" title="Ver detalles">
+                     <button data-id="{{ $incidencia->id }}"
+                         class="btn btn-sm btn-outline-primary btn_inmostradetalles" data-toggle="tooltip"
+                         title="Ver detalles">
                          <i class="fas fa-eye"></i>
                      </button>
                  </td>

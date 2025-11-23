@@ -20,9 +20,9 @@ $(document).ready(function () {
         $("#myModal_notificar_incidencia").modal("show");
     });
 
-    
+
     $("textarea[name='motivo']").on("keyup", function () {
-       
+
         var charCount = $(this).val().length;
         $(".char_count").text(charCount + "/200");
     });
@@ -57,6 +57,8 @@ $(document).ready(function () {
         //location.reload(true);
 
     });
+
+
 
     $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
         e.preventDefault()
@@ -112,7 +114,7 @@ $(document).ready(function () {
         } else if ($(this).data("estado") == 'update') {
             var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
             $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
-             $(".char_count").text(old_motivo.length + "/200");
+            $(".char_count").text(old_motivo.length + "/200");
             var input = `<input type="hidden" name="is_update" value="true">`;
             var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
             $("#myModal_actualizar_incidencia form").append(input);

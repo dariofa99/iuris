@@ -300,7 +300,7 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
       color: #777;
       display: block;
     ">
-      🕒 Últ. actualización: <b>20 de noviembre de 2025</b><br>
+      🕒 Últ. actualización: <b>23 de noviembre de 2025</b><br>
       Soporte: Registre sus incidencias <a href="/incidencias" target="_blank"
         style="color: #5563DE; text-decoration: underline;">Aquí!</a>
     </span>

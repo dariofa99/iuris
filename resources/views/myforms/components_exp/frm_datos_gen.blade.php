@@ -3,8 +3,7 @@
     @if ($expediente->getAsignacion())
         <input type="hidden" value="{{ $expediente->getAsignacion()->fecha_asig }}" id="expediente_fecha_asig"
             name="fecha_asig">
-        <input type="hidden" value="{{ $expediente->getAsignacion()->id }}" id="id_asig"
-            name="id_asig">
+        <input type="hidden" value="{{ $expediente->getAsignacion()->id }}" id="id_asig" name="id_asig">
     @endif
     @if (!currentUser()->hasRole('estudiante'))
         <div class="col-md-4">
@@ -29,6 +28,9 @@
                     <input type="hidden" name="expidnumberest" id="idnumberest" disabled>
 
                 </div>
+              
+                    <b><small>Cédula: {{ $expediente->estudiante->idnumber }} </small></b>
+
             </div>
         </div>
 
