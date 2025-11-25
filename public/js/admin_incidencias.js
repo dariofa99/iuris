@@ -27,18 +27,32 @@ $(document).ready(function () {
         $(".char_count").text(charCount + "/200");
     });
 
+    /*  $("#form_incidencia").on("submit", async function (e) {
+         e.preventDefault();
+         var expid = $("#expid").val();
+ 
+         var formData = new FormData(document.getElementById("form_incidencia"));
+         var res = await incidenciasService.store(formData);
+         $("#wait").show()
+         toastr.success("Creado con éxito", "", {
+             positionClass: "toast-top-right",
+             timeOut: "4000",
+         });
+         location = "/incidencias/";
+ 
+     }); */
+
     $("#form_incidencia").on("submit", async function (e) {
         e.preventDefault();
-        var expid = $("#expid").val();
-
         var formData = new FormData(document.getElementById("form_incidencia"));
+        formData.append('id_asig', $("#id_asig").val());
         var res = await incidenciasService.store(formData);
-        $("#wait").show()
-        toastr.success("Creado con éxito", "", {
+        toastr.success("Incidencia creada con éxito", "", {
             positionClass: "toast-top-right",
             timeOut: "4000",
         });
-        location = "/incidencias/";
+        $("#myModal_notificar_incidencia").modal("hide");
+        location.reload();
 
     });
 
@@ -54,7 +68,7 @@ $(document).ready(function () {
             positionClass: "toast-top-right",
             timeOut: "4000",
         });
-        //location.reload(true);
+        location.reload(true);
 
     });
 

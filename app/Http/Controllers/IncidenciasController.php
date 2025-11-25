@@ -33,7 +33,7 @@ class IncidenciasController extends Controller
                 }
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(8);
 
         //  dd($incidencias);
         return view("myforms.incidencias.admin", compact("incidencias"));
@@ -72,7 +72,7 @@ class IncidenciasController extends Controller
 
         $url = null;
 
-        if ($request->has('id_asig') && $request->id_asig != null) {
+        if ($request->has('id_asig') && $request->id_asig != null && $request->id_asig != "") {
             $incidencia->asignaciones()->attach($request->id_asig);
             $asignacion = AsignacionCaso::find($request->id_asig);
             $expediente = $asignacion->expediente;

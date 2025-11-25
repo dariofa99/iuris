@@ -153,3 +153,4 @@
          @endforeach
      </tbody>
  </table>
+{{ $incidencias->appends(request()->query())->links() }}

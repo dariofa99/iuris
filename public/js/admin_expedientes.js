@@ -23,7 +23,7 @@ $(document).ready(function () {
         let response = await expedientesService.cambiarFechaEvaluacion(request);
         if (response.error) {
             toastr.error(response.error, "", {
-                timeOut: "4000",
+                timeOut: "4000", 
             });
         } else {
             toastr.success("Se actualizó con éxito", "Espere", {
@@ -3183,7 +3183,7 @@ $(document).ready(function () {
     });
 
 
-    $("#form_incidencia").on("submit", async function (e) {
+   /*  $("#form_incidencia").on("submit", async function (e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("form_incidencia"));
         formData.append('id_asig', $("#id_asig").val());
@@ -3195,7 +3195,7 @@ $(document).ready(function () {
         $("#myModal_notificar_incidencia").modal("hide");
         location.reload();
 
-    });
+    }); */
 
 
     $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {

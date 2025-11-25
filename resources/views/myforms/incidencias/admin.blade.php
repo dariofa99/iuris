@@ -22,7 +22,7 @@
     @endif
 @endsection
 
-
+ 
 @section('area_buttons')
 @endsection
 
