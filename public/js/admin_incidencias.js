@@ -16,7 +16,11 @@ $(document).ready(function () {
     });
     $("#btn_notificar_incidente").on("click", async function (e) {
         e.preventDefault();
-        $("#myTab").hide();
+        if($("#expid").length <= 0){
+           $("#myTabIncidencias").hide();
+        }
+        console.log($("#expid").length);
+        
         $("#myModal_notificar_incidencia").modal("show");
     });
 
@@ -118,12 +122,14 @@ $(document).ready(function () {
                     // Aquí puedes agregar la lógica para eliminar la incidencia
                     var request = convertFormToJSON("form_act_incidencia")
                     request['motivo'] = "Incidencia resuelta";
+                    $("#wait").show()
                     var res = await incidenciasService.update(request)
-                    $("#wait").hide()
+                    
                     toastr.success("Creado con éxito", "", {
                         positionClass: "toast-top-right",
                         timeOut: "4000",
                     });
+                    location.reload(true);
                 }
             });
         } else if ($(this).data("estado") == 'update') {

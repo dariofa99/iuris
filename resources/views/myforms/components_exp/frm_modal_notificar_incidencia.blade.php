@@ -9,7 +9,7 @@
 
 
     @slot('body')
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs" id="myTabIncidencias" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab"
                     aria-controls="home" aria-selected="true">Reportar</button>

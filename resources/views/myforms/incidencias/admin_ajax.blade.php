@@ -24,10 +24,12 @@
                      </span>
 
                      @if (currentUser()->hasRole('amatai'))
-               
-                         <strong>Cédula:</strong> {{ $incidencia->user->idnumber }} 
-                         @if($incidencia->user->roles->count() > 0)
-                         <small>(Rol: {{ $incidencia->user->roles[0]->name }})</small>
+                         <strong>Cédula:</strong> {{ $incidencia->user->idnumber }}
+                         @if ($incidencia->user->roles->count() > 0)
+                             {{-- dame un estilo bien chido para el small --}}
+                             <small style="border-bottom:1px solid rgb(218, 218, 218)" >(Rol: {{ $incidencia->user->roles[0]->name }},
+                                 {{ $incidencia->created_at->diffForHumans() }}
+                                 )</small>
                          @endif
                      @endif
 
@@ -100,6 +102,9 @@
                                      <div class="col-md-2 fecha">
                                          <span>
                                              {{ getSmallDateWithHour($estado->created_at) }}
+                                             <br> <small>
+                                                ({{ $estado->created_at->diffForHumans() }})
+                                             </small>
                                          </span>
                                      </div>
 
