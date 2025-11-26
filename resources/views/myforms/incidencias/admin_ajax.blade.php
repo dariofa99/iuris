@@ -23,8 +23,15 @@
                          ({{ $incidencia->estado->ref_nombre }})
                      </span>
 
-                        
-                     <strong>Cédula:</strong> {{ $incidencia->user->idnumber }}
+                     @if (currentUser()->hasRole('amatai'))
+               
+                         <strong>Cédula:</strong> {{ $incidencia->user->idnumber }} 
+                         @if($incidencia->user->roles->count() > 0)
+                         <small>(Rol: {{ $incidencia->user->roles[0]->name }})</small>
+                         @endif
+                     @endif
+
+
 
 
                      @if ($incidencia->asignaciones->count() > 0 and Route::is('incidencias.index'))
@@ -153,4 +160,5 @@
          @endforeach
      </tbody>
  </table>
-{{ $incidencias->appends(request()->query())->links() }}
+ <hr>
+ {{ $incidencias->appends(request()->query())->links() }}

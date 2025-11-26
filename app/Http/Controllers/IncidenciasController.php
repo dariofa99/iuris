@@ -72,7 +72,7 @@ class IncidenciasController extends Controller
 
         $url = null;
 
-        if ($request->has('id_asig') && $request->id_asig != null && $request->id_asig != "") {
+        if ($request->has('id_asig') && $request->id_asig != null && $request->id_asig != "" && $request->id_asig != 'undefined') {
             $incidencia->asignaciones()->attach($request->id_asig);
             $asignacion = AsignacionCaso::find($request->id_asig);
             $expediente = $asignacion->expediente;
