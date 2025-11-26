@@ -3102,7 +3102,7 @@ $(document).ready(function () {
         e.preventDefault();
         var res = await incidenciasService.getByAsigCaso($("#id_asig").val());
         var tb = '';
-        res.incidencias.forEach(element => {
+        res.incidencias.data.forEach(element => {
             tb += `<tr style="font-size:13px !important" class="row-incidencia" id="row-incidencia-${element.id}">                    
                             <td>${element.motivo}</td>
                             <td></i>${element.user.name}</td>
@@ -3268,7 +3268,7 @@ $(document).ready(function () {
 
     }); */
 
-    $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
+ /*    $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
         e.preventDefault()
 
         const id = $(this).data("id");
@@ -3287,7 +3287,7 @@ $(document).ready(function () {
             detalle.hide();
         }
 
-    });
+    }); */
 
 
 });//////////////////////////////////////////////

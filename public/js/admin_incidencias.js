@@ -46,6 +46,7 @@ $(document).ready(function () {
         e.preventDefault();
         var formData = new FormData(document.getElementById("form_incidencia"));
         formData.append('id_asig', $("#id_asig").val());
+        $("#wait").show();
         var res = await incidenciasService.store(formData);
         toastr.success("Incidencia creada con éxito", "", {
             positionClass: "toast-top-right",
@@ -63,7 +64,7 @@ $(document).ready(function () {
         request['id_asig'] = $("#id_asig").val();
         $("#wait").show()
         var res = await incidenciasService.update(request)
-        $("#wait").hide()
+        //$("#wait").hide()
         toastr.success("Creado con éxito", "", {
             positionClass: "toast-top-right",
             timeOut: "4000",

@@ -113,7 +113,7 @@
                         <tr class="text-muted" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
                             <th scope="col" class="pl-4">#</th>
                             <th scope="col">Motivo</th>
-                            <th scope="col">Usuario</th>
+                            <th scope="col">Usuario</th> 
                             <th scope="col">Estado</th>
                             <th scope="col" class="text-center">Acciones</th>
                         </tr>

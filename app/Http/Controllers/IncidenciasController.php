@@ -154,7 +154,7 @@ class IncidenciasController extends Controller
                 }
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         $view = view('myforms.incidencias.admin_ajax', compact('incidencias'))->render();
 
