@@ -42,7 +42,7 @@ class NotaController extends Controller
     {
 
         $periodos = Periodo::all();
-
+       
         return view('report.notas.frm_notas_list', compact('periodos'));
     }
 
@@ -62,6 +62,10 @@ class NotaController extends Controller
             if ($request->has('idnumber')) {
                 $user = User::where('idnumber', $request->idnumber)->first();
             }
+        }
+        if($request->has('expid')){
+           $request['segid'] = $segmentoAct->id;
+          
         }
         $notas = [];
         if (isset($user)) {

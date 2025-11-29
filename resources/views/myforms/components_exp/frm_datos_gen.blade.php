@@ -28,8 +28,11 @@
                     <input type="hidden" name="expidnumberest" id="idnumberest" disabled>
 
                 </div>
-              
+
+                <a href="{{url('/notas/ver/estudiante?idnumber=' . $expediente->estudiante->idnumber . '&origen=expedientes&expid=' . $expediente->expid)}}" target="_blank" rel="noopener noreferrer">
                     <b><small>Cédula: {{ $expediente->estudiante->idnumber }} </small></b>
+
+                </a>
 
             </div>
         </div>

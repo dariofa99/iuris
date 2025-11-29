@@ -344,18 +344,23 @@ class User extends Authenticatable
                 ->orderBy('notas_ext.created_at', 'desc')
                 ->get();
         } else {
-            $notas = $this->notas()
+            $notas = $this->notas() 
                 ->whereDate('notas.created_at', '>', '2021-10-17')
                 ->where(function ($query) use ($request) {
                     if ($request->has('segid') and $request->segid != '') {
-                        return $query->where('segid', $request->segid);
+                        $query->where('segid', $request->segid);
+                    }
+                    
+                    if ($request->has('expid') and $request->segid != '') {
+                        
+                        $query->where('expidnumber', $request->expid);
                     }
                     if ($request->has('perid') and $request->segid != '') {
-                        return $query->where('perid', $request->perid);
+                        $query->where('perid', $request->perid);
                     } else {
                         $periodo = Periodo::where("estado", 1)->first();
                         if ($periodo) {
-                            return $query->where('perid', $periodo->id);
+                            $query->where('perid', $periodo->id);
                         }
                     }
                 })

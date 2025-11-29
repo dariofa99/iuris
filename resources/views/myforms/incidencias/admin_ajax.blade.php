@@ -27,7 +27,8 @@
                          <strong>Cédula:</strong> {{ $incidencia->user->idnumber }}
                          @if ($incidencia->user->roles->count() > 0)
                              {{-- dame un estilo bien chido para el small --}}
-                             <small style="border-bottom:1px solid rgb(218, 218, 218)" >(Rol: {{ $incidencia->user->roles[0]->name }},
+                             <small style="border-bottom:1px solid rgb(218, 218, 218)">(Rol:
+                                 {{ $incidencia->user->roles[0]->name }},
                                  {{ $incidencia->created_at->diffForHumans() }}
                                  )</small>
                          @endif
@@ -54,6 +55,11 @@
                                      target="_blank" rel="noopener noreferrer"><i class="fa fa-clone"></i> Ir al
                                      caso</a>
                              @endif
+                             <a href="{{ url('/notas/ver/estudiante?idnumber=' . $asignacion->asigest_id . '&origen=expedientes&expid=' . $asignacion->asigexp_id) }}"
+                                 target="_blank" rel="noopener noreferrer"> <i class="fa fa-file"></i>
+                                 Ver notas
+
+                             </a>
                          @endforeach
                      @endif
 
@@ -103,7 +109,7 @@
                                          <span>
                                              {{ getSmallDateWithHour($estado->created_at) }}
                                              <br> <small>
-                                                ({{ $estado->created_at->diffForHumans() }})
+                                                 ({{ $estado->created_at->diffForHumans() }})
                                              </small>
                                          </span>
                                      </div>
