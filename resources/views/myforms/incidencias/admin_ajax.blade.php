@@ -32,37 +32,37 @@
                                  {{ $incidencia->created_at->diffForHumans() }}
                                  )</small>
                          @endif
-                     @endif
 
 
 
 
-                     @if ($incidencia->asignaciones->count() > 0 and Route::is('incidencias.index'))
-                         <br>
-                         <strong>Expediente(s):</strong>
-                         @foreach ($incidencia->asignaciones as $asignacion)
-                             <span class="badge badge-secondary">
-                                 {{ $asignacion->expediente->expid }}
-                             </span>
-                             @if ($asignacion->expediente->exptipoproce_id != 3)
-                                 <a href="{{ url('/expedientes/' . $asignacion->expediente->expid . '/edit') }}"
-                                     target="_blank" rel="noopener noreferrer">
-                                     <i class="fa fa-clone"></i> Ir al caso
+
+                         @if ($incidencia->asignaciones->count() > 0 and Route::is('incidencias.index'))
+                             <br>
+                             <strong>Expediente(s):</strong>
+                             @foreach ($incidencia->asignaciones as $asignacion)
+                                 <span class="badge badge-secondary">
+                                     {{ $asignacion->expediente->expid }}
+                                 </span>
+                                 @if ($asignacion->expediente->exptipoproce_id != 3)
+                                     <a href="{{ url('/expedientes/' . $asignacion->expediente->expid . '/edit') }}"
+                                         target="_blank" rel="noopener noreferrer">
+                                         <i class="fa fa-clone"></i> Ir al caso
+
+                                     </a>
+                                 @else
+                                     <a href="{{ url('/defensas/oficio/' . $asignacion->expediente->expid . '/edit') }}"
+                                         target="_blank" rel="noopener noreferrer"><i class="fa fa-clone"></i> Ir al
+                                         caso</a>
+                                 @endif
+                                 <a href="{{ url('/notas/ver/estudiante?idnumber=' . $asignacion->asigest_id . '&origen=expedientes&expid=' . $asignacion->asigexp_id) }}"
+                                     target="_blank" rel="noopener noreferrer"> <i class="fa fa-file"></i>
+                                     Ver notas
 
                                  </a>
-                             @else
-                                 <a href="{{ url('/defensas/oficio/' . $asignacion->expediente->expid . '/edit') }}"
-                                     target="_blank" rel="noopener noreferrer"><i class="fa fa-clone"></i> Ir al
-                                     caso</a>
-                             @endif
-                             <a href="{{ url('/notas/ver/estudiante?idnumber=' . $asignacion->asigest_id . '&origen=expedientes&expid=' . $asignacion->asigexp_id) }}"
-                                 target="_blank" rel="noopener noreferrer"> <i class="fa fa-file"></i>
-                                 Ver notas
-
-                             </a>
-                         @endforeach
+                             @endforeach
+                         @endif
                      @endif
-
                  </td>
                  <td class="text-center">
                      <button data-id="{{ $incidencia->id }}"
