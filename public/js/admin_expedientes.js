@@ -3198,7 +3198,7 @@ $(document).ready(function () {
     }); */
 
 
-    $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {
+/*     $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {
         e.preventDefault();
         //Remover inputs previos
         $("#myModal_actualizar_incidencia form input[name='is_update']").remove();
@@ -3250,7 +3250,7 @@ $(document).ready(function () {
             $("#myModal_actualizar_incidencia").modal("show");
 
         }
-    });
+    }); */
 
    /*  $("#form_act_incidencia").on("submit", async function (e) {
         e.preventDefault();

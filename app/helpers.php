@@ -35,11 +35,11 @@ if (!function_exists('currentUserInConciliacion')) {
 
 function getPercent($total, $part)
 {
-    if(is_numeric($total) && is_numeric($part)){
+    if (is_numeric($total) && is_numeric($part)) {
         return ($part * 100) / $total;
     }
     return 0;
-} 
+}
 
 function getColorByPercent($percent)
 {
@@ -318,11 +318,10 @@ function getAditionalDataByShortName($short_name, $table)
     $aditional_data = ReferencesData::where('short_name', $short_name)
         ->where('table', $table)
         ->first();
-        if ($aditional_data) {
-            return $aditional_data;
-        }
-        return $short_name;
-  
+    if ($aditional_data) {
+        return $aditional_data;
+    }
+    return $short_name;
 }
 
 function getReferencesStaticTableBySection($section, $table)
@@ -362,9 +361,10 @@ function getReferencesTableByCategory($category)
 
 function getDiffDays($fecha_inicio, $fecha_fin)
 {
-    $inicio = Carbon::parse($fecha_inicio); //moment(vacaciones[0].fecha_inicio, 'YYYY-MM-DD');
-    $fin = Carbon::parse($fecha_fin); //moment(vacaciones[0].fecha_fin, 'YYYY-MM-DD');
-    return  $inicio->diffInDays($fin, false);
+    $inicio = Carbon::parse($fecha_inicio)->startOfDay();
+   $fin = Carbon::parse($fecha_fin)->endOfDay();
+
+    return $inicio->diffInDays($fin, false);
 }
 function quitarAcentos($cadena)
 {

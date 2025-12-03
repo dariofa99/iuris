@@ -1,13 +1,13 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualIncidencias");
+        localStorage.removeItem("keyCircularActualIncidenciasU");
 
-        var keyCir = localStorage.getItem("keyCircularActualIncidenciasU");
+        var keyCir = localStorage.getItem("keyCircularActualVacNavidad");
         $("#modal_t").text("Información importante!");
         var message = '';
         var message = getMotivationalMessage();
         if (keyCir == null) {
-            message = getHtmlCircular();
+            message = getMantenimientoMessage();
         } else {
             $("#modal_t").text("");
             // message = getHtmlCircular();
@@ -177,27 +177,63 @@
     }
 
     function getMantenimientoMessage() {
-        var message = '';
-        message += '<div class="" style="font-size:19px">';
-        message += `<h1>
-                    <strong >
-                        Atención!<br>
-                        Instrucción para la reasignación de casos. <br></h1>
-                        Estimados estudiantes recuerden que, en caso de que un asunto o caso le sea reasignado, es su deber y obligación actualizar la información registrada en los campos de “Datos del caso”, Hechos y Respuesta de estudiante.
-                        Para ello, deberá contactar a la persona usuaria con el fin de verificar, confirmar o complementar la información previamente redactada por el/la estudiante anterior.
-Esta actualización debe reflejar, con sus propias palabras, los hechos y la respuesta, asegurando que el registro sea claro, preciso y fidedigno a lo manifestado por la persona usuaria.
-                    </strong>
-                    <br>
-                          <br>
-                      
-                     </div>`;
-        message += `<hr>`;
-        message += `<span> Últ. Actualización: 12 de agosto de 2025 <br>
-                         
-                      </span>`;
+        $("#contentNotButtonDis").append($("<button>", {
+            class: "btn btn-danger",
+            id: "btnNotFalse",
+            text: "No volver a mostrar",
+            "data-not": "keyCircularActualVacNavidad"
+        }));
+        return `
+<div class="container-fluid" style="font-size:18px;">
 
-        return message;
+    <!-- HEADER NAVIDEÑO -->
+    <div class="text-center mb-4">
+        <h2 class="font-weight-bold" style="color:#c0392b;">
+           <i class="fas fa-bell"></i> Atención
+
+        </h2>
+        <p class="text-muted">Actualización para el periodo de vacaciones</p>
+    </div>
+
+    <!-- CARD INFO -->
+    <div class="card shadow-sm mb-4" style="border-left:6px solid #c0392b;">
+        <div class="card-body">
+
+            <p class="mb-3">
+                Estimados estudiantes, recuerden que durante el periodo de vacaciones,
+                <strong>el sistema pone en pausa los días en los cuales se aplican notas de cero</strong>,
+                <span class="text-danger font-weight-bold">a excepción de las actuaciones con fecha límite puesta por el docente.</span>
+            </p>
+
+           
+        </div>
+    </div>
+
+    <!-- MENSAJE NAVIDEÑO -->
+    <div class="text-center py-4 px-3" 
+         style="background:#f9f2eb;border-radius:12px; border:1px solid #f0e6dc;">
+        <h4 style="color:#8e2b2b;" class="font-weight-bold mb-2">
+            🎄 🎄 <i class="fas fa-tree"></i> 🎄  🎄
+        </h4>
+        <p class="mb-2">
+            Desde la administración de <strong>IURIS</strong>, 
+            les deseamos unas felices fiestas llenas de paz, armonía, alegría y muchos éxitos.
+        </p>
+      
+
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="text-center mt-4 text-muted" style="font-size:14px;">
+        <i class="fas fa-calendar-alt"></i>
+        Última actualización: <strong>2 de diciembre de 2025</strong>
+    </div>
+
+</div>
+`;
     }
+
 
     function getMotivationalMessage() {
 
@@ -300,7 +336,7 @@ Esta actualización debe reflejar, con sus propias palabras, los hechos y la res
       color: #777;
       display: block;
     ">
-      🕒 Últ. actualización: <b>23 de noviembre de 2025</b><br>
+      🕒 Últ. actualización: <b>2 de diciembre de 2025</b><br>
       Soporte: Registre sus incidencias <a href="/incidencias" target="_blank"
         style="color: #5563DE; text-decoration: underline;">Aquí!</a>
     </span>
