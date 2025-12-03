@@ -28,7 +28,7 @@ $(document).ready(function () {
     $("textarea[name='motivo']").on("keyup", function () {
 
         var charCount = $(this).val().length;
-        $(".char_count").text(charCount + "/200");
+        $(".char_count").text(charCount + "/250");
     });
 
     /*  $("#form_incidencia").on("submit", async function (e) {
@@ -173,7 +173,7 @@ function incidenciaOpenUpdateForm(formId) {
     if ($(formId).data("estado") == 273) {
         $("#myModal_notificar_incidencia").modal("hide");
          var old_motivo = "Incidencia resuelta"
-        $(".char_count").text(old_motivo.length + "/200");
+        $(".char_count").text(old_motivo.length + "/250");
         $("#myModal_actualizar_incidencia form textarea[name='motivo']").val(old_motivo);
         $("#myModal_actualizar_incidencia #lbl_title_fract").text("Resolver incidencia");
         $("#myModal_actualizar_incidencia").modal("show");
@@ -217,7 +217,7 @@ function incidenciaOpenUpdateForm(formId) {
          }); */
     } else if ($(this).data("estado") == 'update') {
         var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
-        $(".char_count").text(old_motivo.length + "/200");
+        $(".char_count").text(old_motivo.length + "/250");
         $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
         var input = `<input type="hidden" name="is_update" value="true">`;
         var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
