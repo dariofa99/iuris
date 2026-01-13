@@ -111,7 +111,7 @@ class Expediente extends Model
         return $this->belongsTo(RamaDerecho::class, 'expramaderecho_id', 'id');
     }
 
-     public function historialHechosRespuesta()
+    public function historialHechosRespuesta()
     {
         return $this->hasMany(HistorialDatosCaso::class, 'hisdc_expidnumber', 'expid');
     }
@@ -575,7 +575,7 @@ class Expediente extends Model
 
         $hijos = [];
         $segmento = $this->getSegmentoActivo();
- 
+
         if (count($padresAct) > 0) {
             $periodo = $this->getPeriodoActivo();
             $vacaciones = DB::table("vacaciones_periodo")
@@ -613,10 +613,12 @@ class Expediente extends Model
                         }
                     }
 
-                    if (count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104 
-                    and $hijosAct[0]->actestado_id != 101 
-                    and $hijosAct[0]->actestado_id != 139 
-                    and $hijosAct[0]->fecha_limit !== null and $hijosAct[0]->fecha_limit < $date) {
+                    if (
+                        count($hijosAct) > 0 and $hijosAct[0]->actestado_id != 104
+                        and $hijosAct[0]->actestado_id != 101
+                        and $hijosAct[0]->actestado_id != 139
+                        and $hijosAct[0]->fecha_limit !== null and $hijosAct[0]->fecha_limit < $date
+                    ) {
 
                         $hijos[] = $hijosAct;
                         $actuacion = Actuacion::find($hijosAct[0]->rev_actid);
@@ -635,7 +637,7 @@ class Expediente extends Model
                             'tbl_org_id' => $actuacion->id,
                         ];
                         //
-                        
+
                         $actuacion->actestado_id = 139;
                         $actuacion->actuserupdated = Auth::user()->idnumber;
                         $actuacion->save();
@@ -1041,7 +1043,7 @@ class Expediente extends Model
             //$fecha_1 = $this->getDaysAfterAsig();; // Carbon::parse($asignacion->fecha_asig);
             $fecha_2 = Carbon::now();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
-            
+
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
 
                 $segmento = $this->getSegmentoActivo();
@@ -1165,7 +1167,7 @@ class Expediente extends Model
         }
 
         $periodo = $this->getPeriodoActivo();
-        if($fecha_1 < Carbon::parse($periodo->prdfecha_inicio)){
+        if ($fecha_1 < Carbon::parse($periodo->prdfecha_inicio)) {
             $fecha_1 = Carbon::parse($periodo->prdfecha_inicio);
         }
 
@@ -1181,10 +1183,10 @@ class Expediente extends Model
         ]);
 
 
-//dd($_vacaciones,$fecha_1);
+        //dd($_vacaciones,$fecha_1);
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
-             
+
 
             //Evaluar si o buscar la fecha final mayor entre vacaciones y pausas,
             //es decir, busca que fecha final es mayor
@@ -1217,7 +1219,7 @@ class Expediente extends Model
             $expediente = $this;
             $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. " . $fecha_1 . " - " . $fecha_eva;
             $docente_id = Auth::user()->idnumber;
-           // $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
+            // $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
 
             $asignacion->fecha_eva = $fecha_eva;
             $asignacion->save();

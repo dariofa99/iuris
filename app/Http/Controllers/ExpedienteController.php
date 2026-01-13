@@ -1678,10 +1678,9 @@ class ExpedienteController extends Controller
 
     DB::table('expediente_has_users')->where('id', $id)->delete();
     return response()->json(['message' => 'Usuario retirado del caso']);
-
   }
 
-  public function getExpedientesRamaEstudiante (Request $request, $idnumber)
+  public function getExpedientesRamaEstudiante(Request $request, $idnumber)
   {
     /*select rd.subrama ,count(rd.subrama) from expedientes e 
 join rama_derecho rd on rd.id = e.expramaderecho_id 
@@ -1693,13 +1692,15 @@ group by rd.subrama ;*/
       ->where('e.expidnumberest', $idnumber)
       ->where('e.expestado_id', '!=', 8)
       ->select(
-        'rd.subrama', DB::raw('count(rd.subrama) as total'),
+        'rd.subrama',
+        DB::raw('count(rd.subrama) as total'),
         DB::raw('SUM(IF(e.expestado_id = 1, 1, 0)) AS Abiertos'),
         DB::raw('SUM(IF(e.expestado_id = 2, 1, 0)) AS Cerrados'),
         DB::raw('SUM(IF(e.expestado_id = 3, 1,  0)) AS Rechazados'),
         DB::raw('SUM(IF(e.expestado_id = 4, 1, 0)) AS En_solicitud_de_cierre'),
         DB::raw('SUM(IF(e.expestado_id = 5, 1, 0)) AS Cerrado_sistema'),
-        DB::raw('SUM(IF(e.expestado_id = 6, 1, 0)) AS Pausados'))
+        DB::raw('SUM(IF(e.expestado_id = 6, 1, 0)) AS Pausados')
+      )
       ->groupBy('rd.subrama')
       ->get();
 

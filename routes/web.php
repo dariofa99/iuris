@@ -722,13 +722,12 @@ Route::get('/pruebas/users', 'UsersController@pruebas');
 Route::get(
   '/pruebas',
   function () {
-   
+
     $user = User::where('idnumber', '1085278208')->first();
 
-    return view('myforms.mails.recovery_account',[            
-            "user"=> $user,            
-        ]); 
-
+    return view('myforms.mails.recovery_account', [
+      "user" => $user,
+    ]);
   }
 
 );

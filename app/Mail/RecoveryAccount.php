@@ -23,9 +23,9 @@ class RecoveryAccount extends Mailable
      */
     public function __construct(User $notification)
     {
-       $this->notification = $notification;      
+        $this->notification = $notification;
     }
- 
+
     /**
      * Build the message.
      *
@@ -33,10 +33,10 @@ class RecoveryAccount extends Mailable
      */
     public function build()
     {
-       
-        return $this->view('myforms.mails.recovery_account',[            
-            "user"=> $this->notification,            
+
+        return $this->view('myforms.mails.recovery_account', [
+            "user" => $this->notification,
         ])
-        ->subject("Recuperar cuenta", config('app.name'));
+            ->subject("Recuperar cuenta", config('app.name'));
     }
 }
