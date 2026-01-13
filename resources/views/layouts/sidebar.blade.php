@@ -78,7 +78,7 @@
                     <li
                         class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                             'menu-open' }}">
-                        @if (config('app.name') != 'ConciliApp' and !currentUser()->hasRole('visitante_conciliacion'))
+                        @if (config('app.name') != 'ConciliApp' and !currentUser()->hasRole('visitante_conciliacion') and !currentUser()->hasRole('solicitante'))
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-folder"></i>
                                 <p>
@@ -215,7 +215,7 @@
                                 <li class="nav-item ml-3">
                                     <a href="{{ url('/conciliaciones') }}" class="nav-link">
 
-                                        <p>Listar</p>
+                                        <p> {{ currentUser()->hasRole('solicitante') ? 'Ver/Crear conciliaciones' : 'Listar conciliaciones' }}</p>
                                     </a>
                                 </li>
                                 @if (currentUser()->can('admin_actasandmail') || currentUser()->hasRole('visitante_conciliacion'))

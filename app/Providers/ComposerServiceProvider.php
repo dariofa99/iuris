@@ -85,14 +85,20 @@ class ComposerServiceProvider extends ServiceProvider
 
         View::composer([
             'myforms.frm_expediente_edit',
-             'myforms.frm_defensa_oficio_edit',
+            'myforms.frm_defensa_oficio_edit',
             'myforms.frm_expediente_show',
             'myforms.incidencias.*',
+            'myforms.frm_defensa_oficio_show',
         ], 'App\Http\ViewComposers\IncidenciasComposer');
 
         View::composer([
             'layouts.*',
         ], 'App\Http\ViewComposers\SidebarComposer');
+
+        View::composer([
+            'auth.recovery',
+            'auth.reset_account',
+        ], 'App\Http\ViewComposers\RecoveryAccountComposer');
     }
 
     /**

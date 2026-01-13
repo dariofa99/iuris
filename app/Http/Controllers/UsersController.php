@@ -11,6 +11,7 @@ use \App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\TablaReferencia;
 use App\Mail\ConfirmarCorreo;
+use App\Mail\RecoveryAccount;
 use App\Mail\ValidateAccount;
 use App\ReferenceDataOptions;
 use App\ReferencesData;
@@ -127,7 +128,7 @@ class UsersController extends Controller
 
 
     if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()->all()]); 
+      return response()->json(['errors' => $validator->errors()->all()]);
     }
     $user = $this->userService->store($request);
     if (Auth::guest()) Auth::login($user);
@@ -327,7 +328,7 @@ class UsersController extends Controller
     //return  response()->json(['encontrado'=>$request->all()]);
 
     $users = $this->userService->findUserByNameOrLastNameAndRole(
-      $request->name, 
+      $request->name,
       $request->role,
       $request->has('active') ? $request->get('active') : true
     );
@@ -456,7 +457,7 @@ class UsersController extends Controller
       //dd($user);
       return  response()->json($user);
     } catch (\Throwable $th) {
-      
+
       return  response()->json(['errors' => ["El token es invalido, vuelva a iniciar sesión para recuperarlo"]]);
     }
     return  response()->json(['errors' => ["El token es invalido, vuelva a iniciar sesión para recuperarlo"]]);
@@ -465,10 +466,10 @@ class UsersController extends Controller
   {
     /* $user = $this->userService->findWithFilter([
       "confirm_token" => $token
-    ]);  */  
-    $user = User::where("confirm_token",$token)->first();
+    ]);  */
+    $user = User::where("confirm_token", $token)->first();
     try {
-    
+
 
       if ($user and $request->has("email")) {
         //
@@ -476,7 +477,7 @@ class UsersController extends Controller
         $user->active = 1;
         $user->confirm_token = null;
         $user->save();
-     
+
         Session::flash('message-info', 'La cuenta se activó con éxito, ahora puede iniciar sesión');
         return  redirect("/login");
       } else {
@@ -488,5 +489,95 @@ class UsersController extends Controller
     }
     abort(404);
     return  response()->json(['errors' => false]);
+  }
+
+
+  public function validateAccount(Request $request)
+  {
+    try {
+      $user = $this->userService->findWithFilter([
+        "tipodoc_id" => $request->tipodoc_id,
+        "idnumber" => $request->idnumber
+      ]);
+      if ($user) {
+        //Generar codigo de confirmacion numerico
+        $user->confirm_token = rand(100000, 999999);
+        $user->save();
+        Mail::to($request->email)->send(new RecoveryAccount($user));
+        return  response()->json([
+          'user' => $user,
+          'email' => $request->email,
+          'phone' => $request->phone,
+          'exists' => true
+        ]);
+      }
+    } catch (\Throwable $th) {
+      return  response()->json(['exists' => $th->getMessage()]);
+    }
+    return  response()->json(['exists' => $user]);
+  }
+
+  public function validateCodeAccount(Request $request)
+  {
+    try {
+      $user = $this->userService->findWithFilter([
+        "confirm_token" => $request->verification_code,
+        "idnumber" => $request->idnumber
+      ]);
+     
+      //return redirect()->back();
+      if ($user) {
+        $user->email = $request->newemail;
+        $user->tel1 = $request->newphone;
+        $user->confirm_token = null;
+        $user->save();
+        return  response()->json([
+          'user' => $user,
+          'exists' => true
+        ]);
+      }
+    } catch (\Throwable $th) {
+      return  response()->json(['errors' => $th->getMessage()]);
+    }
+    return  response()->json(['exists' => false]);
+  }
+
+  public function resetAccount(Request $request)
+  {
+    // dd($request->all());
+    try {
+      $user = $this->userService->findWithFilter([
+        "id" => $request->id
+      ]);
+
+
+      return view('auth.reset_account', compact('user'));
+    } catch (\Throwable $th) {
+      return  response()->json(['exists' => false]);
+    }
+    return  response()->json(['exists' => false]);
+  }
+
+
+  public function resetPasswordAccount(Request $request)
+  {
+    // dd($request->all());
+    try {
+      $user = $this->userService->findWithFilter([
+        "id" => $request->id
+      ]);
+
+      $user->password = ($request->password);
+      $user->save();
+      $user->roles()->sync(8);
+
+      return  response()->json([
+        'success' => true,
+        'message-success' => 'La contraseña se actualizó con éxito, ahora puede iniciar sesión'
+      ]);
+    } catch (\Throwable $th) {
+      return  response()->json(['exists' => false]);
+    }
+    return  response()->json(['exists' => false]);
   }
 }

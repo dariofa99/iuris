@@ -81,7 +81,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
         $this->applyValidateSede();
         return $this->query //->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-           // ->where('expedientes.expidnumberest', '<>', 3030)
+            // ->where('expedientes.expidnumberest', '<>', 3030)
             ->where(function ($query) use ($request) {
                 if (
                     !$request->has('data') and
@@ -423,14 +423,22 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ['operador' => "<=", "value" => $fecha_2],
             ['operador' => ">=", "value" => $fecha_2]
         ]);
+
+        $_hubovacaciones = $this->vacacionesService->getByDates([
+            ['operador' => ">=", "value" => $fecha_1],
+            ['operador' => "<=", "value" => $fecha_2]
+        ]);
+
+
         //Evaluar si se realizo en pausa
         $pausas = $this->pausaService->getByAsignacion($asignacion, [
             ['operador' => "<=", "value" => $fecha_2],
-            ['operador' => ">=", "value" => $fecha_2] 
+            ['operador' => ">=", "value" => $fecha_2]
         ]);
-        
+
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
+            
             //Evaluar si o buscar la fecha inicial menor entre vacaciones y pausas,
             //es decir, busca en que fecha inicio primero
             $fecha_vaca_in = Carbon::parse($_vacaciones[0]->fecha_inicio);
@@ -449,13 +457,14 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             } else {
                 $fecha_in_2 = $fecha_pausa_fin;
             }
+
             //Contar desde fecha de asignacion hasta la fecha 1
             $dias_pausado_1 = getDiffDays($fecha_1, $fecha_fin_1);
             // $dias_pausado_2 = getDiffDays($fecha_in_2, Carbon::now()->endOfDay());
 
             return [
                 'dias_pausado' => $dias_pausado_1,
-                'fecha_inicial' => $fecha_in_2       
+                'fecha_inicial' => $fecha_in_2
             ];
 
             $total = $dias_pausado_1 + $dias_pausado_2;
@@ -469,7 +478,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             //$dias_pausado_2 = getDiffDays($fecha_in_2, $fecha_2);
             return [
                 'dias_pausado' => $dias_pausado_1,
-                'fecha_inicial' => $fecha_in_2      
+                'fecha_inicial' => $fecha_in_2
             ];
         } else if (count($pausas) > 0) {
             //Si solo vencio en pausa
@@ -482,11 +491,12 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 'fecha_inicial' => $fecha_in_2
             ];
             $total = $dias_pausado_1 + $dias_pausado_2;
-            Log::info($fecha_in_2);       
+            Log::info($fecha_in_2);
         } else {
+           
             //Si no se creo ni en vacaciones ni pausas                
             $dias_pausado_1 = $this->getDaysForEval2($fecha_1, $fecha_2, $asignacion);
-           
+
             $dias_pausado = getDiffDays($fecha_1, $fecha_2);
             $total = $dias_pausado - $dias_pausado_1;
             return [
@@ -496,17 +506,25 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ];
             $total = $dias_pausado - $dias_pausado_1;
             Log::info(" * $fecha_1");
-        }    
+        }
+        $dias_v = 0;
+        if (count($_hubovacaciones) > 0) {
+
+            foreach ($_hubovacaciones as $key => $_hubovacacion) {
+                $dias_v .= getDiffDays($_hubovacacion->fecha_inicio, $_hubovacacion->fecha_fin);
+            }
+            //
+        }
         //}
         $dias_pausado = getDiffDays($fecha_1, $fecha_2);
-
+        //dd($dias_pausado_1, $dias_v, "jfjfjf");
         return [
             'dias_pausado' => $dias_pausado,
             'fecha_inicial' => $fecha_2
         ];;
     }
 
-       
+
     public function getDaysForEval2($fecha_1, $fecha_2, $asignacion)
     {
         $dias_sin_hechos =  6;/* Carbon::parse($fecha_1)
@@ -529,12 +547,12 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
             //Evaluar los dias de vacaciones teniendo en cuenta las pausas, solo se 
             //toman en cuenta las vacaciones que no se dieron mientras estaba pausado
-            
+
             foreach ($_vacaciones as $key => $_vacacion) {
                 $pausas_ = $this->pausaService->getByAsignacion($asignacion, [
                     ['operador' => "<=", "value" => $_vacacion->fecha_inicio],
                     ['operador' => ">=", "value" => $_vacacion->fecha_inicio]
-                ]); 
+                ]);
                 if (count($pausas_) > 0) {
                     if ($_vacacion->fecha_fin > $pausas_[0]->fecha_final) {
                         $days_pausado += getDiffDays($pausas_[0]->fecha_final, $_vacacion->fecha_fin);
@@ -548,7 +566,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             }
 
             $days_pausado_ = $this->pausaService->getDays($pausas);
-           // dd($days_pausado_, $_vacaciones,$days_pausado); 
+            // dd($days_pausado_, $_vacaciones,$days_pausado); 
             return $days_pausado + $days_pausado_;
 
             dd($pausas, $_vacaciones, $days_pausado, $days_pausado_);

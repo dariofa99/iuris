@@ -4,7 +4,7 @@
         @if (!$readonly)
             @if (currentUser()->hasRole('amatai') ||
                     $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                    currentUser()->hasRole('estudiante'))
+                    currentUser()->hasRole('estudiante')) 
                 @if ($expediente->expestado_id != '2' and $expediente->expestado_id != '4')
                     @if ($expediente->exptipoproce_id != '1')
                         <button type="button"

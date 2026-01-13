@@ -402,7 +402,7 @@ class ConciliacionesController extends Controller
                 }
             }
             if ($request->has("send_notification")) {
-                 Mail::to("centrodeconciliacion@udenar.edu.co")->send(new RegConciliacionStart($conciliacion)); 
+                Mail::to("solicitudesconciliacion@udenar.edu.co")->send(new RegConciliacionStart($conciliacion)); 
                 $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
                 ProcessEmailSendSummernoteNotification::dispatch(
                     $users,

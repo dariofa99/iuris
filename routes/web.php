@@ -51,6 +51,10 @@ Route::get('/validar/cuenta/mensaje', function () {
   return view('myforms.mensaje_validar_cuenta');
 });
 Route::post('usuarios/update/email/solicitud', "UsersController@validateSolicitudEmail");
+Route::post('usuarios/validate/account', "UsersController@validateAccount");
+Route::post('usuarios/validate/code/account', "UsersController@validateCodeAccount");
+Route::post('usuarios/reset/account', "UsersController@resetAccount");
+Route::post('usuarios/reset/password/account', "UsersController@resetPasswordAccount");
 Route::get("usuarios/active/account/{token}", "UsersController@activateAccount");
 Route::get('conciliaciones/download/file/{file_id}', 'ConciliacionesController@downloadFile');
 Route::post('conciliaciones/enviar/correo', 'ConciliacionesController@enviarCorreo');
@@ -718,109 +722,13 @@ Route::get('/pruebas/users', 'UsersController@pruebas');
 Route::get(
   '/pruebas',
   function () {
-    $periodo = Periodo::where('estado', '1')
-      ->first();
-    $con_ul = Conciliacion::where('periodo_id', $periodo->id)
-      ->where('num_conciliacion', '<>', 'CCEAH-000-00-00')
-      ->orderBy('created_at', 'desc')->first();
-    if ($con_ul == null) {
-      $id_num = '001';
-    } else {
-      $id_num = intval(explode('-', $con_ul->num_conciliacion)[1]) + 1;
-      //dd($id_num);
+   
+    $user = User::where('idnumber', '1085278208')->first();
 
-      if ($id_num < 10)  $id_num =  '00' . $id_num;
-      if ($id_num > 10 and $id_num < 100)  $id_num =  '0' . $id_num;
-    }
+    return view('myforms.mails.recovery_account',[            
+            "user"=> $user,            
+        ]); 
 
-    // $porciones = explode("-", $con_ul->num_conciliacion);
-
-    dd($id_num);
-
-    $segmento = Segmento::where('estado', true)
-      ->join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
-      ->where('sg.sede_id', session('sede')->id_sede)
-      ->first();
-
-
-
-
-    $asig_doc = DB::select(
-      DB::raw("SELECT `docidnumber`,`name`, COUNT(`docidnumber`) AS num_casos FROM `asignacion_docente_caso`
-            JOIN asignacion_caso ON `asignacion_docente_caso`.asig_caso_id = asignacion_caso.id
-            JOIN expedientes ON asignacion_caso.asigexp_id = expedientes.expid
-            JOIN users ON `asignacion_docente_caso`.`docidnumber` = users.idnumber
-            JOIN periodo ON asignacion_caso.periodo_id = periodo.id
-            JOIN segmentos ON periodo.id = segmentos.perid
-            JOIN sede_usuarios ON sede_usuarios.user_id = users.id
-            WHERE expedientes.exptipoproce_id = '1' AND users.active=1
-            AND users.idnumber != '79504911' 
-            AND users.active_asignacion=1 AND segmentos.id = $segmento->segmento_id
-            AND sede_usuarios.sede_id = " . session('sede')->id_sede . "
-            GROUP BY `docidnumber` ORDER BY num_casos ASC
-             ")
-    );
-
-    $docentes = DB::table('users')
-      ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
-      ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
-      ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
-      ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-      ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-      ->where('role_id', '4')
-      ->where('users.active', true)
-      ->where('users.idnumber', '<>', '79504911')
-      ->where('users.active_asignacion', true)
-      ->where('sedes.id_sede', session('sede')->id_sede)
-      ->select(
-        'users.active',
-        'users.id',
-        'ref_nombre',
-        'users.idnumber',
-        DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
-        'role_user.role_id',
-        'roles.display_name'
-      )->orderBy('users.created_at', 'desc')->get();
-    dd($docentes, $asig_doc);
-    if (count($docentes) > 0 and count($asig_doc) > 0) {
-      if (count($docentes) == count($asig_doc)) {
-        /*   $asignacion = new AsigDocenteCaso();
-                $asignacion->docidnumber = $asig_doc[0]->docidnumber;
-                $asignacion->asig_caso_id = $asignacion_caso->id;
-                $asignacion->user_created_id = \Auth::user()->idnumber;
-                $asignacion->user_updated_id = \Auth::user()->idnumber;
-                $asignacion->save(); */
-      } else {
-        foreach ($docentes as $key => $docente) {
-          $found_key = array_search($docente->idnumber, array_column($asig_doc, 'docidnumber'));
-          if ($found_key === false) {
-            dd($docente);
-            /*  $asignacion = new AsigDocenteCaso();
-                        $asignacion->docidnumber =  $docente->idnumber;
-                        $asignacion->asig_caso_id = $asignacion_caso->id;
-                        $asignacion->user_created_id = \Auth::user()->idnumber;
-                        $asignacion->user_updated_id = \Auth::user()->idnumber;
-                        $asignacion->save(); */
-            break;
-          }
-        }
-      }
-    } elseif (count($docentes) > 0) {
-      foreach ($docentes as $key => $docente) {
-        dd($docente);
-        /*  $asignacion = new AsigDocenteCaso();
-                $asignacion->docidnumber =  $docente->idnumber;
-                $asignacion->asig_caso_id = $asignacion_caso->id;
-                $asignacion->user_created_id = \Auth::user()->idnumber;
-                $asignacion->user_updated_id = \Auth::user()->idnumber;
-                $asignacion->save(); */
-        break;
-      }
-    }
-
-    dd($docentes, $asig_doc);
-    // NotaExt::message(); 
-    // dd(N
   }
 
 );

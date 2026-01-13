@@ -104,9 +104,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>SI presenta algún problema para diligenciar el formulario, por favor comuníquese al correo
-                       
-                     darioj99@udenar.edu.co  </strong>
+                    <strong>Si presenta algún problema para diligenciar el formulario, por favor comuníquese al correo darioj99@udenar.edu.co o acérquese a las oficinas de la Universidad de Nariño, sede centro.  </strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

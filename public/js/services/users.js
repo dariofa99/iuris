@@ -130,7 +130,7 @@ export class UserService {
     return topics;
   }
   async alertValidateUser(lastidnumber, form) {
-    if (lastidnumber != '' && $("#"+form+" select[name='tipodoc_id']").val() != '') {
+    if (lastidnumber != '' && $("#" + form + " select[name='tipodoc_id']").val() != '') {
       Swal.fire({
         title: 'Vuelve a ingresar el número de documento',
         input: 'text',
@@ -163,7 +163,8 @@ export class UserService {
               $("#" + form + " select[name='tipopers_id']").val(response.user.tipopers_id).prop("disabled", true)
               $("#" + form + " input[name='email']").val(response.user.email).prop("disabled", true)
               $("#" + form + " select[name='genero_id']").val(response.user.genero_id).prop("disabled", true)
-               $("#" + form + " select[name='pbepersondiscap']").val(response.user.pbepersondiscap).prop("disabled", true)
+              $("#" + form + " select[name='pbepersondiscap']").val(response.user.pbepersondiscap).prop("disabled", true)
+               $("#" + form + " input[name='codigo_estudiantil']").val(response.user.codigo_estudiantil).prop("disabled", true);
               $("#" + form + " .input_user_ad").prop("disabled", true);
             } else {
               $("#" + form + " input[name='id']").remove();
@@ -172,8 +173,9 @@ export class UserService {
               $("#" + form + " input[name='lastname']").val("");
               $("#" + form + " input[name='tel1']").val("");
               $("#" + form + " input[name='address']").val("");
+               $("#" + form + " input[name='codigo_estudiantil']").val("").prop("disabled", false);
               $("#" + form + " .input_user_ad").prop("disabled", false);
-             
+
 
             }
           } else {
@@ -319,14 +321,14 @@ export class UserService {
     $("#" + form + " .input_user_ad").each((index, obj) => {
       if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170) && $(obj).is(":checked"))
         || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
-       var formParent = $(obj).closest("form");
+        var formParent = $(obj).closest("form");
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
           section: $(obj).attr("data-section"),
           type: $(obj).attr("data-type"),
           name: $(obj).attr("data-name"),
           option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-          value_is_other:  formParent.find("#value_other_text-" + $(obj).attr("data-id")).val(),// $("#value_other_text-" + $(obj).attr("data-id")).val(),
+          value_is_other: formParent.find("#value_other_text-" + $(obj).attr("data-id")).val(),// $("#value_other_text-" + $(obj).attr("data-id")).val(),
           //conciliacion_id: $("#conciliacion_id").val()
         });
       }
@@ -347,6 +349,69 @@ export class UserService {
     const topics = await response.json();
     return topics;
 
+  }
+
+  async validateAccount(request) {
+    const response = await fetch(BASE_URL + 'usuarios/validate/account', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        //'Content-Type': 'application/x-www-form-urlencoded',
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-Token": $("#token").attr("content"),
+      },
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      console.log(response);
+      throw new Error(message);
+    }
+    const topics = await response.json();
+    return topics;
+  }
+
+  async validateCodeAccount(request) {
+    const response = await fetch(BASE_URL + 'usuarios/validate/code/account', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        //'Content-Type': 'application/x-www-form-urlencoded',
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-Token": $("#token").attr("content"),
+      },
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      console.log(response);
+      throw new Error(message);
+    }
+    const topics = await response.json();
+    return topics;
+  }
+
+  async resetPasswordAccount(request) {
+    const response = await fetch(BASE_URL + 'usuarios/reset/password/account', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        //'Content-Type': 'application/x-www-form-urlencoded',
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-Token": $("#token").attr("content"),
+      },
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      console.log(response);
+      throw new Error(message);
+    }
+    const topics = await response.json();
+    return topics;
   }
 
 }

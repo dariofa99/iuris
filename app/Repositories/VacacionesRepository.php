@@ -2,20 +2,23 @@
 
 namespace App\Repositories;
 
-
+use App\Services\PeriodosService;
 use App\Services\TurnosService;
 use App\Services\VacacionesService;
 use App\Turno;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class VacacionesRepository extends BaseRepository implements VacacionesService
 {
 
+    protected PeriodosService $periodoService;
     public function __construct(Turno $model)
     {
         parent::__construct($model);
+        $this->periodoService = App::make(PeriodosService::class);
     }
 
     public function getByDates(array $request)
@@ -25,7 +28,7 @@ class VacacionesRepository extends BaseRepository implements VacacionesService
             /*  ->whereDate('fecha_inicio',$request[0]['operador'], $request[0]['value'])
         ->whereDate('fecha_fin',$request[1]['operador'], $request[1]['value'])
        */
-            ->where("periodo_id", 8)
+            ->where("periodo_id", $this->periodoService->getPeriodoActivo()->id)
             ->where(function ($query) use ($request) {
                 if (isset($request[0])) {
                     $query->whereDate('fecha_inicio', $request[0]['operador'], $request[0]['value']);

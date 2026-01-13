@@ -1181,9 +1181,11 @@ class Expediente extends Model
         ]);
 
 
-
+//dd($_vacaciones,$fecha_1);
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
+             
+
             //Evaluar si o buscar la fecha final mayor entre vacaciones y pausas,
             //es decir, busca que fecha final es mayor
             $fecha_vaca_fin = Carbon::parse($_vacaciones[0]->fecha_fin);
@@ -1204,6 +1206,7 @@ class Expediente extends Model
             ->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
 
 
+        //dd($evaluar);
 
         if ($evaluar['dias_pausado'] > 30) {
             $segmento = $this->getSegmentoActivo();
@@ -1214,7 +1217,7 @@ class Expediente extends Model
             $expediente = $this;
             $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. " . $fecha_1 . " - " . $fecha_eva;
             $docente_id = Auth::user()->idnumber;
-            $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
+           // $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
 
             $asignacion->fecha_eva = $fecha_eva;
             $asignacion->save();

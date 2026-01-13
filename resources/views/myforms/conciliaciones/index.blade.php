@@ -6,8 +6,9 @@
 
 @section('titulo_area')
    @if(currentUser()->hasRole('solicitante') || currentUser()->can('crear_conciliaciones'))
-        <a href="/conciliaciones/create" id="btn_new_conciliacion" class="btn btn-success">
-            Solicitar nueva conciliación</a>
+        <a href="/conciliaciones/create" id="btn_new_conciliacion" class="btn btn-primary btn-lg">
+           <i class="fa fa-edit"></i> Solicitar nueva conciliación
+        </a>
             @else
             Conciliaciones
   @endif

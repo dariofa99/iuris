@@ -12,7 +12,7 @@ use App\Periodo;
 use App\Role;
 use App\RefAsignacionCaso;
 use App\MotivoAsigCaso;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Sede;
 use App\TablaReferencia;
 use Illuminate\Support\Facades\Auth;

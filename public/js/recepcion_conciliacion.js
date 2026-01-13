@@ -66,8 +66,7 @@ $(function () {
 
     $(".myFormParteConvocada").on("change", "select[name='pbepersondiscap']", function (e) {
     var formId = $(this).closest('form').attr('id');
-    console.log(formId);
-    
+      
     if ($(this).val() == 1) {
       $("#" + formId + " select[name='has_apoyo']").prop("disabled", false);
       mostrarCompDiscapUser(formId)
