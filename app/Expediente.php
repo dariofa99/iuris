@@ -1219,7 +1219,7 @@ class Expediente extends Model
             $expediente = $this;
             $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. " . $fecha_1 . " - " . $fecha_eva;
             $docente_id = Auth::user()->idnumber;
-            // $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
+            $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
 
             $asignacion->fecha_eva = $fecha_eva;
             $asignacion->save();
