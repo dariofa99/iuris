@@ -1620,6 +1620,7 @@ class ExpedienteController extends Controller
     $pausas->each(function ($pau) {
       $pau->fecha_initxt = getSmallDate($pau->fecha_inicial);
       $pau->fecha_fintxt = getSmallDate($pau->fecha_final);
+      $pau->num_dias = getDiffDays($pau->fecha_inicial, $pau->fecha_final);
     });
     return response()->json($pausas);
   }

@@ -23,7 +23,7 @@ $(document).ready(function () {
         let response = await expedientesService.cambiarFechaEvaluacion(request);
         if (response.error) {
             toastr.error(response.error, "", {
-                timeOut: "4000", 
+                timeOut: "4000",
             });
         } else {
             toastr.success("Se actualizó con éxito", "Espere", {
@@ -276,10 +276,10 @@ $(document).ready(function () {
                         ${pausa.fecha_initxt}
                     </td>
                     <td>
-                    ${pausa.fecha_fintxt}
+                        ${pausa.fecha_fintxt}
                     </td>
                     <td>
-                    ${diferenciaDias}
+                        ${pausa.num_dias}
                     </td>
                 </tr>
                 `;
@@ -3183,111 +3183,111 @@ $(document).ready(function () {
     });
 
 
-   /*  $("#form_incidencia").on("submit", async function (e) {
-        e.preventDefault();
-        var formData = new FormData(document.getElementById("form_incidencia"));
-        formData.append('id_asig', $("#id_asig").val());
-        var res = await incidenciasService.store(formData);
-        toastr.success("Incidencia creada con éxito", "", {
-            positionClass: "toast-top-right",
-            timeOut: "4000",
-        });
-        $("#myModal_notificar_incidencia").modal("hide");
-        location.reload();
+    /*  $("#form_incidencia").on("submit", async function (e) {
+         e.preventDefault();
+         var formData = new FormData(document.getElementById("form_incidencia"));
+         formData.append('id_asig', $("#id_asig").val());
+         var res = await incidenciasService.store(formData);
+         toastr.success("Incidencia creada con éxito", "", {
+             positionClass: "toast-top-right",
+             timeOut: "4000",
+         });
+         $("#myModal_notificar_incidencia").modal("hide");
+         location.reload();
+ 
+     }); */
 
-    }); */
 
+    /*     $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {
+            e.preventDefault();
+            //Remover inputs previos
+            $("#myModal_actualizar_incidencia form input[name='is_update']").remove();
+            $("#myModal_actualizar_incidencia form input[name='hestado_id']").remove();
+            $("#myModal_actualizar_incidencia input[name='estado_id']").val($(this).data("estado"))
+            $("#myModal_actualizar_incidencia input[name='id']").val($(this).data("id"))
+            if ($(this).data("estado") == 273) {
+                Swal.fire({
+                    title: '¿Estás seguro de marcar como resuelta la incidencia?',
+                    text: "¡No podrás revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, resolver',
+                    cancelButtonText: 'Cancelar'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        // Aquí puedes agregar la lógica para eliminar la incidencia
+                        var request = convertFormToJSON("form_act_incidencia")
+                        request['motivo'] = "Incidencia resuelta";
+                        var res = await incidenciasService.update(request)
+                        $("#wait").hide()
+                        toastr.success("Actualizado con éxito", "", {
+                            positionClass: "toast-top-right",
+                            timeOut: "4000",
+                        });
+                        location.reload(true);
+                    }
+                });
+            } else if ($(this).data("estado") == 'update') {
+                var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
+                $(".char_count").text(old_motivo.length + "/200");
+                $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
+                var input = `<input type="hidden" name="is_update" value="true">`;
+                var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
+                $("#myModal_actualizar_incidencia form").append(input);
+                $("#myModal_actualizar_incidencia form").append(inputId);
+                $("#myModal_actualizar_incidencia #lbl_title_fract").text("Actualizando incidencia");
+                $("#myModal_actualizar_incidencia").modal("show");
+                $("#myModal_notificar_incidencia").modal("hide");
+            } else if ($(this).data("estado") == 272) {
+                $("#myModal_notificar_incidencia").modal("hide");
+                $("#myModal_actualizar_incidencia #lbl_title_fract").text("Solicitar revisión de incidencia");
+                $("#myModal_actualizar_incidencia").modal("show");
+            } else {
+                $("#myModal_notificar_incidencia").modal("hide");
+                $("#myModal_actualizar_incidencia #lbl_title_fract").text("Rechazar incidencia");
+                $("#myModal_actualizar_incidencia").modal("show");
+    
+            }
+        }); */
 
-/*     $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {
-        e.preventDefault();
-        //Remover inputs previos
-        $("#myModal_actualizar_incidencia form input[name='is_update']").remove();
-        $("#myModal_actualizar_incidencia form input[name='hestado_id']").remove();
-        $("#myModal_actualizar_incidencia input[name='estado_id']").val($(this).data("estado"))
-        $("#myModal_actualizar_incidencia input[name='id']").val($(this).data("id"))
-        if ($(this).data("estado") == 273) {
-            Swal.fire({
-                title: '¿Estás seguro de marcar como resuelta la incidencia?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, resolver',
-                cancelButtonText: 'Cancelar'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    // Aquí puedes agregar la lógica para eliminar la incidencia
-                    var request = convertFormToJSON("form_act_incidencia")
-                    request['motivo'] = "Incidencia resuelta";
-                    var res = await incidenciasService.update(request)
-                    $("#wait").hide()
-                    toastr.success("Actualizado con éxito", "", {
-                        positionClass: "toast-top-right",
-                        timeOut: "4000",
-                    });
-                    location.reload(true);
-                }
-            });
-        } else if ($(this).data("estado") == 'update') {
-            var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
-            $(".char_count").text(old_motivo.length + "/200");
-            $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
-            var input = `<input type="hidden" name="is_update" value="true">`;
-            var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
-            $("#myModal_actualizar_incidencia form").append(input);
-            $("#myModal_actualizar_incidencia form").append(inputId);
-            $("#myModal_actualizar_incidencia #lbl_title_fract").text("Actualizando incidencia");
-            $("#myModal_actualizar_incidencia").modal("show");
-            $("#myModal_notificar_incidencia").modal("hide");
-        } else if ($(this).data("estado") == 272) {
-            $("#myModal_notificar_incidencia").modal("hide");
-            $("#myModal_actualizar_incidencia #lbl_title_fract").text("Solicitar revisión de incidencia");
-            $("#myModal_actualizar_incidencia").modal("show");
-        } else {
-            $("#myModal_notificar_incidencia").modal("hide");
-            $("#myModal_actualizar_incidencia #lbl_title_fract").text("Rechazar incidencia");
-            $("#myModal_actualizar_incidencia").modal("show");
+    /*  $("#form_act_incidencia").on("submit", async function (e) {
+         e.preventDefault();
+ 
+         var request = convertFormToJSON("form_act_incidencia")
+         request['id_asig'] = $("#id_asig").val();
+         $("#wait").show()
+         var res = await incidenciasService.update(request)
+         $("#wait").hide()
+         toastr.success("Actualizado con éxito", "", {
+             positionClass: "toast-top-right",
+             timeOut: "4000",
+         });
+         location.reload(true);
+ 
+     }); */
 
-        }
-    }); */
-
-   /*  $("#form_act_incidencia").on("submit", async function (e) {
-        e.preventDefault();
-
-        var request = convertFormToJSON("form_act_incidencia")
-        request['id_asig'] = $("#id_asig").val();
-        $("#wait").show()
-        var res = await incidenciasService.update(request)
-        $("#wait").hide()
-        toastr.success("Actualizado con éxito", "", {
-            positionClass: "toast-top-right",
-            timeOut: "4000",
-        });
-        location.reload(true);
-
-    }); */
-
- /*    $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
-        e.preventDefault()
-
-        const id = $(this).data("id");
-        const detalle = $("#deta-" + id);
-        const icon = $(this).find("i");
-
-        if (!detalle.is(":visible")) {
-            //$(".row-incidencia").hide()
-            icon.removeClass("fa-eye").addClass("fa-eye-slash");
-            $("#row-incidencia-" + id).show();
-            detalle.show();
-
-        } else {
-            icon.removeClass("fa-eye-slash").addClass("fa-eye");
-            $(".row-incidencia").show()
-            detalle.hide();
-        }
-
-    }); */
+    /*    $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
+           e.preventDefault()
+   
+           const id = $(this).data("id");
+           const detalle = $("#deta-" + id);
+           const icon = $(this).find("i");
+   
+           if (!detalle.is(":visible")) {
+               //$(".row-incidencia").hide()
+               icon.removeClass("fa-eye").addClass("fa-eye-slash");
+               $("#row-incidencia-" + id).show();
+               detalle.show();
+   
+           } else {
+               icon.removeClass("fa-eye-slash").addClass("fa-eye");
+               $(".row-incidencia").show()
+               detalle.hide();
+           }
+   
+       }); */
 
 
 });//////////////////////////////////////////////

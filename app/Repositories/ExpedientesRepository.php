@@ -468,7 +468,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ];
 
             $total = $dias_pausado_1 + $dias_pausado_2;
-            Log::info($fecha_in_2);
+           // Log::info($fecha_in_2);
         } elseif (count($_vacaciones) > 0) {
             //Si solo vencio en vacaciones            
             $fecha_fin_1 = Carbon::parse($_vacaciones[0]->fecha_inicio);
@@ -491,7 +491,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 'fecha_inicial' => $fecha_in_2
             ];
             $total = $dias_pausado_1 + $dias_pausado_2;
-            Log::info($fecha_in_2);
+           // Log::info($fecha_in_2);
         } else {
 
             //Si no se creo ni en vacaciones ni pausas                
@@ -499,13 +499,16 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
             $dias_pausado = getDiffDays($fecha_1, $fecha_2);
             $total = $dias_pausado - $dias_pausado_1;
+
+           // dd($dias_pausado_1, $dias_pausado,$total,$fecha_1, $fecha_2);
+
             return [
                 'dias_pausado' => $total,
                 'fecha_inicial' => $fecha_1,
                 //'fecha_iniciales' => $fecha_2
             ];
             $total = $dias_pausado - $dias_pausado_1;
-            Log::info(" * $fecha_1");
+           // Log::info(" * $fecha_1");
         }
         $dias_v = 0;
         if (count($_hubovacaciones) > 0) {
@@ -533,16 +536,24 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     ) {
         $fecha = $fechaInicio->copy();
         $diasContados = 0;
-
+        $diaspasados = 0;
+        $dias_pausado = 0;
         while ($diasContados < $diasObjetivo) {
 
             if (!$this->estaBloqueado($fecha, $pausas, $vacaciones)) {
                 $diasContados++;
+                //Log::info("Contando dia: " . $fecha->toDateString() . " - Dias contados: $diasContados");
+            }else {
+                $dias_pausado++;
+               // Log::info("Dia bloqueado: " . $fecha->toDateString() . " - Dias pausados: $dias_pausado");
             }
 
             if ($diasContados < $diasObjetivo) {
                 $fecha->addDay();
+               // Log::info("Siguiente dia a evaluar: " . $fecha->toDateString());
             }
+            $diaspasados++;
+           // Log::info("Dias pasados: $diaspasados");
         }
 
         return $fecha;

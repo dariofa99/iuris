@@ -364,7 +364,7 @@ function getDiffDays($fecha_inicio, $fecha_fin)
     $inicio = Carbon::parse($fecha_inicio)->startOfDay();
    $fin = Carbon::parse($fecha_fin)->endOfDay();
 
-    return $inicio->diffInDays($fin, false);
+    return $inicio->diffInDays($fin, false) + 1;
 }
 function quitarAcentos($cadena)
 {

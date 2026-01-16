@@ -44,7 +44,7 @@ class PausasRepository extends BaseRepository implements PausasService
 			foreach ($_vacaciones as $key => $vacaciones) {
 				$fecha_vaca_in = Carbon::parse($vacaciones->fecha_inicial);
 				$fecha_vaca_fin = Carbon::parse($vacaciones->fecha_final);
-				$days_vac = $days_vac + intval($fecha_vaca_in->diffInDays($fecha_vaca_fin, false));
+				$days_vac = $days_vac + getDiffDays($fecha_vaca_in, $fecha_vaca_fin);// intval($fecha_vaca_in->diffInDays($fecha_vaca_fin, false));
 			}
 			return ($days_vac);
 		}

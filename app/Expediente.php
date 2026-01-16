@@ -1205,6 +1205,7 @@ class Expediente extends Model
         $fecha_2 = Carbon::now();
         $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
         if ($evaluar['dias_pausado'] > 30) {
+           
             $segmento = $this->getSegmentoActivo();
             $fecha_eva = $this->getExpedienteService()->calcularDias($fecha_1, $fecha_2, $asignacion);
             $expediente = $this;
