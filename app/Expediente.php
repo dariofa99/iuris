@@ -1203,19 +1203,10 @@ class Expediente extends Model
             $fecha_1 = Carbon::parse($pausas[0]->fecha_final);
         }
         $fecha_2 = Carbon::now();
-
-        $evaluar = $this->getExpedienteService()
-            ->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
-
-
-        //dd($evaluar);
-
+        $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
         if ($evaluar['dias_pausado'] > 30) {
             $segmento = $this->getSegmentoActivo();
-            $diasVacaciones = $this->difDays($fecha_1, $fecha_2) - $evaluar['dias_pausado'];
-            $diasVacaciones = $diasVacaciones + 31;
-            $fecha_eva = Carbon::parse($fecha_1)->addDays($diasVacaciones);
-
+            $fecha_eva = $this->getExpedienteService()->calcularDias($fecha_1, $fecha_2, $asignacion);
             $expediente = $this;
             $message = "No tiene actuaciones requeridos en más 30 días, requeridos a lo largo del corte. " . $fecha_1 . " - " . $fecha_eva;
             $docente_id = Auth::user()->idnumber;
@@ -1352,6 +1343,8 @@ class Expediente extends Model
         $text .=  " <span style='background-color:$color;color:#ffffff' class='pull-center badge'>$dias</span>";
         return $text;
     }
+
+
 
     public function isValidEvaPause()
     {

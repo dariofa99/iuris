@@ -438,7 +438,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
-            
+
             //Evaluar si o buscar la fecha inicial menor entre vacaciones y pausas,
             //es decir, busca en que fecha inicio primero
             $fecha_vaca_in = Carbon::parse($_vacaciones[0]->fecha_inicio);
@@ -493,7 +493,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             $total = $dias_pausado_1 + $dias_pausado_2;
             Log::info($fecha_in_2);
         } else {
-           
+
             //Si no se creo ni en vacaciones ni pausas                
             $dias_pausado_1 = $this->getDaysForEval2($fecha_1, $fecha_2, $asignacion);
 
@@ -522,6 +522,78 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             'dias_pausado' => $dias_pausado,
             'fecha_inicial' => $fecha_2
         ];;
+    }
+
+
+    public function calcularFechaPorDiasEfectivos(
+        Carbon $fechaInicio,
+        int $diasObjetivo,
+        $pausas,
+        $vacaciones
+    ) {
+        $fecha = $fechaInicio->copy();
+        $diasContados = 0;
+
+        while ($diasContados < $diasObjetivo) {
+
+            if (!$this->estaBloqueado($fecha, $pausas, $vacaciones)) {
+                $diasContados++;
+            }
+
+            if ($diasContados < $diasObjetivo) {
+                $fecha->addDay();
+            }
+        }
+
+        return $fecha;
+    }
+
+
+
+    private function estaBloqueado(Carbon $fecha, $pausas, $vacaciones): bool
+    {
+        foreach ($pausas as $p) {
+            if ($fecha->between(
+                Carbon::parse($p->fecha_inicial),
+                Carbon::parse($p->fecha_final)
+            )) {
+                return true;
+            }
+        }
+
+        foreach ($vacaciones as $v) {
+            if ($fecha->between(
+                Carbon::parse($v->fecha_inicio),
+                Carbon::parse($v->fecha_fin)
+            )) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function calcularDias($fecha_1, $fecha_2, $asignacion)
+    {
+        $pausas = $asignacion->pausas()
+            ->whereDate('fecha_inicial', ">=", $fecha_1)
+            ->whereDate('fecha_final', "<=", $fecha_2)
+            ->orderBy('fecha_inicial', 'asc')
+            ->get();
+
+        $_vacaciones = $this->vacacionesService->getByDates([
+            ['operador' => ">=", "value" => $fecha_1],
+            ['operador' => "<=", "value" => $fecha_2]
+        ]);
+
+        $fecha = $this->calcularFechaPorDiasEfectivos(
+            Carbon::parse($fecha_1)->startOfDay(),
+            30,
+            $pausas,
+            $_vacaciones
+        );
+
+        return $fecha;
     }
 
 
