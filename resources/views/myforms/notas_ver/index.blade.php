@@ -111,6 +111,7 @@
                         $contador_e = 0;
 
                     @endphp
+
                     @forelse($notas as $key => $data)
                         <tr style="border-bottom: 2px solid black">
                             <td style="width: 0%">
@@ -168,7 +169,7 @@
                                             Origen
                                         </th>
                                         <th>
-                                            Tipo
+                                            Fecha 
                                         </th>
                                         <th>
                                             Docente
@@ -260,7 +261,7 @@
                                                     {{ $nota['origen_nota'] }}
                                                 </td>
                                                 <td>
-                                                    {{ $nota['tipo'] }}
+                                                    {{ getSmallDateWithHour($nota['created_at']) }}
                                                 </td>
                                                 <td colspan="4">
                                                     {{ $nota['docevname'] }}

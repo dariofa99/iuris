@@ -1,13 +1,13 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualIncidenciasU");
+        localStorage.removeItem("keyCircularActualVacNavidad");
 
         var keyCir = localStorage.getItem("keyCircularActualVacNavidad");
-        $("#modal_t").text("Información importante!");
+        $("#modal_t").text("");
         var message = '';
         var message = getMotivationalMessage();
         if (keyCir == null) {
-            message = getMantenimientoMessage();
+            message = getMotivationalMessage();
         } else {
             $("#modal_t").text("");
             // message = getHtmlCircular();
@@ -270,7 +270,7 @@
                 autor: "Nelson Mandela"
             },
             {
-                texto: "Hoy es un gran día para empezar algo nuevo. ¡Confía en ti y da el primer paso!",
+                texto: "El éxito no llega de la noche a la mañana, se construye con el esfuerzo de cada día.",
                 autor: ""
             },
             {
@@ -284,7 +284,109 @@
             {
                 texto: "El esfuerzo puede ser invisible, pero los resultados siempre brillan.",
                 autor: ""
+            },
+            {
+                texto: "Cada día es una nueva oportunidad para aprender y crecer.",
+                autor: ""
+            },
+            {
+                texto: "La perseverancia es la clave del éxito. No te rindas.",
+                autor: ""
+            },
+            {
+                texto: "Cada tarea hecha es un paso más hacia tu meta.",
+                autor: ""
+            },
+            {
+                texto: "El éxito no llega de la noche a la mañana, se construye con el esfuerzo de cada día.",
+                autor: ""
+            },
+            {
+                texto: "Cada tarea hecha es un paso más hacia tu meta.",
+                autor: ""
+            },
+            {
+                texto: "No te rindas: lo que hoy cuesta, mañana será parte de tu fortaleza.",
+                autor: ""
+            },
+            {
+                texto: "Equivocarse también es aprender; lo importante es no dejar de intentarlo.",
+                autor: ""
+            },
+            {
+                texto: "Cree en ti, incluso cuando el camino parezca difícil.",
+                autor: ""
+            },
+            {
+                texto: "Tu mayor competencia eres tú mismo: sé mejor que ayer.",
+                autor: ""
+            },
+            {
+                texto: "No estudias solo para pasar una materia, estudias para construir tu futuro.",
+                autor: ""
+            },
+            {
+                texto: "Los sueños se cumplen cuando decides trabajar por ellos.",
+                autor: ""
+            },
+            {
+                texto: "Cada hora de estudio es una inversión en la persona que quieres ser.",
+                autor: ""
+            },
+            {
+                texto: "Hoy estudiante, mañana profesional: todo empieza con disciplina.",
+                autor: ""
+            },
+            {
+                texto: "Sí se puede, paso a paso.",
+                autor: ""
+            },
+            {
+                texto: "Aprender es crecer.",
+                autor: ""
+            },
+            {
+                texto: "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
+                autor: "Robert Collier"
+            },
+            {
+                texto: "Cada logro comienza con la decisión de intentarlo.",
+                autor: "John F. Kennedy"
+            },
+            {
+                texto: "Nuestra mayor gloria no está en no caer nunca, sino en levantarnos cada vez que caemos.",
+                autor: "Confucio"
+            },
+            {
+                texto: "La educación es el arma más poderosa que puedes usar para cambiar el mundo.",
+                autor: "Nelson Mandela"
+            },
+            {
+                texto: "Cree que puedes y ya estás a medio camino.",
+                autor: "Theodore Roosevelt"
+            },
+            {
+                texto: "El aprendizaje nunca agota la mente.",
+                autor: "Leonardo da Vinci"
+            },
+            {
+                texto: "No fracases por falta de intentarlo.",
+                autor: "Benjamin Franklin"
+            },
+            {
+                texto: "El futuro pertenece a quienes creen en la belleza de sus sueños.",
+                autor: "Eleanor Roosevelt"
+            },
+            {
+                texto: "El éxito no es definitivo, el fracaso no es fatal: lo que cuenta es el valor para continuar.",
+                autor: "Winston Churchill"
+            },
+            {
+                texto: "Dime y lo olvido, enséñame y lo recuerdo, involúcrame y lo aprendo.",
+                autor: "Benjamin Franklin"
             }
+
+
         ];
 
 
@@ -336,7 +438,7 @@
       color: #777;
       display: block;
     ">
-      🕒 Últ. actualización: <b>2 de diciembre de 2025</b><br>
+      🕒 Últ. actualización: <b>20 de enero de 2026</b><br>
       Soporte: Registre sus incidencias <a href="/incidencias" target="_blank"
         style="color: #5563DE; text-decoration: underline;">Aquí!</a>
     </span>
