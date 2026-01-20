@@ -20,6 +20,7 @@ use App\Exports\NotasExport;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use App\Services\UsersService;
+use Carbon\Carbon;
 
 class NotaController extends Controller
 {
@@ -242,9 +243,13 @@ class NotaController extends Controller
             //return response()->json($expediente);
             if (count($expediente->get_has_nota_final()) > 0) {
                 $nota_final = $expediente->get_has_nota_final();
+                $days = \Carbon\Carbon::parse($nota_final['nota_conocimiento']['created_at'])->diffInDays(Carbon::now());
+                //return response()->json($days);
                 $can_edit = false;
                 if ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('diradmin')) $can_edit = true;
-
+                if ($days <= 1) {
+                    $can_edit = true;
+                }
                 $notas = [
                     "nota_conocimiento" => number_format($nota_final['nota_conocimiento']['nota'], 1, '.', '.'),
                     "nota_conocimientoid" => $nota_final['nota_conocimiento']['id'],
@@ -255,7 +260,7 @@ class NotaController extends Controller
                     'nota_concepto' => $nota_final['nota_concepto']['nota'],
                     'nota_conceptoid' => $nota_final['nota_concepto']['id'],
                     "nota_final" => number_format($nota_final['nota_final']['nota'], 1, '.', '.'),
-                    "can_edit" => $can_edit,
+                    "can_edit" =>  $can_edit,
                     "encontrado" => true,
                     "segmento" => $nota_final['segmento'],
                     "periodo" => $nota_final['nota_aplicacion']['periodo'],

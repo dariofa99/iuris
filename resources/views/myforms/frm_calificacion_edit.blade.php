@@ -139,15 +139,15 @@
                         currentUser()->hasRole('diradmin'))
                 <div class="col-md-12">
                     <div class="btn-group">
-                        <button style="display:none" type="submit" class="btn btn-success btn-sm mb-1"
+                        <button  type="submit" class="btn btn-success btn-sm mb-1"
                             id="btn_update_notas">Actualizar</button>
                     </div>
 
                     <div class="btn-group">
-                        <a style="display:none" class="btn btn-warning btn-sm mb-1" id="btn_cancelar_notas">X</a>
+                        <a  class="btn btn-warning btn-sm mb-1" id="btn_cancelar_notas">X</a>
                     </div>
 
-                    @if ($expediente->expestado_id != '5' and $expediente->expestado_id != '2')
+                    @if ($expediente->expestado_id == '2')
                         <div class="btn-group">
                             <a class="btn btn-primary btn-sm mb-1" id="btn_cambiar_notas">
                                 Cambiar notas
@@ -156,13 +156,13 @@
                     @endif
                     @if ($expediente->expestado_id == '4')
                         <div class="btn-group">
-                            <a href="#" style="display:none" class="btn btn-warning btn-sm mb-1" data-value=""
+                            <a href="#"  class="btn btn-warning btn-sm mb-1" data-value=""
                                 id="btn_tipo_update">
                                 Cambiar notas a:
                             </a>
                         </div>
                     @endif
-                    @if ($expediente->expestado_id != '2' and $expediente->expestado_id != '5')
+                    @if ($expediente->expestado_id == '2')
                         <div class="btn-group">
                             <a class="btn btn-danger btn-sm mb-1" id="btn_delete_notas">
                                 Eliminar las notas 

@@ -833,7 +833,7 @@ class Expediente extends Model
             ->where('sg.sede_id', session('sede')->id_sede)
             ->where('perid', $periodo->periodo_id)
             ->get();
-        $notas = [];
+        $notas = []; 
         //  dd($segmentos);
         foreach ($segmentos as $key => $segmento) {
             //dd($segmento);

@@ -3580,20 +3580,23 @@ function lleFormEditNotas(res, origen, tbl_id) {
         var tipo_id = res.tipo_id == "1" ? "2" : "1";
 
         if (res.can_edit) {
-            if (origen == 1 && $("#expestado_id").val() == "4") {
+             
+          
+          //  if (origen == 1 && $("#expestado_id").val() == "2") {
                 $("#btn_tipo_update").attr("data-value", tipo_id);
                 $("#btn_tipo_update").show();
                 $("#btn_tipo_update").attr(
                     "id",
                     "btn_tipo_nota_update"
                 );
-            }
+        //    }
 
             $("#myModal_edit_notas #btns_edit_notas").show();
             $("#btn_cambiar").attr("id", "btn_cambiar_notas");
             $("#btn_delete").attr("id", "btn_delete_notas");
             $("#btn_update").attr("id", "btn_update_notas");
         } else {
+             $("#myModal_edit_notas #btns_edit_notas").remove();
             $("#btn_cambiar_notas").attr("id", "btn_cambiar");
             $("#btn_delete_notas").attr("id", "btn_delete");
             $("#btn_update_notas").attr("id", "btn_update");

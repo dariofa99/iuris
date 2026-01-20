@@ -497,7 +497,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             //Si no se creo ni en vacaciones ni pausas                
             $dias_pausado_1 = $this->getDaysForEval2($fecha_1, $fecha_2, $asignacion);
 
-            $dias_pausado = getDiffDays($fecha_1, $fecha_2);
+            $dias_pausado = getDiffDays($fecha_1, $fecha_2) - 1;
             $total = $dias_pausado - $dias_pausado_1;
 
            // dd($dias_pausado_1, $dias_pausado,$total,$fecha_1, $fecha_2);
@@ -510,21 +510,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             $total = $dias_pausado - $dias_pausado_1;
            // Log::info(" * $fecha_1");
         }
-        $dias_v = 0;
-        if (count($_hubovacaciones) > 0) {
-
-            foreach ($_hubovacaciones as $key => $_hubovacacion) {
-                $dias_v .= getDiffDays($_hubovacacion->fecha_inicio, $_hubovacacion->fecha_fin);
-            }
-            //
-        }
-        //}
-        $dias_pausado = getDiffDays($fecha_1, $fecha_2);
-        //dd($dias_pausado_1, $dias_v, "jfjfjf");
-        return [
-            'dias_pausado' => $dias_pausado,
-            'fecha_inicial' => $fecha_2
-        ];;
+     
     }
 
 
@@ -652,36 +638,6 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             // dd($days_pausado_, $_vacaciones,$days_pausado); 
             return $days_pausado + $days_pausado_;
 
-            dd($pausas, $_vacaciones, $days_pausado, $days_pausado_);
-
-            if (count($pausas) > 0) {
-                //evaluar si hubieron vacaciones
-
-                //evaluar si las vacaciones se dieron mientras estaba pausado
-                if (count($_vacaciones) > 0) {
-
-
-                    $days_pausado += $this->pausaService->getDays($pausas);
-                } else {
-                    //no hay vacaciones
-                    //foreach ($pausas as $key => $pausa) {
-                    $days_pausado += $this->pausaService->getDays($pausas);
-                    // }
-
-
-                }
-            } else {
-                //no hay pausas
-                //Se evalua si hay vacaciones
-                if ($_vacaciones) {
-                    $days_pausado += $this->vacacionesService->getDays($_vacaciones);
-                }
-                //dd($days_pausado,$pausas);           
-            }
-            $totls = $dias_sin_hechos;
-            $dias_sin_hechos = $dias_sin_hechos - $days_pausado;
-            dd($days_pausado, $totls, $dias_sin_hechos, $_vacaciones, $pausas, $fecha_1, $fecha_2);
-            return $dias_sin_hechos;
             //
         }
     }
