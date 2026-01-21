@@ -1144,6 +1144,10 @@ class Expediente extends Model
         $asignacion = $this->asignacion;
         $fecha_1 = Carbon::parse($asignacion->fecha_asig);
 
+        if (!$asignacion || $asignacion == null) {
+            return "Error: No tiene asignación activa.";
+        }
+
         if (($act) and $asignacion) {
             if ($asignacion->fecha_eva != null and $asignacion->fecha_eva  > $act->actfecha) {
                 $fecha_1 = Carbon::parse($asignacion->fecha_eva);
@@ -1199,8 +1203,9 @@ class Expediente extends Model
             }
         } elseif (count($_vacaciones) > 0) {
             $fecha_1 = Carbon::parse($_vacaciones[0]->fecha_fin);
-            //validar si la fecha final de vacaciones esta en pausa
-            $_pausas_2 = $this->pausasService()->getByDates([
+            //validar si la fecha final de vacaciones esta en pausa+
+            // dd( $_vacaciones, $fecha_1);
+            $_pausas_2 = $this->pausasService()->getByAsignacion($asignacion, [
                 ['operador' => "<=", "value" => $fecha_1],
                 ['operador' => ">=", "value" => $fecha_1]
             ]);
