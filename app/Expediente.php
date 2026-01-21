@@ -833,7 +833,7 @@ class Expediente extends Model
             ->where('sg.sede_id', session('sede')->id_sede)
             ->where('perid', $periodo->periodo_id)
             ->get();
-        $notas = []; 
+        $notas = [];
         //  dd($segmentos);
         foreach ($segmentos as $key => $segmento) {
             //dd($segmento);
@@ -1183,7 +1183,7 @@ class Expediente extends Model
         ]);
 
 
-        //dd($_vacaciones,$fecha_1);
+
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
 
@@ -1199,13 +1199,31 @@ class Expediente extends Model
             }
         } elseif (count($_vacaciones) > 0) {
             $fecha_1 = Carbon::parse($_vacaciones[0]->fecha_fin);
+            //validar si la fecha final de vacaciones esta en pausa
+            $_pausas_2 = $this->pausasService()->getByDates([
+                ['operador' => "<=", "value" => $fecha_1],
+                ['operador' => ">=", "value" => $fecha_1]
+            ]);
+
+            if (count($_pausas_2) > 0) {
+                $fecha_1 = Carbon::parse($_pausas_2[0]->fecha_final);
+                $fecha_1 = $fecha_1->addDay();
+            }
         } elseif (count($pausas) > 0) {
             $fecha_1 = Carbon::parse($pausas[0]->fecha_final);
+            //validar si la fecha final de pausa esta en vacaciones
+            $_vacaciones_2 = $this->vacacionesService()->getByDates([
+                ['operador' => "<=", "value" => $fecha_1],
+                ['operador' => ">=", "value" => $fecha_1]
+            ]);
+            if (count($_vacaciones_2) > 0) {
+                $fecha_1 = Carbon::parse($_vacaciones_2[0]->fecha_fin);
+                $fecha_1 = $fecha_1->addDay();
+            }
         }
         $fecha_2 = Carbon::now();
         $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
         if ($evaluar['dias_pausado'] > 30) {
-           
             $segmento = $this->getSegmentoActivo();
             $fecha_eva = $this->getExpedienteService()->calcularDias($fecha_1, $fecha_2, $asignacion);
             $expediente = $this;
@@ -1218,131 +1236,6 @@ class Expediente extends Model
             return $evaluar['dias_pausado'];
         }
         return $evaluar['dias_pausado'];
-
-
-        $act = $this->actuacion()
-            ->where(['actusercreated' => $this->expidnumberest])
-            ->where(function ($q) {
-                $q->orwhere('actestado_id', '=', 101)
-                    ->orwhere('actestado_id', '=', 102)
-                    ->orwhere('actestado_id', '=', 138)
-                    ->orwhere('actestado_id', '=', 139)
-                    ->orwhere('actestado_id', '=', 104);
-            })
-            ->orderBy('actuacions.actfecha', 'desc')->first();
-        $color = 'green';
-        $dias = 0;
-        $periodo = $this->getPeriodoActivo();
-        $periodo->prdfecha_inicio = date("2025-08-03");
-        $now = Carbon::now();
-        $estamosVacaciones = DB::table("vacaciones_periodo")
-            ->whereDate('fecha_inicio', '<=', $now)
-            ->whereDate('fecha_fin', '>=', $now)
-            ->where("periodo_id", $periodo->id)
-            ->orderBy('created_at', 'desc')->first();
-        $asignacion = $this->asignacion;
-        if ($estamosVacaciones) {
-            if ($act and ($act->actfecha < $estamosVacaciones->fecha_inicio)) {
-                $dias = $this->difDays($act->actfecha, $estamosVacaciones->fecha_inicio);
-                $text =  "<b>Periodo de vacaciones activo. Días: $dias</b>";
-            } else if ($act) {
-                $text =  "<b>Periodo de vacaciones activo</b>";
-            } else {
-                $asig = $this->getAsignacion();
-                $dias = $this->difDays($asig->fecha_asig, $estamosVacaciones->fecha_inicio);
-                $text = "Periodo de vacaciones activo. Días: " . $dias;
-            }
-            return $text;
-        } else if ($pausa) {
-            if ($act and ($act->actfecha > $pausa->fecha_final)) {
-                $dias = $this->difDays($act->actfecha, date('Y-m-d'));
-                $text =  "<b>Días transcurridos desde última actuación:</b>";
-            } elseif ($pausa->fecha_final <= $periodo->prdfecha_inicio) {
-                $dias = $this->difDays($periodo->prdfecha_inicio, date('Y-m-d'));
-                $text =  "<b>Días transcurridos desde inicio de corte:</b>";
-            } else {
-                $dias = $this->difDays($pausa->fecha_final, date('Y-m-d'));
-                $text =  "<b>Días transcurridos desde final de pausa:</b>";
-            }
-        } else {
-            if ($act) {
-
-                $huboVacaciones = DB::table("vacaciones_periodo")
-                    ->whereDate('fecha_inicio', '>=', $act->actfecha)
-                    ->whereDate('fecha_fin', '<=', $now)
-                    ->where("periodo_id", $periodo->id)
-                    ->orderBy('created_at', 'desc')->get();
-                $dias_v = 0;
-                if (count($huboVacaciones) > 0) {
-                    foreach ($huboVacaciones as $key => $vacacion) {
-                        $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
-                    }
-                    $dias = $this->difDays($act->actfecha, date('Y-m-d')) - $dias_v;
-                } else {
-                    $hizoEnVacaciones = DB::table("vacaciones_periodo")
-                        ->whereDate('fecha_inicio', '<=', $act->actfecha)
-                        ->whereDate('fecha_fin', '>=', $act->actfecha)
-                        ->where("periodo_id", $periodo->id)
-                        ->orderBy('created_at', 'desc')->first();
-                    if (($hizoEnVacaciones)) {
-                        $dias = $this->difDays($hizoEnVacaciones->fecha_fin, date('Y-m-d'));
-                    } else {
-
-                        if ($act->actfecha < $periodo->prdfecha_inicio) {
-                            $dias = $this->difDays($periodo->prdfecha_inicio, date('Y-m-d'));
-                            $text =  "<b>Días transcurridos desde inicio de corte:</b>";
-                        } else {
-                            if ($asignacion->fecha_asig > $act->actfecha) {
-                                $dias = $this->difDays($asignacion->fecha_asig, date('Y-m-d'));
-                                $text =  "<b>Días transcurridos desde asignación:</b>";
-                            } else {
-                                $dias = $this->difDays($act->actfecha, date('Y-m-d'));
-                                $text =  "<b>Días transcurridos desde última actuación:</b>";
-                            }
-                        }
-                    }
-                }
-            } else {
-
-
-                $huboVacaciones = DB::table("vacaciones_periodo")
-                    ->whereDate('fecha_inicio', '>=', $asignacion->fecha_asig)
-                    ->whereDate('fecha_fin', '<=', $now)
-                    ->where("periodo_id", $periodo->id)
-                    ->orderBy('created_at', 'desc')->get();
-
-                if ($huboVacaciones) {
-                    $dias_v = 0;
-                    foreach ($huboVacaciones as $key => $vacacion) {
-                        $dias_v += $this->difDays($vacacion->fecha_inicio, $vacacion->fecha_fin);
-                    }
-                }
-                $pausa = ExpedientePausas::with("asignacion")
-                    ->whereHas("asignacion", function ($query) {
-                        $query->where('asigexp_id', $this->expid);
-                    })->orderBy('expedientes_pausa.created_at', 'desc')
-                    ->first();
-
-                if ($pausa) {
-                    $dias = $this->difDays(date("2024-09-02"), now());
-                    $text =  "<b>Días transcurridos desde fin de pausa:</b> ";
-                } else {
-                    $dias = $this->getDaysAfterAsig() - $dias_v;
-                    if ($asignacion->periodo_id != $periodo->id) {
-                        $dias = $this->difDays(date("2024-08-26"), now());
-                        $text =  "<b>Días transcurridos desde inicio de corte:</b>";
-                    } else {
-                        // $dias = $this->difDays(date("2024-08-02"), now());
-                        $dias = $this->getDaysAfterAsig() - $dias_v;
-                        $text =  "<b>Días transcurridos desde la asignación:</b>";
-                    }
-                }
-            }
-        }
-        if ($dias > 10) $color = 'orange';
-        if ($dias > 20) $color = 'red';
-        $text .=  " <span style='background-color:$color;color:#ffffff' class='pull-center badge'>$dias</span>";
-        return $text;
     }
 
 
