@@ -1199,7 +1199,7 @@ class ExpedienteController extends Controller
     $historial->each(function ($item) use ($fecha_inicio) {
       $item->name = $item->estudiante->name;
       $item->lastname = $item->estudiante->lastname;
-      $item->afterdays = getDiffDays($fecha_inicio, $item->created_at);
+      $item->afterdays = getDiffDays($fecha_inicio, $item->created_at) - 1;
     });
 
     $historialOld = $expediente->historialHechosRespuesta()

@@ -14,7 +14,7 @@ class PausasRepository extends BaseRepository implements PausasService
 	public function __construct(ExpedientePausas $model)
 	{
 		parent::__construct($model);
-	}
+	} 
 
 	public function getByAsignacion($asignacion, $request)
 	{

@@ -1026,6 +1026,7 @@ class Expediente extends Model
 
             $fecha_2 = Carbon::parse($historial->created_at)->endOfDay();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
+            //  dd($evaluar);
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
                 $segmento = $this->getSegmentoActivo();
                 $expediente = $this;
@@ -1043,12 +1044,12 @@ class Expediente extends Model
             //$fecha_1 = $this->getDaysAfterAsig();; // Carbon::parse($asignacion->fecha_asig);
             $fecha_2 = Carbon::now();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
-
+            //dd($evaluar);
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
 
                 $segmento = $this->getSegmentoActivo();
                 $expediente = $this;
-                $message = "No tiene hechos requeridos en más 5 días, requeridos a lo largo del corte.";
+                $message = "No tiene hechos requeridos en más 5 días, despues de la asignación.";
                 $docente_id = Auth::user()->idnumber;
                 $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
                 $asignacion->evaluado_hechos = 1;

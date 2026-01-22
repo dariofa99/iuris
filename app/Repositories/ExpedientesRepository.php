@@ -422,13 +422,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $_vacaciones = $this->vacacionesService->getByDates([
             ['operador' => "<=", "value" => $fecha_2],
             ['operador' => ">=", "value" => $fecha_2]
-        ]);
-
-        $_hubovacaciones = $this->vacacionesService->getByDates([
-            ['operador' => ">=", "value" => $fecha_1],
-            ['operador' => "<=", "value" => $fecha_2]
-        ]);
-
+        ]);   
 
         //Evaluar si se realizo en pausa
         $pausas = $this->pausaService->getByAsignacion($asignacion, [
@@ -505,7 +499,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             return [
                 'dias_pausado' => $total,
                 'fecha_inicial' => $fecha_1,
-                //'fecha_iniciales' => $fecha_2
+                'fecha_iniciales' => $fecha_2
             ];
             $total = $dias_pausado - $dias_pausado_1;
            // Log::info(" * $fecha_1");
