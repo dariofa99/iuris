@@ -78,7 +78,9 @@
                     <li
                         class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                             'menu-open' }}">
-                        @if (config('app.name') != 'ConciliApp' and !currentUser()->hasRole('visitante_conciliacion') and !currentUser()->hasRole('solicitante'))
+                        @if (config('app.name') != 'ConciliApp' and
+                                !currentUser()->hasRole('visitante_conciliacion') and
+                                !currentUser()->hasRole('solicitante'))
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-folder"></i>
                                 <p>
@@ -215,9 +217,18 @@
                                 <li class="nav-item ml-3">
                                     <a href="{{ url('/conciliaciones') }}" class="nav-link">
 
-                                        <p> {{ currentUser()->hasRole('solicitante') ? 'Ver/Crear conciliaciones' : 'Listar conciliaciones' }}</p>
+                                        <p> {{ currentUser()->hasRole('solicitante') ? 'Ver/Crear conciliaciones' : 'Listar conciliaciones' }}
+                                        </p>
                                     </a>
                                 </li>
+                                <li class="nav-item ml-3">
+                                    <a href="{{ route('reparto.index') }}" class="nav-link">
+
+                                        <p> Reparto
+                                        </p>
+                                    </a>
+                                </li>
+
                                 @if (currentUser()->can('admin_actasandmail') || currentUser()->hasRole('visitante_conciliacion'))
                                     <li class="nav-item ml-3">
                                         <a href="{{ route('reportes.create') }}" class="nav-link">
@@ -428,26 +439,26 @@
                         </li>
                     @endif
 
-                     
-                        <li
-                            class="nav-item has-treeview {{ (!Route::is('periodos.index') and !Route::is('segmentos.index')) ?: 'menu-open' }}">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-comment-dots"></i>
-                                <p>
-                                    Incidencias
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('incidencias.index') }}" class="nav-link">
-                                        <p>Solicitar atención</p>
-                                    </a>
-                                </li>
-                              
-                            </ul>
-                        </li>
-                  
+
+                    <li
+                        class="nav-item has-treeview {{ (!Route::is('periodos.index') and !Route::is('segmentos.index')) ?: 'menu-open' }}">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-comment-dots"></i>
+                            <p>
+                                Incidencias
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('incidencias.index') }}" class="nav-link">
+                                    <p>Solicitar atención</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
 
 
                 </ul>

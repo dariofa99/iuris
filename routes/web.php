@@ -336,7 +336,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('reqpdfgen/{id}',  'RequerimientoController@reqpdfgen');
     Route::post('requerimientos/update/{id}',  'RequerimientoController@updateReq');
 
-
+  //reparto conciliaciones
+  Route::resource('conciliaciones/reparto', 'RepartoConciliacionController');
 
 
     //notas // Calificaciones

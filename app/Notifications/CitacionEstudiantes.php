@@ -20,7 +20,7 @@ class CitacionEstudiantes extends Notification
     public function __construct()
     {
         //
-        
+
     }
 
     /**
@@ -31,7 +31,7 @@ class CitacionEstudiantes extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -42,12 +42,11 @@ class CitacionEstudiantes extends Notification
      */
     public function toMail($notifiable)
     {
-      
-        return (new Mailable($notifiable))
-        ->subject('Citación estudiantes')
-        ->to($notifiable->to)
-        ->cc($notifiable->cc);
 
+        return (new Mailable($notifiable))
+            ->subject('Citación estudiantes')
+            ->to($notifiable->to)
+            ->cc($notifiable->cc);
     }
 
     /**
@@ -58,13 +57,13 @@ class CitacionEstudiantes extends Notification
      */
     public function toDatabase($notifiable)
     {
-      
+
         return [
-                       'type_notification'=>'Citación',          
-           'message'=>'Citación de '.$notifiable->docente_fullname.' Exp: '.$notifiable->expid,
-           'url'=>'/expedientes/'.$notifiable->expid.'/edit',
-           'created_at'=>date("Y-m-d H:i:s"),
-           'icon'=>'fas fa-user'
+            'type_notification' => 'Citación',
+            'message' => 'Citación de ' . $notifiable->docente_fullname . ' Exp: ' . $notifiable->expid,
+            'url' => '/expedientes/' . $notifiable->expid . '/edit',
+            'created_at' => date("Y-m-d H:i:s"),
+            'icon' => 'fas fa-user'
 
 
         ];

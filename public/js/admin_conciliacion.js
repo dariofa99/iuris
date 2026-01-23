@@ -123,9 +123,9 @@ $(document).ready(function () {
         var request = {
           estado_id: 240,
           solicitante_id: auth_user.id,
-          mail_solicitante: auth_user.email
-        }
-        console.log(auth_user, request);
+          mail_solicitante: auth_user.email,
+          categoria_id: 219
+        }      
         let response = await conciliacionService.registrar_conciliacion(request);
 
         $("#wait").show();

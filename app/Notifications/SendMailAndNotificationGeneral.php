@@ -74,7 +74,7 @@ class SendMailAndNotificationGeneral extends Notification
     {
         return [
             'type_notification' => $this->subject,
-            'message' => substr($this->concepto, 0, 60) . '...',
+            'message' => $this->concepto,
             'url' => $this->url != null ? url($this->url) : "#",
             'created_at' => date("Y-m-d H:i:s"),
             'icon' => 'fas fa-user'

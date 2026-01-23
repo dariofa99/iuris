@@ -402,7 +402,7 @@ class ConciliacionesController extends Controller
                 }
             }
             if ($request->has("send_notification")) {
-                Mail::to("solicitudesconciliacion@udenar.edu.co")->send(new RegConciliacionStart($conciliacion)); 
+                //Mail::to("solicitudesconciliacion@udenar.edu.co")->send(new RegConciliacionStart($conciliacion)); 
                 $users = $this->userService->getUsersByPermissionName('recibir_correos_conciliacion_r');
                 ProcessEmailSendSummernoteNotification::dispatch(
                     $users,
@@ -465,6 +465,7 @@ class ConciliacionesController extends Controller
 
         $view = view('myforms.conciliaciones.componentes.conciliacion_estados_ajax', compact('conciliacion'))->render();
         return response()->json([
+            'users' => $users,  
             'view' => $view
         ]);
         return response()->json($request->all());
