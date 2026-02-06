@@ -3,35 +3,63 @@ import { ExpedientesService } from './services/expedientes.js';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {
-    $(".btn_eliminar_notas_ver").on("click",function (e) {
-        e.preventDefault();
-        var id = $(this).attr("data-id");
-        $("#btn_delete_notas_ver-"+id).show();
-        $("#btn_cancel_notas_ver-"+id).show();
-        $(this).hide();
+    $('[data-toggle="collapse"]').click(function () {
+        var target = $(this).data('target');
+        var icon = $(this).find('.toggle-icon');
 
-        $(".chk_notas-"+id).prop("checked",true).prop("disabled",false).attr("type","checkbox")
+        if ($(target).hasClass('show')) {
+            icon.removeClass('fa-chevron-down').addClass('fa-chevron-right');
+        } else {
+            icon.removeClass('fa-chevron-right').addClass('fa-chevron-down');
+        }
     });
 
-    $(".btn_cancel_notas_ver").on("click",function (e) {
+    // Mostrar modal de confirmación en lugar de alerta
+    $('.btn_eliminar_notas_ver').click(function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        $('#confirmationPanel-' + id).modal('show');
+    });
+
+    // Cerrar modal al cancelar
+    $('.btn_cancel_notas_ver').click(function () {
+        var id = $(this).data('id');
+        $('#confirmationPanel-' + id).modal('hide');
+    });
+
+    // Animación de entrada
+    $('.animated').each(function (index) {
+        $(this).css('animation-delay', (index * 0.1) + 's');
+    });
+    $(".btn_eliminar_notas_ver").on("click", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("data-id");
+        $("#btn_delete_notas_ver-" + id).show();
+        $("#btn_cancel_notas_ver-" + id).show();
+        $(this).hide();
+
+        $(".chk_notas-" + id).prop("checked", true).prop("disabled", false).attr("type", "checkbox")
+    });
+
+    $(".btn_cancel_notas_ver").on("click", function (e) {
         e.preventDefault();
         var id = $(this).attr("data-id");
         $(".btn_delete_notas_ver").hide();
         $(".btn_cancel_notas_ver").hide();
         $(".btn_eliminar_notas_ver").show();
-        $(".chk_notas-"+id).prop("checked",false).prop("disabled",true).attr("type","hidden")
+        $(".chk_notas-" + id).prop("checked", false).prop("disabled", true).attr("type", "hidden")
     });
 
-    $(".btn_delete_notas_ver").on("click",async function (e) {
+    $(".btn_delete_notas_ver").on("click", async function (e) {
         e.preventDefault();
         var id = $(this).attr("data-id");
         var data = [];
-        $(".chk_notas-"+id).each((key, element) => {
-            if($(element).is(":checked")){
+        $(".chk_notas-" + id).each((key, element) => {
+            if ($(element).is(":checked")) {
                 data.push($(element).val())
             }
         });
-        if(data.length>0){
+        if (data.length > 0) {
             Swal.fire({
                 title: 'Esta seguro de eliminar las notas del caso?',
                 icon: 'warning',
@@ -51,16 +79,16 @@ $(document).ready(function () {
                         timeOut: "4000",
                     });
                     window.location.reload(true);
-                  
+
                 }
             });
-            
-        }else{
+
+        } else {
             toastr.error("Debe seleccionar al menos una nota", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
         }
-        
+
     });
 });//////////////////////////////////////////////

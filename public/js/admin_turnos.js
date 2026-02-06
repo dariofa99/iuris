@@ -380,8 +380,9 @@ async function getAsistenciaReport(request = {}) {
 				'<td>' + value.name + ' ' + value.lastname + '</td>' +
 				'<td>' + value.ref_nombre + '</td>' +
 				'<td>' + value.asistencia + '</td>' +
-				'<td>' + parseInt(parseInt(value.falta_doble * 2) + parseInt(value.falta_simple)) + '</td>' +
+				'<td>' + parseInt(value.total_faltas) + '</td>' +
 				'<td>' + value.reposicion + '</td>' +
+				'<td>' + value.nota_proporcional + '</td>' +
 				'<td><button type="button" class="btn btn-success btn-sm btn_det_rasis" data-idnumber=' + value.idnumber + ' id="dt_rasis-' + value.idnumber + '" name="' + value.name + ' ' + value.lastname + '">Detalles</button></td>' +
 				'</tr>';
 		});

@@ -16,6 +16,8 @@ class ReferencesDataController extends Controller
         ReferencesDataService $referencesDataService
     ) {
         $this->referencesDataService = $referencesDataService;
+        $this->middleware('auth', ['except' => ['getByRefDataFilter']]);
+         $this->middleware('permission:ver_administracion');
     }
 
     /**
@@ -23,15 +25,15 @@ class ReferencesDataController extends Controller
      *  
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = $this->getCategories();
+        $categories = $this->getCategories($request);
         return view('myforms.categorias.index', compact('categories'));
     }
 
-    private function getCategories()
+    private function getCategories($request)
     {
-        return $categories = ReferencesData::orderBy('categories', 'asc')->get();
+        return $categories = ReferencesData::SearchCategory($request)->orderBy('created_at', 'desc')->paginate(10);
     }
 
     /**
@@ -52,9 +54,9 @@ class ReferencesDataController extends Controller
      */
     public function store(Request $request)
     {
-        //return response()->json("esste");
+       // return response()->json($request->all());
         $this->guardar($request);
-        $categories = $this->getCategories();
+        $categories = $this->getCategories($request);
         $view =  view('myforms.categorias.partials.ajax.index', compact('categories'))->render();
         $response = [];
         $response['render_view'] = $view;
@@ -110,7 +112,8 @@ class ReferencesDataController extends Controller
                     ->insert([
                         'value' => $option,
                         'references_data_id' => $referencia->id,
-                        'active_other_input' => $request->active_other_input[$key]
+                        'active_other_input' => $request->active_other_input[$key],
+                        'other_input_label' => $request->other_input_label[$key]
                     ]);
             }
         } else {
@@ -118,7 +121,8 @@ class ReferencesDataController extends Controller
                 ->insert([
                     'value' => $request->name,
                     'references_data_id' => $referencia->id,
-                    'active_other_input' => 0
+                    'active_other_input' => 0,
+                    'other_input_label' => ''
                 ]);
         }
         if ($request->table == 'conciliacion') {
@@ -161,12 +165,12 @@ class ReferencesDataController extends Controller
     {
 
 
-        // return response()->json($items_deleted); 
+       //  return response()->json($request->all()); 
         $request['categories'] = $request->table;
         $referencia = ReferencesData::find($id);
         $older_type_data = $referencia->type_data_id;
         $referencia->fill($request->all());
-        $referencia->save();
+        $referencia->save(); 
         $referencia->options;
         $items_deleted = json_decode($request->items_deleted);
         if (count($items_deleted) > 0) {
@@ -184,6 +188,7 @@ class ReferencesDataController extends Controller
                     if ($option_o) {
                         $option_o->value = $option;
                         $option_o->active_other_input = $request->active_other_input[$key];
+                        $option_o->other_input_label = $request->other_input_label[$key];
                         $option_o->save();
                     }
                 } else {
@@ -191,7 +196,8 @@ class ReferencesDataController extends Controller
                         ->insert([
                             'value' => $option,
                             'references_data_id' => $referencia->id,
-                            'active_other_input' => $request->active_other_input[$key]
+                            'active_other_input' => $request->active_other_input[$key],
+                            'other_input_label' => $request->other_input_label[$key]
                         ]);
                 }
             }
@@ -202,7 +208,8 @@ class ReferencesDataController extends Controller
                     ->insert([
                         'value' => $request->name,
                         'references_data_id' => $referencia->id,
-                        'active_other_input' => 0
+                        'active_other_input' => 0,
+                        'other_input_label' => '',
                     ]);
             } else {
                 $insert = DB::table("references_data_options")
@@ -210,7 +217,8 @@ class ReferencesDataController extends Controller
                     ->update([
                         'value' => $request->display_name,
                         'references_data_id' => $referencia->id,
-                        'active_other_input' => 0
+                        'active_other_input' => 0,
+                        'other_input_label' => '',
                     ]);
             }
         }
@@ -225,8 +233,8 @@ class ReferencesDataController extends Controller
             }
         }
 
-        $categories = $this->getCategories();
-        $view =  view('myforms.categories.partials.ajax.index', compact('categories'))->render();
+        $categories = $this->getCategories($request);
+        $view =  view('myforms.categorias.partials.ajax.index', compact('categories'))->render();
         $response = [];
         $response['render_view'] = $view;
         return response()->json($response);

@@ -613,7 +613,9 @@ Route::get('/prueba/filter/{id}', 'ExpedienteController@prueba');
 
 Route::get('/prueba', function () {
 
-  $expediente = Expediente::where('expid', 'PRF-80522-2023-42933')->first();
+  $expediente = DB::table('asistencia')
+  ->whereDate('asistencia.astfecha', Carbon::now()->format('Y-m-d'))
+  ->get();
 
   // $expediente->setNotActLimit();
 

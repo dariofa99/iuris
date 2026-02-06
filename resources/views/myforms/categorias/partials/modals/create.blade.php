@@ -1,5 +1,4 @@
 @component('components.modal')
-
     @slot('trigger')
         myModal_create_category
     @endslot
@@ -33,13 +32,13 @@
                     <option value="conciliaciones">Conciliaciones</option>
                     <option value="pdf_reportes">Reportes pdf</option>
                     <option value="conc_encuesta_satisf">Encuesta de satisfacción (conciliaciones)</option>
-                </select> 
+                </select>
             </div>
 
             <div class="form-group content_section" id="content_section" style="display: none">
                 <label for="description">Insertar campo en</label>
                 <select disabled style="width: 100%" required name="section" id="section_c" class="form-control">
-                    <option value="">Seleccione...</option>                    
+                    <option value="">Seleccione...</option>
                 </select>
             </div>
             <div class="form-group">
@@ -53,6 +52,20 @@
                     @endforelse
                 </select>
             </div>
+
+            <div class="form-group modern-switch">
+                <input type="hidden" name="required" value="0">
+                <label for="required" class="switch-label">
+                    Es obligatorio
+                </label>
+
+                <label class="switch">
+                    <input type="checkbox" name="required" id="required" value="1">
+                    <span class="slider"></span>
+                </label>
+
+            </div>
+
 
             <div class="adoptions adoptions_g" id="content_aditional_options" style="display: none">
                 <table id="aditional_options_table" class="table">

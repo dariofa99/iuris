@@ -207,5 +207,5 @@
     <script src="{{ asset('/plugins/dropzone59/dropzone59.js') }}"></script>
     <script src={{ asset('js/dropzone_anexos.js') }}></script>
 
-    <script type="module" src={{ asset('js/recepcion_conciliacion.js') }}></script>
+    <script type="module" src={{ asset('js/recepcion_conciliacion.js?v=' . config('app_config.asset_version')) }}></script>
 @endpush

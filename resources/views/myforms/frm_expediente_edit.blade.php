@@ -7,7 +7,7 @@
     <style>
 
     </style>
-@endpush
+@endpush 
 
 @section('navbar')
     <!-- aqui va el menu de cada vista -->

@@ -7,8 +7,8 @@ $(document).ready(function () {
   $(".select2_ramas").selectpicker();
   $(".select2_ramas").selectpicker("refresh");
   $("#myFormUserEdit input[name='idnumber']").prop("disabled", true).removeAttr('name');
- 
-   $("#myFormUserEdit")
+
+  $("#myFormUserEdit")
     .on("change", "select[name='pbepersondiscap']", function (e) {
       if ($(this).val() == 1) {
         mostrarCompDiscapUser('myFormUserEdit')
@@ -20,18 +20,18 @@ $(document).ready(function () {
   $("#table_list_model").on("click", ".btn_switch_estdoc", async function (e) {
     e.preventDefault();
     var id = $(this).attr("id");
-    var email = $("#useremail-"+id).text().trim();
+    var email = $("#useremail-" + id).text().trim();
     var estado = $(this).attr('data-estado') == 0 ? 1 : 0;
     let request = {
-      'id':id,
-      'active':estado,
-      'email':email
+      'id': id,
+      'active': estado,
+      'email': email
     }
     $("#wait").show();
     let response = await userService.update(request);
-    var path = window.location.href;  
+    var path = window.location.href;
     await index_pagination(path);
-    toastr.success("Usuario actualizado con éxito", "", {      
+    toastr.success("Usuario actualizado con éxito", "", {
       timeOut: "4000",
     });
     $("#wait").hide()
@@ -197,7 +197,7 @@ $(document).ready(function () {
 
     if (errors.length <= 0) {
       var request = convertFormToJSON("myFormChangeEmailAccount");
-      
+
       $("#wait").show();
       let response = await userService.updateEmail(request);
       if (response.errors) {
@@ -219,14 +219,14 @@ $(document).ready(function () {
           allowEscapeKey: false, // Permitir escape para cerrar el modal
           backdrop: true // Mostrar el backdrop (fondo sombreado)
 
-      }).then((result) => {
+        }).then((result) => {
           if (result.value) {
-              // console.log(response);
-              window.location = "/login";
+            // console.log(response);
+            window.location = "/login";
           }
-      });
+        });
       }
-     // window.location.reload();
+      // window.location.reload();
     } else {
       toastr.error("Revisa en los demas formularios que no hayan campos obligatorios sin registrar", "", {
         positionClass: "toast-top-right",
@@ -238,17 +238,53 @@ $(document).ready(function () {
 
   $("#btn_actualizar_usuario").on("click", async function (e) {
 
-    var errors = validateForm("myFormUserEdit");
+    //var errors = validateForm("myFormUserEdit");
+
+    const form = document.getElementById("myFormUserEdit");
+    if (!form) return;
+    var isvalid = validateForms(form);
+    if (isvalid) {
+      var request = convertFormToJSON("myFormUserEdit");
+      var data = userService.getAditionalDataByForm("myFormUserEdit")
+      request["data"] = (data);
+      $("#wait").show();
+      console.log(request);
+      let response = await userService.update(request);
+      if (response.errors) {
+        response.errors.forEach(error => {
+          toastr.error(error, "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+          });
+        });
+      } else {
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Cambios registrados exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+      window.location.reload();
+    } else {
+      toastr.error("Hay campos que son obligatorios", "Atención!", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+      form.reportValidity();
+    }
+    return;
 
     if (errors.length <= 0) {
       var request = convertFormToJSON("myFormUserEdit");
       var data = userService.getAditionalDataByForm('myFormUserEdit');
-      if(request.min_atencion && request.min_atencion > 40){
-         toastr.error("Los minutos de atención no deben ser superiores a 40", "Atención!", {
-            positionClass: "toast-top-right",
-            timeOut: "4000",
-          });
-          return;
+      if (request.min_atencion && request.min_atencion > 40) {
+        toastr.error("Los minutos de atención no deben ser superiores a 40", "Atención!", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+        });
+        return;
       }
       request["data"] = (data);
 

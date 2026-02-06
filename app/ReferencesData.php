@@ -15,7 +15,8 @@ class ReferencesData extends Model
     'table',
     'section',
     'is_visible',
-    'type_data_id'
+    'type_data_id',
+    'required'
 ];//que campos tiene la
 
 
@@ -39,6 +40,13 @@ class ReferencesData extends Model
     public function type()
     {
         return $this->belongsTo(TablaReferencia::class,'type_data_id');
+    }
+
+    function scopeSearchCategory($query, $request)
+    {
+        if($request->search_category){
+            return $query->where('name','like','%'.$request->search_category.'%');
+        }
     }
 
 }

@@ -341,7 +341,7 @@ class User extends Authenticatable
                         return $query->where('segid', $request->segid);
                     }
                 })
-                ->orderBy('notas_ext.created_at', 'desc')
+                ->orderBy('notas_ext.id', 'asc')
                 ->get();
         } else {
             $notas = $this->notas() 
@@ -364,15 +364,15 @@ class User extends Authenticatable
                         }
                     }
                 })
-                ->orderBy('notas.created_at', 'desc')
+                ->orderBy('notas.id', 'asc')
                 ->get();
         }
         $origen = [];
         if (count($notas) > 0) {
 
             foreach ($notas as $key => $nota) {
-                if (!isset($origen[$nota->tbl_org_id])) {
-                    $origen[$nota->tbl_org_id] = [];
+                if (!isset($origen[$nota->expidnumber])) {
+                    $origen[$nota->expidnumber] = [];
                 }
 
 
@@ -409,7 +409,7 @@ class User extends Authenticatable
                     $n_concepto[] =  $data;
                 }
 
-                ($origen[$nota->tbl_org_id][] = [
+                ($origen[$nota->expidnumber][] = [
                     'id' => $data['id'],
                     'nota' => $data['nota'],
                     'expediente' => $data['expediente'],

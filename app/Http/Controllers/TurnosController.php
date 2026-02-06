@@ -187,7 +187,7 @@ class TurnosController extends Controller
     public function destroy(Request $request, $id)
     {
         //return response()->json($request->all());
-        if(isset($request->inactivarEstudiante) and $request->inactivarEstudiante){
+        if (isset($request->inactivarEstudiante) and $request->inactivarEstudiante) {
             $user = User::where('id', $request->estudiante_id)->first();
             $user->active = false;
             $user->save();
@@ -283,38 +283,7 @@ class TurnosController extends Controller
     public function reporasistencia(Request $request)
     {
 
-        $periodo =  $this->periodosService->getPeriodoActivo();
-
-        $fecha = $periodo->prdfecha_inicio;
-
-        $rasistencia = DB::table('users')
-            ->leftjoin('asistencia',  'users.idnumber', '=', 'asistencia.astid_estudent')
-            ->join('referencias_tablas as ref', 'ref.id', '=', 'users.cursando_id')
-            ->join('role_user', 'users.id', '=', 'role_user.user_id')
-            ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
-            ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-            ->select(
-                'users.name',
-                'users.lastname',
-                'ref.ref_nombre',
-                DB::raw('SUM(IF(asistencia.astid_tip_asist = 121 OR asistencia.astid_tip_asist = 127 OR asistencia.astid_tip_asist = 128, 1, 0)) AS asistencia'),
-                DB::raw('SUM(IF(asistencia.astid_tip_asist = 122, 1, 0)) AS falta_simple'),
-                DB::raw('SUM(IF(asistencia.astid_tip_asist = 123 OR asistencia.astid_tip_asist = 126, 1, 0)) AS falta_doble'),
-                DB::raw('SUM(IF(asistencia.astid_tip_asist = 125, 1, 0)) AS reposicion'),
-                'users.idnumber'
-            )
-            ->where(function ($query) use ($request) {
-                if ($request->has('name') and $request->input('name') != '') {
-                    return $query->orWhere('users.lastname', 'like', "%{$request->name}%")
-                        ->orWhere('users.name', 'like', "%{$request->name}%");
-                }
-            })
-            ->where('users.active', true)
-            ->where('role_id', '6')
-            ->where('astfecha', '>=', $fecha)
-            ->where('sedes.id_sede', session('sede')->id_sede)
-            ->groupBy('users.idnumber')
-            ->get();
+        $rasistencia = $this->turnosService->getAsistencia($request);
         //dd($rasistencia);
         return response()->json(
 

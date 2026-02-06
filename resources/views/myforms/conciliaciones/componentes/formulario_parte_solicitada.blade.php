@@ -1,6 +1,6 @@
 <input type="hidden" name="id" value="{{ isset($user) ? $user->id : '' }}">
 
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group has-feedback">
         <label for="idnumber">Tipo de Persona<span class="ast_required">*</span></label>
         <select {{ $disabled }} required name="tipopers_id" id="tipopers_id"
@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group has-feedback"><label for="idnumber">Tipo documento<span class="ast_required">*</span></label>
         <select {{ $disabled }} name="tipodoc_id" id="tipodoc_id" class="form-control form-control-sm required"
             required>
@@ -26,19 +26,19 @@
         </select>
     </div>
 </div> 
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group">
         <label>
             No. Identificación<span class="ast_required">*</span>
         </label>
 
-        <input name="idnumber" {{ $disabled }} data-name="idnumber" required type="text"
+        <input required name="idnumber" {{ $disabled }} data-name="idnumber" type="text"
             value="{{ $user->idnumber }}" class="form-control form-control-sm required">
 
 
     </div>
 </div>
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group">
         <label>
             Nombres<span class="ast_required">*</span></label>
@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group">
         <label>
             Apellidos<span class="ast_required">*</span></label>
@@ -59,18 +59,18 @@
 
     </div>
 </div>
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group">
-        <label>Teléfono
+        <label>Teléfono <span class="ast_required">*</span>
         </label>
-        <input name="tel1" {{ $disabled }} data-name="telefono" type="text"
+        <input required name="tel1" {{ $disabled }} data-name="telefono" type="text"
             value="{{ $user->tel1 }}" class="form-control form-control-sm"
             @if ($conciliacion->estado_id != 177 and $conciliacion->estado_id != 179 and !auth()->user()->can('act_conciliacion'))  @endif>
 
     </div>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group">
         <label> Correo electrónico<span class="ast_required">*</span><i>
             <a style="font-size: 10px !important;color:orange" class="btn_disabled_email">
@@ -87,7 +87,7 @@
 
 <div class="col-md-{{ isset($col) ? $col : '3' }}">
     <div class="form-group has-feedback">
-        <label for="name">Dirección para notificaciones
+        <label for="name">Dirección para notificaciones <span class="ast_required">*</span>
             </label>
         <input {{ isset($disabled) ? $disabled : '' }} id='address'
             value="{{ isset($user) ? $user->address : '' }}" name='address' required type="text"

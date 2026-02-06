@@ -87,8 +87,8 @@
     </div>
 
     <div class="col-md-{{ isset($col) ? $col : '6' }}">
-        <div class="form-group has-feedback"><label for="name">Telefóno celular<span
-                    class="ast_required">*</span></label>
+        <div class="form-group has-feedback">
+            <label for="name">Telefóno celular<span class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='tel1'
                 value="{{ isset($user) ? $user->tel1 : '' }}" name='tel1' required type="text"
                 class="form-control form-control-sm onlynumber required" data-toggle="tooltip"
@@ -111,8 +111,7 @@
 
     <div class="col-md-{{ isset($col) ? $col : '6' }}">
         <div class="form-group">
-            {!! Form::label('Fecha Nacimiento: ') !!}
-            <span class="ast_required">*</span>
+            <label for="fechanacimien">Fecha de nacimiento<span class="ast_required">*</span></label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -122,9 +121,8 @@
                 <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='fechanacimien'
                     value="{{ isset($user) ? $user->fechanacimien : '' }}" name='fechanacimien' required
                     type="date" class="form-control form-control-sm  required" title="Fecha de nacimiento"
-                 placeholder="Fecha de nacimiento"
-                    maxlength="10">
-                    
+                    placeholder="Fecha de nacimiento" maxlength="10">
+
             </div>
             <!-- /.input group -->
         </div>

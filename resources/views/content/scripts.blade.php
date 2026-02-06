@@ -2,7 +2,7 @@
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyCircularActualVacNavidad");
 
-        var keyCir = localStorage.getItem("keyCircularActualVacNavidad");
+        var keyCir = localStorage.getItem("keyTurnosDocenteRojas");
         $("#modal_t").text("");
         var message = '';
         var message = getMotivationalMessage();
@@ -149,6 +149,7 @@
                             <span class="sr-only">Next</span>
                           </a>
                         </div>`;
+
         $("#contentNotButtonDis").append($("<button>", {
             class: "btn btn-danger",
             id: "btnNotFalse",
@@ -175,6 +176,121 @@
 
         return message;
     }
+
+    function getHabilityTeacherMessage() {
+
+        $("#contentNotButtonDis").append($("<button>", {
+            class: "btn btn-outline-secondary",
+            id: "btnNotFalse",
+            text: "No volver a mostrar",
+            "data-not": "keyNotaAsistenciaConsultorio"
+        }));
+
+        return `
+<div class="container-fluid" style="font-size:17px; max-width:960px; line-height:1.6;" role="article" aria-label="Circular académica sobre nota de asistencia">
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="font-weight-bold" style="color:#0d6efd;">
+            <i class="fas fa-clipboard-check" aria-hidden="true"></i>
+            Circular Académica
+        </h2>
+        <p class="text-muted">
+            Implementación del cálculo de nota por asistencia – Consultorios Jurídicos
+        </p>
+    </div>
+
+
+    <!-- CARD PRINCIPAL -->
+    <div class="card shadow-sm mb-4" style="border-left:1px solid #0d6efd; border-radius:12px;">
+        <div class="card-body">
+
+            <p>
+                En atención a lo dispuesto en el 
+                <strong>Estatuto Estudiantil</strong>, donde se establece que la 
+                <strong>asistencia a las actividades académicas es obligatoria</strong> 
+                y constituye parte esencial del proceso formativo, el Consultorio Jurídico 
+                implementa oficialmente el <strong>cálculo de la nota de asistencia</strong> 
+                como componente evaluativo del desempeño académico.
+            </p>
+
+            <p>
+                A partir de la fecha, cada estudiante podrá consultar en el sistema su 
+                calificación correspondiente, la cual se obtiene de manera proporcional 
+                según los días efectivamente asistidos frente a los días en que debía asistir 
+                durante el período académico.
+            </p>
+
+            <div class="alert alert-primary mt-3" style="border-radius:10px;">
+                <strong>Fórmula de cálculo:</strong><br>
+                Nota de asistencia = Días asistidos × ( 5 ÷ Días que debía asistir )
+            </div>
+
+            <p class="mb-0">
+                La calificación máxima posible es <strong>5.0</strong> y se ajusta proporcionalmente 
+                de acuerdo con el cumplimiento de la asistencia registrada.
+            </p>
+
+        </div>
+    </div>
+
+
+
+    <!-- PONDERACIONES -->
+    <div class="card shadow-sm mb-4" style="border-left:1px solid #198754; border-radius:12px;">
+        <div class="card-body">
+
+            <h5 class="font-weight-bold mb-3">
+                <i class="fas fa-percentage" aria-hidden="true"></i>
+                Ponderación dentro de la nota final
+            </h5>
+
+            <p>
+                La nota de asistencia hará parte de la evaluación integral del Consultorio 
+                y se integrará a la calificación final según la estructura académica del curso:
+            </p>
+
+            <ul style="margin-bottom:0;">
+                <li><strong>Solo Expedientes:</strong> Expedientes 70% – Asistencia 30%</li>
+                <li><strong>Expedientes + Conciliaciones:</strong> Expedientes 50% – Conciliaciones 20% – Asistencia 30%</li>
+                <li><strong>Expedientes + Conciliaciones + Defensas de oficio:</strong> Expedientes 30% – Conciliaciones 20% – Defensas 20% – Asistencia 30%</li>
+            </ul>
+
+        </div>
+    </div>
+
+
+
+    <!-- MENSAJE INSTITUCIONAL -->
+    <div class="card shadow-sm" style="border-left:1px solid #6c757d; border-radius:12px;">
+        <div class="card-body">
+
+            <p class="mb-2">
+                Esta medida fortalece el compromiso, la responsabilidad y la participación 
+                constante en las actividades del Consultorio, reconociendo el cumplimiento 
+                regular de las jornadas académicas y del servicio a la comunidad.
+            </p>
+
+            <p class="mb-0">
+                Invitamos a todos los estudiantes a realizar seguimiento periódico de su registro 
+                de asistencia en el sistema institucional.
+            </p>
+
+        </div>
+    </div>
+
+
+
+    <!-- FOOTER -->
+    <div class="text-center text-muted mt-4" style="font-size:15px;">
+        Consultorio Jurídico – Universidad de Nariño<br>
+        Vigente a partir de la fecha
+    </div>
+
+</div>
+`;
+    }
+
 
     function getMantenimientoMessage() {
         $("#contentNotButtonDis").append($("<button>", {
@@ -438,7 +554,7 @@
       color: #777;
       display: block;
     ">
-      🕒 Últ. actualización: <b>23 de enero de 2026</b><br>
+      🕒 Últ. actualización: <b>6 de febrero de 2026</b><br>
       Soporte: Registre sus incidencias <a href="/incidencias" target="_blank"
         style="color: #5563DE; text-decoration: underline;">Aquí!</a>
     </span>

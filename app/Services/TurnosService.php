@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface TurnosService {    
     public function index(Request $request);
+    public function getAsistencia(Request $request);
   
 } 
 ?>

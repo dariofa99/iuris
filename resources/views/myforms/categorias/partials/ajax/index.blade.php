@@ -1,13 +1,13 @@
 
-<table class="table" >
+<table class="table" style="table-layout: fixed; word-wrap: break-word;">
     <thead>
-    <th>
+    <th width="35%">
     Nombre
     </th>
-    <th>
+    <th width="35%">
     Nombre en BD
     </th>
-    <th>
+    <th width="20%">
     Uso en
     </th>
     
@@ -18,17 +18,17 @@
         <td>
         {{$category->name}}
         </td>
-        <td>
+        <td  style="word-wrap: break-word; overflow-wrap: break-word;">
             {{$category->short_name}}
         </td>
-        <td>
+        <td >
         {{$category->getCategory()}} 
         </td>
         <td>
-        <button class="btn btn-primary btn-sm btn_edit_category" data-id="{{$category->id}}">
+        <button class="btn btn-primary btn-sm btn_edit_category btn-block" data-id="{{$category->id}}">
         Editar
         </button>
-         <button class="btn btn-danger btn-sm btn_delete_category" data-id="{{$category->id}}">
+         <button class="btn btn-danger btn-sm btn_delete_category btn-block" data-id="{{$category->id}}">
         Eliminar
         </button>
        
@@ -40,3 +40,5 @@
     
     </tbody>
     </table>
+
+     {{ $categories->appends(request()->query())->links() }}

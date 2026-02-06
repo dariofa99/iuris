@@ -5,6 +5,6 @@
         @include('myforms.components_user.identitaria')
         @include('myforms.components_user.socioeconomica')
     </div>
-    <button type="submit" id="{{ isset($user) ? 'actualizar_exp_us' : 'registrar_exp_us' }}"
+    <button type="button" id="{{ isset($user) ? 'actualizar_exp_us' : 'registrar_exp_us' }}"
         class="btn btn-primary btn-block"> Asignar usuario </button>
 </form>

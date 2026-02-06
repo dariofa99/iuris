@@ -307,16 +307,35 @@ class SolicitudesController extends Controller
      */
     public function store(Request $request)
     {
- //return response()->json("lkjsdlkgjsdg");
+        //return response()->json("lkjsdlkgjsdg");
+
+        $messages = [
+            'name.required' => 'El nombre es requerido.',
+            'lastname.required' => 'El apellido es requerido.',
+            'email.unique' => 'El :attribute  ya existe en otra cuenta.',
+            'email.required' => 'El :attribute es requerido.',
+            'idnumber.required' => 'El número de documento es requerido.',
+            'idnumber.unique' => 'El número de documento ya existe en otra cuenta.',
+        ];
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+            'lastname' => ['required'],
+            'email' => ['required', 'unique:users'],
+            'idnumber' => ['required', 'unique:users']
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
 
         $user = $this->userService->findWithFilter([
             'idnumber' => $request->idnumber,
             'email' => $request->email
         ]);
 
-        return response()->json($user);
+        // return response()->json($user);
 
-       // return response()->json($request->all()); //
+        // return response()->json($request->all()); //
 
         $this->sedesService->setSede($request);
         $user = $this->userService->store($request);

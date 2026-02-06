@@ -62,7 +62,7 @@
     </div>
 </div>
 @if (isset($user))
-
+ 
     @include('myforms.components_user.aditional_data', [
         'data' => getReferencesDataBySection('discapacidad', 'users'),
         'discaform' => 'discaform',

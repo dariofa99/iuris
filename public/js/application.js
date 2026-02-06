@@ -5,7 +5,7 @@ const Toast = Swal.mixin({
     timer: 3000,
 });
 function activeOtherInput(e) {
-     var elementType = $(e.target).prop("tagName").toLowerCase(); // Detecta si es select
+    var elementType = $(e.target).prop("tagName").toLowerCase(); // Detecta si es select
     var active, id, formParent;
     if (elementType === "select") {
         var selectedOption = $(this).find("option:selected");
@@ -33,7 +33,7 @@ function activeOtherInput(e) {
 
         });
         id = $(this).attr("data-id");
-        
+
         // 
 
     }
@@ -177,6 +177,189 @@ function validateForm(form) {
     });
     errors = [... new Set(errors)];
     return errors
+}
+
+function validateForms(formulario) {
+
+    const $form = $(formulario);
+
+    let valido = true;
+    let firstError = null;
+
+    /* =========================
+       LIMPIAR ERRORES
+    ========================== */
+
+    $form.find(".is-invalid").removeClass("is-invalid");
+    $form.find(".invalid-feedback").remove();
+
+
+    /* =====================================================
+       1️⃣ INPUTS / SELECT / TEXTAREA (normales)
+    ====================================================== */
+
+    $form.find("[required]").filter(function () {
+        return $(this).is(":visible")
+            && !this.disabled
+            && this.type !== "checkbox"
+            && this.type !== "radio";
+    }).each(function () {
+
+        const $field = $(this);
+        const type = this.type;
+        const tag = this.tagName;
+
+        let value = $field.val();
+        let error = false;
+        let mensaje = "Este campo es obligatorio";
+
+
+        // SELECT
+        if (tag === "SELECT") {
+            if (!value) {
+                error = true;
+                mensaje = "Seleccione una opción";
+            }
+        }
+
+        // EMAIL
+        else if (type === "email") {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                error = true;
+                mensaje = "Ingrese un correo válido";
+            }
+        }
+
+        // NORMAL
+        else {
+            if (!value || !value.trim()) {
+                error = true;
+            }
+        }
+
+
+        if (error) {
+
+            valido = false;
+
+            if (!firstError) firstError = this;
+
+            $field.addClass("is-invalid");
+            $field.after(`<div class="invalid-feedback">${mensaje}</div>`);
+        }
+    });
+
+
+
+    /* =====================================================
+       2️⃣ CHECKBOX (grupo mínimo 1)
+    ====================================================== */
+
+    const checkboxNames = new Set();
+
+    $form.find("input[type='checkbox'][required]:visible")
+        .each(function () {
+            checkboxNames.add(this.name);
+        });
+
+    checkboxNames.forEach(name => {
+
+        const $group = $form.find(`input[name='${name}']:visible`);
+        const checked = $group.filter(":checked").length;
+
+        if (checked === 0) {
+
+            valido = false;
+
+            if (!firstError) firstError = $group.first()[0];
+
+            $group.addClass("is-invalid");
+
+            // 🔥 MENSAJE DEBAJO DEL LABEL (NO ENTRE CHECKBOX)
+            const $container = $group.closest(".form-group, .mb-3, .col-md-12, .col-md-6");
+
+            $container.append(
+                `<div class="invalid-feedback d-block">Seleccione al menos una opción</div>`
+            );
+        }
+    });
+
+
+
+    /* =====================================================
+       3️⃣ RADIO (solo 1)
+    ====================================================== */
+
+    const radioNames = new Set();
+
+    $form.find("input[type='radio'][required]:visible")
+        .each(function () {
+            radioNames.add(this.name);
+        });
+
+    radioNames.forEach(name => {
+
+        const $group = $form.find(`input[name='${name}']:visible`);
+        const checked = $group.filter(":checked").length;
+
+        if (checked === 0) {
+
+            valido = false;
+
+            if (!firstError) firstError = $group.first()[0];
+
+            $group.addClass("is-invalid");
+
+            const $container = $group.closest(".form-group, .mb-3, .col-md-12, .col-md-6");
+
+            $container.append(
+                `<div class="invalid-feedback d-block">Seleccione una opción</div>`
+            );
+        }
+    });
+
+
+
+    /* =====================================================
+       4️⃣ FOCUS AUTOMÁTICO
+    ====================================================== */
+
+    if (firstError) {
+
+        firstError.focus();
+
+        firstError.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+
+    return valido;
+}
+
+
+function removeRequired(form, fieldName) {
+
+    const $form = $(form);
+
+    const $field = $form.find(`[name="${fieldName}"]`);
+
+    if (!$field.length) return;
+
+    // quitar required HTML
+    $field.removeAttr("required");
+
+    // quitar clases
+    $field.removeClass("required is-invalid");
+
+    // quitar mensajes si existen
+    $field.siblings(".invalid-feedback").remove();
+
+    // quitar asterisco del label
+    const $label = $field.closest(".form-group").find("label .ast_required");
+    $label.remove();
 }
 
 function validateTypeDoc(form) {

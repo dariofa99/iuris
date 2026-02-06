@@ -17,13 +17,14 @@ class CreateReferencesDataTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('short_name')->nullable();
-            $table->string('categories')->nullable();   
-            $table->string('section')->nullable();  
-            $table->boolean('is_visible')->default(1);   
+            $table->string('categories')->nullable();
+            $table->string('section')->nullable();
+            $table->boolean('is_visible')->default(1);
             $table->string('table');
+            $table->boolean('required')->default(0);
             $table->integer('type_data_id')->unsigned();
             $table->foreign('type_data_id')->references('id')->on('referencias_tablas')
-            ->onDelete('cascade')->onUpdate('cascade');
+                ->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

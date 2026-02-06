@@ -10,7 +10,7 @@
                 @php
                     $is_active = false;
                     $option_id = 0;
-                @endphp
+                @endphp 
 
                 <select {{ isset($disabled) ? $disabled : '' }} id="option_id-{{ $reference->id }}"
                     data-name="{{ $reference->name }}" data-type="{{ $reference->type_data_id }}" name="static_data[]"

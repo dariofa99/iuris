@@ -13,29 +13,32 @@
             </div>
         </div>
     @endif
-    @if(is_string($reference))
+    @if (is_string($reference))
         falta la referencia {{ $reference }}
     @else
-   
+        @php
+            $other_input_label = '¿Cuál...?';
+        @endphp
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label>
                         {{ $reference->name }}
-                        @if (isset($required) && $required)
-                            <span class="ast_required">*</span>
+                        @if (isset($reference) && $reference->required == 1)
+                            <span class="text-danger"> {{ $reference->required ? ' *' : '' }}</span>
                         @endif
                     </label>
 
-                    @if ($reference->type_data_id == 251)
-                
+                    @if ($reference->type_data_id == 169)
+
                         @php
                             $is_active = false;
                             $option_id = 0;
                         @endphp
-                        <select {{ isset($disabled) ? $disabled : '' }} id="option_id-{{ $reference->id }}"
-                            data-name="{{ $reference->name }}" data-type="{{ $reference->type_data_id }}"
-                            name="static_data[]" data-section="{{ $reference->section }}"
+                        <select {{ $reference->required ? 'required' : '' }} {{ isset($disabled) ? $disabled : '' }}
+                            id="option_id-{{ $reference->id }}" data-name="{{ $reference->name }}"
+                            data-type="{{ $reference->type_data_id }}" name="static_data[]"
+                            data-section="{{ $reference->section }}"
                             class="form-control form-control-sm input_user_ad data_input_select {{ isset($required) && $required ? 'required' : '' }}"
                             data-id="{{ $reference->id }}">
                             <option value="">Seleccione...</option>
@@ -49,6 +52,9 @@
                                     ) {
                                         $is_active = true;
                                         $option_id = $opt->id;
+                                    }
+                                    if ($opt->active_other_input) {
+                                        $other_input_label = $opt->other_input_label;
                                     }
                                 @endphp
                                 <option data-active_other="{{ $opt->active_other_input }}"
@@ -74,11 +80,15 @@
                                     $is_active = true;
                                     $option_id = $opt->id;
                                 }
+                                if ($opt->active_other_input) {
+                                    $other_input_label = $opt->other_input_label;
+                                }
                             @endphp
                             <br>
-                            <input class="input_user_ad" {{ isset($disabled) ? $disabled : '' }}
-                                id="option_id-{{ $opt->id }}" data-name="{{ $reference->name }}"
-                                data-type="{{ $reference->type_data_id }}" name="static_data-{{ $reference->id }}"
+                            <input {{ $reference->required ? 'required' : '' }} class="input_user_ad"
+                                {{ isset($disabled) ? $disabled : '' }} id="option_id-{{ $opt->id }}"
+                                data-name="{{ $reference->name }}" data-type="{{ $reference->type_data_id }}"
+                                name="static_data-{{ $reference->id }}"
                                 data-active_other="{{ $opt->active_other_input }}"
                                 data-section="{{ $reference->section }}" data-id="{{ $reference->id }}"
                                 value="{{ $opt->value }}"
@@ -88,7 +98,7 @@
                         @endforeach
 
                         @include('myforms.categorias.partials.ajax.value_isotherquestion')
-                    @elseif($reference->type_data_id == 169)
+                    @elseif($reference->type_data_id == 279)
                         @php
                             $is_active = false;
                             $option_id = 0;
@@ -107,9 +117,10 @@
                                 }
                             @endphp
                             <br>
-                            <input class="input_user_ad" {{ isset($disabled) ? $disabled : '' }}
-                                id="option_id-{{ $opt->id }}" data-name="{{ $reference->name }}"
-                                data-type="{{ $reference->type_data_id }}" name="static_data-{{ $reference->id }}"
+                            <input {{ $reference->required ? 'required' : '' }} class="input_user_ad"
+                                {{ isset($disabled) ? $disabled : '' }} id="option_id-{{ $opt->id }}"
+                                data-name="{{ $reference->name }}" data-type="{{ $reference->type_data_id }}"
+                                name="static_data-{{ $reference->id }}"
                                 data-active_other="{{ $opt->active_other_input }}"
                                 data-section="{{ $reference->section }}" data-id="{{ $reference->id }}"
                                 value="{{ $opt->value }}"
@@ -120,10 +131,10 @@
 
                         @include('myforms.categorias.partials.ajax.value_isotherquestion')
                     @else
-                        <input {{ isset($disabled) ? $disabled : '' }} data-reference_id="{{ $reference->id }}"
-                            data-name="{{ $reference->name }}" data-option="{{ $reference->options[0]->id }}"
-                            data-type="{{ $reference->type_data_id }}" name="static_data[]"
-                            data-section="{{ $reference->section }}" type="text"
+                        <input {{ $reference->required ? 'required' : '' }} {{ isset($disabled) ? $disabled : '' }}
+                            data-reference_id="{{ $reference->id }}" data-name="{{ $reference->name }}"
+                            data-option="{{ $reference->options[0]->id }}" data-type="{{ $reference->type_data_id }}"
+                            name="static_data[]" data-section="{{ $reference->section }}" type="text"
                             @if (isset($model) and $reference->options[0] and $model->getDataVal($reference->id, $reference->options[0]->id)) value="{{ $model->getDataVal($reference->id, $reference->options[0]->id)->value }}" @endif
                             class="form-control form-control-sm input_user_ad">
                     @endif
@@ -131,7 +142,7 @@
                 </div>
             </div>
         </div>
-        @endif
+    @endif
 
 
 </div>

@@ -31,7 +31,7 @@ class IncidenciasComposer
 
 	public function __construct()
 	{
-		
+
 		$this->referenciasService = App::make(ReferenciasService::class);
 		//$this->segmentosService = App::make(SegmentosService::class);
 		//$this->periodosService = App::make(PeriodosService::class);
@@ -40,25 +40,37 @@ class IncidenciasComposer
 
 	public function compose(View $view)
 	{
-		
-		
+
+
 
 		$categorias_incidencia_exp = $this->referenciasService->getReferenciasByFilter(
-			['tabla_ref' => 'incidencias',
-			 'categoria' => 'type_category_exp']
+			[
+				'tabla_ref' => 'incidencias',
+				'categoria' => 'type_category_exp'
+			]
 		);
 
 		$categorias_incidencia_system = $this->referenciasService->getReferenciasByFilter(
-			['tabla_ref' => 'incidencias',
-			 'categoria' => 'type_category_system']
+			[
+				'tabla_ref' => 'incidencias',
+				'categoria' => 'type_category_system'
+			]
 		);
 
-		
+		$estados_incidencia_ = $this->referenciasService->getReferenciasByFilter(
+			[
+				'tabla_ref' => 'incidencias',
+				'categoria' => 'type_status'
+			]
+		);
+
+
 
 
 		$view->with([
 			'categorias_incidencia'    => $categorias_incidencia_exp,
-			'categorias_incidencia_system'    => $categorias_incidencia_system
+			'categorias_incidencia_system'    => $categorias_incidencia_system,		
+			'estados_incidencia'    => $estados_incidencia_
 		]);
 	}
 }

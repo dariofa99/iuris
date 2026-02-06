@@ -190,7 +190,7 @@
      </table>
  </div>
 
- {{ $expedientes->appends(request()->query())->links() }}
+ {{ $expedientes->appends(request()->query())->links() }} 
 
  <script>
      (function() {

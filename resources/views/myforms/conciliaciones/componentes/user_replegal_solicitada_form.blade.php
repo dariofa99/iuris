@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-10">
                 <h4>
-                    Rep. legal para el convocado
+                    Rep. legal para el convocado 
                     {{ $parte_->name }} {{ $parte_->lastname }}
 
 

@@ -1,4 +1,4 @@
-<form id="myFormParteSolicitante" method="POST">
+<form id="myFormParteSolicitante" method="POST" novalidate>
     <div class="row">
         @include('myforms.users.formulario_registro')
         
@@ -8,7 +8,7 @@
         @if (config('app.name') != 'ConciliApp')
         <input type="hidden" id="tipopersvalidate_id" name="tipopers_id" value="236">
         @endif
-    </div> 
+    </div>  
     @if (count($sedes) > 1)
         <div class="row">
             <div class="col-md-12">
@@ -20,7 +20,7 @@
             @foreach ($sedes as $key => $sede)
                 <div class="col-md-4 selected_sede">
                     <div class="card">
-                        <!-- Default panel contents -->
+                        <!-- Default panel contents --> 
                         <div class="card-header">{{ $sede->nombre }}</div>
                         <div class="card-body">
                             <p>{{ $sede->ubicacion }}</p>

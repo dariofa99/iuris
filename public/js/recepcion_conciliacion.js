@@ -6,7 +6,12 @@ const userService = new UserService();
 const conciliacionService = new ConciliacionService();
 const solicitudesService = new SolicitudesService();
 $(function () {
-//  ocultarCompDiscapUser();
+  //  ocultarCompDiscapUser();
+  removeRequired("#myFormParteSolicitante", "tel2");
+
+
+
+
   $("#myFormParteSolicitante")
     .on("change", "select[name='pbepersondiscap']", function (e) {
       if ($(this).val() == 1) {
@@ -64,9 +69,9 @@ $(function () {
     });
 
 
-    $(".myFormParteConvocada").on("change", "select[name='pbepersondiscap']", function (e) {
+  $(".myFormParteConvocada").on("change", "select[name='pbepersondiscap']", function (e) {
     var formId = $(this).closest('form').attr('id');
-      
+
     if ($(this).val() == 1) {
       $("#" + formId + " select[name='has_apoyo']").prop("disabled", false);
       mostrarCompDiscapUser(formId)
@@ -126,90 +131,151 @@ $(function () {
 
   }); */
 
-  $("#btn_registrar_conc").on("click", async function (e) {
+  document.addEventListener("invalid", function (e) {
     e.preventDefault();
+  }, true);
 
-    var errors = validateForm("myFormParteSolicitante");
-    //console.log(errors)
-    if (errors.length <= 0) {
-      var request = convertFormToJSON("myFormParteSolicitante");
-      if (request.sede_id == '') {
-        toastr.error("No hay una sede seleccionada", "Atención!", {
-          positionClass: "toast-top-right",
-          timeOut: "4000",
-        });
-        return false;
-      }
-      let timerInterval
-      Swal.fire({
-        title: 'Espere por favor!',
-        html: 'Estamos registrando su solicitud',
-        timer: 10000,
-        timerProgressBar: true,
+  $(document).on("click", "#btn_registrar_conc", function () {
 
-        allowOutsideClick: false, // Permitir clic fuera del modal
-        allowEscapeKey: false, // Permitir escape para cerrar el modal
-        backdrop: true, // Mostrar el backdrop (fondo sombreado)
-
-        didOpen: () => {
-          Swal.showLoading()
-          // const b = Swal.getHtmlContainer().querySelector('b')
-          timerInterval = setInterval(() => {
-            //b.textContent = Swal.getTimerLeft()
-          }, 100)
-        },
-        willClose: () => {
-          clearInterval(timerInterval)
-        }
-      }).then((result) => {
-        /* Read more about handling dismissals below */
-        if (result.dismiss === Swal.DismissReason.timer) {
-          console.log('I was closed by the timer')
-        }
-      });
-      var data = userService.getAditionalDataByForm('myFormParteSolicitante');
-      request["data"] = (data);
-      request['active'] = 1;
-      request['tipopers_id'] = 237;
-      let response = await solicitudesService.solicitar(request);
-      if (response.errors) {
-        Swal.close();
-        response.errors.forEach(error => {
-          toastr.error(error, "", {
-            positionClass: "toast-top-right",
-            timeOut: "4000",
-          });
-        });
-      } else {
-        Swal.close();
-        Swal.fire({
-          title: "La solicitud se ha creado con éxito!",
-          html: `<h5>Hemos enviado un correo electrónico con el enlace 
-                  para que puedas seguir el proceso en caso de perder la conexión actual.</h5>`,
-          type: "success",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Continuar..!",
-          allowOutsideClick: false, // Permitir clic fuera del modal
-          allowEscapeKey: false, // Permitir escape para cerrar el modal
-          backdrop: true // Mostrar el backdrop (fondo sombreado)
-
-        }).then((result) => {
-          if (result.value) {
-            window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
-          }
-        });
-      }
+    const form = document.getElementById("myFormParteSolicitante");
+    if (!form) return;
+    var isvalid = validateForms(form);
+    if (isvalid) {
+      form.requestSubmit();
     } else {
       toastr.error("Hay campos que son obligatorios", "Atención!", {
         positionClass: "toast-top-right",
         timeOut: "4000",
       });
+      form.reportValidity();
+    }
+
+  });
 
 
+  $("#myFormParteSolicitante").on("submit", function (e) {
+    e.preventDefault();
+    registrarSolicitud();
+  });
+
+  async function registrarSolicitud() {
+
+    var request = convertFormToJSON("myFormParteSolicitante");
+    if (request.sede_id == '') {
+      toastr.error("No hay una sede seleccionada", "Atención!", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+      return false;
+    }
+    let timerInterval
+    Swal.fire({
+      title: 'Espere por favor!',
+      html: 'Estamos registrando su solicitud',
+      timer: 10000,
+      timerProgressBar: true,
+
+      allowOutsideClick: false, // Permitir clic fuera del modal
+      allowEscapeKey: false, // Permitir escape para cerrar el modal
+      backdrop: true, // Mostrar el backdrop (fondo sombreado)
+
+      didOpen: () => {
+        Swal.showLoading()
+        // const b = Swal.getHtmlContainer().querySelector('b')
+        timerInterval = setInterval(() => {
+          //b.textContent = Swal.getTimerLeft()
+        }, 100)
+      },
+      willClose: () => {
+        clearInterval(timerInterval)
+      }
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log('I was closed by the timer')
+      }
+    });
+    var data = userService.getAditionalDataByForm('myFormParteSolicitante');
+    request["data"] = (data);
+    request['active'] = 1;
+    request['tipopers_id'] = 237;
+    let response = await solicitudesService.solicitar(request);
+    if (response.errors) {
+      Swal.close();
+      Swal.fire({
+        icon: "warning",
+        title: "¡Cuenta ya registrada!",
+        html: `
+        <div style="font-size:15px; line-height:1.6">
+
+            <p style="margin-bottom:10px">
+                Los datos ingresados ya tienen una cuenta asociada.
+            </p>
+
+            <p style="color:#6c757d; font-size:14px">
+                Puedes iniciar sesión o recuperar tu contraseña si la olvidaste.
+            </p>
+
+        </div>
+    `,
+        showCancelButton: true,
+        confirmButtonText: "🔐 Iniciar sesión",
+        cancelButtonText: "🔁 Recuperar contraseña",
+        confirmButtonColor: "#0d6efd",
+        cancelButtonColor: "#6c757d",
+        width: 520,
+        padding: "2rem",
+        backdrop: `
+        rgba(0,0,0,0.5)
+    `,
+        customClass: {
+          popup: "rounded-4 shadow-lg",
+          confirmButton: "btn btn-primary px-4 m-1",
+          cancelButton: "btn btn-outline-secondary px-4 m1"
+        },
+        buttonsStyling: false,
+        allowOutsideClick: true
+      }).then((result) => {
+
+        if (result.isConfirmed) {
+          window.location.href = "/login";
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          window.location.href = "/recovery/account";
+        }
+
+      });
+
+
+      response.errors.forEach(error => {
+        toastr.error(error, "", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+        });
+      });
+    } else {
+      Swal.close();
+      Swal.fire({
+        title: "La solicitud se ha creado con éxito!",
+        html: `<h5>Hemos enviado un correo electrónico con el enlace 
+                  para que puedas seguir el proceso en caso de perder la conexión actual.</h5>`,
+        type: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Continuar..!",
+        allowOutsideClick: false, // Permitir clic fuera del modal
+        allowEscapeKey: false, // Permitir escape para cerrar el modal
+        backdrop: true // Mostrar el backdrop (fondo sombreado)
+
+      }).then((result) => {
+        if (result.value) {
+          window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
+        }
+      });
     }
 
 
-  });
+
+  }
+
 
   $("#myFormRepLegal").on("focus", "input[name='idnumber']", validateTypeDoc);
 
@@ -262,7 +328,7 @@ $(function () {
     var juridico_id = $("#" + formId).attr('data-juridico');
     var errors = validateForm(formId);
     if (errors.length <= 0) {
-     await addUserByStep(formId, this, 7, juridico_id, false)
+      await addUserByStep(formId, this, 7, juridico_id, false)
       await Swal.fire({
         title: "El representante legal ha sido agregado",
         icon: "success",
@@ -272,6 +338,22 @@ $(function () {
     }
   });
   $("#btn_registrar_apod_sol").on("click", async function () {
+
+    const form = document.getElementById("myFormApoderado");
+    if (!form) return;
+    var isvalid = validateForms(form);
+    if (isvalid) {
+      addUserByStep("myFormApoderado", this, 4)
+    } else {
+      toastr.error("Hay campos que son obligatorios", "Atención!", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+      form.reportValidity();
+    }
+
+    return false;
+
     var errors = validateForm("myFormApoderado");
     if (errors.length <= 0) {
       addUserByStep("myFormApoderado", this, 4)
@@ -320,6 +402,94 @@ $(function () {
     var re = /^[0-9]{10}$/;
     return re.test(phone);
   }
+
+  $(".btn_save_parte_convocada").on("click", async function () {
+    var formId = $(this).closest('.myFormParteConvocada').attr('id');
+    const form = document.getElementById(formId);
+    if (!form) return;
+    var isvalid = validateForms(form);
+    if (isvalid) {
+      var request = convertFormToJSON(formId);
+      var phone = request.tel1;
+      var email = request.email;
+      var address = request.address;
+      var idnumber = request.idnumber;
+
+      if (!validatePhone(phone) && address == '' && !validEmail(email, idnumber)) {
+        toastr.error("", "Debe ingresar al menos un dato de contacto válido para la persona " + (index + 1) + ".<br>Teléfono, correo o dirección.", {
+          positionClass: "toast-top-right",
+          timeOut: "5000",
+        });
+        insert = false;
+      } else {
+        console.log(request);
+        var request = convertFormToJSON(formId);
+        request['conciliacion_id'] = $("#conciliacion_id").val()
+        request['tipo_usuario'] = $(this).attr("data-type");
+        request["data"] = userService.getAditionalDataByForm(formId);
+        await guardarSolicitud(request);
+        /* request['conciliacion_id'] = $("#conciliacion_id").val()
+        request['tipo_usuario'] = typeId;
+        request["data"] = userService.getAditionalDataByForm(form);
+        response_ = await conciliacionService.addUser(request); */
+
+
+      }
+    } else {
+
+    }
+
+
+
+  });
+
+  async function guardarSolicitud(request) {
+    // 1️⃣ mostrar loading
+    Swal.fire({
+      title: 'Espere por favor',
+      html: 'Estamos registrando su solicitud...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    try {
+
+      // 2️⃣ backend REAL (aquí sí espera)
+      const response_ = await conciliacionService.addUser(request);
+
+      // 3️⃣ cerrar loading
+      Swal.close();
+
+      // 4️⃣ success
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Registro exitoso!',
+        text: 'La solicitud fue guardada correctamente',
+        timer: 1200,
+        showConfirmButton: false
+      });
+
+      // 5️⃣ recargar o redirigir
+      window.location.reload();
+      // o:
+      // window.location.href = `/solicitudes/recepcion/conciliacion/${response_.token}/?id=${response_.id}&paso=6`;
+
+    } catch (e) {
+
+      Swal.close();
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo registrar la solicitud'
+      });
+
+      throw e;
+    }
+  }
+
 
 
   $("#btn_parte_convocada").on("click", async function () {
@@ -415,6 +585,26 @@ $(function () {
 
   $("#btn_registrar_asunto").on("click", async function () {
     var errors = validateForm("myFormAsunto");
+
+    const form = document.getElementById("myFormAsunto");
+    if (!form) return;
+    var isvalid = validateForms(form);
+    if (isvalid) {
+      var request = {};
+      $("#wait").show();
+      request["conciliacion_id"] = $("#conciliacion_id").val();
+      var data = userService.getAditionalDataByForm('myFormAsunto');
+      request["data"] = (data);
+      let response_ = await conciliacionService.addAditionalData(request);
+      window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + 5;
+    } else {
+      toastr.error("Hay campos que son obligatorios", "Atención!", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+      form.reportValidity();
+    }
+    return;
     var request = {};
     if (errors.length <= 0) {
       $("#wait").show();
@@ -473,17 +663,90 @@ $(function () {
      $(this).attr('data-tipo') == 206 ? $("#btn_add_he_pret_input").text("Agregar otro hecho") :
      $("#btn_add_he_pret_input").text("Agregar otra pretension") */
 
-    var row = `
-      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
-        <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
-        <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
-      </div>
-`
-    $("#content_create_descrip_hepr").html(row)
+    /*  var row = `
+       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${$(this).attr('data-tipo')}">
+         <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+         <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+       </div>`; */
+    addHeprRow(lbl,key,$(this).attr('data-tipo'));
+
+    //$("#content_create_descrip_hepr").html(row)
 
     $("#myModalCreateConcHechosPretensiones").modal('show');
     $("#lbl_title_modal").text($(this).attr('data-tipo') == 206 ? "Agregando hechos" : "Agregando pretensiones")
   });
+
+
+  function addHeprRow(labelBase, key,tipo) {    
+
+    const row = `
+        <div class="hepr-item content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
+            <button type="button" class="btn-remove-hepr">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <label class="font-weight-bold mb-2">
+                ${labelBase} ${key}
+            </label>
+
+            <textarea
+                name="descripcion[]"
+                rows="3"
+                class="form-control required"
+                placeholder="Escriba aquí..."
+            ></textarea>
+        </div>
+    `;
+
+    $("#content_create_descrip_hepr").append(row);
+  }
+
+
+  /* =========================
+     AGREGAR
+  ========================= */
+/*   $("#btn_add_he_pret_input").on("click", function () {
+
+    const tipo = $("input[name=tipo_id]").val();
+
+    let label = "Descripción";
+
+    if (tipo == 206) label = "Descripción del hecho";
+    if (tipo == 207) label = "Descripción de la pretensión";
+    if (tipo == 208) label = "Descripción del acuerdo";
+
+    addHeprRow(label);
+
+  }); */
+
+
+  /* =========================
+     ELIMINAR
+  ========================= */
+  $(document).on("click", ".btn-remove-hepr", function () {
+
+    $(this).closest(".hepr-item").remove();
+
+    renumerar();
+
+  });
+
+
+  /* =========================
+     RENOMBRAR
+  ========================= */
+  function renumerar() {
+
+    heprCount = 0;
+
+    $(".hepr-item").each(function () {
+      heprCount++;
+      const lbl = $(this).find("label");
+      const base = lbl.text().replace(/\d+$/, '').trim();
+      lbl.text(base + " " + heprCount);
+    });
+  }
+
 
   $(".btn_create_document").on("click", async function (e) {
     $("#cont_files input[name=category_id]").remove();
@@ -550,13 +813,14 @@ $(function () {
     var key = $(".count_input_descrip_hepr_" + tipo).length + 1
     var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
 
-    var row = `
+  /*   var row = `
       <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
         <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
         <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
       </div>
    `
-    $("#content_create_descrip_hepr").append(row)
+    $("#content_create_descrip_hepr").append(row) */
+    addHeprRow(lbl,key,tipo);
   });
 
   $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", async function (e) {
@@ -770,8 +1034,8 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
   $("#wait").show();
 
   if ($("#" + form + " input[name='id']").val() != undefined && $("#" + form + " input[name='id']").val() != "") {
- console.log("form")
-  console.log(form)
+    console.log("form")
+    console.log(form)
     var request = {
       "user_id": $("#" + form + " input[name='id']").val(),
       "conciliacion_id": $("input[name='conciliacion_id']").val(),
@@ -794,7 +1058,7 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
     }
     request["data"] = userService.getAditionalDataByForm(form);
     let response = await userService.registrar(request);
-     if (response.errors) {
+    if (response.errors) {
       response.errors.forEach(error => {
         toastr.error(error, "", {
           positionClass: "toast-top-right",
@@ -812,7 +1076,7 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
       }
       let response_ = await conciliacionService.addUser(request);
       if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
-    } 
+    }
   }
   $("#wait").hide();
 

@@ -1,53 +1,43 @@
-@component('components.b4.modal_large')
-    @slot('trigger')
-        myModalCreateConcHechosPretensiones
-    @endslot
+ @component('components.b4.modal_large')
+     @slot('trigger')
+         myModalCreateConcHechosPretensiones
+     @endslot
 
-    @slot('title')
-        <label id="lbl_title_modal">Agregando Información</label>
-    @endslot
-
-
-    @slot('body')
-       
-        <div class="row">
-            <div class="col-md-12">
-                <form method="POST" class="form_store" accept-charset="UTF-8" id="myformCreateHechoPretension">
-                    <input type="hidden" name="id">
-                    <input type="hidden" name="tipo_id">
-
-                    <div id="content_create_descrip_hepr">
-
-                        <div class="form-group count_input_descrip_hepr content_input_descrip_hepr">
-                            <label for="description" id="lbl_descrip_hepr">Descripción de los hechos 1</label>
-                            <textarea name="descripcion[]" class="form-control" rows="2"></textarea>
-                        </div>
+     @slot('title')
+         <label id="lbl_title_modal">Agregando Información</label>
+     @endslot
 
 
-                    </div>
-                   
 
-                   
-                    <div class="row">
-                        <div class="col-md-3">
-                            <button type="button" id="btn_add_he_pret_input" class="btn btn-block btn-success btn-sm">
-                                Agregar otro hecho
-                            </button>
-                        </div>
-                    </div>
+     @slot('body')
+         <div class="container-fluid py-2">
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <br>
-                            <button type="submit" class="btn btn-block btn-primary btn-sm">
-                                Guardar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+             <form method="POST" id="myformCreateHechoPretension" class="form_store">
 
-        </div>
-    @endslot
-@endcomponent
-<!-- /modal -->
+                 <input type="hidden" name="id">
+                 <input type="hidden" name="tipo_id">
+
+                 {{-- CONTENEDOR --}}
+                 <div id="content_create_descrip_hepr" class="hepr-container"></div>
+
+                 {{-- BOTONES --}}
+                 <div class="d-flex justify-content-between mt-4">
+
+                     <button type="button" id="btn_add_he_pret_input" class="btn btn-outline-primary btn-sm px-4">
+                         <i class="fas fa-plus mr-1"></i>
+                         Agregar
+                     </button>
+
+                     <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                         <i class="fas fa-save mr-1"></i>
+                         Guardar
+                     </button>
+
+                 </div>
+
+             </form>
+
+         </div>
+     @endSlot
+ @endcomponent
+ <!-- /modal -->

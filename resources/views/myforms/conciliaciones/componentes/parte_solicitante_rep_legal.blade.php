@@ -10,7 +10,7 @@
                 </h4>
             </div>
         </div>
-        <div class="row">
+       {{--  <div class="row">
             <div class="col-md-2">
                 <button id="btn_opaddrpl-{{ $key }}" data-key="{{ $key }}"
                     class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
@@ -18,14 +18,17 @@
                     Agregar
                 </button>
             </div>
-        </div>
-
+        </div> --}}
+        @php
+            $hasrep_legales = false;
+        @endphp
         @forelse ($parte_->conc_rep_legal as $key_ => $conciliacion_rep_legal)
             @php
                 $rep_legal = $conciliacion->getUserByFilter([
                     'tipo_usuario_id' => 198,
                     'user_id' => $conciliacion_rep_legal->pivot->user_replegal_id,
                 ]);
+                $hasrep_legales = true;
             @endphp
 
 
@@ -52,10 +55,10 @@
 
 
         @empty
-            Todavia no hay usuarios
+            
         @endforelse
 
-        <div class="card card-outline card-success" id="user_rep_legal_form-{{ $key }}" style="display: none;">
+        <div class="card card-outline card-success" id="user_rep_legal_form-{{ $key }}" style="display: {{ $hasrep_legales ? 'none' : 'block' }};">
             <div class="card-header">
                 <h4> Agregar Representante Legal </h4>
             </div>

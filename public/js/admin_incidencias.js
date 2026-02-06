@@ -11,6 +11,28 @@ $(document).ready(function () {
         }
     });
 
+    $("#filter").on("change", function () {
+       var value = $(this).val();
+       $(".filter_input").hide().val("");
+       if(value != ""){
+        if(value == "status"){
+            $("select[name='filter_value']").show();       
+        }else{
+            $("input[name='filter_value']").show();
+        }
+       }else{
+        window.location.href = "/incidencias";
+       }
+    });
+
+    $("#btn_buscar_incidencia").on("click", function () {
+        var filter = $("#filter").val();
+        var filter_value = $("#filter_value").val() || $("#filter_option").val();
+        if (filter != "0" && filter_value != "") {
+            window.location.href = `/incidencias?filter=${filter}&filter_value=${filter_value}`;
+        }
+    });
+
     $("#check_file").on("click", function () {
         $("#archivo").click();
     });

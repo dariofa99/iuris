@@ -19,21 +19,22 @@ use Excel;
 use App\Exports\NotasExport;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
+use App\Services\TurnosService;
 use App\Services\UsersService;
 use Carbon\Carbon;
 
 class NotaController extends Controller
 {
-    private $userService;
+    private $turnosService;
     private $periodosService;
     private $segmentosService;
 
     public function __construct(
-        UsersService $userService,
+        TurnosService $turnosService,
         PeriodosService $periodosService,
         SegmentosService $segmentosService
     ) {
-        $this->userService = $userService;
+        $this->turnosService = $turnosService;
         $this->periodosService = $periodosService;
         $this->segmentosService = $segmentosService;
     }
@@ -43,7 +44,7 @@ class NotaController extends Controller
     {
 
         $periodos = Periodo::all();
-       
+
         return view('report.notas.frm_notas_list', compact('periodos'));
     }
 
@@ -59,27 +60,41 @@ class NotaController extends Controller
         // $user = User::where('idnumber',3030)->first();
         if (currentUser()->hasRole("estudiante")) {
             $user = User::where('idnumber', auth()->user()->idnumber)->first();
+            $request['idnumber'] = auth()->user()->idnumber;
+           
         } elseif (currentUser()->can("ver_notas_estudiante")) {
             if ($request->has('idnumber')) {
                 $user = User::where('idnumber', $request->idnumber)->first();
+
             }
         }
-        if($request->has('expid')){
-           $request['segid'] = $segmentoAct->id;
-          
+        // dd("$notas");
+        if ($request->has('expid')) {
+            $request['segid'] = $segmentoAct->id;
         }
         $notas = [];
         if (isset($user)) {
+
             $notas = $user->getNotas($request);
-           // dd($notas);
-            return view("myforms.notas_ver.index", compact('user', 'notas','segmentoAct'));
+            $request['idnumber'] = $request->idnumber;
+
+            $asistencia = $this->turnosService->getAsistencia($request);
+            
+            if(count($asistencia) > 0){
+                $asistencia = $this->turnosService->getAsistencia($request)[0];
+            }else{
+                $asistencia = null;
+            }
+            // dd($notas);
+            return view("myforms.notas_ver.index", compact('user', 'notas', 'segmentoAct', 'asistencia'));
         } else {
             //$user = User::where('idnumber',3030)->first();
             $request->session()->flash('message-success', 'No se encontró el estudiante!');
         }
 
 
-        // dd($notas);
+
+         dd($notas);
         return view("myforms.notas_ver.index", compact('notas', 'segmentoAct'));
     }
 
@@ -140,7 +155,7 @@ class NotaController extends Controller
         if (!$request->ajax()) {
 
             $notas = $this->notas_download($request);
-            
+
             //return response()->json($notas);
             $segmento = Segmento::find($request->segmento_id);
             $periodo = Periodo::find($request->periodo_id);
@@ -177,9 +192,6 @@ class NotaController extends Controller
 
 
             $segmentos = Segmento::where('perid', $request->periodo_id)->get();
-
-
-
             $not_exp = [];
             $not_act = [];
             $not_req = [];
@@ -387,7 +399,7 @@ class NotaController extends Controller
                 ->where('users.active', true)
                 ->where('users.idnumber', $request->idnumber)
                 ->where('sedes.id_sede', session('sede')->id_sede)
-                ->select( 
+                ->select(
                     'users.active',
                     'users.id',
                     'ref_nombre',
@@ -406,7 +418,7 @@ class NotaController extends Controller
                 ->leftjoin('referencias_tablas', 'referencias_tablas.id', '=', 'users.cursando_id')
                 ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
                 ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
-                ->join('turnos','turnos.trnid_estudent','=',"users.idnumber")
+                ->join('turnos', 'turnos.trnid_estudent', '=', "users.idnumber")
                 ->where('role_id', '6')
                 ->where('users.active', true)
                 ->where('sedes.id_sede', session('sede')->id_sede)
@@ -422,7 +434,7 @@ class NotaController extends Controller
                 )
                 ->orderBy('users.created_at', 'desc')
                 ->get();
-        }       
+        }
         $notas_periodo = [];
         if ($request->segmento_id) {
             foreach ($users as $key_2 => $user) {
@@ -506,7 +518,7 @@ class NotaController extends Controller
                         GROUP BY `estidnumber`"
         ));
 
-        $notas_oficina =[];
+        $notas_oficina = [];
         /*  DB::select(DB::raw(
             "SELECT `estidnumber`, AVG(`nota`) as nota FROM `notas_ext`       
                         WHERE `segid` = $segmento AND `cptnotaid` != 4  

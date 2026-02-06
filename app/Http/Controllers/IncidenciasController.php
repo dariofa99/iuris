@@ -22,7 +22,7 @@ class IncidenciasController extends Controller
     {
         $incidencias = Incidencia::with('asignaciones')->where(function ($query) use ($request) {
             if (!auth()->user()->hasRole('amatai')) {
-                $query->where("user_id", auth()->user()->id);
+                $query->where("user_id", auth()->user()->id); 
             }
         })
             ->where(function ($query) use ($request) {
@@ -32,6 +32,7 @@ class IncidenciasController extends Controller
                     });
                 }
             })
+            ->filter($request)
             ->orderBy('created_at', 'desc')
             ->paginate(8);
 

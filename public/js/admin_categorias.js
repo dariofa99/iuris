@@ -9,14 +9,16 @@ const dataSections = {
         { id: 'parte_solicitada', value: 'Parte solicitada' },
         { id: 'rep_legal_solicitada', value: 'Representante legal - solicitada' },
         { id: 'elementos_juridicos', value: 'Elementos jurídicos' },
-        { id: 'asunto', value: 'Asunto' }
+        { id: 'asunto', value: 'Asunto' },
+        { id: 'personalizado', value: 'Personalizado' }
     ],
     'users': [
         { id: 'datos_personales', value: 'Datos personales' },
         { id: 'enfoque_diferencial', value: 'Enfoque diferencial' },
         { id: 'discapacidad', value: 'Discapacidad' },
         { id: 'socio_economica', value: 'Inf. Socio-económica' },
-        { id: 'grupo_etnico', value: 'Grupo etnico' }
+        { id: 'grupo_etnico', value: 'Grupo etnico' },
+        { id: 'personalizado', value: 'Personalizado' },
     ]
 };
 var items_delete = [];
@@ -36,6 +38,7 @@ $(document).ready(function () {
                     title: "Categoria actualizada con éxito.",
                 });
             }
+            location.reload();
             $("#content_categories_list").html(res.render_view);
             if (items_delete.length > 0) items_delete.length = 0;
             $("#myModal_create_category").modal("hide");
@@ -45,8 +48,8 @@ $(document).ready(function () {
                 "Error",
                 { positionClass: "toast-top-right", timeOut: "50000" }
             );
+            $("#wait").hide();
         }
-        $("#wait").hide();
 
     }
     );
@@ -62,7 +65,7 @@ $(document).ready(function () {
         $("#myformCreateCategory").attr("id", "myformEditRCategory");
         $("#myformEditRCategory")[0].reset();
         $("#myformEditRCategory input[name=id]").val(res.id);
-        $("#myformEditRCategory select[name=type_data_id]").val(res.type_data_id);
+        $("#myformEditRCategory select[name=type_data_id]").val(res.type_data_id).trigger('change');
         $("#myformEditRCategory select[name=table]").val(res.table);
         $("#myformEditRCategory select[name=section]").val(res.section);
         //$(".select2").select2();
@@ -77,27 +80,40 @@ $(document).ready(function () {
 
         $("#myformEditRCategory input[name=name]").val(res.name);
         $("#myformEditRCategory input[name=short_name]").val(res.short_name);
+        if (res.required == 1) {
+            $("#myformEditRCategory input[name=required]").prop("checked", true);
+        }
         $("#myformEditRCategory button[type=submit]")
             .text("Actualizar")
             .removeClass("btn-primary")
             .addClass("btn-warning");
 
         $("#lbl_modal_title").text("Actualizar categoria");
-        $("#content_section_users").hide();
-        $(".content_section_users select").prop("disabled", true);
+        $("#content_section").hide();
+        $(".content_section select").prop("disabled", true);
+        if (res.table == "users" || res.table == "conciliaciones") {
+            $("#content_section").show();
+            $(".content_section select").prop("disabled", false);
+            fillSection(res.table);
+            $("#section_c").val(res.section).trigger('change');
+        }
+
 
         if (res.options.length > 0 && res.type_data_id != 168) {
             var row = "";
             res.options.forEach((element, item) => {
                 let checked_ = "";
                 let value = "0";
+                let display_ = "none";
                 if (element.active_other_input) {
                     checked_ = "checked";
                     value = "1";
+                    display_ = "block";
                 }
                 row += `<tr class="option_row" data-item="${item}" id="option_row-${item}">
                                         <td>
                                             <input value="${element.value}" type="text" required name="option_name[]" class="form-control form-control-sm">
+                                            <input type="text" style="display: ${display_};" value="${element.other_input_label}" id="other_input_label-${item}" name="other_input_label[]" class="form-control form-control-sm mt-1" placeholder="Etiqueta para la opción Otro">
                                         </td>
                                         <td>
                                             <input type="hidden" id="active_other_input-${item}" name="active_other_input[]" value="${value}">
@@ -158,16 +174,20 @@ $(document).ready(function () {
     });
 
     $("#myformCreateCategory select[name=table]").on("change", function (e) {
+        fillSection($(this).val());
+    });
+
+    function fillSection(value) {
         var options = '<option value="">Seleccione...</option> ';
         $("#myModal_create_category select[name='section']").prop('disabled', true);
         $("#content_section").hide();
-        if ($(this).val() == "users") {
+        if (value == "users") {
             dataSections.users.forEach(element => {
                 options += `<option value="${element.id}">${element.value}</option>`;
             });
             $("#myModal_create_category select[name='section']").prop('disabled', false);
             $("#content_section").show();
-        } else if ($(this).val() == "conciliaciones") {
+        } else if (value == "conciliaciones") {
             dataSections.conciliaciones.forEach(element => {
                 options += `<option value="${element.id}">${element.value}</option>`;
             });
@@ -175,11 +195,11 @@ $(document).ready(function () {
             $("#content_section").show();
         }
         $("#myModal_create_category select[name='section']").html(options);
+    }
 
-    });
 
     $("#myformCreateCategory select[name=type_data_id]").on("change", function (e) {
-        if ($(this).val() == "169" || $(this).val() == "170") {
+        if ($(this).val() == "169" || $(this).val() == "170" || $(this).val() == "279") {
             var item = $(".option_row").length;
             if (item == 0) {
                 addOptionTable(item);
@@ -221,8 +241,10 @@ $(document).ready(function () {
         var item = $(this).attr("id").split("-")[1];
         if ($(this).is(":checked")) {
             $("#active_other_input-" + item).val(1);
+            $("#other_input_label-" + item).prop("required", true).val("Cúal?").show();
         } else {
             $("#active_other_input-" + item).val(0);
+            $("#other_input_label-" + item).prop("required", false).val("").hide();
         }
     });
     $(".btn_add_field").on("click", function (e) {
@@ -307,11 +329,15 @@ function addOptionTable(item) {
     var row = `<tr class="option_row" data-item="${item}" id="option_row-${item}">
                 <td>
                     <input  type="text" required name="option_name[]" class="form-control form-control-sm">
+                    <input type="text" style="display: none;" value="" id="other_input_label-${item}" name="other_input_label[]" class="form-control form-control-sm mt-1" placeholder="Etiqueta para la opción Otro">
                 </td>
                 <td>
                     <input type="hidden" id="active_other_input-${item}" name="active_other_input[]" value="0">
                     <input type="hidden"  name="options_id[]" value="null">
                     <input type="checkbox" id="active-${item}" class="chk_active_other_input" data-size="xs" data-style="order-check" data-width="60" data-toggle="toggle" data-on="1" data-off="0" data-onstyle="primary" data-offstyle="warning">
+
+
+
                 </td>
                 <td>
                     <button type="button" id="btn_delete_option_row-${item}" data-item="${item}" class="btn btn-danger btn-sm btn_delete_option_row">

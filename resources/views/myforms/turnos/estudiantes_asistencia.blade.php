@@ -21,7 +21,7 @@
        @include('layouts.loaderindiv')
         <table class="table" id="tableEstAsistencia">
             <thead>
-                <tr>
+                <tr> 
                     <th>No.</th>
                     <th>Cédula</th>
                     <th>Nombre</th>
@@ -29,6 +29,7 @@
                     <th>Asistencias</th>
                     <th>Faltas</th>
                     <th>Reposiciones</th>
+                    <th>Nota Proporcional</th>
                     <th>Detalles</th>
                 </tr>
             </thead>

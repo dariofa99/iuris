@@ -17,8 +17,10 @@ class CreateReferencesDataOptionsTable extends Migration
             $table->increments('id');
             $table->string('value')->nullable();   
             $table->boolean('status')->default(1);     
-            $table->boolean('active_other_input')->default(0);                           
+            $table->boolean('active_other_input')->default(0);  
+            $table->string('other_input_label')->nullable();                         
             $table->integer('references_data_id')->unsigned();
+
             $table->foreign('references_data_id')->references('id')->on('references_data')
             ->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

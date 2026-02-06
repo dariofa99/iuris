@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Incidencia extends Model
 {
-    
+
     protected $table = 'incidencias';
     protected $fillable = [
         'motivo',
@@ -45,12 +45,47 @@ class Incidencia extends Model
         return $this->hasMany(IncidenciaEstado::class);
     }
 
-     public function asignaciones()
+    public function asignaciones()
     {
-   
+
         return $this->belongsToMany(AsignacionCaso::class, 'incidencias_asignacion', 'incidencia_id', 'asig_caso_id')
             ->withPivot('incidencia_id', 'asig_caso_id', 'id')
             ->withTimestamps();
-    
+    }
+
+
+    public function expedientes()
+    {
+        return $this->hasManyThrough(
+            Expediente::class,
+            AsignacionCaso::class,
+            'id',                          // FK en AsignacionCaso
+            'expid',                        // FK en Expediente
+            'asig_caso_id',                           // Local key en Incidencia (through pivot)
+            'asigexp_id'                    // FK en AsignacionCaso
+        );
+    }
+
+    public function scopeFilter($builder, $request)
+    {
+        $filter = $request->get('filter');
+        $filter_value = $request->get('filter_value');
+
+        if ($filter == null || $filter == '') {
+            return $builder;
+        }
+
+        return $builder->where(function ($query) use ($filter, $filter_value) {
+
+            $query->where('estado_id', $filter_value)
+                ->orWhereHas('asignaciones', function ($q) use ($filter_value) {
+                    $q->whereHas('expediente', function ($subQ) use ($filter_value) {
+                        $subQ->where('expid', $filter_value);
+                    });
+                })
+                ->orWhereHas('user', function ($q) use ($filter_value) {
+                    $q->where('idnumber', 'LIKE', "%$filter_value%");
+                });
+        });
     }
 }
