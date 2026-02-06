@@ -18,6 +18,48 @@
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
     <style>
+        /* círculo moderno */
+        .check-ui {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+            background: #fff;
+            cursor: pointer;
+            transition: all .25s ease;
+            display: inline-block;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+        }
+
+        /* hover */
+        .check-ui:hover {
+            transform: scale(1.08);
+        }
+
+        /* checked */
+        .check-modern:checked+.check-ui {
+            background: #207e1c;
+            border-color: #207e1c;
+        }
+
+        /* icono check */
+        .check-modern:checked+.check-ui::after {
+            content: "✓";
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            position: absolute;
+            top: 1px;
+            left: 6px;
+        }
+
+        /* disabled */
+        .check-modern:disabled+.check-ui {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+  
         /* Animaciones */
         @keyframes fadeInUp {
             from {
@@ -297,7 +339,7 @@
                                         <h5 class="font-weight-bold text-dark mb-0">
                                             {{ $user->name }} {{ $user->lastname }}
                                         </h5>
-                                        <div >
+                                        <div>
                                             @if ($user->email)
                                                 <small class="text-muted d-block">
                                                     <i class="fas fa-envelope mr-1"></i>{{ $user->email }}
@@ -308,7 +350,7 @@
                                                     <i class="fas fa-phone mr-1"></i>{{ $user->tel1 }}
                                                 </small>
                                             @endif
-                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -400,28 +442,26 @@
                                     </div>
 
                                     @isset($user)
-                                        
-                                  
-                                    <div class="col-md-12 mt-3">
-                                        <div class="mb-1">
-                                            <h5 class="font-weight-bold text-dark mb-0">
-                                                {{ $user->name }} {{ $user->lastname }}
-                                            </h5>
-                                            <small class="text-muted d-block">
-                                                @if ($user->email)
-                                                    <small class="text-muted d-block">
-                                                        <i class="fas fa-envelope mr-1"></i>{{ $user->email }}
-                                                    </small>
-                                                @endif
-                                                @if ($user->tel1)
-                                                    <small class="text-muted d-block">
-                                                        <i class="fas fa-phone mr-1"></i>{{ $user->tel1 }}
-                                                    </small>
-                                                @endif
-                                            </small>
+                                        <div class="col-md-12 mt-3">
+                                            <div class="mb-1">
+                                                <h5 class="font-weight-bold text-dark mb-0">
+                                                    {{ $user->name }} {{ $user->lastname }}
+                                                </h5>
+                                                <small class="text-muted d-block">
+                                                    @if ($user->email)
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-envelope mr-1"></i>{{ $user->email }}
+                                                        </small>
+                                                    @endif
+                                                    @if ($user->tel1)
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-phone mr-1"></i>{{ $user->tel1 }}
+                                                        </small>
+                                                    @endif
+                                                </small>
+                                            </div>
                                         </div>
-                                    </div>
-  @endisset
+                                    @endisset
                                 </div>
 
                             </form>
@@ -442,7 +482,7 @@
             $color = $nota >= 4 ? 'success' : ($nota >= 3 ? 'warning' : 'danger');
 
         @endphp
-      {{--   <div class="col-md-3">
+        {{--   <div class="col-md-3">
             <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
 
                 <h6 class="text-muted">Nota de Asistencia</h6>
@@ -553,13 +593,15 @@
                                                 <a style="color: #ffffff !important; text-decoration: none;" target="_blank"
                                                     href="/expedientes/{{ $data[0]['expediente'] }}/edit"
                                                     class="h4 font-weight-bold mb-0 hover-glow" style="font-size: 1.8rem;">
-                                                   {{ $data[0]['expediente'] }}
+                                                    {{ $data[0]['expediente'] }}
                                                 </a>
                                             </div>
                                         </div>
 
                                         <!-- Separador visual -->
-                                        <div style="height: 50px; width: 2px; background: rgba(255,255,255,0.3); margin: 0 20px;"></div>
+                                        <div
+                                            style="height: 50px; width: 2px; background: rgba(255,255,255,0.3); margin: 0 20px;">
+                                        </div>
 
                                         <!-- Información del expediente -->
                                         <div class="col">
@@ -568,7 +610,8 @@
                                                 <div class="col-auto mr-4">
                                                     <div class="text-white">
                                                         <div class="d-flex align-items-center">
-                                                            <i class="fas fa-calendar fa-lg mr-2" style="opacity: 0.8;"></i>
+                                                            <i class="fas fa-calendar fa-lg mr-2"
+                                                                style="opacity: 0.8;"></i>
                                                             <div>
                                                                 {{-- <small class="opacity-75 d-block">Período</small> --}}
                                                                 <strong>{{ $data[0]['periodo'] }}</strong>
@@ -578,7 +621,7 @@
                                                 </div>
 
                                                 <!-- Corte/Segmento -->
-                                              {{--   <div class="col-auto mr-4">
+                                                {{--   <div class="col-auto mr-4">
                                                     <div class="text-white">
                                                         <div class="d-flex align-items-center">
                                                             <i class="fas fa-cut fa-lg mr-2" style="opacity: 0.8;"></i>
@@ -594,10 +637,12 @@
                                                 <div class="col-auto">
                                                     <div class="text-white">
                                                         <div class="d-flex align-items-center">
-                                                            <i class="fas fa-sticky-note fa-lg mr-2" style="opacity: 0.8;"></i>
+                                                            <i class="fas fa-sticky-note fa-lg mr-2"
+                                                                style="opacity: 0.8;"></i>
                                                             <div>
-                                                                <small class="opacity-75 d-block">Notas <strong>{{ count($data) }} registros</strong></small>
-                                                                
+                                                                <small class="opacity-75 d-block">Notas
+                                                                    <strong>{{ count($data) }} registros</strong></small>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -701,23 +746,23 @@
                                                                     @if (currentUser()->hasRole('amatai') || currentUser()->can('eliminar_notas'))
                                                                         <div>
                                                                             <button
-                                                                                id="btn_eliminar_notas_ver-{{ $key_nota }}"
+                                                                                id="btn_eliminar_notas_ver-{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }}"
                                                                                 class="btn btn-danger btn-outline-light btn-sm btn_eliminar_notas_ver btn-pulse"
-                                                                                data-id="{{ $key_nota }}">
+                                                                                data-id="{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }}">
                                                                                 <i class="fas fa-trash-alt mr-1"></i>
                                                                                 Eliminar
                                                                             </button>
                                                                             <button style="display: none"
-                                                                                id="btn_cancel_notas_ver-{{ $key_nota }}"
+                                                                                id="btn_cancel_notas_ver-{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }}"
                                                                                 class="btn btn-warning btn-outline-light btn-sm btn_cancel_notas_ver btn-pulse"
-                                                                                data-id="{{ $key_nota }}">
+                                                                                data-id="{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }}">
                                                                                 <i class="fas fa-times mr-1"></i>
                                                                                 Cancelar
                                                                             </button>
                                                                             <button style="display: none"
-                                                                                id="btn_delete_notas_ver-{{ $key_nota }}"
+                                                                                id="btn_delete_notas_ver-{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }}"
                                                                                 class="btn btn-success btn-outline-light btn-sm btn_delete_notas_ver btn-pulse"
-                                                                                data-id="{{ $key_nota }}">
+                                                                                data-id="{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }}">
                                                                                 <i class="fas fa-check mr-1"></i>
                                                                                 Confirmar
                                                                             </button>
@@ -883,9 +928,22 @@
                                                             </div>
 
                                                         </div>
-                                                        <input type="hidden" disabled
-                                                            class="chk_notas-{{ $key_nota }}"
-                                                            value="{{ $nota['id'] }}">
+                                                        {{--  <input type="hidden" disabled
+                                                            class="chk_notas-{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }} "
+                                                            value="{{ $nota['id'] }}">  --}}
+                                                        <div class="custom-check position-absolute"
+                                                            style="top:10px; right:10px;">
+
+                                                             <input type="checkbox"
+                                                                class="chk_notas-{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }} d-none check-modern"
+                                                                value="{{ $nota['id'] }}" id="chk_{{ $nota['id'] }}-{{ $data[0]['tbl_org_id'] }}"
+                                                                disabled> 
+
+                                                            <label for="chk_{{ $nota['id'] }}-{{ $data[0]['tbl_org_id'] }}"
+                                                                class="check-ui mb-0"></label>
+
+                                                        </div> 
+
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -1132,7 +1190,7 @@
     <script>
         $(document).ready(function() {
             // Animación de acordeón
-          
+
         });
     </script>
 @endpush
