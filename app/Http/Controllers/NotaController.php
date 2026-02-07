@@ -92,9 +92,6 @@ class NotaController extends Controller
             $request->session()->flash('message-success', 'No se encontró el estudiante!');
         }
 
-
-
-         dd($notas);
         return view("myforms.notas_ver.index", compact('notas', 'segmentoAct'));
     }
 

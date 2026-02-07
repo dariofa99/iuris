@@ -59,7 +59,7 @@
             opacity: .4;
             cursor: not-allowed;
         }
-  
+
         /* Animaciones */
         @keyframes fadeInUp {
             from {
@@ -294,6 +294,206 @@
                 margin-top: 10px;
             }
         }
+
+        /* =====================================
+               ESTILOS MODERNOS PARA FORMULARIO
+               ===================================== */
+
+        .form-group-custom {
+            position: relative;
+        }
+
+        .form-label-modern {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group-modern {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .modern-input,
+        .modern-select {
+            height: 45px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+            background: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .modern-input {
+            padding: 10px 12px 10px 45px;
+        }
+
+        .modern-select {
+            padding: 10px 12px;
+        }
+
+        .modern-input:focus,
+        .modern-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 16px rgba(102, 126, 234, 0.15);
+            outline: none;
+            background: #f8fbff;
+        }
+
+        .modern-input::placeholder {
+            color: #a0a9b8;
+            font-weight: 400;
+        }
+
+        .modern-select option {
+            background: #fff;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .input-icon-modern {
+            position: absolute;
+            left: 12px;
+            color: #667eea;
+            font-size: 1rem;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .modern-input:focus~.input-icon-modern,
+        .modern-select:focus~.input-icon-modern {
+            color: #764ba2;
+        }
+
+        .btn-search-modern {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-search-modern:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-search-modern:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-search-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .btn-search-modern:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-search-modern i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-search-modern span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sombra y redondeado mejorados */
+        .shadow-xl {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .rounded-xl {
+            border-radius: 16px !important;
+        }
+
+        /* Animación de entrada suave */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card[style*="background"] {
+            animation: slideInDown 0.5s ease-out forwards;
+        }
+
+        /* Efecto hover en tarjeta del formulario */
+        .form-group-custom:hover .input-icon-modern {
+            transform: scale(1.1);
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            .modern-input {
+                height: 42px;
+                padding: 8px 10px 8px 40px;
+                font-size: 13px;
+            }
+
+            .modern-select {
+                height: 42px;
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .btn-search-modern {
+                padding: 10px 16px;
+                font-size: 13px;
+                margin-top: 0;
+            }
+
+            .form-label-modern {
+                font-size: 0.85rem;
+            }
+
+            .form-label-modern i {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Transiciones suaves en inputs */
+        .modern-input,
+        .modern-select,
+        .btn-search-modern {
+            will-change: transform;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 @endpush
@@ -306,7 +506,7 @@
 
 
         <!-- FORM CARD -->
-        <div class="col-md-9">
+        <div class="col-md-12">
 
             <div class="shadow-lg border-0 rounded-lg">
                 @if (currentUser()->hasRole('estudiante'))
@@ -357,20 +557,42 @@
                         </div>
                     </div>
                 @else
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="/notas/ver/estudiante" method="GET" id="myFormBuscarNotas">
+                    <div class="card border-0 shadow-xl rounded-xl"
+                        style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);">
+                        <div class="card-body p-4">
+                            {{-- Encabezado del formulario --}}
+                            <div class="mb-4 pb-3" style="border-bottom: 2px solid #e9ecef;">
+                              {{--   <h5 class="mb-1 font-weight-bold text-dark d-flex align-items-center">
+                                    <i class="fas fa-search text-primary mr-2" style="font-size: 1.3rem;"></i>
+                                    Buscar Notas de Estudiante
+                                </h5> --}}
+                                {{--      <small class="text-muted">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Completa los campos para filtrar las notas
+                                </small> --}}
+                            </div>
 
+                            <form action="/notas/ver/estudiante" method="GET" id="myFormBuscarNotas">
                                 {{-- FILA PRINCIPAL --}}
                                 <div class="form-row align-items-end">
 
                                     {{-- Documento --}}
                                     @if (auth()->user()->can('ver_notas_estudiante'))
-                                        <div class="col-md-3">
-                                            <label class="small text-muted mb-1">Documento</label>
-                                            <input placeholder="Ingrese un número de documento" required type="text"
-                                                value="{{ Request::get('idnumber') }}" class="form-control shadow-sm"
-                                                name="idnumber">
+                                        <div class="col-md-3 mb-3 mb-md-0">
+                                            <div class="form-group-custom">
+                                                <label class="form-label-modern mb-2">
+                                                    <i class="fas fa-id-card text-primary mr-2"></i>
+                                                    <span class="font-weight-600">Documento</span>
+                                                </label>
+                                                <div class="input-group-modern">
+                                                    <input placeholder="Ej: 12345678" required type="text"
+                                                        value="{{ Request::get('idnumber') }}"
+                                                        class="form-control modern-input" name="idnumber">
+                                                    <span class="input-icon-modern">
+                                                        <i class="fas fa-user"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     @else
                                         @if (Request::has('idnumber'))
@@ -379,91 +601,107 @@
                                         @endif
                                     @endif
 
-
-                                    {{-- ORIGEN (MISMO FOREACH) --}}
-                                    <div class="col-md-2">
-                                        <label class="small text-muted mb-1">Origen</label>
-                                        <select class="form-control shadow-sm" name="origen">
-
-                                            <option @if (Request::has('origen') and Request::get('origen') == 'expedientes') selected @endif value="expedientes">
-                                                Expedientes
-                                            </option>
-
-                                            <option @if (Request::has('origen') and Request::get('origen') == 'conciliaciones') selected @endif
-                                                value="conciliaciones">
-                                                Conciliaciones
-                                            </option>
-
-                                        </select>
-                                    </div>
-
-
-                                    {{-- PERIODO (TU FOREACH ORIGINAL) --}}
-                                    <div class="col-md-3">
-                                        <label class="small text-muted mb-1">Periodo</label>
-                                        <select class="form-control shadow-sm" name="perid">
-
-                                            @foreach ($periodos as $key => $periodo)
-                                                <option @if (Request::has('perid') and Request::get('perid') == $periodo->id) selected @endif
-                                                    value="{{ $periodo->id }}">
-                                                    {{ $periodo->prddes_periodo }}
-                                                </option>
-                                            @endforeach
-
-                                        </select>
-                                    </div>
-
-
-                                    {{-- CORTE (TU FOREACH ORIGINAL) --}}
-                                    <div class="col-md-2">
-                                        <label class="small text-muted mb-1">Corte</label>
-                                        <select class="form-control shadow-sm" name="segid">
-
-                                            @foreach ($segmentos as $key => $segmento)
-                                                <option @if (
-                                                    (Request::has('segid') and Request::get('segid') == $segmento->id) ||
-                                                        ($segmentoAct->id == $segmento->id and !Request::has('segid'))) selected @endif
-                                                    value="{{ $segmento->id }}">
-                                                    {{ $segmento->segnombre }}
-                                                </option>
-                                            @endforeach
-
-                                            <option value="">Ver todos</option>
-
-                                        </select>
-                                    </div>
-
-
-                                    {{-- BOTÓN --}}
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary btn-block shadow-sm">
-                                            🔍 Buscar
-                                        </button>
-                                    </div>
-
-                                    @isset($user)
-                                        <div class="col-md-12 mt-3">
-                                            <div class="mb-1">
-                                                <h5 class="font-weight-bold text-dark mb-0">
-                                                    {{ $user->name }} {{ $user->lastname }}
-                                                </h5>
-                                                <small class="text-muted d-block">
-                                                    @if ($user->email)
-                                                        <small class="text-muted d-block">
-                                                            <i class="fas fa-envelope mr-1"></i>{{ $user->email }}
-                                                        </small>
-                                                    @endif
-                                                    @if ($user->tel1)
-                                                        <small class="text-muted d-block">
-                                                            <i class="fas fa-phone mr-1"></i>{{ $user->tel1 }}
-                                                        </small>
-                                                    @endif
-                                                </small>
+                                    {{-- EXPEDIENTE --}}
+                                    <div class="col-md-2 mb-3 mb-md-0">
+                                        <div class="form-group-custom">
+                                            <label class="form-label-modern mb-2">
+                                                <i class="fas fa-folder-open text-success mr-2"></i>
+                                                <span class="font-weight-600">Expediente</span>
+                                            </label>
+                                            <div class="input-group-modern">
+                                                <input type="text" name="expid" id="expi" placeholder="Número"
+                                                    value="{{ Request::get('expid') }}" class="form-control modern-input">
+                                                <span class="input-icon-modern">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </span>
                                             </div>
                                         </div>
-                                    @endisset
+                                    </div>
+
+                                    {{-- ORIGEN --}}
+                                    <div class="col-md-2 mb-3 mb-md-0">
+                                        <div class="form-group-custom">
+                                            <label class="form-label-modern mb-2">
+                                                <i class="fas fa-sitemap text-info mr-2"></i>
+                                                <span class="font-weight-600">Origen</span>
+                                            </label>
+                                            <select class="form-control modern-select" name="origen">
+                                                <option value="">-- Seleccionar --</option>
+                                                <option @if (Request::has('origen') and Request::get('origen') == 'expedientes') selected @endif
+                                                    value="expedientes">
+                                                    📋 Expedientes
+                                                </option>
+                                                <option @if (Request::has('origen') and Request::get('origen') == 'conciliaciones') selected @endif
+                                                    value="conciliaciones">
+                                                    🤝 Conciliaciones
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {{-- PERIODO --}}
+                                    <div class="col-md-3 mb-3 mb-md-0">
+                                        <div class="form-group-custom">
+                                            <label class="form-label-modern mb-2">
+                                                <i class="fas fa-calendar-alt text-warning mr-2"></i>
+                                                <span class="font-weight-600">Período</span>
+                                            </label>
+                                            <select class="form-control modern-select" name="perid">
+                                                <option value="">-- Seleccionar --</option>
+                                                @foreach ($periodos as $key => $periodo)
+                                                    <option @if (Request::has('perid') and Request::get('perid') == $periodo->id) selected @endif
+                                                        value="{{ $periodo->id }}">
+                                                        {{ $periodo->prddes_periodo }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {{-- BOTÓN BUSCAR --}}
+                                    <div class="col-md-2 mb-3 mb-md-0">
+                                        <button type="submit" class="btn btn-search-modern btn-block"
+                                            style="height: 45px;">
+                                            <i class="fas fa-search mr-2"></i>
+                                            <span>Buscar</span>
+                                        </button>
+                                    </div>
                                 </div>
 
+                                {{-- INFORMACIÓN del USUARIO encontrado --}}
+                                @isset($user)
+                                    <div class="mt-4 pt-4" style="border-top: 2px solid #e9ecef;">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                    style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                                    <i class="fas fa-user text-white" style="font-size: 1.5rem;"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div>
+                                                    <h6 class="font-weight-bold text-dark mb-1">
+                                                        {{ $user->name }} {{ $user->lastname }}
+                                                    </h6>
+                                                    <div class="small text-muted">
+                                                        @if ($user->email)
+                                                            <div class="mb-1">
+                                                                <i
+                                                                    class="fas fa-envelope mr-1 text-primary"></i>{{ $user->email }}
+                                                            </div>
+                                                        @endif
+                                                        @if ($user->tel1)
+                                                            <div>
+                                                                <i
+                                                                    class="fas fa-phone mr-1 text-success"></i>{{ $user->tel1 }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endisset
                             </form>
                         </div>
                     </div>
@@ -482,23 +720,20 @@
             $color = $nota >= 4 ? 'success' : ($nota >= 3 ? 'warning' : 'danger');
 
         @endphp
-        {{--   <div class="col-md-3">
-            <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
-
-                <h6 class="text-muted">Nota de Asistencia</h6>
-
-                <h1 class="display-4 fw-bold text-{{ $color }}">
-                    {{ $nota ? number_format($nota, 2) : 'N/A' }}
-                </h1>
-
-                <div class="progress mt-3" style="height:10px;">
-                    <div class="progress-bar bg-{{ $color }}" style="width: {{ ($nota / 5) * 100 }}%">
+        @if (currentUser()->hasRole('amatai'))
+           {{--  <div class="col-md-2">
+                <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
+                    <h6 class="text-muted">Nota de Asistencia</h6>
+                    <h1 class="display-4 fw-bold text-{{ $color }}">
+                        {{ $nota ? number_format($nota, 2) : 'N/A' }}
+                    </h1>
+                    <div class="progress mt-3" style="height:10px;">
+                        <div class="progress-bar bg-{{ $color }}" style="width: {{ ($nota / 5) * 100 }}%">
+                        </div>
                     </div>
                 </div>
-
-                
-            </div>
-        </div> --}}
+            </div> --}}
+        @endif
     </div>
 
 
@@ -590,9 +825,10 @@
                                                 <small class="text-white opacity-75 mb-1">
                                                     <i class="fas fa-folder-open mr-1"></i>Expediente
                                                 </small>
-                                                <a style="color: #ffffff !important; text-decoration: none;" target="_blank"
-                                                    href="/expedientes/{{ $data[0]['expediente'] }}/edit"
-                                                    class="h4 font-weight-bold mb-0 hover-glow" style="font-size: 1.8rem;">
+                                                <a style="color: #ffffff !important; text-decoration: none;"
+                                                    target="_blank" href="/expedientes/{{ $data[0]['expediente'] }}/edit"
+                                                    class="h4 font-weight-bold mb-0 hover-glow"
+                                                    style="font-size: 1.8rem;">
                                                     {{ $data[0]['expediente'] }}
                                                 </a>
                                             </div>
@@ -934,15 +1170,17 @@
                                                         <div class="custom-check position-absolute"
                                                             style="top:10px; right:10px;">
 
-                                                             <input type="checkbox"
+                                                            <input type="checkbox"
                                                                 class="chk_notas-{{ $key_nota }}-{{ $data[0]['tbl_org_id'] }} d-none check-modern"
-                                                                value="{{ $nota['id'] }}" id="chk_{{ $nota['id'] }}-{{ $data[0]['tbl_org_id'] }}"
-                                                                disabled> 
+                                                                value="{{ $nota['id'] }}"
+                                                                id="chk_{{ $nota['id'] }}-{{ $data[0]['tbl_org_id'] }}"
+                                                                disabled>
 
-                                                            <label for="chk_{{ $nota['id'] }}-{{ $data[0]['tbl_org_id'] }}"
+                                                            <label
+                                                                for="chk_{{ $nota['id'] }}-{{ $data[0]['tbl_org_id'] }}"
                                                                 class="check-ui mb-0"></label>
 
-                                                        </div> 
+                                                        </div>
 
                                                     </div>
                                                 </div>

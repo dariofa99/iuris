@@ -73,7 +73,7 @@ $(document).ready(function () {
 				$("#wait").show();
 				let inactivarEstudiante = document.getElementById("confirmCheck").checked;
 				let estudiante_id = $(this).attr("data-estudiante");
-				let response = await horariosService.deleteTurno(id, {inactivarEstudiante: inactivarEstudiante, estudiante_id: estudiante_id });
+				let response = await horariosService.deleteTurno(id, { inactivarEstudiante: inactivarEstudiante, estudiante_id: estudiante_id });
 				toastr.success("Eliminado con éxito", "", {
 					positionClass: "toast-top-right",
 					timeOut: "4000",
@@ -374,17 +374,60 @@ async function getAsistenciaReport(request = {}) {
 	if (response.length > 0) {
 		var datosasis = '';
 		response.forEach((value, key) => {
-			datosasis += '<tr>' +
-				'<td>' + parseInt(key + 1) + '</td>' +
-				'<td>' + value.idnumber + '</td>' +
-				'<td>' + value.name + ' ' + value.lastname + '</td>' +
-				'<td>' + value.ref_nombre + '</td>' +
-				'<td>' + value.asistencia + '</td>' +
-				'<td>' + parseInt(value.total_faltas) + '</td>' +
-				'<td>' + value.reposicion + '</td>' +
-				'<td>' + value.nota_proporcional + '</td>' +
-				'<td><button type="button" class="btn btn-success btn-sm btn_det_rasis" data-idnumber=' + value.idnumber + ' id="dt_rasis-' + value.idnumber + '" name="' + value.name + ' ' + value.lastname + '">Detalles</button></td>' +
-				'</tr>';
+			let asistenciasNum = parseInt(value.asistencia) || 0;
+			let badgeClass = "high";// asistenciasNum >= 80 ? 'high' : (asistenciasNum >= 60 ? 'medium' : 'low');
+
+			// Convertir nota proporcional a número
+			let notaProporcional = parseFloat(value.nota_proporcional) || 0;
+			let notaBadgeClass = notaProporcional >= 4 ? 'high' : (notaProporcional >= 3 ? 'medium' : 'low');
+			datosasis += `
+                        <tr>
+                            <td>
+                                <span class="font-weight-bold text-primary">${parseInt(key + 1)}</span>
+                            </td>
+                            <td>
+                                <span class="font-monospace">${value.idnumber}</span>
+                            </td>
+                            <td>
+                                <strong>${value.name} ${value.lastname}</strong>
+                            </td>
+                            <td>
+                                <span class="badge badge-light" style="background: #f0f2f5; color: #2c3e50; font-weight: 600;">
+                                    ${value.ref_nombre}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-asistencia ${badgeClass}">
+                                    ${value.asistencia}
+                                </span>
+                            </td>
+                            <td>
+                                <span style="color: #dc3545; font-weight: 700;">
+                                    ${parseInt(value.total_faltas)}
+                                </span>
+                            </td>
+                            <td>
+                                <span style="color: #11998e; font-weight: 700;">
+                                    ${value.reposicion}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-asistencia ${notaBadgeClass}">
+                                    ${notaProporcional.toFixed(1)}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" 
+                                    class="btn btn-details-modern btn_det_rasis" 
+                                    data-idnumber="${value.idnumber}" 
+                                    id="dt_rasis-${value.idnumber}" 
+									name="${value.name} ${value.lastname}"
+                                    title="Ver detalles de ${value.name} ${value.lastname}">
+                                    <i class="fas fa-eye mr-1"></i> Detalles
+                                </button>
+                            </td>
+                        </tr>
+                    `;
 		});
 		$("#tableEstAsistencia tbody").html(datosasis);
 	} else {

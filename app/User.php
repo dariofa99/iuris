@@ -351,7 +351,7 @@ class User extends Authenticatable
                         $query->where('segid', $request->segid);
                     }
                     
-                    if ($request->has('expid') and $request->segid != '') {
+                    if ($request->has('expid') and $request->segid != '' and $request->expid != '') {
                         
                         $query->where('expidnumber', $request->expid);
                     }
