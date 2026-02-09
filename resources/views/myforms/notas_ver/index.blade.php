@@ -296,8 +296,8 @@
         }
 
         /* =====================================
-               ESTILOS MODERNOS PARA FORMULARIO
-               ===================================== */
+                               ESTILOS MODERNOS PARA FORMULARIO
+                               ===================================== */
 
         .form-group-custom {
             position: relative;
@@ -494,6 +494,28 @@
         .btn-search-modern {
             will-change: transform;
         }
+
+        .card-header-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: linear-gradient(135deg, #177839 90%, #ffd13b 100%);
+
+            border-radius: 12px 12px 0 0;
+
+            /* CLAVE */
+            overflow: visible;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+            backdrop-filter: blur(3px);
+            top: 50px;
+            /* altura navbar */
+            z-index: 1020;
+        }
+
+        .card-body {
+            overflow: visible !important;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 @endpush
@@ -506,7 +528,7 @@
 
 
         <!-- FORM CARD -->
-        <div class="col-md-12">
+        <div class="col-md-10">
 
             <div class="shadow-lg border-0 rounded-lg">
                 @if (currentUser()->hasRole('estudiante'))
@@ -562,7 +584,7 @@
                         <div class="card-body p-4">
                             {{-- Encabezado del formulario --}}
                             <div class="mb-4 pb-3" style="border-bottom: 2px solid #e9ecef;">
-                              {{--   <h5 class="mb-1 font-weight-bold text-dark d-flex align-items-center">
+                                {{--   <h5 class="mb-1 font-weight-bold text-dark d-flex align-items-center">
                                     <i class="fas fa-search text-primary mr-2" style="font-size: 1.3rem;"></i>
                                     Buscar Notas de Estudiante
                                 </h5> --}}
@@ -720,8 +742,8 @@
             $color = $nota >= 4 ? 'success' : ($nota >= 3 ? 'warning' : 'danger');
 
         @endphp
-        @if (currentUser()->hasRole('amatai'))
-           {{--  <div class="col-md-2">
+        @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('estudiante'))
+            <div class="col-md-2">
                 <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
                     <h6 class="text-muted">Nota de Asistencia</h6>
                     <h1 class="display-4 fw-bold text-{{ $color }}">
@@ -732,7 +754,7 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
         @endif
     </div>
 
@@ -802,11 +824,10 @@
 
 
                     <!-- Tarjeta principal para cada expediente -->
-                    <div class="card shadow-lg border-0 mb-4 animated fadeInUp"
-                        style="animation-delay: {{ $count * 0.1 }}s;">
+                    <div class="card shadow-lg border-0 mb-4 animated fadeInUp mt-10"
+                        style="animation-delay: {{ $count * 0.1 }}s; overflow: visible;">
                         <!-- Cabecera con gradiente -->
-                        <div class="card-header border-0 p-0 overflow-hidden"
-                            style="background: linear-gradient(135deg, #177839 90%, #ffd13b 100%);">
+                        <div class="card-header-sticky">
                             <div class="d-flex align-items-center p-4">
                                 <div class="mr-4">
                                     <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
@@ -1079,7 +1100,7 @@
                                                 <div
                                                     class="col-md-{{ $key_2 == 0 ? 4 : 2 }} col-lg-{{ $key_2 == 0 ? 6 : 2 }} mb-3">
                                                     <div
-                                                        class="card card-success card-outline h-100 border-0 shadow-sm hover-lift {{ $tipoClase }}">
+                                                        class="card card-success card-outline h-95 border-0 shadow-sm hover-lift {{ $tipoClase }}">
                                                         <!-- Indicador visual del tipo de nota -->
                                                         <div
                                                             class="card-type-indicator card-outline bg-{{ $esNumero ? 'warning' : 'info' }} text-white py-1 text-center">
@@ -1138,7 +1159,6 @@
 
                                                             <!-- Footer con metadatos -->
 
-                                                            <hr>
                                                             <div class="border-top pt-3">
                                                                 <div
                                                                     class="d-flex justify-content-between align-items-center">

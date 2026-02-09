@@ -1,13 +1,13 @@
 <script>
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualVacNavidad");
+        localStorage.removeItem("keyTurnosDocenteRojas");
 
-        var keyCir = localStorage.getItem("keyTurnosDocenteRojas");
+        var keyCir = localStorage.getItem("keyNotaAsistenciaConsultorio");
         $("#modal_t").text("");
         var message = '';
         var message = getMotivationalMessage();
         if (keyCir == null) {
-            message = getMotivationalMessage();
+            message = getHTMLDocument();
         } else {
             $("#modal_t").text("");
             // message = getHtmlCircular();
@@ -177,7 +177,7 @@
         return message;
     }
 
-    function getHabilityTeacherMessage() {
+    function getHTMLDocument() {
 
         $("#contentNotButtonDis").append($("<button>", {
             class: "btn btn-outline-secondary",
@@ -206,24 +206,16 @@
         <div class="card-body">
 
             <p>
-                En atención a lo dispuesto en el 
-                <strong>Estatuto Estudiantil</strong>, donde se establece que la 
-                <strong>asistencia a las actividades académicas es obligatoria</strong> 
-                y constituye parte esencial del proceso formativo, el Consultorio Jurídico 
-                implementa oficialmente el <strong>cálculo de la nota de asistencia</strong> 
-                como componente evaluativo del desempeño académico.
+               La unidad de Consultorios Jurídicos y Centro de Conciliación “Eduardo Alvarado Hurtado”, de la Universidad de Nariño, recuerda a los estudiantes, que, en cumplimiento de lo establecido en el Estatuto Estudiantil y el Reglamento interno, la <b>ASISTENCIA</b> a los turnos y demás actividades académicas programadas en esta materia, es obligatoria y un componente esencial del proceso formativo. En consecuencia, se <b>DA A CONOCER QUE, DESDE AHORA</b>, podrán consultar dicha calificación directamente en IURIS. 
             </p>
 
             <p>
-                A partir de la fecha, cada estudiante podrá consultar en el sistema su 
-                calificación correspondiente, la cual se obtiene de manera proporcional 
-                según los días efectivamente asistidos frente a los días en que debía asistir 
-                durante el período académico.
+               Para ese efecto, se da también a conocer, que la calificación de la asistencia en IURIS, se calcula de forma proporcional según los turnos efectivamente asistidos, frente a los turnos programados, mediante la siguiente fórmula .
             </p>
 
             <div class="alert alert-primary mt-3" style="border-radius:10px;">
                 <strong>Fórmula de cálculo:</strong><br>
-                Nota de asistencia = Días asistidos × ( 5 ÷ Días que debía asistir )
+                Nota de asistencia = Turnos asistidos × ( 5 ÷ Turnos que debía asistir )
             </div>
 
             <p class="mb-0">
@@ -246,8 +238,7 @@
             </h5>
 
             <p>
-                La nota de asistencia hará parte de la evaluación integral del Consultorio 
-                y se integrará a la calificación final según la estructura académica del curso:
+                La nota de asistencia ha hecho parte de la evaluación integral del Consultorio Jurídico, incorporándose dentro de la calificación final conforme a la estructura académica de cada modalidad:
             </p>
 
             <ul style="margin-bottom:0;">
@@ -266,14 +257,11 @@
         <div class="card-body">
 
             <p class="mb-2">
-                Esta medida fortalece el compromiso, la responsabilidad y la participación 
-                constante en las actividades del Consultorio, reconociendo el cumplimiento 
-                regular de las jornadas académicas y del servicio a la comunidad.
+                La socialización de esta información tiene como propósito que los estudiantes conozcan de manera oportuna cómo se consolida su desempeño académico y brindar mayor claridad y transparencia sobre la forma en como se calcula su nota final, igualmente, para recordar el reconocimiento que hace el Consultorio Jurídico a la constancia, el compromiso y la participación de los estudiantes en las actividades académicas y en el servicio a la comunidad.
             </p>
 
             <p class="mb-0">
-                Invitamos a todos los estudiantes a realizar seguimiento periódico de su registro 
-                de asistencia en el sistema institucional.
+                Se invita a todos los estudiantes a realizar seguimiento periódico de su registro de asistencia a través del sistema IURIS.
             </p>
 
         </div>
@@ -283,7 +271,7 @@
 
     <!-- FOOTER -->
     <div class="text-center text-muted mt-4" style="font-size:15px;">
-        Consultorio Jurídico – Universidad de Nariño<br>
+        Consultorios Jurídicos y Centro de Conciliación “Eduardo Alvarado Hurtado”<br>
         Vigente a partir de la fecha
     </div>
 
