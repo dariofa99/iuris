@@ -732,3 +732,75 @@
         animation: slideInUp 0.5s ease-out;
         font-size: 20px !important;
     }
+    /* ========= CARD PRO ========= */
+
+.pro-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    transition: .25s;
+}
+
+.pro-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
+
+/* ========= TITULOS ========= */
+
+.section-title {
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 18px;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+/* ========= GRID INFO ========= */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 18px;
+}
+
+.info-item span {
+    font-size: 11px;
+    color: #9ca3af;
+    display:block;
+}
+
+.info-item b {
+    font-size: 14px;
+    color: #111;
+}
+
+/* ========= AVATAR ========= */
+
+.avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+
+/* ========= CHIPS ========= */
+
+.chips {
+    display:flex;
+    gap:8px;
+}
+
+.chip {
+    padding:6px 14px;
+    font-size:12px;
+    border-radius:999px;
+    font-weight:600;
+}
+
+.chip-primary {
+    background:#e0e7ff;
+    color:#4338ca;
+}
