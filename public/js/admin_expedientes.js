@@ -12,6 +12,14 @@ $(document).ready(function () {
     document.addEventListener("invalid", function (e) {
         e.preventDefault();
     }, true);
+    $("#content_user_exp_asig").on("keydown","#myFormUserCreateExpediente input",function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            $("#registrar_exp_us").trigger("click");
+        }
+    }
+);
+
     removeRequired("#myFormUserCreateExpediente", "fechanacimien");
     $("#btn_chg_date").on("click", function (e) {
         e.preventDefault();
@@ -1236,12 +1244,12 @@ $(document).ready(function () {
                 });
                 window.location.reload(true)
             }
-        }else{
-                toastr.error("Hay campos que son obligatorios", "Atención!", {
-                    positionClass: "toast-top-right",
-                    timeOut: "4000",
-                });
-            }
+        } else {
+            toastr.error("Hay campos que son obligatorios", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+        }
 
     });
 

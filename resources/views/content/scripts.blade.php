@@ -542,7 +542,7 @@
       color: #777;
       display: block;
     ">
-      🕒 Últ. actualización: <b>6 de febrero de 2026</b><br>
+      🕒 Últ. actualización: <b>10 de febrero de 2026</b><br>
       Soporte: Registre sus incidencias <a href="/incidencias" target="_blank"
         style="color: #5563DE; text-decoration: underline;">Aquí!</a>
     </span>
