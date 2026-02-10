@@ -804,3 +804,62 @@
     background:#e0e7ff;
     color:#4338ca;
 }
+
+/* ================= CLICK EFFECT ================= */
+
+.avatar-click {
+    cursor: zoom-in;
+    transition: .25s;
+}
+
+.avatar-click:hover {
+    transform: scale(1.05);
+}
+
+/* ================= MODAL PRO ================= */
+
+.modal-image-pro {
+    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,.85);
+}
+
+/* imagen grande */
+
+.preview-img {
+    max-height: 85vh;
+    border-radius: 18px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.6);
+    animation: zoomIn .25s ease;
+}
+
+/* animación */
+
+@keyframes zoomIn {
+    from {
+        transform: scale(.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* botón cerrar */
+
+.btn-close-pro {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    font-size: 48px;
+    color: white;
+    background: transparent;
+    border: none;
+    z-index: 10;
+    cursor: pointer;
+    opacity: .8;
+}
+
+.btn-close-pro:hover {
+    opacity: 1;
+}
