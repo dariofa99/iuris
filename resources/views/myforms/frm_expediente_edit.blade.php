@@ -111,7 +111,7 @@
                     currentUser()->hasRole('diradmin') or
                     currentUser()->hasRole('coordprac') or
                     currentUser()->hasRole('dirgral')) and
-                $expediente->expestado_id != 2)
+                $expediente->expestado_id != 20)
             <li class="nav-item">
                 <a class="nav-link urlactive" id="reasignar-tab" data-toggle="tab" href="#reasignar_caso" role="tab"
                     aria-controls="reasignar" aria-selected="false">

@@ -1665,7 +1665,7 @@ class ExpedienteController extends Controller
       $user = $this->userService->find($request->input("id"));
       $user = $this->userService->update($user, $request);
     }
-    $expediente->usuarios()->syncWithoutDetaching([
+    $expediente->usuarios()->attach([
       $user->id => [
         "tipo_usuario_id" => 1,
         "estado_id" => 2

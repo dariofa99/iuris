@@ -1131,12 +1131,12 @@ $(document).ready(function () {
         } */
     });
 
-
-
-    $("#content_user_exp_add").on("submit", '#myFormUserAddCreateExpediente', async function (e) {
+    $("#myModal_exp_user_add").on("click", '#registrar_exp_us_add', async function (e) {
         e.preventDefault();
-        var errors = validateForm("myFormUserAddCreateExpediente");
-        if (errors.length <= 0) {
+        const form = document.getElementById("myFormUserAddCreateExpediente");
+        if (!form) return;
+        var isvalid = validateForms(form);
+        if (isvalid) {
             var request = convertFormToJSON("myFormUserAddCreateExpediente");
             var data = userService.getAditionalDataByForm("myFormUserAddCreateExpediente")
             request["data"] = (data);
@@ -1160,8 +1160,89 @@ $(document).ready(function () {
                 });
                 window.location.reload(true)
             }
-
+        } else {
+            toastr.error("Hay campos que son obligatorios", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
         }
+
+    });
+
+    /* 
+        $("#content_user_exp_add").on("submit", '#myFormUserAddCreateExpediente', async function (e) {
+            alert("hola")
+            e.preventDefault();
+            var errors = validateForm("myFormUserAddCreateExpediente");
+            if (errors.length <= 0) {
+                var request = convertFormToJSON("myFormUserAddCreateExpediente");
+                var data = userService.getAditionalDataByForm("myFormUserAddCreateExpediente")
+                request["data"] = (data);
+                request["exp_id"] = $("#expediente_id").val()
+                $("#wait").show();
+                let response = await expedientesService.addUser(request);
+                if (response.errors) {
+                    response.errors.forEach(error => {
+                        toastr.error(error, "", {
+                            positionClass: "toast-top-right",
+                            timeOut: "4000",
+                        });
+                    });
+                    $("#wait").hide();
+                } else {
+                    resetForm('myFormUserAddCreateExpediente');
+                    $("#myModal_exp_user_add").modal("hide");
+                    toastr.success("Usuario agregado con éxito", "", {
+                        positionClass: "toast-top-center",
+                        timeOut: "4000",
+                    });
+                    window.location.reload(true)
+                }
+    
+            }else{
+                toastr.error("Hay campos que son obligatorios", "Atención!", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+            }
+        }); */
+
+    $("#content_user_exp_add").on("click", '#actualizar_exp_us_add', async function (e) {
+        e.preventDefault();
+        const form = document.getElementById("myFormUserAddEditExpediente");
+        if (!form) return;
+        var isvalid = validateForms(form);
+        if (isvalid) {
+            var request = convertFormToJSON("myFormUserAddEditExpediente");
+            var data = userService.getAditionalDataByForm("myFormUserAddEditExpediente")
+            request["data"] = (data);
+            request["exp_id"] = $("#expediente_id").val()
+            $("#wait").show();
+            let response = await expedientesService.addUser(request);
+            if (response.errors) {
+                response.errors.forEach(error => {
+                    toastr.error(error, "", {
+                        positionClass: "toast-top-right",
+                        timeOut: "4000",
+                    });
+                });
+                $("#wait").hide();
+            } else {
+                resetForm('myFormUserAddCreateExpediente');
+                $("#myModal_exp_user_add").modal("hide");
+                toastr.success("Usuario agregado con éxito", "", {
+                    positionClass: "toast-top-center",
+                    timeOut: "4000",
+                });
+                window.location.reload(true)
+            }
+        }else{
+                toastr.error("Hay campos que son obligatorios", "Atención!", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+            }
+
     });
 
     $("#content_user_exp_add").on("submit", '#myFormUserAddEditExpediente', async function (e) {
@@ -1219,7 +1300,7 @@ $(document).ready(function () {
         if (!form) return;
         var isvalid = validateForms(form);
         if (isvalid) {
-           var request = convertFormToJSON("myFormUserEditExpediente");
+            var request = convertFormToJSON("myFormUserEditExpediente");
             var data = userService.getAditionalDataByForm('myFormUserEditExpediente');
             request["data"] = (data);
             $("#wait").show();
@@ -1239,7 +1320,7 @@ $(document).ready(function () {
                 });
 
             }
-          
+
             $("#wait").hide();
         } else {
             toastr.error("Hay campos que son obligatorios", "Atención!", {

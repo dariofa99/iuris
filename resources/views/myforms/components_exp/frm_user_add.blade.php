@@ -13,7 +13,7 @@
         @include('myforms.components_user.socioeconomica')
     </div>
     @if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('coordprac') || currentUser()->hasRole('amatai'))
-        <button type="submit" id="{{ isset($user) ? 'actualizar_exp_us_add' : 'registrar_exp_us_add' }}"
+        <button type="button" id="{{ isset($user) ? 'actualizar_exp_us_add' : 'registrar_exp_us_add' }}"
             class="btn btn-primary btn-block">{{ isset($user) ? 'Actualizar usuario' : 'Asignar usuario' }}  </button>
     @endif
 </form>

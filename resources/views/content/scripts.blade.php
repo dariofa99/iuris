@@ -196,7 +196,7 @@
             Circular Académica
         </h2>
         <p class="text-muted">
-            Implementación del cálculo de nota por asistencia – Consultorios Jurídicos
+           
         </p>
     </div>
 

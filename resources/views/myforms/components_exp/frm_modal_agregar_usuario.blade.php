@@ -4,7 +4,7 @@
     @endslot
 
     @slot('title')
-        Registro de persona usuaria. <small><i><strong>
+        Registro de persona usuaria.<br> <small><i><strong>
                     Los campos marcados con asterisco(*) son obligatorios.</strong></i></small>
     @endslot
 
