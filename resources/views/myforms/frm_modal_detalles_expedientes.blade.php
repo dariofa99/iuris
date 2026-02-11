@@ -39,9 +39,15 @@
                         </small>
 
                         <div class="chips justify-content-center mb-3">
-                            <span class="chip chip-primary">
-                                {{ $expediente->estudiante->curso->ref_nombre }}
-                            </span>
+                            
+                            
+                               
+     
+
+                            <span class="chip {{$expediente->getColorTurno($expediente->estudiante->turno->color->ref_value)}}">
+                                 {{ $expediente->estudiante->curso->ref_nombre }}<br>
+                                {{ $expediente->getMjs($expediente->estudiante->turno->horario->ref_value) }}
+                            </span> 
                         </div>
 
                         <hr>
