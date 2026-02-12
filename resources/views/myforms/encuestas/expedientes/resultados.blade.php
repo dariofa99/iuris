@@ -132,9 +132,9 @@
     {!! Html::script('plugins/amcharts/pie.js') !!}
     {!! Html::script('plugins/jquery-ui/jquery-ui.min.js') !!}
     {!! Html::script('plugins/amcharts/plugins/export/export.min.js') !!}
-     <script type="module" src={{ asset('js/admin_encuestas.js') }}></script>
-    <script type="module" src={{ asset('js/admin_categorias.js') }}></script>
-    <script type="module" src={{ asset('js/graficos_encuestas_exp.js') }}></script>
+     <script type="module" src={{ asset('js/admin_encuestas.js?v=' . config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/admin_categorias.js?v=' . config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/graficos_encuestas_exp.js?v=' . config('app_config.asset_version')) }}></script>
 
     </script>
 @endpush
