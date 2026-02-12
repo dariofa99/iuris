@@ -99,7 +99,7 @@
                                         ])
                                         @if (!currentUser()->hasRole('visitante_conciliacion'))
                                             <div class="col-md-12 mt-3">
-                                                <input type="submit" id="btn_llenarForm" value="Enviar encuesta"
+                                                <input type="button" id="btn_llenarForm" value="Enviar encuesta"
                                                     class="btn btn-primary btn-block">
                                             </div>
                                         @endif

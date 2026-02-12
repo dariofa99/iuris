@@ -7,7 +7,7 @@ const userService = new UserService();
 
 
 $(document).ready(function () {
-    
+
     $("#myEvaNivSatForm").on("click", ".btn_pagq", async function (e) {
         e.preventDefault();
         /*  //var request = convertFormToJSON("myEvaNivSatForm");
@@ -20,37 +20,42 @@ $(document).ready(function () {
          console.log(response); */
     });
 
-   
 
-    $("#myEvaNivSatForm").on("submit", async function (e) {
+
+    $("#btn_llenarForm").on("click", async function (e) {
         e.preventDefault();
-        Swal.fire({
-            title: 'Envío encuesta de satisfacción',
-            html: `¿Está seguro de enviar la encuesta de satisfacción?
+
+        const form = document.getElementById("myEvaNivSatForm");
+        if (!form) return;
+        var isvalid = validateForms(form);
+        if (isvalid) {
+            Swal.fire({
+                title: 'Envío encuesta de satisfacción',
+                html: `¿Está seguro de enviar la encuesta de satisfacción?
               
               `,
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            /* cancelButtonColor: '#d33', */
-            confirmButtonText: 'Si, Continuar',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.value) {
-                $("#wait").show();
-                var request = convertFormToJSON("myEvaNivSatForm");
-                var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
-                request["data"] = (data);
-                $("#wait").show();
-                var response = await encuestasService.updateEncuSatisfExp(request);
-                Swal.fire({
-                    title: 'Registrado con éxito',
-                    text: "Gracias por su evaluación...",
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Continuar',
-                    cancelButtonText: 'Cancelar'
-                });
-                let html = `
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                /* cancelButtonColor: '#d33', */
+                confirmButtonText: 'Si, Continuar',
+                cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.value) {
+                    $("#wait").show();
+                    var request = convertFormToJSON("myEvaNivSatForm");
+                    var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
+                    request["data"] = (data);
+                    $("#wait").show();
+                    var response = await encuestasService.updateEncuSatisfExp(request);
+                    Swal.fire({
+                        title: 'Registrado con éxito',
+                        text: "Gracias por su evaluación...",
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Continuar',
+                        cancelButtonText: 'Cancelar'
+                    });
+                    let html = `
                 <div class="alert alert-success" role="alert">
                     ¡El registro se ha completado con éxito!
                
@@ -59,16 +64,28 @@ $(document).ready(function () {
                     </div>
                 
                 `
-                $("#renderQuestion").html(html);
-                var url = window.location.hostname;
-                 history.pushState({}, "", "/login")
-                $("#wait").hide();
-                $("#wait").hide();
-                
+                    $("#renderQuestion").html(html);
+                    var url = window.location.hostname;
+                    history.pushState({}, "", "/login")
+                    $("#wait").hide();
+                    $("#wait").hide();
 
-            }
-        });
-       
+
+                }
+            });
+            $("#wait").hide();
+        } else {
+            toastr.error("Hay campos que son obligatorios", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            form.reportValidity();
+        }
+
+
+
+
+
     })
 
     $("#myFormBuscarConciliacion").on("submit", async function (e) {
@@ -76,7 +93,7 @@ $(document).ready(function () {
         var request = convertFormToJSON("myFormBuscarConciliacion");
         $("#wait").show();
         var response = await encuestasService.findUser(request);
-        if(response.errors && response.errors.length > 0){
+        if (response.errors && response.errors.length > 0) {
             toastr.error("No se encontró al usuario", "", {
                 timeOut: "4000",
             });
@@ -90,7 +107,7 @@ $(document).ready(function () {
 
     $(".btn_start_test").on("click", async function (e) {
         e.preventDefault();
-        
+
         const exp_id = $(this).attr("data-expediente")
         Swal.fire({
             title: 'Inicio encuesta de satisfacción',

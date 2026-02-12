@@ -84,7 +84,7 @@ class Incidencia extends Model
                     });
                 })
                 ->orWhereHas('user', function ($q) use ($filter_value) {
-                    $q->where('idnumber', 'LIKE', "%$filter_value%");
+                    $q->where('idnumber', '=', "$filter_value");
                 });
         });
     }
