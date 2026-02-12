@@ -27,11 +27,12 @@
             <div class="form-group">
                 <label for="description">Utilizar en</label>
                 <select required name="table" id="table" class="form-control">
-                    <option value="">Seleccione...</option>
+                    <option value="">Seleccione...</option> 
                     <option value="users">Usuarios</option>
                     <option value="conciliaciones">Conciliaciones</option>
                     <option value="pdf_reportes">Reportes pdf</option>
                     <option value="conc_encuesta_satisf">Encuesta de satisfacción (conciliaciones)</option>
+                    <option value="exp_encuesta_satisf">Encuesta de satisfacción (expedientes)</option>
                 </select>
             </div>
 

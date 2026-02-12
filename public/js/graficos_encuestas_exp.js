@@ -150,7 +150,7 @@ $(".changeToBarChart").on("click", async function (e) {
 
 var getChart = async (id) => {
 
-    var periodo = id;
+    var periodo = id ? id : $("select[name='select_periodo']").val();
     $("#wait").show();
 
     let response = await encuestasService.getChartDataExp({ "periodo": periodo });

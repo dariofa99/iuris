@@ -1,5 +1,5 @@
 import { ReferenciasService } from "./services/referencias.js";
-const referenciasService = new ReferenciasService();
+const referenciasService = new ReferenciasService(); 
 var items_delete = [];
 const dataSections = {
     'conciliaciones': [

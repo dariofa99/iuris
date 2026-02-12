@@ -94,7 +94,7 @@
                                 value="{{ $opt->value }}"
                                 {{ (isset($model) and $model->getDataVal($reference->id, $opt->id)) ? 'checked' : '' }}
                                 type="checkbox" data-option="{{ $opt->id }}">
-                            {{ $opt->value }}
+                            <label class="font-weight-normal" for="option_id-{{ $opt->id }}"> {{ $opt->value }} </label>
                         @endforeach
 
                         @include('myforms.categorias.partials.ajax.value_isotherquestion')
@@ -126,7 +126,9 @@
                                 value="{{ $opt->value }}"
                                 {{ (isset($model) and $model->getDataVal($reference->id, $opt->id)) ? 'checked' : '' }}
                                 type="radio" data-option="{{ $opt->id }}">
-                            {{ $opt->value }}
+                            <label for="option_id-{{ $opt->id }}" class="font-weight-normal" >
+                                {{ $opt->value }}
+                            </label>
                         @endforeach
 
                         @include('myforms.categorias.partials.ajax.value_isotherquestion')

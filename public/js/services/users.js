@@ -164,7 +164,7 @@ export class UserService {
               $("#" + form + " input[name='email']").val(response.user.email).prop("disabled", true)
               $("#" + form + " select[name='genero_id']").val(response.user.genero_id).prop("disabled", true)
               $("#" + form + " select[name='pbepersondiscap']").val(response.user.pbepersondiscap).prop("disabled", true)
-               $("#" + form + " input[name='codigo_estudiantil']").val(response.user.codigo_estudiantil).prop("disabled", true);
+              $("#" + form + " input[name='codigo_estudiantil']").val(response.user.codigo_estudiantil).prop("disabled", true);
               $("#" + form + " .input_user_ad").prop("disabled", true);
             } else {
               $("#" + form + " input[name='id']").remove();
@@ -173,7 +173,7 @@ export class UserService {
               $("#" + form + " input[name='lastname']").val("");
               $("#" + form + " input[name='tel1']").val("");
               $("#" + form + " input[name='address']").val("");
-               $("#" + form + " input[name='codigo_estudiantil']").val("").prop("disabled", false);
+              $("#" + form + " input[name='codigo_estudiantil']").val("").prop("disabled", false);
               $("#" + form + " .input_user_ad").prop("disabled", false);
 
 
@@ -319,8 +319,8 @@ export class UserService {
   getAditionalDataByForm(form) {
     var data = [];
     $("#" + form + " .input_user_ad").each((index, obj) => {
-      if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170) && $(obj).is(":checked"))
-        || $(obj).attr("data-type") != 170 && $(obj).val() != '') {
+      if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170 || $(obj).attr("data-type") == 279) && $(obj).is(":checked"))
+        || ($(obj).attr("data-type") != 170 && $(obj).attr("data-type") != 279 && $(obj).attr("data-type") != 169 && $(obj).val() != '')) {
         var formParent = $(obj).closest("form");
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
@@ -331,6 +331,7 @@ export class UserService {
           value_is_other: formParent.find("#value_other_text-" + $(obj).attr("data-id")).val(),// $("#value_other_text-" + $(obj).attr("data-id")).val(),
           //conciliacion_id: $("#conciliacion_id").val()
         });
+
       }
     });
     return data;

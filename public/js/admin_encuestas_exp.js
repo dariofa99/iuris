@@ -25,6 +25,9 @@ $(document).ready(function () {
     $("#btn_llenarForm").on("click", async function (e) {
         e.preventDefault();
 
+
+
+      
         const form = document.getElementById("myEvaNivSatForm");
         if (!form) return;
         var isvalid = validateForms(form);
@@ -46,6 +49,8 @@ $(document).ready(function () {
                     var data = conciliacionService.getAditionalDataByForm('myEvaNivSatForm');
                     request["data"] = (data);
                     $("#wait").show();
+                    console.log(request);
+
                     var response = await encuestasService.updateEncuSatisfExp(request);
                     Swal.fire({
                         title: 'Registrado con éxito',
@@ -55,18 +60,40 @@ $(document).ready(function () {
                         confirmButtonText: 'Continuar',
                         cancelButtonText: 'Cancelar'
                     });
-                    let html = `
-                <div class="alert alert-success" role="alert">
-                    ¡El registro se ha completado con éxito!
-               
-               <br>
-               <a href="/login"> Regresar </a>
-                    </div>
+                 let html = `
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-5">
+        
+        <div class="card shadow border-0 text-center">
+            <div class="card-body p-4">
                 
-                `
-                    $("#renderQuestion").html(html);
-                    var url = window.location.hostname;
-                    history.pushState({}, "", "/login")
+                <div class="mb-3">
+                    <i class="fa fa-check-circle text-success" style="font-size: 60px;"></i>
+                </div>
+
+                <h4 class="text-success font-weight-bold">
+                    ¡Registro completado!
+                </h4>
+
+                <p class="text-muted mb-4">
+                    Gracias por completar la encuesta de satisfacción.
+                </p>
+
+                <a href="/login" class="btn btn-success btn-block">
+                    Ir al inicio de sesión
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+`;
+
+                
+                     $("#renderQuestion").html(html);
+                      var url = window.location.hostname;
+                      history.pushState({}, "", "/login")
                     $("#wait").hide();
                     $("#wait").hide();
 

@@ -753,25 +753,24 @@ export class ConciliacionService {
         var data = [];
 
         $("#" + form + " .input_user_ad").each((index, obj) => {
-            console.log($(obj).attr("data-type"),$(obj).is(":checked"),$(obj).val() != '');
-            if ((($(obj).attr("data-type") == 169 
-            || $(obj).attr("data-type") == 170) && $(obj).is(":checked"))
-                || (($(obj).attr("data-type") != 170 && $(obj).attr("data-type") != 169 ) && $(obj).val() != '')) {
-                  
-                    data.push({
+            if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170 || $(obj).attr("data-type") == 279) && $(obj).is(":checked"))
+                || ($(obj).attr("data-type") != 170 && $(obj).attr("data-type") != 279 && $(obj).attr("data-type") != 169 && $(obj).val() != '')) {
+                var formParent = $(obj).closest("form");
+                data.push({
                     value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
                     section: $(obj).attr("data-section"),
                     type: $(obj).attr("data-type"),
                     name: $(obj).attr("data-name"),
                     option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
-                    value_is_other: $("#value_other_text-" + $(obj).attr("data-id")).val(),
-                    
-                });
+                    value_is_other: formParent.find("#value_other_text-" + $(obj).attr("data-id")).val(),// $("#value_other_text-" + $(obj).attr("data-id")).val(),
+                    //conciliacion_id: $("#conciliacion_id").val()
+                });               
+                
             }
         });
         return data;
     }
-   
+
 
 }
 
