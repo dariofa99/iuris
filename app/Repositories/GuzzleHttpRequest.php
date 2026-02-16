@@ -6,8 +6,8 @@ use GuzzleHttp\Client;
 class GuzzleHttpRequest{
 
     public $client;
-    function __construct($url){
-        
+    function __construct($url){      
+       // dd($url);
         $this->client = new Client(
             [
             'base_uri'=>$url,

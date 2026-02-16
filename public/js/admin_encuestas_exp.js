@@ -91,9 +91,9 @@ $(document).ready(function () {
 `;
 
                 
-                     $("#renderQuestion").html(html);
+                   /*   $("#renderQuestion").html(html);
                       var url = window.location.hostname;
-                      history.pushState({}, "", "/login")
+                      history.pushState({}, "", "/login") */
                     $("#wait").hide();
                     $("#wait").hide();
 
