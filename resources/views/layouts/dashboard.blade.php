@@ -52,7 +52,7 @@ if (!isset($modo_nav_crl)) {
 
     <!-- Custom -->
     {!! Html::style('/css/general.css?v=' . config('app_config.asset_version')) !!}
-    {!! Html::style('/css/styles.css?v='. config('app_config.asset_version')) !!}
+    {!! Html::style('/css/styles.css?v=' . config('app_config.asset_version')) !!}
 
     <style>
         body {
@@ -150,15 +150,18 @@ if (!isset($modo_nav_crl)) {
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src={{ asset('js/config.js?v='. config('app_config.asset_version')) }}></script>
-    {!! Html::script('js/application.js?v='. config('app_config.asset_version')) !!}
-    <script type="module" src="{{ asset('js/scripts.js?v='. config('app_config.asset_version')) }}"></script>
+    <script src={{ asset('js/config.js?v=' . config('app_config.asset_version')) }}></script>
+    {!! Html::script('js/application.js?v=' . config('app_config.asset_version')) !!}
+    <script type="module" src="{{ asset('js/scripts.js?v=' . config('app_config.asset_version')) }}"></script>
 
     <script>
         //para que funcionen los tooltip
         var tokendefault = '';
         $(function() {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: 'top',
+                container: 'body'
+            });
             $("#wait").hide()
         });
         var channel = Echo.join('chat');

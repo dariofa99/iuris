@@ -27,10 +27,8 @@
                 </h3>
                   <div class="card-tools">
                     
-                      <a style="display: none"  id="btn_new_categoryInExp" href="#" class="btn btn-tool btn-sm">
-                          
-                              Nueva Pregunta
-                         
+                      <a style="display: none"  id="btn_new_categoryInExp" href="#" class="btn btn-tool btn-sm">                          
+                              Nueva Pregunta                         
                       </a>
 
                       <a style="display: none"  id="btn_load_categoryInExp" href="#" class="btn btn-tool btn-sm">

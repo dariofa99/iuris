@@ -8,9 +8,14 @@ const solicitudesService = new SolicitudesService();
 $(function () {
   //  ocultarCompDiscapUser();
   removeRequired("#myFormParteSolicitante", "tel2");
+  toggleCampo('socio_economica', 'Ocupación', 'hide');
 
+  $('[data-toggle="tooltip"]').tooltip({
+    placement: 'top',
+    container: 'body'
+  });
 
-
+$('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id option[value="15"]').prop('disabled', true);
 
   $("#myFormParteSolicitante")
     .on("change", "select[name='pbepersondiscap']", function (e) {
@@ -668,7 +673,7 @@ $(function () {
          <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
          <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
        </div>`; */
-    addHeprRow(lbl,key,$(this).attr('data-tipo'));
+    addHeprRow(lbl, key, $(this).attr('data-tipo'));
 
     //$("#content_create_descrip_hepr").html(row)
 
@@ -677,7 +682,7 @@ $(function () {
   });
 
 
-  function addHeprRow(labelBase, key,tipo) {    
+  function addHeprRow(labelBase, key, tipo) {
 
     const row = `
         <div class="hepr-item content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
@@ -705,19 +710,19 @@ $(function () {
   /* =========================
      AGREGAR
   ========================= */
-/*   $("#btn_add_he_pret_input").on("click", function () {
-
-    const tipo = $("input[name=tipo_id]").val();
-
-    let label = "Descripción";
-
-    if (tipo == 206) label = "Descripción del hecho";
-    if (tipo == 207) label = "Descripción de la pretensión";
-    if (tipo == 208) label = "Descripción del acuerdo";
-
-    addHeprRow(label);
-
-  }); */
+  /*   $("#btn_add_he_pret_input").on("click", function () {
+  
+      const tipo = $("input[name=tipo_id]").val();
+  
+      let label = "Descripción";
+  
+      if (tipo == 206) label = "Descripción del hecho";
+      if (tipo == 207) label = "Descripción de la pretensión";
+      if (tipo == 208) label = "Descripción del acuerdo";
+  
+      addHeprRow(label);
+  
+    }); */
 
 
   /* =========================
@@ -813,14 +818,14 @@ $(function () {
     var key = $(".count_input_descrip_hepr_" + tipo).length + 1
     var lbl = tipo == 206 ? "Descripción de los hechos" : "Descripción de las pretensiones";
 
-  /*   var row = `
-      <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
-        <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
-        <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
-      </div>
-   `
-    $("#content_create_descrip_hepr").append(row) */
-    addHeprRow(lbl,key,tipo);
+    /*   var row = `
+        <div class="form-group content_input_descrip_hepr count_input_descrip_hepr_${tipo}">
+          <label for="description" id="lbl_descrip_hepr">${lbl} ${key}</label>
+          <textarea name="descripcion[]" class="form-control required" rows="2"></textarea>
+        </div>
+     `
+      $("#content_create_descrip_hepr").append(row) */
+    addHeprRow(lbl, key, tipo);
   });
 
   $("#myModal_create_document").on("submit", "#myformCreateConciliacionAnexo", async function (e) {

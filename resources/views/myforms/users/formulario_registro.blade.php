@@ -39,7 +39,7 @@
                     class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='idnumber'
                 value="{{ isset($user) ? $user->idnumber : '' }}" name='idnumber' required type="text"
-                class="form-control form-control-sm onlynumber required" data-toggle="tooltip" title="Solo números"
+                class="form-control form-control-sm onlynumber required" data-toggle="tooltip"
                 placeholder="Número de documento" maxlength="12">
 
         </div>
@@ -49,8 +49,8 @@
         <div class="form-group has-feedback"><label for="name">Nombres<span class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='name'
                 value="{{ isset($user) ? $user->name : '' }}" name='name' required type="text"
-                class="form-control form-control-sm required" data-toggle="tooltip" title="Nombres"
-                placeholder="Nombres" maxlength="20">
+                class="form-control form-control-sm required" data-placement="top" data-toggle="tooltip" 
+                placeholder="Nombres" maxlength="100">
 
         </div>
     </div>
@@ -59,7 +59,7 @@
         <div class="form-group has-feedback"><label for="name">Apellidos<span class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='lastname'
                 value="{{ isset($user) ? $user->lastname : '' }}" name='lastname' required type="text"
-                class="form-control form-control-sm required" data-toggle="tooltip" title="Apellidos"
+                class="form-control form-control-sm required" data-placement="top" data-toggle="tooltip" 
                 placeholder="Apellidos" maxlength="20">
 
         </div>
@@ -69,7 +69,7 @@
                     class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='address'
                 value="{{ isset($user) ? $user->address : '' }}" name='address' required type="text"
-                class="form-control form-control-sm required" data-toggle="tooltip" title="Dirección de residencia"
+                class="form-control form-control-sm required" data-placement="top" data-toggle="tooltip"
                 placeholder="Dirección de residencia" maxlength="200">
 
         </div>
@@ -80,8 +80,8 @@
                     class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='email' name='email'
                 value="{{ isset($user) ? $user->email : '' }}" required type="email"
-                class="form-control form-control-sm required validate_email" data-toggle="tooltip"
-                title="Correo electrónico" placeholder="Correo electrónico" maxlength="200">
+                class="form-control form-control-sm required validate_email" data-placement="top" data-toggle="tooltip"
+                 placeholder="Correo electrónico" maxlength="200">
 
         </div>
     </div>
@@ -90,9 +90,9 @@
         <div class="form-group has-feedback">
             <label for="name">Telefóno celular<span class="ast_required">*</span></label>
             <input {{ isset($disabled) ? $disabled : '' }} id='tel1'
-                value="{{ isset($user) ? $user->tel1 : '' }}" name='tel1' required type="text"
-                class="form-control form-control-sm onlynumber required" data-toggle="tooltip"
-                title="Número de contacto" placeholder="Número de contacto" maxlength="10">
+                value="{{ isset($user) ? $user->tel1 : '' }}" required name='tel1' required type="text"
+                class="form-control form-control-sm onlynumber required"  
+                placeholder="Número de contacto" maxlength="10">
 
         </div>
     </div>
@@ -102,8 +102,8 @@
             <label for="name">Otro telefóno<span class="ast_required">*</span></label>
             <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='tel2'
                 value="{{ isset($user) ? $user->tel2 : '' }}" name='tel2' required type="text"
-                class="form-control form-control-sm onlynumber required" data-toggle="tooltip"
-                title="Número de contacto 2" placeholder="Número de contacto 2" maxlength="10">
+                class="form-control form-control-sm onlynumber required" data-placement="top" 
+                data-boundary="window" placeholder="Número de contacto 2" maxlength="10">
         </div>
     </div>
 
@@ -120,7 +120,7 @@
                 </div>
                 <input autocomplete="off" {{ isset($disabled) ? $disabled : '' }} id='fechanacimien'
                     value="{{ isset($user) ? $user->fechanacimien : '' }}" name='fechanacimien' required
-                    type="date" class="form-control form-control-sm  required" title="Fecha de nacimiento"
+                    type="date" class="form-control form-control-sm  required"
                     placeholder="Fecha de nacimiento" maxlength="10">
 
             </div>

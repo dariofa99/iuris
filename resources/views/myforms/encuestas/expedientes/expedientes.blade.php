@@ -75,5 +75,5 @@
     </div>
 @endsection
 @push('scripts')
-    <script type="module" src={{ asset('js/admin_encuestas_exp.js') }}></script>
+    <script type="module" src={{ asset('js/admin_encuestas_exp.js?v=' . config('app_config.asset_version')) }}></script>
 @endpush

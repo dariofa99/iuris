@@ -495,12 +495,42 @@ class UsersController extends Controller
   public function validateAccount(Request $request)
   {
     try {
+      $request->validate(
+        [
+          'email' => [
+            'required',
+            'email'
+          ],
+          'phone' => 'required',
+          'idnumber' => 'required'
+
+        ],
+        [
+          'email.required' => 'El correo es obligatorio.',
+          'email.email' => 'Debe ingresar un correo válido.',
+          'phone.required' => 'El número de teléfono es obligatorio.',
+          'idnumber.required' => 'El número de documento es obligatorio.'
+        ]
+      );
       $user = $this->userService->findWithFilter([
         "tipodoc_id" => $request->tipodoc_id,
         "idnumber" => $request->idnumber
       ]);
       if ($user) {
         //Generar codigo de confirmacion numerico
+        $emailEnOtraCuenta = User::where('email', $request->email)
+          ->where('idnumber', '!=', $request->idnumber)
+          ->exists();
+
+        if ($emailEnOtraCuenta) {
+          return response()->json([
+            'errors' =>
+            [
+              'email' => ['El correo ya está registrado en otra cuenta.']
+            ]
+          ], 200);
+        }
+
         $user->confirm_token = rand(100000, 999999);
         $user->save();
         Mail::to($request->email)->send(new RecoveryAccount($user));
@@ -511,8 +541,16 @@ class UsersController extends Controller
           'exists' => true
         ]);
       }
+    } catch (\Illuminate\Validation\ValidationException $e) {
+      //return response()->json(['errors' => $validator->errors()->all()]);
+      return response()->json([
+        'errors' => $e->errors()
+      ], 200);
     } catch (\Throwable $th) {
-      return  response()->json(['exists' => $th->getMessage()]);
+
+      return response()->json([
+        'errors' => 'Error interno del servidor'
+      ], 500);
     }
     return  response()->json(['exists' => $user]);
   }
@@ -520,24 +558,31 @@ class UsersController extends Controller
   public function validateCodeAccount(Request $request)
   {
     try {
+
       $user = $this->userService->findWithFilter([
         "confirm_token" => $request->verification_code,
         "idnumber" => $request->idnumber
       ]);
-     
-      //return redirect()->back();
-      if ($user) {
-        $user->email = $request->newemail;
-        $user->tel1 = $request->newphone;
-        $user->confirm_token = null;
-        $user->save();
-        return  response()->json([
-          'user' => $user,
-          'exists' => true
-        ]);
-      }
+
+      $user->email = $request->newemail;
+      $user->tel1 = $request->newphone;
+      $user->confirm_token = null;
+      $user->save();
+
+      return response()->json([
+        'user' => $user,
+        'exists' => true
+      ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+      //return response()->json(['errors' => $validator->errors()->all()]);
+      return response()->json([
+        'errors' => $e->errors()
+      ], 200);
     } catch (\Throwable $th) {
-      return  response()->json(['errors' => $th->getMessage()]);
+
+      return response()->json([
+        'errors' => 'Error interno del servidor'
+      ], 500);
     }
     return  response()->json(['exists' => false]);
   }

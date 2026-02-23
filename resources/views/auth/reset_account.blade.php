@@ -121,7 +121,7 @@
                         <!-- Formulario de datos de cuenta -->
                         <form id="myFormResetAccount">
                             @csrf
-                            <input type="text" name="id" value="{{$user->id}}">
+                            <input type="hidden" name="id" value="{{$user->id}}">
                             <!-- Tipo de documento y número -->
                             <div class="form-row">
                                 <div class="form-group col-md-6">

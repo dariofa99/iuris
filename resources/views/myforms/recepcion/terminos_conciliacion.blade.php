@@ -36,7 +36,7 @@
                             quien presta sus servicios, corresponde a la
                             población del Departamento de Nariño y en
                             especial a la ciudadanía de Pasto de estratos
-                            económicos 1,2, 3 y personas que se encuentren
+                            económicos 1, 2, 3 y personas que se encuentren
                             en situación económica precaria y población
                             vulnerable, como personas en situación de
                             desplazamiento forzado, madres comunitarias

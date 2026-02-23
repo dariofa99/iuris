@@ -45,6 +45,7 @@ class UsersComposer
 		
         $estrato = DB::table('referencias_tablas')
 		->where(['tabla_ref'=>'users','categoria'=>'estrato'])
+		->where('ref_nombre','<>','Sin definir')
 		->pluck('ref_nombre','id'); 
         $genero = DB::table('referencias_tablas')
 		->where(['tabla_ref'=>'users','categoria'=>'genero'])
@@ -52,7 +53,9 @@ class UsersComposer
 		->pluck('ref_nombre','id'); 
 		
         $estcivil = DB::table('referencias_tablas')
-		->where(['tabla_ref'=>'users','categoria'=>'estado_civil'])
+		->where(['tabla_ref'=>'users','categoria'=>'estado_civil',
+			
+		])->where('ref_nombre','<>','Sin definir')
 		->pluck('ref_nombre','id'); 
         $cursando = TablaReferencia::where(['categoria'=>'cursando','tabla_ref'=>'turnos'])->pluck('ref_nombre','id'); 
 		$ramas_derecho = DB::table('rama_derecho')

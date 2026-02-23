@@ -256,7 +256,7 @@ class ExpEncuSatisfaccionController extends Controller
                 if ($request->has('periodo') && $request->periodo != '') {
                     $query->where('periodo_id', $request->periodo);
                 } else {
-                    $query->where('periodo_id', 8);
+                    $query->where('periodo_id', $periodo_activo->id);
                 }
             })
             ->paginate(1);
@@ -264,7 +264,8 @@ class ExpEncuSatisfaccionController extends Controller
         if ($request->ajax() || $request->header('X-Requested-With') == 'XMLHttpRequest') {
             $view_re = view('myforms.encuestas.expedientes.resultados_individual_ajax', compact('encuestas'))->render();
             $response = [
-                "view" => $view_re
+                "view" => $view_re,
+                "data" => $encuestas
             ];
             return response()->json($response);
         }

@@ -805,3 +805,15 @@ function mostrarCompDiscapUser(formId) {
     $("#" + formId + " .has_apoyo").hide();
     $("#" + formId + " #has_apoyo").prop("disabled", false);
 }
+
+function toggleCampo(seccion, nombre, accion = 'hide') {
+
+    let campo = $('[data-section="' + seccion + '"][data-name="' + nombre + '"]');
+    let contenedor = campo.closest('.form-group, .col, .col-md-6, .col-md-12');
+
+    if (accion === 'hide') {
+        contenedor.remove();
+    } else {
+        contenedor.show();
+    }
+}
