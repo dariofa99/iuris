@@ -743,7 +743,7 @@
 
         @endphp
         @if (currentUser()->hasRole('amatai') || currentUser()->hasRole('estudiante'))
-            <div class="col-md-2">
+            <div class="col-md-2" tabindex="0">
                 <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
                     <h6 class="text-muted">Nota de Asistencia</h6>
                     <h1 class="display-4 fw-bold text-{{ $color }}">
@@ -979,7 +979,7 @@
                                     @foreach ($notasAgrupadas as $key_nota => $notasDelDia)
                                         <!-- Separador de bloque por fecha -->
                                         <div class="row mb-4">
-                                            <div class="col-12">
+                                            <div class="col-12" tabindex="0">
                                                 <div class="d-flex align-items-center mb-3">
                                                     <div class="flex-grow-1">
                                                         <div class="separador-fecha bg-white shadow-sm p-3 rounded-lg">
@@ -1097,7 +1097,7 @@
                                                 @endphp
 
                                                 <!-- Tarjeta individual para cada nota -->
-                                                <div
+                                                <div tabindex="0"
                                                     class="col-md-{{ $key_2 == 0 ? 4 : 2 }} col-lg-{{ $key_2 == 0 ? 6 : 2 }} mb-3">
                                                     <div
                                                         class="card card-success card-outline h-95 border-0 shadow-sm hover-lift {{ $tipoClase }}">
@@ -1139,7 +1139,12 @@
                                                             <!-- Contenido de la nota -->
                                                             <div class="mb-3">
                                                                 <div class="nota-contenido"
-                                                                    style="max-height: 150px; overflow-y: auto;">
+                                                                    style="max-height: 150px; overflow-y: auto;"
+                                                                    @if ($esNumero)
+                                                                        aria-label="Calificación: {{ $nota['nota'] }}"
+                                                                    @else
+                                                                        aria-label="Nota: {{ strip_tags($textoMostrar) }}"
+                                                                    @endif>
                                                                     @if ($esNumero)
                                                                         <div class="text-center py-2">
                                                                             <div
