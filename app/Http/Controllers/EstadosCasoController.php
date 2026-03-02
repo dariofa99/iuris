@@ -70,16 +70,17 @@ class EstadosCasoController extends Controller
             ]);
             $estudiante_id = $expediente->estudiante->idnumber;
             $date = Carbon::now()->format('Y-m-d');
-            $acts =  $expediente->verifyNotAct($date);
+            $acts =  $expediente->verifyActPendientes();
             $reqs =  $expediente->verifyNotReq($date);
             $request['expidnumber'] = $request->expid;
             $request['ref_estado_id'] = $request->new_expestado;
             $request['ref_motivo_estado_id'] = $request->motivo_estado;
             $expediente->expestado_id = $request->new_expestado;
             $role = '';
+      
             if (!currentUser()->hasRole('estudiante')) $role = 'docente';
             if ($request->new_expestado == 2) {
-                if ((count($acts) <= 0 and count($reqs) <= 0) || $expediente->exptipoproce_id == 1) {
+                if (($acts > 0  and count($reqs) <= 0) || $expediente->exptipoproce_id == 1) {
                     if (count($expediente->notas) > 0) {
                         $nota = $expediente->get_nota_corte('conocimiento');
                         if (count($nota) > 0 and ($nota['tipo_id']) == 0 and count($expediente->get_has_nota_final()) <= 0) {
@@ -120,7 +121,7 @@ class EstadosCasoController extends Controller
                 } else {
                     $mensaje = '';
                     if (count($reqs) > 0) $mensaje .= 'Hay ' . count($reqs) . ' requerimientos que requieren ser entregados <br>';
-                    if (count($acts) > 0) $mensaje .= 'Hay ' . count($acts) . ' actuaciones que requieren ser revisadas';
+                    if (($acts) > 0) $mensaje .= 'Hay actuaciones que requieren ser revisadas';
 
                     $response = [
                         'mensaje' => $mensaje,
@@ -158,11 +159,11 @@ class EstadosCasoController extends Controller
                     }
                 }
 
-                if ((count($acts) > 0 || count($reqs) > 0) and $request->new_expestado == 4) {
+                if ((($acts) > 0 || count($reqs) > 0) and $request->new_expestado == 4) {
                     if ($expediente->exptipoproce_id != 1) {
                         $mensaje = '';
                         if (count($reqs) > 0) $mensaje .= 'Hay ' . count($reqs) . ' requerimientos que requieren ser revisados <br>';
-                        if (count($acts) > 0) $mensaje .= 'Hay ' . count($acts) . ' actuaciones que requieren ser revisadas';
+                        if (($acts) > 0) $mensaje .= 'Hay actuaciones que requieren ser revisadas';
 
                         $response = [
                             'mensaje' => $mensaje,
@@ -223,10 +224,9 @@ class EstadosCasoController extends Controller
                             }
                         }
                     }
-                    if($request->new_expestado == 3){
+                    if ($request->new_expestado == 3) {
                         $expediente->asignacion->fecha_eva = Carbon::now();
-                        $expediente->asignacion->save();    
-                        
+                        $expediente->asignacion->save();
                     }
                     $estadoCaso = $this->estadoCasoService->store($request);
                     $expediente->save();

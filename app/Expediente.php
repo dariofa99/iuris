@@ -455,11 +455,11 @@ class Expediente extends Model
 
             $hijosAct = DB::select(
                 DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre FROM actuacions, revisiones_actuacion
-        WHERE actuacions.id = revisiones_actuacion.rev_actid
-        AND parent_rev_actid = $actpa->id
-        AND actestado_id <> 136 AND actestado_id <> 138 
-        AND actestado_id <> 234
-        ORDER BY rev_actid DESC LIMIT 1"),
+                    WHERE actuacions.id = revisiones_actuacion.rev_actid
+                    AND parent_rev_actid = $actpa->id
+                    AND actestado_id <> 136 AND actestado_id <> 138 
+                    AND actestado_id <> 234
+                    ORDER BY rev_actid DESC LIMIT 1"),
             );
 
             if (
@@ -474,6 +474,54 @@ class Expediente extends Model
         }
 
         return $hijos;
+    }
+
+    public function verifyActPendientes()
+    {
+        $hayPorEvaluar = 0;
+        $padresAct = DB::table('actuacions')
+            ->join(
+                'revisiones_actuacion',
+                'actuacions.id',
+                '=',
+                'revisiones_actuacion.parent_rev_actid'
+            )
+            ->where(function ($query) {
+                $query->where('actestado_id', 101)
+                    ->orWhere('actestado_id', 102)
+                    ->orWhere('actestado_id', 140);
+            })
+            ->where([
+                ['actidnumberest', $this->expidnumberest],
+                ['actexpid', $this->expid]
+            ])
+            ->select('actuacions.id')
+            ->groupBy('actuacions.id')
+            ->get();
+
+        $hijos = [];
+     
+//return $padresAct;
+        if (count($padresAct) > 0) {
+            $hayPorEvaluar = count($padresAct);
+            foreach ($padresAct as $key => $actpa) {
+                //$hayPorEvaluar = true;
+                $hijosAct = DB::select(
+                    DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre FROM actuacions, revisiones_actuacion
+                    WHERE actuacions.id = revisiones_actuacion.rev_actid
+                    AND parent_rev_actid = $actpa->id
+                    AND (actestado_id = 104 or actestado_id = 234)                    
+                    ORDER BY rev_actid DESC LIMIT 1"),
+                );
+               
+                if (count($hijosAct) > 0) {
+                    $hayPorEvaluar = $hayPorEvaluar - 1;                    
+                } 
+            }
+        } else {
+            $hayPorEvaluar = 0;
+        }
+        return $hayPorEvaluar;
     }
 
     public function verifyActuacionForCreate()
