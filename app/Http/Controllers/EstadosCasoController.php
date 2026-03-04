@@ -77,10 +77,11 @@ class EstadosCasoController extends Controller
             $request['ref_motivo_estado_id'] = $request->motivo_estado;
             $expediente->expestado_id = $request->new_expestado;
             $role = '';
-      
+       // return response()->json($acts);
             if (!currentUser()->hasRole('estudiante')) $role = 'docente';
             if ($request->new_expestado == 2) {
-                if (($acts > 0  and count($reqs) <= 0) || $expediente->exptipoproce_id == 1) {
+                if (($acts <= 0  and count($reqs) <= 0) || $expediente->exptipoproce_id == 1) {
+
                     if (count($expediente->notas) > 0) {
                         $nota = $expediente->get_nota_corte('conocimiento');
                         if (count($nota) > 0 and ($nota['tipo_id']) == 0 and count($expediente->get_has_nota_final()) <= 0) {
@@ -129,6 +130,7 @@ class EstadosCasoController extends Controller
                         'exp' => $expediente,
                     ];
                 }
+
             } else {
 
                 if (currentUser()->hasRole('estudiante')) {

@@ -510,7 +510,7 @@ class Expediente extends Model
                     DB::raw("SELECT rev_actid, actestado_id, actuacions.actfecha,actnombre FROM actuacions, revisiones_actuacion
                     WHERE actuacions.id = revisiones_actuacion.rev_actid
                     AND parent_rev_actid = $actpa->id
-                    AND (actestado_id = 104 or actestado_id = 234)                    
+                    AND (actestado_id = 104 or actestado_id = 234 or actestado_id = 139)                    
                     ORDER BY rev_actid DESC LIMIT 1"),
                 );
                
