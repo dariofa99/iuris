@@ -97,14 +97,20 @@ class SolicitudesController extends Controller
 
         $conciliacion = Conciliacion::where("token", $token)->first();
 
-
+      
         if ($conciliacion and ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 176)) {
             if ($conciliacion and $request->paso != 1) {
 
                 if ($request->paso == 2) {
                     $user = $conciliacion->getUser(205); //solicitante
+                    if($user->id == null){
+                        $user = $conciliacion->getUser(199); //autor
+                    }
+                    if($user->id == null){
+                         Session::flash('message-danger', 'Hay errores en la asignacion de usuarios, por favor comunícate con soporte técnico.');
+                    }
                     Auth::login($user);
-
+  //dd($user);
                     if ($user->tipopers_id != 238) {
 
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");

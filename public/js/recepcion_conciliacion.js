@@ -15,7 +15,8 @@ $(function () {
     container: 'body'
   });
 
-$('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id option[value="15"]').prop('disabled', true);
+  $('#estrato_id option[value="14"],#estrato_id option[value="15"]').remove();
+  $('#estadocivil_id option[value="20"],#estadocivil_id option[value="21"]').remove();
 
   $("#myFormParteSolicitante")
     .on("change", "select[name='pbepersondiscap']", function (e) {
@@ -25,6 +26,11 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
         ocultarCompDiscapUser('myFormParteSolicitante');
       }
     });
+
+
+
+
+
 
 
   /* $("#myUserRepLegalForm-1")
@@ -73,6 +79,23 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
       }
     });
 
+
+  $("#myFormAsunto")
+    .on("change", ".data_input_select", function (e) {
+     let seccion = $(this).data('section');
+      let nombre = $(this).data('name');
+      let valor = $(this).val();
+
+      if (seccion === 'asunto' && nombre === 'Cuantia') {
+
+        if (valor === '245') { // Indeterminada
+          $('#myModal_InfoInderminada').modal('show');
+          console.log("Tolis");
+          
+        }
+
+      }
+    });
 
   $(".myFormParteConvocada").on("change", "select[name='pbepersondiscap']", function (e) {
     var formId = $(this).closest('form').attr('id');
@@ -292,6 +315,20 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
 
   $(".myUserRepLegalForm").on("focus", "input[name='idnumber']", validateTypeDoc);
 
+  /*  let oldValueTipoDoc = null;
+   $("#content_apoderado_solicitud").on("change", "select[name='tipodoc_id']", async function (e) {
+ 
+     let value = $(this).val()
+     if (oldValueTipoDoc != value && oldValueTipoDoc != null) {
+       oldValueTipoDoc = value;
+        resetForm("myFormApoderado")
+     } else {
+      
+     }
+ 
+ 
+   }); */
+
   $("#contentFormsParteCovocada").on("change", "select[name='tipodoc_id']", async function (e) {
     let value = $(this).val()
     var formId = $(this).closest('.myFormParteConvocada').attr('id');
@@ -323,7 +360,9 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
 
   $("#myFormApoderado").on("blur", "input[name='idnumber']", async function () {
     var lastidnumber = $(this).val();
-    userService.alertValidateUser(lastidnumber, "myFormApoderado");
+    await userService.alertValidateUser(lastidnumber, "myFormApoderado");
+
+
     $(this).val("");
   });
 
@@ -498,14 +537,20 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
 
 
   $("#btn_parte_convocada").on("click", async function () {
-    // $("#wait").show();
+     $("#wait").show();
     if (!$("#chk_not_parte").is(":checked")) {
       let insert = true;
+      console.log("si por aqui");
+      
       $(".myFormParteConvocada").each(async function (index, obj) {
         var form = $(obj).attr("id")
         var errors = validateForm(form);
         if (errors.length > 0) {
           insert = false;
+          toastr.warning("", "Debe guardar al menos un dato de contacto válido para la persona " + (index + 1) + ".<br>Teléfono, correo o dirección.", {
+              positionClass: "toast-top-right",
+              timeOut: "5000",
+            });
           // return
         } else {
           //validar que el telefono sea valido, el email y la direccion, si hay uno invalido no insertar
@@ -531,7 +576,7 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
         Swal.fire({
           title: 'Espere por favor!',
           html: 'Estamos registrando su solicitud',
-          timer: 3000,
+          timer: 1500,
           timerProgressBar: true,
 
           allowOutsideClick: false, // Permitir clic fuera del modal
@@ -573,7 +618,7 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
       }
 
     } else {
-
+     
     }
     $("#wait").hide();
   });
@@ -1015,6 +1060,7 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
       $("#btn_no_apoderado").show()
     } else {
       $("#content_apoderado_solicitud input,select").prop("disabled", false);
+      resetForm("myFormApoderado");
       $("#btn_registrar_apod_sol").show();
       $("#btn_no_apoderado").hide()
     }
@@ -1036,20 +1082,28 @@ $('#estrato_id option[value="13"],#estrato_id option[value="14"],#estrato_id opt
 });//fin document ready
 
 async function addUserByStep(form, obj, step, userJuridico = null, redirect = true) {
-  $("#wait").show();
+  //  $("#wait").show();
 
   if ($("#" + form + " input[name='id']").val() != undefined && $("#" + form + " input[name='id']").val() != "") {
     console.log("form")
     console.log(form)
-    var request = {
-      "user_id": $("#" + form + " input[name='id']").val(),
-      "conciliacion_id": $("input[name='conciliacion_id']").val(),
-      "tipo_usuario": $(obj).attr("data-type")
-    };
+    var request = convertFormToJSON(form);
+    request["data"] = userService.getAditionalDataByForm(form);
+    request["conciliacion_id"] = $("input[name='conciliacion_id']").val();
+    request["tipo_usuario"] = $(obj).attr("data-type")
+    request["user_id"] = $("#" + form + " input[name='id']").val();
+    /*  var request = {
+       "user_id": $("#" + form + " input[name='id']").val(),
+       "conciliacion_id": $("input[name='conciliacion_id']").val(),
+       "tipo_usuario": $(obj).attr("data-type") 
+     }; */
+    request["data"] = userService.getAditionalDataByForm(form);
 
     if (userJuridico != null) {
       request["user_judirico_id"] = userJuridico;
     }
+    console.log(request);
+
     let response_ = await conciliacionService.addUser(request);
     if (response_) {
       if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;

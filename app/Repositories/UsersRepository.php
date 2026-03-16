@@ -301,7 +301,7 @@ class UsersRepository extends BaseRepository implements UsersService
         }
       }
     }
-    if ($request->email != $user->email) {
+    if ($request->has("email") and $request->email != $user->email) {
       $user->confirm_token = Str::random(50);
       Mail::to($request->email)->send(new ConfirmarCorreo($user));
     }

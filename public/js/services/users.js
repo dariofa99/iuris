@@ -166,6 +166,16 @@ export class UserService {
               $("#" + form + " select[name='pbepersondiscap']").val(response.user.pbepersondiscap).prop("disabled", true)
               $("#" + form + " input[name='codigo_estudiantil']").val(response.user.codigo_estudiantil).prop("disabled", true);
               $("#" + form + " .input_user_ad").prop("disabled", true);
+
+              var soliIdnumber = $("#myFormApoderado input[name='solicitante_idnumber']").val();
+              console.log(soliIdnumber,idnumber);
+              
+              if(soliIdnumber == idnumber){
+                $("#" + form + " input[name='codigo_estudiantil']").val(response.user.codigo_estudiantil).prop("disabled", false);
+                $("#" + form + " .input_user_ad").prop("disabled", false);
+              }
+
+
             } else {
               $("#" + form + " input[name='id']").remove();
               $("#" + form + " input[name='idnumber']").val(lastidnumber);
@@ -319,9 +329,13 @@ export class UserService {
   getAditionalDataByForm(form) {
     var data = [];
     $("#" + form + " .input_user_ad").each((index, obj) => {
-      if ((($(obj).attr("data-type") == 169 || $(obj).attr("data-type") == 170 || $(obj).attr("data-type") == 279) && $(obj).is(":checked"))
-        || ($(obj).attr("data-type") != 170 && $(obj).attr("data-type") != 279 && $(obj).attr("data-type") != 169 && $(obj).val() != '')) {
+      console.log("Aqui si");
+      
+      if ((($(obj).attr("data-type") == 279 || $(obj).attr("data-type") == 170 || $(obj).attr("data-type") == 279) && $(obj).is(":checked"))
+        || ($(obj).attr("data-type") != 170 && $(obj).attr("data-type") != 279 && $(obj).val() != '')) {
         var formParent = $(obj).closest("form");
+        console.log("Aqui ntambien");
+        
         data.push({
           value: $(obj).attr("data-option") != undefined ? $(obj).val() : $(obj).find(":selected").text(),
           section: $(obj).attr("data-section"),

@@ -107,9 +107,11 @@ class ConciliacionesController extends Controller
      */
     public function create(Request $request)
     {
+       // dd("create conciliacion", $request->all());
         try {
             $periodo = $this->periodoService->getPeriodoActivo();
             $request['periodo_id'] =  $periodo->id;
+            $request['tipo_usuario_id'] = 205; //estado borrador
             $conciliacion = $this->conciliacionService->store($request);
         } catch (\Throwable $e) {
             $mensajeError = "Ha ocurrido un error: " . $e->getMessage();
@@ -192,6 +194,8 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = $this->conciliacionService->find($id);
         if (currentUser()->hasRole("solicitante") and ($conciliacion->estado_id != 178)) {
+          //  dd("no puedes editar esta conciliacion");
+
             return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
         }
 
@@ -850,7 +854,7 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = $this->conciliacionService->find($request->conciliacion_id);
 
-        // return response()->json($request->all(), 200);
+        // return response()->json($request->all(), 200); 
 
         try {
             if ($request->has('id') and $request->input("id") != '') {
@@ -869,6 +873,7 @@ class ConciliacionesController extends Controller
                 $conciliacion = $this->conciliacionService->addUser($conciliacion, $request);
             }
             $this->userService->addSede($user);
+            $user = $this->userService->update($user, $request);
             if ($request->has("user_judirico_id")) {
                 $user->conc_rep_legal()->syncWithoutDetaching([
                     $conciliacion->id => [

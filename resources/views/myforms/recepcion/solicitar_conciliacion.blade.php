@@ -42,7 +42,7 @@
                 'visible' => true,
                 'title' => 'Asunto',
                 'message' =>
-                    'Diligencia el siguiente formulario con la información del <b>asunto</b> de la conciliación. Recuerda que la cuantía debe ser máximo 50 salarios mínimos (tenga en cuenta que la cuantía es el valor que se genera al sumar el total de las pretensiones, si no es posible determinar el valor digitar indeterminada). Los campos marcados con (*) son obligatorios.',
+                    'Diligencie el siguiente formulario con la información del asunto de la conciliación. Recuerde que la casilla denominada cuantía corresponde a un valor de dinero y no puede ser superior a 50 salarios mínimos legales mensuales vigentes (para la fecha, el salario mínimo es de 1.750.000, sin incluir auxilio de transporte). El valor que usted ingrese será el que busca que le paguen, devuelvan, etc. A esto se le denomina pretensión y será descrito más adelante en el apartado de pretensiones.',
                 'view' => 'myforms.recepcion.frm_asunto',
             ],
             4 => [
@@ -198,6 +198,7 @@
     </div>
     @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
     @include('myforms.conciliaciones.componentes.modal_create_document')
+    @include('myforms.recepcion.frm_modal_infoinderminada')
 
 @endsection
 @push('scripts')
