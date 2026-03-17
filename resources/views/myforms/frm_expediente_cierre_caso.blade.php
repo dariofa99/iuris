@@ -8,7 +8,9 @@
             $expediente->getDaysOrColorForClose('dias') > 10 and
             $expediente->estado->id == 1 || $expediente->estado->id == 3) ||
             ($expediente->exptipoproce_id != 1 and $expediente->estado->id == 1 || $expediente->estado->id == 3) or
-        (currentUser()->hasRole('amatai') or currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral')) or
+        (currentUser()->hasRole('amatai') or 
+        //currentUser()->hasRole('diradmin') or 
+        currentUser()->hasRole('dirgral')) or
         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber and $expediente->estado->id == 4)
     <button type="button" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
         data-target="#myModal_exp_edit_cierre_caso" id="btn_trigger_exp_edit_cierre_caso">
@@ -22,7 +24,7 @@
     $expediente->exptipoproce_id == 1 and
         ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber or
             currentUser()->hasRole('amatai') or
-            currentUser()->hasRole('diradmin') or
+            //currentUser()->hasRole('diradmin') or
             currentUser()->hasRole('dirgral')))
 
     @if ($expediente->expestado_id == 5)
@@ -50,7 +52,10 @@
 @if (
     $expediente->expestado_id != 2 and
         $expediente->expestado_id != 5 and
-        currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin'))
+        currentUser()->hasRole('dirgral') 
+        || currentUser()->hasRole('amatai') 
+        //|| currentUser()->hasRole('diradmin')
+        )
     <button type="button" class="btn btn-danger btn-sm mb-2" id="btn_cerrar_dr_caso">
         Cerrar caso sin evaluar
     </button>
@@ -62,8 +67,9 @@
         $expediente->expestado_id != 7 and
         currentUser()->hasRole('dirgral') ||
             currentUser()->hasRole('amatai') ||
-            currentUser()->hasRole('coordprac') ||
-            currentUser()->hasRole('diradmin'))
+            //currentUser()->hasRole('diradmin') ||
+            currentUser()->hasRole('coordprac') 
+            )
     <button type="button" class="btn btn-info btn-sm mb-2" id="btn_revisar_dr_caso">
         Pasar a revisión
     </button>

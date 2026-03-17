@@ -26,7 +26,8 @@
             <a href="#" class="btn_change_doc_exp btn-notificar-incidencia"
                 data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
                 data-idnumber="{{ Auth::user()->idnumber }}" id="btn_change_doc_exp">
-                Cambiar</a>
+                Cambiar
+            </a>
 
             <a href="#" class="btn_change_doc_exp btn-notificar-incidencia"
                 data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
@@ -87,10 +88,12 @@
 
     @if (
         !$expediente->getDocenteAsig()->hasRole('docente_prueba') and
-            currentUser()->hasRole('diradmin') ||
+            //currentUser()->hasRole('diradmin') ||
                 currentUser()->hasRole('dirgral') ||
-                currentUser()->hasRole('amatai') ||
-                currentUser()->hasRole('coordprac'))
+               // currentUser()->hasRole('coordprac') ||
+                currentUser()->hasRole('amatai') 
+                
+                )
         <a href="#" class="btn_change_doc_exp btn-notificar-incidencia" id="btn_dar_baja_exp"
             data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
             data-idnumber="{{ Auth::user()->idnumber }}">
