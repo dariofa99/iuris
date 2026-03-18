@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Event;
 class UserAditionalData extends Model
 {
     protected $table = 'user_aditional_data';
-    protected $fillable = ['value',
+    protected $fillable = [
+        'value',
     'value_is_other',
     'reference_data_id',
     'reference_data_option_id',
-    'user_id'];
+    'user_id'
+    ];
 
 
     public function reference()

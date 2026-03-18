@@ -61,11 +61,9 @@ class NotaController extends Controller
         if (currentUser()->hasRole("estudiante")) {
             $user = User::where('idnumber', auth()->user()->idnumber)->first();
             $request['idnumber'] = auth()->user()->idnumber;
-           
         } elseif (currentUser()->can("ver_notas_estudiante")) {
             if ($request->has('idnumber')) {
                 $user = User::where('idnumber', $request->idnumber)->first();
-
             }
         }
         // dd("$notas");
@@ -79,10 +77,10 @@ class NotaController extends Controller
             $request['idnumber'] = $request->idnumber;
 
             $asistencia = $this->turnosService->getAsistencia($request);
-            
-            if(count($asistencia) > 0){
+
+            if (count($asistencia) > 0) {
                 $asistencia = $this->turnosService->getAsistencia($request)[0];
-            }else{
+            } else {
                 $asistencia = null;
             }
             // dd($notas);
@@ -255,10 +253,21 @@ class NotaController extends Controller
                 $days = \Carbon\Carbon::parse($nota_final['nota_conocimiento']['created_at'])->diffInDays(Carbon::now());
                 //return response()->json($days);
                 $can_edit = false;
-                if ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('diradmin')) $can_edit = true;
-                if ($days <= 1) {
+
+
+
+                if (
+                    $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') //|| currentUser()->hasRole('dirgral')
+                ) {
+                    $can_edit = true;
+                } else {
+                    $can_edit = false;
+                }
+
+                if ($days <= 1 and $can_edit) {
                     $can_edit = true;
                 }
+
                 $notas = [
                     "nota_conocimiento" => number_format($nota_final['nota_conocimiento']['nota'], 1, '.', '.'),
                     "nota_conocimientoid" => $nota_final['nota_conocimiento']['id'],
@@ -276,7 +285,8 @@ class NotaController extends Controller
                     "tipo" => $nota_final['nota_aplicacion']['tipo'],
                     "tipo_id" => $nota_final['nota_aplicacion']['tipo_id'],
                     "segmento_id" => $nota_final['segmento_id'],
-                    "docevname" => $nota_final['nota_conocimiento']['docevname']
+                    "docevname" => $nota_final['nota_conocimiento']['docevname'],
+                    "days"=>$nota_final['nota_conocimiento']['created_at']
                 ];
 
                 //  $nota_final['nota_etica']['docidnumber'] == \Auth::user()->idnumber ? $notas["can_edit"] = true:'';

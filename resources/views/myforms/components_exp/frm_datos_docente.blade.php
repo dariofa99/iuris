@@ -21,7 +21,9 @@
     @if (!$readonly)
 
 
-        @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') and
+        @if (
+            //currentUser()->hasRole('diradmin') ||
+            currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') and
                 $expediente->getDocenteAsig()->name != 'Sin asignar')
             <a href="#" class="btn_change_doc_exp btn-notificar-incidencia"
                 data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
@@ -89,11 +91,9 @@
     @if (
         !$expediente->getDocenteAsig()->hasRole('docente_prueba') and
             //currentUser()->hasRole('diradmin') ||
-                currentUser()->hasRole('dirgral') ||
-               // currentUser()->hasRole('coordprac') ||
-                currentUser()->hasRole('amatai') 
-                
-                )
+            currentUser()->hasRole('dirgral') ||
+                // currentUser()->hasRole('coordprac') ||
+                currentUser()->hasRole('amatai'))
         <a href="#" class="btn_change_doc_exp btn-notificar-incidencia" id="btn_dar_baja_exp"
             data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
             data-idnumber="{{ Auth::user()->idnumber }}">

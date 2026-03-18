@@ -1,4 +1,3 @@
-
 @foreach ($expediente->getActuaciones($only_estu) as $key => $actuacion)
     @php
 
@@ -30,7 +29,7 @@
                 if (
                     $hijo->actestado_id == '101' ||
                     $hijo->actestado_id == '104' ||
-                   // $hijo->actestado_id == '234' ||
+                    // $hijo->actestado_id == '234' ||
                     $hijo->actestado_id == '139'
                 ) {
                     $haycorrecciones = false;
@@ -84,7 +83,7 @@
                     $actuacion->actestado_id == 136 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral'))
                     <button type="button" value="{{ $actuacion->id }}"
                         class="btn btn-default btn-block btn-sm btn_change_status" style="color:#777">
@@ -100,8 +99,8 @@
                     $actuacion->actestado_id == 235 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('diradmin'))
+                            // currentUser()->hasRole('diradmin') ||
+                            currentUser()->hasRole('dirgral'))
                     <button type='button' data-estado='136' value="{{ $actuacion->id }}"
                         class='btn btn-danger btn-block btn-sm btn_change_status'>
                         Des-anular</button>
@@ -110,7 +109,7 @@
                     $actuacion->actestado_id == 138 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral'))
                     <button type='button' value="{{ $actuacion->id }}"
                         class='btn btn-default btn-block btn-sm btn_change_status' style='color:#777'>
@@ -121,7 +120,7 @@
                     $actuacion->actestado_id == 101 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            // currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral'))
                     <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $actuacion->id }}"
                         class='btn btn-primary btn-block btn-sm buscar_actuacion'>
@@ -138,7 +137,7 @@
                         count($actuacion->getHijos($actuacion)) <= 0 || !$hayactuaciones and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral'))
                     <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $actuacion->id }}"
                         class='btn btn-warning btn-sm btn-block buscar_actuacion'>
@@ -149,7 +148,7 @@
                     $actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
                         $actuacion->actusercreated == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') and
                         $hayactuaciones === false and
                         ($haycorrecciones === false and $hayhijos === false) and
@@ -165,7 +164,7 @@
                         $haycorrecciones === true and
                         $expediente->expidnumberest == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral'))
                     <button data-modal="#myModal_act_add_revision" type='button' value="{{ $actuacion->id }}"
                         class='btn btn-warning btn-sm btn-block buscar_actuacion' data-titulo_modal='Nueva actuación'>
@@ -175,11 +174,13 @@
                     ($actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140 and
                         $actuacion->actusercreated == currentUser()->idnumber ||
                             currentUser()->hasRole('amatai') ||
-                            currentUser()->hasRole('diradmin') ||
+                            // currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') and
                         $hayactuaciones === false and
                         ($haycorrecciones === false and $hayhijos === false)) ||
-                        (currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') and
+                        (currentUser()->hasRole('amatai') 
+                        //|| currentUser()->hasRole('diradmin')
+                         || currentUser()->hasRole('dirgral') and
                             ($haycorrecciones === false and $hayhijos === false)))
                     <button type='button' value="{{ $actuacion->id }}"
                         class='btn btn-danger btn-block btn-sm delete_act'>
@@ -224,8 +225,8 @@
                             $hijo->actestado_id == 136 and
                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                                     currentUser()->hasRole('amatai') ||
-                                    currentUser()->hasRole('dirgral') ||
-                                    currentUser()->hasRole('diradmin'))
+                                    //currentUser()->hasRole('diradmin') ||
+                                    currentUser()->hasRole('dirgral'))
                             <button type="button" value="{{ $hijo->id }}"
                                 class="btn btn-default btn-block btn-sm btn_change_status" style="color:#777">
                                 Marcar revisado
@@ -240,7 +241,7 @@
                             $hijo->actestado_id == 235 and
                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                                     currentUser()->hasRole('amatai') ||
-                                    currentUser()->hasRole('diradmin') ||
+                                    // currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral'))
                             <button type='button' data-estado='136' value="{{ $hijo->id }}"
                                 class='btn btn-danger btn-block btn-sm btn_change_status'>
@@ -250,7 +251,7 @@
                             $hijo->actestado_id == 138 and
                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                                     currentUser()->hasRole('amatai') ||
-                                    currentUser()->hasRole('diradmin') ||
+                                    // currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral'))
                             <button type='button' value="{{ $hijo->id }}"
                                 class='btn btn-default btn-block btn-sm btn_change_status' style='color:#777'>
@@ -262,7 +263,7 @@
                             $hijo->actestado_id == 101 and
                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                                     currentUser()->hasRole('amatai') ||
-                                    currentUser()->hasRole('diradmin') ||
+                                    // currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral'))
                             <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $hijo->id }}"
                                 class='btn btn-primary btn-block btn-sm buscar_actuacion'>
@@ -280,7 +281,7 @@
                                 $haycorrecciones and
                                 $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                                     currentUser()->hasRole('amatai') ||
-                                    currentUser()->hasRole('diradmin') ||
+                                    //currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral'))
                             <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $hijo->id }}"
                                 class='btn btn-warning btn-sm btn-block buscar_actuacion'>
@@ -293,7 +294,7 @@
                             $hijo->actestado_id == 101 || $hijo->actestado_id == 136 and
                                 ($hijo->actusercreated == currentUser()->idnumber and $vencido == false) ||
                                     (currentUser()->hasRole('amatai') ||
-                                        currentUser()->hasRole('diradmin') ||
+                                        // currentUser()->hasRole('diradmin') ||
                                         currentUser()->hasRole('dirgral')) ||
                                     ($hijo->actestado_id == 136 and $hijo->actusercreated == currentUser()->idnumber))
                             <button data-modal="#myModal_act_edit" type='button' value="{{ $hijo->id }}"
@@ -302,13 +303,11 @@
                             </button>
                         @endif
                         @if (
-                            (($hijo->actestado_id == 101 || $hijo->actestado_id == 136)
-                             and
-                                ($hijo->actusercreated == currentUser()->idnumber and $vencido == false))
-                                 ||
-                                    (currentUser()->hasRole('amatai') ||
-                                        currentUser()->hasRole('diradmin') ||
-                                        currentUser()->hasRole('dirgral')))
+                            ($hijo->actestado_id == 101 || $hijo->actestado_id == 136 and
+                                ($hijo->actusercreated == currentUser()->idnumber and $vencido == false)) ||
+                                (currentUser()->hasRole('amatai') ||
+                                    //currentUser()->hasRole('diradmin') ||
+                                    currentUser()->hasRole('dirgral')))
                             <button type='button' value="{{ $hijo->id }}"
                                 class='btn btn-danger btn-block btn-sm delete_act'>
                                 Eliminar
@@ -448,7 +447,7 @@
                                     <div class="flex-grow-1">
                                         <small class="text-muted text-uppercase font-weight-bold">Documento</small>
                                         <div>
-                                            @if($actuacion->actdocnompropio)
+                                            @if ($actuacion->actdocnompropio)
                                                 <a target="_blank" href="{{ url('/actpdfdownload/' . $actuacion->id . '/estudiante') }}" 
                                                    class="text-primary font-weight-bold d-flex align-items-center">
                                                     <i class="fas fa-download mr-1"></i>
@@ -510,12 +509,7 @@
                                     </button>
                                 @endif
 
-                                @if (
-                                    $actuacion->actestado_id == 136 and
-                                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                            currentUser()->hasRole('amatai') ||
-                                            currentUser()->hasRole('diradmin') ||
-                                            currentUser()->hasRole('dirgral'))
+                                @if ($actuacion->actestado_id == 136 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                     <button type="button" value="{{ $actuacion->id }}"
                                             class="btn btn-outline-success btn-sm btn_change_status">
                                         <i class="fas fa-check-circle mr-1"></i> Marcar revisado
@@ -526,36 +520,21 @@
                                     </button>
                                 @endif
 
-                                @if (
-                                    $actuacion->actestado_id == 235 and
-                                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                            currentUser()->hasRole('amatai') ||
-                                            currentUser()->hasRole('dirgral') ||
-                                            currentUser()->hasRole('diradmin'))
+                                @if ($actuacion->actestado_id == 235 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('diradmin'))
                                     <button type='button' data-estado='136' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-warning btn-sm btn_change_status'>
                                         <i class="fas fa-undo-alt mr-1"></i> Des-anular
                                     </button>
                                 @endif
 
-                                @if (
-                                    $actuacion->actestado_id == 138 and
-                                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                            currentUser()->hasRole('amatai') ||
-                                            currentUser()->hasRole('diradmin') ||
-                                            currentUser()->hasRole('dirgral'))
+                                @if ($actuacion->actestado_id == 138 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                     <button type='button' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-secondary btn-sm btn_change_status'>
                                         <i class="fas fa-times-circle mr-1"></i> Quitar revisado
                                     </button>
                                 @endif
 
-                                @if (
-                                    $actuacion->actestado_id == 101 and
-                                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                            currentUser()->hasRole('amatai') ||
-                                            currentUser()->hasRole('diradmin') ||
-                                            currentUser()->hasRole('dirgral'))
+                                @if ($actuacion->actestado_id == 101 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                     <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-primary btn-sm buscar_actuacion'>
                                         <i class="fas fa-check-double mr-1"></i> Revisar
@@ -566,62 +545,28 @@
                                     </button>
                                 @endif
 
-                                @if (
-                                    $actuacion->actestado_id == 102 and
-                                        count($actuacion->getHijos($actuacion)) <= 0 || !$hayactuaciones and
-                                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                            currentUser()->hasRole('amatai') ||
-                                            currentUser()->hasRole('diradmin') ||
-                                            currentUser()->hasRole('dirgral'))
+                                @if ($actuacion->actestado_id == 102 and count($actuacion->getHijos($actuacion)) <= 0 || !$hayactuaciones and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                     <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-warning btn-sm buscar_actuacion'>
                                         <i class="fas fa-edit mr-1"></i> Editar Revisión
                                     </button>
                                 @endif
 
-                                @if (
-                                    ($actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140) &&
-                                    (($actuacion->actusercreated == currentUser()->idnumber || 
-                                      currentUser()->hasRole('amatai') || 
-                                      currentUser()->hasRole('diradmin') || 
-                                      currentUser()->hasRole('dirgral')) &&
-                                      $hayactuaciones === false &&
-                                      $haycorrecciones === false && 
-                                      $hayhijos === false && 
-                                      $vencido == false))
+                                @if (($actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140) && (($actuacion->actusercreated == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')) && $hayactuaciones === false && $haycorrecciones === false && $hayhijos === false && $vencido == false))
                                     <button data-modal="#myModal_act_edit" type='button' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-primary btn-sm buscar_actuacion'>
                                         <i class="fas fa-pen mr-1"></i> Editar
                                     </button>
                                 @endif
 
-                                @if (
-                                    ($actuacion->actestado_id == 102 || $actuacion->actestado_id == 140) &&
-                                    $haycorrecciones === true &&
-                                    ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                     currentUser()->hasRole('amatai') ||
-                                     currentUser()->hasRole('diradmin') ||
-                                     currentUser()->hasRole('dirgral')))
+                                @if (($actuacion->actestado_id == 102 || $actuacion->actestado_id == 140) && $haycorrecciones === true && ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')))
                                     <button data-modal="#myModal_act_add_revision" type='button' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-warning btn-sm buscar_actuacion' data-titulo_modal='Nueva actuación'>
                                         <i class="fas fa-exclamation-triangle mr-1"></i> Ag. Corrección
                                     </button>
                                 @endif
 
-                                @if (
-                                    (($actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140) &&
-                                     ($actuacion->actusercreated == currentUser()->idnumber ||
-                                      currentUser()->hasRole('amatai') ||
-                                      currentUser()->hasRole('diradmin') ||
-                                      currentUser()->hasRole('dirgral')) &&
-                                     $hayactuaciones === false &&
-                                     $haycorrecciones === false && 
-                                     $hayhijos === false) ||
-                                    (currentUser()->hasRole('amatai') || 
-                                     currentUser()->hasRole('diradmin') || 
-                                     currentUser()->hasRole('dirgral')) &&
-                                     $haycorrecciones === false && 
-                                     $hayhijos === false)
+                                @if ((($actuacion->actestado_id == 101 || $actuacion->actestado_id == 136 || $actuacion->actestado_id == 140) && ($actuacion->actusercreated == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')) && $hayactuaciones === false && $haycorrecciones === false && $hayhijos === false) || ((currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')) && $haycorrecciones === false && $hayhijos === false))
                                     <button type='button' value="{{ $actuacion->id }}"
                                             class='btn btn-outline-danger btn-sm delete_act'>
                                         <i class="fas fa-trash-alt mr-1"></i> Eliminar
@@ -703,7 +648,7 @@
                                         <div class="flex-grow-1">
                                             <small class="text-muted">Documento:</small>
                                             <div>
-                                                @if($hijo->actdocnompropio)
+                                                @if ($hijo->actdocnompropio)
                                                     <a target="_blank" href="{{ url('/actpdfdownload/' . $hijo->id . '/estudiante') }}" 
                                                        class="text-primary">
                                                         <i class="fas fa-download mr-1"></i>
@@ -745,12 +690,7 @@
                                     <i class="fas fa-tools mr-1"></i> Acciones:
                                 </small>
                                 <div class="btn-group flex-wrap" role="group">
-                                    @if (
-                                        $hijo->actestado_id == 136 and
-                                            $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                                currentUser()->hasRole('amatai') ||
-                                                currentUser()->hasRole('dirgral') ||
-                                                currentUser()->hasRole('diradmin'))
+                                    @if ($hijo->actestado_id == 136 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('diradmin'))
                                         <button type="button" value="{{ $hijo->id }}"
                                                 class="btn btn-outline-success btn-sm btn_change_status">
                                             <i class="fas fa-check-circle mr-1"></i> Marcar revisado
@@ -761,36 +701,21 @@
                                         </button>
                                     @endif
 
-                                    @if (
-                                        $hijo->actestado_id == 235 and
-                                            $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                                currentUser()->hasRole('amatai') ||
-                                                currentUser()->hasRole('diradmin') ||
-                                                currentUser()->hasRole('dirgral'))
+                                    @if ($hijo->actestado_id == 235 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                         <button type='button' data-estado='136' value="{{ $hijo->id }}"
                                                 class='btn btn-outline-warning btn-sm btn_change_status'>
                                             <i class="fas fa-undo-alt mr-1"></i> Des-anular
                                         </button>
                                     @endif
 
-                                    @if (
-                                        $hijo->actestado_id == 138 and
-                                            $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                                currentUser()->hasRole('amatai') ||
-                                                currentUser()->hasRole('diradmin') ||
-                                                currentUser()->hasRole('dirgral'))
+                                    @if ($hijo->actestado_id == 138 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                         <button type='button' value="{{ $hijo->id }}"
                                                 class='btn btn-outline-secondary btn-sm btn_change_status'>
                                             <i class="fas fa-times-circle mr-1"></i> Quitar revisado
                                         </button>
                                     @endif
 
-                                    @if (
-                                        $hijo->actestado_id == 101 and
-                                            $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                                currentUser()->hasRole('amatai') ||
-                                                currentUser()->hasRole('diradmin') ||
-                                                currentUser()->hasRole('dirgral'))
+                                    @if ($hijo->actestado_id == 101 and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                         <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $hijo->id }}"
                                                 class='btn btn-outline-primary btn-sm buscar_actuacion'>
                                             <i class="fas fa-check-double mr-1"></i> Revisar
@@ -801,38 +726,21 @@
                                         </button>
                                     @endif
 
-                                    @if (
-                                        $hijo->actestado_id == 102 and
-                                            $ultima_id == $hijo->id and
-                                            $haycorrecciones and
-                                            $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                                                currentUser()->hasRole('amatai') ||
-                                                currentUser()->hasRole('diradmin') ||
-                                                currentUser()->hasRole('dirgral'))
+                                    @if ($hijo->actestado_id == 102 and $ultima_id == $hijo->id and $haycorrecciones and $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                         <button data-modal="#myModal_act_edit_docen" type='button' value="{{ $hijo->id }}"
                                                 class='btn btn-outline-warning btn-sm buscar_actuacion'>
                                             <i class="fas fa-edit mr-1"></i> Editar Revisión
                                         </button>
                                     @endif
 
-                                    @if (
-                                        ($hijo->actestado_id == 101 || $hijo->actestado_id == 136) &&
-                                        (($hijo->actusercreated == currentUser()->idnumber && $vencido == false) ||
-                                         currentUser()->hasRole('amatai') ||
-                                         currentUser()->hasRole('diradmin') ||
-                                         currentUser()->hasRole('dirgral')))
+                                    @if (($hijo->actestado_id == 101 || $hijo->actestado_id == 136) && (($hijo->actusercreated == currentUser()->idnumber && $vencido == false) || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral')))
                                         <button data-modal="#myModal_act_edit" type='button' value="{{ $hijo->id }}"
                                                 class='btn btn-outline-primary btn-sm buscar_actuacion'>
                                             <i class="fas fa-pen mr-1"></i> Editar
                                         </button>
                                     @endif
 
-                                    @if (
-                                        (($hijo->actestado_id == 101 || $hijo->actestado_id == 136) &&
-                                         ($hijo->actusercreated == currentUser()->idnumber && $vencido == false)) ||
-                                         currentUser()->hasRole('amatai') ||
-                                         currentUser()->hasRole('diradmin') ||
-                                         currentUser()->hasRole('dirgral'))
+                                    @if ((($hijo->actestado_id == 101 || $hijo->actestado_id == 136) && ($hijo->actusercreated == currentUser()->idnumber && $vencido == false)) || currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
                                         <button type='button' value="{{ $hijo->id }}"
                                                 class='btn btn-outline-danger btn-sm delete_act'>
                                             <i class="fas fa-trash-alt mr-1"></i> Eliminar
