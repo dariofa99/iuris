@@ -205,7 +205,7 @@
                     @if (currentUser()->can('ver_conciliaciones') ||
                             currentUser()->hasRole('amatai') ||
                             currentUser()->hasRole('solicitante') ||
-                            currentUser()->hasRole('visitante_conciliacion') ||
+                            
                             count(currentUser()->conciliaciones) > 0)
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">

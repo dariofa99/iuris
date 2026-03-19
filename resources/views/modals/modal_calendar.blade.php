@@ -26,7 +26,8 @@
                             @if (currentUser()->hasRole('coordprac') or
                                     currentUser()->hasRole('diradmin') or
                                     currentUser()->hasRole('dirgral') or
-                                    currentUser()->hasRole('amatai'))
+                                    currentUser()->hasRole('amatai') or
+                                    currentUser()->can('admin_turnos_estudiantes'))
                                 <th>Asistencia</th>
                                 <th>Lugar</th>
                                 <th>Motivo</th>
@@ -46,7 +47,8 @@
             @if (currentUser()->hasRole('coordprac') or
                     currentUser()->hasRole('diradmin') or
                     currentUser()->hasRole('dirgral') or
-                    currentUser()->hasRole('amatai'))
+                    currentUser()->hasRole('amatai') or
+                     currentUser()->can('admin_turnos_estudiantes'))
                 <button type="button" class="btn btn-success" id="addest">Añadir estudiante</button>
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
             @endif

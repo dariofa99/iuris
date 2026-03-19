@@ -414,8 +414,9 @@
                                 }
 
                                 @if (currentUser()->hasRole('coordprac') or
-                                        currentUser()->hasRole('diradmin') or
+                                        currentUser()->hasRole('diradmin') or 
                                         currentUser()->hasRole('dirgral') or
+                                        currentUser()->can('admin_turnos_estudiantes') or
                                         currentUser()->hasRole('amatai'))
                                     $('#contencalendarid').append('<tr id="row_' + key + '">' +
                                         '<td><span class="lbl_index" id="lbl_index-' + key +
