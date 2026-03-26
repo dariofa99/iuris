@@ -5,20 +5,7 @@
      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_req_create"
          id="btn_modal_req">Nueva cita/requerimiento</button>
  @endif 
-
-
-
-
-
  <!-- /modal -->
-
-
-
-
-
-
-
-
 
  <div class="col-md-12">
      <br>

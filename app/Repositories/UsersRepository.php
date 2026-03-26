@@ -288,6 +288,15 @@ class UsersRepository extends BaseRepository implements UsersService
 
   public function update(User $user, Request $request): User
   {
+
+    if(currentUser()->hasRole('estudiante')){
+        if($request->has('tel1')){
+          $request['tel1'] = $user->tel1;
+        }
+        if($request->has('tel2')){
+          $request['tel2'] = $user->tel2;
+        }
+    }
     $user->fill($request->all());
     $user->save();
     if ($request->has('data') and 

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('titulo_area')
-    Rol de Usuario: <strong> {{ count($user->roles)>0 ? $user->roles[0]->display_name : "Sin rol" }} </strong>
+    Rol de Usuario: <strong> {{ count($user->roles) > 0 ? $user->roles[0]->display_name : 'Sin rol' }} </strong>
 @endsection
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
@@ -92,8 +92,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link urlactive" id="discapacidad-tab" data-toggle="tab" href="#discapacidad_tab"
-                                    role="tab" aria-controls="discapacidad_tab" aria-selected="false">
+                                <a class="nav-link urlactive" id="discapacidad-tab" data-toggle="tab"
+                                    href="#discapacidad_tab" role="tab" aria-controls="discapacidad_tab"
+                                    aria-selected="false">
                                     Información Discapacidad
                                 </a>
                             </li>
@@ -132,33 +133,26 @@
                                 </div>
                             </div>
 
-                            <div id="discapacidad_tab" class="tab-pane fade" role="tabpanel" aria-labelledby="discapacidad-tab">
+                            <div id="discapacidad_tab" class="tab-pane fade" role="tabpanel"
+                                aria-labelledby="discapacidad-tab">
                                 <div class="row">
                                     @include('myforms.components_user.discapacidad', [
                                         'disabled' => isset($user) ? '' : '',
                                     ])
-                                </div> 
+                                </div>
                             </div>
-
-                            <!-- /.tab-pane -->
-
-                            <!-- /.tab-pane -->
-
-                            <!-- /.tab-pane -->
-
-                            <!-- /.tab-pane -->
-
-
                         </div>
                         <!-- /.tab-content -->
                     </div><!-- /.card-body -->
                 </div>
+                @can("edit_usuarios")
                 <div class="row">
                     <div class="col-md-4">
-                        <button type="button" id="btn_actualizar_usuario"
-                            class="btn btn-primary btn-block">Actualizar</button>
+                        <button type="button" id="btn_actualizar_usuario" class="btn btn-primary btn-block">Actualizar
+                        </button>
                     </div>
                 </div>
+                @endcan
             </form>
 
             <!-- /.nav-tabs-custom -->
@@ -202,10 +196,10 @@
 
             /*   var message = `<h5>Estimado estudiante debido a cambios de horario se habilitará la 
           asignación del curso en el transcurso de esta semana.</h5>`;
-                     
-                     Comunícate con el director
-                     
-                      */
+                         
+                         Comunícate con el director
+                         
+                          */
 
             $("#modal-show-alerts-content").html(message);
             $("#mymodalShowAlerts").modal("show")

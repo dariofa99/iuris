@@ -1,21 +1,32 @@
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contenedor = document.getElementById('mensajeMotivacional');
+        if (contenedor) {
+            contenedor.innerHTML = getMotivationalMessage();
+        }
+        0
+        setInterval(() => {
+            contenedor.innerHTML = getMotivationalMessage();
+        }, 60000);
+    });
+
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
         localStorage.removeItem("keyTurnosDocenteRojas");
 
-        var keyCir = localStorage.getItem("keyNotaAsistenciaConsultorio");
+        var keyCir = localStorage.getItem("keyCircularActualVacSemanaSanta");
         $("#modal_t").text("");
         var message = '';
-        var message = getMotivationalMessage();
+        //var message = getMantenimientoMessage();
         if (keyCir == null) {
-            message = getHTMLDocument();
+            message = getMantenimientoMessage();
+            $("#modal-show-alerts-content").html(message);
+            $("#mymodalShowAlerts").modal("show");
         } else {
             $("#modal_t").text("");
-            // message = getHtmlCircular();
+            // message = getMotivationalMessage();
         }
 
         //var message = getMantenimientoMessage();
-        $("#modal-show-alerts-content").html(message);
-        $("#mymodalShowAlerts").modal("show");
     @endif
 
     $("#mymodalShowAlerts").on("click", '#btnNotFalse', function(e) {
@@ -285,48 +296,48 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCircularActualVacNavidad"
+            "data-not": "keyCircularActualVacSemanaSanta"
         }));
         return `
 <div class="container-fluid" style="font-size:18px;">
 
     <!-- HEADER NAVIDEÑO -->
     <div class="text-center mb-4">
-        <h2 class="font-weight-bold" style="color:#c0392b;">
+        <h2 class="font-weight-bold" style="color:#502997;">
            <i class="fas fa-bell"></i> Atención
 
         </h2>
-        <p class="text-muted">Actualización para el periodo de vacaciones</p>
+        <p class="text-muted" style="font-style: italic; border-left: 3px solid #d4af7a; padding-left: 10px;">
+    📅 <strong>Recordatorio</strong> para el periodo de vacaciones de Semana Santa
+</p>
     </div>
 
     <!-- CARD INFO -->
-    <div class="card shadow-sm mb-4" style="border-left:6px solid #c0392b;">
+    <div class="card shadow-sm mb-4" style="border-left:6px solid #502997;">
         <div class="card-body">
 
             <p class="mb-3">
                 Estimados estudiantes, recuerden que durante el periodo de vacaciones,
                 <strong>el sistema pone en pausa los días en los cuales se aplican notas de cero</strong>,
-                <span class="text-danger font-weight-bold">a excepción de las actuaciones con fecha límite puesta por el docente.</span>
+                <span class="text-danger font-weight-bold">a excepción de las actuaciones con fecha límite puesta por el docente asesor.</span>
             </p>
 
            
         </div>
-    </div>
+    </div>`;
+        `
 
     <!-- MENSAJE NAVIDEÑO -->
-    <div class="text-center py-4 px-3" 
-         style="background:#f9f2eb;border-radius:12px; border:1px solid #f0e6dc;">
-        <h4 style="color:#8e2b2b;" class="font-weight-bold mb-2">
-            🎄 🎄 <i class="fas fa-tree"></i> 🎄  🎄
-        </h4>
-        <p class="mb-2">
-            Desde la administración de <strong>IURIS</strong>, 
-            les deseamos unas felices fiestas llenas de paz, armonía, alegría y muchos éxitos.
-        </p>
-      
-
-
-    </div>
+ <div class="text-center py-4 px-3" 
+     style="background:#f9f2eb;border-radius:12px; border:1px solid #f0e6dc;">
+    <h4 style="color:#8e2b2b;" class="font-weight-bold mb-2">
+        ✝️ 🌿 <i class="fas fa-dove"></i> 🌿 ✝️
+    </h4>
+    <p class="mb-2">
+        Desde la administración de <strong>IURIS</strong>, 
+        les deseamos una Santa Semana llena de reflexión, paz interior, renovación espiritual y bendiciones junto a sus seres queridos.
+    </p>
+</div> 
 
     <!-- FOOTER -->
     <div class="text-center mt-4 text-muted" style="font-size:14px;">
@@ -342,6 +353,169 @@
     function getMotivationalMessage() {
 
         const frases = [{
+                texto: "La única manera de hacer un gran trabajo es amar lo que haces.",
+                autor: "Steve Jobs"
+            },
+            {
+                texto: "El éxito no es la clave de la felicidad. La felicidad es la clave del éxito.",
+                autor: "Albert Schweitzer"
+            },
+            {
+                texto: "No te compares con los demás, eres único y valioso.",
+                autor: "Dr. Seuss"
+            },
+            {
+                texto: "El futuro pertenece a quienes creen en la belleza de sus sueños.",
+                autor: "Eleanor Roosevelt"
+            },
+            {
+                texto: "Cree que puedes y ya estás a medio camino.",
+                autor: "Theodore Roosevelt"
+            },
+            {
+                texto: "El éxito es ir de fracaso en fracaso sin perder el entusiasmo.",
+                autor: "Winston Churchill"
+            },
+            {
+                texto: "La educación es el arma más poderosa que puedes usar para cambiar el mundo.",
+                autor: "Nelson Mandela"
+            },
+            {
+                texto: "Nuestra mayor gloria no está en no caer nunca, sino en levantarnos cada vez que caemos.",
+                autor: "Confucio"
+            },
+            {
+                texto: "El aprendizaje nunca agota la mente.",
+                autor: "Leonardo da Vinci"
+            },
+            {
+                texto: "No fracases por falta de intentarlo.",
+                autor: "Benjamin Franklin"
+            },
+            {
+                texto: "El éxito no es definitivo, el fracaso no es fatal: lo que cuenta es el valor para continuar.",
+                autor: "Winston Churchill"
+            },
+            {
+                texto: "Dime y lo olvido, enséñame y lo recuerdo, involúcrame y lo aprendo.",
+                autor: "Benjamin Franklin"
+            },
+            {
+                texto: "El único modo de hacer un gran trabajo es amar lo que haces.",
+                autor: "Steve Jobs"
+            },
+            {
+                texto: "No importa lo lento que vayas, siempre y cuando no te detengas.",
+                autor: "Confucio"
+            },
+            {
+                texto: "La perseverancia no es una carrera larga; son muchas carreras cortas, una tras otra.",
+                autor: "Walter Elliot"
+            },
+            {
+                texto: "El éxito suele llegar a quienes están demasiado ocupados para buscarlo.",
+                autor: "Henry David Thoreau"
+            },
+            {
+                texto: "La diferencia entre lo ordinario y lo extraordinario es ese pequeño extra.",
+                autor: "Jimmy Johnson"
+            },
+            {
+                texto: "No te lamentes por los errores, aprende de ellos y sigue adelante.",
+                autor: "Vince Lombardi"
+            },
+            {
+                texto: "El único límite para nuestros logros de mañana está en nuestras dudas de hoy.",
+                autor: "Franklin D. Roosevelt"
+            },
+            {
+                texto: "Haz de tu pasión tu propósito, y un día se convertirá en tu profesión.",
+                autor: "Oprah Winfrey"
+            },
+            {
+                texto: "El talento gana partidos, pero el trabajo en equipo y la inteligencia ganan campeonatos.",
+                autor: "Michael Jordan"
+            },
+            {
+                texto: "No cuentes los días, haz que los días cuenten.",
+                autor: "Muhammad Ali"
+            },
+            {
+                texto: "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
+                autor: "Robert Collier"
+            },
+            {
+                texto: "Cada logro comienza con la decisión de intentarlo.",
+                autor: "John F. Kennedy"
+            },
+            {
+                texto: "El optimismo es la fe que conduce al logro.",
+                autor: "Helen Keller"
+            },
+            {
+                texto: "Lo que obtienes al lograr tus metas no es tan importante como lo que te conviertes al lograrlas.",
+                autor: "Zig Ziglar"
+            },
+            {
+                texto: "El conocimiento te dará poder, pero el carácter te dará respeto.",
+                autor: "Bruce Lee"
+            },
+            {
+                texto: "La disciplina es el puente entre metas y logros.",
+                autor: "Jim Rohn"
+            },
+            {
+                texto: "El éxito no está en vencer siempre, sino en nunca darse por vencido.",
+                autor: "Vicente del Bosque"
+            },
+            {
+                texto: "La motivación nos impulsa a empezar, el hábito nos permite continuar.",
+                autor: "Jim Ryun"
+            },
+            {
+                texto: "Hoy es difícil, mañana será peor, pero pasado mañana habrá sol.",
+                autor: "Jack Ma"
+            },
+            {
+                texto: "La excelencia no es un acto, es un hábito.",
+                autor: "Aristóteles"
+            },
+            {
+                texto: "El 80% del éxito se debe a presentarse.",
+                autor: "Woody Allen"
+            },
+            {
+                texto: "Lo importante es no dejar de hacerse preguntas.",
+                autor: "Albert Einstein"
+            },
+            {
+                texto: "El verdadero signo de la inteligencia no es el conocimiento, sino la imaginación.",
+                autor: "Albert Einstein"
+            },
+            {
+                texto: "No puedes tener una vida positiva y una mente negativa.",
+                autor: "Joyce Meyer"
+            },
+            {
+                texto: "Lo que piensas, te conviertes. Lo que sientes, lo atraes. Lo que imaginas, lo creas.",
+                autor: "Buda"
+            },
+            {
+                texto: "El propósito de nuestras vidas es ser felices.",
+                autor: "Dalai Lama"
+            },
+            {
+                texto: "No esperes. El momento nunca será el adecuado.",
+                autor: "Napoleon Hill"
+            },
+            {
+                texto: "El único lugar donde el éxito viene antes que el trabajo es en el diccionario.",
+                autor: "Vidal Sassoon"
+            },
+            {
+                texto: "El éxito es hacer lo que amas y encontrar la manera de que te paguen por ello.",
+                autor: "Nelson Mandela"
+            }, {
                 texto: "La única manera de hacer un gran trabajo es amar lo que haces.",
                 autor: "Steve Jobs"
             },
@@ -499,6 +673,7 @@
         const randomIndex = Math.floor(Math.random() * frases.length);
         const frase = frases[randomIndex];
 
+        return frase.texto;
 
 
         var message = '';
