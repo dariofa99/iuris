@@ -4,6 +4,7 @@
     $representantes_legales = $conciliacion->personasPorTipo('representante_legal')->get();
 
     //dd($solicitados);
+
 @endphp
 
 @foreach ($representantes_legales as $key => $representante_legal)
@@ -11,7 +12,7 @@
 
         <div class="form-card">
 
-            <input type="text" value="{{$solicitados[$key]->id}}">
+            <input type="hidden" value="{{ $solicitados[$key]->id }}">
             {{-- HEADER --}}
             <div class="form-card-header">
                 <div class="form-title">
@@ -23,13 +24,25 @@
 
             {{-- BODY --}}
             <div class="row form-card-body" id="content_solicitada">
-                <input type="text" name="persona_externa_id" value="{{ $representante_legal->id }}">
+                <input type="hidden" name="persona_externa_id" value="{{ $representante_legal->id }}">
                 @include('myforms.categorias.refs_aditional_data', [
                     'data' => $representante_legal->persona->preguntas()->orderBy('orden', 'asc')->get(),
                     'col' => 3,
                     'model' => $representante_legal,
                     // 'design' => 'card_question',
                 ])
+
+                @include('myforms.components_user.aditional_data', [
+                    'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
+                    'user' => $representante_legal,
+                ])
+
+                @include('myforms.components_user.aditional_data', [
+                    'data' => getReferencesDataBySection('discapacidad', 'users'),
+                    //'discaform' => 'discaform',
+                    'user' => $representante_legal,
+                ])
+
             </div>
 
             {{-- FOOTER --}}
@@ -65,7 +78,7 @@
                 </h4>
             </div>
         </div> --}}
-        {{--  <div class="row">
+{{--  <div class="row">
             <div class="col-md-2">
                 <button id="btn_opaddrpl-{{ $key }}" data-key="{{ $key }}"
                     class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
@@ -74,7 +87,7 @@
                 </button>
             </div>
         </div> --}}
-       {{--  @php
+{{--  @php
             $hasrep_legales = false;
         @endphp
         @forelse ($parte_->conc_rep_legal as $key_ => $conciliacion_rep_legal)
