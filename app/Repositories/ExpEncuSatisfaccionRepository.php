@@ -44,7 +44,7 @@ class ExpEncuSatisfaccionRepository extends BaseRepository implements ExpEncuSat
   {
 
      try { 
-     
+      
       $encuestaAct = AdminEncuestas::where("categoria_id", 256)
             ->where("activo", 1)->first();
 

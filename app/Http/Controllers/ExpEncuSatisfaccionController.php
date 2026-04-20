@@ -271,9 +271,11 @@ class ExpEncuSatisfaccionController extends Controller
         }
 
 
-
+ 
 
         $admin_encuestas = AdminEncuestas::where("categoria_id", 256)->get();
+
+       // dd($admin_encuestas);
 
         return view('myforms.encuestas.expedientes.resultados', compact('encuestas', 'admin_encuestas', 'periodos'));
     }

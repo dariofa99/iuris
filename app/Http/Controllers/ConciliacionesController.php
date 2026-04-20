@@ -158,7 +158,7 @@ class ConciliacionesController extends Controller
                             'conciliacion' => $conciliacion,
 
                         ]
-                    );
+                    ); 
                 }
             }
         } catch (\Throwable $e) {
@@ -893,9 +893,13 @@ class ConciliacionesController extends Controller
     {
         $conciliacion = Conciliacion::where('id', $id)->first();
         if ($conciliacion) {
+             $apoderado = $conciliacion->personasPorTipo('apoderado')->first();
+           // dd( $apoderado->persona->preguntas()->orderBy('orden', 'asc')->get());
+
             $pdf = PDF::loadView('pdf.conciliacion_form', [
                 'conciliacion' => $conciliacion
             ]);
+           
             return $pdf->stream('invoice.pdf');
         } else {
             return response()->json(['error' => 'No se encontró la conciliacion'], 404);

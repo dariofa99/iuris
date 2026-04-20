@@ -145,14 +145,15 @@
                         <!-- /.tab-content -->
                     </div><!-- /.card-body -->
                 </div>
-                @can("edit_usuarios")
+             
+                @if(currentUser()->can('edit_usuarios'))
                 <div class="row">
                     <div class="col-md-4">
                         <button type="button" id="btn_actualizar_usuario" class="btn btn-primary btn-block">Actualizar
                         </button>
                     </div>
                 </div>
-                @endcan
+                @endif
             </form>
 
             <!-- /.nav-tabs-custom -->

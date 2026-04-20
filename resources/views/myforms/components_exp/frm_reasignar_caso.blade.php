@@ -38,7 +38,13 @@
  --}}
                              </td>
                              <td>
-                                 @if (!$readonly)
+                                 @if (
+                                     !$readonly and
+                                         (currentUser()->hasRole('amatai') or
+                                            /// currentUser()->hasRole('diradmin') or
+                                             currentUser()->hasRole('coordprac') or
+                                             currentUser()->hasRole('dirgral')) and
+                                         $expediente->expestado_id != 2)
                                      <div>
                                          <a class="btn btn-warning" id="btnOpReasig"><i class="fa fa-edit"> </i>
                                              Reasignar</a>
@@ -95,8 +101,8 @@
                          </th>
 
                          <th>
-                            Administrador
-                        </th>
+                             Administrador
+                         </th>
 
                          <th>
                              Motivo
@@ -112,15 +118,15 @@
                          @foreach ($expediente->asignaciones as $asignacion)
                              <tr>
                                  <td>
-                                     {{ getSmallDate($asignacion->created_at) }} 
+                                     {{ getSmallDate($asignacion->created_at) }}
                                  </td>
                                  <td>
                                      {{ $asignacion->estudiante->name }} {{ $asignacion->estudiante->lastname }}
-                                 </td> 
+                                 </td>
 
                                  <td>
-                                    {{ $asignacion->user_asig->name }} {{ $asignacion->user_asig->lastname }}
-                                </td>
+                                     {{ $asignacion->user_asig->name }} {{ $asignacion->user_asig->lastname }}
+                                 </td>
 
                                  <td>
                                      {{ $asignacion->motivo_asig->nom_motivo }}
@@ -130,7 +136,7 @@
                                      {{ $asignacion->tipo_asig->nombre_asig }}
                                  </td>
                                  <td width="30%">
-                                    {{ $asignacion->anotacion }} 
+                                     {{ $asignacion->anotacion }}
                                  </td>
                              </tr>
                          @endforeach

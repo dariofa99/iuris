@@ -56,4 +56,14 @@ trait RefDataManage
        return false; 
     }
 
+    
+     public function getAdDataByQuestion($question)
+    {
+        return $this->aditional_data()
+            ->whereHas('pregunta', function ($q) use ($question) {
+                $q->where('short_name', $question);
+            })
+            ->with('pregunta','opcion');
+    }
+
 }

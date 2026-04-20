@@ -83,7 +83,7 @@ class ReferencesDataController extends Controller
             'data' => $preguntasSinEncuesta,
             'col' => 12,
             'design' => 'select_question',
-        ])->render();
+        ])->render(); 
         return response()->json($response);
     }
     public function storeFromReports(Request $request)

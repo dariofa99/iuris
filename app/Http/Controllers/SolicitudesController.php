@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AdminPersonas;
 use App\Conciliacion;
 use App\ConciliacionEstado;
 use App\Events\RecepcionDocumentSolicitudEvent;
@@ -24,6 +25,7 @@ use App\Mail\RegConciliacionStart;
 use App\Mail\RegConciliacionSuccess;
 use App\Mail\RegSolicitudExp;
 use App\Services\ConciliacionesService;
+use App\Services\ConcPersonaExternaService;
 use App\Services\PeriodosService;
 use App\Services\SedesService;
 use App\Services\SolicitudesService;
@@ -42,19 +44,21 @@ class SolicitudesController extends Controller
     private $userService;
     private $conciliacionService;
     public $periodoService;
-
+    private $concPersonaExternaService;
     public function __construct(
         UsersService $userService,
         SolicitudesService $solicitudesService,
         SedesService $sedesService,
         PeriodosService  $periodoService,
-        ConciliacionesService $conciliacionService
+        ConciliacionesService $conciliacionService,
+        ConcPersonaExternaService $concPersonaExternaService
     ) {
         $this->periodoService = $periodoService;
         $this->conciliacionService  = $conciliacionService;
         $this->userService = $userService;
         $this->solicitudesService  = $solicitudesService;
         $this->sedesService  = $sedesService;
+        $this->concPersonaExternaService = $concPersonaExternaService;
         $sede = Sede::find(1);
         session(["sede" => $sede]);
         $this->middleware('auth', ['except' => ['registro', 'solicitar_store', 'store', 'waitRoom', 'userRegister', 'update', 'find', 'recepcion', 'solicitar', 'recepcion_conciliacion', 'recepcion_expediente', 'solicitarExpediente', 'storeExpediente_', 'buscarSolicitud', 'solicitarExpedienteStore']]);
@@ -81,7 +85,10 @@ class SolicitudesController extends Controller
     {
         // $user = User::find(20351)  ;
         // Session::forget('sede');
-        return view('myforms.recepcion.solicitar_conciliacion');
+        $paso = request('paso') ?? 1;
+        $pasos = $this->getPasosMessage();
+        $num_pasos = count($pasos);
+        return view('myforms.recepcion.solicitar_conciliacion', compact('paso', 'pasos', 'num_pasos'));
     }
 
     public function solicitarExpediente(Request $request)
@@ -95,56 +102,169 @@ class SolicitudesController extends Controller
     {
 
 
-        $conciliacion = Conciliacion::where("token", $token)->first();
 
-      
+        $conciliacion = Conciliacion::where("token", $token)->first();
+        $paso = request('paso') ?? 1;
+        $pasos = $this->getPasosConciliacion($conciliacion, $paso);
+        $num_pasos = count($pasos);
+        //  dd($request->all());
         if ($conciliacion and ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 176)) {
             if ($conciliacion and $request->paso != 1) {
 
                 if ($request->paso == 2) {
+
+
                     $user = $conciliacion->getUser(205); //solicitante
-                    if($user->id == null){
+                    if ($user->id == null) {
                         $user = $conciliacion->getUser(199); //autor
                     }
-                    if($user->id == null){
-                         Session::flash('message-danger', 'Hay errores en la asignacion de usuarios, por favor comunícate con soporte técnico.');
+                    if ($user->id == null) {
+                        Session::flash('message-danger', 'Hay errores en la asignacion de usuarios, por favor comunícate con soporte técnico.');
                     }
                     Auth::login($user);
-  //dd($user);
+
                     if ($user->tipopers_id != 238) {
 
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
                     }
                 }
-                if ($request->paso > 2) {
-                    $user = $conciliacion->getUser(205); //solicitante                    
-                    if (Auth::guest() and Auth::user() and Auth::user()->id != $user->id) Auth::logout();
+
+
+                if ($request->paso == 3) {
+                    $apoderado = $conciliacion->personasPorTipo('apoderado')->first();
+
+                    try {
+                        if (!$apoderado) {
+                            $persona = AdminPersonas::where(
+                                [
+                                    'tipo_persona' => 'apoderado',
+                                    'categoria_id' => 257
+                                ]
+                            )->first();
+                            if (!$persona) {
+                            }
+                            $request['conciliacion_id'] = $conciliacion->id;
+                            $request['persona_externa_id'] = $persona->id; //solicitante
+
+                            $user = $this->concPersonaExternaService->store($request);
+                        }
+                    } catch (\Throwable $th) {
+                        Session::flash('message-danger', 'No hay un apoderado registrado, por favor comunícate con soporte técnico.');
+                        // return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
+                    }
+
+
+                    /* 
+                    $user = $conciliacion->getUser(205); //solicitante
+                    if ($user->id == null) {
+                        $user = $conciliacion->getUser(199); //autor
+                    }
+                    if ($user->id == null) {
+                        Session::flash('message-danger', 'Hay errores en la asignacion de usuarios, por favor comunícate con soporte técnico.');
+                    }
+                    Auth::login($user);
+
+                    if ($user->tipopers_id != 238) {
+
+                       // return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=3");
+                    } */
                 }
 
-                if (Auth::guest()) return redirect('login');
-                if ($request->paso >= 3) {
-                    $user = $conciliacion->getUser(205); //solicitante
-                    //juridico
-                    if ($user->tipopers_id == 238) {
-                        $user = $conciliacion->getUser(195); //rep legal solicitante
-                        if ($user->id == null) {
-                            return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=2");
+
+                if ($request->paso == 5) {
+                    $personas_convocadas = $conciliacion->personasPorTipo('convocado')->get();
+                    $numConvocados = $conciliacion->getAdDataByQuestion("no._convocados")->first();
+
+                    // Obtener el número esperado (si numConvocados es un objeto, extraer el valor)
+                    $numEsperado = is_object($numConvocados) ? ($numConvocados->value ?? 0) : $numConvocados;
+                    $numActual = $personas_convocadas->count();
+
+                    // Si faltan personas convocadas, agregarlas automáticamente
+                    if ($numActual < $numEsperado) {
+                        $faltan = $numEsperado - $numActual;
+
+                        for ($i = 0; $i < $faltan; $i++) {
+
+                            try {
+                                $persona = AdminPersonas::where(
+                                    [
+                                        'tipo_persona' => 'convocado',
+                                        'categoria_id' => 257
+                                    ]
+                                )->first();
+
+                                $request['conciliacion_id'] = $conciliacion->id;
+                                $request['persona_externa_id'] = $persona->id; //solicitante
+
+                                $user = $this->concPersonaExternaService->store($request);
+                            } catch (\Throwable $th) {
+                                Session::flash('message-danger', 'No hay un convocado registrado, por favor comunícate con soporte técnico.');
+                                //salir del if
+                                break;
+                                // return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=5");
+                            }
                         }
                     }
                 }
+
+                $hasJuridico = false;
                 if ($request->paso == 6) {
-                    $users = $conciliacion->usuarios()->where('tipo_usuario_id', 197)->get();
-                    $hasJuridico = false;
-                    foreach ($users as $user) {
-                        if ($user->tipopers_id == 238) {
-                            $hasJuridico = true;
+                    $personas_convocadas = $conciliacion->personasPorTipo('convocado')->get();
+                    $data = [];
+                    foreach ($personas_convocadas as $convocado) {
+                        if ($convocado->getAdDataByQuestion("tipo_de_persona")->first() and $convocado->getAdDataByQuestion("tipo_de_persona")->first()->value == 'Jurídica') {
+                            $data[] = ($convocado->getAdDataByQuestion("tipo_de_persona")->first()->opcion) ?? "";
                         }
                     }
-                    if (!$hasJuridico) {
+
+                    if (count($data) > 0) {
+                        $hasJuridico = true;
+                        $replegales = $conciliacion->personasPorTipo('representante_legal')->get();
+                        //$numRepr = $conciliacion->getAdDataByQuestion("no._convocados")->first();
+
+                        $numEsperado = count($data);
+                        $numActual = $replegales->count();
+
+
+                        // Si faltan personas convocadas, agregarlas automáticamente
+                        if ($numActual < $numEsperado) {
+                            $faltan = $numEsperado - $numActual;
+
+                            for ($i = 0; $i < $faltan; $i++) {
+                                try {
+                                    $persona = AdminPersonas::where(
+                                        [
+                                            'tipo_persona' => 'representante_legal',
+                                            'categoria_id' => 257
+                                        ]
+                                    )->first();
+
+                                    // dd($persona);
+                                    $request['conciliacion_id'] = $conciliacion->id;
+                                    $request['persona_externa_id'] = $persona->id; //solicitante
+                                    $user = $this->concPersonaExternaService->store($request);
+                                    //   dd($user);
+                                } catch (\Throwable $th) {
+                                    Session::flash('message-danger', 'No hay un representante legal registrado, por favor comunícate con soporte técnico.');
+                                    //salir del if
+                                    break;
+                                    // return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=5");
+                                }
+                            }
+                        }
+                    } else {
+
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
                     }
                 }
-                return view('myforms.recepcion.solicitar_conciliacion', compact('conciliacion'));
+
+                if ($paso >= '6' and !$hasJuridico) {
+                    $pasos[5]['visible'] = false;
+                }
+                if (Auth::guest()) return redirect('login');
+
+
+                return view('myforms.recepcion.solicitar_conciliacion', compact('conciliacion', 'paso', 'pasos', 'num_pasos'));
             }
         } else {
             Session::flash('message-danger', 'La solicitud ya fue enviada a revisión, pronto nos comunicaremos contigo.');
@@ -154,6 +274,106 @@ class SolicitudesController extends Controller
         }
 
         return abort(404);
+    }
+
+    private function getPasosMessage()
+    {
+        $pasos = [
+            0 => [
+                'id' => 'btn_registrar_conc',
+                'tipo_usuario' => 205,
+                'visible' => true,
+                'title' => 'Solicitud',
+                'message' =>
+                "Diligencie el siguiente formulario con la información de la persona que solicita la conciliación, recuerde, si ya tiene una cuenta debe <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Tenga en cuenta que solo los campos marcados con (*) son obligatorios. Si no tiene acceso a su cuenta, por favor realice el proceso de <a href='/recovery/account'>recuperación de cuenta</a>.",
+                'view' => 'myforms.recepcion.frm_parte_solicitante',
+            ],
+            1 => [
+                'id' => 'btn_registrar_replegal_sol',
+                'tipo_usuario' => 195,
+                'visible' => false,
+                'title' => 'Legal',
+                'message' =>
+                'Diligencia el siguiente formulario con la información del <b>representante legal</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.',
+                'view' => 'myforms.recepcion.frm_replegal_solicitante',
+            ],
+            2 => [
+                'id' => 'btn_registrar_apod_sol',
+                'tipo_usuario' => 196,
+                'visible' => true,
+                'title' => 'Apoderado',
+                'message' =>
+                'Diligencia el siguiente formulario con la información de la persona que actúa como <b>apoderado</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.',
+                'view' => 'myforms.recepcion.frm_apoderado_solicitante',
+            ],
+            3 => [
+                'id' => 'btn_registrar_asunto',
+                'tipo_usuario' => 000,
+                'visible' => true,
+                'title' => 'Asunto',
+                'message' =>
+                'Diligencie el siguiente formulario con la información del asunto de la conciliación. Recuerde que la casilla denominada cuantía corresponde a un valor de dinero y no puede ser superior a 50 salarios mínimos legales mensuales vigentes (para la fecha, el salario mínimo es de 1.750.000, sin incluir auxilio de transporte). El valor que usted ingrese será el que busca que le paguen, devuelvan, etc. A esto se le denomina pretensión y será descrito más adelante en el apartado de pretensiones.',
+                'view' => 'myforms.recepcion.frm_asunto',
+            ],
+            4 => [
+                'id' => 'btn_parte_convocada',
+                'tipo_usuario' => 197,
+                'visible' => true,
+                'title' => 'Parte convocada',
+                'message' =>
+                'Diligencia el siguiente formulario con la información de la persona <b>convocada</b> a la conciliación. Los campos marcados con (*) son obligatorios.',
+                'view' => 'myforms.recepcion.frm_parte_convocada',
+            ],
+            5 => [
+                'id' => 'btn_registrar_replegal_sol',
+                'tipo_usuario' => 198,
+                'visible' => false,
+                'title' => 'Rep. legal',
+                'message' =>
+                'Diligencia el siguiente formulario con la información del <b>representante legal</b> de la persona convocada a la conciliación. Los campos marcados con (*) son obligatorios.',
+                'view' => 'myforms.recepcion.frm_replegal_solicitante',
+            ],
+            6 => [
+                'id' => 'btn_solicitar_conciliacion',
+                'tipo_usuario' => 000,
+                'visible' => true,
+                'title' => 'Asunto a conciliar',
+                'message' =>
+                'Recuerde enumerar los hechos al igual que las pretensiones. La cédula debe subirse de ambos lados y ser legible al igual que los anexos.',
+                'view' => 'myforms.recepcion.frm_anexos',
+            ],
+        ];
+
+        return $pasos;
+    }
+    private function getPasosConciliacion($conciliacion, $paso)
+    {
+       
+            $pasos = $this->getPasosMessage();
+
+        if ($conciliacion) {
+            if ($paso >= '2') {
+                $user_ = $conciliacion->getUser(205); //solicitante
+                if ($user_->tipopers_id == 238) {
+                    $pasos[1]['visible'] = true;
+                }
+            }
+
+            if ($paso >= '6') {
+                $users_s = $conciliacion->usuarios()->where('tipo_usuario_id', 197)->get();
+                $hasJuridico = false;
+                foreach ($users_s as $user_) {
+                    if ($user_->tipopers_id == 238) {
+                        $hasJuridico = true;
+                    }
+                }
+                if (!$hasJuridico) {
+                    $pasos[5]['visible'] = true;
+                }
+            }
+        }
+
+        return $pasos;
     }
 
     public function registro(Request $request)

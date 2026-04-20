@@ -1,5 +1,5 @@
 @php
-    $user = $conciliacion->getUser($tipo_usuario_id);
+    //$user = $conciliacion->getUser($tipo_usuario_id);
 @endphp
 <div class="card card-outline card-info" id="parte_solicitada_rep_legal">
     <div class="card-header">
@@ -12,7 +12,7 @@
     </div>
     <div class="card-body">
         <div id="user_rep_legal_solicitada_form">
-            @include('myforms.conciliaciones.componentes.user_replegal_solicitada_form')
+            @include('myforms.conciliaciones.componentes.user_replegal_solicitada_form') 
         </div>
     </div>
 </div>

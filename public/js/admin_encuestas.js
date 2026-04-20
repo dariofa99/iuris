@@ -10,6 +10,18 @@ let encId = 0;
 
 $(document).ready(function () {
 
+     $("#btn_load_categoryInExp").on("click", async function (e) {
+        e.preventDefault();
+        var request = {
+            "table": "exp_encuesta_satisf",
+            "categories": "exp_encuesta_satisf",
+            "encuesta_id": encId
+        }
+        let response = await referenciasService.getByRefDataFilter(request);
+        $("#list_preguntas_add_test").html(response.view);
+        $("#myModal_encuesta_add_preguntas").modal("show");
+    });
+    
 
     $("#btn_new_categoryInExp").on("click", function (e) {
         e.preventDefault()
@@ -60,7 +72,7 @@ $(document).ready(function () {
 
     $("#myFormAddPreguntasEncuestas").on("submit", async function (e) {
         e.preventDefault();
-        var request = convertFormToJSON('myFormAddPreguntasEncuestas');
+        var request = convertFormToJSON('myFormAddPreguntasEncuestas'); 
         request['encuesta_id'] = encId
         $("#wait").show();
         let response = await encuestasService.addPreguntasEncuesta(request);

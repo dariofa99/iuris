@@ -10,6 +10,7 @@ use App\Repositories\BibliotecasRepository;
 use App\Repositories\ConcEncuSatisfaccionRepository;
 use App\Repositories\ConciliacionComentariosRepository;
 use App\Repositories\ConciliacionesRepository;
+use App\Repositories\ConcPersonaExternaRepositoty;
 use App\Repositories\EstadosCasoRepository;
 use App\Repositories\ExpedientesRepository;
 use App\Repositories\ExpEncuSatisfaccionRepository;
@@ -33,6 +34,7 @@ use App\Services\BibliotecasService;
 use App\Services\ConcEncuSatisfaccionService;
 use App\Services\ConciliacionComentarioService;
 use App\Services\ConciliacionesService;
+use App\Services\ConcPersonaExternaService;
 use App\Services\EstadosCasoService;
 use App\Services\ExpedientesService;
 use App\Services\ExpEncuSatisfaccionService;
@@ -76,113 +78,118 @@ class AppServiceProvider extends ServiceProvider
         \Carbon\Carbon::setlocale('es');
         Session::forget('sede');
         Schema::defaultStringLength(191);
-     /*     $this->app->bind('nota',function(){
+        /*     $this->app->bind('nota',function(){
             return new \App\NotaExt();
         });  */
-   /*      $this->app->singleton('GuzzleHttp\Client',function(){
+        /*      $this->app->singleton('GuzzleHttp\Client',function(){
             return new Client(
                 ['base_uri'=>'http://judex.udenar.edu.co/']
             );
         });  */
-        $this->app->bind(   
+        $this->app->bind(
             BaseRepository::class
         );
-        $this->app->bind(            
+        $this->app->bind(
             ReferencesDataService::class,
-            ReferencesDataRepository::class,       
+            ReferencesDataRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             UsersService::class,
-            UsersRepository::class,       
+            UsersRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             ExpEncuSatisfaccionService::class,
-            ExpEncuSatisfaccionRepository::class,       
+            ExpEncuSatisfaccionRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             LoginService::class,
-            LoginRepository::class,       
+            LoginRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             ConciliacionComentarioService::class,
-            ConciliacionComentariosRepository::class,       
+            ConciliacionComentariosRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             TurnosService::class,
-            TurnosRepository::class,       
+            TurnosRepository::class,
         );
 
-        $this->app->bind(            
+        $this->app->bind(
             EstadosCasoService::class,
-            EstadosCasoRepository::class,       
+            EstadosCasoRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             SegmentosService::class,
-            SegmentosRepository::class,       
+            SegmentosRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             ConciliacionesService::class,
-            ConciliacionesRepository::class,       
+            ConciliacionesRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             BibliotecasService::class,
-            BibliotecasRepository::class,       
+            BibliotecasRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             ReferenciasService::class,
-            ReferenciasRepository::class,       
+            ReferenciasRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             SolicitudesService::class,
-            SolicitudesRepository::class,       
+            SolicitudesRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             PausasService::class,
-            PausasRepository::class,       
+            PausasRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             SedesService::class,
-            SedesRepository::class,       
+            SedesRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             VacacionesService::class,
-            VacacionesRepository::class,       
+            VacacionesRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             ExpedientesService::class,
-            ExpedientesRepository::class,       
+            ExpedientesRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             AsignacionCasosService::class,
-            AsignacionCasosRepository::class,       
+            AsignacionCasosRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             AsignacionDocenteCasosService::class,
-            AsignacionDocenteCasosRepository::class,       
+            AsignacionDocenteCasosRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             AutorizacionesService::class,
-            AutorizacionesRepository::class,       
+            AutorizacionesRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             ProcesoJudicialExpService::class,
-            ProcesoJudicialExpRepository::class,       
+            ProcesoJudicialExpRepository::class,
         );
-        $this->app->bind(            
+        $this->app->bind(
             RequerimientosService::class,
-            RequerimientosRepository::class,       
+            RequerimientosRepository::class,
+        );
+
+
+        $this->app->bind(
+            ConcEncuSatisfaccionService::class,
+            ConcEncuSatisfaccionRepository::class,
+
+        );
+
+        $this->app->bind(
+            ConcPersonaExternaService::class,
+            ConcPersonaExternaRepositoty::class,
         );
         $this->app->bind(
             PeriodosService::class,
             PeriodosRepository::class,
             BaseRepository::class
         );
-
-        $this->app->bind(
-            ConcEncuSatisfaccionService::class,
-            ConcEncuSatisfaccionRepository::class,
-            
-        );
-
     }
 }

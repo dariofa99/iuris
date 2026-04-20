@@ -1,3 +1,3 @@
 @foreach ($data as $key => $reference)
-    @include('myforms.encuestas.preguntas.pregunta')
-@endforeach
+    @include('myforms.categorias.partials.ajax.pregunta')
+@endforeach 

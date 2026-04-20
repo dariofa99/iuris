@@ -13,7 +13,7 @@ class CreateConciliacionAdstDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('conciliacion_adst_data', function (Blueprint $table) {
+        /* Schema::create('conciliacion_adst_data', function (Blueprint $table) {
             $table->increments('id');
             $table->string('value')->nullable();  
             $table->string('value_is_other')->nullable();                             
@@ -27,7 +27,7 @@ class CreateConciliacionAdstDataTable extends Migration
             $table->foreign('conciliacion_id')->references('id')->on('conciliaciones')->onDelete('cascade')
             ->onUpdate('cascade');
             $table->timestamps(); 
-        });
+        }); */
     }
 
     /**

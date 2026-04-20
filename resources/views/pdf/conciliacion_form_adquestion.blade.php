@@ -1,3 +1,5 @@
+
+
 @foreach ($data as $key => $reference)
     <tr>
         <td width="50%">

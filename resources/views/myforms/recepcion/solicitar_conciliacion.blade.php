@@ -6,105 +6,18 @@
 
 @section('content')
     @php
-        $paso = Request::has('paso') ? Request::get('paso') : 1;
-        $num_pasos = 4;
-        $pasos = [
-            0 => [
-                'id' => 'btn_registrar_conc',
-                'tipo_usuario' => 205,
-                'visible' => true,
-                'title' => 'Solicitud',
-                'message' =>
-                    "Diligencie el siguiente formulario con la información de la persona que solicita la conciliación, recuerde, si ya tiene una cuenta debe <a href='/login'>iniciar sesión</a> para realizar una nueva solicitud. Tenga en cuenta que solo los campos marcados con (*) son obligatorios. Si no tiene acceso a su cuenta, por favor realice el proceso de <a href='/recovery/account'>recuperación de cuenta</a>.",
-                'view' => 'myforms.recepcion.frm_parte_solicitante',
-            ],
-            1 => [
-                'id' => 'btn_registrar_replegal_sol',
-                'tipo_usuario' => 195,
-                'visible' => false,
-                'title' => 'Legal',
-                'message' =>
-                    'Diligencia el siguiente formulario con la información del <b>representante legal</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.',
-                'view' => 'myforms.recepcion.frm_replegal_solicitante',
-            ],
-            2 => [
-                'id' => 'btn_registrar_apod_sol',
-                'tipo_usuario' => 196,
-                'visible' => true,
-                'title' => 'Apoderado',
-                'message' =>
-                    'Diligencia el siguiente formulario con la información de la persona que actúa como <b>apoderado</b> de la persona que solicita la conciliación. Los campos marcados con (*) son obligatorios.',
-                'view' => 'myforms.recepcion.frm_apoderado_solicitante',
-            ],
-            3 => [
-                'id' => 'btn_registrar_asunto',
-                'tipo_usuario' => 000,
-                'visible' => true,
-                'title' => 'Asunto',
-                'message' =>
-                    'Diligencie el siguiente formulario con la información del asunto de la conciliación. Recuerde que la casilla denominada cuantía corresponde a un valor de dinero y no puede ser superior a 50 salarios mínimos legales mensuales vigentes (para la fecha, el salario mínimo es de 1.750.000, sin incluir auxilio de transporte). El valor que usted ingrese será el que busca que le paguen, devuelvan, etc. A esto se le denomina pretensión y será descrito más adelante en el apartado de pretensiones.',
-                'view' => 'myforms.recepcion.frm_asunto',
-            ],
-            4 => [
-                'id' => 'btn_parte_convocada',
-                'tipo_usuario' => 197,
-                'visible' => true,
-                'title' => 'Parte convocada',
-                'message' =>
-                    'Diligencia el siguiente formulario con la información de la persona <b>convocada</b> a la conciliación. Los campos marcados con (*) son obligatorios.',
-                'view' => 'myforms.recepcion.frm_parte_convocada',
-            ],
-            5 => [
-                'id' => 'btn_registrar_replegal_sol',
-                'tipo_usuario' => 198,
-                'visible' => false,
-                'title' => 'Rep. legal',
-                'message' =>
-                    'Diligencia el siguiente formulario con la información del <b>representante legal</b> de la persona convocada a la conciliación. Los campos marcados con (*) son obligatorios.',
-                'view' => 'myforms.recepcion.frm_replegal_solicitante',
-            ],
-            6 => [
-                'id' => 'btn_solicitar_conciliacion',
-                'tipo_usuario' => 000,
-                'visible' => true,
-                'title' => 'Asunto a conciliar',
-                'message' =>
-                    'Recuerde enumerar los hechos al igual que las pretensiones. La cédula debe subirse de ambos lados y ser legible al igual que los anexos.',
-                'view' => 'myforms.recepcion.frm_anexos',
-            ],
-        ];
-
-        if (isset($conciliacion)) {
-            if ($paso >= '2') {
-                $user_ = $conciliacion->getUser(205); //solicitante
-                if ($user_->tipopers_id == 238) {
-                    //$before = $pasos[($paso - 1)];
-                    $pasos[1]['visible'] = true;
-                }
-            }
-
-            if ($paso >= '6') {
-                //$user_ = $conciliacion->getUser(197); //solicitado
-                $users_s = $conciliacion->usuarios()->where('tipo_usuario_id', 197)->get();
-                $hasJuridico = false;
-                foreach ($users_s as $user_) {
-                    if ($user_->tipopers_id == 238) {
-                        $hasJuridico = true;
-                    }
-                }
-                if (!$hasJuridico) {
-                    $pasos[5]['visible'] = true;
-                }
-            }
-        }
-        $num_pasos = count($pasos);
+        $paso = $paso ?? (Request::has('paso') ? Request::get('paso') : 1);
+        $num_pasos = $num_pasos ?? 4;
+        $pasos = $pasos ?? [];
     @endphp
 
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Si presenta algún problema para diligenciar el formulario, por favor comuníquese al correo darioj99@udenar.edu.co o acérquese a las oficinas de la Universidad de Nariño, sede centro.  </strong>
+                    <strong>Si presenta algún problema para diligenciar el formulario, por favor comuníquese al correo
+                        darioj99@udenar.edu.co o acérquese a las oficinas de la Universidad de Nariño, sede centro.
+                    </strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -133,6 +46,7 @@
                             ])
                         </div>
                         @include('msg.alerts')
+
                         @if ($paso == 1)
                             @include('myforms.recepcion.frm_parte_solicitante')
                         @else
@@ -165,25 +79,36 @@
                                     </a>
                                 @endif
 
-                                @if (intval($paso) == 6)
-                                    <a class="btn btn-success" id="btn_siguiente_replegal"
-                                        href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=7">
-                                        Siguiente
-                                    </a>
+
+
+                                @if (isset($conciliacion))
+                                    @if (intval($paso) == 6)
+                                        <a class="btn btn-success" id="btn_siguiente_replegal"
+                                            href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=7">
+                                            Siguiente
+                                        </a>
+                                    @else
+                                        <a href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=6"
+                                            data-step="{{ intval($paso) + 1 }}" class="btn btn-success"
+                                            data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}"
+                                            id="{{ $pasos[$paso - 1]['id'] }}">
+                                            Siguiente
+                                        </a>
+                                    @endif
                                 @else
-                                    <button type="button" data-step="{{ intval($paso) + 1 }}" class="btn btn-success"
-                                        data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}"
-                                        id="{{ $pasos[$paso - 1]['id'] }}">
+                                    {{--    <a class="btn btn-success" id="btn_no_apoderado" style="display:none"
+                                        href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=4">
+                                        Siguiente
+                                    </a>  --}}
+
+                                    <button type="button" data-step="2" class="btn btn-success" data-type="205"
+                                        id="btn_registrar_conc">
                                         Siguiente
                                     </button>
                                 @endif
 
-                                @if (isset($conciliacion))
-                                    <a class="btn btn-success" id="btn_no_apoderado" style="display:none"
-                                        href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=4">
-                                        Siguiente
-                                    </a>
-                                @endif
+
+
                                 <a href="/login" class="btn btn-default">
                                     Cancelar
                                 </a>

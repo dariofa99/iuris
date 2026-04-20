@@ -13,15 +13,15 @@ class CreateConciliacionUserFormTable extends Migration
      */
     public function up()
     {
-        Schema::create('conciliacion_user_form', function (Blueprint $table) {
+       /*  Schema::create('conciliacion_user_form', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('parte');
+            $table->string('con_has_user_id');
             $table->integer('reference_data_id')->unsigned();
             $table->foreign('reference_data_id')->references('id')->on('references_data')
             ->onDelete('cascade')->onUpdate('cascade'); 
 
             $table->timestamps();
-        });
+        }); */
     }
 
     /**
@@ -31,6 +31,6 @@ class CreateConciliacionUserFormTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('conciliacion_user_form');
+        //Schema::dropIfExists('conciliacion_user_form');
     }
 }

@@ -60,6 +60,8 @@ function activeOtherInput(e) {
 $(document).ready(function () {
     $(document).on("change", ".input_user_ad", activeOtherInput);
 
+    
+
     $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
         var page = $(this).attr("href");

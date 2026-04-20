@@ -100,7 +100,7 @@
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->asignacion->procesojud_id == 1 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
                             currentUser()->hasRole('amatai'))
                     <a href="#" id="btn_act_proc_jur"
@@ -113,7 +113,7 @@
                     $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
                         $expediente->exptipoproce_id != 1 and
                         $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                            currentUser()->hasRole('diradmin') ||
+                            //currentUser()->hasRole('diradmin') ||
                             currentUser()->hasRole('dirgral') ||
                             currentUser()->hasRole('amatai'))
                     @if ($expediente->expestado_id == 1 || $expediente->expestado_id == 3)

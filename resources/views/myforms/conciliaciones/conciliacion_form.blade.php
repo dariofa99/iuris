@@ -17,7 +17,7 @@
             $auth_is_con = $conciliador->id == currentUser()->id;
             if (!$auth_is_con) {
                 $conciliador = $conciliacion->getUser(204);
-                $auth_is_con = $conciliador->id == currentUser()->id;
+                $auth_is_con = $conciliador->id == currentUser()->id; 
             }
         @endphp
         <div class="col-md-2">
@@ -93,14 +93,13 @@
     $parte_sol = $conciliacion->getUser(197); //Solicitada
 @endphp
 
-@if ($parte_sol->tipopers_id == 238)
+
     <div class="box_section">
         @include('myforms.conciliaciones.componentes.parte_solicitada_rep_legal', [
-            'section' => 'representante_legal_solicitada',
-            'tipo_usuario_id' => 198,
+            
         ])
     </div>
-@endif
+
 <div class="box_section">
     @include('myforms.conciliaciones.componentes.elementos_juridicos', [
         'section' => 'elementos_juridicos',

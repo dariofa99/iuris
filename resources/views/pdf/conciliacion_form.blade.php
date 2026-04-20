@@ -155,59 +155,36 @@
     </table>
     @php
         $parte_ = $conciliacion->getUser(196); //Apoderado
+        $apoderado = $conciliacion->personasPorTipo('apoderado')->first();
+
     @endphp
     <h2>INFORMACIÓN APODERADO (A)</h2>
+
+
     <table>
 
-        @if ($parte_->idnumber != null)
-            <tr>
-                <th>Nombre:</th>
-                <td colspan="5">{{ $parte_->name }} {{ $parte_->lastname }}</td>
-            </tr>
-            <tr>
-                <th>Identificación</th>
-                <td>
-                    {{ $parte_->tipo_doc->ref_nombre }} de
+        @if ($apoderado)
+            @include('pdf.conciliacion_form_adquestion', [
+                'data' => $apoderado->persona->preguntas()->orderBy('orden', 'asc')->get(),
+                'discaform' => 'discaform',
+                'user' => $apoderado,
+            ])
 
-                    {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
-                </td>
+            @include('pdf.conciliacion_form_adquestion', [
+                'data' => getReferencesDataBySection('socio_economica', 'users'),
+                'discaform' => 'discaform',
+                'user' => $apoderado,
+            ])
 
-                <th>No</th>
-                <td colspan="3">
-                    {{ $parte_->idnumber }}
-                </td>
-
-
-            </tr>
-            <tr>
-                <th>Dirección para notificaciones:</th>
-                <td>
-                    {{ $parte_->address }}
-                </td>
-
-                <th>Celular</th>
-                <td colspan="3">{{ $parte_->tel1 }} - {{ $parte_->tel2 }}</td>
-            </tr>
-            <tr>
-                <th>Correo electrónico:</th>
-                <td colspan="5">
-                    {{ $parte_->email }}
-                </td>
-            </tr>
-
-            <tr>
-                <th>Tarjeta Profesional No:</th>
-                <td colspan="5">
-                    {{ $parte_->codigo_estudiantil }}
-                </td>
-            </tr>
-        @else
-            <tr>
-                <th colspan="2">
-                    Sin registro
-                </th>
-            </tr>
+            {{--   @foreach ($apoderado->persona->preguntas()->orderBy('orden', 'asc')->get() as $item)
+                <tr>
+                    <th>{{ $item->name }}:</th>
+                    <td colspan="5">
+                        {{ $apoderado->getAdDataByQuestion($item->short_name)->first()->value ?? 'Sin datos' }}</td>
+                </tr>
+            @endforeach --}}
         @endif
+
     </table>
 
     <h2>INFORMACIÓN DEL ASUNTO</h2>

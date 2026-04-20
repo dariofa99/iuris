@@ -16,7 +16,7 @@
     @if (is_string($reference))
         falta la referencia {{ $reference }}
     @else
-        @php
+        @php 
             $other_input_label = '¿Cuál...?';
         @endphp
         <div class="row">

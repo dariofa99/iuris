@@ -29,7 +29,11 @@ $(function () {
 
 
 
-
+  const fechaInput = document.getElementById('fechanacimien');
+  const hoy = new Date();
+  hoy.setFullYear(hoy.getFullYear() - 18);
+  const maxDate = hoy.toISOString().split('T')[0];
+  if (fechaInput) fechaInput.setAttribute('max', maxDate);
 
 
 
@@ -82,7 +86,7 @@ $(function () {
 
   $("#myFormAsunto")
     .on("change", ".data_input_select", function (e) {
-     let seccion = $(this).data('section');
+      let seccion = $(this).data('section');
       let nombre = $(this).data('name');
       let valor = $(this).val();
 
@@ -91,7 +95,7 @@ $(function () {
         if (valor === '245') { // Indeterminada
           $('#myModal_InfoInderminada').modal('show');
           console.log("Tolis");
-          
+
         }
 
       }
@@ -381,7 +385,8 @@ $(function () {
       window.location.reload();
     }
   });
-  $("#btn_registrar_apod_sol").on("click", async function () {
+  $("#btn_registrar_apod_sol").on("click", async function (e) {
+    e.preventDefault();
 
     const form = document.getElementById("myFormApoderado");
     if (!form) return;
@@ -501,7 +506,7 @@ $(function () {
     try {
 
       // 2️⃣ backend REAL (aquí sí espera)
-      const response_ = await conciliacionService.addUser(request);
+      const response_ = await conciliacionService.addDataPersona(request);
 
       // 3️⃣ cerrar loading
       Swal.close();
@@ -536,21 +541,31 @@ $(function () {
 
 
 
-  $("#btn_parte_convocada").on("click", async function () {
-     $("#wait").show();
+  $("#btn_parte_convocada").on("click", async function (e) {
+
+    e.preventDefault();
+
+    window.location = this.href;
+
+    console.log($(this).attr("href"));
+
+
+    return;
+
+    $("#wait").show();
     if (!$("#chk_not_parte").is(":checked")) {
       let insert = true;
       console.log("si por aqui");
-      
+
       $(".myFormParteConvocada").each(async function (index, obj) {
         var form = $(obj).attr("id")
         var errors = validateForm(form);
         if (errors.length > 0) {
           insert = false;
           toastr.warning("", "Debe guardar al menos un dato de contacto válido para la persona " + (index + 1) + ".<br>Teléfono, correo o dirección.", {
-              positionClass: "toast-top-right",
-              timeOut: "5000",
-            });
+            positionClass: "toast-top-right",
+            timeOut: "5000",
+          });
           // return
         } else {
           //validar que el telefono sea valido, el email y la direccion, si hay uno invalido no insertar
@@ -618,7 +633,7 @@ $(function () {
       }
 
     } else {
-     
+
     }
     $("#wait").hide();
   });
@@ -1083,7 +1098,7 @@ $(function () {
 
 async function addUserByStep(form, obj, step, userJuridico = null, redirect = true) {
   //  $("#wait").show();
-
+  //alert(form)
   if ($("#" + form + " input[name='id']").val() != undefined && $("#" + form + " input[name='id']").val() != "") {
     console.log("form")
     console.log(form)
@@ -1097,19 +1112,46 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
        "conciliacion_id": $("input[name='conciliacion_id']").val(),
        "tipo_usuario": $(obj).attr("data-type") 
      }; */
-    request["data"] = userService.getAditionalDataByForm(form);
+    // request["data"] = userService.getAditionalDataByForm(form);
 
     if (userJuridico != null) {
       request["user_judirico_id"] = userJuridico;
     }
     console.log(request);
 
-    let response_ = await conciliacionService.addUser(request);
+    let response_ = await conciliacionService.addDataPersona(request);
     if (response_) {
-      if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
+      //if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
     }
   } else {
+    var request = convertFormToJSON(form);
+    //request["data"] = userService.getAditionalDataByForm(form);
+    request["conciliacion_id"] = $("input[name='conciliacion_id']").val();
+    request["tipo_usuario"] = $(obj).attr("data-type")
+    request["user_id"] = $("#" + form + " input[name='id']").val();
 
+
+    request["data"] = userService.getAditionalDataByForm(form);
+    if (userJuridico != null) {
+      request["user_judirico_id"] = userJuridico;
+    }
+    let response_ = await conciliacionService.addDataPersona(request);
+    if (response_.errors) {
+      response_.errors.forEach(error => {
+        toastr.error(error, "", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+        });
+      });
+    } else {
+      console.log(redirect, response_);
+
+      if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
+
+    }
+
+
+    return;
     var request = convertFormToJSON(form);
     if (!request.hasOwnProperty("email")) {
       var email = $("#" + form + " input[name=idnumber]").val() + "@mail.com";

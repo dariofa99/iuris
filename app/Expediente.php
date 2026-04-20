@@ -500,8 +500,8 @@ class Expediente extends Model
             ->get();
 
         $hijos = [];
-     
-//return $padresAct;
+
+        //return $padresAct;
         if (count($padresAct) > 0) {
             $hayPorEvaluar = count($padresAct);
             foreach ($padresAct as $key => $actpa) {
@@ -513,10 +513,10 @@ class Expediente extends Model
                     AND (actestado_id = 104 or actestado_id = 234 or actestado_id = 139)                    
                     ORDER BY rev_actid DESC LIMIT 1"),
                 );
-               
+
                 if (count($hijosAct) > 0) {
-                    $hayPorEvaluar = $hayPorEvaluar - 1;                    
-                } 
+                    $hayPorEvaluar = $hayPorEvaluar - 1;
+                }
             }
         } else {
             $hayPorEvaluar = 0;
@@ -1050,6 +1050,7 @@ class Expediente extends Model
 
     public function getDaysForEvaHechos()
     {
+
         $validVacations = $this->validateVacationsPause();
         if ($validVacations) {
             return $validVacations;
@@ -1193,6 +1194,7 @@ class Expediente extends Model
         $asignacion = $this->asignacion;
         $fecha_1 = Carbon::parse($asignacion->fecha_asig);
 
+
         if (!$asignacion || $asignacion == null) {
             return "Error: No tiene asignación activa.";
         }
@@ -1237,6 +1239,7 @@ class Expediente extends Model
 
 
 
+
         //SI HAY VACACIONES y PAUSAS
         if (count($_vacaciones) > 0 and count($pausas) > 0) {
 
@@ -1277,6 +1280,17 @@ class Expediente extends Model
         }
         $fecha_2 = Carbon::now();
         $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 30);
+
+        // dd($evaluar, $fecha_1, $fecha_2);
+        $this->evaluarExpByAct($evaluar, $fecha_1, $fecha_2, $asignacion);
+
+
+        return $evaluar['dias_pausado'];
+    }
+
+
+    public function evaluarExpByAct($evaluar, $fecha_1, $fecha_2, $asignacion)
+    {
         if ($evaluar['dias_pausado'] > 30) {
             $segmento = $this->getSegmentoActivo();
             $fecha_eva = $this->getExpedienteService()->calcularDias($fecha_1, $fecha_2, $asignacion);
@@ -1289,10 +1303,7 @@ class Expediente extends Model
             $asignacion->save();
             return $evaluar['dias_pausado'];
         }
-        return $evaluar['dias_pausado'];
     }
-
-
 
     public function isValidEvaPause()
     {

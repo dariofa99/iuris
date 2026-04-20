@@ -205,7 +205,6 @@
                     @if (currentUser()->can('ver_conciliaciones') ||
                             currentUser()->hasRole('amatai') ||
                             currentUser()->hasRole('solicitante') ||
-                            
                             count(currentUser()->conciliaciones) > 0)
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
@@ -230,14 +229,24 @@
                                     </a>
                                 </li>
 
-                                @if (currentUser()->can('admin_actasandmail') || currentUser()->hasRole('visitante_conciliacion'))
+                                @if (currentUser()->can('admin_actasandmail'))
                                     <li class="nav-item ml-3">
                                         <a href="{{ route('reportes.create') }}" class="nav-link">
                                             <p> Administrar actas y correos</p>
                                         </a>
                                     </li>
                                 @endif
-                                @if (currentUser()->can('admin_actasandmail') || currentUser()->hasRole('visitante_conciliacion'))
+
+                                
+                                @if (currentUser()->can('admin_actasandmail'))
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('concpers.index') }}" class="nav-link">
+                                            <p> Admin. Personas externas</p>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if (currentUser()->can('admin_actasandmail'))
                                     <li class="nav-item ml-3">
                                         <a href="{{ route('audiencias.agenda') }}" class="nav-link">
                                             <p>Agenda de conciliaciones</p>
@@ -420,16 +429,18 @@
                                         <p>Cortes</p>
                                     </a>
                                 </li>
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('roles.admin') }}" class="nav-link">
-                                        <p>Roles y permisos</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('categorias.index') }}" class="nav-link">
-                                        <p>Categorías</p>
-                                    </a>
-                                </li>
+                                @if (currentUser()->hasRole('amatai'))
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('roles.admin') }}" class="nav-link">
+                                            <p>Roles y permisos</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3">
+                                        <a href="{{ route('categorias.index') }}" class="nav-link">
+                                            <p>Categorías</p>
+                                        </a>
+                                    </li>
+                                @endif
                                 {{--  <li class="nav-item ml-3">
                                 <a href="{{ route('categories.index') }}" class="nav-link">
                                     <p>Categorías estáticas</p>

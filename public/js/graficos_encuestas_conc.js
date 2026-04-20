@@ -45,7 +45,7 @@ $(document).ready(async function () {
         let response = await referenciasService.getByRefDataFilter(request);
         $("#list_preguntas_add_test").html(response.view);
         $("#myModal_encuesta_add_preguntas").modal("show");
-    })
+    }) 
 
 
     $("#tblListaEncuestas").on("change", ".radioChangeActiveEncuesta", async function (e) {

@@ -98,6 +98,11 @@ Route::get('/recovery/account', 'Auth\ResetPasswordController@showRecoveryForm')
 
 ///rutas que requieren atenticación
 Route::group(['middleware' => ['auth']], function () {
+
+  Route::get('conciliaciones/registrar/personas', 'ConciliacionPersonasController@index')->name("concpers.index");
+
+
+
   //Nuevo usuarios
   Route::resource('usuarios', 'UsersController');
   Route::get("usuarios/buscar/persona", "UsersController@findUserWithFilter");
@@ -142,7 +147,19 @@ Route::group(['middleware' => ['auth']], function () {
   Route::put('encuesta/general/update/{id}', 'EncuestasSatisfaccionController@update');
   Route::post('encuesta/add/preguntas', 'EncuestasSatisfaccionController@addPreguntasEncuesta');
   Route::post('encuesta/delete/pregunta/{id}', 'EncuestasSatisfaccionController@deletePreguntaEncuesta');
+
+  Route::post('personas/externas/store', 'PersonasExternasController@store');
+  Route::get('personas/externas/preguntas/{id}', 'PersonasExternasController@getQuestionsById');
+  Route::post('personas/externas/insert/categoria', 'PersonasExternasController@storeCategoria');
+
+  Route::get('conciliacion/personas/externas/get/categorias/by/filter', 'ConciliacionPersonasController@getByRefDataFilter');  
+  Route::post('conciliacion/personas/externas/add/preguntas', 'ConciliacionPersonasController@addPreguntasForm');
+  Route::post('conciliaciones/add/data/persona/externa', 'ConciliacionPersonasController@store');
+
   Route::group(['middleware' => ["vaccount", 'confirm_email', 'perfil']], function () {
+
+    ///////////////
+
 
 
     Route::get('home', function () {
@@ -336,8 +353,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('reqpdfgen/{id}',  'RequerimientoController@reqpdfgen');
     Route::post('requerimientos/update/{id}',  'RequerimientoController@updateReq');
 
-  //reparto conciliaciones
-  Route::resource('conciliaciones/reparto', 'RepartoConciliacionController');
+    //reparto conciliaciones
+    Route::resource('conciliaciones/reparto', 'RepartoConciliacionController');
 
 
     //notas // Calificaciones
@@ -378,7 +395,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Conciliaciones
     Route::resource('conciliaciones', 'ConciliacionesController');
     //Solicitudes
-    Route::post('conciliaciones/add/user', 'ConciliacionesController@addUser');
+    Route::post('conciliaciones/add/user', 'ConciliacionesController@addUser'); 
+    
 
     Route::post('conciliaciones/insert/data', 'ConciliacionesController@insertData');
     Route::post('conciliaciones/generate/documents', 'ConciliacionesController@generateDocuments');
@@ -614,8 +632,8 @@ Route::get('/prueba/filter/{id}', 'ExpedienteController@prueba');
 Route::get('/prueba', function () {
 
   $expediente = DB::table('asistencia')
-  ->whereDate('asistencia.astfecha', Carbon::now()->format('Y-m-d'))
-  ->get();
+    ->whereDate('asistencia.astfecha', Carbon::now()->format('Y-m-d'))
+    ->get();
 
   // $expediente->setNotActLimit();
 

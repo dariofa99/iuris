@@ -317,10 +317,15 @@ class ExpedienteController extends Controller
       if ($request->has('newfecha') and $request->newfecha != "") {
         $expediente->asignacion->fecha_eva = $request->newfecha;
         $expediente->asignacion->save();
+        $fecha_2 = Carbon::now();
+        $evaluar = $expediente->getExpedienteService()->getDaysForEval($expediente->asignacion, $request->newfecha, $fecha_2, 30);
+        $expediente->evaluarExpByAct($evaluar, $request->newfecha, $fecha_2, $expediente->asignacion);
+        return response()->json(['message' => 'Fecha de evaluación cambiada con éxito', 'evaluar' => $evaluar]);
       } else {
         $expediente->asignacion->fecha_eva = null;
         $expediente->asignacion->save();
       }
+
       return response()->json($expediente);
     } catch (\Throwable $th) {
       return response()->json(['errors' => ["Error al cambiar la fecha"]], 500);

@@ -95,7 +95,7 @@
                                             'data' => $encuesta->encuesta->preguntas,
                                             'col' => 12,
                                             'model' => $encuesta,
-                                            'design' => 'card_question',
+                                            'design' => 'card_question', 
                                         ])
                                         @if (!currentUser()->hasRole('visitante_conciliacion'))
                                             <div class="col-md-12 mt-3">

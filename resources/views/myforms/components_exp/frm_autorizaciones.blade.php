@@ -1,6 +1,6 @@
  @if (!$readonly and 
  (currentUser()->hasRole('estudiante')
-  or currentUser()->hasRole('diradmin')
+ // or currentUser()->hasRole('diradmin')
   or currentUser()->hasRole('dirgral')
   or currentUser()->hasRole('amatai')))
   

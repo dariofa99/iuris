@@ -1,4 +1,59 @@
-@foreach ($conciliacion->usuarios()->where('tipo_usuario_id', 197)->get() as $key => $parte_)
+@php
+    $solicitados = $conciliacion->personasPorTipo('convocado')->get();
+
+    $representantes_legales = $conciliacion->personasPorTipo('representante_legal')->get();
+
+    //dd($solicitados);
+@endphp
+
+@foreach ($representantes_legales as $key => $representante_legal)
+    <form id="myFormParteConvocada_{{ $key }}" class="myFormParteConvocada modern-form-card" method="POST">
+
+        <div class="form-card">
+
+            <input type="text" value="{{$solicitados[$key]->id}}">
+            {{-- HEADER --}}
+            <div class="form-card-header">
+                <div class="form-title">
+                    <i class="fas fa-user"></i>
+                    Parte convocada
+                    <span class="form-number">{{ $key + 1 }}</span>
+                </div>
+            </div>
+
+            {{-- BODY --}}
+            <div class="row form-card-body" id="content_solicitada">
+                <input type="text" name="persona_externa_id" value="{{ $representante_legal->id }}">
+                @include('myforms.categorias.refs_aditional_data', [
+                    'data' => $representante_legal->persona->preguntas()->orderBy('orden', 'asc')->get(),
+                    'col' => 3,
+                    'model' => $representante_legal,
+                    // 'design' => 'card_question',
+                ])
+            </div>
+
+            {{-- FOOTER --}}
+            <div class="form-card-footer">
+                <button data-type="197" type="button" class="btn btn-primary btn_save_parte_convocada"
+                    data-index="{{ $key }}">
+                    <i class="fas fa-save mr-1"></i>
+                    Guardar información
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+@endforeach
+
+
+
+
+
+
+
+
+{{-- @foreach ($conciliacion->usuarios()->where('tipo_usuario_id', 197)->get() as $key => $parte_)
     @if ($parte_->tipo_persona->id == 238)
         <div class="row">
             <div class="col-md-10">
@@ -9,8 +64,8 @@
 
                 </h4>
             </div>
-        </div>
-       {{--  <div class="row">
+        </div> --}}
+        {{--  <div class="row">
             <div class="col-md-2">
                 <button id="btn_opaddrpl-{{ $key }}" data-key="{{ $key }}"
                     class="btn_opaddrpl btn btn-success btn-xs btn-block" type="button">
@@ -19,7 +74,7 @@
                 </button>
             </div>
         </div> --}}
-        @php
+       {{--  @php
             $hasrep_legales = false;
         @endphp
         @forelse ($parte_->conc_rep_legal as $key_ => $conciliacion_rep_legal)
@@ -55,10 +110,10 @@
 
 
         @empty
-            
         @endforelse
 
-        <div class="card card-outline card-success" id="user_rep_legal_form-{{ $key }}" style="display: {{ $hasrep_legales ? 'none' : 'block' }};">
+        <div class="card card-outline card-success" id="user_rep_legal_form-{{ $key }}"
+            style="display: {{ $hasrep_legales ? 'none' : 'block' }};">
             <div class="card-header">
                 <h4> Agregar Representante Legal </h4>
             </div>
@@ -81,8 +136,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <button type="button" data-type="198"
-                                class="btn btn-primary btn-lg btn-block btn_add_replegal" data-key="{{ $key }}"
-                                id="btn_add_replegal">
+                                class="btn btn-primary btn-lg btn-block btn_add_replegal"
+                                data-key="{{ $key }}" id="btn_add_replegal">
                                 Guardar
                             </button>
                         </div>
@@ -91,7 +146,7 @@
             </div>
         </div>
     @endif
-@endforeach
+@endforeach --}}
 
 {{-- <div id="user_rep_legal_form">
     @include('myforms.conciliaciones.componentes.user_replegal_form')
