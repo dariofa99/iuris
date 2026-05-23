@@ -2,12 +2,13 @@
 namespace App\Repositories;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class GuzzleHttpRequest{
 
     public $client;
     function __construct($url){      
-       // dd($url);
+       
         $this->client = new Client(
             [
             'base_uri'=>$url,
@@ -25,17 +26,19 @@ class GuzzleHttpRequest{
             $response = $this->client->request('GET', $url, [
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => json_encode($request),
-                'timeout' => 1, // Máximo tiempo de espera total (segundos)
-                'connect_timeout' => 1, // Tiempo máximo para conectar al servidor
+                'timeout' => 30, // Máximo tiempo de espera total (segundos)
+                'connect_timeout' => 10, // Tiempo máximo para conectar al servidor
             ]);
     
             return json_decode($response->getBody()->getContents());
         } catch (\GuzzleHttp\Exception\ConnectException $e) {
             // Si hay un problema de conexión (servidor caído o no accesible)
-            return (object) ['url' => url('/notfound')];
+
+            return (object) ['url' => url('/notfound'), 'error' => 'No se pudo conectar al servidor de chat.', 'details' => $e->getMessage()];
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             // Si hay otro error en la solicitud
-            return (object) ['url' => url('/notfound')];
+            Log::error('Error en la solicitud al servidor de chat: ' . $e->getMessage());
+            return (object) ['url' => url('/notfound'), 'error' => 'Error en la solicitud al servidor de chat.', 'details' => $e->getMessage()];
         }
     }
  

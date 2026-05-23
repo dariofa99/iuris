@@ -2,6 +2,7 @@
     $user = $conciliacion->getUser(196);
   $apoderado = $conciliacion->personasPorTipo('apoderado')->first();
 
+
 @endphp
 <div class="card card-outline card-info p-2" id="apoderado_solicitante">
     <div class="card-header">

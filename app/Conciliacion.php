@@ -27,7 +27,6 @@ class Conciliacion extends Model
         'categoria_id',
         'periodo_id',
         'user_id'
-
     ];
 
     public function personasPorTipo($tipo)
@@ -36,6 +35,7 @@ class Conciliacion extends Model
             ->whereHas('persona', function ($q) use ($tipo) {
                 $q->where('tipo_persona', $tipo);
             })
+            //->where("conc_personas_externas.conciliacion_id", $this->id)
             ->with('persona');
     }
     public function getPersonaExternaForm()
@@ -43,6 +43,11 @@ class Conciliacion extends Model
         return $this->hasMany(ConcPersonasExternas::class, 'conciliacion_id', 'id');
     }
 
+
+    public function getFormPersona()
+    {
+        return $this->belongsTo(AdminPersonas::class, 'persona_externa_id', 'id');
+    }
 
     public function sedes()
     {

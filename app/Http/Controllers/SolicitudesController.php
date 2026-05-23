@@ -107,7 +107,7 @@ class SolicitudesController extends Controller
         $paso = request('paso') ?? 1;
         $pasos = $this->getPasosConciliacion($conciliacion, $paso);
         $num_pasos = count($pasos);
-        //  dd($request->all());
+         // dd($request->all());
         if ($conciliacion and ($conciliacion->estado_id == 240 || $conciliacion->estado_id == 176)) {
             if ($conciliacion and $request->paso != 1) {
 
@@ -133,7 +133,7 @@ class SolicitudesController extends Controller
                 if ($request->paso == 3) {
                     $apoderado = $conciliacion->personasPorTipo('apoderado')->first();
 
-                    try {
+                   try {
                         if (!$apoderado) {
                             $persona = AdminPersonas::where(
                                 [
@@ -141,12 +141,14 @@ class SolicitudesController extends Controller
                                     'categoria_id' => 257
                                 ]
                             )->first();
-                            if (!$persona) {
-                            }
+                       
                             $request['conciliacion_id'] = $conciliacion->id;
                             $request['persona_externa_id'] = $persona->id; //solicitante
 
+                          //  dd($request->all());
+
                             $user = $this->concPersonaExternaService->store($request);
+                            // dd($user);
                         }
                     } catch (\Throwable $th) {
                         Session::flash('message-danger', 'No hay un apoderado registrado, por favor comunícate con soporte técnico.');
@@ -180,6 +182,7 @@ class SolicitudesController extends Controller
                     $numActual = $personas_convocadas->count();
 
                     // Si faltan personas convocadas, agregarlas automáticamente
+                    //   dd($numEsperado, $numActual);
                     if ($numActual < $numEsperado) {
                         $faltan = $numEsperado - $numActual;
 
@@ -200,8 +203,22 @@ class SolicitudesController extends Controller
                             } catch (\Throwable $th) {
                                 Session::flash('message-danger', 'No hay un convocado registrado, por favor comunícate con soporte técnico.');
                                 //salir del if
-                                break;
+
+                                // break;
                                 // return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=5");
+                            }
+                        }
+                    } else {
+                        if ($numActual > $numEsperado) {
+                            // Session::flash('message-danger', 'Hay más personas convocadas de las esperadas, por favor comunícate con soporte técnico.');
+                            $diferencia = $numActual - $numEsperado;
+                            // Aquí podrías implementar la lógica para eliminar a los convocados adicionales o notificar al usuario
+
+                            //Eliminar los convocados adicionales
+                            $convocados = $conciliacion->personasPorTipo('convocado')->get();
+                            $convocadosADesvincular = $convocados->take($diferencia);
+                            foreach ($convocadosADesvincular as $convocado) {
+                                $convocado->delete();
                             }
                         }
                     }
@@ -216,12 +233,10 @@ class SolicitudesController extends Controller
                             $data[] = ($convocado->getAdDataByQuestion("tipo_de_persona")->first()->opcion) ?? "";
                         }
                     }
-
+                   // dd($data);
                     if (count($data) > 0) {
                         $hasJuridico = true;
                         $replegales = $conciliacion->personasPorTipo('representante_legal')->get();
-                        //$numRepr = $conciliacion->getAdDataByQuestion("no._convocados")->first();
-
                         $numEsperado = count($data);
                         $numActual = $replegales->count();
 
@@ -251,9 +266,24 @@ class SolicitudesController extends Controller
                                     // return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=5");
                                 }
                             }
+                        } elseif ($numActual > $numEsperado) {
+                            // Session::flash('message-danger', 'Hay más representantes legales de los esperados, por favor comunícate con soporte técnico.');
+                            $diferencia = $numActual - $numEsperado;
+                            // Aquí podrías implementar la lógica para eliminar a los representantes legales adicionales o notificar al usuario
+
+                            //Eliminar los representantes legales adicionales
+                            $replegales = $conciliacion->personasPorTipo('representante_legal')->get();
+                            $replegalesADesvincular = $replegales->take($diferencia);
+                            foreach ($replegalesADesvincular as $replegal) {
+                                $replegal->delete();
+                            }
                         }
                     } else {
-
+                        $replegales = $conciliacion->personasPorTipo('representante_legal')->get();
+                        $replegalesADesvincular = $replegales->take(count($replegales));
+                        foreach ($replegalesADesvincular as $replegal) {
+                                $replegal->delete();
+                            }
                         return redirect("/solicitudes/recepcion/conciliacion/$conciliacion->token?id=$conciliacion->id&paso=7");
                     }
                 }
@@ -348,8 +378,8 @@ class SolicitudesController extends Controller
     }
     private function getPasosConciliacion($conciliacion, $paso)
     {
-       
-            $pasos = $this->getPasosMessage();
+
+        $pasos = $this->getPasosMessage();
 
         if ($conciliacion) {
             if ($paso >= '2') {

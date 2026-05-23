@@ -15,7 +15,7 @@
             <td>
                {{ $header}}
             </td>
-        @endforeach
+        @endforeach 
         </tr>
        
         @foreach($data as $key => $dat)

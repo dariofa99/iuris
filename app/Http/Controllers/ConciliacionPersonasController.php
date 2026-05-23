@@ -88,8 +88,8 @@ class ConciliacionPersonasController extends Controller
                 "errors" => ["No hay una encuesta activa"]
             ]);
         }
-        $conc = $encuesta->conciliacion;
-        return response()->json($conc, 200);
+       // $conc = $encuesta->conciliacion;
+        return response()->json($encuesta, 200);
 
        
 

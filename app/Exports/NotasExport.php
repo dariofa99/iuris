@@ -32,7 +32,7 @@ class NotasExport implements FromView,WithHeadings,WithTitle
         return $this->title;
     }
    public function collection()
-    {      
+    {       
         return $collection = collect($this->data);        
     } 
 

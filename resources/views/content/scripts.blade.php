@@ -11,20 +11,21 @@
     });
 
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyTurnosDocenteRojas");
+        localStorage.removeItem("keyCircularActualVacSemanaSanta");
 
-        var keyCir = localStorage.getItem("keyCircularActualVacSemanaSanta");
+        var keyCir = localStorage.getItem("keyCircularActualFinPeriodo");
         $("#modal_t").text("");
         var message = '';
-        //var message = getMantenimientoMessage();
+         
         if (keyCir == null) {
-            message = getMantenimientoMessage();
+            message = getHtmlCircularFinPeriodo();
             $("#modal-show-alerts-content").html(message);
             $("#mymodalShowAlerts").modal("show");
         } else {
             $("#modal_t").text("");
             // message = getMotivationalMessage();
         }
+      
 
         //var message = getMantenimientoMessage();
     @endif
@@ -745,6 +746,180 @@
         return message;
     }
 
+    function getHtmlCircularFinPeriodo() {
+
+    $("#contentNotButtonDis").append($("<button>", {
+        class: "btn btn-danger",
+        id: "btnNotFalse",
+        text: "No volver a mostrar",
+        "data-not": "keyCircularActualFinPeriodo"
+    }));
+
+    return `
+
+<div class="container-fluid">
+
+    <div id="modalContentStart" tabindex="-1"></div>
+
+    <div id="modal-announce"
+         class="sr-only"
+         aria-live="assertive"
+         aria-atomic="true">
+
+        Información importante sobre sustitución de casos estudiantiles.
+    </div>
+
+    <div class="text-center mb-4">
+
+        <div class="mb-3">
+            <i class="fas fa-exchange-alt text-warning"
+               style="font-size:55px;"></i>
+        </div>
+
+        <h3 class="font-weight-bold">
+            Sustitución de casos y continuidad de atención
+        </h3>
+
+        <p class="text-muted">
+            Plataforma IURIS
+        </p>
+
+    </div>
+
+    <div class="alert alert-warning shadow-sm">
+
+        <h5 class="font-weight-bold mb-3">
+            <i class="fas fa-exclamation-triangle"></i>
+            Información importante para estudiantes
+        </h5>
+
+        <p class="mb-2 text-justify">
+            Teniendo en cuenta el cierre de año académico y el proceso de
+            <strong>sustitución de casos</strong>, se recuerda que cuando un
+            expediente es asignado a un nuevo estudiante,
+            este adquiere la responsabilidad de asumir la continuidad del caso.
+        </p>
+
+        <p class="mb-0 text-justify">
+            Por esta razón, el nuevo estudiante debe comunicarse oportunamente
+            con el usuario solicitante para informarle sobre el cambio de asignación
+            y ponerse al tanto de la situación actual del expediente.
+        </p>
+
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <i class="fas fa-tasks"></i>
+            Responsabilidades del estudiante asignado
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-3">
+
+                <div class="d-flex mb-3">
+
+                    <div class="mr-3">
+                        <span class="badge badge-primary p-2">
+                            1
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong>Contactar al usuario solicitante</strong>
+                        <br>
+                        <small class="text-muted">
+                            Informar que el expediente ya no será gestionado
+                            por el estudiante anterior.
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex mb-3">
+
+                    <div class="mr-3">
+                        <span class="badge badge-info p-2">
+                            2
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong>Revisar el expediente y contextualizarse</strong>
+                        <br>
+                        <small class="text-muted">
+                            Verificar actuaciones, observaciones y estado actual del caso.
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex">
+
+                    <div class="mr-3">
+                        <span class="badge badge-danger p-2">
+                            3
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong>Registrar hechos y respuesta</strong>
+                        <br>
+                        <small class="text-muted">
+                            El sistema evaluará automáticamente la gestión
+                            dentro de los siguientes 5 días calendario.
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="alert alert-danger shadow-sm">
+
+        <h5 class="font-weight-bold">
+            <i class="fas fa-exclamation-circle"></i>
+            Importante
+        </h5>
+
+        <p class="mb-2 text-justify">
+            Si el estudiante no registra los hechos y la respuesta correspondiente
+            dentro del plazo establecido,
+            el sistema podrá generar automáticamente una calificación en cero (0).
+        </p>
+
+        <p class="mb-0 text-justify">
+            Estas notas serán reflejadas en el
+            <strong>periodo académico actual</strong>.
+        </p>
+
+    </div>
+
+    <div class="text-center mt-4">
+
+        <div class="alert alert-light border shadow-sm mb-0">
+
+            <i class="fas fa-check-circle text-success"></i>
+
+            Agradecemos su compromiso y responsabilidad
+            en la atención oportuna de los usuarios.
+
+        </div>
+
+    </div>
+
+</div>
+
+    `;
+}
     function getHtmlCircular() {
         $("#contentNotButtonDis").append($("<button>", {
             class: "btn btn-danger",

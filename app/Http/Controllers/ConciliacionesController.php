@@ -622,7 +622,7 @@ class ConciliacionesController extends Controller
  
     public function storeAnexo(Request $request)
     {
-        //return response()->json($request->all());
+      //  return response()->json($request->all());
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         if ($request->file('conciliacion_file') != '') {
             $file = $conciliacion->uploadFile($request->file('conciliacion_file'), '/conciliacion_' . $conciliacion->id);
@@ -637,7 +637,8 @@ class ConciliacionesController extends Controller
         $conciliacion = Conciliacion::find($request->conciliacion_id);
         $view = view("myforms.conciliaciones.componentes." . $request->view_template, compact("conciliacion", 'category'))->render();
         return response()->json([
-            'view' => $view
+            'view' => $view,
+            "success" => true
         ]);
     }
 

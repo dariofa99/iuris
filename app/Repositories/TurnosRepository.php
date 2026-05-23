@@ -153,7 +153,7 @@ class TurnosRepository extends BaseRepository implements TurnosService
 
             )
 
-            ->where(function ($query) use ($request) {
+             ->where(function ($query) use ($request) {
                 if ($request->has('name') and $request->input('name') != '') {
                     return $query->orWhere('users.lastname', 'like', "%{$request->name}%")
                         ->orWhere('users.name', 'like', "%{$request->name}%");

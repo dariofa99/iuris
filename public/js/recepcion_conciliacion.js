@@ -388,6 +388,10 @@ $(function () {
   $("#btn_registrar_apod_sol").on("click", async function (e) {
     e.preventDefault();
 
+    if($("#chk_not_parte_apoderado").is(":checked")){
+      location.href = $(this).attr("href");
+    }
+
     const form = document.getElementById("myFormApoderado");
     if (!form) return;
     var isvalid = validateForms(form);
@@ -968,6 +972,7 @@ $(function () {
 
 
   $("#table_anexos_list").on("click", ".btn_delete_anxcon", function (e) {
+    e.preventDefault();
     var request = {
       file_id: $(this).attr("data-file"),
       conciliacion_id: $("#conciliacion_id").val(),
@@ -1071,7 +1076,7 @@ $(function () {
   $("#chk_not_parte_apoderado").on("change", function (e) {
     if ($(this).is(":checked")) {
       $("#content_apoderado_solicitud input,select").prop("disabled", true);
-      $("#btn_registrar_apod_sol").hide();
+      //$("#btn_registrar_apod_sol").hide();
       $("#btn_no_apoderado").show()
     } else {
       $("#content_apoderado_solicitud input,select").prop("disabled", false);
@@ -1093,6 +1098,34 @@ $(function () {
     $("#user_rep_legal_form-" + key).toggle();
     $(".list_user_rep_legal_form-" + key).toggle();
   });
+////////////////////////////
+  $(".btn_add_document").on("click", function (e) {
+    $("#selectedZone").hide();
+    $(".radio_doc").hide();
+    if ($(this).attr("data-type") == "documento_identidad") {
+      $("#radio_doc_identidad").show();
+      $("input[name='docType'][value='identidad']").prop("checked", true);
+      $("#form_add_document input[name='concept']").val("Documento de identidad");
+    }
+    if ($(this).attr("data-type") == "certificado_existencia") {
+      $("#radio_certificado_existencia").show();
+      $("input[name='docType'][value='existencia']").prop("checked", true);
+      $("#form_add_document input[name='concept']").val("Certificado de existencia jurídica");
+    }
+    if ($(this).attr("data-type") == "eva_socieconomica") {
+      $("#radio_socieconomica").show();
+      $("input[name='docType'][value='socieconomica']").prop("checked", true);
+      $("#form_add_document input[name='concept']").val("Soporte evaluación socioeconómica");
+    }
+    if ($(this).attr("data-type") == "otros_documentos") {
+      $("#radio_otros").show();
+      $("input[name='docType'][value='otros']").prop("checked", true);
+      $("#form_add_document input[name='concept']").val("Otros documentos");
+    }
+    $("#myModal_form_create_anexo").modal("show");
+
+  });
+/////////////////////
 
 });//fin document ready
 
@@ -1146,7 +1179,7 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
     } else {
       console.log(redirect, response_);
 
-      if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
+     // if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
 
     }
 
@@ -1182,3 +1215,181 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
   $("#wait").hide();
 
 }
+
+document.addEventListener('DOMContentLoaded', async function () {
+
+  var files = await conciliacionService.getFilesByCategory({
+    'conciliacion_id': $("#conciliacion_id").val(),
+    'category_id': 233
+  });
+  files.files.forEach(element => {
+    if (element.pivot.concepto == 'Documento de identidad') {
+      $("#row_doc_identidad").remove();
+    }
+    if (element.pivot.concepto == 'Certificado de existencia jurídica') {
+      $("#row_certificado_existencia").remove();
+    }
+    if (element.pivot.concepto == 'Soporte evaluación socioeconómica') {
+      $("#row_eva_socioeconomica").remove();
+    }
+    if (element.pivot.concepto == 'Otros documentos') {
+      $("#row_otros_documentos").remove();
+    } 
+  });
+  console.log(files)
+
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const filePreview = document.getElementById('filePreview');
+  const fileError = document.getElementById('fileError');
+  const removeFileBtn = document.getElementById('removeFile');
+
+  let selectedFile = null;
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+  const ALLOWED_TYPES = ['application/pdf'];
+
+  // Click en zona de carga
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  // Cambio de archivo
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      handleFileSelect(e.target.files[0]);
+    }
+  });
+
+  function handleFileSelect(file) {
+    hideError();
+    selectedFile = null;
+
+    // Validar tipo
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      showError('❌ Tipo de archivo no permitido. Usa: PDF');
+      return;
+    }
+
+    // Validar tamaño
+    if (file.size > MAX_FILE_SIZE) {
+      showError('❌ El archivo es muy grande. Máximo 10 MB.');
+      return;
+    }
+
+    selectedFile = file;
+    showPreview(file);
+    $("#dropZone").hide();
+    $("#selectedZone").show();
+  }
+
+  function showPreview(file) {
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent =
+      'Tamaño: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB';
+    filePreview.classList.remove('d-none');
+  }
+
+  function showError(message) {
+    document.getElementById('errorMessage').textContent = message;
+    fileError.classList.remove('d-none');
+    filePreview.classList.add('d-none');
+    selectedFile = null;
+  }
+
+  function hideError() {
+    fileError.classList.add('d-none');
+  }
+
+  // Remover archivo
+  removeFileBtn.addEventListener('click', () => {
+    selectedFile = null;
+    fileInput.value = '';
+    filePreview.classList.add('d-none');
+    hideError();
+    $("#dropZone").show();
+    $("#selectedZone").hide();
+  });
+
+  // Verificar si hay un botón de envío en el footer del modal
+  const submitBtn = document.querySelector('.btn-submit-anexo');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', uploadFile);
+  }
+
+  async function uploadFile() {
+    if (!selectedFile) {
+      showError('❌ Por favor, selecciona un archivo');
+      return;
+    }
+
+    const docType = document.querySelector('input[name="docType"]:checked');
+    if (!docType) {
+      showError('❌ Por favor, selecciona el tipo de documento');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('conciliacion_file', selectedFile);
+    //formData.append('doc_type', docType.value);
+    formData.append("concept", $("#form_add_document input[name='concept']").val());
+    formData.append("conciliacion_id", $("#conciliacion_id").val());
+    // formData.append("category_id", $("#anexo_category_id").val())
+    formData.append("view_template", "anexos_ajax")
+    formData.append("category_id", 233);
+
+    // Mostrar progreso
+    const uploadProgress = document.getElementById('uploadProgress');
+    uploadProgress.classList.remove('d-none');
+    let data = await conciliacionService.uploadFile(formData, '/conciliaciones/store/anexo');
+    if (data.success) {
+      // Éxito
+      fileInput.value = '';
+      filePreview.classList.add('d-none');
+      selectedFile = null;
+
+      Toast.fire({
+        title: "Archivo agregado con éxito.",
+        icon: "success",
+        timer: 2000,
+      });
+
+      location.reload();
+
+      $("#table_anexos_list tbody").html(data.view);
+      //$("#uploadProgress").addClass('d-none');
+
+    } else {
+      showError('❌ ' + (data.message || 'Error al cargar el archivo'));
+    }
+    /*  fetch('/conciliaciones/store/anexo', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          uploadProgress.classList.add('d-none');
+          if (data.success) {
+            // Éxito
+            fileInput.value = '';
+            filePreview.classList.add('d-none');
+            selectedFile = null;
+         
+            Toast.fire({
+              title: "Archivo agregado con éxito.",
+              icon: "success",
+              timer: 2000,
+            });
+  
+            $("#table_anexos_list tbody").html(data.view);
+  
+          } else {
+            showError('❌ ' + (data.message || 'Error al cargar el archivo'));
+          }
+        })
+        .catch(error => {
+          uploadProgress.classList.add('d-none');
+          showError('❌ Error: ' + error.message);
+        });*/
+  }
+});

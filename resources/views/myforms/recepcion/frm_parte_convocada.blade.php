@@ -94,19 +94,37 @@
 
                 {{-- BODY --}}
                 <div class="row form-card-body" id="content_solicitada">
-                    <input type="text" name="persona_externa_id" value="{{ $solicitado->id }}">
+                    <input type="hidden" name="persona_externa_id" value="{{ $solicitado->id }}">
                     @include('myforms.categorias.refs_aditional_data', [
                         'data' => $solicitado->persona->preguntas()->orderBy('orden', 'asc')->get(),
                         'col' => 3,
                         'model' => $solicitado,
                         // 'design' => 'card_question',
                     ])
+                    <div class="col-md-12">
+                        <h4>
+                            INFORMACIÓN IDENTITARIA Y DE INCLUSIVIDAD
+                        </h4>
+                    </div>
+                    @include('myforms.components_user.aditional_data', [
+                        'data' => getReferencesDataBySection('discapacidad', 'users'),
+                        //'discaform' => 'discaform',
+                        'user' => $solicitado,
+                    ])
+                    <div class="col-md-12">
+                        {{--  <h3>
+                        Información socio-económica
+                    </h3> --}}
+                    </div>
+                    @include('myforms.components_user.aditional_data', [
+                        'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
+                        'user' => $solicitado,
+                    ])
                 </div>
 
                 {{-- FOOTER --}}
                 <div class="form-card-footer">
-                    <button data-type="197" type="button"
-                        class="btn btn-primary btn_save_parte_convocada"
+                    <button data-type="197" type="button" class="btn btn-primary btn_save_parte_convocada"
                         data-index="{{ $key }}">
                         <i class="fas fa-save mr-1"></i>
                         Guardar información
@@ -118,6 +136,6 @@
         </form>
     @endforeach
 
-   
+
 
 </div>

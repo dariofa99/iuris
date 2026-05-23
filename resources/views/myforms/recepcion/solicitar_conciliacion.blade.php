@@ -88,7 +88,7 @@
                                             Siguiente
                                         </a>
                                     @else
-                                        <a href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=6"
+                                        <a href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso={{ intval($paso) + 1 }}"
                                             data-step="{{ intval($paso) + 1 }}" class="btn btn-success"
                                             data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}"
                                             id="{{ $pasos[$paso - 1]['id'] }}">
@@ -123,6 +123,7 @@
     </div>
     @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
     @include('myforms.conciliaciones.componentes.modal_create_document')
+     @include('myforms.conciliaciones.componentes.modal_create_anexo')
     @include('myforms.recepcion.frm_modal_infoinderminada')
 
 @endsection

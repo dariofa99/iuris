@@ -41,7 +41,7 @@ export class ConciliacionService {
 
     }
 
-     async addDataPersona(request) {
+    async addDataPersona(request) {
         const response = await fetch(BASE_URL + 'conciliaciones/add/data/persona/externa', {
             method: 'POST',
             headers: {
@@ -494,6 +494,37 @@ export class ConciliacionService {
         });
     }
 
+    async uploadFile(formData, url) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', BASE_URL + url, true);
+            xhr.setRequestHeader('X-CSRF-Token', $("#token").attr("content")); // Agrega la cabecera X-CSRF-Token
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentage = (event.loaded / event.total) * 100;
+                    this.showProgress(percentage);
+                }
+            });
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (error) {
+                        reject(new Error('Error al analizar la respuesta JSON'));
+                    }
+                } else {
+                    reject(new Error(`Upload failed with status: ${xhr.status}`));
+                }
+            };
+            xhr.onerror = () => {
+                reject(new Error('Upload failed'));
+            };
+            xhr.send(formData);
+        });
+    }
+
+
     async editConciliacionComentario(request) {
         const response = await fetch(BASE_URL + "conciliaciones/edit/comentario?" + new URLSearchParams(request), {
             method: 'GET',
@@ -785,8 +816,8 @@ export class ConciliacionService {
                     option_id: $(obj).attr("data-option") != undefined ? $(obj).attr("data-option") : $(obj).val(),
                     value_is_other: formParent.find("#value_other_text-" + $(obj).attr("data-id")).val(),// $("#value_other_text-" + $(obj).attr("data-id")).val(),
                     //conciliacion_id: $("#conciliacion_id").val()
-                });               
-                
+                });
+
             }
         });
         return data;

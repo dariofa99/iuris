@@ -14,7 +14,7 @@ class AdminPersonas extends Model
         'estado',
         'categoria_id'
 
-    ];
+    ]; 
 
 
     public function preguntas()

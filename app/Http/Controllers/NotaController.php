@@ -150,13 +150,11 @@ class NotaController extends Controller
         if (!$request->ajax()) {
 
             $notas = $this->notas_download($request);
-
-            //return response()->json($notas);
             $segmento = Segmento::find($request->segmento_id);
             $periodo = Periodo::find($request->periodo_id);
 
             if ($request->segmento_id) {
-                $header =  ['cedula', 'codigo', 'nombres', 'curso', 'casos', 'defensas', 'conciliaciones', 'otros', 'final'];
+                $header =  ['cedula', 'codigo', 'nombres', 'curso', 'casos', 'defensas', 'conciliaciones', 'otros', 'asistencia', 'final'];
                 return Excel::download(new NotasExport($notas, $header, null, 'Notas_' . $periodo->prddes_periodo), 'Reporte.xlsx');
             } else {
                 $segmentos = Segmento::join('sede_segmentos as sg', 'sg.segmento_id', '=', 'segmentos.id')
@@ -170,6 +168,7 @@ class NotaController extends Controller
                     $header[] = 'defensas';
                     $header[] = 'conciliaciones';
                     $header[] = 'otros';
+                    $header[] = 'asistencia';
                     $header[] = 'final';
                 }
                 $header[] = 'final periodo';
@@ -286,7 +285,7 @@ class NotaController extends Controller
                     "tipo_id" => $nota_final['nota_aplicacion']['tipo_id'],
                     "segmento_id" => $nota_final['segmento_id'],
                     "docevname" => $nota_final['nota_conocimiento']['docevname'],
-                    "days"=>$nota_final['nota_conocimiento']['created_at']
+                    "days" => $nota_final['nota_conocimiento']['created_at']
                 ];
 
                 //  $nota_final['nota_etica']['docidnumber'] == \Auth::user()->idnumber ? $notas["can_edit"] = true:'';
@@ -412,7 +411,7 @@ class NotaController extends Controller
                     'ref_nombre',
                     'users.idnumber',
                     'users.codigo_estudiantil',
-                    DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
+                    DB::raw('CONCAT(users.lastname," ",users.name) as full_name'),
                     'role_user.role_id',
                     'roles.display_name'
                 )
@@ -435,7 +434,7 @@ class NotaController extends Controller
                     'ref_nombre',
                     'users.idnumber',
                     'users.codigo_estudiantil',
-                    DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
+                    DB::raw('CONCAT(users.lastname," ",users.name) as full_name'),
                     'role_user.role_id',
                     'roles.display_name'
                 )
@@ -453,7 +452,7 @@ class NotaController extends Controller
                 $to_excel[] = $user->codigo_estudiantil;
                 $to_excel[] = $user->full_name;
                 $to_excel[] = $user->ref_nombre;
-                $nota_us = $this->getNotas($user, $request->segmento_id);
+                $nota_us = $this->getNotas($user, $request->segmento_id, $request);
                 foreach ($nota_us as $key_3 => $not) {
                     $to_excel[] = $not;
                 }
@@ -473,8 +472,9 @@ class NotaController extends Controller
                 $to_excel[] = $user->codigo_estudiantil;
                 $to_excel[] = $user->full_name;
                 $to_excel[] = $user->ref_nombre;
+
                 foreach ($segmentos as $key => $segmento) {
-                    $nota_us = $this->getNotas($user, $segmento->id);
+                    $nota_us = $this->getNotas($user, $segmento->id, $request);
                     foreach ($nota_us as $key_3 => $not) {
                         $to_excel[] = $not;
                     }
@@ -491,6 +491,8 @@ class NotaController extends Controller
                 } else {
                     $to_excel[] = $final;
                 }
+
+
                 $notas_periodo[] = $to_excel;
 
                 // }
@@ -503,7 +505,7 @@ class NotaController extends Controller
         }
     }
 
-    private function getNotas($user, $segmento)
+    private function getNotas($user, $segmento, $request)
     {
 
 
@@ -579,6 +581,18 @@ class NotaController extends Controller
         $data_user[] = $nota_d;
         $data_user[] = $nota_con;
         $data_user[] = $nota_ofi;
+        $request['idnumber'] = $user->idnumber;
+        $asistencia = $this->turnosService->getAsistencia($request);
+//dd($asistencia);
+        
+        if (count($asistencia) > 0) {
+            $nota = $asistencia[0]->nota_proporcional ?? 0;
+            $nota = is_numeric($nota) ? floatval($nota) : 0;
+            $data_user[] = $nota;
+        } else {
+            $data_user[] = 0;
+        }
+
         $data_user[] = is_numeric($nota_c) ? round($nota_final, 1) : "N/A";
 
         return $data_user;

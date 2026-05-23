@@ -10,20 +10,20 @@
 @foreach ($representantes_legales as $key => $representante_legal)
     <form id="myFormParteConvocada_{{ $key }}" class="myFormParteConvocada modern-form-card" method="POST">
 
-        <div class="form-card">
+        <div class="card">
 
             <input type="hidden" value="{{ $solicitados[$key]->id }}">
             {{-- HEADER --}}
-            <div class="form-card-header">
+            <div class="card-header">
                 <div class="form-title">
                     <i class="fas fa-user"></i>
-                    Parte convocada
+                    Representante Legal
                     <span class="form-number">{{ $key + 1 }}</span>
                 </div>
             </div>
 
             {{-- BODY --}}
-            <div class="row form-card-body" id="content_solicitada">
+            <div class="row card-body" id="content_solicitada">
                 <input type="hidden" name="persona_externa_id" value="{{ $representante_legal->id }}">
                 @include('myforms.categorias.refs_aditional_data', [
                     'data' => $representante_legal->persona->preguntas()->orderBy('orden', 'asc')->get(),
@@ -31,22 +31,32 @@
                     'model' => $representante_legal,
                     // 'design' => 'card_question',
                 ])
-
-                @include('myforms.components_user.aditional_data', [
-                    'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
-                    'user' => $representante_legal,
-                ])
-
+                <div class="col-md-12">
+                    <h4>
+                       INFORMACIÓN IDENTITARIA Y DE INCLUSIVIDAD
+                    </h4>
+                </div>
                 @include('myforms.components_user.aditional_data', [
                     'data' => getReferencesDataBySection('discapacidad', 'users'),
                     //'discaform' => 'discaform',
                     'user' => $representante_legal,
                 ])
+                <div class="col-md-12">
+                   {{--  <h3>
+                        Información socio-económica
+                    </h3> --}}
+                </div>
+                @include('myforms.components_user.aditional_data', [
+                    'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
+                    'user' => $representante_legal,
+                ])
+
+
 
             </div>
 
             {{-- FOOTER --}}
-            <div class="form-card-footer">
+            <div class="card-footer">
                 <button data-type="197" type="button" class="btn btn-primary btn_save_parte_convocada"
                     data-index="{{ $key }}">
                     <i class="fas fa-save mr-1"></i>

@@ -733,7 +733,7 @@
             </div>
 
         </div>
-
+ 
 
         @php
             $nota = $asistencia->nota_proporcional ?? 0;
@@ -844,13 +844,14 @@
                                         <div class="col-auto pr-4">
                                             <div class="d-flex flex-column align-items-center">
                                                 <small class="text-white opacity-75 mb-1">
-                                                    <i class="fas fa-folder-open mr-1"></i>Expediente
+                                                    <i class="fas fa-folder-open mr-1"></i> {{ $data[0]['proceso'] }}
                                                 </small>
                                                 <a style="color: #ffffff !important; text-decoration: none;"
-                                                    target="_blank" href="/expedientes/{{ $data[0]['expediente'] }}/edit"
+                                                    target="_blank" href=" @if($data[0]['proceso'] == 'Expediente') /expedientes/{{ $data[0]['expediente'] }}/edit @else /defensas/oficio/{{ $data[0]['expediente'] }}/edit  @endif"
                                                     class="h4 font-weight-bold mb-0 hover-glow"
                                                     style="font-size: 1.8rem;">
                                                     {{ $data[0]['expediente'] }}
+                                                    
                                                 </a>
                                             </div>
                                         </div>
