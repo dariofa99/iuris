@@ -166,7 +166,7 @@
             </div>
         </div>
     </div>
-    @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == 1 || $expediente->expestado_id == 3)
+    @if (currentUser()->hasRole('estudiante') and $expediente->expestado_id == 1 || $expediente->expestado_id == 3 || $expediente->expestado_id == 6)
         <div class="row">
             <div class="col-md-12" align="right">
                 <div class="form-group">

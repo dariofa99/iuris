@@ -24,7 +24,8 @@
 
             {{-- BODY --}}
             <div class="row card-body" id="content_solicitada">
-                <input type="hidden" name="persona_externa_id" value="{{ $representante_legal->id }}">
+                <input hidden type="text" name="persona_externa_id" value="{{ $representante_legal->persona_externa_id }}">
+                <input hidden type="text" name="conc_persona_externa_id" value="{{ $representante_legal->id }}">
                 @include('myforms.categorias.refs_aditional_data', [
                     'data' => $representante_legal->persona->preguntas()->orderBy('orden', 'asc')->get(),
                     'col' => 3,

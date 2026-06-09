@@ -97,7 +97,7 @@ Route::get('/firmar/revocar/get/status', 'ConciliacionesFirmasController@getFirm
 Route::get('/recovery/account', 'Auth\ResetPasswordController@showRecoveryForm');
 
 ///rutas que requieren atenticación
-Route::group(['middleware' => ['auth','mantenimiento']], function () {
+Route::group(['middleware' => ['auth']], function () {
 
   Route::get('conciliaciones/registrar/personas', 'ConciliacionPersonasController@index')->name("concpers.index");
 

@@ -182,7 +182,7 @@ class SolicitudesController extends Controller
                     $numActual = $personas_convocadas->count();
 
                     // Si faltan personas convocadas, agregarlas automáticamente
-                    //   dd($numEsperado, $numActual);
+                       //dd($numEsperado, $numActual);
                     if ($numActual < $numEsperado) {
                         $faltan = $numEsperado - $numActual;
 
@@ -252,7 +252,7 @@ class SolicitudesController extends Controller
                                             'tipo_persona' => 'representante_legal',
                                             'categoria_id' => 257
                                         ]
-                                    )->first();
+                                    )->first(); 
 
                                     // dd($persona);
                                     $request['conciliacion_id'] = $conciliacion->id;

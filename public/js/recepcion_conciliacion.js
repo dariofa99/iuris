@@ -388,7 +388,7 @@ $(function () {
   $("#btn_registrar_apod_sol").on("click", async function (e) {
     e.preventDefault();
 
-    if($("#chk_not_parte_apoderado").is(":checked")){
+    if ($("#chk_not_parte_apoderado").is(":checked")) {
       location.href = $(this).attr("href");
     }
 
@@ -525,7 +525,7 @@ $(function () {
       });
 
       // 5️⃣ recargar o redirigir
-      window.location.reload();
+      // window.location.reload();
       // o:
       // window.location.href = `/solicitudes/recepcion/conciliacion/${response_.token}/?id=${response_.id}&paso=6`;
 
@@ -1017,13 +1017,15 @@ $(function () {
 
   $("#btn_solicitar_conciliacion").on("click", function (e) {
     e.preventDefault();
-    var validfile = false;
+    var validfile = true;
 
-    var anexos = $(".content_he_pret").length
-    $(".files").each((element, obj) => {
-      if ($(obj).attr("data-type") == 233) {
-        validfile = true;
-      }
+    var anexos = $("#table_required_anexos tr").length
+    var message = "";
+    $("#table_required_anexos tr").each((element, obj) => {
+      if ($(obj).attr("data-required") == "true") {
+        validfile = false;
+        message += $(obj).attr("data-label") + "<br>";       
+      } 
 
     })
 
@@ -1031,7 +1033,7 @@ $(function () {
     if (!validfile) {
       Swal.fire({
         title: "Recuerda subir los anexos requeridos!",
-        html: "Falta adjuntar el documento de identidad",
+        html: message,
         icon: "warning",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
@@ -1098,7 +1100,7 @@ $(function () {
     $("#user_rep_legal_form-" + key).toggle();
     $(".list_user_rep_legal_form-" + key).toggle();
   });
-////////////////////////////
+  ////////////////////////////
   $(".btn_add_document").on("click", function (e) {
     $("#selectedZone").hide();
     $(".radio_doc").hide();
@@ -1125,7 +1127,7 @@ $(function () {
     $("#myModal_form_create_anexo").modal("show");
 
   });
-/////////////////////
+  /////////////////////
 
 });//fin document ready
 
@@ -1179,7 +1181,7 @@ async function addUserByStep(form, obj, step, userJuridico = null, redirect = tr
     } else {
       console.log(redirect, response_);
 
-     // if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
+      if (redirect) window.location = "/solicitudes/recepcion/conciliacion/" + response_.token + "/?id=" + response_.id + "&paso=" + step;
 
     }
 
@@ -1234,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
     if (element.pivot.concepto == 'Otros documentos') {
       $("#row_otros_documentos").remove();
-    } 
+    }
   });
   console.log(files)
 

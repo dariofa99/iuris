@@ -51,9 +51,7 @@ class ConcPersonaExternaRepositoty extends BaseRepository implements ConcPersona
 
       //$encuestaAct = AdminPersonas::find($request->input('persona_externa_id'));
 
-      $encuesta =  ConcPersonasExternas::where('persona_externa_id', $request->input('persona_externa_id'))
-        ->where('conciliacion_id', $request->input('conciliacion_id'))
-        ->first();
+      $encuesta =  ConcPersonasExternas::find($request->input('conc_persona_externa_id'));
       //dd($encuesta);
       if ($encuesta == null) {
 
@@ -76,6 +74,7 @@ class ConcPersonaExternaRepositoty extends BaseRepository implements ConcPersona
         }
         //Mail::to(auth()->user()->email)->send(new RegConcEncuestaSatSuccess());
       }
+      
       return $encuesta;
     } catch (\Throwable $th) {
       return $th->getMessage();

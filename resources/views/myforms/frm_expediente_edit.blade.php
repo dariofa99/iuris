@@ -54,6 +54,7 @@
 
 @section('area_forms')
     @php
+     
         if (!currentUser()->hasRole('estudiante') and currentUser()->hasRole('coordprac')) {
             $disabled = 'disabled';
         } else {
@@ -63,6 +64,7 @@
                 $expediente->expestado_id == '6'
             ) {
                 $disabled = '';
+               
             } else {
                 $disabled = 'disabled';
             }
@@ -104,7 +106,7 @@
             <a class="nav-link urlactive" id="cierre_caso-tab" data-toggle="tab" href="#cierre_caso" role="tab"
                 aria-controls="cierre_caso" aria-selected="false">
                 Cierre de caso
-            </a>
+            </a> 
         </li>
         @if (count($expediente->asignaciones) > 1 ||
                 (currentUser()->hasRole('amatai') or

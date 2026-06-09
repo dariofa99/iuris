@@ -68,7 +68,7 @@
                 </small>
             </div>
 
-            <input type="text" name="concept" id="concept">
+            <input type="hidden" name="concept" id="concept">
 
 
             <div class="card border-2 border-dashed p-5 text-center" id="selectedZone"

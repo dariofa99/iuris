@@ -68,10 +68,10 @@
 @endpush
 
 @php
-    $user = $conciliacion->getUser(197);
+    /* $user = $conciliacion->getUser(197);
     $users = $conciliacion->usuarios()->where('tipo_usuario_id', 197)->get();
     $numConv = $conciliacion->getStaticDataValByShortName('no._convocados', 'asunto');
-    $numConv = $numConv->value;
+    $numConv = $numConv->value; */
     $solicitados = $conciliacion->personasPorTipo('convocado')->get();
 
 @endphp
@@ -83,7 +83,7 @@
 
             <div class="form-card">
 
-                {{-- HEADER --}}
+                {{-- HEADER --}} 
                 <div class="form-card-header">
                     <div class="form-title">
                         <i class="fas fa-user"></i>
@@ -94,7 +94,8 @@
 
                 {{-- BODY --}}
                 <div class="row form-card-body" id="content_solicitada">
-                    <input type="hidden" name="persona_externa_id" value="{{ $solicitado->id }}">
+                    <input hidden type="text" name="conc_persona_externa_id" value="{{ $solicitado->id }}">
+                    <input hidden type="text" name="persona_externa_id" value="{{ $solicitado->persona_externa_id }}">
                     @include('myforms.categorias.refs_aditional_data', [
                         'data' => $solicitado->persona->preguntas()->orderBy('orden', 'asc')->get(),
                         'col' => 3,

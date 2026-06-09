@@ -1,12 +1,13 @@
 @php
     $user = $conciliacion->getUser(196);
     $apoderado = $conciliacion->personasPorTipo('apoderado')->first();
-
+ 
 @endphp
 <form id="myFormApoderado">
     <div class="row" id="content_apoderado_solicitud">
         @if ($apoderado)
-        <input type="text" name="persona_externa_id" value="{{ $apoderado->id }}" >
+        <input type="hidden" name="conc_persona_externa_id" value="{{ $apoderado->id }}" >
+        <input type="hidden" name="persona_externa_id" value="{{ $apoderado->persona_externa_id }}" >
             @include('myforms.categorias.refs_aditional_data', [
                 'data' => $apoderado->persona->preguntas()->orderBy('orden', 'asc')->get(),
                 'col' => 3,

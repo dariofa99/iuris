@@ -34,7 +34,7 @@
 
                             {{-- BODY --}}
                             <div class="row form-card-body" id="content_solicitada">
-                                <input type="hidden" name="persona_externa_id" value="{{ $solicitado->id }}">
+                                <input type="text" name="persona_externa_id" value="{{ $solicitado->id }}">
                                 @include('myforms.categorias.refs_aditional_data', [
                                     'data' => $solicitado->persona->preguntas()->orderBy('orden', 'asc')->get(),
                                     'col' => 3,
