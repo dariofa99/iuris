@@ -11,16 +11,16 @@
     });
 
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualVacSemanaSanta");
+        localStorage.removeItem("keyCircularActualFinPeriodo");
 
-        var keyCir = localStorage.getItem("keyCircularActualFinPeriodo");
+        var keyCir = localStorage.getItem("keyCircularActualActPHP"); 
         $("#modal_t").text("");
         var message = '';
          
         if (keyCir == null) {
-            message = getHtmlCircularFinPeriodo();
+            message = getCircularMant();
             $("#modal-show-alerts-content").html(message);
-            $("#mymodalShowAlerts").modal("show");
+           // $("#mymodalShowAlerts").modal("show");
         } else {
             $("#modal_t").text("");
             // message = getMotivationalMessage();
@@ -732,6 +732,40 @@
 `;
         return message;
     }
+
+    function getCircularMant() {
+    
+    var message = '';
+
+   /*  $("#contentNotButtonDis").append($("<button>", {
+        class: "btn btn-danger",
+        id: "btnNotFalse",
+        text: "No volver a mostrar",
+        "data-not": "keyCircularActualActPHP"
+    })); */
+
+    if (keyCir == null) {
+        message = `
+            <div class="alert alert-warning" role="alert" style="font-size:16px;">
+                <h4><strong>⚠️ Aviso Importante</strong></h4>
+                <p>
+                    Se informa a todos los usuarios que la plataforma <strong>IURIS</strong> estará fuera de servicio
+                    a partir del <strong>17 de junio de 2026 a las 6:00 p.m.</strong>, debido a labores de actualización,
+                    mantenimiento y despliegue de mejoras.
+                </p>
+                <p>
+                    Se estima que el servicio será restablecido el <strong>19 de junio de 2026</strong>.
+                    Durante este periodo no será posible acceder a las funcionalidades del sistema.
+                </p>
+                <p>
+                    Agradecemos su comprensión y ofrecemos disculpas por los inconvenientes que esta situación pueda generar.
+                </p>
+            </div>
+        `;
+    }
+
+    return message;
+}
 
     function getCircular() {
         var keyCir = localStorage.getItem("keyCircularActualTurnos");

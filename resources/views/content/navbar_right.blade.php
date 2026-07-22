@@ -65,7 +65,7 @@
 
                         <div class="glass-content">
                             <div class="glass-text">
-                                {{ $notification->data['message'] }}
+                                {{ isset($notification->data['message']) ? $notification->data['message'] : 'Mensaje no disponible' }}
                             </div>
 
                             <small class="glass-time">

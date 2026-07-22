@@ -1024,11 +1024,14 @@ $(function () {
     $("#table_required_anexos tr").each((element, obj) => {
       if ($(obj).attr("data-required") == "true") {
         validfile = false;
-        message += $(obj).attr("data-label") + "<br>";       
-      } 
+        message += $(obj).attr("data-label") + "<br>";
+      }
 
     })
 
+    var cantidadHechos = $('#content_hechos_pretensiones-206 textarea').length;
+    var cantidadPretensiones = $('#content_hechos_pretensiones-207 textarea').length;
+  
 
     if (!validfile) {
       Swal.fire({
@@ -1039,7 +1042,7 @@ $(function () {
         confirmButtonText: "Ok",
       });
 
-    } else if (anexos <= 0) {
+    } else if (cantidadHechos <= 0 || cantidadPretensiones <= 0) {
       Swal.fire({
         title: "Recuerda subir los hechos o pretensiones requeridos!",
         icon: "warning",

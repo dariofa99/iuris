@@ -14,7 +14,7 @@ class CreatePersonasExternasTable extends Migration
     public function up()
     {
         Schema::create('personas_externas', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('tipo_persona');
 
             $table->boolean('estado')->default(1);
@@ -27,7 +27,7 @@ class CreatePersonasExternasTable extends Migration
 
 
         Schema::create('personas_externas_preguntas', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             // $table->string('con_has_user_id');
 
             $table->integer('orden');
