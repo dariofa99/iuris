@@ -18,13 +18,24 @@ use App\Notifications\UserNotification;
 use App\PdfReporte;
 use App\PdfReporteDestino;
 use App\Periodo;
+use App\Services\SegmentosService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ActuacionController extends Controller
 {
+
+
+  private $segmentosService;
+
+  function __construct(SegmentosService $segmentosService)
+  {
+    $this->segmentosService = $segmentosService;
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -140,7 +151,7 @@ class ActuacionController extends Controller
   public function create()
   {
     $expediente = Expediente::where('expid', '2019B-11')->first();
-   
+
     //dd($actuaciones);
     //
   }
@@ -723,5 +734,52 @@ class ActuacionController extends Controller
     $actuacion->save();
 
     return response()->json($actuacion->actestado_id);
+  }
+
+  function getCasosAbandono()
+  {
+    
+
+    $segmento = $this->segmentosService->getSegmentoActivo();
+    //dd($segmento);
+    $casos = DB::table('expedientes')
+      ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
+      ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
+      ->join('users as estudiante', 'estudiante.idnumber', '=', 'asignacion_caso.asigest_id')
+      ->join('users as solicitante', 'solicitante.idnumber', '=', 'expedientes.expidnumber')
+      ->join('users as docente', 'docente.idnumber', '=', 'asignacion_docente_caso.docidnumber')
+      ->join('ref_estados', 'ref_estados.id', '=', 'expedientes.expestado_id')
+      ->join('ref_tipproceso', 'ref_tipproceso.id', '=', 'expedientes.exptipoproce_id')
+      ->select([
+        'expedientes.expid',
+        'asignacion_caso.fecha_asig',
+        DB::raw("CONCAT(estudiante.name,' ',estudiante.lastname) as estudiante"),
+        DB::raw("CONCAT(solicitante.name,' ',solicitante.lastname) as usuario_sol"),
+        'ref_estados.nombre_estado as estado',
+        'ref_tipproceso.ref_tipproceso as proceso',
+        DB::raw("CONCAT(docente.name,' ',docente.lastname) as docente_as"),
+        'expedientes.exphechos',
+        'expedientes.exprtaest'
+      ])
+      ->selectSub(function ($query) {
+        $query->from('actuacions')
+          ->selectRaw('MAX(created_at)')
+          ->whereColumn('actuacions.actexpid', 'expedientes.expid');
+      }, 'fecha_ultima_actuacion')
+      ->selectSub(function ($query) {
+        $query->from('historial_datos_casos')
+          ->selectRaw('MAX(created_at)')
+          ->whereColumn('historial_datos_casos.hisdc_expidnumber', 'expedientes.expid');
+      }, 'fecha_redaccion')
+      ->whereIn('ref_estados.id', [1, 3])
+      ->where('expedientes.expidnumberest', '<>', 3030)
+      ->whereIn('asignacion_caso.periodo_id',  [9, 10])
+      ->where('expedientes.exptipoproce_id', '<>', 1)
+      ->where('asignacion_caso.activo', 1)
+      ->distinct()
+      ->orderBy('fecha_ultima_actuacion', 'asc')
+      ->paginate(5);
+
+    return view('myforms.reportes.casos_olvidados', compact('casos'));
   }
 }

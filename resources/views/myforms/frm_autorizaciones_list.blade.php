@@ -32,7 +32,8 @@
             @include('myforms.frm_autorizaciones_list_ajax')
         </div>
     </div>
-
+ @include('myforms.components_exp.frm_modal_create_autorizacion')
+ 
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->

@@ -22,7 +22,7 @@ export class ExpedientesService {
 
     }
 
-   
+
     async store(request) {
         const response = await fetch(BASE_URL + 'expedientes', {
             method: 'POST',
@@ -64,7 +64,7 @@ export class ExpedientesService {
         return topics;
 
     }
-    
+
     async pausarExpediente(request) {
         const response = await fetch(BASE_URL + 'expedientes/pausar', {
             method: 'POST',
@@ -149,7 +149,7 @@ export class ExpedientesService {
 
     }
 
-     async getDetailsEstudiante(estudiante_id) {
+    async getDetailsEstudiante(estudiante_id) {
         const response = await fetch(BASE_URL + 'expedientes/get/exp/rama/student/' + estudiante_id, {
             method: 'GET',
             headers: {
@@ -168,9 +168,9 @@ export class ExpedientesService {
         return topics;
 
     }
-    
+
     async getTeacherCases(request) {
-        const response = await fetch(BASE_URL + 'expedientes/get/teachers?'+ new URLSearchParams(request), {
+        const response = await fetch(BASE_URL + 'expedientes/get/teachers?' + new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -270,6 +270,26 @@ export class ExpedientesService {
         return topics;
     }
 
+    async rechazarAutorizacionNotificacion(request) {
+        const response = await fetch(BASE_URL + 'expedientes/rechazar/autorizacion', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
     async addAsesoria(request) {
         const response = await fetch(BASE_URL + 'asesorias', {
             method: 'POST',
@@ -349,7 +369,7 @@ export class ExpedientesService {
         return topics;
     }
 
-       async removeUserExpediente(id) {
+    async removeUserExpediente(id) {
         const response = await fetch(BASE_URL + 'expedientes/remove/user/' + id, {
             method: 'DELETE',
             headers: {
@@ -366,7 +386,7 @@ export class ExpedientesService {
         }
         const topics = await response.json();
         return topics;
-    } 
+    }
     async addActuacion(formData) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -946,7 +966,7 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
     }
-    
+
     async storeProcJudicial(formData) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -955,7 +975,7 @@ export class ExpedientesService {
             xhr.upload.addEventListener('progress', (event) => {
                 if (event.lengthComputable) {
                     const percentage = (event.loaded / event.total) * 100;
-                    this.showProgress(percentage); 
+                    this.showProgress(percentage);
                 }
             });
             xhr.onload = () => {
@@ -978,7 +998,7 @@ export class ExpedientesService {
     }
 
     async editExpProcJudicial(id) {
-        const response = await fetch(BASE_URL + "expedientes/proceso/judicial/"+id+"/edit", {
+        const response = await fetch(BASE_URL + "expedientes/proceso/judicial/" + id + "/edit", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -988,14 +1008,14 @@ export class ExpedientesService {
             }
         });
         if (!response.ok) {
-            const message = `An error has occured: ${response.status}`;           
+            const message = `An error has occured: ${response.status}`;
             throw new Error(message);
         }
         const topics = await response.json();
         return topics;
     }
     async getPausasExpediente(request) {
-        const response = await fetch(BASE_URL + "expedientes/get/pausas?"+ new URLSearchParams(request), {
+        const response = await fetch(BASE_URL + "expedientes/get/pausas?" + new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -1005,14 +1025,14 @@ export class ExpedientesService {
             }
         });
         if (!response.ok) {
-            const message = `An error has occured: ${response.status}`;           
+            const message = `An error has occured: ${response.status}`;
             throw new Error(message);
         }
         const topics = await response.json();
         return topics;
     }
-    async deletePausa(id,request) {
-        const response = await fetch(BASE_URL + "expedientes/delete/pausa/"+id+"?"+ new URLSearchParams(request), {
+    async deletePausa(id, request) {
+        const response = await fetch(BASE_URL + "expedientes/delete/pausa/" + id + "?" + new URLSearchParams(request), {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
@@ -1022,14 +1042,14 @@ export class ExpedientesService {
             }
         });
         if (!response.ok) {
-            const message = `An error has occured: ${response.status}`;           
+            const message = `An error has occured: ${response.status}`;
             throw new Error(message);
         }
         const topics = await response.json();
         return topics;
     }
-    async updatePausa(id,request) {
-        const response = await fetch(BASE_URL + 'expedientes/update/pausa/'+id, {
+    async updatePausa(id, request) {
+        const response = await fetch(BASE_URL + 'expedientes/update/pausa/' + id, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
@@ -1048,10 +1068,10 @@ export class ExpedientesService {
         return topics;
     }
     showProgress(percentage) {
-        const progressDiv = document.getElementById('progressbarwait');       
+        const progressDiv = document.getElementById('progressbarwait');
         progressDiv.textContent = `${parseInt(percentage)}%`;
         progressDiv.style.width = `${parseInt(percentage)}%`;
-    
+
     }
 
     async addUser(request) {

@@ -10,6 +10,7 @@ use App\User;
 use App\Actuacion;
 use App\AsignacionCaso;
 use App\AsigDocenteCaso;
+use App\Autorizacion;
 use App\Conciliacion;
 use App\Events\LoginEvent;
 use App\ExpedientePausas;
@@ -19,6 +20,7 @@ use App\Solicitud;
 use App\HistorialDatosCaso;
 use App\Jobs\ProcessEmailSendNotificarDirector;
 use App\Jobs\ProcessEmailSendPJ;
+use App\Jobs\ProcessSendNotificationGeneral;
 use App\Nota;
 use App\Notifications\NotificarDirector;
 use App\Notifications\SolicitudDocenteCaso;
@@ -1711,5 +1713,25 @@ group by rd.subrama ;*/
       ->get();
 
     return response()->json($expedientes);
+  }
+
+  public function rechazarAutorizacionNotificacion(Request $request)
+  {
+    $autorizacion = Autorizacion::find($request->id);
+    $expediente = $autorizacion->asignacion->expediente;
+
+    $user = $expediente->estudiante;
+    $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+    $concepto = $request->asunto;
+    $concepto .= "\n" . "Expediente: " . $expediente->expid;
+    $concepto_html = nl2br(e($concepto));
+    $subject = 'Solicitud de autorización rechazada';
+    $url = url("/expedientes/{$expediente->expid}/edit#autorizaciones");
+    ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+
+    $autorizacion->estado_notificado = 1;
+    $autorizacion->save();
+
+    return response()->json($request->all());
   }
 }

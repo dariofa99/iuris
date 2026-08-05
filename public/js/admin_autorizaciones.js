@@ -17,6 +17,105 @@ $(document).ready(function () {
         window.location.reload();
         return false;
     });
+
+     $("#table_list_autorizaciones").on("click", ".btn_detalles_autorizacion", async function (e) {
+        var id = $(this).attr("data-id");
+        $("#wait").show();
+        let res = await expedientesService.editAutorizacion(id);
+        $("#myformCreateAutorizacion").attr("id", "myformEditAutorizacion");
+        //$("#myformEditAutorizacion input[name=id]").val(res.id);
+        $("#myformEditAutorizacion input[name=nombre_estudiante]").val(
+            res.nombre_estudiante
+        );
+        $("#myformEditAutorizacion input[name=num_identificacion]").val(
+            res.num_identificacion
+        );
+        $("#myformEditAutorizacion input[name=doc_expedicion]").val(
+            res.doc_expedicion
+        );
+        $("#myformEditAutorizacion input[name=num_carne]").val(
+            res.num_carne
+        );
+        $("#myformEditAutorizacion input[name=calidad_de]").val(
+            res.calidad_de
+        );
+        $("#myformEditAutorizacion input[name=tipo_proceso]").val(
+            res.tipo_proceso
+        );
+        $("#myformEditAutorizacion input[name=num_radicado]").val(
+            res.num_radicado
+        );
+         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
+        $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
+        $("#myformEditAutorizacion select[name=genero]").val(res.genero);
+        $("#myformEditAutorizacion button").hide();
+        disabledForm('myformEditAutorizacion')
+        $("#mymodalCreateAutorizacion").modal("show");
+        $("#wait").hide();
+    });
+
+    $("#table_list_autorizaciones").on("click", ".btn_rechazar_autorizacion", async function (e) {
+        e.preventDefault();
+        var id = $(this).attr("data-id");
+        var request = { estado: $(this).attr("data-estado") == 0 ? 1 : 0, vista: "expedientes", id: id };
+       Swal.fire({
+            title: "Notificar rechazo de autorización",
+            html: "<small>Se enviará un correo al estudiante notificando el rechazo de la autorización. A continuación, indique el motivo del rechazo.</small>",
+            icon: "warning",
+            input: 'textarea',
+            inputPlaceholder: '¿Por qué rechaza la autorización?',
+            inputAttributes: {
+                rows: 90,  // Número de filas del textarea
+                cols: 500  // Número de columnas del textarea
+            },
+            //value: '', // Valor inicial del textarea
+            inputValue: 'Por favor, actualice la información del formulario indicando ¿para qué requiere la autorización?', // Valor inicial del textarea
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si, rechazar',
+            confirmButtonClass: 'btn-success',
+            allowEmpty: false, // Evita el valor vacío en el textarea
+            preConfirm: async (text) => {
+                if (text !== '') {
+                    $("#wait").show();
+                    request["asunto"] = text;
+                    let response = await expedientesService.rechazarAutorizacionNotificacion(request);
+                    if (response.errors) {
+                        $("#wait").hide();
+                        response.errors.forEach(error => {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: 'Ups! Algo fallo',
+                                html: error,
+                                showConfirmButton: false,
+                                timer: 5500
+                            });
+                        });
+                    } else {
+                        $("#wait").hide();
+
+                         Swal.fire({
+                            title: "Notificación enviada con éxito",
+                            html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
+                            icon: "info",
+                            confirmButtonColor: "#3085d6",
+                            confirmButtonText: "OK",
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.reload(true)
+                            }
+                        }); 
+                    }
+                } else {
+                    Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
+
+                }
+                $("#wait").hide();
+            }
+        });
+    });
+
 });
 /////////////////////////////////////////////
 function hideButtReasCaso() {
@@ -67,7 +166,7 @@ function fillModalHistoryDataCase(response) {
         $("#modal-conten-js").html(inforhis);
         $("#mymodaljs").modal("show");
     }
-}
+} 
 function validarNotas(errors, form) {
     var notaapl = $("#" + form + " input[name=ntaaplicacion]").val();
     var notacon = $("#" + form + " input[name=ntaconocimiento]").val();

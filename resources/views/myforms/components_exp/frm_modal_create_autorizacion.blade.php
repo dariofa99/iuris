@@ -66,8 +66,13 @@
     <input type="text" required class="form-control  required form-control-sm" id="juzgado" name="juzgado" >
   </div>
 
+    <div class="form-group col-md-12">
+    <label for="concepto">¿Para que requiere autorización?</label>
+    <textarea required class="form-control  required form-control-sm" id="concepto" name="concepto" rows="4"></textarea>
+  </div>
+
  <div class="form-group col-md-12">
-     <button type="submit" class="btn btn-primary btn-block">Crear</button>
+     <button type="button" id="btn_create_autorizacion" class="btn btn-primary btn-block">Crear</button>
   </div>
 
 

@@ -136,6 +136,14 @@
                                         <p>Administrar encuestas</p>
                                     </a>
                                 </li>
+
+                                <li class="nav-item ml-3">
+                                    <a href="{{ url('estudiantes/casos/olvidados') }}" class="nav-link">
+
+                                        <p> Ver casos olvidados</p>
+                                    
+                                    </a>
+                                </li>
                             @endif
 
                             @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
@@ -221,13 +229,7 @@
                                         </p>
                                     </a>
                                 </li>
-                                <li class="nav-item ml-3">
-                                    <a href="{{ route('reparto.index') }}" class="nav-link">
 
-                                        <p> Reparto
-                                        </p>
-                                    </a>
-                                </li>
 
                                 @if (currentUser()->can('admin_actasandmail'))
                                     <li class="nav-item ml-3">
@@ -237,7 +239,7 @@
                                     </li>
                                 @endif
 
-                                
+
                                 @if (currentUser()->can('admin_actasandmail'))
                                     <li class="nav-item ml-3">
                                         <a href="{{ route('concpers.index') }}" class="nav-link">

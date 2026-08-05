@@ -54,6 +54,19 @@
                             {{ $autorizacion->estado ? 'Quitar Autorizado' : 'Autorizar' }}
                         </button>
                     @endif
+                    @if (!$autorizacion->estado and (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
+                        <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
+                            class="btn btn-success btn-sm btn-block btn_detalles_autorizacion">
+                            Detalles</button>
+                        </button>
+                    @endif
+
+                      @if (!$autorizacion->estado and (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
+                        <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
+                            class="btn btn-{{ $autorizacion->estado_notificado ? 'info' : 'primary' }} btn-sm btn-block btn_rechazar_autorizacion">
+                          {{$autorizacion->estado_notificado ? 'Notificado' : 'Notificar'}}</button>
+                        </button>
+                    @endif
 
                     @if ($autorizacion->estado)
                         <a href="/autorizaciones/descargar/{{ $autorizacion->autorizacion_id }}" target="_blank"

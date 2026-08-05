@@ -270,6 +270,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Expedientes
     Route::resource('expedientes', 'ExpedienteController');
     Route::post('expedientes/cambiar/fecha/evaluacion', 'ExpedienteController@cambiarFechaEvaluacion');
+    
+    Route::post('expedientes/rechazar/autorizacion', 'ExpedienteController@rechazarAutorizacionNotificacion');
 
     Route::get('expedientes/historial/{exp}/{tipo}', 'ExpedienteController@historialDatosCaso');
     Route::get('expedientes/selectconest/{texcon}', 'ExpedienteController@selectest');
@@ -517,6 +519,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::post('solicitudes/store/documento', 'SolicitudesController@storeDocument');
+
+    Route::get('estudiantes/casos/olvidados', 'ActuacionController@getCasosAbandono');
 
     //prueba
     Route::get('prueba/expedienteasig', 'ExpedienteController@pruebaasig');
