@@ -33,9 +33,9 @@
         </div>
     </div>
  @include('myforms.components_exp.frm_modal_create_autorizacion')
- 
+
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
-    <script type="module"   src={{asset("js/admin_autorizaciones.js")}}></script>
+    <script type="module"   src={{asset("js/admin_autorizaciones.js?v=". config('app_config.asset_version')) }}></script>
 @endpush
