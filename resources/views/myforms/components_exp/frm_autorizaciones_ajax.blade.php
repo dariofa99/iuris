@@ -2,31 +2,38 @@
     @foreach ($expediente->asignacion->autorizaciones as $autorizacion)
         <tr>
             <td>
-                {{ $autorizacion->nombre_estudiante }}
+                {{ $autorizacion->nombre_estudiante == '' ? 'Pendiente' : $autorizacion->nombre_estudiante }}
             </td>
 
             <td>
-                {{ $autorizacion->calidad_de }}
+                {{ $autorizacion->calidad_de == '' ? 'Pendiente' : $autorizacion->calidad_de }}
             </td>
             <td>
-                {{ $autorizacion->tipo_proceso }}
+                {{ $autorizacion->tipo_proceso == '' ? 'Pendiente' : $autorizacion->tipo_proceso }}
             </td>
             <td>
-                <span class="pull-center badge bg-{{ $autorizacion->estado ? 'green' : 'warning' }} dis-block ">
-                    {{ $autorizacion->estado ? 'Autorizado' : 'Sin autorizar' }}
+                <span style="background-color: {{ $autorizacion->ref_estado->color  }};" class="pull-center badge dis-block ">
+                    {{ $autorizacion->ref_estado ? $autorizacion->ref_estado->ref_nombre : 'Sin autorizar' }}
                 </span>
             </td>
             <td>
                 @if (!isset($readonly) || (isset($readonly) and !$readonly))
                     @if (
-                        !$autorizacion->estado and
+                        !$autorizacion->estado and $autorizacion->ref_estado->id == 280 and
                             currentUser()->id == $autorizacion->user_solicitante_id ||
-                                currentUser()->hasRole('dirgral') ||
-                                currentUser()->hasRole('amatai'))
+                                (currentUser()->hasRole('dirgral') ||
+                                currentUser()->hasRole('amatai')))
+
+
                         <button data-id="{{ $autorizacion->id }}"
                             class="btn btn-primary btn-sm btn_editar_autorizacion">Editar</button>
                         <button data-id="{{ $autorizacion->id }}"
                             class="btn btn-danger btn-sm btn_eliminar_autorizacion">Eliminar</button>
+
+
+                    @elseif(currentUser()->hasRole('estudiante') and !$autorizacion->estado)
+                        <button data-id="{{ $autorizacion->id }}"
+                            class="btn btn-primary btn-sm btn_editar_autorizacion">Actualizar información</button>
                     @endif
 
                     @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
@@ -44,16 +51,16 @@
                         Descargar</a>
                 @endif
 
-             
-                    @if (
-                        !$autorizacion->estado and
-                            currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
-                        <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
-                            class="btn btn-{{ $autorizacion->estado_notificado ? 'info' : 'primary' }} btn-sm btn_rechazar_autorizacion">
-                            {{ $autorizacion->estado_notificado ? 'Notificado' : 'Notificar' }}</button>
-                        </button>
-                    @endif
-    
+
+                @if (
+                    !$autorizacion->estado and
+                        currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
+                    <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
+                        class="btn btn-{{ $autorizacion->estado_notificado ? 'info' : 'primary' }} btn-sm btn_rechazar_autorizacion">
+                        {{ $autorizacion->estado_notificado ? 'Notificado' : 'Notificar' }}</button>
+                    </button>
+                @endif
+
 
             </td>
         </tr>

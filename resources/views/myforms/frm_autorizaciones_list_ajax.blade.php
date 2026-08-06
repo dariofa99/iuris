@@ -39,16 +39,16 @@
                     {{ $autorizacion->asignacion->asigexp_id }}
                 </td>
                 <td>
-                    <span class="pull-center badge bg-{{ $autorizacion->estado ? 'success' : 'warning' }} dis-block ">
-                        {{ $autorizacion->estado ? 'Autorizado' : 'Sin autorizar' }}
-                    </span>
+                      <span style="background-color: {{ $autorizacion->ref_estado->color  }};color:#fff" class="pull-center badge dis-block ">
+                    {{ $autorizacion->ref_estado ? $autorizacion->ref_estado->ref_nombre : 'Sin autorizar' }}
+                </span>
                 </td>
                 <td>
                     <a href="/expedientes/{{ $autorizacion->asignacion->asigexp_id }}/edit"
                         class="btn btn-info btn-sm btn-block btn_detalles_autorizacion">
                         Ir al caso</a>
 
-                    @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
+                    @if (($autorizacion->ref_estado->id == 281 || $autorizacion->ref_estado->id == 282) && (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
                         <button data-id="{{ $autorizacion->id }}" data-estado="{{ $autorizacion->estado }}"
                             class="btn btn-{{ $autorizacion->estado ? 'default' : 'warning' }} btn-sm btn-block btn_change_estado_autorizacion">
                             {{ $autorizacion->estado ? 'Quitar Autorizado' : 'Autorizar' }}

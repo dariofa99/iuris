@@ -60,7 +60,7 @@ function activeOtherInput(e) {
 $(document).ready(function () {
     $(document).on("change", ".input_user_ad", activeOtherInput);
 
-    
+
 
     $("#table_list_model").on("click", ".pagination a", async function (e) {
         e.preventDefault();
@@ -412,6 +412,7 @@ function resetForm(form) {
     $("#" + form + " input[type='text']").val("").prop("disabled", false);
     $("#" + form + " input[type='email']").val("").prop("disabled", false);
     $("#" + form + " input[type='number']").val("").prop("disabled", false);
+    $("#" + form + " textarea").val("").prop("disabled", false);
     $("#" + form + " select").val("").prop("disabled", false);
     $("#" + form + " input[type='radio']").prop("disabled", false);
     $("#" + form + " input[type='checkbox']").prop("disabled", false);

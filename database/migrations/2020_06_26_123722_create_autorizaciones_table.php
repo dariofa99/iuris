@@ -30,6 +30,10 @@ class CreateAutorizacionesTable extends Migration
             $table->boolean('estado_notificado')->default(0);
             $table->integer('asig_caso_id')->unsigned();
             $table->foreign('asig_caso_id')->references('id')->on('asignacion_caso');
+
+            $table->integer('estado_id')->unsigned(); // 
+            $table->foreign('estado_id')->references('id')->on('referencias_tablas');
+
             $table->integer('user_solicitante_id')->unsigned();
             $table->foreign('user_solicitante_id')->references('id')->on('users'); //expid 
             $table->integer('user_aprobo_id')->unsigned();

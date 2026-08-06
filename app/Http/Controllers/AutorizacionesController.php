@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Autorizacion;
 use App\AsignacionCaso;
+use App\Jobs\ProcessSendNotificationGeneral;
 use App\Services\AutorizacionesService;
 use App\Services\ExpedientesService;
 use Illuminate\Support\Facades\Auth;
@@ -64,18 +65,39 @@ class AutorizacionesController extends Controller
         $expediente = $this->expedienteService->findWithFilter([
             'expid' => $request->exp_id
         ]);
-        $asignacion = $expediente->asignacion;
-        $autorizacion = new Autorizacion($request->all());
-        $autorizacion->user_solicitante_id = Auth::user()->id;
-        $autorizacion->user_aprobo_id = Auth::user()->id;
-        $autorizacion->asig_caso_id = $asignacion->id;
-        $autorizacion->save();
-        if (session()->has('sede')) {
-            $autorizacion->sedes()->attach(session('sede')->id_sede);
-        }
-        $view = view('myforms.components_exp.frm_autorizaciones_ajax', compact('expediente'))->render();
+        try {
+            //code...
 
-        return response()->json(['view' => $view]);
+            $asignacion = $expediente->asignacion;
+            $autorizacion = new Autorizacion($request->all());
+            $autorizacion->user_solicitante_id = Auth::user()->id;
+            $autorizacion->user_aprobo_id = Auth::user()->id;
+            $autorizacion->asig_caso_id = $asignacion->id;
+            $autorizacion->estado_id = 280; // Estado inicial de la autorización
+            $autorizacion->save();
+            if (session()->has('sede')) {
+                $autorizacion->sedes()->attach(session('sede')->id_sede);
+            }
+            $view = view('myforms.components_exp.frm_autorizaciones_ajax', compact('expediente'))->render();
+            if ($autorizacion) {
+                $user = $expediente->estudiante;
+                $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+                $concepto = "Su solicitud de autorización ha sido aprobada por el docente asesor: \n\n";
+                $concepto .= $request->concepto;
+
+                $concepto .= "\n\n" . "Por favor complete la información requerida en la autorización para su aprobación por parte de dirección administrativa.";
+
+                $concepto .= "\n" . "Expediente: " . $expediente->expid;
+                $concepto_html = nl2br(e($concepto));
+                $subject = 'Solicitud de autorización';
+                $url = url("/expedientes/{$expediente->expid}/edit#autorizaciones");
+                ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+            }
+
+            return response()->json(['view' => $view]);
+        } catch (\Throwable $th) {
+            return response()->json(['errors' => ["Error al guardar la autorización: " . $th->getMessage()]]);
+        }
     }
 
     /**
@@ -113,13 +135,15 @@ class AutorizacionesController extends Controller
 
         $autorizacion =  $this->autorizacionesService->find($id);
         $autorizacion->fill($request->all());
-
+        $autorizacion->estado_id = 281;
         if ($request->has('estado')) {
             if ($request->estado == 1) {
                 $autorizacion->fecha_autorizado = date('Y-m-d');
                 $autorizacion->user_aprobo_id = currentUser()->id;
+                $autorizacion->estado_id = 282;
             } else {
                 $autorizacion->fecha_autorizado = null;
+                  $autorizacion->estado_id = 281;
             }
             //  $autorizacion->save();
         }

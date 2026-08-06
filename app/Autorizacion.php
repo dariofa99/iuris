@@ -16,7 +16,7 @@ class Autorizacion extends Model
     protected $fillable = [
         'nombre_estudiante', 'num_identificacion', 'doc_expedicion', 'num_carne', 'calidad_de',
         'tipo_proceso', 'num_radicado', 'juzgado', 'estado','estado_notificado', 'asig_caso_id', 'user_solicitante_id',
-        'user_aprobo_id', 'genero', 'fecha_autorizado','concepto'
+        'user_aprobo_id', 'genero', 'fecha_autorizado','concepto','estado_id'
     ];
 
 
@@ -24,6 +24,11 @@ class Autorizacion extends Model
     {
         return $this->belongsTo(AsignacionCaso::class, 'asig_caso_id', 'id');
     }
+
+    public function ref_estado()
+   {
+      return $this->belongsTo(TablaReferencia::class, 'estado_id', 'id');
+   }
 
     public function sedes()
     {

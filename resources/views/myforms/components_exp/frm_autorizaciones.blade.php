@@ -1,5 +1,5 @@
  @if (!$readonly and 
- (currentUser()->hasRole('estudiante')
+ (currentUser()->hasRole('docente')
  // or currentUser()->hasRole('diradmin')
   or currentUser()->hasRole('dirgral')
   or currentUser()->hasRole('amatai')))
@@ -11,6 +11,14 @@
              </button>
          </div>
      </div>
+@else
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <strong>Nota:</strong> A partir de ahora, las autorizaciones deben ser solicitadas por el docente asesor.
+            </div>
+        </div>
+    </div>
  @endif
  <div class="row">
      <div class="col-md-12">

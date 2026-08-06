@@ -3026,7 +3026,9 @@ $(document).ready(function () {
             .removeClass("btn-warning")
             .addClass("btn-primary")
             .text("Crear").show();
+           // $("#row_create_autorizacion").remove();
         resetForm('myformCreateAutorizacion');
+
         $("#mymodalCreateAutorizacion").modal("show");
     });
 
