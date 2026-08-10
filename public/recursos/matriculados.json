@@ -1,922 +1,508 @@
 [
+    
  {
-  "codigo_alumno": 221051005,
-  "identificacion": 1080040599,
-  "nombres": "JULIETH FERNANDA",
-  "apellidos": "GAMEZ GAMEZ",
-  "email": "gamezjfg@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223052033,
+  "identificacion": 1126444476,
+  "nombres_completos": "AGREDO MADROÑERO BRAYAN ANDREY",
+  "apellidos": "AGREDO MADROÑERO",
+  "nombres": "BRAYAN ANDREY",
+  "email": "andreyagredomadro@gmail.com"
  },
  {
-  "codigo_alumno": 221052022,
-  "identificacion": 1085343585,
-  "nombres": "JULIO ANDRES",
-  "apellidos": "DE LA CRUZ VELASCO",
-  "email": "andrez98j@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222052069,
+  "identificacion": 1193424801,
+  "nombres_completos": "CHAMORRO ERASO LEIDY CATHERINE",
+  "apellidos": "CHAMORRO ERASO",
+  "nombres": "LEIDY CATHERINE",
+  "email": "lcchamorro22b@udenar.edu.co"
  },
  {
-  "codigo_alumno": 222051036,
-  "identificacion": 1004135459,
-  "nombres": "LIZETH VIVIANA",
-  "apellidos": "AYALA URBANO",
-  "email": "vivianaayala143@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052033,
+  "identificacion": 1193035405,
+  "nombres_completos": "CHAVEZ NOGUERA GABRIELA ALEJANDRA",
+  "apellidos": "CHAVEZ NOGUERA",
+  "nombres": "GABRIELA ALEJANDRA",
+  "email": "gabriela.alejandra0803@gmail.com"
  },
  {
-  "codigo_alumno": 222052049,
-  "identificacion": 1085257994,
-  "nombres": "LAURA SOFIA",
-  "apellidos": "BRAVO RODRIGUEZ",
-  "email": "sofiabravo824@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 221052042,
+  "identificacion": 1004539060,
+  "nombres_completos": "CHITAN PALMA MARIBEL DANIELA",
+  "apellidos": "CHITAN PALMA",
+  "nombres": "MARIBEL DANIELA",
+  "email": "maribeldaniel202@gmail.com                        "
  },
  {
-  "codigo_alumno": 220052055,
-  "identificacion": 1085319584,
-  "nombres": "JHOSTIN JESUS",
-  "apellidos": "PEJENDINO BENAVIDES",
-  "email": "jhostinbenavides94@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222052010,
+  "identificacion": 1004134499,
+  "nombres_completos": "CISNEROS INSUASTI LINA ALEJANDRA",
+  "apellidos": "CISNEROS INSUASTI",
+  "nombres": "LINA ALEJANDRA",
+  "email": "linacisneros007@gmail.com                         "
  },
  {
-  "codigo_alumno": 221051034,
-  "identificacion": 1193551067,
-  "nombres": "LUISA MARIA",
-  "apellidos": "REINA LARA",
-  "email": "luisamariareina15@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 221052003,
+  "identificacion": 1010059995,
+  "nombres_completos": "ERAZO ROSERO OLIVER DAVID",
+  "apellidos": "ERAZO ROSERO",
+  "nombres": "OLIVER DAVID",
+  "email": "davider28@hotmail.com                             "
  },
  {
-  "codigo_alumno": 2140512185,
-  "identificacion": 1085302489,
-  "nombres": "DANIEL FERNANDO",
-  "apellidos": "JOJOA HERNANDEZ",
-  "email": "danjohernandez@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223052020,
+  "identificacion": 1087642033,
+  "nombres_completos": "LASSO ALVEAR JEYLI YULISA",
+  "apellidos": "LASSO ALVEAR",
+  "nombres": "JEYLI YULISA",
+  "email": "yulisa123lasso@gmail.com                          "
  },
  {
-  "codigo_alumno": 221051018,
-  "identificacion": 1004235101,
+  "codigo_alumno": 221052028,
+  "identificacion": 1004234664,
+  "nombres_completos": "MARTINEZ MUÑOZ SARA MARIA",
+  "apellidos": "MARTINEZ MUÑOZ",
+  "nombres": "SARA MARIA",
+  "email": "saramartinez20208@gmail.com                       "
+ },
+ {
+  "codigo_alumno": 222052006,
+  "identificacion": 1010144752,
+  "nombres_completos": "MENESES PANTOJA KENNEDY",
+  "apellidos": "MENESES PANTOJA",
+  "nombres": "KENNEDY",
+  "email": "kennedypantoja472@gmail.com                       "
+ },
+ {
+  "codigo_alumno": 223052005,
+  "identificacion": 1080691063,
+  "nombres_completos": "MORILLO SANTACRUZ CRISTIAN FELIPE",
+  "apellidos": "MORILLO SANTACRUZ",
+  "nombres": "CRISTIAN FELIPE",
+  "email": "jairomorillo78@gmail.com                          "
+ },
+ {
+  "codigo_alumno": 223052028,
+  "identificacion": 1089848407,
+  "nombres_completos": "ORTEGA CABRERA ANGELA MARIA",
+  "apellidos": "ORTEGA CABRERA",
   "nombres": "ANGELA MARIA",
-  "apellidos": "CHAVEZ IZQUIERDO",
-  "email": "aizquierdo0512@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "email": "angela.ortegac13@gmail.com                        "
  },
  {
-  "codigo_alumno": 222051007,
-  "identificacion": 1080691005,
-  "nombres": "CARLOS MARIO",
-  "apellidos": "LONDOÑO ZAMBRANO",
-  "email": "carloslondonozambrano@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 219052163,
+  "identificacion": 1004234617,
+  "nombres_completos": "PALACIOS CORAL LUISA MARIA",
+  "apellidos": "PALACIOS CORAL",
+  "nombres": "LUISA MARIA",
+  "email": "lpalacios@udenar.edu.co                           "
  },
  {
-  "codigo_alumno": 222051025,
-  "identificacion": 1081052547,
-  "nombres": "YAZMIN PAOLA",
-  "apellidos": "TOBAR CORTES",
-  "email": "tobar4816@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052067,
+  "identificacion": 1085342194,
+  "nombres_completos": "PORTILLA ANDRADE CAROLINA ANDREA",
+  "apellidos": "PORTILLA ANDRADE",
+  "nombres": "CAROLINA ANDREA",
+  "email": "karo980707@gmail.com                              "
  },
  {
-  "codigo_alumno": 221051052,
-  "identificacion": 1080690045,
-  "nombres": "JAVIER SEBASTIAN",
-  "apellidos": "LOAIZA MEJIA",
-  "email": "sebasdg2@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052025,
+  "identificacion": 1085309038,
+  "nombres_completos": "PORTILLA ARIAS MARIO ANDRES",
+  "apellidos": "PORTILLA ARIAS",
+  "nombres": "MARIO ANDRES",
+  "email": "marioandres.17@hotmail.com                        "
  },
  {
-  "codigo_alumno": 220051013,
-  "identificacion": 1004134540,
-  "nombres": "JAIDER SEBASTIAN",
-  "apellidos": "VALENCIA ORTEGA",
-  "email": "jsvo1011@udenar.edu.co",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052014,
+  "identificacion": 1030020028,
+  "nombres_completos": "PORTILLO ESTRELLA SERGIO ANDRES",
+  "apellidos": "PORTILLO ESTRELLA",
+  "nombres": "SERGIO ANDRES",
+  "email": "sergioport2005@gmail.com                          "
  },
  {
-  "codigo_alumno": 221051021,
-  "identificacion": 1004690473,
-  "nombres": "DIANA MABEL",
-  "apellidos": "ERAZO COLIMBA",
-  "email": "dianamabelerazocolimba@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052038,
+  "identificacion": 1085900593,
+  "nombres_completos": "REVELO NAZATE WAGNER ALEXIS",
+  "apellidos": "REVELO NAZATE",
+  "nombres": "WAGNER ALEXIS",
+  "email": "rnalexis8@udenar.edu.co                           "
  },
  {
-  "codigo_alumno": 222051005,
-  "identificacion": 1081052406,
-  "nombres": "SAMUEL JOSUÉ",
-  "apellidos": "GUERRERO DORADO",
-  "email": "sasmuguedo@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 220052058,
+  "identificacion": 1123327196,
+  "nombres_completos": "RODRIGUEZ CANTICUS EDISON RICARDO",
+  "apellidos": "RODRIGUEZ CANTICUS",
+  "nombres": "EDISON RICARDO",
+  "email": "edison.rod@hotmail.com                            "
  },
  {
-  "codigo_alumno": 221051041,
-  "identificacion": 1004190803,
-  "nombres": "DIANA SOFIA",
-  "apellidos": "ORTEGA JOJOA",
-  "email": "dvdiana256@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052054,
+  "identificacion": 1085336333,
+  "nombres_completos": "ROSERO CHAMORRO LUIS FERNANDO",
+  "apellidos": "ROSERO CHAMORRO",
+  "nombres": "LUIS FERNANDO",
+  "email": "roseroluis877@gmail.com                           "
  },
  {
-  "codigo_alumno": 221051039,
-  "identificacion": 1004508378,
-  "nombres": "MAYER SANTIAGO",
-  "apellidos": "BENAVIDES CORDOBA",
-  "email": "santyma5@hotmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052066,
+  "identificacion": 1193273335,
+  "nombres_completos": "TOBAR VELASQUEZ ESTEFANY VALENTINA",
+  "apellidos": "TOBAR VELASQUEZ",
+  "nombres": "ESTEFANY VALENTINA",
+  "email": "valenv2833@gmail.com                              "
  },
  {
-  "codigo_alumno": 222052071,
-  "identificacion": 1193271387,
-  "nombres": "NEIVER DANILO",
-  "apellidos": "BUCHELI DIAZ",
-  "email": "danilobd27@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 223052015,
+  "identificacion": 36953294,
+  "nombres_completos": "VASCONEZ LOPEZ GLADYS DEL ROSARIO",
+  "apellidos": "VASCONEZ LOPEZ",
+  "nombres": "GLADYS DEL ROSARIO",
+  "email": "brujitag44@hotmail.com                            "
  },
  {
-  "codigo_alumno": 221051054,
-  "identificacion": 1193031935,
-  "nombres": "KELLY DAYANA",
-  "apellidos": "CABRERA BOTINA",
-  "email": "iemccpcabrera7.6@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051046,
+  "identificacion": 1004533169,
+  "nombres_completos": "BELTRAN YANDUN JAIDER YULIAN",
+  "apellidos": "BELTRAN YANDUN",
+  "nombres": "JAIDER YULIAN",
+  "email": "yulianbeltran499@gmail.com                        "
  },
  {
-  "codigo_alumno": 221052006,
-  "identificacion": 1081052580,
-  "nombres": "CAMILA ALEJANDRA",
-  "apellidos": "ENRIQUEZ YEPEZ",
-  "email": "alejaenri18@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051021,
+  "identificacion": 1081592272,
+  "nombres_completos": "BOLAÑOS MUÑOZ SHARICK VANESA",
+  "apellidos": "BOLAÑOS MUÑOZ",
+  "nombres": "SHARICK VANESA",
+  "email": "munozvanesa404@gmail. com                         "
  },
  {
-  "codigo_alumno": 222051017,
-  "identificacion": 1080042771,
-  "nombres": "JULIETH DANIELA",
-  "apellidos": "FIGUEROA CERON",
-  "email": "juliethdanifigueroa@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051090,
+  "identificacion": 1138524122,
+  "nombres_completos": "BURBANO ENRIQUEZ JOSE ALEJANDRO",
+  "apellidos": "BURBANO ENRIQUEZ",
+  "nombres": "JOSE ALEJANDRO",
+  "email": "jaburbanoenriquez@gmail.com                       "
  },
  {
-  "codigo_alumno": 220052045,
-  "identificacion": 1004133460,
-  "nombres": "RONALD NICOLÁS",
-  "apellidos": "ORTIZ LOPEZ",
-  "email": "fockall15@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051085,
+  "identificacion": 1089242137,
+  "nombres_completos": "BURBANO MONTERO MAYRA CAMILA",
+  "apellidos": "BURBANO MONTERO",
+  "nombres": "MAYRA CAMILA",
+  "email": "mcamilabm8@gmail.com                              "
  },
  {
-  "codigo_alumno": 220052041,
-  "identificacion": 1004133574,
-  "nombres": "JUAN FELIPE",
-  "apellidos": "IMBAGO VILLARREAL",
-  "email": "jua38888@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052002,
+  "identificacion": 1004190428,
+  "nombres_completos": "CABRERA BENAVIDES PAOLA XIMENA",
+  "apellidos": "CABRERA BENAVIDES",
+  "nombres": "PAOLA XIMENA",
+  "email": "pxcabrera@udenar.edu.co                           "
  },
  {
-  "codigo_alumno": 222052008,
-  "identificacion": 1085899202,
-  "nombres": "KATHERIN ALEJANDRA",
-  "apellidos": "HUALPA CHAMORRO",
-  "email": "kathealejahualpa@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052006,
-  "identificacion": 1004596328,
-  "nombres": "YASMIN YULIANA",
-  "apellidos": "CUASTUMAL ALTAMIRANO",
-  "email": "yasmin6328@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222051013,
-  "identificacion": 1081272960,
-  "nombres": "JAIDER ALEJANDRO",
-  "apellidos": "ORTEGA MORA",
-  "email": "ortegaalejandromora@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 220051039,
-  "identificacion": 1193126812,
-  "nombres": "YENNY GABRIELA",
-  "apellidos": "PORTILLA CEBALLOS",
-  "email": "yenyportilla20@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221051023,
-  "identificacion": 1004191363,
-  "nombres": "ANDRES FELIPE",
-  "apellidos": "HUERTAS RIASCOS",
-  "email": "andresfelipehuertas06@hotmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222051063,
-  "identificacion": 1080690988,
-  "nombres": "JUAN JOSE",
-  "apellidos": "PATIÑO SANTANDER",
-  "email": "juanjopadter@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052035,
-  "identificacion": 1081272230,
-  "nombres": "DIANA ALEXANDRA",
-  "apellidos": "PATICHOY RICAURTE",
-  "email": "dianaalexandrapr@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221051015,
-  "identificacion": 1193030246,
-  "nombres": "JUAN JOSÉ",
-  "apellidos": "PANTOJA ENRÍQUEZ",
-  "email": "juanjo01164@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052027,
-  "identificacion": 1004135182,
-  "nombres": "AURA MARIA",
-  "apellidos": "NOGUERA MORINELLY",
-  "email": "auranoguera123@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 219051101,
-  "identificacion": 1085331147,
-  "nombres": "JULIANA MERCEDES",
-  "apellidos": "ERAZO CHAVES",
-  "email": "julita1996erazo@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052030,
-  "identificacion": 1085901352,
-  "nombres": "SUAD ITZEL",
-  "apellidos": "MONTENEGRO BERNAL",
-  "email": "itzelmontr91@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220051047,
-  "identificacion": 1124314426,
-  "nombres": "EDISON ALEXANDER",
-  "apellidos": "CARDENAS YAQUENO",
-  "email": "familia.cardenas.yaqueno@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 220051009,
-  "identificacion": 1004666478,
-  "nombres": "YINA PAOLA",
-  "apellidos": "ROSERO RIASCOS",
-  "email": "yinapaolaroseroriascos@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052056,
-  "identificacion": 1193271264,
-  "nombres": "GREIS MERCEDES",
-  "apellidos": "ORDOÑEZ USAMA",
-  "email": "greiis842@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052039,
-  "identificacion": 1085636250,
-  "nombres": "WEIMAR FERNANDO",
-  "apellidos": "ARIAS FIGUEROA",
-  "email": "ferarias2011@hotmail.es",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052015,
-  "identificacion": 1138524225,
-  "nombres": "ASHLEE GISELL",
-  "apellidos": "CERÓN MATUTE",
-  "email": "ashcm1138@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221051051,
-  "identificacion": 1007520581,
-  "nombres": "EDWIN ALEJANDRO",
-  "apellidos": "CORDOBA GOMEZ",
-  "email": "edwincordobaadmii1201@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221051037,
-  "identificacion": 1193572129,
-  "nombres": "MATEO",
-  "apellidos": "ESTUPIÑAN CHAMORRO",
-  "email": "mateoes69@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221052026,
-  "identificacion": 1193255311,
-  "nombres": "CARLOS ALEJANDRO",
-  "apellidos": "ORTEGA PORTILLA",
-  "email": "carlosortega159852@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222051048,
-  "identificacion": 1086328880,
-  "nombres": "DARLIN MARYURI",
-  "apellidos": "LOPEZ VASQUEZ",
-  "email": "darlinmaryurilopezvasquez17@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 220051002,
-  "identificacion": 1193597354,
-  "nombres": "GABRIELA",
-  "apellidos": "BENAVIDES IBARRA",
-  "email": "gabibenavidesibarra@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 216051145,
-  "identificacion": 1085948120,
-  "nombres": "CATHERIN DANIELA",
-  "apellidos": "CHALACA HERNANDEZ",
-  "email": "danielachalaca069@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222051040,
-  "identificacion": 1080043394,
-  "nombres": "DAVID ALEJANDRO",
-  "apellidos": "MEDINA TREJO",
-  "email": "dale2401medina@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 220052008,
-  "identificacion": 1075669004,
-  "nombres": "PAOLA ANDREA",
-  "apellidos": "BOTINA JOJOA",
-  "email": "andrep.bj07@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222051061,
-  "identificacion": 1080691302,
-  "nombres": "VALERIA ELIZABETH",
-  "apellidos": "GUSTÍN MARTÍNEZ",
-  "email": "gustinmartinezvaleria65@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052075,
-  "identificacion": 1086754190,
-  "nombres": "SARITA LISSETH",
-  "apellidos": "ROSERO LARA",
-  "email": "saritalarasr@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052047,
-  "identificacion": 1004593993,
-  "nombres": "YULIETH GABRIELA",
-  "apellidos": "CASTILLO NARVAEZ",
-  "email": "yulieth.castillo7@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222051031,
-  "identificacion": 1080043259,
-  "nombres": "DANIEL ERNESTO",
-  "apellidos": "MEDINA PEREZ",
-  "email": "daerma17@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221051053,
-  "identificacion": 1004232753,
-  "nombres": "EDITH LORENA",
-  "apellidos": "BARCO CADENA",
-  "email": "Lorenabarco2002@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221052046,
-  "identificacion": 1085321595,
-  "nombres": "DIANA CAROLINA",
-  "apellidos": "ORGANISTA SALAS",
-  "email": "dyanaqaroll95@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 216052010,
-  "identificacion": 1004597903,
-  "nombres": "JULIETA MARCELA",
-  "apellidos": "ANDRADE ALVAREZ",
-  "email": "march2427@hotmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052040,
-  "identificacion": 1085346996,
-  "nombres": "DIANA CAROLINA",
-  "apellidos": "ORTEGA CHICAIZA",
-  "email": "dianachica18@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052031,
-  "identificacion": 1004190666,
-  "nombres": "DEICY GABRIELA",
-  "apellidos": "ESPAÑA CORDOBA",
-  "email": "deisygabriela11091@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052054,
-  "identificacion": 1004215477,
-  "nombres": "JUAN DAVID",
-  "apellidos": "BOTINA TORO",
-  "email": "juanbhotina2002@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052019,
-  "identificacion": 1081053902,
+  "codigo_alumno": 223051002,
+  "identificacion": 1193385869,
+  "nombres_completos": "CABRERA CORAL DANIEL ALEJANDRO",
+  "apellidos": "CABRERA CORAL",
   "nombres": "DANIEL ALEJANDRO",
-  "apellidos": "MELO PAREDES",
-  "email": "atercer58@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "email": "alejandrocabreracoral@gmail.com                   "
  },
  {
-  "codigo_alumno": 221052062,
-  "identificacion": 1004743672,
-  "nombres": "JHON JAMES",
-  "apellidos": "PASAJE OJEDA",
-  "email": "jhonjms10@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051022,
+  "identificacion": 1081053574,
+  "nombres_completos": "CABRERA RODRIGUEZ XIMENA CAROLINA",
+  "apellidos": "CABRERA RODRIGUEZ",
+  "nombres": "XIMENA CAROLINA",
+  "email": "carolina.cabrerar57@gmail.com                     "
  },
  {
-  "codigo_alumno": 220051016,
-  "identificacion": 1193210052,
-  "nombres": "ARVEY SANTIAGO",
-  "apellidos": "MIRAMAG PORTILLA",
-  "email": "arveymiramag@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222052012,
+  "identificacion": 1004190353,
+  "nombres_completos": "CALI ARELLANO ANDRES FELIPE",
+  "apellidos": "CALI ARELLANO",
+  "nombres": "ANDRES FELIPE",
+  "email": "feliarcan12@gmail.com                             "
  },
  {
-  "codigo_alumno": 222052055,
-  "identificacion": 1004193565,
-  "nombres": "JOSE DANIEL",
-  "apellidos": "TAGUADA",
-  "email": "josedanieltag23@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051038,
+  "identificacion": 1004550939,
+  "nombres_completos": "CHAMORRO NARVAEZ ESTEBAN CAMILO",
+  "apellidos": "CHAMORRO NARVAEZ",
+  "nombres": "ESTEBAN CAMILO",
+  "email": "ecchamorro@udenar.edu.co                          "
  },
  {
-  "codigo_alumno": 222051033,
-  "identificacion": 1137099060,
-  "nombres": "LUIS ALEJANDRO",
-  "apellidos": "ARCOS LOPEZ",
-  "email": "luisalejandroarcoslopez@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051041,
+  "identificacion": 1085905192,
+  "nombres_completos": "DELGADO CHALAPUD HILDA JANETH",
+  "apellidos": "DELGADO CHALAPUD",
+  "nombres": "HILDA JANETH",
+  "email": "hildajanethdelgado@gmail.com                      "
  },
  {
-  "codigo_alumno": 222052051,
-  "identificacion": 1086358222,
-  "nombres": "CAMILA VALENTINA",
-  "apellidos": "ROSERO JIMENEZ",
-  "email": "camila.rosero27327@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 223051010,
+  "identificacion": 1080043992,
+  "nombres_completos": "DELGADO MADROÑERO KAROL VALENTINA",
+  "apellidos": "DELGADO MADROÑERO",
+  "nombres": "KAROL VALENTINA",
+  "email": "karolvalentina3000@gmail.com                      "
  },
  {
-  "codigo_alumno": 221051060,
-  "identificacion": 1140434113,
-  "nombres": "FRANCI BANESA",
-  "apellidos": "JACANAMEJOY MARMOLEJO",
-  "email": "vane91n@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051042,
+  "identificacion": 1086578272,
+  "nombres_completos": "DIAZ AZAIN STEPHANIE TATIANA",
+  "apellidos": "DIAZ AZAIN",
+  "nombres": "STEPHANIE TATIANA",
+  "email": "tatiana220205@gmail.com                           "
  },
  {
-  "codigo_alumno": 222052009,
-  "identificacion": 1138524553,
-  "nombres": "CRISTIAN DAVID",
-  "apellidos": "RAMOS ENRIQUEZ",
-  "email": "ramoscristhiancsfn@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051014,
+  "identificacion": 1085263296,
+  "nombres_completos": "ERAZO CUASTUMAL OSCAR CAMILO",
+  "apellidos": "ERAZO CUASTUMAL",
+  "nombres": "OSCAR CAMILO",
+  "email": "oscarcamiloerazocuastumal@gmail.com               "
  },
  {
-  "codigo_alumno": 222051008,
-  "identificacion": 1080042455,
-  "nombres": "MICHAEL FABIAN",
-  "apellidos": "ZAMBRANO MORENO",
-  "email": "zmfabian001@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051055,
+  "identificacion": 1087754142,
+  "nombres_completos": "ERAZO YESSICA TATIANA",
+  "apellidos": "ERAZO",
+  "nombres": "YESSICA TATIANA",
+  "email": "dtean200@gmail.com                                "
  },
  {
-  "codigo_alumno": 222052036,
-  "identificacion": 1081053669,
-  "nombres": "KATHALINA ALEXANDRA",
-  "apellidos": "ARCOS ROSERO",
-  "email": "kathalinaarcosr@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222051009,
-  "identificacion": 1080691929,
-  "nombres": "ÁNGELA CRISTINA",
-  "apellidos": "BACCA DELGADO",
-  "email": "angelacristinabaccad@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221051033,
-  "identificacion": 1193216347,
-  "nombres": "LEIDY CAROLINA",
-  "apellidos": "SALAS BOTINA",
-  "email": "karolina312salas@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221052044,
-  "identificacion": 1004235939,
-  "nombres": "JOHNATHAN STEVEN",
-  "apellidos": "PAZ RIASCOS",
-  "email": "zoloyo123456pc@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052022,
-  "identificacion": 1004189847,
-  "nombres": "DIEGO SEBASTIAN",
-  "apellidos": "ORTEGA PANTOJA",
-  "email": "sebastian527ortega@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052035,
-  "identificacion": 27091174,
-  "nombres": "ANGELICA",
-  "apellidos": "LOPEZ BURBANO",
-  "email": "incopez@yahoo.es",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052039,
-  "identificacion": 1192891915,
-  "nombres": "CRISTHIAN FERNANDO",
-  "apellidos": "CORDOBA ROSAS",
-  "email": "cristhiancordoba2000@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052043,
-  "identificacion": 1080690751,
-  "nombres": "JORGE ANDREY",
-  "apellidos": "PAZ RIASCOS",
-  "email": "pazj65393@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052001,
-  "identificacion": 1080042367,
+  "codigo_alumno": 222051026,
+  "identificacion": 1004190421,
+  "nombres_completos": "ESCOBAR PAZ MARIA CAMILA",
+  "apellidos": "ESCOBAR PAZ",
   "nombres": "MARIA CAMILA",
-  "apellidos": "MARTINEZ VILLOTA",
-  "email": "mariacamilamv511@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "email": "escobarpazmariacamila@gmail.com                   "
  },
  {
-  "codigo_alumno": 221051024,
-  "identificacion": 1193034598,
-  "nombres": "LILIANA ESTEFANIA",
-  "apellidos": "ERAZO JOJOA",
-  "email": "estefania.erazo28@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223052013,
+  "identificacion": 1081054581,
+  "nombres_completos": "GAVILANES ERAZO MARLY YISSEL",
+  "apellidos": "GAVILANES ERAZO",
+  "nombres": "MARLY YISSEL",
+  "email": "marlyerazo1705@gmail.com                          "
  },
  {
-  "codigo_alumno": 222051018,
-  "identificacion": 1004255492,
-  "nombres": "BLANCA ELIZABETH",
-  "apellidos": "CORDOBA BOLAÑOS",
-  "email": "elizabethcordoba766@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051030,
+  "identificacion": 1085262727,
+  "nombres_completos": "GUAITARILLA ACHICANOY LAURA SOFIA",
+  "apellidos": "GUAITARILLA ACHICANOY",
+  "nombres": "LAURA SOFIA",
+  "email": "laurasofiaguaitarillaa@gmail.com                  "
  },
  {
-  "codigo_alumno": 219052197,
-  "identificacion": 1085333814,
-  "nombres": "ADRIANA STEPHANIE",
-  "apellidos": "ROMO ALVAREZ",
-  "email": "sromoalvarez9@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222052003,
+  "identificacion": 1004192028,
+  "nombres_completos": "HERRERA GRIJALBA JENNIFER ESTEFANIA",
+  "apellidos": "HERRERA GRIJALBA",
+  "nombres": "JENNIFER ESTEFANIA",
+  "email": "jenniferr100212@gmail.com                         "
  },
  {
-  "codigo_alumno": 222052034,
-  "identificacion": 1005210810,
-  "nombres": "EDWARD ANDRES",
-  "apellidos": "ERAZO CRUZ",
-  "email": "andreserazo100@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051037,
+  "identificacion": 1004136572,
+  "nombres_completos": "IPIALES BENAVIDES MIGUEL ESTEBAN",
+  "apellidos": "IPIALES BENAVIDES",
+  "nombres": "MIGUEL ESTEBAN",
+  "email": "eipiales1313@gmail.com                            "
  },
  {
-  "codigo_alumno": 222052053,
-  "identificacion": 1004234634,
-  "nombres": "JULIANA VALENTINA",
-  "apellidos": "TAMAYO ARGOTI",
-  "email": "valentama25@udenar.edu.co",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051034,
+  "identificacion": 1004234073,
+  "nombres_completos": "LAGOS QUIROZ ANGELA SOFIA",
+  "apellidos": "LAGOS QUIROZ",
+  "nombres": "ANGELA SOFIA",
+  "email": "sofilagosmar@gmail.com                            "
  },
  {
-  "codigo_alumno": 221051048,
-  "identificacion": 1087046174,
-  "nombres": "ANGELA CAMILA",
-  "apellidos": "RUALES ROMO",
-  "email": "angelaruales123@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051016,
+  "identificacion": 1004235960,
+  "nombres_completos": "LASSO BENAVIDES MARÍA JOSÉ",
+  "apellidos": "LASSO BENAVIDES",
+  "nombres": "MARÍA JOSÉ",
+  "email": "mariajoselasso25@gmail.com                        "
  },
  {
-  "codigo_alumno": 221051044,
-  "identificacion": 1004135932,
-  "nombres": "ANDRÉS GUILLERMO",
-  "apellidos": "GUARANGUAY TELLO",
-  "email": "andresitooo343@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221052037,
-  "identificacion": 1087420716,
-  "nombres": "DAYANA KATHERINE",
-  "apellidos": "REY CABRERA",
-  "email": "dayanareyc11@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052035,
-  "identificacion": 1007309769,
-  "nombres": "VICTOR SAMUEL",
-  "apellidos": "GUERRERO HERNANDEZ",
-  "email": "saamuelguerrero@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 220052027,
-  "identificacion": 1004532139,
-  "nombres": "JORGE EMIRO",
-  "apellidos": "AGUIRRE GUANCHA",
-  "email": "jorgeaguirre1306@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 222052005,
-  "identificacion": 1080040341,
-  "nombres": "ANGIE JULIETH",
-  "apellidos": "ERAZO RUIZ",
-  "email": "julieth2015ruiz@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052059,
-  "identificacion": 1023961754,
-  "nombres": "YESICA KARINA",
-  "apellidos": "JIMENEZ ERAZO",
-  "email": "jimenzzkari@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052030,
-  "identificacion": 1004533680,
-  "nombres": "GISSELLE KATALINA",
-  "apellidos": "NARVAEZ REINA",
-  "email": "giselreina7@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052011,
-  "identificacion": 1028035281,
-  "nombres": "YULISSA",
-  "apellidos": "MENDOZA MORA",
-  "email": "yulimendozamora65@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 219052117,
+  "identificacion": 1193271766,
+  "nombres_completos": "LOPEZ PACHAJOA VALERIA ESTEFANIA",
+  "apellidos": "LOPEZ PACHAJOA",
+  "nombres": "VALERIA ESTEFANIA",
+  "email": "valerialpz@udenar.edu.co                          "
  },
  {
   "codigo_alumno": 222051056,
   "identificacion": 1193458053,
-  "nombres": "DANIEL ENRIQUE",
+  "nombres_completos": "LÓPEZ RODRÍGUEZ DANIEL ENRIQUE",
   "apellidos": "LÓPEZ RODRÍGUEZ",
-  "email": "dany00lds@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "nombres": "DANIEL ENRIQUE",
+  "email": "dany00lds@gmail.com                               "
  },
  {
-  "codigo_alumno": 220051055,
-  "identificacion": 1004620175,
-  "nombres": "SHELSEY STHER",
-  "apellidos": "CASTILLO MELVILLE",
-  "email": "shelseyesthercastillomelville@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051081,
+  "identificacion": 1080041736,
+  "nombres_completos": "MAYUNGA ASCUNTAR STEFANI DANIELA",
+  "apellidos": "MAYUNGA ASCUNTAR",
+  "nombres": "STEFANI DANIELA",
+  "email": "danielamayunga@gmail.com                          "
  },
  {
-  "codigo_alumno": 222051082,
-  "identificacion": 1080042561,
-  "nombres": "DANIEL RICARDO",
-  "apellidos": "GUZMAN GALVEZ",
-  "email": "dani.drrg2017@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051005,
+  "identificacion": 1004190752,
+  "nombres_completos": "MEZA BOTINA MELANIE MADELEIN",
+  "apellidos": "MEZA BOTINA",
+  "nombres": "MELANIE MADELEIN",
+  "email": "melanimmb18@gmail.com                             "
  },
  {
-  "codigo_alumno": 222052020,
-  "identificacion": 1087406520,
-  "nombres": "TANIA CAMILA",
-  "apellidos": "ORTEGA BENAVIDES",
-  "email": "ortegatania6@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 219051164,
-  "identificacion": 1113694493,
-  "nombres": "JUAN CAMILO",
-  "apellidos": "MAZUERA COLLAZOS",
-  "email": "camilomazuera16315@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052041,
-  "identificacion": 1080041981,
-  "nombres": "MARIA FERNANDA",
-  "apellidos": "ZAPATA CHALPARPUED",
-  "email": "mariazacha1234@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 220052042,
-  "identificacion": 1193063031,
-  "nombres": "JUAN DAVID",
-  "apellidos": "GONZALEZ FLOREZ",
-  "email": "juandavidgfz@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221051029,
-  "identificacion": 1004217494,
-  "nombres": "MISHELL SOFIA",
-  "apellidos": "CORTES ZAMBRANO",
-  "email": "msofiacortes1@gmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222051014,
-  "identificacion": 1081274421,
-  "nombres": "JULIETH MELISSA",
-  "apellidos": "PAREDES SANTACRUZ",
-  "email": "jmparedes22B@udenar.edu.co",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 222052064,
-  "identificacion": 1006851213,
-  "nombres": "SMEL STALY",
-  "apellidos": "GIRALDO TORO",
-  "email": "stalygiraldoo@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052041,
-  "identificacion": 1004193598,
-  "nombres": "ANGELA MARIA",
-  "apellidos": "SANTANDER BENAVIDES",
-  "email": "angelabenacha1@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221051058,
-  "identificacion": 1087778521,
-  "nombres": "DERICK MATEO",
-  "apellidos": "QUIÑONES DIAZ",
-  "email": "dawi_mateo30@hotmail.com",
-  "jornada_alumno": "MAÑANA"
- },
- {
-  "codigo_alumno": 221052047,
-  "identificacion": 1004630483,
-  "nombres": "BRIGNEY YOVANA",
-  "apellidos": "OVIEDO IMBAQUIN",
-  "email": "brigneyoviedo12@gmail.com",
-  "jornada_alumno": "TARDE"
- },
- {
-  "codigo_alumno": 221052025,
-  "identificacion": 1081272225,
+  "codigo_alumno": 221051055,
+  "identificacion": 1004136272,
+  "nombres_completos": "MONCAYO MUÑOZ JUAN MANUEL",
+  "apellidos": "MONCAYO MUÑOZ",
   "nombres": "JUAN MANUEL",
-  "apellidos": "PANTOJA BUSTOS",
-  "email": "juanmanuel.pb@outlook.com",
-  "jornada_alumno": "MAÑANA"
+  "email": "moncayomunozjuannmanuel@gmail.com                 "
  },
  {
-  "codigo_alumno": 221052014,
-  "identificacion": 1004214467,
-  "nombres": "KAREN VIVIANA",
-  "apellidos": "BURBANO MARIN",
-  "email": "kavivibm2000@hotmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 223052048,
+  "identificacion": 1140264010,
+  "nombres_completos": "MORENO CAICEDO PAULA ALEJANDRA",
+  "apellidos": "MORENO CAICEDO",
+  "nombres": "PAULA ALEJANDRA",
+  "email": "morenopaula264@gmail.com                          "
  },
  {
-  "codigo_alumno": 222052029,
-  "identificacion": 1004192928,
-  "nombres": "PABLO JOSUE",
-  "apellidos": "CARDENAS DIAZ",
-  "email": "cardenasjosue2003@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051028,
+  "identificacion": 1004564493,
+  "nombres_completos": "OBANDO VALLEJO VALERIA",
+  "apellidos": "OBANDO VALLEJO",
+  "nombres": "VALERIA",
+  "email": "valeriiaobandovallejo@gmail.com                   "
  },
  {
-  "codigo_alumno": 220051012,
-  "identificacion": 1006996439,
-  "nombres": "DEISY PAOLA",
-  "apellidos": "AREVALO IRIARTE",
-  "email": "deisyarevalo21@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051050,
+  "identificacion": 1089242165,
+  "nombres_completos": "OVIEDO BRAVO KAREN DAYANA",
+  "apellidos": "OVIEDO BRAVO",
+  "nombres": "KAREN DAYANA",
+  "email": "dayana.oviedobravo@gnail.com                      "
  },
  {
-  "codigo_alumno": 222052079,
-  "identificacion": 1081053543,
-  "nombres": "KATHERIN ALEJANDRA",
-  "apellidos": "SANTACRUZ INSUASTY",
-  "email": "alejandrasantacruzu@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 223051004,
+  "identificacion": 1137089312,
+  "nombres_completos": "PAGUATIAN MUÑOZ JOHANA ALEJANDRA",
+  "apellidos": "PAGUATIAN MUÑOZ",
+  "nombres": "JOHANA ALEJANDRA",
+  "email": "johanapagmu@gmail.com                             "
  },
  {
-  "codigo_alumno": 222051058,
-  "identificacion": 1081273443,
-  "nombres": "JUAN DIEGO",
-  "apellidos": "LÓPEZ BOLAÑOS",
-  "email": "juandiegobu0@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051025,
+  "identificacion": 1004509407,
+  "nombres_completos": "PANTOJA DIAZ ANA CATERINE",
+  "apellidos": "PANTOJA DIAZ",
+  "nombres": "ANA CATERINE",
+  "email": "acpantoja23a@udenar.edu.co                        "
  },
  {
-  "codigo_alumno": 220052056,
-  "identificacion": 1023034665,
-  "nombres": "JUAN CAMILO",
-  "apellidos": "NIETO QUIROZ",
-  "email": "juanknq@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222052048,
+  "identificacion": 1085334962,
+  "nombres_completos": "PARRA CABEZAS KAREN FERNANDA",
+  "apellidos": "PARRA CABEZAS",
+  "nombres": "KAREN FERNANDA",
+  "email": "karenfernandaparra@hotmail.com                    "
  },
  {
-  "codigo_alumno": 221051040,
-  "identificacion": 1004136288,
-  "nombres": "JORGE ANDRES",
-  "apellidos": "CAICEDO DELGADO",
-  "email": "jorgecaicedo92@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 223051043,
+  "identificacion": 1004550642,
+  "nombres_completos": "QUENGUAN FAJARDO EDISON CAMILO",
+  "apellidos": "QUENGUAN FAJARDO",
+  "nombres": "EDISON CAMILO",
+  "email": "camilopro73@gmail.com                             "
  },
  {
-  "codigo_alumno": 222052074,
-  "identificacion": 1086754123,
-  "nombres": "ANDREA MARICELA",
-  "apellidos": "HUERTAS TATICUAN",
-  "email": "andreataticuan6@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 221051062,
+  "identificacion": 1100473,
+  "nombres_completos": "RANCAÑO RAMOS DIANNELLYS",
+  "apellidos": "RANCAÑO RAMOS",
+  "nombres": "DIANNELLYS",
+  "email": "diannellys@outlook.es                             "
  },
  {
-  "codigo_alumno": 221052001,
-  "identificacion": 1089847659,
-  "nombres": "DAYRA LUCELY",
-  "apellidos": "MENESES ROSERO",
-  "email": "dayralmenesesr@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051049,
+  "identificacion": 1087112362,
+  "nombres_completos": "RIASCOS RIASCOS LUZ MARY",
+  "apellidos": "RIASCOS RIASCOS",
+  "nombres": "LUZ MARY",
+  "email": "lmriascos22b@udenar.edu.co                        "
  },
  {
-  "codigo_alumno": 220052016,
-  "identificacion": 1087426335,
-  "nombres": "MAURO ANDRES",
-  "apellidos": "CHAVEZ REALPE",
-  "email": "maurochavez2403@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 223052018,
+  "identificacion": 1086248064,
+  "nombres_completos": "RODRIGUEZ RODRIGUEZ PAULA ESTHER",
+  "apellidos": "RODRIGUEZ RODRIGUEZ",
+  "nombres": "PAULA ESTHER",
+  "email": "paularr248@gmail.com                              "
  },
  {
-  "codigo_alumno": 222051011,
-  "identificacion": 1081052481,
-  "nombres": "JUAN FELIPE",
-  "apellidos": "CORDOBA PAZOS",
-  "email": "juanfe.lhc@gmail.com",
-  "jornada_alumno": "MAÑANA"
+  "codigo_alumno": 222051030,
+  "identificacion": 1089030191,
+  "nombres_completos": "RUIZ RODRIGUEZ KAREN YAMILE",
+  "apellidos": "RUIZ RODRIGUEZ",
+  "nombres": "KAREN YAMILE",
+  "email": "yruiz9736@gmail.com                               "
  },
  {
-  "codigo_alumno": 221052055,
-  "identificacion": 1085297864,
-  "nombres": "LEINY YICELA",
-  "apellidos": "RIASCOS CORDOBA",
-  "email": "lyriascos21b@udenar.edu.co",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 223051038,
+  "identificacion": 1086578034,
+  "nombres_completos": "SALAZAR LOPEZ SANTIAGO",
+  "apellidos": "SALAZAR LOPEZ",
+  "nombres": "SANTIAGO",
+  "email": "santiagosalazarlopez1804z@gmail.com               "
  },
  {
-  "codigo_alumno": 221052013,
-  "identificacion": 1193554334,
-  "nombres": "DIANA SOFIA",
-  "apellidos": "SANTACRUZ RIVERA",
-  "email": "soffitasantacruz@gmail.com",
-  "jornada_alumno": "TARDE"
+  "codigo_alumno": 222051053,
+  "identificacion": 1082656219,
+  "nombres_completos": "SALAZAR ROMO NATALIA ALEJANDRA",
+  "apellidos": "SALAZAR ROMO",
+  "nombres": "NATALIA ALEJANDRA",
+  "email": "nati26salazar@gmail.com                           "
+ },
+ {
+  "codigo_alumno": 222051073,
+  "identificacion": 1086103670,
+  "nombres_completos": "SARABIA LOPEZ MAYURITH TATIANA",
+  "apellidos": "SARABIA LOPEZ",
+  "nombres": "MAYURITH TATIANA",
+  "email": "maryurithtatianasarabialopez@gmail.com            "
+ },
+ {
+  "codigo_alumno": 221051014,
+  "identificacion": 1004630276,
+  "nombres_completos": "SARASTY ORTIZ CARLOS MAURICIO",
+  "apellidos": "SARASTY ORTIZ",
+  "nombres": "CARLOS MAURICIO",
+  "email": "mauriciosarasty@udenar.edu.co                     "
+ },
+ {
+  "codigo_alumno": 222052021,
+  "identificacion": 1080042384,
+  "nombres_completos": "SUAREZ INSUASTY JUAN PABLO",
+  "apellidos": "SUAREZ INSUASTY",
+  "nombres": "JUAN PABLO",
+  "email": "suarezinsuastyjuanpablo@gmail.com                 "
+ },
+ {
+  "codigo_alumno": 221051007,
+  "identificacion": 1004134858,
+  "nombres_completos": "VILLOTA MUÑOZ DANIEL FELIPE",
+  "apellidos": "VILLOTA MUÑOZ",
+  "nombres": "DANIEL FELIPE",
+  "email": "villotamunozdanielfelipe@gmail.com                "
  }
+
 ]

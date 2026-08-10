@@ -93,10 +93,14 @@ class AgendasController extends Controller
         // Rango pedido por FullCalendar (si viene en la query)
         $periodo_act = $this->periodosService->getPeriodoActivo();
         if (!$periodo_act) {
-            return response()->json([]);
+            return response()->json([
+                'errors' => 'No hay un periodo activo actualmente.'
+            ], 400);
         }
+       
+        
         $request['fecha_inicial'] = $periodo_act->prdfecha_inicio;
-        $request['fecha_final'] = $periodo_act->prdfecha_final;
+        $request['fecha_final'] = $periodo_act->prdfecha_fin;
         $rangeStart = Carbon::parse($request['fecha_inicial'] ?? Carbon::today());
         $can_delete = true;
         if (currentUser()->hasRole('amatai') || currentUser()->hasRole('estudiante')) {
@@ -105,14 +109,21 @@ class AgendasController extends Controller
         }
 
         // Forzamos un tope hasta 31 de mayo de 2026 si el end no viene o es mayor
-        $rangeEndRequest = $request['fecha_final'] ? Carbon::parse($request['fecha_final']) : Carbon::parse('2026-05-31');
-        $maxEnd = Carbon::parse('2026-05-31');
+        $rangeEndRequest = $request['fecha_final'] ? Carbon::parse($request['fecha_final']) : Carbon::parse('2027-05-31');
+        $maxEnd = Carbon::parse($request['fecha_final']);
         $rangeEnd = $rangeEndRequest->lte($maxEnd) ? $rangeEndRequest : $maxEnd;
+
+       /*  return response()->json([
+            'start' => $rangeEndRequest,
+            'end' => $periodo_act->prdfecha_inicio
+        ]); */
 
         $docenteId = $request->get('docente_id') ? $request->get('docente_id') : Auth::user()->idnumber;
 
         if (!$docenteId) {
-            return response()->json([]); // sin docente, no hay eventos
+            return response()->json([
+                'errors' => 'No se proporcionó un docente válido.'
+            ], 400);
         }
         $docente = User::where('idnumber', $docenteId)->first();
         $min_atencion = $docente->min_atencion != null && $docente->min_atencion != "" && $docente->min_atencion < 40 && $docente->min_atencion > 20 ? $docente->min_atencion : 40;
@@ -122,6 +133,7 @@ class AgendasController extends Controller
             ->where("trndid_periodo", $periodo_act->id)
             ->get();
 
+          //  return response()->json($horarios);
         // Traemos todos los turnos ya asignados del docente entre el rango (una sola consulta)
         $turnosAsignados = TurnoEstudianteDocente::where('docente_id', $docente->id)
             ->whereBetween('fecha', [$rangeStart->toDateString(), $rangeEnd->toDateString()])

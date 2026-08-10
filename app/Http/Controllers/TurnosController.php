@@ -14,6 +14,7 @@ use App\Exports\EstudiantesCursosExport;
 use App\Services\PeriodosService;
 use App\Services\TurnosService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TurnosController extends Controller
 {
@@ -213,8 +214,25 @@ class TurnosController extends Controller
             ->join('users', 'users.idnumber', '=', 'turnos.trnid_estudent')
             ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
             ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
+            ->select('turnos.trnid_estudent', 'users.cursando_id')
             ->where('sedes.id_sede', session('sede')->id_sede)
-            ->delete();
+            ->get();
+        foreach ($turnos as $turno) {
+            $user = User::where('idnumber', $turno->trnid_estudent)->first();
+            Log::info('User: ' . $user->idnumber . ' Cursando ID: ' . $user->cursando_id);
+            if ($user and ($user->cursando_id == 116 || $user->cursando_id == 117)) {
+                // $user->cursando_id = 1;
+                $user->active = 0;
+                $user->save();
+            }
+        }
+        $turnos = DB::table('turnos')
+            ->join('users', 'users.idnumber', '=', 'turnos.trnid_estudent')
+            ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
+            ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
+            ->select('turnos.trnid_estudent')
+            ->where('sedes.id_sede', session('sede')->id_sede)
+            ->delete(); 
         return response()->json($turnos);
     }
 
