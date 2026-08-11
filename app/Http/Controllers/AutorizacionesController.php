@@ -9,7 +9,9 @@ use App\AsignacionCaso;
 use App\Jobs\ProcessSendNotificationGeneral;
 use App\Services\AutorizacionesService;
 use App\Services\ExpedientesService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use PDF;
 
 class AutorizacionesController extends Controller
@@ -184,7 +186,13 @@ class AutorizacionesController extends Controller
     {
 
         $autorizacion =  Autorizacion::find($id);
-        // dd($autorizacion);    
+       //  dd($autorizacion);    
+
+         if(Carbon::parse($autorizacion->created_at) < Carbon::parse('2026-06-30')){
+             Session::flash('message-danger', 'La autorización no puede ser descargada, debe solicitarla nuevamente');
+            return redirect()->back();
+         }
+
         if ($autorizacion and $autorizacion->estado) {
             $pdf = PDF::loadView(
                 'pdf.autorizacion',

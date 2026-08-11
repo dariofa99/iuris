@@ -33,7 +33,14 @@
 
                     @elseif(currentUser()->hasRole('estudiante') and !$autorizacion->estado)
                         <button data-id="{{ $autorizacion->id }}"
-                            class="btn btn-primary btn-sm btn_editar_autorizacion">Actualizar información</button>
+                            class="btn btn-primary btn-sm btn_editar_autorizacion">
+                            
+                            {{ $autorizacion->estado_id == 283 ? 'Volver a solicitar' : 'Actualizar información' }}
+
+                            
+                        
+                        
+                        </button>
                     @endif
 
                     @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))

@@ -13,7 +13,8 @@
             <div class="col-md-12">
                 <form id="myformCreateAutorizacion">
                     <input type="hidden" name="id" id="autorizacion_id">
-                    @if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('amatai'))
+                    @if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('amatai')
+                            || currentUser()->hasRole('diradmin') )
                         <div class="row" id="row_create_autorizacion">
                             <div class="form-group col-md-8">
                                 <label for="nombre_estudiante">Nombre del estudiante</label>

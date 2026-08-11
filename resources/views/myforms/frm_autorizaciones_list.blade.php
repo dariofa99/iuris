@@ -28,6 +28,7 @@
  
     <hr>
     <div class="row">
+        @include('msg.alerts')
         <div class="col-md-12 table-responsive no-padding" id="content_list_autorizaciones">
             @include('myforms.frm_autorizaciones_list_ajax')
         </div>

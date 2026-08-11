@@ -44,8 +44,8 @@
                 </span>
                 </td>
                 <td>
-                    <a href="/expedientes/{{ $autorizacion->asignacion->asigexp_id }}/edit"
-                        class="btn btn-info btn-sm btn-block btn_detalles_autorizacion">
+                    <a href="/expedientes/{{ $autorizacion->asignacion->asigexp_id }}/edit#autorizaciones"
+                        class="btn btn-info btn-sm btn-block" target="_blank">
                         Ir al caso</a>
 
                     @if (($autorizacion->ref_estado->id == 281 || $autorizacion->ref_estado->id == 282) && (currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai')))
@@ -69,7 +69,7 @@
                     @endif
 
                     @if ($autorizacion->estado)
-                        <a href="/autorizaciones/descargar/{{ $autorizacion->autorizacion_id }}" target="_blank"
+                        <a href="/autorizaciones/descargar/{{ $autorizacion->id }}" target="_blank"
                             class="btn btn-warning btn-block mt-1 btn-sm btn_print_autorizacion">
                             Descargar</a>
                     @endif

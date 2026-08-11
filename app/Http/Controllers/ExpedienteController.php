@@ -1730,6 +1730,7 @@ group by rd.subrama ;*/
     ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
 
     $autorizacion->estado_notificado = 1;
+    $autorizacion->estado_id = 283;
     $autorizacion->save();
 
     return response()->json($request->all());
