@@ -245,8 +245,7 @@ $(document).ready(function () {
       var request = convertFormToJSON("myFormUserEdit");
       var data = userService.getAditionalDataByForm("myFormUserEdit")
       request["data"] = (data);
-      //$("#wait").show();
-      console.log(request);
+      $("#wait").show();     
       let response = await userService.update(request);
       if (response.errors) {
         response.errors.forEach(error => {
