@@ -237,9 +237,7 @@ $(document).ready(function () {
   });
 
   $("#btn_actualizar_usuario").on("click", async function (e) {
-
     //var errors = validateForm("myFormUserEdit");
-
     const form = document.getElementById("myFormUserEdit");
     if (!form) return;
     var isvalid = validateForms(form);
@@ -247,14 +245,14 @@ $(document).ready(function () {
       var request = convertFormToJSON("myFormUserEdit");
       var data = userService.getAditionalDataByForm("myFormUserEdit")
       request["data"] = (data);
-      $("#wait").show();
+      //$("#wait").show();
       console.log(request);
       let response = await userService.update(request);
       if (response.errors) {
         response.errors.forEach(error => {
           toastr.error(error, "", {
             positionClass: "toast-top-right",
-            timeOut: "4000",
+            timeOut: "6000",
           });
         });
       } else {
@@ -272,7 +270,7 @@ $(document).ready(function () {
         positionClass: "toast-top-right",
         timeOut: "4000",
       });
-      form.reportValidity();
+      //form.reportValidity();
     }
     return;
 

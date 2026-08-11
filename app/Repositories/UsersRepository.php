@@ -10,11 +10,14 @@ use App\Services\UsersService;
 use App\User;
 use App\UserAditionalData;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -87,7 +90,7 @@ class UsersRepository extends BaseRepository implements UsersService
       'tipopers_id' => $request->has('tipopers_id') ? $request['tipopers_id'] : 237,
       'idnumber' => $request['idnumber'],
       'name' => $request['name'],
-      'lastname' => $request['lastname'], 
+      'lastname' => $request['lastname'],
       'password' => $request->has('password') ? ($request->get('password')) : ($request['idnumber']),
       'accesofvir' => $request->has('accesofvir') ? $request['accesofvir'] : '',
       'description' =>  $request->has('description') ?  $request['description'] : '',
@@ -215,7 +218,7 @@ class UsersRepository extends BaseRepository implements UsersService
         'roles.display_name'
       )->orderBy('users.created_at', 'desc')->get();
 
-    return $users->toArray(); 
+    return $users->toArray();
   }
 
   public function getEstudiantes(): array
@@ -261,7 +264,7 @@ class UsersRepository extends BaseRepository implements UsersService
       ->orderBy('users.created_at', 'desc')
       ->groupBy('users.idnumber')
       ->get()->toArray();
-    return $doceWithRama; 
+    return $doceWithRama;
   }
 
 
@@ -289,45 +292,58 @@ class UsersRepository extends BaseRepository implements UsersService
   public function update(User $user, Request $request): User
   {
 
-    if(currentUser()->hasRole('estudiante')){
-        if($request->has('tel1')){
-          $request['tel1'] = $user->tel1;
-        }
-        if($request->has('tel2')){
-          $request['tel2'] = $user->tel2;
-        }
-    }
-    $user->fill($request->all());
-    $user->save();
-    if ($request->has('data') and 
-    is_array($request->data)) {
-      $requestData = $request->data;
-      foreach ($request->data as $key => $rq) {
-        $rq['user_id'] = $user->id;
-        $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
-        if ($ref_data) {
-          $this->storeData($ref_data, $rq, $requestData);
-        }
+    if (currentUser()->hasRole('estudiante')) {
+      if (Auth::user()->id != $user->id && $request->has('tel1')) {
+        $request['tel1'] = $user->tel1;
+      }
+      if (Auth::user()->id != $user->id && $request->has('tel2')) {
+        $request['tel2'] = $user->tel2;
       }
     }
-    if ($request->has("email") and $request->email != $user->email) {
-      $user->confirm_token = Str::random(50);
-      Mail::to($request->email)->send(new ConfirmarCorreo($user));
-    }
-    if ($request->has('sede_id')) {
-      if (count($user->sedes) <= 0) {
-        $user->sedes()->attach($request->get('sede_id'));
+    try {
+
+
+      $user->fill($request->all());
+      $user->save();
+      if (
+        $request->has('data') and
+        is_array($request->data)
+      ) {
+        $requestData = $request->data;
+        foreach ($request->data as $key => $rq) {
+          $rq['user_id'] = $user->id;
+          $ref_data = ReferencesData::where(['name' => $rq['name'], 'section' => $rq['section']])->first();
+          if ($ref_data) {
+            $this->storeData($ref_data, $rq, $requestData);
+          }
+        }
+      }
+      if ($request->has("email") and $request->email != $user->email) {
+        $user->confirm_token = Str::random(50);
+        Mail::to($request->email)->send(new ConfirmarCorreo($user));
+      }
+      if ($request->has('sede_id')) {
+        if (count($user->sedes) <= 0) {
+          $user->sedes()->attach($request->get('sede_id'));
+        } else {
+          $user->sedes()->sync($request->get('sede_id'));
+        }
       } else {
-        $user->sedes()->sync($request->get('sede_id'));
-      }
-    } else {
-      if (count($user->sedes) <= 0) {
-        if (session()->has('sede')) {
-          $user->sedes()->attach(session('sede')->id_sede);
+        if (count($user->sedes) <= 0) {
+          if (session()->has('sede')) {
+            $user->sedes()->attach(session('sede')->id_sede);
+          }
         }
       }
+      return $user;
+    } catch (QueryException $e) {
+      Log::error("Error: " . $e->getMessage());
+      throw $e;
+    } catch (\Throwable  $e) {
+
+      Log::error("Error updating user password: " . $e->getMessage());
+      throw $e;
     }
-    return $user;
   }
 
   public function updateProfilePicture(User $user, Request $request): User
@@ -393,7 +409,7 @@ class UsersRepository extends BaseRepository implements UsersService
         'user_id' => $request['user_id']
       ])->first();
     } else {
-      $data = UserAditionalData::where([       
+      $data = UserAditionalData::where([
         'reference_data_id' => $ref_data->id,
         'user_id' => $request['user_id']
       ])->first();

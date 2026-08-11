@@ -18,6 +18,7 @@ use App\ReferencesData;
 use App\Services\ExpedientesService;
 use App\Services\UsersService;
 use App\UserAditionalData;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -42,7 +43,7 @@ class UsersController extends Controller
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
-   */ 
+   */
 
   public function users(Request $request)
   {
@@ -214,40 +215,48 @@ class UsersController extends Controller
         ->withInput();
     }
 
+    try {
+      //code...
 
 
-    if ($request->get('ramaderecho_id')) {
-      $user->ramas_derecho()->sync($request['ramaderecho_id']);
-    }
-    if ($request->has('sede_id') and $request->get('sede_id') != null) {
-      $user->sedes()->sync($request['sede_id']);
-    }
+      if ($request->get('ramaderecho_id')) {
+        $user->ramas_derecho()->sync($request['ramaderecho_id']);
+      }
+      if ($request->has('sede_id') and $request->get('sede_id') != null) {
+        $user->sedes()->sync($request['sede_id']);
+      }
 
-    if ($request->get('id_rol')) {
-      $user->roles()->sync($request['id_rol']);
-    }
-    $user = $this->userService->update($user, $request);
-
-    if ((currentUser()->hasRole('estudiante')
-        and $user->hasRole('estudiante'))
-      and ($user->turno === null)
-    ) {
-      $user->asignarTurno($request);
-    } elseif ($request->has('cursando_id') and $user->turno) {
-      $request['cursando_id'] = $user->cursando_id;
+      if ($request->get('id_rol')) {
+        $user->roles()->sync($request['id_rol']);
+      }
       $user = $this->userService->update($user, $request);
-    }
 
-    if ((currentUser()->hasRole('estudiante') and $user->hasRole('estudiante')) and (!$user->docente_asignado)) {
-      $user->asignarDocente($request);
-    }
+      if ((currentUser()->hasRole('estudiante')
+          and $user->hasRole('estudiante'))
+        and ($user->turno === null)
+      ) {
+        $user->asignarTurno($request);
+      } elseif ($request->has('cursando_id') and $user->turno) {
+        $request['cursando_id'] = $user->cursando_id;
+        $user = $this->userService->update($user, $request);
+      }
+
+      if ((currentUser()->hasRole('estudiante') and $user->hasRole('estudiante')) and (!$user->docente_asignado)) {
+        $user->asignarDocente($request);
+      }
 
 
-    if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
-      return response()->json(['user' => $user]);
+      if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
+        return response()->json(['usersss' => $user]);
+      }
+      if (!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
+      return Redirect::to('users/' . $user->id . '/edit');
+    }catch (QueryException $e) {
+      return response()->json(['errors' => ["Parece que hay campos que son obligatorios (*) y no han sido completados. Por favor, revisa en todas las pestañas y vuelve a intentarlo."]]);
+    }   
+    catch (\Throwable $th) {
+       return response()->json(['errors' => [$th->getMessage()]]);
     }
-    if (!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
-    return Redirect::to('users/' . $user->id . '/edit');
   }
 
   /**
