@@ -130,7 +130,9 @@
                             @if (currentUser()->hasRole('coordprac') ||
                                     currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral') ||
-                                    currentUser()->hasRole('amatai'))
+                                    currentUser()->hasRole('amatai') || 
+                                    currentUser()->can('ver_casos_olvidados')
+                                    )
                                 <li class="nav-item ml-3">
                                     <a href="{{ route('expencuesta.index') }}" class="nav-link">
                                         <p>Administrar encuestas</p>

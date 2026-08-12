@@ -9,6 +9,32 @@ const expedientesService = new ExpedientesService();
 const incidenciasService = new IncidenciasService();
 
 $(document).ready(function () {
+
+    $("#myform_req").on("keyup", "textarea[name='reqdescrip']", async function (e) {
+        e.preventDefault();
+        var text = $(this).val();
+        console.log(text.length)
+        $("#reqdescrip-length").text(text.length + "/400");
+        if (text.length > 400) {
+            $(this).val(text.substring(0, 400));
+            $("#reqdescrip-length").text("400/400");
+        }
+
+    });
+
+     $("#myform_req_edit").on("keyup", "textarea[name='reqdescrip']", async function (e) {
+        e.preventDefault();
+        var text = $(this).val();
+        console.log(text.length)
+        $("#reqdescrip-length").text(text.length + "/400");
+        if (text.length > 400) {
+            $(this).val(text.substring(0, 400));
+            $("#reqdescrip-length").text("400/400");
+        }
+
+    });
+
+
     document.addEventListener("invalid", function (e) {
         e.preventDefault();
     }, true);
@@ -3026,7 +3052,7 @@ $(document).ready(function () {
             .removeClass("btn-warning")
             .addClass("btn-primary")
             .text("Crear").show();
-           // $("#row_create_autorizacion").remove();
+        // $("#row_create_autorizacion").remove();
         resetForm('myformCreateAutorizacion');
 
         $("#mymodalCreateAutorizacion").modal("show");
@@ -3035,7 +3061,7 @@ $(document).ready(function () {
 
     $("#mymodalCreateAutorizacion").on("click", "#btn_create_autorizacion", async function (e) {
         e.preventDefault();
-       // var errors = validateForm("myformCreateAutorizacion");
+        // var errors = validateForm("myformCreateAutorizacion");
 
         const form = document.getElementById("myformCreateAutorizacion");
         console.log("Form element:", form); // Log the form element to check if it's null
@@ -3123,7 +3149,7 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
-          $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
+        $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
         $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
         $("#myformEditAutorizacion select[name=genero]").val(res.genero);
         $("#myformEditAutorizacion button").hide();
@@ -3231,7 +3257,7 @@ $(document).ready(function () {
                     } else {
                         $("#wait").hide();
 
-                         Swal.fire({
+                        Swal.fire({
                             title: "Notificación enviada con éxito",
                             html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
                             icon: "info",
@@ -3241,7 +3267,7 @@ $(document).ready(function () {
                             if (result.value) {
                                 window.location.reload(true)
                             }
-                        }); 
+                        });
                     }
                 } else {
                     Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
@@ -3910,6 +3936,7 @@ function llenarFormEditReq(res) {
     $("#reqhora_ed").val(res.requerimiento.reqhora);
     $("#reqmotivo").val(res.requerimiento.reqmotivo);
     $("#reqdescrip").val(res.requerimiento.reqdescrip);
+    $("#reqdescrip-length").text(res.requerimiento.reqdescrip.length + "/400");
 }
 function llenarModalUpdateReq(res) {
     $("#reqcreated_at").val(moment(res.requerimiento.created_at, "YYYY-MM-DD").format("YYYY-MM-DD"))

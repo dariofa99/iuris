@@ -36,22 +36,94 @@
 @section('area_forms')
 
     <div class="container-fluid">
-        {{-- 
+
+
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card shadow-sm border-0">
+
+                    <!-- Encabezado -->
+                    <div class="card-header bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <h3 class="mb-1">
+                                    <i class="fa fa-folder-open text-primary"></i>
+                                    Expedientes
+                                </h3>
+
+                                <small class="text-muted">
+                                    Consulte y filtre los expedientes registrados
+                                </small>
+                            </div>
+
+                            <span class="badge badge-primary p-2">
+                                Total registros: {{ count($casos) }}
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
                     <div class="card-body">
-                        <h3 class="mb-0">
-                            <i class="fa fa-folder-open text-primary"></i>
-                            Expedientes
-                        </h3>
-                        <small class="text-muted">
-                            Total registros: {{ count($casos) }}
-                        </small>
+
+                        <form method="GET" action="{{ url()->current() }}">
+
+                            <div class="form-row align-items-end">
+
+                                <!-- Periodo -->
+                                <div class="form-group col-md-4">
+                                    <label for="periodo">
+                                        <i class="fa fa-calendar text-primary"></i>
+                                        <strong>Periodo</strong>
+                                    </label>
+                                    <select  name="periodo" id="periodo" class="form-control">
+                                        <option value="">
+                                            Todos los periodos
+                                        </option>
+                                        @foreach ($periodos as $periodo)
+                                            <option value="{{ $periodo->id }}"
+                                                {{ request('periodo') == $periodo->id ? 'selected' : '' }}>
+                                                {{ $periodo->prddes_periodo }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <!-- Número de CC -->
+                                <div class="form-group col-md-5">
+                                    <label for="documento">
+                                        <i class="fa fa-id-card text-primary"></i>
+                                        <strong>Número de documento</strong>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-search text-muted"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" name="documento" id="documento" class="form-control"
+                                            placeholder="Ingrese número de CC" value="{{ request('documento') }}">
+                                    </div>
+                                </div>
+                                <!-- Botones -->
+                                <div class="form-group col-md-3">
+                                    <div class="btn-block">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-search"></i>
+                                            Filtrar
+                                        </button>
+                                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary"
+                                            title="Limpiar filtros">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         @foreach ($casos as $caso)
             <div class="card shadow mb-4 border-left-primary">
@@ -128,7 +200,15 @@
                                     <th>Docente</th>
                                     <td>{{ $caso->docente_as }}</td>
                                 </tr>
-
+                                <tr>
+                                    <td>
+                                        <a target="_blank" href="{{ route('expedientes.show', $caso->expid) }}"
+                                            class="btn btn-primary btn-sm">
+                                            <i class="fa fa-eye"></i>
+                                            Ver expediente
+                                        </a>
+                                    </td>
+                                </tr>
                             </table>
 
                         </div>
@@ -219,7 +299,7 @@
                             </small>
 
                         </div>
-
+{{-- 
                         <div class="col-md-4 text-right">
 
                             <a target="_blank" href="{{ route('expedientes.show', $caso->expid) }}"
@@ -230,7 +310,7 @@
 
                             </a>
 
-                        </div>
+                        </div> --}}
 
                     </div>
 

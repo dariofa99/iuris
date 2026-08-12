@@ -146,8 +146,8 @@
              <div class="col-md-12">
                  <div class="form-group">
                      {!! Form::label('Descripción: ') !!}
-                     {!! Form::textarea('reqdescrip',null,['class' => 'form-control required', 'maxlength' => '900'],
-                     ) !!}
+                     {!! Form::textarea('reqdescrip',null,['class' => 'form-control required', 'maxlength' => '400', 'rows' => '6', 'placeholder' => 'Ingrese una descripción del requerimiento'])!!}
+                     <small class="float-right" id="reqdescrip-length">0/400</small>
                  </div>
              </div>
              <div class="col-md-12">

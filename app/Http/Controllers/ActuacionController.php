@@ -18,6 +18,7 @@ use App\Notifications\UserNotification;
 use App\PdfReporte;
 use App\PdfReporteDestino;
 use App\Periodo;
+use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
@@ -30,10 +31,12 @@ class ActuacionController extends Controller
 
 
   private $segmentosService;
+  private $periodoService;
 
-  function __construct(SegmentosService $segmentosService)
+  function __construct(SegmentosService $segmentosService, PeriodosService $periodoService)
   {
     $this->segmentosService = $segmentosService;
+    $this->periodoService = $periodoService;
   }
 
   /**
@@ -736,12 +739,12 @@ class ActuacionController extends Controller
     return response()->json($actuacion->actestado_id);
   }
 
-  function getCasosAbandono()
+  function getCasosAbandono(Request $request)
   {
     
 
-    $segmento = $this->segmentosService->getSegmentoActivo();
-    //dd($segmento);
+    $peri = $this->periodoService->getPeriodoActivo();
+    //dd($peri);
     $casos = DB::table('expedientes')
       ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
       ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
@@ -773,13 +776,23 @@ class ActuacionController extends Controller
       }, 'fecha_redaccion')
       ->whereIn('ref_estados.id', [1, 3])
       ->where('expedientes.expidnumberest', '<>', 3030)
-      ->whereIn('asignacion_caso.periodo_id',  [9, 10])
+    //  ->whereIn('asignacion_caso.periodo_id',  [$peri->id])
       ->where('expedientes.exptipoproce_id', '<>', 1)
       ->where('asignacion_caso.activo', 1)
+      ->where(function ($query) use ($request) {
+        if($request->has('documento') and $request->documento != ''){ 
+          $query->where('expedientes.expidnumberest', 'like', '%' . $request->documento . '%');
+        }
+        if($request->has('periodo') and $request->periodo != ''){ 
+          $query->where('asignacion_caso.periodo_id', $request->periodo);
+        }
+        
+      })
       ->distinct()
       ->orderBy('fecha_ultima_actuacion', 'asc')
       ->paginate(5);
 
-    return view('myforms.reportes.casos_olvidados', compact('casos'));
+    $periodos = $this->periodoService->index(request());
+    return view('myforms.reportes.casos_olvidados', compact('casos', 'periodos'));
   }
 }

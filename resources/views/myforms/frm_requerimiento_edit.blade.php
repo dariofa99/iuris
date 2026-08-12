@@ -180,8 +180,11 @@
                     {!! Form::textarea('reqdescrip', null, [
                         'class' => 'form-control form-control-sm required',
                         'id' => 'reqdescrip',
-                        'maxlength' => '700',
+                        'maxlength' => '400',
+                        'rows' => '6',
+                        'placeholder' => 'Ingrese una descripción del requerimiento',
                     ]) !!}
+                    <small class="float-right" id="reqdescrip-length">0/400</small>
                 </div>
             </div>
 
@@ -200,7 +203,7 @@
                     ) !!}
                 </div>
             </div>
-
+ 
 
         </div>
 
