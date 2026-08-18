@@ -20,6 +20,7 @@ use App\PdfReporteDestino;
 use App\Periodo;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
+use App\Services\UsersService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -32,11 +33,13 @@ class ActuacionController extends Controller
 
   private $segmentosService;
   private $periodoService;
+  private $usersService;
 
-  function __construct(SegmentosService $segmentosService, PeriodosService $periodoService)
+  function __construct(SegmentosService $segmentosService, PeriodosService $periodoService, UsersService $userService)
   {
     $this->segmentosService = $segmentosService;
     $this->periodoService = $periodoService;
+    $this->usersService = $userService;
   }
 
   /**
@@ -741,10 +744,175 @@ class ActuacionController extends Controller
 
   function getCasosAbandono(Request $request)
   {
-    
+
 
     $peri = $this->periodoService->getPeriodoActivo();
     //dd($peri);
+    //$request["periodo"] = 10;
+    $dias_limite = 30;
+
+$casos = DB::table('expedientes')
+    ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
+    ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
+    ->join('users as estudiante', 'estudiante.idnumber', '=', 'asignacion_caso.asigest_id')
+    ->join('users as solicitante', 'solicitante.idnumber', '=', 'expedientes.expidnumber')
+    ->join('users as docente', 'docente.idnumber', '=', 'asignacion_docente_caso.docidnumber')
+    ->join('ref_estados', 'ref_estados.id', '=', 'expedientes.expestado_id')
+    ->join('ref_tipproceso', 'ref_tipproceso.id', '=', 'expedientes.exptipoproce_id')
+
+    ->select([
+        'expedientes.expid',
+        'asignacion_caso.fecha_asig',
+
+        DB::raw("CONCAT(estudiante.name,' ',estudiante.lastname) as estudiante"),
+
+        DB::raw("CONCAT(solicitante.name,' ',solicitante.lastname) as usuario_sol"),
+
+        'ref_estados.nombre_estado as estado',
+
+        'ref_tipproceso.ref_tipproceso as proceso',
+
+        DB::raw("CONCAT(docente.name,' ',docente.lastname) as docente_as"),
+
+        'expedientes.exphechos',
+        'expedientes.exprtaest'
+    ])
+
+    // Última actuación realizada por el estudiante
+    ->selectSub(function ($query) {
+
+        $query->from('actuacions')
+            ->selectRaw('MAX(created_at)')
+            ->whereColumn(
+                'actuacions.actexpid',
+                'expedientes.expid'
+            )
+            ->whereColumn(
+                'actuacions.actusercreated',
+                'expedientes.expidnumberest'
+            );
+
+    }, 'fecha_ultima_actuacion')
+
+    // Última modificación/redacción del caso
+    ->selectSub(function ($query) {
+
+        $query->from('historial_datos_casos')
+            ->selectRaw('MAX(created_at)')
+            ->whereColumn(
+                'historial_datos_casos.hisdc_expidnumber',
+                'expedientes.expid'
+            );
+
+    }, 'fecha_redaccion')
+
+    // Estados
+    ->whereIn('ref_estados.id', [1, 3])
+
+    // Excluir estudiante
+    ->where(
+        'expedientes.expidnumberest',
+        '<>',
+        3030
+    )
+
+    // Excluir tipo de proceso
+    ->where(
+        'expedientes.exptipoproce_id',
+        '<>',
+        1
+    )
+
+    // Solo asignaciones activas
+    ->where(
+        'asignacion_caso.activo',
+        1
+    )
+
+    // Filtros actuales
+    ->where(function ($query) use ($request) {
+
+        if ($request->has('documento') && $request->documento != '') {
+
+            $query->where(
+                'expedientes.expidnumberest',
+                'like',
+                '%' . $request->documento . '%'
+            );
+        }
+
+        if ($request->has('periodo') && $request->periodo != '') {
+
+            $query->where(
+                'asignacion_caso.periodo_id',
+                $request->periodo
+            );
+        }
+    })
+
+    // ==========================================================
+    // CASOS OLVIDADOS
+    // ==========================================================
+    ->where(function ($query) {
+
+        // ------------------------------------------------------
+        // 1. Tiene actuaciones, pero la última fue hace
+        //    más de 30 días
+        // ------------------------------------------------------
+        $query->whereRaw("
+            (
+                SELECT MAX(a.created_at)
+                FROM actuacions a
+                WHERE a.actexpid = expedientes.expid
+                AND a.actusercreated = expedientes.expidnumberest
+            ) < DATE_SUB(NOW(), INTERVAL 30 DAY)
+        ")
+
+        // ------------------------------------------------------
+        // 2. Nunca ha tenido actuaciones y lleva más de
+        //    30 días asignado
+        // ------------------------------------------------------
+        ->orWhere(function ($query) {
+
+            $query->whereNotExists(function ($subquery) {
+
+                $subquery->select(DB::raw(1))
+                    ->from('actuacions')
+                    ->whereColumn(
+                        'actuacions.actexpid',
+                        'expedientes.expid'
+                    )
+                    ->whereColumn(
+                        'actuacions.actusercreated',
+                        'expedientes.expidnumberest'
+                    );
+
+            })
+
+            ->whereRaw("
+                asignacion_caso.fecha_asig <
+                DATE_SUB(NOW(), INTERVAL 30 DAY)
+            ");
+        });
+    })
+
+    ->distinct()
+
+    ->groupBy('expedientes.expid')
+
+    ->orderBy('fecha_ultima_actuacion', 'asc')
+
+    ->paginate(100);
+
+    $periodos = $this->periodoService->index(request());
+    $users = $this->usersService->getEstudiantes();
+
+
+    return view('myforms.reportes.casos_olvidados', compact('casos', 'periodos', 'users'));
+
+    dd($casos);
+
+    /////////////////////
     $casos = DB::table('expedientes')
       ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
       ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
@@ -767,7 +935,11 @@ class ActuacionController extends Controller
       ->selectSub(function ($query) {
         $query->from('actuacions')
           ->selectRaw('MAX(created_at)')
-          ->whereColumn('actuacions.actexpid', 'expedientes.expid');
+          ->whereColumn('actuacions.actexpid', 'expedientes.expid')
+          ->whereColumn(
+            'actuacions.actusercreated',
+            'expedientes.expidnumberest'
+          );
       }, 'fecha_ultima_actuacion')
       ->selectSub(function ($query) {
         $query->from('historial_datos_casos')
@@ -776,23 +948,25 @@ class ActuacionController extends Controller
       }, 'fecha_redaccion')
       ->whereIn('ref_estados.id', [1, 3])
       ->where('expedientes.expidnumberest', '<>', 3030)
-    //  ->whereIn('asignacion_caso.periodo_id',  [$peri->id])
       ->where('expedientes.exptipoproce_id', '<>', 1)
       ->where('asignacion_caso.activo', 1)
       ->where(function ($query) use ($request) {
-        if($request->has('documento') and $request->documento != ''){ 
+        if ($request->has('documento') and $request->documento != '') {
           $query->where('expedientes.expidnumberest', 'like', '%' . $request->documento . '%');
         }
-        if($request->has('periodo') and $request->periodo != ''){ 
+        if ($request->has('periodo') and $request->periodo != '') {
           $query->where('asignacion_caso.periodo_id', $request->periodo);
         }
-        
       })
       ->distinct()
+      ->groupBy('expedientes.expid')
       ->orderBy('fecha_ultima_actuacion', 'asc')
       ->paginate(5);
 
     $periodos = $this->periodoService->index(request());
-    return view('myforms.reportes.casos_olvidados', compact('casos', 'periodos'));
+    $users = $this->usersService->getEstudiantes();
+
+
+    return view('myforms.reportes.casos_olvidados', compact('casos', 'periodos', 'users'));
   }
 }

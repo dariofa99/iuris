@@ -5,7 +5,7 @@
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
 @endpush
-
+ 
 @section('navbar')
     <!-- aqui va el menu de cada vista -->
     @include('content.navbar')

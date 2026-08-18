@@ -16,7 +16,7 @@
         @endsection
         @include('msg.ajax.success')
         @php
-            if (currentUser()->hasRole('estudiante') || currentUser()->hasRole('coordprac')) {
+            if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('estudiante') || currentUser()->hasRole('coordprac')) {
                 $disabled = '';
             }else{
                 $disabled = 'disabled';

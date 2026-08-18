@@ -222,7 +222,7 @@
             'user_idnumber' => $expediente->expidnumber,
         ])
     @endif
-    @if (currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante'))
+    @if (currentUser()->hasRole('diradmin') || currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante'))
         @include('myforms.frm_expediente_user_edit', [
             'user' => $expediente->solicitante,
         ])

@@ -18,7 +18,7 @@
             <div class="input-group">
 
                 <div class="input-group-btn">
-                    @if (currentUser()->hasRole('estudiante') and !$readonly)
+                    @if ((currentUser()->hasRole('diradmin') || currentUser()->hasRole('estudiante'))  and !$readonly)
                         <button value="{{ $expediente->solicitante->idnumber }}"
                             data-tipo_doc="{{ $expediente->solicitante->tipodoc_id }}" type="button"
                             id="btn_exp_user_carga" style="background-color: green" class="btn btn-success"
