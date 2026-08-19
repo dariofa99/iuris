@@ -187,13 +187,20 @@ class DefensaOficioController extends Controller
         ->withErrors($messages)
         ->withInput();
     }
-    $request['idnumber'] = '00' . $ced;
+
+    //return response()->json($request->all());
+    /* $request['idnumber'] = '00' . $ced;
     $request['name'] = 'UserName';
     $request['lastname'] = 'UserLastName';
     $request['email'] = $ced . 'user@correo.com';
-    $user = $this->userService->store($request);
+    $user = $this->userService->store($request); */
+
+
+    
+
+
     $request['exptipoproce_id'] = 3;
-    $request['expidnumber'] = $user->idnumber;
+    $request['expidnumber'] = $request['expidnumber'];
     $expediente = $this->expedientesService->store($request);
     $request['asigest_id'] =  $expediente->expidnumberest;
     $request['asigexp_id'] =  $expediente->expid;
@@ -272,8 +279,8 @@ class DefensaOficioController extends Controller
         return view('errors.error', compact('url'));
       }
       if (($expediente->expestado_id == '4'
-          || $expediente->expestado_id == '2'
-          || $expediente->expestado_id == '5')) {
+        || $expediente->expestado_id == '2'
+        || $expediente->expestado_id == '5')) {
         return redirect('/defensas/oficio/' . $expediente->expid);
       }
     } else {
@@ -298,9 +305,7 @@ class DefensaOficioController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
-  {
-  }
+  public function update(Request $request, $id) {}
 
   /**
    * Remove the specified resource from storage.
@@ -308,9 +313,7 @@ class DefensaOficioController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
-  {
-  }
+  public function destroy($id) {}
 
 
   public function getEstudiantes()

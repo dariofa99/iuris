@@ -247,7 +247,7 @@ class UsersController extends Controller
 
 
       if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
-        return response()->json(['usersss' => $user]);
+        return response()->json(['user' => $user]);
       }
       if (!$email_request) Session::flash('message-success', 'Actualizado con éxito..');
       return Redirect::to('users/' . $user->id . '/edit');
