@@ -86,7 +86,7 @@
         
          
             <td align="center" width="45%">
-                <img src="{{ public_path('/img/firmadiradmin.jpeg') }}" style="background-color: white;" width="160"
+                <img src="{{ public_path('/img/firmadiradmin.jpeg') }}" style="position: absolute; background-color: white;margin-top:-35;" width="160"
                     height="105" />
             </td>
             <td width="5%"></td>
