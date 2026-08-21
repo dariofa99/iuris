@@ -41,7 +41,7 @@
                                  @if (
                                      !$readonly and
                                          (currentUser()->hasRole('amatai') or
-                                            /// currentUser()->hasRole('diradmin') or
+                                             currentUser()->can('reasignar_caso') or
                                              currentUser()->hasRole('coordprac') or
                                              currentUser()->hasRole('dirgral')) and
                                          $expediente->expestado_id != 2)
