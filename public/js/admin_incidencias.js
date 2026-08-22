@@ -3,7 +3,7 @@ const incidenciasService = new IncidenciasService();
 $(document).ready(function () {
 
     let tab = get_tab();
-    if(tab != false && tab != ""){
+    if(tab != false && tab != "" && tab === "problempage"){
         $("#myModal_notificar_incidencia").modal("show");
          
     }
@@ -195,8 +195,8 @@ $(document).ready(function () {
 });
 
 function incidenciaOpenUpdateForm(formId) {
-    console.log(formId);
-
+   // console.log($(formId).data("id"));
+ 
     $("#myModal_actualizar_incidencia form input[name='is_update']").remove();
     $("#myModal_actualizar_incidencia form input[name='hestado_id']").remove();
     $("#myModal_actualizar_incidencia input[name='estado_id']").val($(formId).data("estado"))
@@ -246,22 +246,25 @@ function incidenciaOpenUpdateForm(formId) {
                  location.reload(true);
              }
          }); */
-    } else if ($(this).data("estado") == 'update') {
-        var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
+         
+    } else if ($(formId).data("estado") == 'update') {
+        var old_motivo = $("#old_motivo-" + $(formId).data("id")).val();
+       
         $(".char_count").text(old_motivo.length + "/250");
         $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
         var input = `<input type="hidden" name="is_update" value="true">`;
-        var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
+        var inputId = `<input type="hidden" name="hestado_id" value="${$(formId).data("id")}">`;
         $("#myModal_actualizar_incidencia form").append(input);
         $("#myModal_actualizar_incidencia form").append(inputId);
         $("#myModal_actualizar_incidencia #lbl_title_fract").text("Actualizando incidencia");
         $("#myModal_actualizar_incidencia").modal("show");
         $("#myModal_notificar_incidencia").modal("hide");
-    } else if ($(this).data("estado") == 272) {
+    } else if ($(formId).data("estado") == 272) {
         $("#myModal_notificar_incidencia").modal("hide");
         $("#myModal_actualizar_incidencia #lbl_title_fract").text("Solicitar revisión de incidencia");
         $("#myModal_actualizar_incidencia").modal("show");
     } else {
+        
         $("#myModal_notificar_incidencia").modal("hide");
         $("#myModal_actualizar_incidencia #lbl_title_fract").text("Rechazar incidencia");
         $("#myModal_actualizar_incidencia").modal("show");
