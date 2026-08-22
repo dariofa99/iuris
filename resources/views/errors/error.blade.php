@@ -431,7 +431,7 @@
                     <span>IURIS</span>
 
                     &nbsp;|&nbsp;
-                    Consultorios Jurídicos y Centro de Conciliación Eduardo Alvarado Hurtado
+                    Consultorios Jurídicos y Centro de Conciliación  “Eduardo Alvarado Hurtado”
 
 
                 </div>
@@ -503,7 +503,7 @@
 
                 &nbsp;·&nbsp;
 
-                Consultorios Jurídicos y Centro de Conciliación Eduardo Alvarado Hurtado
+                Consultorios Jurídicos y Centro de Conciliación  “Eduardo Alvarado Hurtado”
 
                 &nbsp;·&nbsp;
 

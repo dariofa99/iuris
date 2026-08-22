@@ -90,31 +90,31 @@
                                     </select>
                                 </div>
                                 <!-- Número de CC -->
-                                <div class="form-group col-md-5">
+                                <div class="form-group col-md-3">
                                     <label for="documento">
                                         <i class="fa fa-id-card text-primary"></i>
                                         <strong>Nombre del estudiante</strong>
                                     </label>
-                                 
-                                    <select title="Seleccione un estudiante" data-live-search="true" data-live-search-placeholder="Escriba un valor..." class="form-control form-control-sm selectpicker select_data_users" name="documento" id="select_data_users">
+                                    <select title="Seleccione un estudiante" data-live-search="true"
+                                        data-live-search-placeholder="Escriba un valor..."
+                                        class="form-control form-control-sm selectpicker select_data_users" name="documento"
+                                        id="select_data_users">
 
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->idnumber }}" {{ request('documento') == $user->idnumber ? 'selected' : '' }}>
+                                            <option value="{{ $user->idnumber }}"
+                                                {{ request('documento') == $user->idnumber ? 'selected' : '' }}>
                                                 {{ $user->full_name }}
                                             </option>
                                         @endforeach
                                     </select>
-
-
-                                    {{--  <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fa fa-search text-muted"></i>
-                                            </span>
-                                        </div>
-                                        <input type="text" name="documento" id="documento" class="form-control"
-                                            placeholder="Ingrese número de CC" value="{{ request('documento') }}">
-                                    </div> --}}
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="periodo">
+                                        <i class="fa fa-clock text-primary"></i>
+                                        <strong>Días sin actuaciones</strong>
+                                    </label>
+                                    <input type="number" name="dias_sin_actuaciones" id="dias_sin_actuaciones"
+                                        class="form-control" value="{{ request('dias_sin_actuaciones') }}">
                                 </div>
                                 <!-- Botones -->
                                 <div class="form-group col-md-3">
@@ -235,7 +235,7 @@
                                         @if ($caso->fecha_ultima_actuacion)
                                             {{ \Carbon\Carbon::parse($caso->fecha_ultima_actuacion)->diffForHumans() }}
                                             <small>
-                                                ({{ \Carbon\Carbon::parse($caso->fecha_ultima_actuacion)->format('d-m-Y H:i') }})
+                                                ({{ getLongDate(\Carbon\Carbon::parse($caso->fecha_ultima_actuacion)) }})
                                             </small>
                                         @else
                                             <span class="text-danger">
@@ -342,5 +342,5 @@
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
     <!-- Latest compiled and minified JavaScript -->
-     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
+    <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 @endpush

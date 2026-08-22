@@ -1274,3 +1274,498 @@
     vertical-align: baseline;
     border-radius: 50rem;
 }
+
+/* =====================================================
+   CONTENEDOR DE LA TABLA
+===================================================== */
+
+.roles-container {
+    width: 100%;
+
+    background: #fff;
+
+    border: 1px solid #e4eaec;
+
+    border-radius: 10px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .06);
+
+    overflow: auto;
+
+    max-height: calc(100vh - 180px);
+}
+
+
+/* =====================================================
+   TABLA
+===================================================== */
+
+#table_list {
+
+    width: 100%;
+
+    min-width: 850px;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   CELDAS
+===================================================== */
+
+#table_list th,
+#table_list td {
+
+    padding: 12px 14px;
+
+    border-right: 1px solid #edf1f2;
+
+    border-bottom: 1px solid #edf1f2;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   ENCABEZADO GENERAL
+===================================================== */
+
+#table_list thead th {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 20;
+
+    background: #006975;
+
+    color: white;
+}
+
+
+/* =====================================================
+   PRIMER ENCABEZADO
+===================================================== */
+
+#table_list .permiso-header {
+
+    width: 280px;
+
+    min-width: 280px;
+
+    max-width: 280px;
+
+    text-align: left;
+
+    background: #202c30;
+
+    color: white;
+}
+
+
+/* =====================================================
+   HEADER ROLES
+===================================================== */
+
+#table_list .roles-header {
+
+    background: #006975;
+
+    font-size: 14px;
+
+    letter-spacing: .5px;
+}
+
+
+/* =====================================================
+   SEGUNDA FILA
+===================================================== */
+
+#table_list .fila_roles th {
+
+    background: #f0f6f7;
+
+    color: #26383d;
+
+    top: 43px;
+
+    z-index: 19;
+}
+
+
+/* =====================================================
+   PRIMERA COLUMNA FIJA
+===================================================== */
+
+#table_list .permiso-cell {
+
+    position: sticky;
+
+    left: 0;
+
+    z-index: 10;
+
+    width: 280px;
+
+    min-width: 280px;
+
+    max-width: 280px;
+
+    text-align: left;
+
+    background: #fff;
+
+    box-shadow: 4px 0 7px rgba(0, 0, 0, .04);
+}
+
+
+/* =====================================================
+   PRIMERA COLUMNA DEL HEADER
+===================================================== */
+
+#table_list thead .permiso-header {
+
+    position: sticky;
+
+    left: 0;
+
+    z-index: 30;
+
+    background: #202c30;
+}
+
+
+/* =====================================================
+   NOMBRE DEL PERMISO
+===================================================== */
+
+.permiso-nombre {
+
+    font-weight: 600;
+
+    color: #34464b;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   NOMBRE DEL ROL
+===================================================== */
+
+.rol-nombre {
+
+    font-weight: 700;
+
+    color: #26383d;
+
+    margin-bottom: 7px;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   MARCAR TODO
+===================================================== */
+
+.marcar-todo {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 10px;
+
+    color: #66777c;
+
+    cursor: pointer;
+
+    margin: 0;
+}
+
+
+/* =====================================================
+   CELDAS CHECKBOX
+===================================================== */
+
+.check-cell {
+
+    width: 90px;
+
+    min-width: 90px;
+
+    height: 52px;
+
+    background: #fff;
+
+    transition: background .15s ease;
+}
+
+
+/* =====================================================
+   HOVER FILA
+===================================================== */
+
+#table_list tbody tr:hover td {
+
+    background: #f5fafb;
+}
+
+
+/*
+   Mantener blanca la primera columna
+   aunque la fila tenga hover
+*/
+
+#table_list tbody tr:hover .permiso-cell {
+
+    background: #eef7f8;
+}
+
+
+/* =====================================================
+   CHECKBOX
+===================================================== */
+
+.check_permis_role,
+.btn_check_selall {
+
+    width: 17px;
+
+    height: 17px;
+
+    cursor: pointer;
+
+    accent-color: #006975;
+}
+
+
+/* =====================================================
+   SEPARACIÓN DE FILAS
+===================================================== */
+
+#table_list tbody tr {
+
+    transition: background .15s ease;
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+.roles-container::-webkit-scrollbar {
+
+    width: 9px;
+
+    height: 9px;
+}
+
+
+.roles-container::-webkit-scrollbar-track {
+
+    background: #f1f4f5;
+}
+
+
+.roles-container::-webkit-scrollbar-thumb {
+
+    background: #b7c5c8;
+
+    border-radius: 10px;
+}
+
+
+.roles-container::-webkit-scrollbar-thumb:hover {
+
+    background: #006975;
+}
+
+
+/* =====================================================
+   ÚLTIMA COLUMNA
+===================================================== */
+
+#table_list th:last-child,
+#table_list td:last-child {
+
+    border-right: none;
+}
+
+/* CONTENEDOR */
+.roles-container {
+    width: 100%;
+    max-height: calc(100vh - 180px);
+    overflow: auto;
+
+    border: 1px solid #e4eaec;
+    border-radius: 10px;
+    background: white;
+}
+
+
+/* TABLA */
+#table_list {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+
+/* CELDAS */
+#table_list th,
+#table_list td {
+    padding: 12px 14px;
+    border-right: 1px solid #edf1f2;
+    border-bottom: 1px solid #edf1f2;
+    text-align: center;
+}
+
+
+/* ================================
+   COLUMNA PERMISOS
+================================ */
+
+#table_list .permiso-header,
+#table_list .permiso-cell {
+
+    position: sticky;
+
+    left: 0;
+
+    width: 280px;
+    min-width: 280px;
+    max-width: 280px;
+
+    text-align: left;
+
+    z-index: 30;
+}
+
+
+/* Encabezado Permisos */
+
+#table_list .permiso-header {
+
+    top: 0;
+
+    background: #202c30;
+
+    color: white;
+
+    z-index: 50;
+}
+
+
+/* Celdas de permisos */
+
+#table_list .permiso-cell {
+
+    background: white;
+
+    z-index: 20;
+
+    box-shadow: 4px 0 8px rgba(0, 0, 0, .06);
+}
+
+
+/* ================================
+   ENCABEZADO ROLES
+================================ */
+
+#table_list .roles-header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 40;
+
+    background: #006975;
+
+    color: white;
+
+    font-size: 15px;
+}
+
+
+/* ================================
+   FILA DE ROLES
+================================ */
+
+#table_list .fila_roles th {
+
+    position: sticky;
+
+    top: 43px;
+
+    z-index: 35;
+
+    background: #f0f6f7;
+
+    color: #26383d;
+}
+
+
+/* ================================
+   HOVER
+================================ */
+
+#table_list tbody tr:hover td {
+
+    background: #f5fafb;
+}
+
+
+#table_list tbody tr:hover .permiso-cell {
+
+    background: #eef7f8;
+}
+
+
+/* ================================
+   CHECKBOX
+================================ */
+
+.check_permis_role,
+.btn_check_selall {
+
+    width: 17px;
+    height: 17px;
+
+    cursor: pointer;
+
+    accent-color: #006975;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .roles-container {
+
+        max-height: calc(100vh - 140px);
+    }
+
+    #table_list .permiso-header,
+    #table_list .permiso-cell {
+
+        width: 220px;
+
+        min-width: 220px;
+
+        max-width: 220px;
+    }
+}

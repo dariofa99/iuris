@@ -135,7 +135,13 @@ function set_tab() {
 function get_tab() {
     var url = window.location.href;
     var activeTab = url.substring(url.indexOf("#") + 1);
-    return (activeTab);
+    try {
+        new URL(activeTab);
+    return false;
+    } catch (error) {
+        return activeTab;
+    }
+    return activeTab;
 }
 
 function round(num, decimales = 1) {

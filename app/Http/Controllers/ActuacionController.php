@@ -747,9 +747,12 @@ class ActuacionController extends Controller
 
 
     $peri = $this->periodoService->getPeriodoActivo();
+   // $request["dias_sin_actuaciones"] = 7;
     //dd($peri);
     //$request["periodo"] = 10;
-    $dias_limite = 30;
+    $dias_limite = $request->has('dias_sin_actuaciones') ? $request->dias_sin_actuaciones : 1;
+
+   // dd($dias_limite);
 
 $casos = DB::table('expedientes')
     ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
@@ -825,11 +828,22 @@ $casos = DB::table('expedientes')
 
     // Solo asignaciones activas
     ->where(
-        'asignacion_caso.activo',
-        1
+        'asignacion_caso.activo', 1
     )
 
     // Filtros actuales
+    ->where(function ($query) use ($request) {
+
+        if (auth()->user()->hasRole('docente')) {
+
+            $query->where(
+                'asignacion_docente_caso.docidnumber',
+                auth()->user()->idnumber
+            );
+        }
+
+       
+    })
     ->where(function ($query) use ($request) {
 
         if ($request->has('documento') && $request->documento != '') {
@@ -849,39 +863,64 @@ $casos = DB::table('expedientes')
             );
         }
     })
+    ->where('asignacion_docente_caso.activo',1)
 
     // ==========================================================
     // CASOS OLVIDADOS
     // ==========================================================
-    ->where(function ($query) {
+    
+    // ==========================================================
+    // CASOS OLVIDADOS
+    // MÁS DE 40 DÍAS
+    // ==========================================================
+
+    ->where(function ($query) use ($dias_limite) {
 
         // ------------------------------------------------------
-        // 1. Tiene actuaciones, pero la última fue hace
-        //    más de 30 días
+        // CASO 1:
+        // Tiene actuaciones, pero la última fue hace
+        // MÁS DE 40 DÍAS
         // ------------------------------------------------------
+
         $query->whereRaw("
+
             (
                 SELECT MAX(a.created_at)
+
                 FROM actuacions a
+
                 WHERE a.actexpid = expedientes.expid
-                AND a.actusercreated = expedientes.expidnumberest
-            ) < DATE_SUB(NOW(), INTERVAL 30 DAY)
+
+                AND a.actusercreated =
+                    expedientes.expidnumberest
+
+            ) < DATE_SUB(
+                NOW(),
+                INTERVAL $dias_limite DAY
+            )
+
         ")
 
+
         // ------------------------------------------------------
-        // 2. Nunca ha tenido actuaciones y lleva más de
-        //    30 días asignado
+        // CASO 2:
+        // Nunca ha tenido actuaciones y lleva
+        // MÁS DE 40 DÍAS ASIGNADO
         // ------------------------------------------------------
-        ->orWhere(function ($query) {
+
+        ->orWhere(function ($query) use ($dias_limite) {
 
             $query->whereNotExists(function ($subquery) {
 
                 $subquery->select(DB::raw(1))
+
                     ->from('actuacions')
+
                     ->whereColumn(
                         'actuacions.actexpid',
                         'expedientes.expid'
                     )
+
                     ->whereColumn(
                         'actuacions.actusercreated',
                         'expedientes.expidnumberest'
@@ -890,12 +929,18 @@ $casos = DB::table('expedientes')
             })
 
             ->whereRaw("
-                asignacion_caso.fecha_asig <
-                DATE_SUB(NOW(), INTERVAL 30 DAY)
-            ");
-        });
-    })
 
+                asignacion_caso.fecha_asig <
+                DATE_SUB(
+                    NOW(),
+                    INTERVAL $dias_limite DAY
+                )
+
+            ");
+
+        });
+
+    })
     ->distinct()
 
     ->groupBy('expedientes.expid')

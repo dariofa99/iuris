@@ -1,6 +1,15 @@
 import { IncidenciasService } from "./services/incidencias.js";
 const incidenciasService = new IncidenciasService();
 $(document).ready(function () {
+
+    let tab = get_tab();
+    if(tab != false && tab != ""){
+        $("#myModal_notificar_incidencia").modal("show");
+         
+    }
+   
+
+
     document.getElementById('archivo').addEventListener('change', function (e) {
         const file = e.target.files[0];
 
@@ -9,7 +18,7 @@ $(document).ready(function () {
             document.getElementById('archivo_nombre').innerText = file.name;
             document.getElementById('preview').classList.remove('d-none');
         }
-    });
+    }); 
 
     $("#filter").on("change", function () {
        var value = $(this).val();

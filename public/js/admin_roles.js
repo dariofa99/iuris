@@ -1,6 +1,6 @@
 class UIAdminRoles {
-    
-    constructor(id='',name = '', display_name='' , description='') {
+
+    constructor(id = '', name = '', display_name = '', description = '') {
         this.id = id;
         this.name = name;
         this.display_name = display_name;
@@ -20,13 +20,13 @@ class UIAdminRoles {
         $(form[0]['button']).text('Actualizar');
         $(form[0]['button']).removeClass('btn-primary').addClass('btn-warning');
         $("#btn_save_cancel").show();
-     }
+    }
 
     loadFormCreate() {
         const form = $("#content_form form");
         const myform = this.form
-        form.attr('id', myform);    
-        form[0]['id'].value = this.id;   
+        form.attr('id', myform);
+        form[0]['id'].value = this.id;
         form[0]['name'].value = this.name;
         form[0]['display_name'].value = this.display_name;
         form[0]['description'].value = this.description;
@@ -41,22 +41,22 @@ class UIAdminRoles {
 
 
 
-(function(){
-  
+(function () {
+
     //Roles
-    $("#content_form").on('submit','#myFormCreateRole',function(e){       
+    $("#content_form").on('submit', '#myFormCreateRole', function (e) {
         createRole();
         e.preventDefault();
-    });   
+    });
 
 
-    $("#content_form").on('submit','#myFormEditRole', function (e) {
+    $("#content_form").on('submit', '#myFormEditRole', function (e) {
         id = $("#id").val()
         updateRole(id);
         e.preventDefault();
     })
 
-    $(".content_ajax").on('click','.btn_edit_role',function(e){
+    $(".content_ajax").on('click', '.btn_edit_role', function (e) {
         e.preventDefault();
         id = $(this).attr('id').split('-')[1];
         searchRole(id);
@@ -64,11 +64,11 @@ class UIAdminRoles {
 
     $(".content_ajax").on('click', '.btn_delete_role', function (e) {
         id = $(this).attr('id').split('-')[1];
-        url = '/admin/roles/'+id;
+        url = '/admin/roles/' + id;
         sweetAlertDelete(url);
     });
 
- 
+
     //end-roles
 
 
@@ -89,14 +89,14 @@ class UIAdminRoles {
         updatePermission(id);
         e.preventDefault();
     });
-  
+
     $(".content_ajax").on('click', '.btn_delete_permission', function (e) {
         id = $(this).attr('id').split('-')[1];
         url = '/admin/permisos/' + id;
         sweetAlertDelete(url);
     });
 
-//end-permission
+    //end-permission
     $("#content_form #btn_save_cancel").click(function (e) {
         role = new UIAdminRoles();
         role.form = $(this).attr('data-form');
@@ -161,8 +161,8 @@ class UIAdminRoles {
 })();
 
 //funcion que carga las vistas list con ajax
-function index_page_role(route, request={}) {
-   
+function index_page_role(route, request = {}) {
+
 
 
     $.ajax({
@@ -173,13 +173,13 @@ function index_page_role(route, request={}) {
         cache: false,
         beforeSend: function (xhr) {
             xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-            
+
         },
         /*muestra div con mensaje de 'regristrado'*/
         success: function (res) {
             console.log(res)
             //alert('')
-             $(".content_ajax").html(res);
+            $(".content_ajax").html(res);
         },
         error: function (xhr, textStatus, thrownError) {
             alert("Hubo un error con el servidor ERROR::" + thrownError, textStatus);
@@ -187,43 +187,43 @@ function index_page_role(route, request={}) {
     });
 }
 //funcion para obtener el id del rol-permiso
-function getIdAttrRoles(id,separador,orientation){
+function getIdAttrRoles(id, separador, orientation) {
 
-  value = id.split(separador)[orientation];
-  return value;
+    value = id.split(separador)[orientation];
+    return value;
 }
 //
 
 
- function createRole(){
-  
- 	var url = '/admin/roles';
-     var errors = [];//validateForm('myFormCreateRole');
-	if (errors.length<=0) {       
+function createRole() {
+
+    var url = '/admin/roles';
+    var errors = [];//validateForm('myFormCreateRole');
+    if (errors.length <= 0) {
         var data = $("#myFormCreateRole").serialize();
-		$.ajax({               
-                url: url,
-                type: 'POST',
-                cache: false,
-                data: data,                
-                beforeSend: function(xhr){
-                  xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
-                },
-                success: function(respu) {
-                    document.getElementById("myFormCreateRole").reset();
-                    var url = window.location.href;              
-                    index_page_role(url)
-                  },
-                error: function(xhr, textStatus, thrownError) {                  
-                }
-        });	
-	}
- 			
+        $.ajax({
+            url: url,
+            type: 'POST',
+            cache: false,
+            data: data,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
+            },
+            success: function (respu) {
+                document.getElementById("myFormCreateRole").reset();
+                var url = window.location.href;
+                index_page_role(url)
+            },
+            error: function (xhr, textStatus, thrownError) {
+            }
+        });
+    }
+
 }
 
 function updateRole(id) {
 
-    var url = '/admin/roles/'+id;
+    var url = '/admin/roles/' + id;
     var errors = [];//validateForm('myFormCreateRole');
     if (errors.length <= 0) {
         var data = $("#myFormEditRole").serialize();
@@ -237,9 +237,9 @@ function updateRole(id) {
             },
             success: function (respu) {
                 role = new UIAdminRoles();
-                role.form = 'myFormCreateRole';  
+                role.form = 'myFormCreateRole';
                 role.loadFormCreate();
-                var url = window.location.href; 
+                var url = window.location.href;
                 index_page_role(url)
             },
             error: function (xhr, textStatus, thrownError) {
@@ -251,7 +251,7 @@ function updateRole(id) {
 
 function searchRole(id) {
 
-    var url = '/admin/roles/'+id;
+    var url = '/admin/roles/' + id;
     var errors = [];//validateForm('myFormCreateRole');
     if (errors.length <= 0) {
         var data = {};
@@ -264,7 +264,7 @@ function searchRole(id) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
             },
             success: function (respu) {
-                role = new UIAdminRoles(respu.id,respu.name,respu.display_name,respu.description);
+                role = new UIAdminRoles(respu.id, respu.name, respu.display_name, respu.description);
                 role.form = 'myFormEditRole';
                 role.loadFormEdit();
             },
@@ -334,9 +334,9 @@ function updatePermission(id) {
             cache: false,
             data: data,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));               
+                xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));
             },
-            success: function (respu) {               
+            success: function (respu) {
                 permiso = new UIAdminRoles();
                 permiso.form = 'myFormCreatePermission';
                 permiso.loadFormCreate();
@@ -365,10 +365,10 @@ function getRolesPermissions() {
             //console.log(respu)
             llenarTablaListRole(respu);
             getPermissionsRole();
-          /*   llenartablapermissions(respu.permissions);
-            llenartablaroles(respu.roles);
-            getPermissionsRole();
-            getUsers(); */
+            /*   llenartablapermissions(respu.permissions);
+              llenartablaroles(respu.roles);
+              getPermissionsRole();
+              getUsers(); */
             //llenartablapermissions(respu)	              	
 
         },
@@ -380,38 +380,90 @@ function getRolesPermissions() {
 function llenarTablaListRole(respu) {
 
     $("#table_list tbody").html('');
+    $("#table_list thead").html('');
+
+    var head = '';
+
+    // ==========================================
+    // PRIMERA FILA
+    // ==========================================
+
+
+
+head += '<tr class="tabla-header">';
+
+// Permisos ocupa las dos filas
+head += '<th rowspan="2" class="permiso-header">';
+head += 'Permisos';
+head += '</th>';
+
+// Título Roles
+head += '<th colspan="' + respu.roles.length + '" class="roles-header">';
+head += 'Roles';
+head += '</th>';
+
+head += '</tr>';
+
+
+// Segunda fila: roles
+head += '<tr class="fila_roles">';
+
+for (var i = respu.roles.length - 1; i >= 0; i--) {
+
+    head += '<th class="rol-header">';
+
+    head += '<div class="rol-nombre">';
+    head += respu.roles[i].display_name;
+    head += '</div>';
+
+    head += '<label class="marcar-todo">';
+    head += '<input ';
+    head += 'type="checkbox" ';
+    head += 'class="btn_check_selall" ';
+    head += 'id="check_selall-' + respu.roles[i].id + '">';
+    head += '<span>Marcar todo</span>';
+    head += '</label>';
+
+    head += '</th>';
+}
+
+head += '</tr>';
+
+$("#table_list thead").html(head);
+
+
+    // ==========================================
+    // PERMISOS
+    // ==========================================
 
     var row = '';
-    row += '<tr>';
-    row += '<td width="10%" class="bg-green">';
-    row += '<label >Permisos</label>';
-    row += '</td>';
-    row += '<td colspan="' + respu.roles.length + '" align="center" class=" bg-aqua">';
-    row += 'Roles ';
-    row += '</td>';
-    row += '</tr>';
-
-    row += ' <tr class="fila_roles">';
-    row += '<td>';
-    row += '</td>';
-    for (var i = respu.roles.length - 1; i >= 0; i--) {
-        row += ' <td width="10%" >';
-        row += '<b>' + respu.roles[i].display_name + '</b>';
-        row += '<br>Marcar todo <input class="btn_check_selall" type="checkbox" id="check_selall-' + respu.roles[i].id + '">';
-        row += '  </td>';
-    }
-    row += '</tr>';
-
 
     for (var i = respu.permissions.length - 1; i >= 0; i--) {
+
         row += '<tr>';
 
-        row += '<td>';
-        row += '<label id="label_role_name"><b>' + respu.permissions[i].display_name + '</b></label>';
+        row += '<td class="permiso-cell">';
+
+        row += '<div class="permiso-nombre">';
+        row += respu.permissions[i].display_name;
+        row += '</div>';
+
         row += '</td>';
+
+
         for (var j = respu.roles.length - 1; j >= 0; j--) {
-            row += '<td>';
-            row += '<input type="checkbox"  class="check_permis_role" id="permission_' + respu.permissions[i].id + '-role_' + respu.roles[j].id + '">';
+
+            row += '<td class="check-cell">';
+
+            row += '<input ';
+            row += 'type="checkbox" ';
+            row += 'class="check_permis_role" ';
+            row += 'id="permission_' +
+                respu.permissions[i].id +
+                '-role_' +
+                respu.roles[j].id +
+                '">';
+
             row += '</td>';
         }
 
@@ -419,11 +471,7 @@ function llenarTablaListRole(respu) {
     }
 
 
-
-
-
-    $("#table_list tbody").append(row);
-
+    $("#table_list tbody").html(row);
 }
 
 function getPermissionsRole() {
@@ -440,7 +488,7 @@ function getPermissionsRole() {
             //showPreloader();
         },
         success: function (respu) {
-            
+
             for (var i = respu.length - 1; i >= 0; i--) {
                 $("#table_list .check_permis_role").each(function (index, obj) {
                     var id = $(this).attr('id');
@@ -504,12 +552,12 @@ function change_permissions(type_s, role_id) {
 }
 
 
-function sweetAlertDelete(url){
+function sweetAlertDelete(url) {
     //const ipAPI = 'https://api.ipify.org?format=json'
     Swal.fire({
         title: '¿Está seguro de eliminar el registro',
         text: "Recuerda que no se podrá recuperar el registro!",
-        type: 'warning',        
+        type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
