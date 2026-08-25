@@ -1731,7 +1731,7 @@ group by rd.subrama ;*/
 
     $autorizacion->estado_notificado = 1;
     $autorizacion->estado_id = 283;
-    $autorizacion->save();
+    $autorizacion->save(); 
 
     return response()->json($request->all());
   }

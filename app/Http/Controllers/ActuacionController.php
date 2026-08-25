@@ -746,19 +746,13 @@ class ActuacionController extends Controller
   {
 
 
-    $peri = $this->periodoService->getPeriodoActivo();
-    // $request["dias_sin_actuaciones"] = 7;
-    //dd($peri);
-    //$request["periodo"] = 10;
+    //$peri = $this->periodoService->getPeriodoActivo();
+
     if (!$request->has('dias_sin_actuaciones') || $request->dias_sin_actuaciones == '') {
       $request['dias_sin_actuaciones'] = 40;
       
-    }
-    
+    }    
     $dias_limite = $request->has('dias_sin_actuaciones') ? $request->dias_sin_actuaciones : 1;
-
-    // dd($dias_limite);
-
     $casos = DB::table('expedientes')
       ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
       ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
@@ -767,25 +761,17 @@ class ActuacionController extends Controller
       ->join('users as docente', 'docente.idnumber', '=', 'asignacion_docente_caso.docidnumber')
       ->join('ref_estados', 'ref_estados.id', '=', 'expedientes.expestado_id')
       ->join('ref_tipproceso', 'ref_tipproceso.id', '=', 'expedientes.exptipoproce_id')
-
       ->select([
         'expedientes.expid',
         'asignacion_caso.fecha_asig',
-
         DB::raw("CONCAT(estudiante.name,' ',estudiante.lastname) as estudiante"),
-
         DB::raw("CONCAT(solicitante.name,' ',solicitante.lastname) as usuario_sol"),
-
         'ref_estados.nombre_estado as estado',
-
         'ref_tipproceso.ref_tipproceso as proceso',
-
         DB::raw("CONCAT(docente.name,' ',docente.lastname) as docente_as"),
-
         'expedientes.exphechos',
         'expedientes.exprtaest'
       ])
-
       // Última actuación realizada por el estudiante
       ->selectSub(function ($query) {
 
