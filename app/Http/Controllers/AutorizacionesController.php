@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\User;
+use Illuminate\Support\Facades\Log;
 use PDF;
 
 class AutorizacionesController extends Controller
@@ -93,16 +94,16 @@ class AutorizacionesController extends Controller
                 $subject = 'Solicitud de autorización';
                 $url = url("/expedientes/{$expediente->expid}/edit#autorizaciones");
                 ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-                $diradmin = User::first();
-                if ($diradmin != null) {
-                    $diradmin->email = config('app_config.diradminemail');
+               
+                    $diradminEmail = config("app_config.diradminemail");
                     $concepto = "Se ha creado una nueva solicitud de autorización por el docente asesor: \n\n";
                     $concepto .= $request->concepto;
                     $concepto .= "\n\n";
                     $concepto .= "\n" . "Expediente: " . $expediente->expid;
                     $concepto_html = nl2br(e($concepto));
-                    ProcessSendNotificationGeneral::dispatch($diradmin, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-                }
+                    ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+                    Log::info('Notificación de autorización enviada', ['email' => $diradminEmail]);
+                
             }
 
             return response()->json(['view' => $view]);
@@ -172,14 +173,14 @@ class AutorizacionesController extends Controller
             $url = url("/expedientes/{$autorizacion->asignacion->expediente->expid}/edit#autorizaciones");
             $diradmin = User::first();
             if ($diradmin != null) {
-                $diradmin->email = config('app_config.diradminemail');
+                $diradminEmail = config('app_config.diradminemail');
                 $concepto = "Se ha solicitado la aprobación de una solicitud de autorización por el estudiante. \n\n";
                 // $concepto .= $request->concepto;
                 $concepto .= "\n";
                 $concepto .= "\n" . "Expediente: " . $autorizacion->asignacion->expediente->expid;
                 $concepto_html = nl2br(e($concepto));
-                \Log::info("Enviando notificación a adsdasdadas: " . $diradmin->email);
-                ProcessSendNotificationGeneral::dispatch($diradmin, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+                \Log::info("Enviando notificación a dirección administrativa: " . $diradminEmail);
+                ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
             }
         }
         $autorizacion->save();
