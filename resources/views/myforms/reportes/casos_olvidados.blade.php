@@ -123,6 +123,11 @@
                                             <i class="fa fa-search"></i>
                                             Filtrar
                                         </button>
+                                        <a href="{{ url('estudiantes/casos/olvidados/excel') . '?' . http_build_query(request()->query()) }}"
+                                            class="btn btn-success" title="Descargar Excel">
+                                            <i class="fa fa-file-excel"></i>
+                                            Excel
+                                        </a>
                                         <a href="{{ url()->current() }}" class="btn btn-outline-secondary"
                                             title="Limpiar filtros">
                                             <i class="fa fa-times"></i>

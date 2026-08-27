@@ -521,6 +521,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('solicitudes/store/documento', 'SolicitudesController@storeDocument');
 
     Route::get('estudiantes/casos/olvidados', 'ActuacionController@getCasosAbandono');
+    Route::get('estudiantes/casos/olvidados/excel', 'ActuacionController@downloadCasosAbandono');
 
     //prueba
     Route::get('prueba/expedienteasig', 'ExpedienteController@pruebaasig');

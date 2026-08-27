@@ -21,6 +21,9 @@ use App\Periodo;
 use App\Services\PeriodosService;
 use App\Services\SegmentosService;
 use App\Services\UsersService;
+use App\Services\ExpedientesService;
+use App\Exports\CasosAbandonoExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -34,12 +37,14 @@ class ActuacionController extends Controller
   private $segmentosService;
   private $periodoService;
   private $usersService;
+  private $expedientesService;
 
-  function __construct(SegmentosService $segmentosService, PeriodosService $periodoService, UsersService $userService)
+  function __construct(SegmentosService $segmentosService, PeriodosService $periodoService, UsersService $userService, ExpedientesService $expedientesService)
   {
     $this->segmentosService = $segmentosService;
     $this->periodoService = $periodoService;
     $this->usersService = $userService;
+    $this->expedientesService = $expedientesService;
   }
 
   /**
@@ -742,260 +747,23 @@ class ActuacionController extends Controller
     return response()->json($actuacion->actestado_id);
   }
 
+  public function downloadCasosAbandono(Request $request)
+  {
+    $query = $this->expedientesService->getCasosAbandonoQuery($request);
+
+    return Excel::download(
+      new CasosAbandonoExport($query),
+      'casos_abandono.xlsx'
+    );
+  }
+
   function getCasosAbandono(Request $request)
   {
+    $query = $this->expedientesService->getCasosAbandonoQuery($request);
 
-
-    //$peri = $this->periodoService->getPeriodoActivo();
-
-    if (!$request->has('dias_sin_actuaciones') || $request->dias_sin_actuaciones == '') {
-      $request['dias_sin_actuaciones'] = 40;
-      
-    }    
-    $dias_limite = $request->has('dias_sin_actuaciones') ? $request->dias_sin_actuaciones : 1;
-    $casos = DB::table('expedientes')
-      ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-      ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
-      ->join('users as estudiante', 'estudiante.idnumber', '=', 'asignacion_caso.asigest_id')
-      ->join('users as solicitante', 'solicitante.idnumber', '=', 'expedientes.expidnumber')
-      ->join('users as docente', 'docente.idnumber', '=', 'asignacion_docente_caso.docidnumber')
-      ->join('ref_estados', 'ref_estados.id', '=', 'expedientes.expestado_id')
-      ->join('ref_tipproceso', 'ref_tipproceso.id', '=', 'expedientes.exptipoproce_id')
-      ->select([
-        'expedientes.expid',
-        'asignacion_caso.fecha_asig',
-        DB::raw("CONCAT(estudiante.name,' ',estudiante.lastname) as estudiante"),
-        DB::raw("CONCAT(solicitante.name,' ',solicitante.lastname) as usuario_sol"),
-        'ref_estados.nombre_estado as estado',
-        'ref_tipproceso.ref_tipproceso as proceso',
-        DB::raw("CONCAT(docente.name,' ',docente.lastname) as docente_as"),
-        'expedientes.exphechos',
-        'expedientes.exprtaest'
-      ])
-      // Última actuación realizada por el estudiante
-      ->selectSub(function ($query) {
-
-        $query->from('actuacions')
-          ->selectRaw('MAX(created_at)')
-          ->whereColumn(
-            'actuacions.actexpid',
-            'expedientes.expid'
-          )
-          ->whereColumn(
-            'actuacions.actusercreated',
-            'expedientes.expidnumberest'
-          );
-      }, 'fecha_ultima_actuacion')
-
-      // Última modificación/redacción del caso
-      ->selectSub(function ($query) {
-
-        $query->from('historial_datos_casos')
-          ->selectRaw('MAX(created_at)')
-          ->whereColumn(
-            'historial_datos_casos.hisdc_expidnumber',
-            'expedientes.expid'
-          );
-      }, 'fecha_redaccion')
-
-      // Estados
-      ->whereIn('ref_estados.id', [1, 3])
-
-      // Excluir estudiante
-      ->where(
-        'expedientes.expidnumberest',
-        '<>',
-        3030
-      )
-
-      // Excluir tipo de proceso
-      ->where(
-        'expedientes.exptipoproce_id',
-        '<>',
-        1
-      )
-
-      // Solo asignaciones activas
-      ->where(
-        'asignacion_caso.activo',
-        1
-      )
-
-      // Filtros actuales
-      ->where(function ($query) use ($request) {
-
-        if (auth()->user()->hasRole('docente')) {
-
-          $query->where(
-            'asignacion_docente_caso.docidnumber',
-            auth()->user()->idnumber
-          );
-        }
-      })
-      ->where(function ($query) use ($request) {
-
-        if ($request->has('documento') && $request->documento != '') {
-
-          $query->where(
-            'expedientes.expidnumberest',
-            'like',
-            '%' . $request->documento . '%'
-          );
-        }
-
-        if ($request->has('periodo') && $request->periodo != '') {
-
-          $query->where(
-            'asignacion_caso.periodo_id',
-            $request->periodo
-          );
-        }
-      })
-      ->where('asignacion_docente_caso.activo', 1)
-
-      // ==========================================================
-      // CASOS OLVIDADOS
-      // ==========================================================
-
-      // ==========================================================
-      // CASOS OLVIDADOS
-      // MÁS DE 40 DÍAS
-      // ==========================================================
-
-      ->where(function ($query) use ($dias_limite) {
-
-        // ------------------------------------------------------
-        // CASO 1:
-        // Tiene actuaciones, pero la última fue hace
-        // MÁS DE 40 DÍAS
-        // ------------------------------------------------------
-
-        $query->whereRaw("
-
-            (
-                SELECT MAX(a.created_at)
-
-                FROM actuacions a
-
-                WHERE a.actexpid = expedientes.expid
-
-                AND a.actusercreated =
-                    expedientes.expidnumberest
-
-            ) < DATE_SUB(
-                NOW(),
-                INTERVAL $dias_limite DAY
-            )
-
-        ")
-
-
-          // ------------------------------------------------------
-          // CASO 2:
-          // Nunca ha tenido actuaciones y lleva
-          // MÁS DE 40 DÍAS ASIGNADO
-          // ------------------------------------------------------
-
-          ->orWhere(function ($query) use ($dias_limite) {
-
-            $query->whereNotExists(function ($subquery) {
-
-              $subquery->select(DB::raw(1))
-
-                ->from('actuacions')
-
-                ->whereColumn(
-                  'actuacions.actexpid',
-                  'expedientes.expid'
-                )
-
-                ->whereColumn(
-                  'actuacions.actusercreated',
-                  'expedientes.expidnumberest'
-                );
-            })
-
-              ->whereRaw("
-
-                asignacion_caso.fecha_asig <
-                DATE_SUB(
-                    NOW(),
-                    INTERVAL $dias_limite DAY
-                )
-
-            ");
-          });
-      })
-      ->distinct()
-
-      ->groupBy('expedientes.expid')
-
-      ->orderBy('fecha_ultima_actuacion', 'asc')
-
-      ->paginate(100);
-
-    $periodos = $this->periodoService->index(request());
+    $casos = $query->paginate(100);
+    $periodos = $this->periodoService->index($request);
     $users = $this->usersService->getEstudiantes();
-
-
-    return view('myforms.reportes.casos_olvidados', compact('casos', 'periodos', 'users'));
-
-    dd($casos);
-
-    /////////////////////
-    $casos = DB::table('expedientes')
-      ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-      ->join('asignacion_docente_caso', 'asignacion_docente_caso.asig_caso_id', '=', 'asignacion_caso.id')
-      ->join('users as estudiante', 'estudiante.idnumber', '=', 'asignacion_caso.asigest_id')
-      ->join('users as solicitante', 'solicitante.idnumber', '=', 'expedientes.expidnumber')
-      ->join('users as docente', 'docente.idnumber', '=', 'asignacion_docente_caso.docidnumber')
-      ->join('ref_estados', 'ref_estados.id', '=', 'expedientes.expestado_id')
-      ->join('ref_tipproceso', 'ref_tipproceso.id', '=', 'expedientes.exptipoproce_id')
-      ->select([
-        'expedientes.expid',
-        'asignacion_caso.fecha_asig',
-        DB::raw("CONCAT(estudiante.name,' ',estudiante.lastname) as estudiante"),
-        DB::raw("CONCAT(solicitante.name,' ',solicitante.lastname) as usuario_sol"),
-        'ref_estados.nombre_estado as estado',
-        'ref_tipproceso.ref_tipproceso as proceso',
-        DB::raw("CONCAT(docente.name,' ',docente.lastname) as docente_as"),
-        'expedientes.exphechos',
-        'expedientes.exprtaest'
-      ])
-      ->selectSub(function ($query) {
-        $query->from('actuacions')
-          ->selectRaw('MAX(created_at)')
-          ->whereColumn('actuacions.actexpid', 'expedientes.expid')
-          ->whereColumn(
-            'actuacions.actusercreated',
-            'expedientes.expidnumberest'
-          );
-      }, 'fecha_ultima_actuacion')
-      ->selectSub(function ($query) {
-        $query->from('historial_datos_casos')
-          ->selectRaw('MAX(created_at)')
-          ->whereColumn('historial_datos_casos.hisdc_expidnumber', 'expedientes.expid');
-      }, 'fecha_redaccion')
-      ->whereIn('ref_estados.id', [1, 3])
-      ->where('expedientes.expidnumberest', '<>', 3030)
-      ->where('expedientes.exptipoproce_id', '<>', 1)
-      ->where('asignacion_caso.activo', 1)
-      ->where(function ($query) use ($request) {
-        if ($request->has('documento') and $request->documento != '') {
-          $query->where('expedientes.expidnumberest', 'like', '%' . $request->documento . '%');
-        }
-        if ($request->has('periodo') and $request->periodo != '') {
-          $query->where('asignacion_caso.periodo_id', $request->periodo);
-        }
-      })
-      ->distinct()
-      ->groupBy('expedientes.expid')
-      ->orderBy('fecha_ultima_actuacion', 'asc')
-      ->paginate(5);
-
-    $periodos = $this->periodoService->index(request());
-    $users = $this->usersService->getEstudiantes();
-
 
     return view('myforms.reportes.casos_olvidados', compact('casos', 'periodos', 'users'));
   }
