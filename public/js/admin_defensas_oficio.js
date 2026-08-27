@@ -5,8 +5,21 @@ const expedientesService = new ExpedientesService();
 
 $(document).ready(function () {
 
+    
+    $("#btn_exp_user_carga_create").on("click", function (e) {
+        $("#myFormUserEditExpediente").attr("id", "myFormUserCreateExpediente");
+        $("#actualizar_exp_us").attr("id", "registrar_exp_us");
+        resetForm('myFormUserCreateExpediente');
+        $("#myFormUserCreateExpediente select[name='tipopers_id']").val(237);
+        $("#myFormUserCreateExpediente select[name='tipodoc_id']").val(2);
+        $("#content_infoexp").hide();
+        $("#myFormUserCreateExpediente input[name='fechanacimien']").removeAttr('required').removeClass('required');
+
+        ocultarCompDiscapUser('myFormUserCreateExpediente');
+    });
+    
     $("#content_user_exp_asig").on("click", '#registrar_exp_us', async function (e) {
-        e.preventDefault();
+        e.preventDefault(); 
 
         const form = document.getElementById("myFormUserCreateExpediente");
         if (!form) return;

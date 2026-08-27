@@ -349,14 +349,16 @@ class User extends Authenticatable
                 ->where(function ($query) use ($request) {
                     if ($request->has('segid') and $request->segid != '') {
                         $query->where('segid', $request->segid);
+                       // dd("Sss");
                     }
                     
                     if ($request->has('expid') and $request->segid != '' and $request->expid != '') {
                         
                         $query->where('expidnumber', $request->expid);
                     }
-                    if ($request->has('perid') and $request->segid != '') {
+                    if ($request->has('perid')) {
                         $query->where('perid', $request->perid);
+                        //dd($request->perid);
                     } else {
                         $periodo = Periodo::where("estado", 1)->first();
                         if ($periodo) {
@@ -367,6 +369,7 @@ class User extends Authenticatable
                 ->orderBy('notas.id', 'asc')
                 ->get();
         }
+       //dd($notas);
         $origen = [];
         if (count($notas) > 0) {
 

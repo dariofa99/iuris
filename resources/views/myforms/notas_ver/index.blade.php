@@ -664,7 +664,7 @@
                                     {{-- PERIODO --}}
                                     <div class="col-md-3 mb-3 mb-md-0">
                                         <div class="form-group-custom">
-                                            <label class="form-label-modern mb-2">
+                                             <label class="form-label-modern mb-2">
                                                 <i class="fas fa-calendar-alt text-warning mr-2"></i>
                                                 <span class="font-weight-600">Período</span>
                                             </label>

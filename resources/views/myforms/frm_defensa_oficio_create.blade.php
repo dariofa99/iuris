@@ -5,10 +5,7 @@
 
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
 
-    <style>
-
-       
-    </style>
+  
 
 @endpush
 

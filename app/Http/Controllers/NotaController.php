@@ -56,7 +56,9 @@ class NotaController extends Controller
     public function notas_ver(Request $request)
     {
         $segmentoAct = $this->segmentosService->getSegmentoActivo();
-
+        $periodoAct = $this->periodosService->getPeriodoActivo();
+        
+      //  dd($periodoAct->segmentos);
         // $user = User::where('idnumber',3030)->first();
         if (currentUser()->hasRole("estudiante")) {
             $user = User::where('idnumber', auth()->user()->idnumber)->first();
@@ -66,9 +68,9 @@ class NotaController extends Controller
                 $user = User::where('idnumber', $request->idnumber)->first();
             }
         }
-        // dd("$notas");
+        // dd("$user");
         if ($request->has('expid')) {
-            $request['segid'] = $segmentoAct->id;
+            //$request['segid'] = $segmentoAct->id;
         }
         $notas = [];
         if (isset($user)) {
