@@ -470,7 +470,6 @@
 
     <script
         type="module"
-        src="{{ asset('js/admin_defensas_oficio.js') }}"
-    ></script>
+        src="{{ asset('js/admin_defensas_oficio.js?v=' . config('app_config.asset_version')) }}"></script>
 
-@endpush
+@endpush 
