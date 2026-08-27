@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     });
 
-     $("#myform_req_edit").on("keyup", "textarea[name='reqdescrip']", async function (e) {
+    $("#myform_req_edit").on("keyup", "textarea[name='reqdescrip']", async function (e) {
         e.preventDefault();
         var text = $(this).val();
         console.log(text.length)
@@ -3327,75 +3327,315 @@ $(document).ready(function () {
 
 
     $("#btn_detalles_estudiante").on("click", async function () {
+
         var estudiante_id = $("#expidnumberest").val();
+
         console.log(estudiante_id);
 
         $("#wait").show();
+
         let res = await expedientesService.getDetailsEstudiante(estudiante_id);
 
-        if (res == "") {
-            $("#modal-conten-js").html('No hay información registrada o no se ha seleccionado un estudiante');//limpia modal antes de mostrar
-            $("#mymodal-dinamyc-tittle").html("Detalles estudiante");
+
+        /* =====================================================
+           SIN INFORMACIÓN
+        ===================================================== */
+
+        if (res.data == "") {
+
+            $("#modal-conten-js").html(`
+            
+            <div class="iuris-empty">
+
+                <div class="iuris-empty-icon">
+                    <i class="fa fa-user-o"></i>
+                </div>
+
+                <h5>No hay información disponible</h5>
+
+                <p>
+                    No hay información registrada para el estudiante
+                    o aún no se ha seleccionado uno.
+                </p>
+
+            </div>
+
+        `);
+
+            $("#mymodal-dinamyc-tittle").html(`
+            <i class="fa fa-user-circle-o"></i>
+            Detalles estudiante
+        `);
+
         } else {
 
-            var table_html = `<table class="table table-bordered">
-            <thead>
-                <tr>    
-                    <th>Subrama</th>
-                    <th><h4>Total</h4></th>
-                    
-                </tr>
-            </thead>
-            <tbody>`;
-            res.forEach(element => {
 
-                table_html += `<tr>
-                    <td>${element.subrama}</td>
-                    <td><h4>${element.total}</h4></td>
-                     <td>
-                   `;
+            /* =================================================
+               TABLA
+            ================================================= */
+
+            var table_html = `
+
+            <div class="iuris-detail-header">
+
+                <div class="iuris-detail-icon">
+                    <img src="${res.estudiante.image}">
+                </div>
+
+                <div>
+
+                    <div class="iuris-detail-title">
+                        ${res.estudiante.name} ${res.estudiante.lastname}
+                    </div>
+
+                    <small>
+                        Distribución de casos por subrama
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="iuris-table-wrapper">
+
+                <table class="table iuris-detail-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Subrama
+                            </th>
+
+                            <th class="text-center">
+                                Total
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+        `;
+
+
+            /* =================================================
+               RECORRER RESULTADOS
+            ================================================= */
+
+            res.data.forEach(element => {
+
+
+                table_html += `
+
+                <tr>
+
+                    <td>
+
+                        <div class="iuris-subrama">
+
+                            <span class="iuris-subrama-icon">
+
+                                <i class="fa fa-folder-open"></i>
+
+                            </span>
+
+                            <span>
+                                ${element.subrama}
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td class="text-center">
+
+                        <span class="iuris-total">
+                            ${element.total}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="iuris-estados">
+            `;
+
+
+                /* =============================================
+                   ABIERTOS
+                ============================================= */
 
                 if (element.Abiertos != "0") {
+
                     table_html += `
-                   (${element.Abiertos} Abierto)
-                    `;
-                }
-                if (element.Cerrados != "0") {
-                    table_html += `
-                    (${element.Cerrados} Cerrado)
-                    `;
-                }
-                if (element.Rechazados != "0") {
-                    table_html += `
-                     (${element.Rechazados} Rechazado)
-                    `;
-                }
-                if (element.En_solicitud_de_cierre != "0") {
-                    table_html += `
-                     (${element.En_solicitud_de_cierre} En solicitud de cierre)
-                    
-                    `;
-                }
-                if (element.Cerrado_sistema != "0") {
-                    table_html += `
-                     (${element.Cerrado_sistema} Cerrado sistema)
-                    `;
-                }
-                if (element.Pausados != "0") {
-                    table_html += `
-                     (${element.Pausados} Pausado)
-                    `;
+
+                    <span class="iuris-badge abierto">
+
+                        <i class="fa fa-folder-open-o"></i>
+
+                        ${element.Abiertos}
+                        Abierto${element.Abiertos != "1" ? "s" : ""}
+
+                    </span>
+
+                `;
                 }
 
-                table_html += `</td></tr>`;
+
+                /* =============================================
+                   CERRADOS
+                ============================================= */
+
+                if (element.Cerrados != "0") {
+
+                    table_html += `
+
+                    <span class="iuris-badge cerrado">
+
+                        <i class="fa fa-check"></i>
+
+                        ${element.Cerrados}
+                        Cerrado${element.Cerrados != "1" ? "s" : ""}
+
+                    </span>
+
+                `;
+                }
+
+
+                /* =============================================
+                   RECHAZADOS
+                ============================================= */
+
+                if (element.Rechazados != "0") {
+
+                    table_html += `
+
+                    <span class="iuris-badge rechazado">
+
+                        <i class="fa fa-times"></i>
+
+                        ${element.Rechazados}
+                        Rechazado${element.Rechazados != "1" ? "s" : ""}
+
+                    </span>
+
+                `;
+                }
+
+
+                /* =============================================
+                   SOLICITUD CIERRE
+                ============================================= */
+
+                if (element.En_solicitud_de_cierre != "0") {
+
+                    table_html += `
+
+                    <span class="iuris-badge solicitud">
+
+                        <i class="fa fa-clock-o"></i>
+
+                        ${element.En_solicitud_de_cierre}
+                        En solicitud de cierre
+
+                    </span>
+
+                `;
+                }
+
+
+                /* =============================================
+                   CERRADO SISTEMA
+                ============================================= */
+
+                if (element.Cerrado_sistema != "0") {
+
+                    table_html += `
+
+                    <span class="iuris-badge sistema">
+
+                        <i class="fa fa-lock"></i>
+
+                        ${element.Cerrado_sistema}
+                        Cerrado sistema
+
+                    </span>
+
+                `;
+                }
+
+
+                /* =============================================
+                   PAUSADOS
+                ============================================= */
+
+                if (element.Pausados != "0") {
+
+                    table_html += `
+
+                    <span class="iuris-badge pausado">
+
+                        <i class="fa fa-pause"></i>
+
+                        ${element.Pausados}
+                        Pausado${element.Pausados != "1" ? "s" : ""}
+
+                    </span>
+
+                `;
+                }
+
+
+                table_html += `
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
             });
-            table_html += `</tbody></table>`;
+
+
+            table_html += `
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `;
+
 
             $("#modal-conten-js").html(table_html);
-            $("#mymodal-dinamyc-tittle").html("Detalles estudiante");
+
+            $("#mymodal-dinamyc-tittle").html(`
+
+            <i class="fa fa-user-circle-o"></i>
+            Detalles estudiante
+
+        `);
+
         }
+
+
         $("#mymodaljs").modal("show");
+
         $("#wait").hide();
+
     });
 
     $("#btn_notificar_incidente").on("click", async function (e) {

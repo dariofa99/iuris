@@ -1075,7 +1075,7 @@ class ExpedienteController extends Controller
           DB::raw('SUM(IF(expedientes.exptipoproce_id = 1 AND expedientes.expestado_id = 2, 1, 0)) AS simples_cerradas'),
           DB::raw('SUM(IF(expedientes.exptipoproce_id = 2 AND expedientes.expestado_id = 2, 1, 0)) as complejas_cerradas')
         )
-        ->where('expfecha', '>=', $fecha_in)
+        //->where('expfecha', '>=', $fecha_in)
         ->where('astfecha', '=', $fechaconsul)
         ->where('astid_lugar', '=', '130')
         ->Where(function ($query) {
@@ -1111,6 +1111,7 @@ class ExpedienteController extends Controller
       $estudiantes_com = array();
       $estudiantes_exp = array();
 
+
       foreach ($estudiantes_asis as $key => $est_inv) {
 
         $estudiantes_com[$key] = [
@@ -1125,9 +1126,12 @@ class ExpedienteController extends Controller
         ];
       }
 
+
+
       foreach ($estudiantes_fil as $key_fil => $est_inv_fil) {
         foreach ($estudiantes_asis as $key => $est_inv) {
           if ($est_inv->astid_estudent == $est_inv_fil->astid_estudent) {
+
 
 
             unset($estudiantes_com[$key]);
@@ -1152,15 +1156,19 @@ class ExpedienteController extends Controller
 
     if (sizeof($estudiantes) <= 0) {
 
+
+
+
       $estudiantes = DB::table('users')
         //->join('expedientes', 'expedientes.expidnumberest', '=', 'asistencia.astid_estudent')
         ->leftJoin('expedientes', 'users.idnumber', '=', 'expedientes.expidnumberest')
         ->join('role_user', 'users.id', '=', 'role_user.user_id')
-        ->join('turnos', 'users.idnumber', '=', 'turnos.trnid_estudent')
+        ->leftJoin('turnos', 'users.idnumber', '=', 'turnos.trnid_estudent')
         ->leftjoin('sede_usuarios', 'sede_usuarios.user_id', '=', 'users.id')
         ->leftjoin('sedes', 'sedes.id_sede', '=', 'sede_usuarios.sede_id')
         ->where('sedes.id_sede', session('sede')->id_sede)
         ->select(
+          'turnos.id as tid',
           'users.idnumber AS astid_estudent',
           'users.name',
           'users.lastname',
@@ -1171,7 +1179,7 @@ class ExpedienteController extends Controller
         )
         ->where('users.active', '=', '1')
         ->where('role_user.role_id', '=', '6')
-        //->where('expfecha', '>=', $fecha_in)
+        ->where('expfecha', '>=', $fecha_in)
         ->groupBy('astid_estudent')
         ->orderBy($consultex)
         ->orderBy($consultex2)
@@ -1695,8 +1703,10 @@ join rama_derecho rd on rd.id = e.expramaderecho_id
 where e.expidnumberest = '1004193598'
 and (e.expestado_id != 8)
 group by rd.subrama ;*/
-    $expedientes = DB::table('expedientes as e')
+try {
+      $expedientes = DB::table('expedientes as e')
       ->join('rama_derecho as rd', 'rd.id', '=', 'e.expramaderecho_id')
+      ->join("users as es", "es.idnumber", "=", "e.expidnumberest")
       ->where('e.expidnumberest', $idnumber)
       ->where('e.expestado_id', '!=', 8)
       ->select(
@@ -1711,8 +1721,21 @@ group by rd.subrama ;*/
       )
       ->groupBy('rd.subrama')
       ->get();
+    $estudiante = User::where("idnumber", $idnumber)->first();
+   
+    $estudiante->image = url('thumbnails/'.$estudiante->image);
 
-    return response()->json($expedientes);
+    return response()->json([
+      "data" => $expedientes,
+      "estudiante" => $estudiante
+    ]);
+} catch (\Throwable $th) {
+   return response()->json([
+      "data" => [],
+      "estudiante" => null
+    ]);
+}
+
   }
 
   public function rechazarAutorizacionNotificacion(Request $request)
@@ -1731,7 +1754,7 @@ group by rd.subrama ;*/
 
     $autorizacion->estado_notificado = 1;
     $autorizacion->estado_id = 283;
-    $autorizacion->save(); 
+    $autorizacion->save();
 
     return response()->json($request->all());
   }

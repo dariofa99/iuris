@@ -1,40 +1,57 @@
 @extends('layouts.dashboard')
 
 
+@push('styles')
+
+    <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
+
+    <style>
+
+       
+    </style>
+
+@endpush
 
 
 @section('navbar')
-    <!-- aqui va el menu de cada vista -->
-    @include('content.navbar')
-@endsection
-@push('styles')
-    <!-- aqui van los estilos de cada vista -->
-    <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
-    <style>
 
-    </style>
-@endpush
+    @include('content.navbar')
+
+@endsection
+
 
 @section('titulo_area')
-    Defensas de Oficio
+
+    
 @endsection
+
 
 @section('area_forms')
 
     @include('msg.success')
 
+
     @if ($errors->any())
+
         <div class="alert alert-danger">
+
             <ul>
+
                 @foreach ($errors->all() as $error)
+
                     <li>{{ $error }}</li>
+
                 @endforeach
+
             </ul>
+
         </div>
+
     @endif
 
 
     @include('myforms.frm_expediente_user_create')
+
 
     {!! Form::open([
         'route' => 'oficio.store',
@@ -42,226 +59,421 @@
         'id' => 'myFormDefOfiStore',
     ]) !!}
 
+
     @if ($periodo != null)
+
         {!! Form::hidden('periodo_id', $periodo->id) !!}
+
     @endif
 
-    <div class="row">
-        <div class="col-md-12">
 
-            <div class="card shadow-sm border-0">
+    <div class="iuris-form-card">
 
-                {{-- HEADER --}}
-                <div class="card-header bg-white border-0 py-3">
 
-                    <div class="d-flex justify-content-between align-items-center">
+        {{-- ==================================================
+             HEADER
+        =================================================== --}}
 
-                        <div>
-                            <h4 class="mb-1 font-weight-bold text-dark">
-                                <i class="fa fa-file-text-o text-primary mr-2"></i>
-                                Nueva Defensa de Oficio
-                            </h4>
+        <div class="iuris-form-header">
 
-                            <small class="text-muted">
-                                Complete la información para registrar el expediente
-                            </small>
-                        </div>
+            <div class="iuris-form-title">
 
-                        @if ($periodo != null)
-                            <span class="badge badge-success p-2">
-                                <i class="fa fa-check-circle"></i>
-                                Periodo activo
-                            </span>
-                        @endif
+                <span class="iuris-form-icon">
 
-                    </div>
+                    <i class="fa fa-balance-scale"></i>
 
-                </div>
+                </span>
 
-                <div class="card-body">
 
-                    <div class="row">
+                <div>
 
-                        {{-- SOLICITANTE --}}
-                        <div class="col-md-4">
+                    <h5>
+                        Nueva defensa de oficio
+                    </h5>
 
-                            <div class="form-group">
-
-                                {!! Form::label('expidnumber', 'Identificación del solicitante') !!}
-
-                                <div class="input-group">
-
-                                    <div class="input-group-btn">
-                                        {!! Form::button('Agregar', [
-                                            'class' => 'btn btn-success',
-                                            'data-toggle' => 'modal',
-                                            'data-target' => '#myModal_exp_user_edit',
-                                            'id' => 'btn_exp_user_carga_create',
-                                        ]) !!}
-                                    </div>
-
-                                    {!! Form::text('expidnumber', null, [
-                                        'class' => 'form-control required',
-                                        'required' => 'required',
-                                        'readonly',
-                                        'id' => 'expidnumber',
-                                        'placeholder' => 'Seleccione un solicitante',
-                                    ]) !!}
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- EXPEDIENTE --}}
-                        <div class="col-md-4">
-
-                            <div class="form-group">
-
-                                {!! Form::label('expid', 'Código Expediente') !!}
-
-                                {!! Form::text('expid', null, [
-                                    'class' => 'form-control',
-                                    'required' => 'required',
-                                    'maxlength' => '30',
-                                    'placeholder' => 'Código del expediente',
-                                ]) !!}
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- ENTIDAD --}}
-                        <div class="col-md-4">
-
-                            <div class="form-group">
-
-                                {!! Form::label('expjuzoent', 'Entidad') !!}
-
-                                {!! Form::text('expjuzoent', null, [
-                                    'class' => 'form-control',
-                                    'required' => 'required',
-                                    'maxlength' => '60',
-                                    'placeholder' => 'Nombre de la entidad',
-                                ]) !!}
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- TIPO PROCESO --}}
-                        <div class="col-md-4">
-
-                            <div class="form-group">
-
-                                {!! Form::label('expramaderecho_id', 'Tipo Proceso') !!}
-
-                                {!! Form::select('expramaderecho_id', $rama_derecho, null, [
-                                    'placeholder' => 'Selecciona...',
-                                    'class' => 'form-control required',
-                                    'required' => 'required',
-                                    'id' => 'expramaderecho_id',
-                                ]) !!}
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- ESTUDIANTE --}}
-                        <div class="col-md-4">
-
-                            <div class="form-group">
-
-                                <label for="expidnumberest">
-                                    Estudiante
-                                </label>
-
-                                <select data-live-search="true" name="expidnumberest" required id="expidnumberest"
-                                    class="required form-control selectpicker">
-
-                                    <option value="">
-                                        Seleccione estudiante...
-                                    </option>
-
-                                    @foreach ($estudiantes as $key => $estudiante)
-                                        <option value="{{ $estudiante['idnumber'] }}">
-                                            {{ $estudiante['full_name'] }}
-                                        </option>
-                                    @endforeach
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- FECHA --}}
-                        <div class="col-md-4">
-
-                            {!! Form::label('expfechalimite', 'Fecha límite de posesión') !!}
-
-                            <div class="input-group">
-
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="fa fa-calendar text-primary"></i>
-                                    </span>
-                                </div>
-
-                                {!! Form::text('expfechalimite', fechaActual(), [
-                                    'class' => 'form-control required',
-                                    'id' => 'expfechalimite',
-                                    'required' => 'required',
-                                    'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                                    'data-mask',
-                                ]) !!}
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {{-- FOOTER --}}
-                <div class="card-footer bg-light border-0 text-right">
-
-                    @if ($periodo != null)
-                        <button type="submit" class="btn btn-primary px-4">
-
-                            <i class="fa fa-save mr-1"></i>
-                            Registrar
-
-                        </button>
-                    @else
-                        <button disabled type="button" class="btn btn-secondary">
-
-                            <i class="fa fa-lock mr-1"></i>
-                            No hay un periodo activo
-
-                        </button>
-                    @endif
+                    <small>
+                        Registro de información del caso
+                    </small>
 
                 </div>
 
             </div>
 
+
+            @if ($periodo != null)
+
+                <span class="iuris-periodo">
+
+                    <i class="fa fa-check-circle"></i>
+
+                    {{ $periodo->prddes_periodo }} activo
+
+                </span>
+
+            @endif
+
         </div>
+
+
+        {{-- ==================================================
+             BODY
+        =================================================== --}}
+
+        <div class="iuris-form-body">
+
+            <div class="row">
+
+
+                {{-- SOLICITANTE --}}
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        {!! Form::label(
+                            'expidnumber',
+                            'Identificación del solicitante'
+                        ) !!}
+
+
+                        <div class="input-group">
+
+                            <div class="input-group-prepend">
+
+                                {!! Form::button('<i class="fa fa-user-plus"></i>', [
+
+                                    'class' => 'btn btn-iuris-success',
+
+                                    'data-toggle' => 'modal',
+
+                                    'data-target' =>
+                                        '#myModal_exp_user_edit',
+
+                                    'id' =>
+                                        'btn_exp_user_carga_create',
+
+                                ]) !!}
+
+                            </div>
+
+
+                            {!! Form::text('expidnumber', null, [
+
+                                'class' =>
+                                    'form-control required',
+
+                                'required' =>
+                                    'required',
+
+                                'readonly',
+
+                                'id' =>
+                                    'expidnumber',
+
+                                'placeholder' =>
+                                    'Seleccione...',
+
+                            ]) !!}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- EXPEDIENTE --}}
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        {!! Form::label(
+                            'expid',
+                            'Código expediente'
+                        ) !!}
+
+
+                        {!! Form::text('expid', null, [
+
+                            'class' =>
+                                'form-control',
+
+                            'required' =>
+                                'required',
+
+                            'maxlength' =>
+                                '30',
+
+                            'placeholder' =>
+                                'Código del expediente',
+
+                        ]) !!}
+
+                    </div>
+
+                </div>
+
+
+                {{-- ENTIDAD --}}
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        {!! Form::label(
+                            'expjuzoent',
+                            'Entidad'
+                        ) !!}
+
+
+                        {!! Form::text('expjuzoent', null, [
+
+                            'class' =>
+                                'form-control',
+
+                            'required' =>
+                                'required',
+
+                            'maxlength' =>
+                                '60',
+
+                            'placeholder' =>
+                                'Nombre de la entidad',
+
+                        ]) !!}
+
+                    </div>
+
+                </div>
+
+
+                {{-- TIPO PROCESO --}}
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        {!! Form::label(
+                            'expramaderecho_id',
+                            'Tipo de proceso'
+                        ) !!}
+
+
+                        {!! Form::select(
+                            'expramaderecho_id',
+                            $rama_derecho,
+                            null,
+                            [
+
+                                'placeholder' =>
+                                    'Selecciona...',
+
+                                'class' =>
+                                    'form-control required',
+
+                                'required' =>
+                                    'required',
+
+                                'id' =>
+                                    'expramaderecho_id',
+
+                            ]
+                        ) !!}
+
+                    </div>
+
+                </div>
+
+
+                {{-- ESTUDIANTE --}}
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        <label for="expidnumberest">
+
+                            Estudiante
+
+                        </label>
+
+
+                        <select
+
+                            data-live-search="true"
+
+                            name="expidnumberest"
+
+                            required
+
+                            id="expidnumberest"
+
+                            class="required form-control selectpicker"
+
+                        >
+
+                            <option value="">
+
+                                Seleccione estudiante...
+
+                            </option>
+
+
+                            @foreach (
+                                $estudiantes as $key => $estudiante
+                            )
+
+                                <option
+                                    value="{{ $estudiante['idnumber'] }}"
+                                >
+
+                                    {{ $estudiante['full_name'] }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                {{-- FECHA --}}
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        {!! Form::label(
+                            'expfechalimite',
+                            'Fecha límite de posesión'
+                        ) !!}
+
+
+                        <div class="input-group">
+
+                            <div class="input-group-prepend">
+
+                                <span class="input-group-text">
+
+                                    <i class="fa fa-calendar text-primary"></i>
+
+                                </span>
+
+                            </div>
+
+
+                            {!! Form::text(
+                                'expfechalimite',
+                                fechaActual(),
+                                [
+
+                                    'class' =>
+                                        'form-control required',
+
+                                    'id' =>
+                                        'expfechalimite',
+
+                                    'required' =>
+                                        'required',
+
+                                    'data-inputmask' =>
+                                        "'alias': 'yyyy/mm/dd'",
+
+                                    'data-mask',
+
+                                ]
+                            ) !!}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        {{-- ==================================================
+             FOOTER
+        =================================================== --}}
+
+        <div class="iuris-form-footer">
+
+
+            @if ($periodo != null)
+
+                <span class="iuris-required">
+
+                    <i class="fa fa-info-circle"></i>
+
+                    Complete los campos requeridos
+
+                </span>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-iuris-primary"
+                >
+
+                    <i class="fa fa-save"></i>
+
+                    Registrar defensa
+
+                </button>
+
+            @else
+
+                <span class="iuris-required warning">
+
+                    <i class="fa fa-exclamation-circle"></i>
+
+                    No hay un periodo activo
+
+                </span>
+
+
+                <button
+                    disabled
+                    type="button"
+                    class="btn btn-secondary"
+                >
+
+                    <i class="fa fa-lock"></i>
+
+                    No hay un periodo activo
+
+                </button>
+
+            @endif
+
+
+        </div>
+
+
     </div>
+
 
     {!! Form::close() !!}
 
+
 @stop
+
+
 @push('scripts')
-    <!-- aqui van los scripts de cada vista -->
+
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-    <script type="module" src={{ asset('js/admin_defensas_oficio.js') }}></script>
+
+    <script
+        type="module"
+        src="{{ asset('js/admin_defensas_oficio.js') }}"
+    ></script>
+
 @endpush

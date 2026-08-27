@@ -210,7 +210,7 @@ class DefensaOficioController extends Controller
     $request['expidnumber'] = $expediente->expid;
     $request['ref_estado_id'] = $expediente->expestado_id;
     $request['ref_motivo_estado_id'] = 13;
-    $estado_caso = $this->estadoCasoService->store($request);
+    $estado_caso = $this->estadoCasoService->store($request); 
     $user = $expediente->estudiante;
     $user->notification = 'Nueva notificación de caso';
     $user->link_to = '/defensas/oficio/' . $expediente->expid . '/edit';

@@ -1135,44 +1135,47 @@
 .btn-close-pro:hover {
   opacity: 1;
 }
+
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .animated {
-    animation-duration: 0.5s;
-    animation-fill-mode: both;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
 }
 
 .fadeInUp {
-    animation-name: fadeInUp;
+  animation-name: fadeInUp;
 }
 
 .fadeInRight {
-    animation-name: fadeInRight;
+  animation-name: fadeInRight;
 }
 
 .card {
-    transition: all 0.3s ease;
-    border-radius: 12px;
+  transition: all 0.3s ease;
+  border-radius: 12px;
 }
 
 /* .card:hover {
@@ -1181,58 +1184,58 @@
 } */
 
 .btn-group .btn {
-    border-radius: 20px !important;
-    margin: 2px;
-    padding: 0.25rem 1rem;
-    font-size: 0.8rem;
+  border-radius: 20px !important;
+  margin: 2px;
+  padding: 0.25rem 1rem;
+  font-size: 0.8rem;
 }
 
 .btn-group .btn i {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 
 .badge {
-    border-radius: 20px;
-    font-weight: 500;
+  border-radius: 20px;
+  font-weight: 500;
 }
 
 .card-header {
-    border-radius: 12px 12px 0 0 !important;
+  border-radius: 12px 12px 0 0 !important;
 }
 
 .ml-4 {
-    margin-left: 2rem !important;
+  margin-left: 2rem !important;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .btn-group {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        border-radius: 20px !important;
-        margin: 2px 0;
-    }
-    
-    .ml-4 {
-        margin-left: 1rem !important;
-    }
-    
-    .card-header .d-flex {
-        flex-direction: column;
-        align-items: flex-start !important;
-    }
-    
-    .card-header .btn {
-        margin-top: 10px;
-    }
+  .btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    border-radius: 20px !important;
+    margin: 2px 0;
+  }
+
+  .ml-4 {
+    margin-left: 1rem !important;
+  }
+
+  .card-header .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .card-header .btn {
+    margin-top: 10px;
+  }
 }
 
 /* Estilo para el badge de vencido */
 .badge-danger {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
 }
 
 /* Hover en botones */
@@ -1241,38 +1244,38 @@
 .btn-outline-warning:hover,
 .btn-outline-danger:hover,
 .btn-outline-secondary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Línea de tiempo visual para hijos */
 .ml-4 {
-    position: relative;
+  position: relative;
 }
 
 .ml-4:before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 20px;
-    bottom: 20px;
-    width: 2px;
-    background: linear-gradient(to bottom, #3498db, #9b59b6);
-    opacity: 0.3;
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, #3498db, #9b59b6);
+  opacity: 0.3;
 }
 
 /* Badge de estado personalizado */
 .badge-custom {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.65rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 50rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 50rem;
 }
 
 /* =====================================================
@@ -1280,19 +1283,19 @@
 ===================================================== */
 
 .roles-container {
-    width: 100%;
+  width: 100%;
 
-    background: #fff;
+  background: #fff;
 
-    border: 1px solid #e4eaec;
+  border: 1px solid #e4eaec;
 
-    border-radius: 10px;
+  border-radius: 10px;
 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, .06);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .06);
 
-    overflow: auto;
+  overflow: auto;
 
-    max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 180px);
 }
 
 
@@ -1302,15 +1305,15 @@
 
 #table_list {
 
-    width: 100%;
+  width: 100%;
 
-    min-width: 850px;
+  min-width: 850px;
 
-    border-collapse: separate;
+  border-collapse: separate;
 
-    border-spacing: 0;
+  border-spacing: 0;
 
-    font-size: 13px;
+  font-size: 13px;
 }
 
 
@@ -1321,13 +1324,13 @@
 #table_list th,
 #table_list td {
 
-    padding: 12px 14px;
+  padding: 12px 14px;
 
-    border-right: 1px solid #edf1f2;
+  border-right: 1px solid #edf1f2;
 
-    border-bottom: 1px solid #edf1f2;
+  border-bottom: 1px solid #edf1f2;
 
-    text-align: center;
+  text-align: center;
 }
 
 
@@ -1337,15 +1340,15 @@
 
 #table_list thead th {
 
-    position: sticky;
+  position: sticky;
 
-    top: 0;
+  top: 0;
 
-    z-index: 20;
+  z-index: 20;
 
-    background: #006975;
+  background: #006975;
 
-    color: white;
+  color: white;
 }
 
 
@@ -1355,17 +1358,17 @@
 
 #table_list .permiso-header {
 
-    width: 280px;
+  width: 280px;
 
-    min-width: 280px;
+  min-width: 280px;
 
-    max-width: 280px;
+  max-width: 280px;
 
-    text-align: left;
+  text-align: left;
 
-    background: #202c30;
+  background: #202c30;
 
-    color: white;
+  color: white;
 }
 
 
@@ -1375,11 +1378,11 @@
 
 #table_list .roles-header {
 
-    background: #006975;
+  background: #006975;
 
-    font-size: 14px;
+  font-size: 14px;
 
-    letter-spacing: .5px;
+  letter-spacing: .5px;
 }
 
 
@@ -1389,13 +1392,13 @@
 
 #table_list .fila_roles th {
 
-    background: #f0f6f7;
+  background: #f0f6f7;
 
-    color: #26383d;
+  color: #26383d;
 
-    top: 43px;
+  top: 43px;
 
-    z-index: 19;
+  z-index: 19;
 }
 
 
@@ -1405,23 +1408,23 @@
 
 #table_list .permiso-cell {
 
-    position: sticky;
+  position: sticky;
 
-    left: 0;
+  left: 0;
 
-    z-index: 10;
+  z-index: 10;
 
-    width: 280px;
+  width: 280px;
 
-    min-width: 280px;
+  min-width: 280px;
 
-    max-width: 280px;
+  max-width: 280px;
 
-    text-align: left;
+  text-align: left;
 
-    background: #fff;
+  background: #fff;
 
-    box-shadow: 4px 0 7px rgba(0, 0, 0, .04);
+  box-shadow: 4px 0 7px rgba(0, 0, 0, .04);
 }
 
 
@@ -1431,13 +1434,13 @@
 
 #table_list thead .permiso-header {
 
-    position: sticky;
+  position: sticky;
 
-    left: 0;
+  left: 0;
 
-    z-index: 30;
+  z-index: 30;
 
-    background: #202c30;
+  background: #202c30;
 }
 
 
@@ -1447,11 +1450,11 @@
 
 .permiso-nombre {
 
-    font-weight: 600;
+  font-weight: 600;
 
-    color: #34464b;
+  color: #34464b;
 
-    line-height: 1.4;
+  line-height: 1.4;
 }
 
 
@@ -1461,13 +1464,13 @@
 
 .rol-nombre {
 
-    font-weight: 700;
+  font-weight: 700;
 
-    color: #26383d;
+  color: #26383d;
 
-    margin-bottom: 7px;
+  margin-bottom: 7px;
 
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 
@@ -1477,19 +1480,19 @@
 
 .marcar-todo {
 
-    display: inline-flex;
+  display: inline-flex;
 
-    align-items: center;
+  align-items: center;
 
-    gap: 6px;
+  gap: 6px;
 
-    font-size: 10px;
+  font-size: 10px;
 
-    color: #66777c;
+  color: #66777c;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    margin: 0;
+  margin: 0;
 }
 
 
@@ -1499,15 +1502,15 @@
 
 .check-cell {
 
-    width: 90px;
+  width: 90px;
 
-    min-width: 90px;
+  min-width: 90px;
 
-    height: 52px;
+  height: 52px;
 
-    background: #fff;
+  background: #fff;
 
-    transition: background .15s ease;
+  transition: background .15s ease;
 }
 
 
@@ -1517,7 +1520,7 @@
 
 #table_list tbody tr:hover td {
 
-    background: #f5fafb;
+  background: #f5fafb;
 }
 
 
@@ -1528,7 +1531,7 @@
 
 #table_list tbody tr:hover .permiso-cell {
 
-    background: #eef7f8;
+  background: #eef7f8;
 }
 
 
@@ -1539,13 +1542,13 @@
 .check_permis_role,
 .btn_check_selall {
 
-    width: 17px;
+  width: 17px;
 
-    height: 17px;
+  height: 17px;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    accent-color: #006975;
+  accent-color: #006975;
 }
 
 
@@ -1555,7 +1558,7 @@
 
 #table_list tbody tr {
 
-    transition: background .15s ease;
+  transition: background .15s ease;
 }
 
 
@@ -1565,29 +1568,29 @@
 
 .roles-container::-webkit-scrollbar {
 
-    width: 9px;
+  width: 9px;
 
-    height: 9px;
+  height: 9px;
 }
 
 
 .roles-container::-webkit-scrollbar-track {
 
-    background: #f1f4f5;
+  background: #f1f4f5;
 }
 
 
 .roles-container::-webkit-scrollbar-thumb {
 
-    background: #b7c5c8;
+  background: #b7c5c8;
 
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 
 .roles-container::-webkit-scrollbar-thumb:hover {
 
-    background: #006975;
+  background: #006975;
 }
 
 
@@ -1598,37 +1601,37 @@
 #table_list th:last-child,
 #table_list td:last-child {
 
-    border-right: none;
+  border-right: none;
 }
 
 /* CONTENEDOR */
 .roles-container {
-    width: 100%;
-    max-height: calc(100vh - 180px);
-    overflow: auto;
+  width: 100%;
+  max-height: calc(100vh - 180px);
+  overflow: auto;
 
-    border: 1px solid #e4eaec;
-    border-radius: 10px;
-    background: white;
+  border: 1px solid #e4eaec;
+  border-radius: 10px;
+  background: white;
 }
 
 
 /* TABLA */
 #table_list {
-    width: 100%;
-    min-width: 850px;
-    border-collapse: separate;
-    border-spacing: 0;
+  width: 100%;
+  min-width: 850px;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 
 /* CELDAS */
 #table_list th,
 #table_list td {
-    padding: 12px 14px;
-    border-right: 1px solid #edf1f2;
-    border-bottom: 1px solid #edf1f2;
-    text-align: center;
+  padding: 12px 14px;
+  border-right: 1px solid #edf1f2;
+  border-bottom: 1px solid #edf1f2;
+  text-align: center;
 }
 
 
@@ -1639,17 +1642,17 @@
 #table_list .permiso-header,
 #table_list .permiso-cell {
 
-    position: sticky;
+  position: sticky;
 
-    left: 0;
+  left: 0;
 
-    width: 280px;
-    min-width: 280px;
-    max-width: 280px;
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
 
-    text-align: left;
+  text-align: left;
 
-    z-index: 30;
+  z-index: 30;
 }
 
 
@@ -1657,13 +1660,13 @@
 
 #table_list .permiso-header {
 
-    top: 0;
+  top: 0;
 
-    background: #202c30;
+  background: #202c30;
 
-    color: white;
+  color: white;
 
-    z-index: 50;
+  z-index: 50;
 }
 
 
@@ -1671,11 +1674,11 @@
 
 #table_list .permiso-cell {
 
-    background: white;
+  background: white;
 
-    z-index: 20;
+  z-index: 20;
 
-    box-shadow: 4px 0 8px rgba(0, 0, 0, .06);
+  box-shadow: 4px 0 8px rgba(0, 0, 0, .06);
 }
 
 
@@ -1685,17 +1688,17 @@
 
 #table_list .roles-header {
 
-    position: sticky;
+  position: sticky;
 
-    top: 0;
+  top: 0;
 
-    z-index: 40;
+  z-index: 40;
 
-    background: #006975;
+  background: #006975;
 
-    color: white;
+  color: white;
 
-    font-size: 15px;
+  font-size: 15px;
 }
 
 
@@ -1705,15 +1708,15 @@
 
 #table_list .fila_roles th {
 
-    position: sticky;
+  position: sticky;
 
-    top: 43px;
+  top: 43px;
 
-    z-index: 35;
+  z-index: 35;
 
-    background: #f0f6f7;
+  background: #f0f6f7;
 
-    color: #26383d;
+  color: #26383d;
 }
 
 
@@ -1723,13 +1726,13 @@
 
 #table_list tbody tr:hover td {
 
-    background: #f5fafb;
+  background: #f5fafb;
 }
 
 
 #table_list tbody tr:hover .permiso-cell {
 
-    background: #eef7f8;
+  background: #eef7f8;
 }
 
 
@@ -1740,12 +1743,12 @@
 .check_permis_role,
 .btn_check_selall {
 
-    width: 17px;
-    height: 17px;
+  width: 17px;
+  height: 17px;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    accent-color: #006975;
+  accent-color: #006975;
 }
 
 /* =====================================================
@@ -1754,18 +1757,745 @@
 
 @media (max-width: 768px) {
 
-    .roles-container {
+  .roles-container {
 
-        max-height: calc(100vh - 140px);
-    }
+    max-height: calc(100vh - 140px);
+  }
 
-    #table_list .permiso-header,
-    #table_list .permiso-cell {
+  #table_list .permiso-header,
+  #table_list .permiso-cell {
 
-        width: 220px;
+    width: 220px;
 
-        min-width: 220px;
+    min-width: 220px;
 
-        max-width: 220px;
-    }
+    max-width: 220px;
+  }
 }
+
+/* =====================================================
+   HEADER DEL RESUMEN
+===================================================== */
+
+.iuris-detail-header {
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 12px 15px;
+
+  margin-bottom: 12px;
+
+  background: #f7fafb;
+
+  border: 1px solid #e6edef;
+
+  border-radius: 6px;
+}
+
+
+.iuris-detail-icon img {
+
+  width: 60px;
+
+  height: 60px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #eaf5f6;
+
+  color: #006975;
+
+  border-radius: 7px;
+
+  margin-right: 10px;
+
+  font-size: 16px;
+}
+
+
+.iuris-detail-title {
+
+  color: #34474b;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+
+.iuris-detail-header small {
+
+  color: #89999d;
+
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   TABLA
+===================================================== */
+
+.iuris-table-wrapper {
+
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.iuris-detail-table {
+
+  width: 100%;
+
+  margin-bottom: 0;
+
+  border-collapse: separate;
+
+  border-spacing: 0;
+
+  font-size: 12px;
+}
+
+
+/* HEADER */
+
+.iuris-detail-table thead th {
+
+  background: #006975;
+
+  color: white;
+
+  border: 0;
+
+  padding: 9px 12px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+.iuris-detail-table thead th:first-child {
+
+  border-radius: 5px 0 0 0;
+}
+
+
+.iuris-detail-table thead th:last-child {
+
+  border-radius: 0 5px 0 0;
+}
+
+
+/* FILAS */
+
+.iuris-detail-table tbody td {
+
+  padding: 11px 12px;
+
+  vertical-align: middle;
+
+  border-top: 1px solid #edf1f2;
+
+  color: #53666b;
+}
+
+
+.iuris-detail-table tbody tr {
+
+  transition: background .15s ease;
+}
+
+
+.iuris-detail-table tbody tr:hover {
+
+  background: #f7fbfb;
+}
+
+
+/* =====================================================
+   SUBRAMA
+===================================================== */
+
+.iuris-subrama {
+
+  display: flex;
+
+  align-items: center;
+
+  font-weight: 600;
+
+  color: #3e5054;
+}
+
+
+.iuris-subrama-icon {
+
+  width: 27px;
+
+  height: 27px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-right: 8px;
+
+  border-radius: 5px;
+
+  background: #eef7f8;
+
+  color: #006975;
+
+  font-size: 12px;
+}
+
+
+/* =====================================================
+   TOTAL
+===================================================== */
+
+.iuris-total {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 34px;
+
+  height: 28px;
+
+  padding: 0 8px;
+
+  background: #006975;
+
+  color: white;
+
+  border-radius: 5px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   ESTADOS
+===================================================== */
+
+.iuris-estados {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+}
+
+
+.iuris-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 4px 7px;
+
+  border-radius: 12px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+.iuris-badge i {
+
+  font-size: 12px;
+}
+
+
+/* Abierto */
+
+.iuris-badge.abierto {
+
+  color: #287a55;
+
+  background: #eaf7ef;
+}
+
+
+/* Cerrado */
+
+.iuris-badge.cerrado {
+
+  color: #006975;
+
+  background: #e8f5f6;
+}
+
+
+/* Rechazado */
+
+.iuris-badge.rechazado {
+
+  color: #a94a4a;
+
+  background: #fbeeee;
+}
+
+
+/* Solicitud */
+
+.iuris-badge.solicitud {
+
+  color: #9a6a20;
+
+  background: #fff7e8;
+}
+
+
+/* Cerrado sistema */
+
+.iuris-badge.sistema {
+
+  color: #626f73;
+
+  background: #eef1f2;
+}
+
+
+/* Pausado */
+
+.iuris-badge.pausado {
+
+  color: #765f99;
+
+  background: #f3eff9;
+}
+
+
+/* =====================================================
+   SIN INFORMACIÓN
+===================================================== */
+
+.iuris-empty {
+
+  text-align: center;
+
+  padding: 35px 20px;
+}
+
+
+.iuris-empty-icon {
+
+  width: 55px;
+
+  height: 55px;
+
+  margin: 0 auto 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eef7f8;
+
+  color: #006975;
+
+  font-size: 21px;
+}
+
+
+.iuris-empty h5 {
+
+  margin-bottom: 5px;
+
+  color: #34474b;
+
+  font-size: 15px;
+}
+
+
+.iuris-empty p {
+
+  margin: 0;
+
+  color: #89999d;
+
+  font-size: 14px;
+}
+
+.iuris-form-card {
+
+            background: #fff;
+
+            border: 1px solid #e5ebed;
+
+            border-radius: 8px;
+
+            overflow: visible;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .05);
+
+            margin-bottom: 20px;
+        }
+
+
+        /* ============================================
+               HEADER
+            ============================================ */
+
+        .iuris-form-header {
+            min-height: 58px;
+            padding: 10px 16px;
+
+            background: #374850;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            color: white;
+
+            border-radius: 8px 8px 0 0;
+        }
+
+
+        .iuris-form-title {
+
+            display: flex;
+
+            align-items: center;
+        }
+
+
+        .iuris-form-icon {
+
+            width: 34px;
+
+            height: 34px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: rgba(255, 255, 255, .14);
+
+            border-radius: 6px;
+
+            margin-right: 10px;
+
+            font-size: 15px;
+        }
+
+
+        .iuris-form-title h5 {
+
+            margin: 0;
+
+            font-size: 15px;
+
+            font-weight: 600;
+        }
+
+
+        .iuris-form-title small {
+
+            font-size: 11px;
+
+            opacity: .75;
+        }
+
+
+        /* ============================================
+               PERIODO
+            ============================================ */
+
+        .iuris-periodo {
+
+            background: rgba(255, 255, 255, .12);
+
+            border: 1px solid rgba(255, 255, 255, .18);
+
+            border-radius: 20px;
+
+            padding: 5px 10px;
+
+            font-size: 11px;
+        }
+
+
+        /* ============================================
+               BODY
+            ============================================ */
+
+        .iuris-form-body {
+
+            padding: 18px 18px 5px;
+        }
+
+
+        /* ============================================
+               LABEL
+            ============================================ */
+
+        .iuris-form-card label {
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #53666b;
+
+            margin-bottom: 5px;
+        }
+
+
+        /* ============================================
+               INPUTS
+            ============================================ */
+
+        .iuris-form-card .form-control {
+
+            height: 36px;
+
+            font-size: 14px;
+
+            border-radius: 5px;
+
+            border: 1px solid #dce5e7;
+
+            box-shadow: none;
+
+            color: #34474b;
+        }
+
+
+        .iuris-form-card .form-control:focus {
+
+            border-color: #006975;
+
+            box-shadow: 0 0 0 2px rgba(0, 105, 117, .08);
+        }
+
+
+        /* ============================================
+               INPUT GROUP
+            ============================================ */
+
+        .iuris-form-card .input-group .form-control {
+
+            border-radius: 0 5px 5px 0;
+        }
+
+
+        .btn-iuris-success {
+
+            height: 36px;
+
+            color: white;
+
+            background: #2e9b70;
+
+            border: 1px solid #2e9b70;
+
+            border-radius: 5px 0 0 5px;
+
+            font-size: 13px;
+        }
+
+
+        .btn-iuris-success:hover {
+
+            background: #25865f;
+
+            color: white;
+        }
+
+
+        /* ============================================
+               BOTÓN INFO
+            ============================================ */
+
+        .btn-iuris-info {
+
+            height: 36px;
+
+            font-size: 12px;
+
+            color: #006975;
+
+            background: #afced1;
+
+            border: 1px solid #cde3e6;
+
+            border-radius: 5px;
+        }
+
+
+        .btn-iuris-info:hover {
+
+            color: white;
+
+            background: #006975;
+
+            border-color: #006975;
+        }
+
+
+        /* ============================================
+               FOOTER
+            ============================================ */
+
+        .iuris-form-footer {
+
+            min-height: 55px;
+            padding: 10px 18px;
+
+            border-top: 1px solid #edf1f2;
+
+            background: #fafcfc;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-radius: 0 0 8px 8px;
+        }
+
+
+        /* ============================================
+               BOTÓN PRINCIPAL
+            ============================================ */
+
+        .btn-iuris-primary {
+
+            background: #006975;
+
+            border-color: #006975;
+
+            color: white;
+
+            font-size: 14px;
+
+            padding: 7px 15px;
+
+            border-radius: 5px;
+
+            transition: .2s;
+        }
+
+
+        .btn-iuris-primary:hover {
+
+            background: #005661;
+
+            border-color: #005661;
+
+            color: white;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* ============================================
+               MENSAJE
+            ============================================ */
+
+        .iuris-required {
+
+            font-size: 11px;
+
+            color: #89989c;
+        }
+
+
+        .iuris-required i {
+
+            color: #006975;
+
+            margin-right: 4px;
+        }
+
+
+        .iuris-required.warning {
+
+            color: #b06a2c;
+        }
+
+
+        .iuris-required.warning i {
+
+            color: #d98a3a;
+        }
+
+
+        /* ============================================
+               ESPACIADO
+            ============================================ */
+
+        .iuris-form-card .form-group {
+
+            margin-bottom: 15px;
+        }
+
+
+        /* ============================================
+               RESPONSIVE
+            ============================================ */
+
+        @media (max-width: 768px) {
+
+            .iuris-form-header {
+
+                align-items: flex-start;
+
+                gap: 10px;
+            }
+
+            .iuris-periodo {
+
+                display: none;
+            }
+
+            .iuris-form-body {
+
+                padding: 15px;
+            }
+
+            .iuris-form-footer {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 10px;
+            }
+
+            .btn-iuris-primary {
+
+                width: 100%;
+            }
+
+        }

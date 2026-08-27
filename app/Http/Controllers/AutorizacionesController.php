@@ -171,17 +171,16 @@ class AutorizacionesController extends Controller
             $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
             $subject = 'Solicitud de autorización';
             $url = url("/expedientes/{$autorizacion->asignacion->expediente->expid}/edit#autorizaciones");
-            $diradmin = User::first();
-            if ($diradmin != null) {
+         
                 $diradminEmail = config('app_config.diradminemail');
                 $concepto = "Se ha solicitado la aprobación de una solicitud de autorización por el estudiante. \n\n";
                 // $concepto .= $request->concepto;
                 $concepto .= "\n";
                 $concepto .= "\n" . "Expediente: " . $autorizacion->asignacion->expediente->expid;
                 $concepto_html = nl2br(e($concepto));
-                \Log::info("Enviando notificación a dirección administrativa: " . $diradminEmail);
+             
                 ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-            }
+            
         }
         $autorizacion->save();
         $expediente = $this->expedienteService->findWithFilter([
