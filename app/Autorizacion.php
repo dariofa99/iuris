@@ -25,6 +25,11 @@ class Autorizacion extends Model
         return $this->belongsTo(AsignacionCaso::class, 'asig_caso_id', 'id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_solicitante_id', 'id');
+    }
+
     public function ref_estado()
    {
       return $this->belongsTo(TablaReferencia::class, 'estado_id', 'id');

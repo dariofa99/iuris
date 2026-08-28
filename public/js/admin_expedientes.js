@@ -787,7 +787,7 @@ $(document).ready(function () {
 
     $("#btn_desc_exp_us").on("click", function (e) {
         if ($("#select_data_estudiantes").val() != '' && $("#select_data_estudiantes").val() != null) {
-            console.log($("#select_data_estudiantes").val());
+
             let a = document.createElement("a");
             let req = $('#myFormBsExpAdv').serialize();
             a.setAttribute('href', 'excel/exp/user/download?' + req);
@@ -3051,10 +3051,13 @@ $(document).ready(function () {
         $("#myformCreateAutorizacion button")
             .removeClass("btn-warning")
             .addClass("btn-primary")
-            .text("Crear").show();
-        // $("#row_create_autorizacion").remove();
+            .text("Crear autorización").show();
+        if ($(this).data("role") == "diradmin") {
+            $("#row_create_autorizacion").remove();
+        }
         resetForm('myformCreateAutorizacion');
-
+        $("#lbl_autor_create").closest('small').hide();
+        console.log($("#lbl_autor_create").closest('small'));
         $("#mymodalCreateAutorizacion").modal("show");
     });
 
@@ -3062,9 +3065,9 @@ $(document).ready(function () {
     $("#mymodalCreateAutorizacion").on("click", "#btn_create_autorizacion", async function (e) {
         e.preventDefault();
         // var errors = validateForm("myformCreateAutorizacion");
-
+         $("#lbl_autor_create").closest('small').hide();
         const form = document.getElementById("myformCreateAutorizacion");
-        console.log("Form element:", form); // Log the form element to check if it's null
+         // Log the form element to check if it's null
         if (!form) return;
         var isvalid = validateForms(form);
         if (isvalid) {
@@ -3109,6 +3112,8 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
+         $("#lbl_autor_create").closest('small').show();
+        $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname).show()
         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
         $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
         $("#myformEditAutorizacion select[name=genero]").val(res.genero);
@@ -3149,6 +3154,8 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
+         $("#lbl_autor_create").closest('small').show();
+        $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname).show()
         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
         $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
         $("#myformEditAutorizacion select[name=genero]").val(res.genero);

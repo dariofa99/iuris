@@ -1859,7 +1859,7 @@
 
   border-spacing: 0;
 
- /*  font-size: 12px; */
+  /*  font-size: 12px; */
 }
 
 
@@ -2146,356 +2146,507 @@
 
 .iuris-form-card {
 
-            background: #fff;
+  background: #fff;
 
-            border: 1px solid #e5ebed;
+  border: 1px solid #e5ebed;
 
-            border-radius: 8px;
+  border-radius: 8px;
 
-            overflow: visible;
+  overflow: visible;
 
-            box-shadow: 0 3px 12px rgba(0, 0, 0, .05);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .05);
 
-            margin-bottom: 20px;
-        }
+  margin-bottom: 20px;
+}
 
 
-        /* ============================================
+/* ============================================
                HEADER
             ============================================ */
 
-        .iuris-form-header {
-            min-height: 58px;
-            padding: 10px 16px;
+.iuris-form-header {
+  min-height: 58px;
+  padding: 10px 16px;
 
-            background: #374850;
+  background: #374850;
 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-            color: white;
+  color: white;
 
-            border-radius: 8px 8px 0 0;
-        }
-
-
-        .iuris-form-title {
-
-            display: flex;
-
-            align-items: center;
-        }
+  border-radius: 8px 8px 0 0;
+}
 
 
-        .iuris-form-icon {
+.iuris-form-title {
 
-            width: 34px;
+  display: flex;
 
-            height: 34px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            background: rgba(255, 255, 255, .14);
-
-            border-radius: 6px;
-
-            margin-right: 10px;
-
-            font-size: 15px;
-        }
+  align-items: center;
+}
 
 
-        .iuris-form-title h5 {
+.iuris-form-icon {
 
-            margin: 0;
+  width: 34px;
 
-            font-size: 15px;
+  height: 34px;
 
-            font-weight: 600;
-        }
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: rgba(255, 255, 255, .14);
+
+  border-radius: 6px;
+
+  margin-right: 10px;
+
+  font-size: 15px;
+}
 
 
-        .iuris-form-title small {
+.iuris-form-title h5 {
 
-            /* font-size: 11px; */
+  margin: 0;
 
-            opacity: .75;
-        }
+  font-size: 15px;
+
+  font-weight: 600;
+}
 
 
-        /* ============================================
+.iuris-form-title small {
+
+  /* font-size: 11px; */
+
+  opacity: .75;
+}
+
+
+/* ============================================
                PERIODO
             ============================================ */
 
-        .iuris-periodo {
+.iuris-periodo {
 
-            background: rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .12);
 
-            border: 1px solid rgba(255, 255, 255, .18);
+  border: 1px solid rgba(255, 255, 255, .18);
 
-            border-radius: 20px;
+  border-radius: 20px;
 
-            padding: 5px 10px;
+  padding: 5px 10px;
 
-            /* font-size: 11px; */
-        }
+  /* font-size: 11px; */
+}
 
 
-        /* ============================================
+/* ============================================
                BODY
             ============================================ */
 
-        .iuris-form-body {
+.iuris-form-body {
 
-            padding: 18px 18px 5px;
-        }
+  padding: 18px 18px 5px;
+}
 
 
-        /* ============================================
+/* ============================================
                LABEL
             ============================================ */
 
-        .iuris-form-card label {
+.iuris-form-card label {
 
-           /*  font-size: 14px; */
+  /*  font-size: 14px; */
 
-            font-weight: 600;
+  font-weight: 600;
 
-            color: #53666b;
+  color: #53666b;
 
-            margin-bottom: 5px;
-        }
+  margin-bottom: 5px;
+}
 
 
-        /* ============================================
+/* ============================================
                INPUTS
             ============================================ */
 
-        .iuris-form-card .form-control {
+.iuris-form-card .form-control {
 
-            height: 36px;
+  height: 36px;
 
-            /* font-size: 14px; */
+  /* font-size: 14px; */
 
-            border-radius: 5px;
+  border-radius: 5px;
 
-            border: 1px solid #dce5e7;
+  border: 1px solid #dce5e7;
 
-            box-shadow: none;
+  box-shadow: none;
 
-            color: #34474b;
-        }
-
-
-        .iuris-form-card .form-control:focus {
-
-            border-color: #006975;
-
-            box-shadow: 0 0 0 2px rgba(0, 105, 117, .08);
-        }
+  color: #34474b;
+}
 
 
-        /* ============================================
+.iuris-form-card .form-control:focus {
+
+  border-color: #006975;
+
+  box-shadow: 0 0 0 2px rgba(0, 105, 117, .08);
+}
+
+
+/* ============================================
                INPUT GROUP
             ============================================ */
 
-        .iuris-form-card .input-group .form-control {
+.iuris-form-card .input-group .form-control {
 
-            border-radius: 0 5px 5px 0;
-        }
-
-
-        .btn-iuris-success {
-
-            height: 36px;
-
-            color: white;
-
-            background: #2e9b70;
-
-            border: 1px solid #2e9b70;
-
-            border-radius: 5px 0 0 5px;
-
-            /* font-size: 13px; */
-        }
+  border-radius: 0 5px 5px 0;
+}
 
 
-        .btn-iuris-success:hover {
+.btn-iuris-success {
 
-            background: #25865f;
+  height: 36px;
 
-            color: white;
-        }
+  color: white;
+
+  background: #2e9b70;
+
+  border: 1px solid #2e9b70;
+
+  border-radius: 5px 0 0 5px;
+
+  /* font-size: 13px; */
+}
 
 
-        /* ============================================
+.btn-iuris-success:hover {
+
+  background: #25865f;
+
+  color: white;
+}
+
+
+/* ============================================
                BOTÓN INFO
             ============================================ */
 
-        .btn-iuris-info {
+.btn-iuris-info {
 
-            height: 36px;
+  height: 36px;
 
-           /*  font-size: 12px; */
+  /*  font-size: 12px; */
 
-            color: #006975;
+  color: #006975;
 
-            background: #afced1;
+  background: #afced1;
 
-            border: 1px solid #cde3e6;
+  border: 1px solid #cde3e6;
 
-            border-radius: 5px;
-        }
-
-
-        .btn-iuris-info:hover {
-
-            color: white;
-
-            background: #006975;
-
-            border-color: #006975;
-        }
+  border-radius: 5px;
+}
 
 
-        /* ============================================
+.btn-iuris-info:hover {
+
+  color: white;
+
+  background: #006975;
+
+  border-color: #006975;
+}
+
+
+/* ============================================
                FOOTER
             ============================================ */
 
-        .iuris-form-footer {
+.iuris-form-footer {
 
-            min-height: 55px;
-            padding: 10px 18px;
+  min-height: 55px;
+  padding: 10px 18px;
 
-            border-top: 1px solid #edf1f2;
+  border-top: 1px solid #edf1f2;
 
-            background: #fafcfc;
+  background: #fafcfc;
 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-            border-radius: 0 0 8px 8px;
-        }
+  border-radius: 0 0 8px 8px;
+}
 
 
-        /* ============================================
+/* ============================================
                BOTÓN PRINCIPAL
             ============================================ */
 
-        .btn-iuris-primary {
+.btn-iuris-primary {
 
-            background: #006975;
+  background: #006975;
 
-            border-color: #006975;
+  border-color: #006975;
 
-            color: white;
+  color: white;
 
-            /* font-size: 14px; */
+  /* font-size: 14px; */
 
-            padding: 7px 15px;
+  padding: 7px 15px;
 
-            border-radius: 5px;
+  border-radius: 5px;
 
-            transition: .2s;
-        }
-
-
-        .btn-iuris-primary:hover {
-
-            background: #005661;
-
-            border-color: #005661;
-
-            color: white;
-
-            transform: translateY(-1px);
-        }
+  transition: .2s;
+}
 
 
-        /* ============================================
+.btn-iuris-primary:hover {
+
+  background: #005661;
+
+  border-color: #005661;
+
+  color: white;
+
+  transform: translateY(-1px);
+}
+
+
+/* ============================================
                MENSAJE
             ============================================ */
 
-        .iuris-required {
+.iuris-required {
 
-            font-size: 11px;
+  font-size: 11px;
 
-            color: #89989c;
-        }
-
-
-        .iuris-required i {
-
-            color: #006975;
-
-            margin-right: 4px;
-        }
+  color: #89989c;
+}
 
 
-        .iuris-required.warning {
+.iuris-required i {
 
-            color: #b06a2c;
-        }
+  color: #006975;
 
-
-        .iuris-required.warning i {
-
-            color: #d98a3a;
-        }
+  margin-right: 4px;
+}
 
 
-        /* ============================================
+.iuris-required.warning {
+
+  color: #b06a2c;
+}
+
+
+.iuris-required.warning i {
+
+  color: #d98a3a;
+}
+
+
+/* ============================================
                ESPACIADO
             ============================================ */
 
-        .iuris-form-card .form-group {
+.iuris-form-card .form-group {
 
-            margin-bottom: 15px;
-        }
+  margin-bottom: 15px;
+}
 
 
-        /* ============================================
+/* ============================================
                RESPONSIVE
             ============================================ */
 
-        @media (max-width: 768px) {
+@media (max-width: 768px) {
 
-            .iuris-form-header {
+  .iuris-form-header {
 
-                align-items: flex-start;
+    align-items: flex-start;
 
-                gap: 10px;
-            }
+    gap: 10px;
+  }
 
-            .iuris-periodo {
+  .iuris-periodo {
 
-                display: none;
-            }
+    display: none;
+  }
 
-            .iuris-form-body {
+  .iuris-form-body {
 
-                padding: 15px;
-            }
+    padding: 15px;
+  }
 
-            .iuris-form-footer {
+  .iuris-form-footer {
 
-                flex-direction: column;
+    flex-direction: column;
 
-                align-items: stretch;
+    align-items: stretch;
 
-                gap: 10px;
-            }
+    gap: 10px;
+  }
 
-            .btn-iuris-primary {
+  .btn-iuris-primary {
 
-                width: 100%;
-            }
+    width: 100%;
+  }
 
-        }
+}
+
+/* ============================================
+   MEJORAS ADICIONALES
+============================================ */
+
+/* Placeholder más elegante */
+.iuris-form-card .form-control::placeholder {
+  color: #b0c4c8;
+  font-weight: 300;
+  font-size: 13px;
+}
+
+/* Efecto hover en inputs */
+.iuris-form-card .form-control:hover {
+  border-color: #b0c8cc;
+  background-color: #fafcfc;
+}
+
+/* Labels con mejor jerarquía */
+.iuris-form-card label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3a5258;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+
+.iuris-form-card .form-group:hover label {
+  color: #006975;
+}
+
+/* Select personalizado */
+.iuris-form-card select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23374850' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 35px;
+  cursor: pointer;
+}
+
+/* Inputs con iconos - opcional si quieres agregar iconos dentro */
+.iuris-input-icon {
+  position: relative;
+}
+
+.iuris-input-icon .form-control {
+  padding-left: 35px;
+}
+
+.iuris-input-icon i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #006975;
+  opacity: 0.6;
+}
+
+/* Badge de estado o información */
+.iuris-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  background: #e8f0f1;
+  color: #006975;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Mejora para el textarea */
+.iuris-form-card textarea.form-control {
+  min-height: 80px;
+  transition: min-height 0.3s;
+}
+
+.iuris-form-card textarea.form-control:focus {
+  min-height: 120px;
+}
+
+/* Efecto sutil en el footer */
+.iuris-form-footer {
+  background: linear-gradient(to bottom, #fafcfc, #f5f8f9);
+}
+
+/* Espaciado entre secciones */
+.iuris-form-body .section-divider {
+  border-top: 1px solid #eef3f4;
+  margin: 20px 0;
+}
+
+/* Animación de carga para el botón */
+.btn-iuris-primary.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+
+.btn-iuris-primary.loading::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+  .iuris-form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .iuris-periodo {
+    font-size: 11px;
+    padding: 3px 12px;
+  }
+
+  .iuris-form-title small {
+    display: block;
+    margin-top: 2px;
+  }
+
+  .iuris-form-body {
+    padding: 12px;
+  }
+
+  .iuris-form-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .btn-iuris-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}

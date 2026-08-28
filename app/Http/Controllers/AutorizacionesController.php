@@ -94,16 +94,15 @@ class AutorizacionesController extends Controller
                 $subject = 'Solicitud de autorización';
                 $url = url("/expedientes/{$expediente->expid}/edit#autorizaciones");
                 ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-               
-                    $diradminEmail = config("app_config.diradminemail");
-                    $concepto = "Se ha creado una nueva solicitud de autorización por el docente asesor: \n\n";
-                    $concepto .= $request->concepto;
-                    $concepto .= "\n\n";
-                    $concepto .= "\n" . "Expediente: " . $expediente->expid;
-                    $concepto_html = nl2br(e($concepto));
-                    ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-                    Log::info('Notificación de autorización enviada', ['email' => $diradminEmail]);
-                
+
+                $diradminEmail = config("app_config.diradminemail");
+                $concepto = "Se ha creado una nueva solicitud de autorización por el docente asesor: \n\n";
+                $concepto .= $request->concepto;
+                $concepto .= "\n\n";
+                $concepto .= "\n" . "Expediente: " . $expediente->expid;
+                $concepto_html = nl2br(e($concepto));
+                ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+                Log::info('Notificación de autorización enviada', ['email' => $diradminEmail]);
             }
 
             return response()->json(['view' => $view]);
@@ -131,7 +130,7 @@ class AutorizacionesController extends Controller
      */
     public function edit($id)
     {
-        $autorizacion =  Autorizacion::find($id);
+        $autorizacion =  Autorizacion::with(['user'])->find($id);
         return response()->json($autorizacion);
     }
 
@@ -147,7 +146,7 @@ class AutorizacionesController extends Controller
 
         $autorizacion =  $this->autorizacionesService->find($id);
         $autorizacion->fill($request->all());
-        $autorizacion->estado_id = 281;
+        //$autorizacion->estado_id = 281;
 
         if ($request->has('estado')) {
             if ($request->estado == 1) {
@@ -166,21 +165,21 @@ class AutorizacionesController extends Controller
                 ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
             }
         } else {
-            $autorizacion->fecha_autorizado = null;
-            $autorizacion->estado_id = 281;
-            $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
-            $subject = 'Solicitud de autorización';
-            $url = url("/expedientes/{$autorizacion->asignacion->expediente->expid}/edit#autorizaciones");
-         
+            if (currentUser()->hasRole("estudiante")) {
+                $autorizacion->fecha_autorizado = null;
+                $autorizacion->estado_id = 281;
+                $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+                $subject = 'Solicitud de autorización';
+                $url = url("/expedientes/{$autorizacion->asignacion->expediente->expid}/edit#autorizaciones");
+
                 $diradminEmail = config('app_config.diradminemail');
                 $concepto = "Se ha solicitado la aprobación de una solicitud de autorización por el estudiante. \n\n";
                 // $concepto .= $request->concepto;
                 $concepto .= "\n";
                 $concepto .= "\n" . "Expediente: " . $autorizacion->asignacion->expediente->expid;
                 $concepto_html = nl2br(e($concepto));
-             
                 ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-            
+            }
         }
         $autorizacion->save();
         $expediente = $this->expedienteService->findWithFilter([

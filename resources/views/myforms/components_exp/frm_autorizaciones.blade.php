@@ -1,12 +1,9 @@
- @if (!$readonly and 
- (currentUser()->hasRole('docente')
- // or currentUser()->hasRole('diradmin')
-  or currentUser()->hasRole('dirgral')
-  or currentUser()->hasRole('amatai')))
+ @if (!$readonly and(currentUser()->can('crear_autorizacion_exp') 
+ ))
   
      <div class="row">
          <div class="col-md-3">
-             <button class="btn btn-primary btn-block btn-sm" id="btn_nueva_autorizacion">
+             <button data-role="{{isset(currentUser()->role[0]) ? currentUser()->role[0]->name : 'na'}}" class="btn btn-primary btn-block btn-sm" id="btn_nueva_autorizacion">
                  Nueva autorización
              </button>
          </div>
