@@ -15,7 +15,7 @@
                 // 'design' => 'card_question',
             ])
         @endif
-    </div>
+    </div> 
     <div class="row mb-1">
         @if (!$user->idnumber != null)
             <div class="col-md-12">

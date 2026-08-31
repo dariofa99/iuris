@@ -208,7 +208,7 @@
                     @include('myforms.conciliaciones.conciliacion_estados')
                 </div>
                 <div class="tab-pane fade " id="documentos" role="tabpanel" aria-labelledby="documentos-tab">
-                    @include('myforms.conciliaciones.documentos')
+                    @include('myforms.conciliaciones.documentos') 
                 </div>
                 <div class="tab-pane fade " id="notificaciones" role="tabpanel" aria-labelledby="notificaciones-tab">
                     @include('myforms.conciliaciones.conciliacion_comentarios')

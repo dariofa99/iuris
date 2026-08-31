@@ -59,9 +59,12 @@
 @endif --}}
 
 <div class="box_section">
-    @include('myforms.conciliaciones.componentes.apoderado_solicitante', [
+    {{-- @include('myforms.conciliaciones.componentes.apoderado_solicitante', [
         'section' => 'apoderado_solicitante',
-    ])
+    ]) --}}
+
+    @include('myforms.recepcion.frm_apoderado_solicitante')
+
 </div>
 
 <div class="box_section">
