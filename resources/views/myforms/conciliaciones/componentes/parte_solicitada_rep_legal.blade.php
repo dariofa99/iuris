@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h4 align="center" style="color: #000000; font-weight: bold;">
-                    Representantes legales </h4>
+                    REPRESENTANTE LEGAL </h4>
             </div>
         </div>
     </div>
@@ -15,4 +15,5 @@
             @include('myforms.conciliaciones.componentes.user_replegal_solicitada_form') 
         </div>
     </div>
-</div>
+</div> 
+ 

@@ -63,7 +63,9 @@
         'section' => 'apoderado_solicitante',
     ]) --}}
 
-    @include('myforms.recepcion.frm_apoderado_solicitante')
+    @include('myforms.recepcion.frm_apoderado_solicitante', [
+        'disabled'=>'disabled'
+    ])
 
 </div>
 
@@ -87,14 +89,17 @@
 
 
 <div class="box_section">
-    @include('myforms.conciliaciones.componentes.parte_solicitada', [
+     @include('myforms.conciliaciones.componentes.parte_solicitada', [
         'section' => 'parte_solicitada',
         'disabled' => 'disabled',
-    ])
+    ]) -
+
+   {{--  @include('myforms.recepcion.frm_parte_convocada', [
+        'section' => 'parte_solicitada',
+        'disabled' => 'disabled',
+    ]) --}}
 </div>
-@php
-    $parte_sol = $conciliacion->getUser(197); //Solicitada
-@endphp
+
 
 
     <div class="box_section">

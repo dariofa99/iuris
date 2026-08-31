@@ -20,7 +20,7 @@
                     Representante Legal
                     <span class="form-number">{{ $key + 1 }}</span>
                 </div>
-            </div>
+            </div> 
 
             {{-- BODY --}}
             <div class="row card-body" id="content_solicitada">

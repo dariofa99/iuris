@@ -14,7 +14,7 @@
             {{-- HEADER --}}
             <div class="form-card-header">
                 <div class="form-title">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user"></i> 
                    Rep. legal de convocado 
                     {{ $solicitados[$key]->persona->name }} {{ $solicitados[$key]->persona->lastname }}
                     <span class="form-number">{{ $key + 1 }}</span>

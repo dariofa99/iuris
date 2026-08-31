@@ -3,7 +3,7 @@
     <!-- aqui van los estilos de cada vista -->
   
     <!-- aqui van los estilos de cada vista -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <link href="{{asset('/plugins/summernote-0.8/summernote.min.css')}}" rel="stylesheet">
     {!! Html::style('/css/jitsi.css?v=2') !!}
 
     <link rel="stylesheet" href="{{asset('/plugins/dropzone59/dropzone.css')}}">
@@ -252,7 +252,7 @@
 @push('scripts')
   <script src="{{ asset('plugins/summernote-0.8/summernote.min.js') }}"></script>
   <script src="https://meet.jit.si/external_api.js"></script>
-  {!! Html::script('js/config_jitsi.js?v=3')!!} 
+ {{--  {!! Html::script('js/config_jitsi.js?v=3')!!}  --}}
   <script src="{{asset('/plugins/dropzone59/dropzone59.js')}}"></script>
     <script src={{asset("js/dropzone_anexos.js")}}></script>
   <!-- InputMask -->

@@ -751,8 +751,10 @@ Route::get(
 
     $user = User::where('idnumber', '1085278208')->first();
 
-    return view('myforms.mails.recovery_account', [
-      "user" => $user,
+    return view('myforms.mails.formato_correo', [
+      "user_created" => $user->name,
+      "mensaje"=>"Joder",
+      "url"=>"http://iuris.com"
     ]);
   }
 

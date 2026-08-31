@@ -12,7 +12,7 @@
                 'data' => $apoderado->persona->preguntas()->orderBy('orden', 'asc')->get(),
                 'col' => 3,
                 'model' => $apoderado,
-                // 'design' => 'card_question',
+                'disabled' => isset($disabled) ? 'disabled' : "",
             ])
         @endif
     </div> 
