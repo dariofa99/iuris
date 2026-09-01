@@ -2768,9 +2768,9 @@ $(document).ready(function () {
                     return
                 }
             }
-            $("#wait").show();
+          //  $("#wait").show();
             let response = await expedientesService.update(request, id);
-            window.location.reload();
+           // window.location.reload();
             toastr.success("Se actualizó con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",

@@ -324,7 +324,7 @@ class DefensaOficioController extends Controller
       ->where('role_id', '6')
 
       ->select(
-        'users.id',
+        'users.id', 
         'users.idnumber',
 
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),
