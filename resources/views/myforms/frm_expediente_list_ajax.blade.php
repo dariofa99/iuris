@@ -44,20 +44,23 @@
                              Defensa de Oficio
                          @endif
                      </td>
-
+ 
                      <td>
-                         @if ($expediente->exptipoproce_id == '1' and $expediente->expestado_id != '2' and !currentUser()->hasRole('solicitante'))
+                         @if ($expediente->exptipoproce_id == '1' and $expediente->expestado_id != '2' and $expediente->expestado_id != '5' and !currentUser()->hasRole('solicitante'))
                              <label class="pull-center badge-colors dis-block"
                                  style="border-radius:8px;border: 2px solid {{ $expediente->getDaysOrColorForClose('color') }}; color : {{ $expediente->getDaysOrColorForClose('color') }}">
                                  {{ $expediente->getDaysOrColorForClose('mensaje') }}
 
                              </label>
                          @else
+                         <label class="pull-center badge-colors dis-block"
+                                style="border-radius:8px;border:1px solid #374850; color:#374850">
                              @if ($expediente->getAsignacion() == null)
                                  Se debe revisar la asignación
                              @else
                                  {{ \Carbon\Carbon::parse($expediente->getAsignacion()->fecha_asig)->diffForHumans() }}
                              @endif
+                         </label>
                          @endif
 
 

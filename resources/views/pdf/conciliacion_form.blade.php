@@ -201,11 +201,11 @@
     @endphp
     <table>
         @foreach ($solicitados as $key => $parte_)
-        <tr>
-            <th colspan="2" colspan="6" style="text-align: center !important;">
-                Parte convocada {{ $key + 1 }} 
-            </th>
-        </tr>
+            <tr>
+                <th colspan="2" colspan="6" style="text-align: center !important;">
+                    Parte convocada {{ $key + 1 }}
+                </th>
+            </tr>
             @include('pdf.conciliacion_form_adquestion', [
                 'data' => $parte_->persona->preguntas()->orderBy('orden', 'asc')->get(),
                 'discaform' => 'discaform',
@@ -216,135 +216,26 @@
     </table>
 
     <h2>REPRESENTACIÓN LEGAL (Solo para personas jurídicas)</h2>
-    <table>
-        @foreach ($conciliacion->usuarios()->where('tipo_usuario_id', 197)->get() as $key => $personajuridica)
-            @if ($personajuridica->tipo_persona->id == 238)
+   
+        @php
+            $representantes_legales = $conciliacion->personasPorTipo('representante_legal')->get();;
+        @endphp
+        <table>
+            @foreach ($representantes_legales as $key => $parte_)
                 <tr>
-                    <th colspan="6" style="text-align: center !important;">
-                        Rep. legal de parte convocada {{ $personajuridica->name }} {{ $personajuridica->lastname }}
+                    <th colspan="2" colspan="6" style="text-align: center !important;">
+                        Parte convocada {{ $key + 1 }}
                     </th>
                 </tr>
-                @forelse ($personajuridica->conc_rep_legal as $key_ => $conciliacion_rep_legal)
-                    @php
-                        $parte_ = $conciliacion->getUserByFilter([
-                            'tipo_usuario_id' => 198,
-                            'user_id' => $conciliacion_rep_legal->pivot->user_replegal_id,
-                        ]);
-                    @endphp
+                @include('pdf.conciliacion_form_adquestion', [
+                    'data' => $parte_->persona->preguntas()->orderBy('orden', 'asc')->get(),
+                    'discaform' => 'discaform',
+                    'user' => $parte_,
+                ])
+            @endforeach
 
-                    @if ($parte_->idnumber != null)
-                        <tr>
-                            <th colspan="6" style="text-align: center !important;">
-                                Rep. legal {{ $key_ + 1 }}
-                            </th>
-                        </tr>
+        </table>
 
-                        <tr>
-                            <th>Nombre:</th>
-                            <td colspan="3">{{ $parte_->name }} {{ $parte_->lastname }}</td>
-                            <th>Tipo de persona</th>
-                            <td>
-                                {{ $parte_->tipo_persona->ref_nombre }}
-                            </td>
-                        </tr>
-                        <tr>
-
-                            <th>Identificación</th>
-                            <td>
-                                {{ $parte_->tipo_doc->ref_nombre }} de
-
-                                {{ $parte_->getStaticDataValByShortName('lugar_exp._documento', 'datos_personales')->value ?? 'Sin datos' }}
-                            </td>
-
-
-
-                            <th>No</th>
-                            <td colspan="3">
-                                {{ $parte_->idnumber }}
-                            </td>
-
-
-                        </tr>
-                        <tr>
-                            <th>Dirección para notificaciones:</th>
-                            <td colspan="3">
-                                {{ $parte_->address }}
-                            </td>
-
-                            <th>Celular</th>
-                            <td>{{ $parte_->tel1 }} - {{ $parte_->tel2 }}</td>
-                        </tr>
-                        <tr>
-                            <th>Correo electrónico:</th>
-                            <td colspan="5">
-                                {{ $parte_->email }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="6">
-                                <h2>INFORMACIÓN IDENTITARIA Y DE INCLUSIVIDAD</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="6">
-                                <table>
-
-                                    <tr>
-                                        <td>Sexo</td>
-                                        <td>
-                                            {{ $parte_->genero->ref_nombre }}
-                                        </td>
-                                    </tr>
-                                    @include('pdf.conciliacion_form_adquestion', [
-                                        'data' => getReferencesDataBySection('enfoque_diferencial', 'users'),
-                                        'discaform' => 'discaform',
-                                        'user' => $parte_,
-                                    ])
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="6">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            ¿Posee algún tipo de discapacidad?
-                                        </td>
-                                        <td>
-                                            SI
-                                            <input type="radio" @if ($parte_->pbepersondiscap) checked @endif
-                                                name="discapacidad" value="SI">
-                                            NO
-                                            <input type="radio" @if (!$parte_->pbepersondiscap) checked @endif
-                                                name="discapacidad" value="NO">
-                                        </td>
-                                    </tr>
-                                    @if ($parte_->pbepersondiscap)
-                                        @include('pdf.conciliacion_form_adquestion', [
-                                            'data' => getReferencesDataBySection('discapacidad', 'users'),
-                                            'discaform' => 'discaform',
-                                            'user' => $parte_,
-                                        ])
-                                    @endif
-
-                                </table>
-                            </td>
-
-                        </tr>
-                    @else
-                        <tr>
-                            <th colspan="2">
-                                Sin registro
-                            </th>
-                        </tr>
-                    @endif
-
-                @empty
-                    Todavia no hay usuarios
-                @endforelse
-            @endif
-        @endforeach
-    </table>
 
     <h2>ASUNTO A CONCILIAR</h2>
     <table>

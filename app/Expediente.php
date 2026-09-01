@@ -68,7 +68,6 @@ class Expediente extends Model
         'exppersondemandada',
         'expfechalimite',
         'expfecha_res'
-
     ];
 
 
@@ -280,18 +279,12 @@ class Expediente extends Model
     }
 
     function getDaysOrColorForClose($item = '', $now = null)
-    {
-        /* $asig = $this->asignaciones()->where('asigest_id',$this->estudiante->idnumber)
-        ->where('periodo_id',$periodo->id)
-        ->orderBy('fecha_asig','desc')->first();  */
+    {    
         $asig = $this->getAsignacion();
         $periodo = $this->getPeriodoActivo();
-
-
         try {
             $periodo = $this->getPeriodoActivo();
             $now = Carbon::now();
-
             $estamosVacaciones = DB::table("vacaciones_periodo")
                 ->whereDate('fecha_inicio', '<=', $now)
                 ->whereDate('fecha_fin', '>=', $now)
