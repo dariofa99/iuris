@@ -73,8 +73,8 @@
                             a las partes, con la indicación de la fecha, hora y medio por el cual se desarrollará la audiencia
                             de conciliación.
                             <br>
-                            Para tal efecto, se designará un estudiante adscrito al Centro de Conciliación.
-							<br>
+                           {{--  Para tal efecto, se designará un estudiante adscrito al Centro de Conciliación.
+							<br> --}}
                     </p>
                     <div class="alert alert-info" style="font-size: 20px">
                         <i class="fas fa-info-circle"></i>

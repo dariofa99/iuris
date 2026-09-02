@@ -708,10 +708,15 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
 
         //$peri = $this->periodoService->getPeriodoActivo();
+        /* if(!$request->has('periodo') || $request->periodo == '') {
+             $periodo = $this->periodoService->getPeriodoActivo();
+             $request->merge(['periodo' => $periodo->id]);
+        } */
 
         if (!$request->has('dias_sin_actuaciones') || $request->dias_sin_actuaciones == '') {
             $request['dias_sin_actuaciones'] = 40;
         }
+       // dd($request->all());
         $dias_limite = max(1, (int) $request->input('dias_sin_actuaciones', 40));
         $casos = DB::table('expedientes')
             ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
@@ -808,7 +813,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                     $query->where(
                         'asignacion_caso.periodo_id',
                         $request->periodo
-                    );
+                    ); 
                 }
             })
             ->where('asignacion_docente_caso.activo', 1)

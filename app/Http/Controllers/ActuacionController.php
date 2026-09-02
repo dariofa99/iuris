@@ -45,6 +45,8 @@ class ActuacionController extends Controller
     $this->periodoService = $periodoService;
     $this->usersService = $userService;
     $this->expedientesService = $expedientesService;
+
+    $this->middleware('permission:ver_casos_olvidados',   ['only' => ['getCasosAbandono']]);
   }
 
   /**
@@ -755,7 +757,7 @@ class ActuacionController extends Controller
       new CasosAbandonoExport($query),
       'casos_abandono.xlsx'
     );
-  }
+  } 
 
   function getCasosAbandono(Request $request)
   {

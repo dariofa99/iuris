@@ -137,6 +137,10 @@
                             </div>
                         </form>
                     </div>
+
+                    <div class="card-footer">
+                        @include('msg.alerts')
+                    </div>
                 </div>
             </div>
         </div>

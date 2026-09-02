@@ -10,7 +10,9 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Sede;
 use App\LogSession;
+use App\Services\ExpedientesService;
 use App\Services\LoginService;
+use App\Services\PeriodosService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +24,14 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
     private $loginService;
+    private $expedientesService;
+    private $periodoService;
 
-    public function __construct(LoginService $loginService)
+    public function __construct(LoginService $loginService, ExpedientesService $expedientesService, PeriodosService $periodoService)
     {
         $this->loginService = $loginService;
+        $this->expedientesService = $expedientesService;
+        $this->periodoService = $periodoService;
     }
     /**
      * Display a listing of the resource.
@@ -89,6 +95,14 @@ class LoginController extends Controller
 
             //en caso de ser estudiante lo rediricciona a sus expedientes
             if (Auth::user()->hasRole("docente")) {
+                $periodo = $this->periodoService->getPeriodoActivo();
+                $request->merge(['periodo' => $periodo->id]);
+                $query = $this->expedientesService->getCasosAbandonoQuery($request);
+
+                if ($query->get()->count() > 0) {
+                    Session::flash('message-danger', 'Existen expedientes con abandono de actuaciones, por favor revise el listado de expedientes');
+                    return Redirect::to('/estudiantes/casos/olvidados');
+                }
                 return Redirect::to('expedientes');
             }
             if (Auth::user()->hasRole("solicitante")) {
