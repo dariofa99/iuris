@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class Actuacion extends Model
 {
-   use AsigNotas;
+   use AsigNotas; 
    /**
     * The database table used by the model.
     * 
@@ -46,7 +46,8 @@ class Actuacion extends Model
       'actdocnompropio_docente',
       'actdocruta_docente',
       'actusercreated',
-      'actuserupdated'
+      'actuserupdated',
+      'actdocidnumber'
    ];
 
    public function __construct()

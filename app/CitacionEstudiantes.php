@@ -24,4 +24,5 @@ class CitacionEstudiantes extends Model
     {
         return $this->belongsTo(AsignacionCaso::class, 'asignacion_caso_id', 'id');
     }
+    
 }

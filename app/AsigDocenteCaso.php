@@ -28,6 +28,12 @@ class AsigDocenteCaso extends Model
     {
         return $this->belongsTo(AsignacionCaso::class,'asig_caso_id');
 	}
+
+		public function asignacionCaso()
+    {
+        return $this->belongsTo(AsignacionCaso::class,'asig_caso_id');
+	}
+	
 	
                 
 

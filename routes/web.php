@@ -152,6 +152,8 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('personas/externas/preguntas/{id}', 'PersonasExternasController@getQuestionsById');
   Route::post('personas/externas/insert/categoria', 'PersonasExternasController@storeCategoria');
 
+  Route::get('/actuar/docente','ActuarDocenteController@consultar');
+
   Route::get('conciliacion/personas/externas/get/categorias/by/filter', 'ConciliacionPersonasController@getByRefDataFilter');  
   Route::post('conciliacion/personas/externas/add/preguntas', 'ConciliacionPersonasController@addPreguntasForm');
   Route::post('conciliaciones/add/data/persona/externa', 'ConciliacionPersonasController@store');

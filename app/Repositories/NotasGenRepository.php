@@ -1,15 +1,14 @@
 <?php
 namespace App\Repositories;
 
-use App\NotaGen;
-use App\Services\TurnosService;
-use App\Turno;
+use App\Nota;
+
 use Illuminate\Http\Request;
 
 
-class NotasGenRepository extends BaseRepository implements TurnosService {
+class NotasGenRepository extends BaseRepository {
    
-    public function __construct(NotaGen $model)
+    public function __construct(Nota $model)
     {
         parent::__construct($model);
     }
@@ -23,4 +22,20 @@ class NotasGenRepository extends BaseRepository implements TurnosService {
         })->orderBy('turnos.trnid_color','desc')->get();
         return $turnos;
     }
+
+     public function obtenerPorDocenteYPeriodo(
+        $docidnumber,
+        $expedientes,
+        $inicio,
+        $fin
+    ) {
+        return Nota::query()
+            ->where('docidnumber', $docidnumber)
+            ->whereIn('expidnumber', $expedientes)
+            ->whereBetween('created_at', [$inicio, $fin])
+            ->with('concepto')
+            ->orderBy('created_at')
+            ->get();
+    }
+
 }

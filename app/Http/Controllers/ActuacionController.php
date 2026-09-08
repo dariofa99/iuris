@@ -695,6 +695,7 @@ class ActuacionController extends Controller
         }
       }
     }
+    $actuacion->actdocidnumber = currentUser()->idnumber;
     $actuacion->actdocenfechamod = date("Y-m-d H:i:s");
     $actuacion->save();
     if ($actuacion->actestado_id == 102 || $actuacion->actestado_id == 176) {

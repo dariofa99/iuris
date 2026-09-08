@@ -36,7 +36,7 @@ class HorarioController extends Controller
 
   public function calendario($tipo)
   {
-/*
+    /*
   $docentes = DB::table('users')
   ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
   ->leftjoin('roles' , 'role_user.role_id','=','roles.id')
@@ -332,6 +332,7 @@ class HorarioController extends Controller
       $colores_docentes = [];
       $keys_datos = [];
       $con = 0;
+     //dd($turnos_doc);
       foreach ($turnos_doc as $key => $value) {
         if (!isset($colores_docentes[$value->trnd_docidnumber])) {
           $colores_docentes += [$value->trnd_docidnumber => $colores[$con]];
@@ -624,20 +625,20 @@ class HorarioController extends Controller
             }
             if ((Auth::user()->hasRole('diradmin') || Auth::user()->hasRole('dirgral') || Auth::user()->hasRole('amatai')) ||  $regis_asistio == "1" || $regis_table_asis == "0") { //los demas roles no puede ver el turno cuando esta en permiso
               $events = $events . "
-          {
-          title          : '" . $turnos_doc[$value]->nombre_completo . "',
-          start          : new Date('" . $dias["Viernes"] . " " . $turnos_doc[$value]->trnd_hora_inicio . "'),
-          end            : new Date('" . $dias["Viernes"] . " " . $turnos_doc[$value]->trnd_hora_fin . "'),
-          backgroundColor: '" . $backgroundColor . "',
-          borderColor    : '#c8c8c8',
-          textColor      : '" . $colores_docentes[$turnos_doc[$value]->trnd_docidnumber] . "',
-          url            : '',
-          clbd           : '" . $turnos_doc[$value]->trnd_docidnumber . "',
-          hrbd           : '" . $idregisdoc . "',
-          datev          : '" . $dias["Viernes"] . " " . $turnos_doc[$value]->trnd_hora_inicio . "',
-          modal          : 'turnosdoc',
-          registableasis : '" . $regis_table_asis . "'
-          },";
+                      {
+                      title          : '" . $turnos_doc[$value]->nombre_completo . "',
+                      start          : new Date('" . $dias["Viernes"] . " " . $turnos_doc[$value]->trnd_hora_inicio . "'),
+                      end            : new Date('" . $dias["Viernes"] . " " . $turnos_doc[$value]->trnd_hora_fin . "'),
+                      backgroundColor: '" . $backgroundColor . "',
+                      borderColor    : '#c8c8c8',
+                      textColor      : '" . $colores_docentes[$turnos_doc[$value]->trnd_docidnumber] . "',
+                      url            : '',
+                      clbd           : '" . $turnos_doc[$value]->trnd_docidnumber . "',
+                      hrbd           : '" . $idregisdoc . "',
+                      datev          : '" . $dias["Viernes"] . " " . $turnos_doc[$value]->trnd_hora_inicio . "',
+                      modal          : 'turnosdoc',
+                      registableasis : '" . $regis_table_asis . "'
+                      },";
             }
           }
         }

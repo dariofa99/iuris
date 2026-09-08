@@ -254,7 +254,7 @@
                         {!! Form::label(
                             'expramaderecho_id',
                             'Tipo de proceso'
-                        ) !!}
+                        ) !!} 
 
 
                         {!! Form::select(

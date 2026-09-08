@@ -130,8 +130,7 @@
                             @if (currentUser()->hasRole('coordprac') ||
                                     currentUser()->hasRole('diradmin') ||
                                     currentUser()->hasRole('dirgral') ||
-                                    currentUser()->hasRole('amatai')
-                                    )
+                                    currentUser()->hasRole('amatai'))
                                 <li class="nav-item ml-3">
                                     <a href="{{ route('expencuesta.index') }}" class="nav-link">
                                         <p>Administrar encuestas</p>
@@ -147,12 +146,12 @@
                                 </li> --}}
                             @endif
 
-                            @if(currentUser()->can('ver_casos_olvidados'))
+                            @if (currentUser()->can('ver_casos_olvidados'))
                                 <li class="nav-item ml-3">
                                     <a href="{{ url('estudiantes/casos/olvidados') }}" class="nav-link">
 
                                         <p> Ver casos olvidados</p>
-                                    
+
                                     </a>
                                 </li>
                             @endif
@@ -346,8 +345,8 @@
                                 @if (currentUser()->hasRole('amatai') ||
                                         currentUser()->hasRole('diradmin') ||
                                         currentUser()->hasRole('dirgral') ||
-                                        currentUser()->hasRole('coordprac')
-                                        || currentUser()->can('ver_turnos_estudiantes'))
+                                        currentUser()->hasRole('coordprac') ||
+                                        currentUser()->can('ver_turnos_estudiantes'))
                                     <li class="nav-item ml-3">
                                         <a href="{{ route('turnos.index') }}" class="nav-link">
                                             <p>Turnos estudiantes</p>
@@ -419,7 +418,11 @@
                                         <p>Gráficos</p>
                                     </a>
                                 </li>
-
+                                <li class="nav-item ml-3">
+                                    <a href="{{ url('actuar/docente') }}" class="nav-link">
+                                        <p>Actuar docente</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif
