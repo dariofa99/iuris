@@ -370,7 +370,9 @@ document.addEventListener('DOMContentLoaded', function () {
             $("#wait").hide();
         }
 
-        init_events($('#external-events div.external-event'))
+        //init_events($('#external-events div.external-event'))
+
+
         $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next today',

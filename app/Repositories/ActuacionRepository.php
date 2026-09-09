@@ -22,7 +22,7 @@ class ActuacionRepository
             })
         ->orWhere(function ($q) use ($docidnumber, $inicio, $fin) {
                 $q->where('actuserupdated', $docidnumber)
-                ->orWhere('actdocidnumber', $docidnumber)
+                ->where('actdocidnumber', $docidnumber)
                 ->whereBetween('updated_at', [$inicio, $fin]);
             });
     })

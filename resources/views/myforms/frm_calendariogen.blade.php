@@ -31,8 +31,7 @@
 
 
 
-    @include('modals.modal_calendar')
-    <!-- /modal -->
+
 
 
 
@@ -61,8 +60,9 @@
 
 
 
-    @include('modals.modal_calendar')
 
+    @include('modals.modal_calendar')
+    <!-- /modal -->
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->
@@ -414,7 +414,7 @@
                                 }
 
                                 @if (currentUser()->hasRole('coordprac') or
-                                        currentUser()->hasRole('diradmin') or 
+                                        currentUser()->hasRole('diradmin') or
                                         currentUser()->hasRole('dirgral') or
                                         currentUser()->can('admin_turnos_estudiantes') or
                                         currentUser()->hasRole('amatai'))

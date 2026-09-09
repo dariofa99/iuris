@@ -113,7 +113,7 @@
             
             <td colspan="2">
                  <span style="border-bottom: 1px solid black;display:block;height: 20px;"></span>
-                Nombre:<br>
+                Nombre: {{ $autorizacion->nombre_estudiante }}<br>
                <span align="center" style="display: block; text-align: center;"> ESTUDIANTE </span>
 
             </td>

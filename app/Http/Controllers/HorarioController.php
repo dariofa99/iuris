@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Turno;
 use App\TurnosDocente;
 use App\AsistenciaDocentes;
+use App\Services\CalendarioDocenteService;
 use App\Services\UsersService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +19,12 @@ class HorarioController extends Controller
 {
 
   private $usersService;
+  protected $calendarioDocenteService;
 
-  function __construct(UsersService $usersService)
+  function __construct(UsersService $usersService, CalendarioDocenteService $calendarioDocenteService)
   {
     $this->usersService = $usersService;
+    $this->calendarioDocenteService = $calendarioDocenteService;
   }
 
   /**
@@ -322,6 +325,38 @@ class HorarioController extends Controller
       return view('myforms.frm_calendariogen', compact('active_calendar', 'events', 'docentes', 'tipo'));
     } elseif ($tipo == "docentes") {
 
+
+/*  $events = $this->calendarioDocenteService->obtenerTurnos($periodo);
+ dd($events); */
+
+      if (request()->ajax()) {
+        $events = $this->calendarioDocenteService->obtenerEventos($periodo);
+        $tipo = "docentes";
+        return response()->json($events);
+      }
+
+       return view(
+        'myforms.calendario_docentes',
+        compact( 'tipo')
+      );
+
+
+
+
+     // return view('myforms.frm_calendariogen', compact('active_calendar', 'events', 'docentes', 'tipo'));
+
+
+
+
+
+
+
+
+
+
+
+
+
       $colores = array("#008000", "#13caca", "#008080", "#0000FF", "#000080", "#FFA07A", "#FF00FF", "#808080", "#000000", "#FF0000", "#800000", "#CD5C5C", "#aeae14", "#808000", "#1ae91a", "#800080", "#FA8072", "#9944e7", "#3adb1c", "#db1c63", "#1cafdb", "#8b144b", "#a5530d", "#a36a14", "#347e0e", "#c4ce2c");
 
       $turnos_doc = TurnosDocente::join('users', 'turnos_docentes.trnd_docidnumber', '=', 'users.idnumber')
@@ -332,7 +367,7 @@ class HorarioController extends Controller
       $colores_docentes = [];
       $keys_datos = [];
       $con = 0;
-     //dd($turnos_doc);
+
       foreach ($turnos_doc as $key => $value) {
         if (!isset($colores_docentes[$value->trnd_docidnumber])) {
           $colores_docentes += [$value->trnd_docidnumber => $colores[$con]];
