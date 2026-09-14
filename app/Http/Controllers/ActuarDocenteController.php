@@ -39,11 +39,12 @@ class ActuarDocenteController extends Controller
                 'docentes' => $docentes,
                 'docente' => $docente,
             ]);
-        }
-        /*  $request['docidnumber'] = $docente->idnumber;
+        } 
+
+       /*  $request['docidnumber'] = 12966931;//$docente->idnumber;
         $request['fecha'] = Carbon::parse($request->fecha)->format('Y-m-d');
         $request['hora_inicio'] = Carbon::parse($request->hora_inicio)->format('H:i:s');
-        $request['hora_fin'] = Carbon::parse($request->hora_fin)->format('H:i:s'); */
+        $request['hora_fin'] = Carbon::parse($request->hora_fin)->format('H:i:s');  */
 
         $resultado = $this->service->consultar(
             $request->docidnumber,
@@ -52,7 +53,7 @@ class ActuarDocenteController extends Controller
             $request->hora_fin
         );
 
-        // dd($docentes);
+        // dd($resultado);
 
         return view('myforms.actuar_docente.index', [
             'resultado' => $resultado,

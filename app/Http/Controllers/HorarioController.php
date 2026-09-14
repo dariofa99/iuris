@@ -332,6 +332,7 @@ class HorarioController extends Controller
       if (request()->ajax()) {
         $events = $this->calendarioDocenteService->obtenerEventos($periodo);
         $tipo = "docentes";
+       // dd($events[1]);
         return response()->json($events);
       }
 

@@ -39,10 +39,10 @@ class ActuarDocenteService
         $docidnumber,
         $fecha,
         $horaInicio,
-        $horaFin
+        $horaFin 
     ) {
-        $inicio = $fecha . ' ' . $horaInicio . ':00';
-        $fin = $fecha . ' ' . $horaFin . ':59';
+        $inicio = $fecha . ' ' . $horaInicio . '';
+        $fin = $fecha . ' ' . $horaFin . '';
 
         /*
          * 1. Obtener expedientes actualmente asignados
@@ -52,10 +52,10 @@ class ActuarDocenteService
             ->obtenerExpedientesConActividad($docidnumber, $inicio, $fin);
 
            // 
-/* dd(
-    get_class($expedientes),
+/*  dd(
+    ($expedientes),
     $expedientes->isEmpty()
-); */
+);  */
         if ($expedientes->isEmpty()) {
             return [
                 'docente' => $docidnumber,

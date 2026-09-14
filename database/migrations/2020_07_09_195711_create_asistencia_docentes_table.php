@@ -15,17 +15,32 @@ class CreateAsistenciaDocentesTable extends Migration
     {
         Schema::create('asistencia_docentes', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->string('docidnumber',12);
-            $table->foreign('docidnumber')->references('idnumber')->on('users');//identificación docente
-
-            $table->integer('tipo_asis')->unsigned(); // 
-            $table->foreign('tipo_asis')->references('id')->on('referencias_tablas'); //Tipo de asistencia: asistencia, permiso, reposicion 
-            $table->boolean('reposicion')->default(0);
-            
-            $table->dateTime('inicio');
-            $table->dateTime('fin');
-            $table->longText('descripcion');
+            // Turno al que pertenece el registro
+            $table->unsignedInteger('turno_docente_id');
+            $table->foreign('turno_docente_id')
+                ->references('id')
+                ->on('turnos_docentes');
+            // Docente
+            $table->string('docidnumber', 12);
+            $table->foreign('docidnumber')
+                ->references('idnumber')
+                ->on('users');
+            // Asistió / No asistió / Permiso / Pendiente por asistir
+            $table->unsignedInteger('tipo_asis');
+            $table->foreign('tipo_asis')
+                ->references('id')
+                ->on('referencias_tablas');
+            // turno / reposicion
+            $table->enum('categoria', [
+                'turno',
+                'reposicion'
+            ])->default('turno')->nullable();
+            // Hora real de asistencia
+            $table->dateTime('inicio')->nullable();
+            $table->dateTime('fin')->nullable();
+            // Minutos que debe reponer
+            $table->integer('minutos_reponer')->default(0);
+            $table->longText('descripcion')->nullable();
 
             $table->timestamps();
         });

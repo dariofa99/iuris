@@ -43,5 +43,6 @@ class CreateOficinasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('oficinas');
+        Schema::dropIfExists('oficina_usuarios');
     }
 }

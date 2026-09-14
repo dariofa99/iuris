@@ -10,7 +10,7 @@ class ActuacionRepository
     public function obtenerPorDocenteYPeriodo(
         $docidnumber,
         $expedientes,
-        $inicio,
+        $inicio,  
         $fin
     ) {
         return Actuacion::query()

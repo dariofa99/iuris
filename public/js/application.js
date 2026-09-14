@@ -424,6 +424,21 @@ function resetForm(form) {
     $("#" + form + " input[type='checkbox']").prop("disabled", false);
 
 }
+
+function limpiarForm(form) {
+    $("#" + form + " input[type='text']").val("");
+    $("#" + form + " input[type='email']").val("");
+    $("#" + form + " input[type='number']").val("");
+    $("#" + form + " select").val("");
+    $("#" + form + " input[type='radio']").val("");
+    $("#" + form + " input[type='checkbox']").val("");
+    $("#" + form + " textarea").val("");
+    $("#" + form + " input[type='time']").val("");
+    $("#" + form + " input[type='date']").val("");
+    $("#" + form + " input[type='datetime']").val("");
+
+}
+
 function resetDisabledForm(form) {
     $("#" + form + " input[type='text']").prop("disabled", false);
     $("#" + form + " input[type='email']").prop("disabled", false);
@@ -432,6 +447,9 @@ function resetDisabledForm(form) {
     $("#" + form + " input[type='radio']").prop("disabled", false);
     $("#" + form + " input[type='checkbox']").prop("disabled", false);
     $("#" + form + " textarea").prop("disabled", false);
+    $("#" + form + " input[type='time']").prop("disabled", false);
+    $("#" + form + " input[type='date']").prop("disabled", false);
+    $("#" + form + " input[type='datetime']").prop("disabled", false);
 
 }
 function disabledForm(form) {
@@ -440,6 +458,9 @@ function disabledForm(form) {
     $("#" + form + " input[type='number']").prop("disabled", true);
     $("#" + form + " select").prop("disabled", true);
     $("#" + form + " input[type='radio']").prop("disabled", true);
+    $("#" + form + " input[type='time']").prop("disabled", true);
+    $("#" + form + " input[type='date']").prop("disabled", true);
+    $("#" + form + " input[type='datetime']").prop("disabled", true);
     $("#" + form + " input[type='checkbox']").prop("disabled", true);
     $("#" + form + " textarea").prop("disabled", true);
 }

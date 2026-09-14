@@ -4,16 +4,16 @@
     @endslot
 
     @slot('title')
-        
     @endslot
 
 
     @slot('body')
         <form class="iuris-form-card" id="turnosdoc">
-
+                <input type="hidden" name="turno_id" id="turno_id">
+                <input type="hidden" name="fecha_turno" id="fecha_turno">
             <!-- ============================================
-                     HEADER
-                ============================================= -->
+                                                     HEADER
+                                                ============================================= -->
 
             <div class="iuris-form-header">
 
@@ -34,8 +34,8 @@
 
 
             <!-- ============================================
-                     BODY
-                ============================================= -->
+                                                     BODY
+                                                ============================================= -->
 
             <div class="iuris-form-body">
 
@@ -44,7 +44,7 @@
                 <div class="iuris-turno-docente">
 
                     <div class="iuris-docente-avatar">
-                        <img src="/img.jpg" alt="Doris Arteaga de Maya" id="avatar_docente" class="iuris-avatar">
+                        <img src="/img.jpg" alt="" id="avatar_docente" class="iuris-avatar">
                     </div>
 
                     <div class="iuris-turno-docente-info">
@@ -54,7 +54,7 @@
                         </span>
 
                         <div class="iuris-turno-docente-name" id="nombre_docente">
-                            Doris Arteaga de Maya
+
                         </div>
 
                     </div>
@@ -92,7 +92,8 @@
 
                                 <i class="far fa-clock"></i>
 
-                                <input type="time" class="form-control" id="hora_inicio" value="10:30">
+                                <input type="time" required class="form-control required" name="hora_inicio" id="hora_inicio"
+                                    >
 
                             </div>
 
@@ -115,7 +116,8 @@
 
                                 <i class="far fa-clock"></i>
 
-                                <input type="time" class="form-control" id="hora_fin" value="12:00">
+                                <input type="time" required class="form-control required" name="hora_fin" id="hora_fin"
+                                   >
 
                             </div>
 
@@ -140,14 +142,14 @@
                 </div>
 
 
-                <div class="iuris-novedades">
+                <div class="iuris-novedades" >
 
 
                     <!-- ASISTENCIA -->
 
                     <label class="iuris-option">
 
-                        <input type="radio" name="regisdocasis" id="regisdocasis1" value="149" checked>
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis" value="149" checked>
 
                         <span class="iuris-option-content">
 
@@ -174,7 +176,7 @@
 
                     <label class="iuris-option">
 
-                        <input type="radio" name="regisdocasis" id="regisdocasis2" value="150">
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_permiso" value="150">
 
                         <span class="iuris-option-content">
 
@@ -187,7 +189,7 @@
                                 <strong>Registrar permiso</strong>
 
                                 <small>
-                                    Registrar una novedad o permiso.
+                                    El docente solicitó un permiso.
                                 </small>
 
                             </span>
@@ -196,9 +198,31 @@
 
                     </label>
 
+                    <!-- PERMISO -->
 
+                    <label class="iuris-option">
+
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_permiso" value="284">
+
+                        <span class="iuris-option-content">
+                            <span class="iuris-option-icon falta">
+                                <i class="fas fa-user-times"></i>
+                            </span>
+                            <span class="iuris-option-text">
+                                <strong>Registrar no asistencia</strong>
+                                <small>
+                                    Registrar la inasistencia al turno.
+                                </small>
+                            </span>
+                        </span>
+                    </label>
                 </div>
 
+                <div class="row" id="div_reposicion" style="display: none;">
+
+
+
+                </div>
 
                 <!-- ANOTACIÓN -->
 
@@ -222,8 +246,8 @@
 
 
             <!-- ============================================
-                     FOOTER
-                ============================================= -->
+                                                     FOOTER
+                                                ============================================= -->
 
             <div class="iuris-form-footer">
 
@@ -236,7 +260,7 @@
                 </div>
 
 
-                <button type="button" id="btnasisenciadocmodal" class="btn btn-iuris-primary">
+                <button type="button" id="btnRegistrarTurnoDocente" class="btn btn-iuris-primary">
 
                     <i class="fas fa-save mr-1"></i>
 

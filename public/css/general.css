@@ -3701,7 +3701,17 @@ font-size: 15px;
 
 background: #f4f1e8;
 
-color: #806d3c;
+color: #6f580e;
+
+
+}
+
+.iuris-option-icon.falta {
+
+
+background: #ecefec;
+
+color: #9c2e09;
 
 
 }
@@ -3926,4 +3936,66 @@ RESPONSIVE
     object-fit: cover;
 
     display: block;
+}
+.evento-docente {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 55px;
+    gap: 8px;
+}
+
+
+/* Imagen */
+
+.evento-docente-imagen {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+}
+
+
+.evento-docente-imagen img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+
+/* Información */
+
+.evento-docente-info {
+    min-width: 0;
+    flex: 1;
+    text-align: left;
+}
+
+
+/* Hora */
+
+.evento-docente-hora {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 14px;
+    margin-bottom: 2px;
+}
+
+
+/* Nombre */
+
+.evento-docente-nombre {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+    white-space: normal;
+    overflow: hidden;
+}
+
+.evento-docente-estado{
+  padding: 2px 8px;
+  border-radius: 12px;
 }

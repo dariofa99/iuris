@@ -68,7 +68,7 @@ class AsignacionDocenteCasosRepository extends BaseRepository implements Asignac
                 ON ac.id = adc.asig_caso_id
 
             WHERE adc.docidnumber = ?
-              AND adc.activo = 1
+              -- AND adc.activo = 1
 
               AND ac.asigexp_id IN (
 
