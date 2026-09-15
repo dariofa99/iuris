@@ -20,13 +20,14 @@ class AsignacionDocenteCasosRepository extends BaseRepository implements Asignac
     public function store(Request $request): AsigDocenteCaso
     {
 
+    //dd($request->all());
         $this->model->docidnumber = $request->input('docidnumber');
         $this->model->activo = ($request->has('activo')) ? $request->input('activo') : 1;
         $this->model->cambio_docidnumber = $request->has('cambio_docidnumber') ? $request->input('cambio_docidnumber') : null;
         $this->model->asig_caso_id = $request->input('asig_caso_id');
         $this->model->user_created_id = auth()->user()->idnumber;;
         $this->model->user_updated_id = auth()->user()->idnumber;;
-        $this->model->save();
+        $this->model->save(); 
 
         return $this->model;
     }

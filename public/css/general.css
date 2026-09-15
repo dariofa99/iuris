@@ -2512,7 +2512,7 @@
 .iuris-form-card label {
   font-size: 14px;
   font-weight: 600;
-  color: #ffffff;
+  /* color: #ffffff; */
   margin-bottom: 6px;
   transition: color 0.2s;
 }

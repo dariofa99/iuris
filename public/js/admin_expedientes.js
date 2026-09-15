@@ -1562,15 +1562,15 @@ $(document).ready(function () {
             }).then(async (result) => {
                 if (result.value) {
                     $("#wait").show();
-                    window.location = '/expedientes/' + response.expid + '/edit';
+                   // window.location = '/expedientes/' + response.expid + '/edit';
                 } else {
                     if (result.dismiss === Swal.DismissReason.cancel || result.dismiss === Swal.DismissReason.overlay) {
                         // El usuario hizo clic en el botón cancel o fuera del swal
-                        window.location.reload(true)
+                       // window.location.reload(true)
 
                     } else {
                         // El usuario hizo clic en el botón confirmar
-                        window.location.reload(true)
+                       // window.location.reload(true)
                     }
                 }
             });

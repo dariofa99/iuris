@@ -305,9 +305,9 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
     private function getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama)
     {
-        $segmento = $this->segmentoService->getSegmentoActivo();
 
-        return $asig_doc = DB::select(
+
+        return DB::select(
             DB::raw(
                 "SELECT `docidnumber`, `name`, COUNT(`docidnumber`) AS num_casos, 
                     CASE 
@@ -370,6 +370,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         //$antes = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
+
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
@@ -388,6 +389,9 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 $person_with_min_casos = reset($person_with_min_casos);
 
                 $this->request['docidnumber']  = $person_with_min_casos->docidnumber;
+
+                
+
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                 return;
             } else {
@@ -716,7 +720,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         if (!$request->has('dias_sin_actuaciones') || $request->dias_sin_actuaciones == '') {
             $request['dias_sin_actuaciones'] = 40;
         }
-       // dd($request->all());
+        // dd($request->all());
         $dias_limite = max(1, (int) $request->input('dias_sin_actuaciones', 40));
         $casos = DB::table('expedientes')
             ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
@@ -813,7 +817,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                     $query->where(
                         'asignacion_caso.periodo_id',
                         $request->periodo
-                    ); 
+                    );
                 }
             })
             ->where('asignacion_docente_caso.activo', 1)
@@ -895,9 +899,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
             ->groupBy('expedientes.expid')
 
-            ->orderBy('fecha_ultima_actuacion', 'asc')
-
-            ;
+            ->orderBy('fecha_ultima_actuacion', 'asc');
 
         return $casos;
     }

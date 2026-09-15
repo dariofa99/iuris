@@ -133,6 +133,7 @@ class ActuarDocenteService
                 'tipo' => 'actuacion',
                 'expediente' => $actuacion->actexpid,
                 'fecha' => $actuacion->created_at,
+                'update_fecha' => $actuacion->updated_at,
                 'datos' => $actuacion,
             ]);
         }
@@ -149,6 +150,7 @@ class ActuarDocenteService
                 'tipo' => 'evaluacion',
                 'expediente' => $evaluacion['expediente'],
                 'fecha' => $evaluacion['fecha'],
+                'update_fecha' => $evaluacion['update_fecha'],
                 'datos' => $evaluacion,
             ]);
         }
@@ -161,6 +163,7 @@ class ActuarDocenteService
                 'tipo' => 'asesoria',
                 'expediente' => $asesoria->expidnumber,
                 'fecha' => $asesoria->created_at,
+                'update_fecha' => $asesoria->updated_at,
                 'datos' => $asesoria,
             ]);
         }
@@ -173,6 +176,7 @@ class ActuarDocenteService
                 'tipo' => 'citacion',
                 'expediente' => $citacion->asignacion->asigexp_id,
                 'fecha' => $citacion->created_at,
+                'update_fecha' => $citacion->updated_at,
                 'datos' => $citacion,
             ]);
         }
@@ -185,6 +189,7 @@ class ActuarDocenteService
                 'tipo' => 'cambio_estado',
                 'expediente' => $estado->expidnumber,
                 'fecha' => $estado->created_at,
+                'update_fecha' => $estado->updated_at,
                 'datos' => $estado,
             ]);
         }
@@ -238,6 +243,7 @@ class ActuarDocenteService
                 return [
                     'expediente' => $primera->expidnumber,
                     'fecha' => $primera->created_at,
+                    'update_fecha' => $primera->updated_at,
 
                     'conocimiento' => $grupo
                         ->firstWhere('cptnotaid', 1)->nota,

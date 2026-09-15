@@ -596,16 +596,20 @@
 
                                                     <div class="iuris-activity-hour">
 
-                                                        {{ $actividad['fecha']->format('H:i:s') }}
+                                                        {{ $actividad['update_fecha']->format('H:i:s') }}
 
                                                     </div>
 
 
-                                                    <small class="iuris-activity-date">
+                                                    <small class="iuris-activity-date" style="color: #000000;">
 
-                                                        {{ $actividad['fecha']->format('d/m/Y') }}
 
-                                                    </small>
+
+                                                        
+
+                                                        {{ getSmallDate($actividad['update_fecha']) }}
+
+                                                    </small> 
 
                                                 </td>
 
@@ -861,7 +865,7 @@
 
                                                                     <div class="iuris-modal-value mb-3">
 
-                                                                        {{ $actividad['fecha']->format('d/m/Y H:i:s') }}
+                                                                        {{ getSmallDateWithHour($actividad['update_fecha']) }}
 
                                                                     </div>
 

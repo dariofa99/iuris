@@ -158,10 +158,13 @@ class ExpedienteController extends Controller
     // dd($expediente);
     if ($request['exptipoproce_id'] == 1) {
       //solo para consultas de asesoria   
-      $this->expedienteService->asignarDocente($asignacion_caso);
+      //$this->expedienteService->asignarDocente($asignacion_caso);
+      $result = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); 
+     
     } else {
 
-      $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+      $result = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
+    
     }
     if ($request->has('solicitud_id')) {
       //si viene desde solicitudes

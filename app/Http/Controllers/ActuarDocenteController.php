@@ -53,7 +53,7 @@ class ActuarDocenteController extends Controller
             $request->hora_fin
         );
 
-        // dd($resultado);
+         //dd($resultado);
 
         return view('myforms.actuar_docente.index', [
             'resultado' => $resultado,
