@@ -4,6 +4,10 @@ $(function () {
 
     showCalendar();
 
+    $("#docente_id").on("change", async () => {
+        $("#calendar").fullCalendar('refetchEvents');
+    })
+
     $("#btnRegistrarTurnoDocente").click(async function (e) {
         e.preventDefault();
         // $("#wait").show();
@@ -115,7 +119,28 @@ function showCalendar(docente_id) {
         slotDuration: "00:40:00",
         hiddenDays: [0, 6],
         //Random default events
-        events: '/horarios/docentes/',
+        events: function (start, end, timezone, callback) {
+
+            const docenteId = $('#docente_id').val();
+
+            $.ajax({
+                url: '/horarios/docentes/',
+                type: 'GET',
+                data: {
+                    docente_id: docenteId,
+                    start: start.format('YYYY-MM-DD'),
+                    end: end.format('YYYY-MM-DD')
+                },
+                success: function (response) {
+                    callback(response);
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+                    callback([]);
+                }
+            });
+
+        },
         editable: true, // 🔹 Permite mover eventos (drag & drop)
         // eventStartEditable: true, // 🔹 Permite mover el inicio del evento
         eventDurationEditable: true, // 🔹 Permite cambiar la duración
@@ -126,7 +151,7 @@ function showCalendar(docente_id) {
             if (info.event.extendedProps.tipo === 'estudiante') {
                 info.el.style.cursor = 'default'; // cambia el cursor
             }
-            console.log(info);
+
 
         },
         drop: function (date) {
@@ -167,33 +192,29 @@ function showCalendar(docente_id) {
             */
 
             const contenido = `
-                            <div class="evento-docente">
 
-                                <div class="evento-docente-imagen">
-                                    <img
-                                        src="${image}"
-                                        alt="${event.title}"
-                                    >
-                                </div>
-
-                                <div class="evento-docente-info">
-
-                                    <div class="evento-docente-hora">
+             <div class="row">
+                                <div class="col-md-3">
+                                     <div class="evento-docente-hora">
                                         ${start} - ${end}
                                     </div>
-
-                                    <div class="evento-docente-nombre">
-                                        ${event.title}
-                                    </div>
-
-                                     <div class="evento-docente-estado" style="background-color: ${event.tipo_asis_color}; font-weight: bold;">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="evento-docente-estado" style="background-color: ${event.tipo_asis_color}; font-weight: bold;">
                                         ${event.tipo_asis_nombre}
                                     </div>
-
                                 </div>
+                               
+                                <div class="col-md-12">
+                                      <div class="evento-docente-titulo">
+                                        ${event.title}
+                                    </div>
+                                </div>                         
+                             </div> `;
 
-                            </div>
-                        `;
+
+
+
 
 
             /*
@@ -214,8 +235,8 @@ function showCalendar(docente_id) {
             */
 
             element.find('.fc-content').css({
-                'padding': '10px',
-                'height': '55px'
+                'padding': '5px',
+
             });
 
 
@@ -249,7 +270,7 @@ function showCalendar(docente_id) {
             $("#turnosdoc #avatar_docente").attr("src", calEvent.image);
             $("#turnosdoc #avatar_docente").attr("alt", calEvent.nombre);
             $(".iuris-novedades input[value='149']").prop("checked", true);
-             $("#descripregisdocasis").val("");
+            $("#descripregisdocasis").val("");
             if (calEvent.asistencia_id != null) {
                 $(".iuris-novedades input[type='radio']").filter(`[value="${calEvent.tipo_asis}"]`).prop("checked", true);
                 $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio_asis);

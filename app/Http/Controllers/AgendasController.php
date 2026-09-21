@@ -90,63 +90,121 @@ class AgendasController extends Controller
 
     public function searchTurnTeachers(Request $request)
     {
-        // Rango pedido por FullCalendar (si viene en la query)
+        // ============================================================
+        // PERIODO ACTIVO
+        // ============================================================
         $periodo_act = $this->periodosService->getPeriodoActivo();
+
         if (!$periodo_act) {
             return response()->json([
                 'errors' => 'No hay un periodo activo actualmente.'
             ], 400);
         }
-       
-        
+
         $request['fecha_inicial'] = $periodo_act->prdfecha_inicio;
         $request['fecha_final'] = $periodo_act->prdfecha_fin;
-        $rangeStart = Carbon::parse($request['fecha_inicial'] ?? Carbon::today());
+
+        $rangeStart = Carbon::parse(
+            $request['fecha_inicial'] ?? Carbon::today()
+        );
+
         $can_delete = true;
-        if (currentUser()->hasRole('amatai') || currentUser()->hasRole('estudiante')) {
+
+        if (
+            currentUser()->hasRole('amatai') ||
+            currentUser()->hasRole('estudiante')
+        ) {
             $rangeStart = Carbon::now();
             $can_delete = false;
         }
 
-        // Forzamos un tope hasta 31 de mayo de 2026 si el end no viene o es mayor
-        $rangeEndRequest = $request['fecha_final'] ? Carbon::parse($request['fecha_final']) : Carbon::parse('2027-05-31');
+        $rangeEndRequest = $request['fecha_final']
+            ? Carbon::parse($request['fecha_final'])
+            : Carbon::parse('2027-05-31');
+
         $maxEnd = Carbon::parse($request['fecha_final']);
-        $rangeEnd = $rangeEndRequest->lte($maxEnd) ? $rangeEndRequest : $maxEnd;
 
-       /*  return response()->json([
-            'start' => $rangeEndRequest,
-            'end' => $periodo_act->prdfecha_inicio
-        ]); */
+        $rangeEnd = $rangeEndRequest->lte($maxEnd)
+            ? $rangeEndRequest
+            : $maxEnd;
 
-        $docenteId = $request->get('docente_id') ? $request->get('docente_id') : Auth::user()->idnumber;
+
+        // ============================================================
+        // DOCENTE
+        // ============================================================
+        $docenteId = $request->get('docente_id')
+            ? $request->get('docente_id')
+            : Auth::user()->idnumber;
 
         if (!$docenteId) {
             return response()->json([
                 'errors' => 'No se proporcionó un docente válido.'
             ], 400);
         }
+
         $docente = User::where('idnumber', $docenteId)->first();
-        $min_atencion = $docente->min_atencion != null && $docente->min_atencion != "" && $docente->min_atencion < 40 && $docente->min_atencion > 20 ? $docente->min_atencion : 40;
+
+        if (!$docente) {
+            return response()->json([
+                'errors' => 'No se encontró el docente.'
+            ], 400);
+        }
+
+        $min_atencion =
+            $docente->min_atencion != null &&
+            $docente->min_atencion != "" &&
+            $docente->min_atencion < 40 &&
+            $docente->min_atencion > 20
+            ? $docente->min_atencion
+            : 40;
+
+
+        // ============================================================
+        // HORARIOS DEL DOCENTE
+        // ============================================================
         $horarios = TurnosDocente::where([
             "trnd_docidnumber" => $docenteId
         ])
             ->where("trndid_periodo", $periodo_act->id)
             ->get();
 
-          //  return response()->json($horarios);
-        // Traemos todos los turnos ya asignados del docente entre el rango (una sola consulta)
-        $turnosAsignados = TurnoEstudianteDocente::where('docente_id', $docente->id)
-            ->whereBetween('fecha', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
+
+        // ============================================================
+        // TURNOS YA ASIGNADOS
+        // ============================================================
+        $turnosAsignados = TurnoEstudianteDocente::where(
+            'docente_id',
+            $docente->id
+        )
+            ->whereBetween(
+                'fecha',
+                [
+                    $rangeStart->toDateString(),
+                    $rangeEnd->toDateString()
+                ]
+            )
             ->get();
 
-        // Indexamos por clave "YYYY-MM-DD|HH:MM:SS" para búsqueda rápida
+
+        // ============================================================
+        // INDEXAR TURNOS ASIGNADOS
+        // ============================================================
         $indexAsignados = [];
+
         foreach ($turnosAsignados as $t) {
-            $key = $t->fecha . '|' . (Carbon::parse($t->hora_inicio)->format('H:i:s'));
+
+            $key =
+                $t->fecha .
+                '|' .
+                Carbon::parse($t->hora_inicio)->format('H:i:s');
+
             $indexAsignados[$key] = $t;
         }
 
-        // Mapa de nombres de día (normalizado) a desplazamiento desde inicio de semana
+
+        // ============================================================
+        // DÍAS
+        // ============================================================
         $mapDiasNormalized = [
             'lunes' => 1,
             'martes' => 2,
@@ -159,204 +217,958 @@ class AgendasController extends Controller
             'domingo' => 7
         ];
 
+
+        // ============================================================
+        // RECESOS
+        // ============================================================
+        $recesos = [
+            [
+                'inicio' => '10:00:00',
+                'fin' => '10:30:00'
+            ],
+            [
+                'inicio' => '16:00:00',
+                'fin' => '16:30:00'
+            ]
+        ];
+
+
+        // ============================================================
+        // FUNCIÓN PARA SABER SI UNA HORA ESTÁ EN RECESO
+        // ============================================================
+        $obtenerReceso = function ($fecha, $inicio, $fin) use ($recesos) {
+
+            foreach ($recesos as $receso) {
+
+                $recesoInicio = $fecha->copy()
+                    ->setTimeFromTimeString($receso['inicio']);
+
+                $recesoFin = $fecha->copy()
+                    ->setTimeFromTimeString($receso['fin']);
+
+
+                // El bloque está completamente dentro del receso
+                if (
+                    $inicio->gte($recesoInicio) &&
+                    $inicio->lt($recesoFin)
+                ) {
+                    return [
+                        'inicio' => $recesoInicio,
+                        'fin' => $recesoFin
+                    ];
+                }
+
+
+                // El bloque atraviesa el inicio del receso
+                if (
+                    $inicio->lt($recesoInicio) &&
+                    $fin->gt($recesoInicio)
+                ) {
+                    return [
+                        'inicio' => $recesoInicio,
+                        'fin' => $recesoFin
+                    ];
+                }
+            }
+
+            return null;
+        };
+
+
+        // ============================================================
+        // EVENTOS
+        // ============================================================
         $eventos = [];
 
-        foreach ($horarios as $horario) {
-            $diaRaw = trim($horario->trnd_dia ?? '');
-            $diaNorm = \Str::lower($this->removeAccents($diaRaw));
 
-            if (!isset($mapDiasNormalized[$diaNorm])) continue;
+        // ============================================================
+        // RECORRER HORARIOS
+        // ============================================================
+        foreach ($horarios as $horario) {
+
+            $diaRaw = trim($horario->trnd_dia ?? '');
+
+            $diaNorm = \Str::lower(
+                $this->removeAccents($diaRaw)
+            );
+
+            if (!isset($mapDiasNormalized[$diaNorm])) {
+                continue;
+            }
+
             $isoDia = $mapDiasNormalized[$diaNorm];
 
+
+            // ========================================================
+            // ENCONTRAR PRIMER DÍA DEL HORARIO
+            // ========================================================
             $first = $rangeStart->copy();
-            $diff = ($isoDia - $first->isoWeekday() + 7) % 7;
-            if ($diff !== 0) $first->addDays($diff);
 
-            for ($current = $first->copy(); $current->lte($rangeEnd); $current->addWeek()) {
-                $horaInicio = Carbon::parse($horario->trnd_hora_inicio);
-                $horaFin = Carbon::parse($horario->trnd_hora_fin);
+            $diff = (
+                $isoDia -
+                $first->isoWeekday() +
+                7
+            ) % 7;
 
-                $bloqueInicio = $current->copy()->setTime($horaInicio->hour, $horaInicio->minute, $horaInicio->second);
-                $bloqueFinToCompare = $current->copy()->setTime($horaFin->hour, $horaFin->minute, $horaFin->second);
+            if ($diff !== 0) {
+                $first->addDays($diff);
+            }
 
-                $bloquesDelDia = []; // almacenamos los turnos del día
+
+            // ========================================================
+            // RECORRER SEMANAS
+            // ========================================================
+            for (
+                $current = $first->copy();
+                $current->lte($rangeEnd);
+                $current->addWeek()
+            ) {
+
+                $horaInicio = Carbon::parse(
+                    $horario->trnd_hora_inicio
+                );
+
+                $horaFin = Carbon::parse(
+                    $horario->trnd_hora_fin
+                );
+
+
+                $bloqueInicio = $current->copy()->setTime(
+                    $horaInicio->hour,
+                    $horaInicio->minute,
+                    $horaInicio->second
+                );
+
+                $bloqueFinToCompare = $current->copy()->setTime(
+                    $horaFin->hour,
+                    $horaFin->minute,
+                    $horaFin->second
+                );
+
+
+                $bloquesDelDia = [];
+
                 $restar = 0;
-                while ($bloqueInicio->lt($bloqueFinToCompare)) {
-                    $can_delete = true;
-                    $bloqueTo = $bloqueInicio->copy()->addMinutes($min_atencion);
-                    if ($bloqueTo->gt($bloqueFinToCompare)) {
-                        $bloqueTo = $bloqueFinToCompare->copy();
-                    }
 
-                    if (currentUser()->hasRole('amatai') || currentUser()->hasRole('estudiante')) {
+
+                // ====================================================
+                // GENERAR BLOQUES
+                // ====================================================
+                while (
+                    $bloqueInicio->lt($bloqueFinToCompare)
+                ) {
+
+                    $can_delete = true;
+
+
+                    // =================================================
+                    // SI YA PASÓ LA HORA ACTUAL
+                    // =================================================
+                    if (
+                        currentUser()->hasRole('amatai') ||
+                        currentUser()->hasRole('estudiante')
+                    ) {
+
                         $now = Carbon::now();
-                        if ($bloqueInicio->isSameDay($now) && $bloqueInicio->lt($now)) {
+
+                        if (
+                            $bloqueInicio->isSameDay($now) &&
+                            $bloqueInicio->lt($now)
+                        ) {
+
                             $can_delete = false;
-                            $bloqueInicio = $bloqueTo;
+
+                            $bloqueInicio = $bloqueInicio->copy()
+                                ->addMinutes($min_atencion);
+
                             continue;
                         }
                     }
 
-                    $key = $bloqueInicio->toDateString() . '|' . $bloqueInicio->format('H:i:s');
-                    $asignado = $indexAsignados[$key] ?? null;
 
+                    // =================================================
+                    // SI ESTAMOS DENTRO DE UN RECESO
+                    // =================================================
+                    $recesoActual = null;
+
+                    foreach ($recesos as $receso) {
+
+                        $recesoInicio = $bloqueInicio->copy()
+                            ->setTimeFromTimeString(
+                                $receso['inicio']
+                            );
+
+                        $recesoFin = $bloqueInicio->copy()
+                            ->setTimeFromTimeString(
+                                $receso['fin']
+                            );
+
+
+                        if (
+                            $bloqueInicio->gte($recesoInicio) &&
+                            $bloqueInicio->lt($recesoFin)
+                        ) {
+
+                            $recesoActual = [
+                                'inicio' => $recesoInicio,
+                                'fin' => $recesoFin
+                            ];
+
+                            break;
+                        }
+                    }
+
+
+                    // =================================================
+                    // SALTAR TODO EL RECESO
+                    // =================================================
+                    if ($recesoActual) {
+
+                        $bloqueInicio = $recesoActual['fin']->copy();
+
+                        continue;
+                    }
+
+
+                    // =================================================
+                    // CALCULAR FIN DEL TURNO
+                    // =================================================
+                    $bloqueTo = $bloqueInicio->copy()
+                        ->addMinutes($min_atencion);
+
+
+                    if (
+                        $bloqueTo->gt($bloqueFinToCompare)
+                    ) {
+
+                        $bloqueTo =
+                            $bloqueFinToCompare->copy();
+                    }
+
+
+                    // =================================================
+                    // VERIFICAR SI EL BLOQUE ATRAVIESA UN RECESO
+                    // =================================================
+                    $recesoAtravesado = null;
+
+                    foreach ($recesos as $receso) {
+
+                        $recesoInicio = $bloqueInicio->copy()
+                            ->setTimeFromTimeString(
+                                $receso['inicio']
+                            );
+
+                        $recesoFin = $bloqueInicio->copy()
+                            ->setTimeFromTimeString(
+                                $receso['fin']
+                            );
+
+
+                        // Ejemplo:
+                        // 09:40 - 10:20
+                        //
+                        // Se convierte en:
+                        // 09:40 - 10:00
+                        //
+                        // Luego continúa desde 10:30.
+
+                        if (
+                            $bloqueInicio->lt($recesoInicio) &&
+                            $bloqueTo->gt($recesoInicio)
+                        ) {
+
+                            $recesoAtravesado = [
+                                'inicio' => $recesoInicio,
+                                'fin' => $recesoFin
+                            ];
+
+                            break;
+                        }
+                    }
+
+
+                    // =================================================
+                    // SI ATRAVIESA EL RECESO
+                    // =================================================
+                    if ($recesoAtravesado) {
+
+                        /*
+                     * Si ya existe un bloque antes del receso,
+                     * lo terminamos exactamente a las 10:00 o 16:00.
+                     */
+                        $bloqueTo =
+                            $recesoAtravesado['inicio']->copy();
+                    }
+
+
+                    // =================================================
+                    // BUSCAR TURNO ASIGNADO
+                    // =================================================
+                    $key =
+                        $bloqueInicio->toDateString() .
+                        '|' .
+                        $bloqueInicio->format('H:i:s');
+
+                    $asignado =
+                        $indexAsignados[$key] ?? null;
+
+
+                    // =================================================
+                    // GUARDAR BLOQUE DEL DÍA
+                    // =================================================
                     $bloquesDelDia[] = [
                         'inicio' => $bloqueInicio->copy(),
                         'fin' => $bloqueTo->copy(),
                         'asignado' => $asignado,
                     ];
+
+
+                    // =================================================
+                    // ESTADO
+                    // =================================================
                     $status = 'libre';
+
                     $motivo = 'Disponible';
+
                     $cld = '#CCCCCC';
 
-                    //validar que start con end sean mayores a 10 minutos y menores a min_atencion
-                    if ($bloqueTo->diffInMinutes($bloqueInicio) <= 10) {
-                        // Si la diferencia es menor a 10 minutos, ajustar el inicio
+
+                    // =================================================
+                    // BLOQUES MUY PEQUEÑOS
+                    // =================================================
+                    if (
+                        $bloqueTo->diffInMinutes(
+                            $bloqueInicio
+                        ) <= 10
+                    ) {
+
                         $status = 'skip';
+
                         $motivo = 'No disponible';
+
                         $cld = '#727272ff';
+
                         $restar++;
                     }
 
-                 
 
+                    // =================================================
+                    // EVENTO
+                    // =================================================
                     $eventos[] = [
+
                         'title' => $asignado
-                            ? ($asignado->estado->ref_nombre . ':<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
+                            ? (
+                                $asignado->estado->ref_nombre .
+                                ':<br>' .
+                                (
+                                    $asignado->estudiante->name .
+                                    " " .
+                                    $asignado->estudiante->lastname
+                                    ?? 'Asignado'
+                                )
+                            )
                             : $motivo,
-                        'start' => $bloqueInicio->format('Y-m-d\TH:i:s'),
-                        'end' => $bloqueTo->format('Y-m-d\TH:i:s'),
-                        'color' => $asignado ?  $asignado->estado->color : $cld,
-                        'estado' => $asignado ? $asignado->estado_id : $status,
-                        'motivo' => $asignado ? $asignado->motivo : $motivo,
+
+                        'start' =>
+                        $bloqueInicio->format(
+                            'Y-m-d\TH:i:s'
+                        ),
+
+                        'end' =>
+                        $bloqueTo->format(
+                            'Y-m-d\TH:i:s'
+                        ),
+
+                        'color' =>
+                        $asignado
+                            ? $asignado->estado->color
+                            : $cld,
+
+                        'estado' =>
+                        $asignado
+                            ? $asignado->estado_id
+                            : $status,
+
+                        'motivo' =>
+                        $asignado
+                            ? $asignado->motivo
+                            : $motivo,
+
                         'tipo' => "normal",
+
                         'docente' => $docenteId,
-                        'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
-                        'turno_id' => $asignado ? $asignado->id : null,
-                        'motivo_txt' => $asignado ? $asignado->motivo : '',
-                        'fecha_larga' => getLongDateWithHour($bloqueInicio),
-                        'role_user' => currentUser()->roles[0]->name,
-                        'have_childs' => count($asignado ? $asignado->childs : []) > 0 ? true : false,
-                        'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
+
+                        'docente_nombre' =>
+                        $docente
+                            ? (
+                                $docente->name .
+                                ' ' .
+                                $docente->lastname
+                            )
+                            : 'Desconocido',
+
+                        'turno_id' =>
+                        $asignado
+                            ? $asignado->id
+                            : null,
+
+                        'motivo_txt' =>
+                        $asignado
+                            ? $asignado->motivo
+                            : '',
+
+                        'fecha_larga' =>
+                        getLongDateWithHour(
+                            $bloqueInicio
+                        ),
+
+                        'role_user' =>
+                        currentUser()->roles[0]->name,
+
+                        'have_childs' =>
+                        count(
+                            $asignado
+                                ? $asignado->childs
+                                : []
+                        ) > 0
+                            ? true
+                            : false,
+
+                        'can_delete' =>
+                        $asignado
+                            ? (
+                                $asignado->estudiante_id ==
+                                auth()->user()->id
+                                &&
+                                $can_delete
+                            )
+                            : false
                     ];
 
-                    $bloqueInicio = $bloqueTo;
-                }
-                // Log::info($bloquesDelDia);
 
-                // ✅ Si todos los bloques del día están ocupados → añadimos 2 extras
-                $totalBloques = count($bloquesDelDia);
-                $ocupados = collect($bloquesDelDia)
-                    ->filter(fn($bloque) => !is_null($bloque['asignado']))
+                    // =================================================
+                    // AVANZAR AL SIGUIENTE BLOQUE
+                    // =================================================
+                    $bloqueInicio =
+                        $bloqueTo->copy();
+
+
+                    // =================================================
+                    // SI TERMINAMOS JUSTO EN EL INICIO DEL RECESO
+                    // SALTAMOS LOS 30 MINUTOS
+                    // =================================================
+                    foreach ($recesos as $receso) {
+
+                        $recesoInicio = $bloqueInicio->copy()
+                            ->setTimeFromTimeString(
+                                $receso['inicio']
+                            );
+
+                        $recesoFin = $bloqueInicio->copy()
+                            ->setTimeFromTimeString(
+                                $receso['fin']
+                            );
+
+
+                        if (
+                            $bloqueInicio->equalTo(
+                                $recesoInicio
+                            )
+                        ) {
+
+                            $bloqueInicio =
+                                $recesoFin->copy();
+
+                            break;
+                        }
+                    }
+                }
+
+
+                // ========================================================
+                // SI TODOS LOS BLOQUES ESTÁN OCUPADOS
+                // AGREGAR EXTRAS
+                // ========================================================
+                $totalBloques =
+                    count($bloquesDelDia);
+
+                $ocupados =
+                    collect($bloquesDelDia)
+                    ->filter(
+                        fn($bloque) =>
+                        !is_null(
+                            $bloque['asignado']
+                        )
+                    )
                     ->count();
 
-                if ($totalBloques > 0 && ($ocupados + $restar) === $totalBloques) {
-                    $extraInicio = $bloquesDelDia[$totalBloques - 1]['fin']->copy();
 
-                    // 🔹 Si la hora es mayor o igual a 14 (2 PM)
+                if (
+                    $totalBloques > 0 &&
+                    ($ocupados + $restar) === $totalBloques
+                ) {
+
+                    $extraInicio =
+                        $bloquesDelDia[$totalBloques - 1]['fin']->copy();
+
+
+                    // =================================================
+                    // HORARIO EXTRA
+                    // =================================================
                     $extH = false;
+
+
                     if ($extraInicio->hour >= 18) {
-                        // Fíjala a las 18:00 (6 PM)
+
                         $extH = true;
-                        $extraInicio->setTime(18, 0, 0);
-                    } else if ($extraInicio->hour >= 12 && $extraInicio->hour < 14) {
-                        // Si no, fíjala a las 12:00 (mediodía)
-                        $extraInicio->setTime(12, 0, 0);
+
+                        $extraInicio->setTime(
+                            18,
+                            0,
+                            0
+                        );
+                    } elseif (
+                        $extraInicio->hour >= 12 &&
+                        $extraInicio->hour < 14
+                    ) {
+
+                        $extraInicio->setTime(
+                            12,
+                            0,
+                            0
+                        );
+
                         $extH = true;
                     }
 
+
                     if ($extH) {
+
                         for ($i = 0; $i < 2; $i++) {
-                            $extraFin = $extraInicio->copy()->addMinutes($min_atencion);
-                            $key = $extraInicio->toDateString() . '|' . $extraInicio->format('H:i:s');
-                            $asignado = $indexAsignados[$key] ?? null;
+
+                            $extraFin =
+                                $extraInicio->copy()
+                                ->addMinutes(
+                                    $min_atencion
+                                );
 
 
+                            // =================================================
+                            // NO CREAR EXTRA EN RECESO
+                            // =================================================
+                            $esRecesoExtra = false;
 
-                            $fechaBuscada = $extraFin->format('H:i:s');
-                            $diaBuscado = $extraFin->translatedFormat('l');
+                            foreach ($recesos as $receso) {
 
-                            $tieneHorario = $horarios->contains(function ($horario) use ($diaBuscado, $fechaBuscada) {
-                                return \Str::lower($horario->trnd_dia) === $diaBuscado
-                                    && $fechaBuscada >= $horario->trnd_hora_inicio
-                                    && $fechaBuscada <= $horario->trnd_hora_fin;
-                            });
+                                $recesoInicio =
+                                    $extraInicio->copy()
+                                    ->setTimeFromTimeString(
+                                        $receso['inicio']
+                                    );
 
-                            $existe = collect($eventos)->contains(function ($ev) use ($extraInicio, $extraFin) {
-                                return $ev['start'] === $extraInicio->format('Y-m-d\TH:i:s')
-                                    && $ev['end'] === $extraFin->format('Y-m-d\TH:i:s');
-                            });
-                            if (!$tieneHorario && !$existe) {
-                                $hora = Carbon::createFromTimeString($extraInicio)->format("g:i A");
-                                if ($extH) $hora = Carbon::createFromTimeString($extraInicio)->subHour()->format("g:i A");
+                                $recesoFin =
+                                    $extraInicio->copy()
+                                    ->setTimeFromTimeString(
+                                        $receso['fin']
+                                    );
 
-                                $color = '#ffee00ff'; // valor por defecto
+
+                                if (
+                                    $extraInicio->lt(
+                                        $recesoFin
+                                    ) &&
+                                    $extraFin->gt(
+                                        $recesoInicio
+                                    )
+                                ) {
+
+                                    $esRecesoExtra = true;
+
+                                    $extraInicio =
+                                        $recesoFin->copy();
+
+                                    break;
+                                }
+                            }
+
+
+                            if ($esRecesoExtra) {
+                                continue;
+                            }
+
+
+                            // =================================================
+                            // BUSCAR ASIGNADO
+                            // =================================================
+                            $key =
+                                $extraInicio->toDateString() .
+                                '|' .
+                                $extraInicio->format('H:i:s');
+
+                            $asignado =
+                                $indexAsignados[$key] ?? null;
+
+
+                            $fechaBuscada =
+                                $extraFin->format('H:i:s');
+
+                            $diaBuscado =
+                                $extraFin->translatedFormat('l');
+
+
+                            // =================================================
+                            // VALIDAR HORARIO
+                            // =================================================
+                            $tieneHorario =
+                                $horarios->contains(
+                                    function ($horario)
+                                    use (
+                                        $diaBuscado,
+                                        $fechaBuscada
+                                    ) {
+
+                                        return
+                                            \Str::lower(
+                                                $horario->trnd_dia
+                                            ) ===
+                                            \Str::lower(
+                                                $diaBuscado
+                                            )
+                                            &&
+                                            $fechaBuscada >=
+                                            $horario->trnd_hora_inicio
+                                            &&
+                                            $fechaBuscada <=
+                                            $horario->trnd_hora_fin;
+                                    }
+                                );
+
+
+                            // =================================================
+                            // VERIFICAR DUPLICADO
+                            // =================================================
+                            $existe =
+                                collect($eventos)
+                                ->contains(
+                                    function ($ev)
+                                    use (
+                                        $extraInicio,
+                                        $extraFin
+                                    ) {
+
+                                        return
+                                            $ev['start'] ===
+                                            $extraInicio->format(
+                                                'Y-m-d\TH:i:s'
+                                            )
+                                            &&
+                                            $ev['end'] ===
+                                            $extraFin->format(
+                                                'Y-m-d\TH:i:s'
+                                            );
+                                    }
+                                );
+
+
+                            if (
+                                !$tieneHorario &&
+                                !$existe
+                            ) {
+
+                                $hora =
+                                    Carbon::createFromTimeString(
+                                        $extraInicio
+                                    )->format("g:i A");
+
+
+                                if ($extH) {
+
+                                    $hora =
+                                        Carbon::createFromTimeString(
+                                            $extraInicio
+                                        )
+                                        ->subHour()
+                                        ->format("g:i A");
+                                }
+
+
+                                // =================================================
+                                // COLOR
+                                // =================================================
+                                $color = '#ffee00ff';
+
 
                                 if ($asignado) {
-                                    if ($asignado->estado_id == 260) {
-                                        $color = $asignado->estado->color;
-                                    } elseif (!empty($asignado->estado->color)) {
-                                        $color = $asignado->estado->color;
+
+                                    if (
+                                        $asignado->estado_id == 260
+                                    ) {
+
+                                        $color =
+                                            $asignado->estado->color;
+                                    } elseif (
+                                        !empty($asignado->estado->color)
+                                    ) {
+
+                                        $color =
+                                            $asignado->estado->color;
                                     }
                                 }
+
+
+                                // =================================================
+                                // EVENTO EXTRA
+                                // =================================================
                                 $eventos[] = [
-                                    'title' =>  $asignado
-                                        ? ($asignado->estado->ref_nombre . ':<br>' . ($asignado->estudiante->name . " " . $asignado->estudiante->lastname ?? 'Asignado'))
+
+                                    'title' =>
+                                    $asignado
+                                        ? (
+                                            $asignado
+                                            ->estado
+                                            ->ref_nombre .
+                                            ':<br>' .
+                                            (
+                                                $asignado
+                                                ->estudiante
+                                                ->name .
+                                                ' ' .
+                                                $asignado
+                                                ->estudiante
+                                                ->lastname
+                                            )
+                                        )
                                         : 'Disponible',
-                                    'start' => $extraInicio->format('Y-m-d\TH:i:s'),
-                                    'end' => $extraFin->format('Y-m-d\TH:i:s'),
+
+                                    'start' =>
+                                    $extraInicio->format(
+                                        'Y-m-d\TH:i:s'
+                                    ),
+
+                                    'end' =>
+                                    $extraFin->format(
+                                        'Y-m-d\TH:i:s'
+                                    ),
+
                                     'color' => $color,
-                                    'estado' => $asignado ? $asignado->estado_id : 'libre',
+
+                                    'estado' =>
+                                    $asignado
+                                        ? $asignado->estado_id
+                                        : 'libre',
+
                                     'tipo' => 'extra',
+
                                     'docente' => $docenteId,
-                                    'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
-                                    'motivo' => 'Turno adicional',
-                                    'fecha_larga' => getLongDate($extraInicio) . " a las " . $hora,
-                                    'role_user' => currentUser()->roles[0]->name,
-                                    'motivo_txt' => $asignado ? $asignado->motivo : '',
-                                    'turno_id' => $asignado ? $asignado->id : null,
-                                    'have_childs' => count($asignado ? $asignado->childs : []) > 0 ? true : false,
-                                    'can_delete' => $asignado ? ($asignado->estudiante_id == auth()->user()->id and $can_delete)  : false
+
+                                    'docente_nombre' =>
+                                    $docente
+                                        ? (
+                                            $docente->name .
+                                            ' ' .
+                                            $docente->lastname
+                                        )
+                                        : 'Desconocido',
+
+                                    'motivo' =>
+                                    'Turno adicional',
+
+                                    'fecha_larga' =>
+                                    getLongDate(
+                                        $extraInicio
+                                    ) .
+                                        " a las " .
+                                        $hora,
+
+                                    'role_user' =>
+                                    currentUser()
+                                        ->roles[0]
+                                        ->name,
+
+                                    'motivo_txt' =>
+                                    $asignado
+                                        ? $asignado->motivo
+                                        : '',
+
+                                    'turno_id' =>
+                                    $asignado
+                                        ? $asignado->id
+                                        : null,
+
+                                    'have_childs' =>
+                                    count(
+                                        $asignado
+                                            ? $asignado->childs
+                                            : []
+                                    ) > 0
+                                        ? true
+                                        : false,
+
+                                    'can_delete' =>
+                                    $asignado
+                                        ? (
+                                            $asignado
+                                            ->estudiante_id ==
+                                            auth()->user()->id
+                                            &&
+                                            $can_delete
+                                        )
+                                        : false
                                 ];
                             }
-                            $extraInicio = $extraFin;
+
+
+                            // =================================================
+                            // SIGUIENTE EXTRA
+                            // =================================================
+                            $extraInicio =
+                                $extraFin->copy();
                         }
                     }
                 }
             }
         }
 
-        foreach ($turnosAsignados as $turno) {
-            $key = $turno->fecha . '|' . Carbon::parse($turno->hora_inicio)->format('H:i:s');
 
-            // Verifica si ya fue incluido (es decir, si pertenece a un horario normal)
-            $existe = collect($eventos)->contains(function ($ev) use ($turno) {
-                return $ev['start'] === Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio)->format('Y-m-d\TH:i:s');
-            });
+        // ============================================================
+        // TURNOS FUERA DEL HORARIO HABITUAL
+        // ============================================================
+        foreach ($turnosAsignados as $turno) {
+
+            $key =
+                $turno->fecha .
+                '|' .
+                Carbon::parse(
+                    $turno->hora_inicio
+                )->format('H:i:s');
+
+
+            // ========================================================
+            // VERIFICAR SI YA ESTÁ EN LOS EVENTOS
+            // ========================================================
+            $existe =
+                collect($eventos)
+                ->contains(
+                    function ($ev) use ($turno) {
+
+                        return
+                            $ev['start'] ===
+                            Carbon::parse(
+                                $turno->fecha .
+                                    ' ' .
+                                    $turno->hora_inicio
+                            )->format(
+                                'Y-m-d\TH:i:s'
+                            );
+                    }
+                );
+
 
             if (!$existe) {
-                // Este turno está fuera del horario habitual (reposiciones u otros)
-                $fechaInicio = Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio);
-                $fechaFin = Carbon::parse($turno->fecha . ' ' . $turno->hora_fin);
+
+                // ====================================================
+                // TURNO FUERA DE HORARIO
+                // ====================================================
+                $fechaInicio =
+                    Carbon::parse(
+                        $turno->fecha .
+                            ' ' .
+                            $turno->hora_inicio
+                    );
+
+                $fechaFin =
+                    Carbon::parse(
+                        $turno->fecha .
+                            ' ' .
+                            $turno->hora_fin
+                    );
+
 
                 $eventos[] = [
-                    'title' => $turno->estado_id !== 265 ? $turno->estado->ref_nombre . ': <br>' . ($turno->estudiante->name . ' ' . $turno->estudiante->lastname) : 'Turno Disponible',
-                    'start' => $fechaInicio->format('Y-m-d\TH:i:s'),
-                    'end' => $fechaFin->format('Y-m-d\TH:i:s'),
-                    'color' => $turno->estado->color, // color naranja para distinguirlo
-                    'estado' => $turno->estado_id,
-                    'tipo' => 'fuera_horario',
-                    'docente' => $docenteId,
-                    'docente_nombre' => $docente ? ($docente->name . ' ' . $docente->lastname) : 'Desconocido',
-                    'motivo' => $turno->estado_id == 265 ? "" : $turno->motivo ?? 'Reposición / fuera de horario',
-                    'fecha_larga' => getLongDateWithHour($fechaInicio),
-                    'role_user' => currentUser()->roles[0]->name,
-                    'turno_id' => $turno->id,
-                    'can_delete' => ($turno->estudiante_id == auth()->user()->id and $can_delete),
+
+                    'title' =>
+                    $turno->estado_id !== 265
+                        ? (
+                            $turno
+                            ->estado
+                            ->ref_nombre .
+                            ': <br>' .
+                            (
+                                $turno
+                                ->estudiante
+                                ->name .
+                                ' ' .
+                                $turno
+                                ->estudiante
+                                ->lastname
+                            )
+                        )
+                        : 'Turno Disponible',
+
+                    'start' =>
+                    $fechaInicio->format(
+                        'Y-m-d\TH:i:s'
+                    ),
+
+                    'end' =>
+                    $fechaFin->format(
+                        'Y-m-d\TH:i:s'
+                    ),
+
+                    'color' =>
+                    $turno->estado->color,
+
+                    'estado' =>
+                    $turno->estado_id,
+
+                    'tipo' =>
+                    'fuera_horario',
+
+                    'docente' =>
+                    $docenteId,
+
+                    'docente_nombre' =>
+                    $docente
+                        ? (
+                            $docente->name .
+                            ' ' .
+                            $docente->lastname
+                        )
+                        : 'Desconocido',
+
+                    'motivo' =>
+                    $turno->estado_id == 265
+                        ? ""
+                        : $turno->motivo ??
+                        'Reposición / fuera de horario',
+
+                    'fecha_larga' =>
+                    getLongDateWithHour(
+                        $fechaInicio
+                    ),
+
+                    'role_user' =>
+                    currentUser()
+                        ->roles[0]
+                        ->name,
+
+                    'turno_id' =>
+                    $turno->id,
+
+                    'can_delete' => (
+                        $turno->estudiante_id ==
+                        auth()->user()->id
+                    ) &&
+                        $can_delete,
                 ];
             }
         }
 
+
+        // ============================================================
+        // RESPUESTA
+        // ============================================================
         return response()->json($eventos);
     }
 

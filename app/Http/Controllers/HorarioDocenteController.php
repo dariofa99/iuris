@@ -35,6 +35,7 @@ class HorarioDocenteController extends Controller
         }
 
         $active_asig = 'active';
+      
         return view('myforms.frm_asignaciones_docente_estudiante', compact('docentes_activos', 'horarios_docente', 'active_asig', 'estudiantes'));
     }
 

@@ -198,7 +198,7 @@ class UsersRepository extends BaseRepository implements UsersService
   }
 
   public function getDocentes(): array
-  {
+  { 
     $users = DB::table('users')
       ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
       ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')

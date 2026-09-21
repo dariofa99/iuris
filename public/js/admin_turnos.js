@@ -4,8 +4,25 @@ var dias = [];
 var checks_bd = [];
 var horas = [];
 $(document).ready(function () {
+	const hoy = moment();
+	const inicio = moment().isoWeekday(1);
+	const fin = moment().isoWeekday(5);
+
+	$('#inicio').val(inicio.format('YYYY-MM-DD'));
+	$('#fin').val(fin.format('YYYY-MM-DD'));
+
+	/* const inicioSemana = hoy.clone().startOf('IsoWeek');
+	const finSemana = hoy.clone().endOf('Week');
+
+	$("#inicio").val(inicioSemana.format('YYYY-MM-DD'))
+	$("#fin").val(finSemana.format('YYYY-MM-DD')) */
+
 	set_tab();
 	getAsistenciaReport();
+	getAsistenciasDocente();
+
+
+
 	$(".btn_habilityupdatecolor").on("click", function (e) {
 		e.preventDefault();
 		var id = $(this).attr("data-id");
@@ -100,7 +117,7 @@ $(document).ready(function () {
 					positionClass: "toast-top-right",
 					timeOut: "4000",
 				});
-				window.location.reload(true); 
+				window.location.reload(true);
 			}
 		});
 
@@ -265,40 +282,11 @@ $(document).ready(function () {
 
 	});
 
-	$("#asistencia-tab").on("click", async function () {
-		$("#wait").show();
-
-		let res = await horariosService.getReporteAsistenciaDocente();
-		var datosasis = "";
-		$("#contenrepasistenciadoc").html('');
-		if (res != "") {
-			$(res.docentes).each(function (key, value) {
-				var asistencias = 0;
-				var permisos = 0;
-				var reposiciones = 0;
-				var datasistencias = res.asistencia.find(datosasis => datosasis.docidnumber === value.idnumber);
-				var datapermisos = res.permisos.find(datosper => datosper.docidnumber === value.idnumber);
-				var datareposiciones = res.reposicion.find(datosrepo => datosrepo.docidnumber === value.idnumber);
-				if (datasistencias) { asistencias = datasistencias.asistencia; }
-				if (datapermisos) { permisos = datapermisos.permisos; }
-				if (datareposiciones) { reposiciones = datareposiciones.reposicion; }
-
-
-				datosasis += '<tr>' +
-					'<td>' + parseInt(key + 1) + '</td>' +
-					'<td>' + value.idnumber + '</td>' +
-					'<td>' + value.full_name + '</td>' +
-					'<td>' + round(asistencias / 60) + '</td>' +
-					'<td>' + round(permisos / 60) + '</td>' +
-					'<td>' + round(reposiciones / 60) + '</td>' +
-					'<td>' + parseInt(parseInt(round(permisos / 60)) - parseInt(round(reposiciones / 60))) + '</td>' +
-					'</tr>';
-
-
-			});
-			$("#contenrepasistenciadoc").append(datosasis);//coloca una nueva opcion
-		}
-		$("#wait").hide();
+	$("#inicio").on("change", async function () {
+		getAsistenciasDocente();
+	});
+	$("#fin").on("change", async function () {
+		getAsistenciasDocente();
 	});
 
 	$("#table_list_model").on("click", ".btn_asig_turno", function (e) {
@@ -614,4 +602,83 @@ function hideEditColor(turno_id) {
 	showElement("label_trnid_oficina" + turno_id);
 	showElement("label_trnid_dia" + turno_id);
 	showElement("btn_delete_turno-" + turno_id);
+}
+
+async function getAsistenciasDocente() {
+	$("#wait").show();
+	let request = {
+		start: $("#inicio").val(),
+		end: $("#fin").val()
+	}
+
+	let res = await horariosService.getReporteAsistenciaDocente(request);
+	var datosasis = "";
+	$("#contenrepasistenciadoc").html('');
+	if (res != "") {
+		$(res.docentes).each(function (key, value) {
+			var asistencia_label = "";
+			var asistencias = 0;
+			var permisos = 0;
+			var reposiciones = 0;
+			var horas_semanales = 0;
+			var faltas = 0;
+			var datasistencias = res.asistencia.find(datosasis => datosasis.docidnumber === value.idnumber);
+			var datapermisos = res.permisos.find(datosper => datosper.docidnumber === value.idnumber);
+			var datareposiciones = res.reposicion.find(datosrepo => datosrepo.docidnumber === value.idnumber);
+			var datahorassemanales = res.horas_semanales.find(datoshs => datoshs.trnd_docidnumber === value.idnumber);
+			var datafaltas = res.faltas.find(datosfalta => datosfalta.docidnumber === value.idnumber);
+			//var asistencia_label_d = res.asistencia.find(datosfalta => datosfalta.docidnumber === value.idnumber);
+	
+
+			if (datasistencias) { asistencia_label = datasistencias.asistencia_label; }
+			if (datasistencias) { asistencias = datasistencias.asistencia; }
+			if (datapermisos) { permisos = datapermisos.permisos; }
+			if (datareposiciones) { reposiciones = datareposiciones.reposicion; }
+			if (datahorassemanales) { horas_semanales = datahorassemanales.minutos_rango; }
+			if (datafaltas) { faltas = datafaltas.faltas; }
+
+
+			datosasis += '<tr>' +
+
+				'<td>' + parseInt(key + 1) + '</td>' +
+
+				'<td>' + value.idnumber + '</td>' +
+				'<td>' + value.full_name + '</td>' +
+				'<td>' + parseInt((horas_semanales / 60)) + '</td>' +
+				'<td>' + (asistencia_label) + '</td>' +
+				'<td>' + formatearHoras(parseInt((horas_semanales)) - round(asistencias)) + '</td>' +
+				'<td>' + round(faltas / 60) + '</td>' +
+				'<td>' + round(reposiciones / 60) + '</td>' +
+
+				'</tr>';
+
+
+		});
+		$("#contenrepasistenciadoc").append(datosasis);//coloca una nueva opcion
+	}
+	$("#wait").hide();
+}
+
+function formatearHoras(minutos) {
+    const duracion = moment.duration(minutos, 'minutes');
+
+    const horas = Math.floor(duracion.asHours());
+    const minutosRestantes = duracion.minutes();
+
+    let resultado = '';
+
+    if (horas > 0) {
+        resultado += horas + (horas === 1 ? ' hora' : ' horas');
+    }
+
+    if (minutosRestantes > 0) {
+        if (resultado !== '') {
+            resultado += ', ';
+        }
+
+        resultado += minutosRestantes +
+            (minutosRestantes === 1 ? ' minuto' : ' minutos');
+    }
+
+    return resultado || '0 minutos';
 }

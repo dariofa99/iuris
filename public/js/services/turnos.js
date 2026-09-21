@@ -75,8 +75,8 @@ export class HorariosService {
         const topics = await response.json();
         return topics;
     }
-    async getReporteAsistenciaDocente(){
-        const response = await fetch(BASE_URL + "turnos/docentes/reporte/asis", {
+    async getReporteAsistenciaDocente(request={}) {
+        const response = await fetch(BASE_URL + "turnos/docentes/reporte/asis?" + new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

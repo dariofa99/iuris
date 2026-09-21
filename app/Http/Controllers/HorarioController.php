@@ -56,7 +56,7 @@ class HorarioController extends Controller
     ,'role_user.role_id', 'roles.display_name')->groupBy('users.idnumber')
     ->orderBy('users.created_at', 'desc')->get();
 */
-    $docentes = $this->usersService->getUsersByRoleName('docente');
+    $docentes = $this->usersService->getDocentes();
     // dd($docentes);
     $periodo = DB::table('periodo')
       ->join('sede_periodos as sp', 'sp.periodo_id', '=', 'periodo.id')
@@ -338,7 +338,8 @@ class HorarioController extends Controller
 
        return view(
         'myforms.calendario_docentes',
-        compact( 'tipo')
+
+        compact( 'tipo','docentes')
       );
 
 

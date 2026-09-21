@@ -12,21 +12,74 @@
     Agenda
 @endsection
 @section('area_buttons')
-    <div class="row">
-        <div class="col-md-6 col-sm-offset-6">
-            <select class="form-control" id="horariourl">
-                <option value="estudiantes" @if ($tipo == 'estudiantes') selected @endif>Horario estudiantes</option>
-                <option value="docentes" @if ($tipo == 'docentes') selected @endif>Horario docentes</option>
 
-            </select>
-
-        </div>
-    </div>
 @endsection
 
 @section('area_forms')
 
+    <div class="row">
+        <div class="col-md-12">
 
+            <div class="iuris-horario-filters">
+
+                <!-- Tipo de horario -->
+                <div class="iuris-horario-filter">
+
+                    <div class="iuris-horario-filter-icon">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+
+                    <div class="iuris-horario-filter-content">
+                        <label for="horariourl">
+                            Tipo de horario
+                        </label>
+
+                        <select class="form-control" id="horariourl">
+                            <option value="estudiantes" @if ($tipo == 'estudiantes') selected @endif>
+                                Horario estudiantes
+                            </option>
+
+                            <option value="docentes" @if ($tipo == 'docentes') selected @endif>
+                                Horario docentes
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <!-- Docente -->
+                <div class="iuris-horario-filter iuris-docente-filter">
+
+                    <div class="iuris-horario-filter-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+
+                    <div class="iuris-horario-filter-content">
+                        <label for="docente_id">
+                            Docente
+                        </label>
+
+                        <select class="form-control" name="docente_id" id="docente_id">
+                            <option value="">
+                                Seleccione un docente
+                            </option>
+
+                            @foreach ($docentes as $docente)
+                                <option value="{{ $docente->idnumber }}" @if ($docente->idnumber == request()->get('docente_id')) selected @endif>
+                                    {{ $docente->full_name }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
     <div class="row">
 
         <!-- /.col -->
@@ -61,10 +114,11 @@
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 
     <script type="module" src={{ asset('js/admin_horarios.js?v=' . config('app_config.asset_version')) }}></script>
-     <script type="module" src={{ asset('js/admin_calendar_asisten_docente.js?v=' . config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/admin_calendar_asisten_docente.js?v=' . config('app_config.asset_version')) }}>
+    </script>
 
     <!-- Page specific script -->
-   
+
     <style type="text/css">
         /*#btn_modal_req{visibility: hidden !important;}*/
     </style>

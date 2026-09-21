@@ -6,7 +6,7 @@
 @endsection
 
 @section('titulo_area')
-    Docentes
+  
 @endsection
 
 @section('navbar')
@@ -124,6 +124,102 @@
 
                     <div class="row">
                         <div class="col-md-12">
+
+                            <div class="iuris-form-card">
+
+                                <!-- CABECERA -->
+                                <div class="iuris-form-header">
+                                    <div class="d-flex align-items-center">
+                                        <div class="iuris-summary-icon mr-3">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </div>
+
+                                        <div>
+                                            <div class="iuris-form-title">
+                                                Período de consulta
+                                            </div>
+
+                                            <small class="iuris-text-muted">
+                                                Seleccione el rango de fechas para consultar la información
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form action="#" method="get">
+
+                                    <!-- CUERPO -->
+                                    <div class="iuris-form-body">
+
+                                        <div class="iuris-section-title">
+                                            <i class="far fa-calendar-alt"></i>
+                                            Rango de fechas
+                                        </div>
+
+                                        <div class="row">
+
+                                            <!-- FECHA INICIAL -->
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="inicio" class="iuris-form-label">
+                                                        Fecha inicial
+                                                    </label>
+
+                                                    <div class="iuris-input-icon">
+                                                        <i class="far fa-calendar-alt"></i>
+
+                                                        <input type="date" name="inicio" id="inicio"
+                                                            class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- FECHA FINAL -->
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="fin" class="iuris-form-label">
+                                                        Fecha final
+                                                    </label>
+
+                                                    <div class="iuris-input-icon">
+                                                        <i class="far fa-calendar-alt"></i>
+
+                                                        <input type="date" name="fin" id="fin"
+                                                            class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- BOTÓN -->
+                                   {{--          <div class="col-md-2 d-flex align-items-end">
+                                                <div class="form-group w-100">
+                                                    <button type="submit" class="btn btn-iuris-primary btn-block">
+                                                        <i class="fas fa-search mr-1"></i>
+                                                        Consultar
+                                                    </button>
+                                                </div>
+                                            </div> --}}
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- FOOTER -->
+                               {{--      <div class="iuris-form-footer">
+                                        <div class="iuris-help-text">
+                                            <i class="fas fa-info-circle"></i>
+                                            Seleccione las fechas que desea consultar.
+                                        </div>
+                                    </div> --}}
+
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
                             <div class="box-body table-responsive no-padding">
                                 <table id="tbl_repor_asis" class="table table-bordered table-striped dataTable"
                                     role="grid">
@@ -133,10 +229,11 @@
                                             <th>No.</th>
                                             <th>Cédula</th>
                                             <th>Nombre</th>
+                                            <th>Horas semanales (rango)</th>
                                             <th>Horas asistidas</th>
-                                            <th>Horas permisos</th>
-                                            <th>Horas reposiciones</th>
                                             <th>Horas pendientes</th>
+                                            <th>Horas no asistencia</th>
+                                            <th>Horas marcadas por reponer</th>
 
 
                                         </tr>
