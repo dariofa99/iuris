@@ -3996,8 +3996,10 @@ RESPONSIVE
 }
 
 .evento-docente-estado{
-  padding: 2px;
-  border-radius: 12px;
+  padding: 3px;
+  border-radius: 3px;
+  margin: 2px;
+  font-size: 12px;
 }
 
 /* ==========================================================

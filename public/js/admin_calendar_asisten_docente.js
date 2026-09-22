@@ -39,7 +39,7 @@ $(function () {
         }
     });
 
-      $("#btnActualizarTurnoDocente").click(async function (e) {
+    $("#btnActualizarTurnoDocente").click(async function (e) {
         e.preventDefault();
         // $("#wait").show();
         const form = document.getElementById("turnosdoc");
@@ -206,6 +206,7 @@ function showCalendar(docente_id) {
             const start = moment(event.start).format('HH:mm');
             const end = moment(event.end).format('HH:mm');
 
+
             /*
             |--------------------------------------------------------------------------
             | Imagen del docente
@@ -222,26 +223,32 @@ function showCalendar(docente_id) {
             | Contenido del evento
             |--------------------------------------------------------------------------
             */
+            var text = '';
+            if (event.asistencia_id != null) {
+                console.log(event);
+                text = `(${ moment(event.hora_inicio_asis, "HH:mm:ss").format("h:mm A")} - ${moment(event.hora_fin_asis, "HH:mm:ss").format("h:mm A")})`;
+            }
 
             const contenido = `
 
              <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-12">
                                      <div class="evento-docente-hora">
-                                        ${start} - ${end}
+                                        ${ moment(start, "HH:mm:ss").format("h:mm A")} - ${ moment(end, "HH:mm:ss").format("h:mm A")}
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="evento-docente-estado" style="background-color: ${event.tipo_asis_color}; font-weight: bold;">
-                                        ${event.tipo_asis_nombre}
-                                    </div>
-                                </div>
+                                </div>                         
                                
                                 <div class="col-md-12">
                                       <div class="evento-docente-titulo">
                                         ${event.title}
                                     </div>
-                                </div>                         
+                                </div>    
+                                
+                                <div class="col-md-12">
+                                    <div class="evento-docente-estado" style="background-color: ${event.tipo_asis_color}; font-weight: bold;">
+                                        ${event.tipo_asis_nombre} ${text}
+                                    </div>
+                                </div>
                              </div> `;
 
 
@@ -267,7 +274,7 @@ function showCalendar(docente_id) {
             */
 
             element.find('.fc-content').css({
-                'padding': '5px',
+                'padding-right': '15px',
 
             });
 
@@ -296,7 +303,7 @@ function showCalendar(docente_id) {
             resetDisabledForm("turnosdoc");
 
             //limpiarForm("turnosdoc");
-           
+
             $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio);
             $("#turnosdoc #turno_id").val(calEvent.id);
             $("#turnosdoc #fecha_turno").val(calEvent.fecha_turno);
@@ -308,13 +315,13 @@ function showCalendar(docente_id) {
             $("#descripregisdocasis").val("");
             if (calEvent.asistencia_id != null) {
                 $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", false).show();
-                 $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", true).hide();
+                $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", true).hide();
                 $(".iuris-novedades input[type='radio']").filter(`[value="${calEvent.tipo_asis}"]`).prop("checked", true);
                 $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio_asis);
                 $("#turnosdoc #hora_fin").val(calEvent.hora_fin_asis);
                 $("#descripregisdocasis").val(calEvent.descripcion);
                 $("#turnosdoc #asistencia_id").val(calEvent.asistencia_id);
-               
+
                 if (calEvent.tipo_asis == 150) {
                     $("#div_reposicion").show();
                     $("#div_reposicion").html(contentRepos());

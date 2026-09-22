@@ -142,6 +142,7 @@ class TurnosDocentesController extends Controller
             ->where('reposicion', '0')
             ->where('tipo_asis', '149')
             ->whereDate('inicio', '>=', $prdfecha_inicio)
+            ->whereDate('fin', '<=', $prdfecha_fin)
             ->select(
                 'docidnumber',
                 DB::raw('SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS asistencia'),
@@ -182,6 +183,7 @@ class TurnosDocentesController extends Controller
             ->where('reposicion', '0')
             ->where('tipo_asis', '284')
             ->whereDate('inicio', '>=', $prdfecha_inicio)
+            ->whereDate('fin', '<=', $prdfecha_fin)
             ->select('docidnumber', DB::raw('SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS faltas'))
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
 
