@@ -19,6 +19,28 @@ export class HorariosDocenteService {
         const topics = await response.json();
         return topics;
     }
+
+     async updateAsistencia(request) {
+        const response = await fetch(BASE_URL + 'docentes/horario/actualizar/asistencia', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+
     async updateAsigTurno(request,id) {
         const response = await fetch(BASE_URL + 'turnos/' + id, {
             method: 'PUT',

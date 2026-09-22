@@ -235,6 +235,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Horario docente
     Route::resource('docentes/horario', 'HorarioDocenteController');
     Route::post('docentes/horario/registrar/asistencia', 'HorarioDocenteController@registrarAsistencia');
+     Route::post('docentes/horario/actualizar/asistencia', 'HorarioDocenteController@actualizarAsistencia');
     Route::post('docentes/search/horario', 'HorarioDocenteController@searchHorasDocente');
     Route::post('docentes/horario/delete/all', 'HorarioDocenteController@deleteAllHorarioDocentes');
     //Route::get('docentes/horario/search/estudiante','HorarioDocenteController@searchEstud');

@@ -10,6 +10,7 @@
     @slot('body')
         <form class="iuris-form-card" id="turnosdoc">
                 <input type="hidden" name="turno_id" id="turno_id">
+                <input type="hidden" name="asistencia_id" id="asistencia_id">
                 <input type="hidden" name="fecha_turno" id="fecha_turno">
             <!-- ============================================
                                                      HEADER
@@ -265,6 +266,14 @@
                     <i class="fas fa-save mr-1"></i>
 
                     Guardar cambios
+
+                </button>
+
+                <button type="button" id="btnActualizarTurnoDocente" class="btn btn-iuris-primary">
+
+                    <i class="fas fa-save mr-1"></i>
+
+                    Actualizar cambios
 
                 </button>
 

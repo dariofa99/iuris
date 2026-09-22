@@ -37,7 +37,39 @@ $(function () {
             });
             form.reportValidity();
         }
+    });
+
+      $("#btnActualizarTurnoDocente").click(async function (e) {
+        e.preventDefault();
+        // $("#wait").show();
+        const form = document.getElementById("turnosdoc");
+        if (!form) return;
+        var isvalid = validateForms(form);
+        console.log(form);
+
+        if (isvalid) {
+            //form.requestSubmit();
+            var request = convertFormToJSON("turnosdoc");
+            request.hora_inicio = normalizarHora(request.hora_inicio);
+            request.hora_fin = normalizarHora(request.hora_fin);
+
+            let response = await horariosDocenteService.updateAsistencia(request);
+            $("#calendar").fullCalendar('refetchEvents');
+            $("#myModal_reporasistencia").modal('hide');
+            toastr.success("Asistencia actualizada correctamente", "Éxito!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+
+        } else {
+            toastr.error("Hay campos que son obligatorios", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            form.reportValidity();
+        }
     })
+
 
     $(".iuris-novedades").on('change', 'input[type="radio"]', async function (e) {
         e.preventDefault();
@@ -256,12 +288,15 @@ function showCalendar(docente_id) {
         },
         eventClick: function (calEvent, jsEvent, view) {
             console.log(calEvent);
+            $("#turnosdoc #asistencia_id").val("");
+            $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", false).show();
+            $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", true).hide();
             $("#div_reposicion").hide();
             $("#div_reposicion").html("");
             resetDisabledForm("turnosdoc");
 
             //limpiarForm("turnosdoc");
-            $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", false);
+           
             $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio);
             $("#turnosdoc #turno_id").val(calEvent.id);
             $("#turnosdoc #fecha_turno").val(calEvent.fecha_turno);
@@ -272,10 +307,14 @@ function showCalendar(docente_id) {
             $(".iuris-novedades input[value='149']").prop("checked", true);
             $("#descripregisdocasis").val("");
             if (calEvent.asistencia_id != null) {
+                $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", false).show();
+                 $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", true).hide();
                 $(".iuris-novedades input[type='radio']").filter(`[value="${calEvent.tipo_asis}"]`).prop("checked", true);
                 $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio_asis);
                 $("#turnosdoc #hora_fin").val(calEvent.hora_fin_asis);
                 $("#descripregisdocasis").val(calEvent.descripcion);
+                $("#turnosdoc #asistencia_id").val(calEvent.asistencia_id);
+               
                 if (calEvent.tipo_asis == 150) {
                     $("#div_reposicion").show();
                     $("#div_reposicion").html(contentRepos());
@@ -286,7 +325,7 @@ function showCalendar(docente_id) {
                     disabledForm("turnosdoc")
 
                 }
-                $("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
+                //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
             }
             $("#myModal_reporasistencia").modal('show');
         },
