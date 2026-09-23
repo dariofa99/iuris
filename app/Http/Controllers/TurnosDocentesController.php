@@ -196,6 +196,7 @@ class TurnosDocentesController extends Controller
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
         //$reposicion = DB::select('SELECT `docidnumber`,SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS reposicion FROM `asistencia_docentes` WHERE `reposicion`=1 AND `tipo_asis` = 149	GROUP BY `docidnumber` ORDER BY `docidnumber` DESC');
 
+       // dd($response);
         return response()->json($response);
     }
 

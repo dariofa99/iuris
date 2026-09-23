@@ -236,6 +236,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('docentes/horario', 'HorarioDocenteController');
     Route::post('docentes/horario/registrar/asistencia', 'HorarioDocenteController@registrarAsistencia');
      Route::post('docentes/horario/actualizar/asistencia', 'HorarioDocenteController@actualizarAsistencia');
+    Route::delete('docentes/horario/eliminar/asistencia/{id}', 'HorarioDocenteController@eliminarAsistencia');
     Route::post('docentes/search/horario', 'HorarioDocenteController@searchHorasDocente');
     Route::post('docentes/horario/delete/all', 'HorarioDocenteController@deleteAllHorarioDocentes');
     //Route::get('docentes/horario/search/estudiante','HorarioDocenteController@searchEstud');

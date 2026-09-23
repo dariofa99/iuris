@@ -9,12 +9,12 @@
 
     @slot('body')
         <form class="iuris-form-card" id="turnosdoc">
-                <input type="hidden" name="turno_id" id="turno_id">
-                <input type="hidden" name="asistencia_id" id="asistencia_id">
-                <input type="hidden" name="fecha_turno" id="fecha_turno">
+            <input type="hidden" name="turno_id" id="turno_id">
+            <input type="hidden" name="asistencia_id" id="asistencia_id">
+            <input type="hidden" name="fecha_turno" id="fecha_turno">
             <!-- ============================================
-                                                     HEADER
-                                                ============================================= -->
+                                                             HEADER
+                                                        ============================================= -->
 
             <div class="iuris-form-header">
 
@@ -35,8 +35,8 @@
 
 
             <!-- ============================================
-                                                     BODY
-                                                ============================================= -->
+                                                             BODY
+                                                        ============================================= -->
 
             <div class="iuris-form-body">
 
@@ -93,8 +93,8 @@
 
                                 <i class="far fa-clock"></i>
 
-                                <input type="time" required class="form-control required" name="hora_inicio" id="hora_inicio"
-                                    >
+                                <input type="time" required class="form-control required" name="hora_inicio"
+                                    id="hora_inicio">
 
                             </div>
 
@@ -117,8 +117,7 @@
 
                                 <i class="far fa-clock"></i>
 
-                                <input type="time" required class="form-control required" name="hora_fin" id="hora_fin"
-                                   >
+                                <input type="time" required class="form-control required" name="hora_fin" id="hora_fin">
 
                             </div>
 
@@ -143,7 +142,7 @@
                 </div>
 
 
-                <div class="iuris-novedades" >
+                <div class="iuris-novedades">
 
 
                     <!-- ASISTENCIA -->
@@ -247,8 +246,8 @@
 
 
             <!-- ============================================
-                                                     FOOTER
-                                                ============================================= -->
+                                                             FOOTER
+                                                        ============================================= -->
 
             <div class="iuris-form-footer">
 
@@ -266,6 +265,14 @@
                     <i class="fas fa-save mr-1"></i>
 
                     Guardar cambios
+
+                </button>
+
+                <button type="button" id="btnEliminarAsistenciaDocente" class="btn btn-danger">
+
+                    <i class="fas fa-trash-alt mr-1"></i>
+
+                    Eliminar turno
 
                 </button>
 

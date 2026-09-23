@@ -21,9 +21,6 @@ $(document).ready(function () {
 	getAsistenciaReport();
 	getAsistenciasDocente();
 
-	$("#btn_consultar_asis").click(function () {
-		getAsistenciasDocente();
-	});
 
 
 	$(".btn_habilityupdatecolor").on("click", function (e) {

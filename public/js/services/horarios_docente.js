@@ -80,6 +80,25 @@ export class HorariosDocenteService {
         const topics = await response.json();
         return topics;
     }
+      async deleteAsistencia(id, request={}) {
+        const response = await fetch(BASE_URL + "docentes/horario/eliminar/asistencia/" + id + "?" + new URLSearchParams(request), {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
     async deleteAllTurnos(){
         const response = await fetch(BASE_URL + "turnos/delete/all", {
             method: 'DELETE',

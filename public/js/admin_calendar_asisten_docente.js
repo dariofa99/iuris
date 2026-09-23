@@ -8,6 +8,35 @@ $(function () {
         $("#calendar").fullCalendar('refetchEvents');
     })
 
+    $("#btnEliminarAsistenciaDocente").click(async function (e) {
+        e.preventDefault();
+        Swal.fire({
+			title: 'Esta seguro de eliminar la asistencia del turno?',
+			text: "Los cambios no podran ser revertidos!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Si, eliminar!',
+			cancelButtonText: 'No, cancelar'
+		}).then(async (result) => {
+			if (result.value) {
+				$("#wait").show();
+                var request = convertFormToJSON("turnosdoc");
+             
+				let response = await horariosDocenteService.deleteAsistencia(request.asistencia_id,request);
+				toastr.success("Eliminado con éxito", "", {
+					positionClass: "toast-top-right",
+					timeOut: "4000",
+				});
+                 $("#calendar").fullCalendar('refetchEvents');
+                 $("#myModal_reporasistencia").modal('hide');
+				//window.location.reload(true);
+			}
+		});
+
+
+    });
     $("#btnRegistrarTurnoDocente").click(async function (e) {
         e.preventDefault();
         // $("#wait").show();
@@ -226,7 +255,7 @@ function showCalendar(docente_id) {
             var text = '';
             if (event.asistencia_id != null) {
                 console.log(event);
-                text = `(${ moment(event.hora_inicio_asis, "HH:mm:ss").format("h:mm A")} - ${moment(event.hora_fin_asis, "HH:mm:ss").format("h:mm A")})`;
+                text = `(${moment(event.hora_inicio_asis, "HH:mm:ss").format("h:mm A")} - ${moment(event.hora_fin_asis, "HH:mm:ss").format("h:mm A")})`;
             }
 
             const contenido = `
@@ -234,7 +263,7 @@ function showCalendar(docente_id) {
              <div class="row">
                                 <div class="col-md-12">
                                      <div class="evento-docente-hora">
-                                        ${ moment(start, "HH:mm:ss").format("h:mm A")} - ${ moment(end, "HH:mm:ss").format("h:mm A")}
+                                        ${moment(start, "HH:mm:ss").format("h:mm A")} - ${moment(end, "HH:mm:ss").format("h:mm A")}
                                     </div>
                                 </div>                         
                                
@@ -298,6 +327,7 @@ function showCalendar(docente_id) {
             $("#turnosdoc #asistencia_id").val("");
             $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", false).show();
             $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", true).hide();
+            $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", true).hide();
             $("#div_reposicion").hide();
             $("#div_reposicion").html("");
             resetDisabledForm("turnosdoc");
@@ -314,6 +344,7 @@ function showCalendar(docente_id) {
             $(".iuris-novedades input[value='149']").prop("checked", true);
             $("#descripregisdocasis").val("");
             if (calEvent.asistencia_id != null) {
+                $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", false).show();
                 $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", false).show();
                 $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", true).hide();
                 $(".iuris-novedades input[type='radio']").filter(`[value="${calEvent.tipo_asis}"]`).prop("checked", true);
@@ -330,6 +361,8 @@ function showCalendar(docente_id) {
                     $("#turnosdoc #hora_inicio_repo").val(calEvent.hora_inicio_reposicion);
                     $("#turnosdoc #hora_fin_repo").val(calEvent.hora_fin_reposicion);
                     disabledForm("turnosdoc")
+                    $("#turnosdoc #btnActualizarTurnoDocente").text("Debe eliminar la reposición").prop("disabled", true).show();
+                    $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", true).show();
 
                 }
                 //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);

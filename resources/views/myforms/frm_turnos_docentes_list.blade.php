@@ -168,7 +168,7 @@
                                                     <div class="iuris-input-icon">
                                                         <i class="far fa-calendar-alt"></i>
 
-                                                        <input type="date" name="inicio" id="inicio"
+                                                        <input value="{{ request()->get('start') }}" type="date" name="start" id="inicio"
                                                             class="form-control">
                                                     </div>
                                                 </div>
@@ -184,21 +184,21 @@
                                                     <div class="iuris-input-icon">
                                                         <i class="far fa-calendar-alt"></i>
 
-                                                        <input type="date" name="fin" id="fin"
+                                                        <input value="{{ request()->get('end') }}" type="date" name="end" id="fin"
                                                             class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- BOTÓN -->
-                                   {{--          <div class="col-md-2 d-flex align-items-end">
+                                           <div class="col-md-2 d-flex align-items-end">
                                                 <div class="form-group w-100">
-                                                    <button type="submit" class="btn btn-iuris-primary btn-block">
+                                                    <button id="btn_consultar_asis" type="button" class="btn btn-iuris-primary btn-block">
                                                         <i class="fas fa-search mr-1"></i>
                                                         Consultar
                                                     </button>
                                                 </div>
-                                            </div> --}}
+                                            </div> 
 
                                         </div>
 
@@ -268,5 +268,5 @@
 
 @push('scripts')
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
-    <script type="module" src={{ asset('js/admin_turnos.js') }}></script>
+    <script type="module" src={{ asset('js/admin_turnos.js?v=' . config('app_config.asset_version')) }}></script>
 @endpush

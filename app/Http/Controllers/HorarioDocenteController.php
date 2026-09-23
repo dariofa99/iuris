@@ -276,7 +276,13 @@ class HorarioDocenteController extends Controller
         $horarios = DB::table('asigna_docent_ests')->delete();
     }
 
-    public function actualizarAsistencia(Request $request)
+    public function eliminarAsistencia(Request $request, $id)
+    {
+        $asi = AsistenciaDocentes::find($id)->delete();
+        //$asistencia = $this->turnosDocenteRepository->registrarAsistencia($request);
+         return response()->json(['message' => 'Asistencia eliminada correctamente']);
+    }
+      public function actualizarAsistencia(Request $request)
     {
         $asi = AsistenciaDocentes::find($request->asistencia_id)->delete();
         $asistencia = $this->turnosDocenteRepository->registrarAsistencia($request);
