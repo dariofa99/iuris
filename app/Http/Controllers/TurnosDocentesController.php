@@ -168,8 +168,7 @@ class TurnosDocentesController extends Controller
             ->orderBy('docidnumber', 'desc')
             ->get();
 
-        //$asistencia = DB::select('SELECT `docidnumber`, SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS asistencia FROM `asistencia_docentes` WHERE `reposicion`=0 AND `tipo_asis` = 149	GROUP BY `docidnumber` ORDER BY `docidnumber` DESC');
-
+     
         $response['horas_semanales'] = $this->tuMetodo(request());
 
         $response['permisos'] = $permisos = DB::table('asistencia_docentes')
@@ -192,11 +191,10 @@ class TurnosDocentesController extends Controller
             ->where('categoria', 'reposicion')
             ->where('tipo_asis', '285')
             ->whereDate('inicio', '>=', $prdfecha_inicio)
+            ->whereDate('fin', '<=', $prdfecha_fin)
             ->select('docidnumber', DB::raw('SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS reposicion'))
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
-        //$reposicion = DB::select('SELECT `docidnumber`,SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS reposicion FROM `asistencia_docentes` WHERE `reposicion`=1 AND `tipo_asis` = 149	GROUP BY `docidnumber` ORDER BY `docidnumber` DESC');
-
-       // dd($response);
+    
         return response()->json($response);
     }
 

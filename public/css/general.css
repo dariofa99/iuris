@@ -4158,3 +4158,1054 @@ RESPONSIVE
     }
 
 }
+
+/* ==========================================================
+   IURIS - PERFIL DE USUARIO
+   ========================================================== */
+
+.iuris-profile {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+
+/* ==========================================================
+   SIDEBAR
+   ========================================================== */
+
+.iuris-profile-sidebar {
+    background: #ffffff;
+    border: 1px solid #e5edef;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .035);
+}
+
+
+/* ==========================================================
+   INFORMACIÓN DEL USUARIO
+   ========================================================== */
+
+.iuris-profile-user {
+    padding: 25px 18px 20px;
+    text-align: center;
+    border-bottom: 1px solid #edf2f3;
+}
+
+.iuris-profile-avatar {
+    position: relative;
+    width: 105px;
+    height: 105px;
+    margin: 0 auto 12px;
+}
+
+.iuris-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #e8f0f1;
+    display: block;
+}
+
+.iuris-avatar-edit {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+
+    width: 32px;
+    height: 32px;
+
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+
+    background: #006975;
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+.iuris-avatar-edit:hover {
+    background: #374850;
+    transform: scale(1.05);
+}
+
+.iuris-profile-user h3 {
+    margin: 0 0 6px;
+    color: #374850;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.iuris-profile-role {
+    display: block;
+    color: #89999d;
+    font-size: 12px;
+}
+
+.iuris-profile-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    margin-top: 10px;
+
+    padding: 4px 9px;
+
+    background: #eef7f1;
+    border-radius: 20px;
+
+    color: #2e9b70;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.iuris-profile-status i {
+    font-size: 7px;
+}
+
+
+/* ==========================================================
+   MENÚ
+   ========================================================== */
+
+.iuris-profile-menu {
+    padding: 10px;
+}
+
+.iuris-profile-menu-item {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    margin-bottom: 3px;
+
+    border-radius: 7px;
+
+    color: #89999d;
+    text-decoration: none !important;
+
+    transition: .2s ease;
+}
+
+.iuris-profile-menu-item:hover {
+    background: #f7fafb;
+    color: #3a5258;
+}
+
+.iuris-profile-menu-item.active {
+    background: #eef7f8;
+    color: #006975;
+}
+
+.iuris-profile-menu-icon {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background: #f3f7f8;
+
+    color: #89999d;
+}
+
+.iuris-profile-menu-item.active .iuris-profile-menu-icon {
+    background: #dceff1;
+    color: #006975;
+}
+
+.iuris-profile-menu-item strong {
+    display: block;
+
+    color: #3a5258;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+}
+
+.iuris-profile-menu-item small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #89999d;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   CAMBIAR ROL
+   ========================================================== */
+
+.iuris-profile-role-action {
+    padding: 12px;
+
+    border-top: 1px solid #edf2f3;
+}
+
+.iuris-profile-role-action button {
+    height: 34px;
+
+    border: 1px solid #dce5e7;
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #6f580e;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: .2s ease;
+}
+
+.iuris-profile-role-action button:hover {
+    background: #f8f5e9;
+    border-color: #d8cda8;
+}
+
+
+/* ==========================================================
+   CONTENIDO
+   ========================================================== */
+
+.iuris-profile-content {
+    min-width: 0;
+}
+
+.iuris-profile-panel {
+    background: #ffffff;
+
+    border: 1px solid #e5edef;
+    border-radius: 10px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .035);
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   CABECERA
+   ========================================================== */
+
+.iuris-profile-panel-header {
+    padding: 20px 22px;
+
+    border-bottom: 1px solid #edf2f3;
+
+    background: #ffffff;
+}
+
+.iuris-profile-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #006975;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: .8px;
+}
+
+.iuris-profile-panel-header h3 {
+    margin: 0;
+
+    color: #374850;
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.iuris-profile-panel-header p {
+    margin: 5px 0 0;
+
+    color: #89999d;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   CONTENIDO DEL FORMULARIO
+   ========================================================== */
+
+.iuris-profile-panel .tab-content {
+    padding: 20px;
+}
+
+
+/* ==========================================================
+   BOTÓN ACTUALIZAR
+   ========================================================== */
+
+.iuris-profile-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 12px;
+}
+
+.iuris-profile-actions .btn-iuris-primary {
+    min-width: 190px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media (max-width: 900px) {
+
+    .iuris-profile {
+        grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .iuris-profile {
+        grid-template-columns: 1fr;
+    }
+
+    .iuris-profile-menu {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+    }
+
+    .iuris-profile-menu-item {
+        margin: 0;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .iuris-profile-menu {
+        grid-template-columns: 1fr;
+    }
+
+    .iuris-profile-panel .tab-content {
+        padding: 14px;
+    }
+
+    .iuris-profile-panel-header {
+        padding: 16px;
+    }
+
+    .iuris-profile-actions {
+        display: block;
+    }
+
+    .iuris-profile-actions .btn-iuris-primary {
+        width: 100%;
+    }
+
+}
+
+.iuris-profile-tabs-content {
+    padding: 20px;
+}
+
+.iuris-profile-tab {
+    display: none;
+}
+
+.iuris-profile-tab.active {
+    display: block;
+}
+
+
+/* Menú */
+
+.iuris-profile-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 3px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #89999d;
+    text-align: left;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+.iuris-profile-menu-item:hover {
+    background: #f7fafb;
+    color: #3a5258;
+}
+
+.iuris-profile-menu-item.active {
+    background: #eef7f8;
+    color: #006975;
+}
+
+
+.iuris-profile-menu-icon {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background: #f3f7f8;
+    color: #89999d;
+}
+
+
+.iuris-profile-menu-item.active .iuris-profile-menu-icon {
+    background: #dceff1;
+    color: #006975;
+}
+
+
+.iuris-profile-menu-item strong {
+    display: block;
+
+    color: #3a5258;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+}
+
+
+.iuris-profile-menu-item small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #89999d;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   IURIS - INFORMACIÓN DE HORARIO Y ASISTENCIA
+   Ajustado a la tipografía existente de IURIS
+========================================================= */
+
+
+/* =========================================================
+   CABECERA
+========================================================= */
+
+.iuris-info-header {
+    padding: 0 0 18px;
+    margin-bottom: 16px;
+
+    border-bottom: 1px solid #edf2f3;
+}
+
+.iuris-info-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.iuris-info-title-icon {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #e8f0f1;
+    color: #006975;
+
+    font-size: 18px;
+}
+
+.iuris-info-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #006975;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: .6px;
+    text-transform: uppercase;
+}
+
+.iuris-info-title h3 {
+    margin: 0;
+
+    color: #3a5258;
+
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.iuris-info-title p {
+    margin: 5px 0 0;
+
+    color: #89999d;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DEL DOCENTE
+========================================================= */
+
+.iuris-teacher-summary {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    margin-bottom: 16px;
+
+    background: #f7fafb;
+
+    border: 1px solid #e5edef;
+    border-radius: 7px;
+}
+
+.iuris-teacher-avatar {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+}
+
+.iuris-teacher-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 2px solid #dce5e7;
+}
+
+.iuris-teacher-data {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.iuris-teacher-label {
+    color: #89999d;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: .6px;
+    text-transform: uppercase;
+}
+
+.iuris-teacher-data strong {
+    margin-top: 2px;
+
+    color: #3a5258;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    line-height: 19px;
+}
+
+.iuris-teacher-data span:last-child {
+    margin-top: 2px;
+
+    color: #89999d;
+
+    font-size: 11px;
+}
+
+.iuris-period-badge {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-left: auto;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background: #eef7f8;
+
+    color: #006975;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.iuris-period-badge i {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TARJETAS DE RESUMEN
+========================================================= */
+
+.iuris-attendance-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-bottom: 22px;
+}
+
+.iuris-attendance-card {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+
+    padding: 12px;
+
+    background: #fff;
+
+    border: 1px solid #e5edef;
+
+    border-radius: 7px;
+
+    transition: all .2s ease;
+}
+
+.iuris-attendance-card:hover {
+    border-color: #c8dadd;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .035);
+}
+
+.iuris-attendance-icon {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background: #e8f0f1;
+
+    color: #006975;
+
+    font-size: 15px;
+}
+
+.iuris-attendance-data {
+    min-width: 0;
+}
+
+.iuris-attendance-data span {
+    display: block;
+
+    color: #89999d;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    line-height: 14px;
+}
+
+.iuris-attendance-data strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #3a5258;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 20px;
+}
+
+.iuris-attendance-data small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #89999d;
+
+    font-size: 10px;
+
+    line-height: 13px;
+}
+
+
+/* =========================================================
+   TARJETA DE REPOSICIÓN
+========================================================= */
+
+.iuris-attendance-card-warning
+.iuris-attendance-icon {
+    background: #f4f1e8;
+
+    color: #6f580e;
+}
+
+
+/* =========================================================
+   SECCIÓN HORARIO
+========================================================= */
+
+.iuris-schedule-section {
+    margin-top: 5px;
+}
+
+.iuris-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 10px;
+
+    margin-bottom: 13px;
+
+    border-bottom: 1px solid #edf2f3;
+}
+
+.iuris-section-heading h4 {
+    margin: 3px 0 0;
+
+    color: #3a5258;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.iuris-schedule-total {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 5px;
+
+    background: #f7fafb;
+
+    color: #89999d;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.iuris-schedule-total i {
+    color: #006975;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   GRID DE DÍAS
+========================================================= */
+
+.iuris-schedule-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+/* =========================================================
+   TARJETA DEL DÍA
+========================================================= */
+
+.iuris-day-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid #e5edef;
+
+    border-radius: 7px;
+}
+
+.iuris-day-header {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px 13px;
+
+    background: #f7fafb;
+
+    border-bottom: 1px solid #edf2f3;
+}
+
+.iuris-day-icon {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background: #e8f0f1;
+
+    color: #006975;
+
+    font-size: 14px;
+}
+
+.iuris-day-header strong {
+    display: block;
+
+    color: #3a5258;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.iuris-day-header span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #89999d;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   TURNOS
+========================================================= */
+
+.iuris-day-turnos {
+    padding: 9px 11px;
+}
+
+.iuris-time-block {
+    display: grid;
+
+    grid-template-columns:
+        60px
+        1fr
+        60px;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 42px;
+
+    padding: 6px 8px;
+
+    margin-bottom: 6px;
+
+    background: #f7fafb;
+
+    border: 1px solid #edf2f3;
+
+    border-radius: 6px;
+}
+
+.iuris-time-block:last-child {
+    margin-bottom: 0;
+}
+
+.iuris-time {
+    color: #3a5258;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   LÍNEA DEL HORARIO
+========================================================= */
+
+.iuris-time-line {
+    position: relative;
+
+    height: 2px;
+
+    background: #dce5e7;
+
+    border-radius: 2px;
+}
+
+.iuris-time-line span {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 8px;
+    height: 8px;
+
+    transform: translate(-50%, -50%);
+
+    background: #006975;
+
+    border: 2px solid #fff;
+
+    border-radius: 50%;
+
+    box-shadow: 0 0 0 1px #cde3e6;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .iuris-attendance-cards {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .iuris-attendance-cards {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .iuris-schedule-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .iuris-teacher-summary {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+    .iuris-period-badge {
+        margin-left: 60px;
+        margin-top: -4px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .iuris-attendance-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .iuris-info-title {
+        align-items: flex-start;
+    }
+
+    .iuris-teacher-summary {
+        padding: 10px;
+    }
+
+    .iuris-period-badge {
+        width: 100%;
+
+        justify-content: center;
+
+        margin-left: 0;
+    }
+
+}
+
+.iuris-day-empty {
+    background: #fbfcfc;
+}
+
+.iuris-day-empty .iuris-day-header {
+    background: #fafcfc;
+}
+
+.iuris-day-empty .iuris-day-icon {
+    background: #f1f4f5;
+    color: #89999d;
+}
+
+.iuris-day-no-schedule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 10px;
+    color: #89999d;
+    font-size: 11px;
+    border: 1px dashed #dce5e7;
+    border-radius: 6px;
+    background: #fafcfc;
+}
+
+.iuris-day-no-schedule i {
+    font-size: 13px;
+    color: #a8b5b8;
+}

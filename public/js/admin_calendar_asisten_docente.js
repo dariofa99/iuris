@@ -11,29 +11,29 @@ $(function () {
     $("#btnEliminarAsistenciaDocente").click(async function (e) {
         e.preventDefault();
         Swal.fire({
-			title: 'Esta seguro de eliminar la asistencia del turno?',
-			text: "Los cambios no podran ser revertidos!",
-			type: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Si, eliminar!',
-			cancelButtonText: 'No, cancelar'
-		}).then(async (result) => {
-			if (result.value) {
-				$("#wait").show();
+            title: 'Esta seguro de eliminar la asistencia del turno?',
+            text: "Los cambios no podran ser revertidos!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
                 var request = convertFormToJSON("turnosdoc");
-             
-				let response = await horariosDocenteService.deleteAsistencia(request.asistencia_id,request);
-				toastr.success("Eliminado con éxito", "", {
-					positionClass: "toast-top-right",
-					timeOut: "4000",
-				});
-                 $("#calendar").fullCalendar('refetchEvents');
-                 $("#myModal_reporasistencia").modal('hide');
-				//window.location.reload(true);
-			}
-		});
+
+                let response = await horariosDocenteService.deleteAsistencia(request.asistencia_id, request);
+                toastr.success("Eliminado con éxito", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "4000",
+                });
+                $("#calendar").fullCalendar('refetchEvents');
+                $("#myModal_reporasistencia").modal('hide');
+                //window.location.reload(true);
+            }
+        });
 
 
     });
@@ -352,7 +352,6 @@ function showCalendar(docente_id) {
                 $("#turnosdoc #hora_fin").val(calEvent.hora_fin_asis);
                 $("#descripregisdocasis").val(calEvent.descripcion);
                 $("#turnosdoc #asistencia_id").val(calEvent.asistencia_id);
-
                 if (calEvent.tipo_asis == 150) {
                     $("#div_reposicion").show();
                     $("#div_reposicion").html(contentRepos());
@@ -363,7 +362,14 @@ function showCalendar(docente_id) {
                     disabledForm("turnosdoc")
                     $("#turnosdoc #btnActualizarTurnoDocente").text("Debe eliminar la reposición").prop("disabled", true).show();
                     $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", true).show();
-
+                    if (!calEvent.has_reposicion) {
+                        $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", false).show();
+                        $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", false).show();
+                        resetDisabledForm("turnosdoc")
+                        $("#turnosdoc #fecha_repo").val("");
+                        $("#turnosdoc #hora_inicio_repo").val("");
+                        $("#turnosdoc #hora_fin_repo").val("");
+                    }
                 }
                 //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
             }

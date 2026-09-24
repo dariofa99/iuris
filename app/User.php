@@ -268,7 +268,7 @@ class User extends Authenticatable
             // return $query;
 
         }
-    }
+    } 
 
     public function asignaciones_docente()
     {
@@ -284,6 +284,12 @@ class User extends Authenticatable
     {
         //return $sol = \App\Solicitud::where('idnumber',currentUser()->idnumber)->get();          
         return $this->hasMany('App\Solicitud', 'idnumber', 'idnumber');
+    }
+
+    public function turnosDocente()
+    {
+        //return $sol = \App\Solicitud::where('idnumber',currentUser()->idnumber)->get();          
+        return $this->hasMany(TurnosDocente::class, 'trnd_docidnumber', 'idnumber');
     }
 
 

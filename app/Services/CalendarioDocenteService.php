@@ -444,8 +444,11 @@ class CalendarioDocenteService
                     $turno->id
                 ];
 
+                $evento['has_reposicion'] = false;
                 if($turno->reposiciones && $turno->reposiciones->count() > 0){
                     $reposicion = $turno->reposiciones->first();
+                    $evento['has_reposicion'] = true;
+
                     $evento['reposicion_id'] = $reposicion->id;
 
                     $evento['fecha_reposicion'] = Carbon::parse($reposicion->hora_inicio_asis)->format('Y-m-d')
@@ -573,10 +576,9 @@ class CalendarioDocenteService
              */
 
                 $idEvento =
-                    'reposicion-'
-                    . $turno->id
-                    . '-'
-                    . $reposicion->id;
+                    
+                     $turno->id
+                   ;
 
 
                 /*

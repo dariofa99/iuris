@@ -200,10 +200,48 @@ class MyusersController extends Controller
     if ($user->id != Auth::user()->id and !currentUser()->can("edit_usuarios")) {
       return view('errors.error');
     }
+    $ordenDias = [
+      'Lunes'     => 1,
+      'Martes'    => 2,
+      'Miércoles' => 3,
+      'Jueves'    => 4,
+      'Viernes'   => 5,
+    ];
+
+    $turnosDocente = $user->turnosDocente()
+      ->where('trndid_periodo', 10)
+      ->get()
+      ->sortBy(function ($turno) use ($ordenDias) {
+        return [
+          $ordenDias[trim($turno->trnd_dia)] ?? 99,
+          $turno->trnd_hora_inicio
+        ];
+      })
+      ->values();
+
+    $horarioDocente = $turnosDocente->groupBy(function ($turno) {
+      return trim($turno->trnd_dia);
+    });
+
+    $horarioDocente = $turnosDocente->groupBy('trnd_dia');
+    $horasSemanales = $turnosDocente->sum(function ($turno) {
+      $inicio = \Carbon\Carbon::parse($turno->trnd_hora_inicio);
+      $fin = \Carbon\Carbon::parse($turno->trnd_hora_fin);
+
+      return $inicio->diffInMinutes($fin);
+    });
+
+    $horasSemanalesTexto = floor($horasSemanales / 60) . ' horas';
+
+    if (($horasSemanales % 60) > 0) {
+      $horasSemanalesTexto .= ' ' . ($horasSemanales % 60) . ' minutos';
+    }
+
+    //dd($turnosDocente,$horarioDocente);
 
     $active_users = 'active';
 
-    return view('myforms.frm_myusers_edit', ['user' => $user], compact('active_users'));
+    return view('myforms.frm_myusers_edit', ['user' => $user, 'horarioDocente' => $horarioDocente, 'horasSemanalesTexto' => $horasSemanalesTexto], compact('active_users'));
   }
 
   /**
