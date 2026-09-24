@@ -60,7 +60,7 @@ class TurnosDocenteRepository
         // UNA SOLA CONSULTA PARA TODOS LOS TURNOS
         // =====================================================
 
-        $asistencias = DB::table('asistencia_docentes')
+        $asistencias = AsistenciaDocentes::with('reposiciones')
             ->leftJoin(
                 'referencias_tablas',
                 'asistencia_docentes.tipo_asis',
@@ -129,9 +129,15 @@ class TurnosDocenteRepository
             // REPOSICIONES
             // =================================================
 
-            $turno->reposiciones = $registros
-                ->where('categoria', 'reposicion')
-                ->values();
+            /*  $turno->asistencias->each(function ($asistencia) use ($registros) {
+
+                $reposiciones = $registros
+                    ->where('categoria', 'reposicion')
+                    ->where('tipo_asis', 285)
+                    ->where('turno_docente_id', $asistencia->first()->turno_docente_id);
+
+                $asistencia->reposiciones = $reposiciones;
+             }); */
         });
 
 
@@ -200,7 +206,7 @@ class TurnosDocenteRepository
                 $request->fecha_repo . ' ' . $request->hora_fin_repo . ":00"
             )->format('Y-m-d H:i:s');
 
-            $asistencia = AsistenciaDocentes::create([
+            $reposicion = AsistenciaDocentes::create([
                 'docidnumber' => $turno_docente->trnd_docidnumber,
                 'tipo_asis' => 285,
                 'inicio' => $inicio_repo,
@@ -210,6 +216,8 @@ class TurnosDocenteRepository
                 'turno_docente_id' => $turno_docente->id,
                 // 'minutos_reponer' => $request->minutos_reponer
             ]);
+
+            $asistencia->reposiciones()->attach($reposicion->id);
         }
 
         return $asistencia;

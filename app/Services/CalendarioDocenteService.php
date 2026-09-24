@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\TurnosDocenteRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CalendarioDocenteService
 {
@@ -24,24 +25,18 @@ class CalendarioDocenteService
     {
         $turnos = $this->turnosDocenteRepository
             ->obtenerPorPeriodo($periodo->id);
-        //return $turnos;
+        // return $turnos;
         return $this->generarEventos(
             $turnos,
             $periodo
         );
     }
 
-    /**
-     * Genera los eventos del calendario.
-     */
-
-
     private function generarEventos(
         $turnos,
         $periodo
     ) {
         $eventos = [];
-
 
         /*
      * =====================================================
@@ -119,8 +114,7 @@ class CalendarioDocenteService
 
         foreach ($turnos as $turno) {
 
-            $docente =
-                $turno->trnd_docidnumber;
+            $docente = $turno->trnd_docidnumber;
 
             if (!isset($coloresDocentes[$docente])) {
 
@@ -171,35 +165,22 @@ class CalendarioDocenteService
             $fecha->addDay()
         ) {
 
-            /*
-         * No fines de semana.
-         */
-
             if ($fecha->isWeekend()) {
                 continue;
             }
 
-
-            /*
-         * Día de la semana.
-         */
-
-            $numeroDia =
-                $fecha->dayOfWeek;
-
+            $numeroDia = $fecha->dayOfWeek;
 
             if (!isset($diasSemana[$numeroDia])) {
                 continue;
             }
 
-
-            $nombreDia =
-                $diasSemana[$numeroDia];
+            $nombreDia = $diasSemana[$numeroDia];
 
 
             /*
          * =================================================
-         * TURNOS DE ESTE DÍA
+         * TURNOS DEL DÍA
          * =================================================
          */
 
@@ -215,21 +196,14 @@ class CalendarioDocenteService
 
             /*
          * =================================================
-         * GENERAR CADA TURNO
+         * GENERAR TURNOS
          * =================================================
          */
 
             foreach ($turnosDia as $turno) {
 
-                /*
-             * =============================================
-             * DOCENTE
-             * =============================================
-             */
-
                 $docente =
                     $turno->trnd_docidnumber;
-
 
                 $nombre = trim(
                     $turno->name
@@ -237,13 +211,10 @@ class CalendarioDocenteService
                         . $turno->lastname
                 );
 
-
-                $imagen =
-                    url(
-                        '/thumbnails/'
-                            . $turno->image
-                    );
-
+                $imagen = url(
+                    '/thumbnails/'
+                        . $turno->image
+                );
 
                 $color =
                     $coloresDocentes[$docente];
@@ -251,7 +222,7 @@ class CalendarioDocenteService
 
                 /*
              * =============================================
-             * FECHA ACTUAL
+             * FECHA DEL TURNO
              * =============================================
              */
 
@@ -261,12 +232,11 @@ class CalendarioDocenteService
 
                 /*
              * =============================================
-             * ASISTENCIA DE ESTA FECHA
+             * ASISTENCIA
              * =============================================
              */
 
                 $asistencia = null;
-
 
                 if (
                     isset($turno->asistencias)
@@ -276,7 +246,6 @@ class CalendarioDocenteService
                     $registrosFecha =
                         $turno->asistencias
                         ->get($fechaActual);
-
 
                     if ($registrosFecha) {
 
@@ -288,7 +257,7 @@ class CalendarioDocenteService
 
                 /*
              * =============================================
-             * HORARIO ORIGINAL
+             * HORARIO
              * =============================================
              */
 
@@ -296,7 +265,6 @@ class CalendarioDocenteService
                     $fechaActual
                     . ' '
                     . $turno->trnd_hora_inicio;
-
 
                 $fin =
                     $fechaActual
@@ -306,14 +274,13 @@ class CalendarioDocenteService
 
                 /*
              * =============================================
-             * EVENTO DEL TURNO
-             * =============================================
-             */
-
+             * EVENTO
+             * ============================================= */
+   
+  
                 $evento = [
 
                     'id' =>
-
                     $turno->id,
 
                     'title' =>
@@ -344,9 +311,7 @@ class CalendarioDocenteService
 
 
                     /*
-                 * =========================================
                  * DOCENTE
-                 * =========================================
                  */
 
                     'docidnumber' =>
@@ -369,132 +334,153 @@ class CalendarioDocenteService
 
 
                     /*
-                 * =========================================
                  * ASISTENCIA
-                 * =========================================
                  */
 
                     'asistencia_id' =>
-                    $asistencia->id
-                        ?? null,
+                    $asistencia != null ? $asistencia->id : null,
 
                     'tipo_asis' =>
-                    $asistencia->tipo_asis
-                        ?? null,
+                    $asistencia != null ? $asistencia->tipo_asis : null,
 
                     'categoria' =>
-                    $asistencia->categoria
-                        ?? null,
+                    $asistencia != null ? $asistencia->categoria : null,
 
                     'descripcion' =>
-                    $asistencia->descripcion
-                        ?? null,
+                    $asistencia != null ? $asistencia->descripcion : null,
 
                     'hora_inicio_asis' =>
-                    $asistencia && $asistencia->hora_inicio_asis != null
-                        ? Carbon::parse($asistencia->hora_inicio_asis)->format('H:i:s')
+                    $asistencia != null
+                        && $asistencia->hora_inicio_asis
+                        ? Carbon::parse(
+                            $asistencia->hora_inicio_asis
+                        )->format('H:i:s')
                         : null,
 
                     'hora_fin_asis' =>
-                    $asistencia && $asistencia->hora_fin_asis != null
-                        ? Carbon::parse($asistencia->hora_fin_asis)->format('H:i:s')
+                    $asistencia != null
+                        && $asistencia->hora_fin_asis
+                        ? Carbon::parse(
+                            $asistencia->hora_fin_asis
+                        )->format('H:i:s')
                         : null,
 
                     'tipo_asis_nombre' =>
-                    $asistencia->tipo_asis_nombre
-                        ?? 'Sin registrar aún',
+                    $asistencia != null ? $asistencia->tipo_asis_nombre : "Pendiente por registrar",
 
                     'tipo_asis_color' =>
-                    $asistencia->tipo_asis_color
-                        ?? '#057f9a',
+                    $asistencia != null ? $asistencia->tipo_asis_color : "#057f9a",
 
 
                     /*
-                 * =========================================
                  * REPOSICIÓN
-                 * =========================================
                  */
 
                     'es_reposicion' =>
                     false,
 
+                    'has_reposicion' =>
+                    false,
+
                     'reposicion_id' =>
-                    $asistencia->id
-                        ?? null,
+                    null,
+
+                    'fecha_reposicion' =>
+                    null,
 
                     'descripcion_reposicion' =>
                     null,
 
                     'hora_inicio_reposicion' =>
-                    $asistencia && $asistencia->hora_inicio_asis != null
-                        ? Carbon::parse($asistencia->hora_inicio_asis)->format('H:i:s')
-                        : null,
+                    null,
 
                     'hora_fin_reposicion' =>
                     null,
 
 
                     /*
-                 * =========================================
-                 * REFERENCIA AL TURNO
-                 * =========================================
+                 * TURNO
                  */
 
                     'turno_docente_id' =>
                     $turno->id
                 ];
 
-                $evento['has_reposicion'] = false;
-                if($turno->reposiciones && $turno->reposiciones->count() > 0){
-                    $reposicion = $turno->reposiciones->first();
-                    $evento['has_reposicion'] = true;
 
-                    $evento['reposicion_id'] = $reposicion->id;
+                /*
+             * =================================================
+             * REVISAR REPOSICIÓN
+             * =================================================
+             */
 
-                    $evento['fecha_reposicion'] = Carbon::parse($reposicion->hora_inicio_asis)->format('Y-m-d')
-                        ?? null;
+                if (
+                    $asistencia
+                    && $asistencia->reposiciones
+                    && $asistencia->reposiciones->isNotEmpty()
+                ) {
+                    Log::info(
+                        "Procesando reposiciones para la asistencia ID: {$asistencia->id}, docente: {$docente}, nombre: {$nombre}"
+                    );
 
-                    $evento['descripcion_reposicion'] = $reposicion->descripcion_reposicion
-                        ?? null;
+                    $reposicion =
+                        $asistencia->reposiciones->first();
+
+                    Log::info(
+                        "REPOSICIÓN: " . json_encode($reposicion)
+                    );
+                    $evento['has_reposicion'] =
+                        true;
+
+                    $evento['reposicion_id'] =
+                        $reposicion->id;
+
+
+                    $evento['fecha_reposicion'] =
+                        $reposicion->inicio
+                        ? Carbon::parse(
+                            $reposicion->inicio
+                        )->format('Y-m-d')
+                        : "dfdsf";
+
+
+                    $evento['descripcion_reposicion'] =
+                        $reposicion->descripcion
+                        ?? "fsdfsdf";
+
 
                     $evento['hora_inicio_reposicion'] =
-                    $reposicion->hora_inicio_asis && $reposicion->hora_inicio_asis != null
-                        ? Carbon::parse($reposicion->hora_inicio_asis)->format('H:i:s')
+                        $reposicion->inicio
+                        ? Carbon::parse(
+                            $reposicion->inicio
+                        )->format('H:i:s')
                         : null;
 
+
                     $evento['hora_fin_reposicion'] =
-                    $reposicion->hora_fin_asis && $reposicion->hora_fin_asis != null
-                        ? Carbon::parse($reposicion->hora_fin_asis)->format('H:i:s')
+                        $reposicion->fin
+                        ? Carbon::parse(
+                            $reposicion->fin
+                        )->format('H:i:s')
                         : null;
                 }
 
+
                 $eventos[] = $evento;
+
             }
         }
 
 
         /*
      * =====================================================
-     * 2. REPOSICIONES
+     * 2. EVENTOS DE REPOSICIONES
      * =====================================================
-     *
-     * Una reposición = un evento.
-     *
-     * Pero SOLO si la fecha de la reposición está
-     * dentro del rango solicitado por FullCalendar.
      */
 
         foreach ($turnos as $turno) {
 
-            /*
-         * =============================================
-         * DOCENTE
-         * =============================================
-         */
-
             $docente =
                 $turno->trnd_docidnumber;
-
 
             $nombre = trim(
                 $turno->name
@@ -502,224 +488,297 @@ class CalendarioDocenteService
                     . $turno->lastname
             );
 
-
-            $imagen =
-                url(
-                    '/thumbnails/'
-                        . $turno->image
-                );
-
+            $imagen = url(
+                '/thumbnails/'
+                    . $turno->image
+            );
 
             $color =
                 $coloresDocentes[$docente];
 
 
-            /*
-         * =============================================
-         * REPOSICIONES
-         * =============================================
-         */
-
             if (
-                !isset($turno->reposiciones)
-                || !$turno->reposiciones
+                !isset($turno->asistencias)
+                || !$turno->asistencias
             ) {
                 continue;
             }
 
 
+            /*
+         * =============================================
+         * DÍAS
+         * =============================================
+         */
+
             foreach (
-                $turno->reposiciones
-                as $reposicion
+                $turno->asistencias
+                as $asistenciasDia
             ) {
 
                 /*
-             * =========================================
-             * FECHA REAL DE LA REPOSICIÓN
-             * =========================================
+             * =============================================
+             * ASISTENCIAS
+             * =============================================
              */
 
-                $inicioReposicion =
-                    Carbon::parse(
-                        $reposicion->hora_inicio_asis
-                    );
-
-
-                $finReposicion =
-                    Carbon::parse(
-                        $reposicion->hora_fin_asis
-                    );
-
-
-                /*
-             * =========================================
-             * VERIFICAR RANGO
-             * =========================================
-             *
-             * Esto evita enviar reposiciones que están
-             * fuera del rango que pidió FullCalendar.
-             */
-
-                if (
-                    $inicioReposicion->lt($fechaInicio)
-                    ||
-                    $inicioReposicion->gt($fechaFin)
+                foreach (
+                    $asistenciasDia
+                    as $asistencia
                 ) {
-                    continue;
+
+                    /*
+                 * =========================================
+                 * REPOSICIONES DE LA ASISTENCIA
+                 * =========================================
+                 */
+
+                    if (
+                        !$asistencia->reposiciones
+                        || $asistencia->reposiciones->isEmpty()
+                    ) {
+                        continue;
+                    }
+
+
+                    /*
+                 * =========================================
+                 * CADA REPOSICIÓN
+                 * =========================================
+                 */
+
+                    foreach (
+                        $asistencia->reposiciones
+                        as $reposicion
+                    ) {
+
+                        if (
+                            !$reposicion->inicio
+                        ) {
+                            continue;
+                        }
+
+Log::info(
+                "Procesando asistencias para el turno ID: {$turno->id}, docente: {$docente}, nombre: {$nombre}"
+            );
+                        /*
+                     * =====================================
+                     * INICIO
+                     * =====================================
+                     */
+
+                        $inicioReposicion =
+                            Carbon::parse(
+                                $reposicion->inicio
+                            );
+
+
+                        /*
+                     * =====================================
+                     * FIN
+                     * =====================================
+                     */
+
+                        $finReposicion =
+                            $reposicion->fin
+                            ? Carbon::parse(
+                                $reposicion->fin
+                            )
+                            : $inicioReposicion
+                            ->copy()
+                            ->addHour();
+
+
+                        /*
+                     * =====================================
+                     * RANGO FULLCALENDAR
+                     * =====================================
+                     */
+
+                        if (
+                            $inicioReposicion->lt(
+                                $fechaInicio
+                            )
+                            ||
+                            $inicioReposicion->gt(
+                                $fechaFin
+                            )
+                        ) {
+                            continue;
+                        }
+
+
+                        /*
+                     * =====================================
+                     * ID ÚNICO
+                     * =====================================
+                     */
+
+                        $idEvento =
+                            $turno->id;
+
+
+                        /*
+                     * =====================================
+                     * EVENTO DE REPOSICIÓN
+                     * =====================================
+                     */
+                  
+                        Log::info(
+                            $reposicion
+                        );
+                        $eventos[] = [
+
+                            "nuevo_campo" => "nuevo_valor",
+
+                            'id' =>
+                            $idEvento,
+
+                            'title' =>
+                            $nombre,
+
+                            'start' =>
+                            $inicioReposicion
+                                ->format(
+                                    'Y-m-d H:i:s'
+                                ),
+
+                            'end' =>
+                            $finReposicion
+                                ->format(
+                                    'Y-m-d H:i:s'
+                                ),
+
+                            'fecha_turno' =>
+                            $inicioReposicion
+                                ->format('Y-m-d'),
+
+
+                            /*
+                         * COLOR
+                         */
+
+                            'backgroundColor' =>
+                            $color,
+
+                            'borderColor' =>
+                            $color,
+
+                            'textColor' =>
+                            '#ffffff',
+
+
+                            /*
+                         * DOCENTE
+                         */
+
+                            'docidnumber' =>
+                            $docente,
+
+                            'nombre' =>
+                            $nombre,
+
+                            'dia' =>
+                            $turno->trnd_dia,
+
+                            'hora_inicio' =>
+                            $turno->trnd_hora_inicio,
+
+                            'hora_fin' =>
+                            $turno->trnd_hora_fin,
+
+                            'image' =>
+                            $imagen,
+
+
+                            /*
+                         * REPOSICIÓN
+                         */
+
+                            'es_reposicion' =>
+                            true,
+
+                            'has_reposicion' =>
+                            false,
+
+                            'reposicion_id' =>
+                            $reposicion->id,
+
+                            'descripcion_reposicion' =>
+                            $reposicion->descripcion
+                                ?? null,
+
+                            'hora_inicio_reposicion' =>
+                            $reposicion->inicio
+                                ? Carbon::parse(
+                                    $reposicion->inicio
+                                )->format('H:i:s')
+                                : null,
+
+                            'hora_fin_reposicion' =>
+                            $reposicion->fin
+                                ? Carbon::parse(
+                                    $reposicion->fin
+                                )->format('H:i:s')
+                                : null,
+
+
+                            /*
+                         * ASISTENCIA DE REPOSICIÓN
+                         */
+
+                            'asistencia_id' =>
+                            $reposicion->id,
+
+                            'tipo_asis' =>
+                            $reposicion->tipo_asis,
+
+                            'categoria' =>
+                            $reposicion->categoria,
+
+                            'descripcion' =>
+                            $reposicion->descripcion,
+
+                            'hora_inicio_asis' =>
+                            $reposicion->inicio
+                                ? Carbon::parse(
+                                    $reposicion->inicio
+                                )->format('H:i:s')
+                                : null,
+
+                            'hora_fin_asis' =>
+                            $reposicion->fin
+                                ? Carbon::parse(
+                                    $reposicion->fin
+                                )->format('H:i:s')
+                                : null,
+
+                            'tipo_asis_nombre' =>
+                            $reposicion->tipoAsistencia->ref_nombre
+                                ?? 'Pendiente por asistir',
+
+                            'tipo_asis_color' =>
+                            $reposicion->tipoAsistencia->color
+                                ?? '#9e00fa',
+
+
+                            /*
+                         * ASISTENCIA ORIGINAL
+                         */
+
+                            'asistencia_origen_id' =>
+                            $asistencia->id,
+
+
+                            /*
+                         * TURNO ORIGINAL
+                         */
+
+                            'turno_docente_id' =>
+                            $turno->id
+                        ];
+                    }
                 }
-
-
-                /*
-             * =========================================
-             * ID
-             * =========================================
-             */
-
-                $idEvento =
-                    
-                     $turno->id
-                   ;
-
-
-                /*
-             * =========================================
-             * EVENTO
-             * =========================================
-             */
-
-                $eventos[] = [
-
-                    'id' =>
-                    $idEvento,
-
-                    'title' =>
-                    $nombre,
-
-                    'start' =>
-                    $inicioReposicion
-                        ->format('Y-m-d H:i:s'),
-
-                    'end' =>
-                    $finReposicion
-                        ->format('Y-m-d H:i:s'),
-
-                    'fecha_turno' =>
-                    $inicioReposicion
-                        ->format('Y-m-d'),
-
-
-                    /*
-                 * COLOR
-                 */
-
-                    'backgroundColor' =>
-                    $color,
-
-                    'borderColor' =>
-                    $color,
-
-                    'textColor' =>
-                    '#ffffff',
-
-
-                    /*
-                 * =========================================
-                 * DOCENTE
-                 * =========================================
-                 */
-
-                    'docidnumber' =>
-                    $docente,
-
-                    'nombre' =>
-                    $nombre,
-
-                    'dia' =>
-                    $turno->trnd_dia,
-
-                    'hora_inicio' =>
-                    $turno->trnd_hora_inicio,
-
-                    'hora_fin' =>
-                    $turno->trnd_hora_fin,
-
-                    'image' =>
-                    $imagen,
-
-
-                    /*
-                 * =========================================
-                 * REPOSICIÓN
-                 * =========================================
-                 */
-
-                    'es_reposicion' =>
-                    true,
-
-                    'reposicion_id' =>
-                    $reposicion->id,
-
-                    'descripcion_reposicion' =>
-                    $reposicion
-                        ->descripcion_reposicion
-                        ?? null,
-
-                    'hora_inicio_reposicion' =>
-                    $reposicion->hora_inicio_asis && $reposicion->hora_inicio_asis != null
-                        ? Carbon::parse($reposicion->hora_inicio_asis)->format('H:i:s')
-                        : null,
-
-                    'hora_fin_reposicion' =>
-                    $reposicion->hora_fin_asis && $reposicion->hora_fin_asis != null
-                        ? Carbon::parse($reposicion->hora_fin_asis)->format('H:i:s')
-                        : null,
-
-                    /*
-                 * =========================================
-                 * TURNO ORIGINAL
-                 * =========================================
-                 */
-
-                    'turno_docente_id' =>
-                    $turno->id,
-
-
-                    /*
-                 * =========================================
-                 * ASISTENCIA
-                 * =========================================
-                 */
-
-                    'asistencia_id' =>
-                    $reposicion->id,
-
-                    'tipo_asis' =>
-                    $reposicion->tipo_asis,
-
-                    'categoria' =>
-                    $reposicion->categoria,
-
-                    'descripcion' =>
-                    $reposicion->descripcion,
-
-                    'hora_inicio_asis' =>
-                    $reposicion->hora_inicio_asis && $reposicion->hora_inicio_asis != null
-                        ? Carbon::parse($reposicion->hora_inicio_asis)->format('H:i:s')
-                        : null,
-
-                    'hora_fin_asis' =>
-                    $reposicion->hora_fin_asis && $reposicion->hora_fin_asis != null
-                        ? Carbon::parse($reposicion->hora_fin_asis)->format('H:i:s')
-                        : null,
-
-                    'tipo_asis_nombre' =>
-                    $reposicion->tipo_asis_nombre
-                        ?? 'Pendiente por asistir',
-
-                    'tipo_asis_color' =>
-                    $reposicion->tipo_asis_color
-                        ?? '#057f9a'
-                ];
             }
         }
 

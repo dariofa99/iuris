@@ -29,4 +29,14 @@ class AsistenciaDocentes extends Model
     'turno_docente_id',
     'minutos_reponer',
   ];
+
+   public function reposiciones()
+   {
+      return $this->belongsToMany(AsistenciaDocentes::class, 'repos_asis_docentes', 'asistencia_id', 'asistencia_repo_id')
+         ->withPivot('asistencia_id', 'asistencia_repo_id', 'id')->withTimestamps();
+   }
+   public function tipoAsistencia()
+   {
+      return $this->belongsTo(TablaReferencia::class, 'tipo_asis');
+   }
 }

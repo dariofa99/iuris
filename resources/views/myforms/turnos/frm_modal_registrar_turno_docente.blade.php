@@ -9,9 +9,9 @@
 
     @slot('body')
         <form class="iuris-form-card" id="turnosdoc">
-            <input type="hidden" name="turno_id" id="turno_id">
-            <input type="hidden" name="asistencia_id" id="asistencia_id">
-            <input type="hidden" name="fecha_turno" id="fecha_turno">
+            <input type="text" name="turno_id" id="turno_id">
+            <input type="text" name="asistencia_id" id="asistencia_id">
+            <input type="text" name="fecha_turno" id="fecha_turno">
             <!-- ============================================
                                                              HEADER
                                                         ============================================= -->
