@@ -418,10 +418,7 @@ class CalendarioDocenteService
                     && $asistencia->reposiciones
                     && $asistencia->reposiciones->isNotEmpty()
                 ) {
-                    Log::info(
-                        "Procesando reposiciones para la asistencia ID: {$asistencia->id}, docente: {$docente}, nombre: {$nombre}"
-                    );
-
+                  
                     $reposicion =
                         $asistencia->reposiciones->first();
 
@@ -440,12 +437,12 @@ class CalendarioDocenteService
                         ? Carbon::parse(
                             $reposicion->inicio
                         )->format('Y-m-d')
-                        : "dfdsf";
+                        : null;
 
 
                     $evento['descripcion_reposicion'] =
                         $reposicion->descripcion
-                        ?? "fsdfsdf";
+                        ?? null;
 
 
                     $evento['hora_inicio_reposicion'] =
@@ -558,9 +555,7 @@ class CalendarioDocenteService
                             continue;
                         }
 
-Log::info(
-                "Procesando asistencias para el turno ID: {$turno->id}, docente: {$docente}, nombre: {$nombre}"
-            );
+
                         /*
                      * =====================================
                      * INICIO
@@ -629,7 +624,7 @@ Log::info(
                         );
                         $eventos[] = [
 
-                            "nuevo_campo" => "nuevo_valor",
+                            
 
                             'id' =>
                             $idEvento,

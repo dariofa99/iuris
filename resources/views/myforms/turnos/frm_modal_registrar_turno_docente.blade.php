@@ -9,9 +9,9 @@
 
     @slot('body')
         <form class="iuris-form-card" id="turnosdoc">
-            <input type="text" name="turno_id" id="turno_id">
-            <input type="text" name="asistencia_id" id="asistencia_id">
-            <input type="text" name="fecha_turno" id="fecha_turno">
+            <input type="hidden" name="turno_id" id="turno_id">
+            <input type="hidden" name="asistencia_id" id="asistencia_id">
+            <input type="hidden" name="fecha_turno" id="fecha_turno">
             <!-- ============================================
                                                              HEADER
                                                         ============================================= -->
@@ -143,6 +143,32 @@
 
 
                 <div class="iuris-novedades">
+
+                       <!-- PENDIENTE -->
+
+                    <label class="iuris-option">
+
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis" value="285" checked>
+
+                        <span class="iuris-option-content">
+
+                            <span class="iuris-option-icon">
+                                <i class="fas fa-clock"></i>
+                            </span>
+
+                            <span class="iuris-option-text">
+
+                                <strong>Pendiente</strong>
+
+                                <small>
+                                    Pendiente de registrar turno.
+                                </small>
+
+                            </span>
+
+                        </span>
+
+                    </label>
 
 
                     <!-- ASISTENCIA -->

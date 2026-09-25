@@ -8,6 +8,7 @@ use App\TurnosDocente as AppTurnosDocente;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\TurnosDocente;
+use Illuminate\Support\Facades\Log;
 
 class TurnosDocenteRepository
 {
@@ -217,6 +218,7 @@ class TurnosDocenteRepository
                 // 'minutos_reponer' => $request->minutos_reponer
             ]);
 
+            Log::info("Asistencia ID: " . $asistencia->id . " - Reposición ID: " . $reposicion->id);
             $asistencia->reposiciones()->attach($reposicion->id);
         }
 
@@ -291,7 +293,7 @@ class TurnosDocenteRepository
                 $request->fecha_repo . ' ' . $request->hora_fin_repo . ":00"
             )->format('Y-m-d H:i:s');
 
-            $asistencia = AsistenciaDocentes::create([
+            $reposicion = AsistenciaDocentes::create([
                 'docidnumber' => $turno_docente->trnd_docidnumber,
                 'tipo_asis' => 285,
                 'inicio' => $inicio_repo,
@@ -301,6 +303,7 @@ class TurnosDocenteRepository
                 'turno_docente_id' => $turno_docente->id,
                 // 'minutos_reponer' => $request->minutos_reponer
             ]);
+            $asistencia->reposiciones()->attach($reposicion->id);
         }
 
         return $asistencia;

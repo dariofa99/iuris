@@ -275,7 +275,7 @@ function showCalendar(docente_id) {
                                 
                                 <div class="col-md-12">
                                     <div class="evento-docente-estado" style="background-color: ${event.tipo_asis_color}; font-weight: bold;">
-                                        ${event.tipo_asis_nombre} ${text}
+                                        ${event.tipo_asis_nombre} ${text} <span class="badge badge-pill badge-light">${event.es_reposicion && event.tipo_asis == 149 ? 'R' : ''}</span>
                                     </div>
                                 </div>
                              </div> `;
