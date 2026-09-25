@@ -142,17 +142,17 @@
                 </div>
 
 
-                <div class="iuris-novedades">
+                <div class="iuris-novedades" >
 
                        <!-- PENDIENTE -->
 
-                    <label class="iuris-option">
+                    <label class="iuris-option" id="tipo_asis_pendiente_option">
 
-                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis" value="285" checked>
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_pendiente" value="285" checked>
 
                         <span class="iuris-option-content">
 
-                            <span class="iuris-option-icon">
+                            <span class="iuris-option-icon pendiente">
                                 <i class="fas fa-clock"></i>
                             </span>
 
@@ -175,7 +175,7 @@
 
                     <label class="iuris-option">
 
-                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis" value="149" checked>
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_asistencia" value="149" checked>
 
                         <span class="iuris-option-content">
 
@@ -228,7 +228,7 @@
 
                     <label class="iuris-option">
 
-                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_permiso" value="284">
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_no_asistencia" value="284">
 
                         <span class="iuris-option-content">
                             <span class="iuris-option-icon falta">

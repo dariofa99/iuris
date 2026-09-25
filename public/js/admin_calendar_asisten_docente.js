@@ -254,7 +254,7 @@ function showCalendar(docente_id) {
             */
             var text = '';
             if (event.asistencia_id != null) {
-                console.log(event);
+                
                 text = `(${moment(event.hora_inicio_asis, "HH:mm:ss").format("h:mm A")} - ${moment(event.hora_fin_asis, "HH:mm:ss").format("h:mm A")})`;
             }
 
@@ -275,7 +275,7 @@ function showCalendar(docente_id) {
                                 
                                 <div class="col-md-12">
                                     <div class="evento-docente-estado" style="background-color: ${event.tipo_asis_color}; font-weight: bold;">
-                                        ${event.tipo_asis_nombre} ${text} <span class="badge badge-pill badge-light">${event.es_reposicion && event.tipo_asis == 149 ? 'R' : ''}</span>
+                                        ${event.tipo_asis_nombre} ${text} <span class="badge badge-pill badge-light">${event.es_reposicion && (event.tipo_asis == 284 || event.tipo_asis == 149) ? 'R' : ''}</span>
                                     </div>
                                 </div>
                              </div> `;
@@ -331,7 +331,7 @@ function showCalendar(docente_id) {
             $("#div_reposicion").hide();
             $("#div_reposicion").html("");
             resetDisabledForm("turnosdoc");
-
+            $("#turnosdoc #tipo_asis_pendiente_option").hide();
             //limpiarForm("turnosdoc");
 
             $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio);
@@ -370,6 +370,9 @@ function showCalendar(docente_id) {
                         $("#turnosdoc #hora_inicio_repo").val("");
                         $("#turnosdoc #hora_fin_repo").val("");
                     }
+                }
+                if(calEvent.tipo_asis == 285 && calEvent.es_reposicion){
+                     $("#turnosdoc #tipo_asis_pendiente_option").show();
                 }
                 //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
             }
