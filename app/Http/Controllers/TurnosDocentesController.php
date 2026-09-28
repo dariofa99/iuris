@@ -94,11 +94,18 @@ class TurnosDocentesController extends Controller
      */
     public function show()
     {
+       // dd("aa");
         $response = [];
         $periodo = $this->periodoService->getPeriodoActivo();
         $prdfecha_inicio = $periodo->prdfecha_inicio;
         $prdfecha_fin = $periodo->prdfecha_fin;
-        if (request()->has('start') && request()->has('end')) {
+        if(request()->has('start') && request()->get("start") == "undefined" && request()->has('end')  && request()->get("end") == "undefined"){
+            return response()->json([
+                    'errors' => 'Las fechas inicial no puede ser mayor que la fecha final.'
+                ], 200);
+        }
+        if (request()->has('start') && request()->get("start") != "undefined" && request()->has('end')  && request()->get("end") != "undefined") {
+           
             if (Carbon::parse(request()->get('start'))->gt(Carbon::parse(request()->get('end')))) {
                 return response()->json([
                     'errors' => 'La fecha inicial no puede ser mayor que la fecha final.'
