@@ -42,6 +42,10 @@ class TurnosDocenteRepository
                 'turnos_docentes.trndid_periodo',
                 $periodoId
             )
+             ->where(
+                'turnos_docentes.activo',
+                1
+            )
             ->orderBy(
                 'turnos_docentes.trnd_docidnumber',
                 'DESC'

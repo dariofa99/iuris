@@ -16,6 +16,7 @@ class CreateTurnosDocentesTable extends Migration
         Schema::create('turnos_docentes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('trnd_docidnumber',12);
+            $table->boolean("activo")->default(1);
             $table->foreign('trnd_docidnumber')->references('idnumber')->on('users'); //identificación
             $table->string('trnd_dia',9);
             $table->time('trnd_hora_inicio');

@@ -47,7 +47,7 @@ class TurnosDocentesController extends Controller
                 'role_user.role_id',
                 'roles.display_name'
             )->orderBy('users.created_at', 'desc')->get();
-       // dd($docentes);
+        // dd($docentes);
         return view('myforms.frm_turnos_docentes_list', compact('docentes'))->render();
         //
     }
@@ -74,9 +74,12 @@ class TurnosDocentesController extends Controller
             ->where('sp.sede_id', session('sede')->id_sede)
             ->where('estado', 1)
             ->first();
-        $turnos_doc = TurnosDocente::where('trnd_docidnumber', $request->id)->where('trndid_periodo', $periodo->id)->orderBy('trnd_hora_inicio', 'ASC')->get();
+        $turnos_doc = TurnosDocente::where('trnd_docidnumber', $request->id)
+        ->where('trndid_periodo', $periodo->id)
+        ->where('activo',1)
+        ->orderBy('trnd_hora_inicio', 'ASC')->get();
         return response()->json(
-
+            
             $turnos_doc->toArray()
 
         );
@@ -96,7 +99,7 @@ class TurnosDocentesController extends Controller
         $prdfecha_inicio = $periodo->prdfecha_inicio;
         $prdfecha_fin = $periodo->prdfecha_fin;
         if (request()->has('start') && request()->has('end')) {
-            if(Carbon::parse(request()->get('start'))->gt(Carbon::parse(request()->get('end')))) {
+            if (Carbon::parse(request()->get('start'))->gt(Carbon::parse(request()->get('end')))) {
                 return response()->json([
                     'errors' => 'La fecha inicial no puede ser mayor que la fecha final.'
                 ], 200);
@@ -106,13 +109,13 @@ class TurnosDocentesController extends Controller
         }
 
 
-        if(!$periodo) {
+        if (!$periodo) {
             return response()->json([
                 'errors' => 'No hay un periodo activo actualmente.'
             ], 200);
         }
 
-        
+
 
         $response['docentes'] = $docentes = DB::table('users')
             ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
@@ -129,7 +132,7 @@ class TurnosDocentesController extends Controller
             ->groupBy('users.idnumber')->orderBy('users.created_at', 'desc')->get();
 
 
-/* 
+        /* 
         $response['asistencia'] =  $asistencia = DB::table('asistencia_docentes')
             ->where('reposicion', '0')
             ->where('tipo_asis', '149')
@@ -168,7 +171,7 @@ class TurnosDocentesController extends Controller
             ->orderBy('docidnumber', 'desc')
             ->get();
 
-     
+
         $response['horas_semanales'] = $this->tuMetodo(request());
 
         $response['permisos'] = $permisos = DB::table('asistencia_docentes')
@@ -194,7 +197,7 @@ class TurnosDocentesController extends Controller
             ->whereDate('fin', '<=', $prdfecha_fin)
             ->select('docidnumber', DB::raw('SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS reposicion'))
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
-    
+
         return response()->json($response);
     }
 
@@ -248,6 +251,21 @@ class TurnosDocentesController extends Controller
             }
         }
         return response()->json($request->all());
+    }
+
+    public function inhabilitarHorario(Request $request)
+    {
+        $periodo = $this->periodoService->getPeriodoActivo();
+        $turnos_doc = TurnosDocente::where('trnd_docidnumber', $request->docidmunber)
+        ->where(['trndid_periodo'=> $periodo->id , 'activo'=>1] )
+        ->orderBy('trnd_hora_inicio', 'ASC')->update([
+            'activo'=>0
+        ]);
+   
+        $turnos_doc= TurnosDocente::where('trnd_docidnumber', $request->docidmunber)
+        ->where(['trndid_periodo'=> $periodo->id , 'activo'=>0] )
+        ->orderBy('trnd_hora_inicio', 'ASC')->get();
+        return response()->json($turnos_doc);
     }
 
     /**
@@ -323,6 +341,7 @@ class TurnosDocentesController extends Controller
 
         $turnos = DB::table('turnos_docentes')
             ->where('trndid_periodo', $periodo->id)
+            ->where('activo', 1)
             ->select(
                 'trnd_docidnumber',
                 'trnd_dia',

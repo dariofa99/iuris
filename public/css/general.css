@@ -5219,3 +5219,463 @@ RESPONSIVE
     font-size: 13px;
     color: #a8b5b8;
 }
+
+/* =========================================================
+   IURIS - ADMINISTRACION DE HORARIOS DOCENTES
+========================================================= */
+
+.iuris-turnos-page {
+  --turnos-ink: #263f45;
+  --turnos-muted: #71858a;
+  --turnos-line: #dce8e9;
+  --turnos-soft: #f4f8f8;
+  --turnos-teal: #006975;
+
+  margin-bottom: 24px;
+  color: var(--turnos-ink);
+}
+
+.iuris-turnos-page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0 20px;
+  animation: iurisTurnosEnter .35s ease-out both;
+}
+
+.iuris-turnos-page-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 8px;
+  background: #dceff0;
+  color: var(--turnos-teal);
+  font-size: 20px;
+}
+
+.iuris-turnos-eyebrow,
+.iuris-schedule-kicker {
+  display: block;
+  color: var(--turnos-teal);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
+
+.iuris-turnos-page-header h2 {
+  margin: 2px 0 3px;
+  color: var(--turnos-ink);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.iuris-turnos-page-header p {
+  margin: 0;
+  color: var(--turnos-muted);
+  font-size: 13px;
+}
+
+.iuris-turnos-panel {
+  overflow: hidden;
+  border: 1px solid var(--turnos-line);
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(32, 65, 70, .055);
+}
+
+.iuris-turnos-panel > .iuris-turnos-tabs-header {
+  padding: 0 18px;
+  border-bottom: 1px solid var(--turnos-line);
+  background: #fff;
+}
+
+.iuris-turnos-tabs {
+  gap: 22px;
+  border: 0;
+}
+
+.iuris-turnos-tabs .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 3px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  color: var(--turnos-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.iuris-turnos-tabs .nav-link:hover,
+.iuris-turnos-tabs .nav-link:focus {
+  color: var(--turnos-teal);
+}
+
+.iuris-turnos-tabs .nav-link.active {
+  border-bottom-color: var(--turnos-teal);
+  background: transparent;
+  color: var(--turnos-teal);
+}
+
+.iuris-turnos-panel > .iuris-turnos-panel-body {
+  padding: 20px;
+}
+
+.iuris-schedule-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--turnos-line);
+  border-radius: 7px;
+  background: linear-gradient(110deg, #f4f8f8 0%, #fbfcfc 75%);
+}
+
+.iuris-schedule-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 490px);
+  min-width: 0;
+}
+
+.iuris-schedule-filter-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 6px;
+  background: #deeff0;
+  color: var(--turnos-teal);
+}
+
+.iuris-schedule-filter-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.iuris-schedule-filter-content label {
+  display: block;
+  margin: 0 0 5px;
+  color: var(--turnos-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.iuris-schedule-filter-content .form-control {
+  height: 36px;
+  border: 1px solid #d2e0e2;
+  border-radius: 5px;
+  color: var(--turnos-ink);
+  font-size: 13px;
+}
+
+.iuris-schedule-filter-content .form-control:focus {
+  border-color: var(--turnos-teal);
+  box-shadow: 0 0 0 3px rgba(0, 105, 117, .1);
+}
+
+.iuris-selected-teacher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid #dce9e9;
+  border-radius: 5px;
+  background: #fff;
+  color: var(--turnos-teal);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.iuris-selected-teacher span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#content-docentetr {
+  margin-top: 18px;
+}
+
+.iuris-schedule-editor {
+  overflow: hidden;
+  border: 1px solid var(--turnos-line);
+  border-radius: 7px;
+  background: #fff;
+}
+
+.iuris-schedule-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 17px;
+  border-bottom: 1px solid var(--turnos-line);
+}
+
+.iuris-schedule-editor-heading h3 {
+  margin: 3px 0 0;
+  color: var(--turnos-ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.iuris-schedule-weekdays {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--turnos-muted);
+  font-size: 11px;
+}
+
+.iuris-schedule-weekdays i {
+  color: var(--turnos-teal);
+}
+
+.iuris-schedule-table-wrap {
+  overflow-x: auto;
+}
+
+.iuris-schedule-editor-table {
+  width: 100%;
+  min-width: 680px;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.iuris-schedule-editor-table thead th {
+  padding: 11px 13px;
+  border: 0;
+  border-bottom: 1px solid var(--turnos-line);
+  background: var(--turnos-soft);
+  color: #526a70;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .45px;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.iuris-schedule-editor-table thead th:first-child,
+.iuris-schedule-editor-table thead th:nth-child(2) {
+  text-align: left;
+}
+
+.iuris-schedule-editor-table tbody td {
+  padding: 10px 12px;
+  border-top: 0;
+  border-bottom: 1px solid #edf2f2;
+  color: var(--turnos-ink);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.iuris-schedule-editor-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.iuris-schedule-editor-table tbody tr:hover {
+  background: #f8fbfb;
+}
+
+.iuris-schedule-editor-table .form-control {
+  min-width: 120px;
+  height: 35px;
+  border: 1px solid #dce6e7;
+  border-radius: 5px;
+  color: var(--turnos-ink);
+  font-size: 13px;
+}
+
+.iuris-schedule-editor-table .form-control:focus {
+  border-color: var(--turnos-teal);
+  box-shadow: 0 0 0 3px rgba(0, 105, 117, .09);
+}
+
+.iuris-schedule-editor-table input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--turnos-teal);
+  cursor: pointer;
+}
+
+.iuris-schedule-editor-table .horariomenos {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #f0d6d3;
+  border-radius: 5px;
+  background: #fff6f4;
+  color: #b34e41;
+}
+
+.iuris-schedule-editor-table .horariomenos:hover {
+  border-color: #d88c82;
+  background: #b34e41;
+  color: #fff;
+}
+
+.iuris-schedule-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 16px;
+  border-top: 1px solid var(--turnos-line);
+  background: #fbfcfc;
+}
+
+.iuris-schedule-actions-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.iuris-schedule-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 7px 13px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.iuris-schedule-actions .btn-iuris-primary {
+  min-width: 145px;
+}
+
+.iuris-schedule-actions .btn-iuris-add {
+  border: 1px solid #b9dfd0;
+  background: #eaf6f0;
+  color: #267855;
+}
+
+.iuris-schedule-actions .btn-iuris-add:hover {
+  border-color: #2e9b70;
+  background: #2e9b70;
+  color: #fff;
+}
+
+.iuris-schedule-actions .btn-iuris-disable {
+  border: 1px solid #ead8d5;
+  background: #fff;
+  color: #9b5148;
+}
+
+.iuris-schedule-actions .btn-iuris-disable:hover {
+  border-color: #b34e41;
+  background: #b34e41;
+  color: #fff;
+}
+
+@keyframes iurisTurnosEnter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .iuris-turnos-page-header {
+    align-items: flex-start;
+  }
+
+  .iuris-turnos-page-header h2 {
+    font-size: 19px;
+  }
+
+  .iuris-turnos-panel > .iuris-turnos-panel-body {
+    padding: 14px;
+  }
+
+  .iuris-schedule-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .iuris-schedule-filter {
+    width: 100%;
+  }
+
+  .iuris-selected-teacher {
+    align-self: flex-start;
+    max-width: 100%;
+  }
+
+  .iuris-schedule-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .iuris-schedule-actions-primary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .iuris-schedule-actions .btn,
+  .iuris-schedule-actions .btn-iuris-primary {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .iuris-turnos-page-header {
+    gap: 10px;
+  }
+
+  .iuris-turnos-page-icon {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+    font-size: 17px;
+  }
+
+  .iuris-turnos-page-header p {
+    font-size: 12px;
+  }
+
+  .iuris-turnos-panel > .iuris-turnos-tabs-header {
+    padding: 0 12px;
+  }
+
+  .iuris-turnos-tabs {
+    gap: 16px;
+  }
+
+  .iuris-turnos-tabs .nav-link {
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .iuris-schedule-editor-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .iuris-schedule-actions-primary {
+    grid-template-columns: 1fr;
+  }
+}

@@ -219,6 +219,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('turnos/docentes/{id}', 'TurnosDocentesController@store');
     Route::get('turnos/docentes/reporte/asis', 'TurnosDocentesController@show');
     Route::post('turnos/acdocentes', 'TurnosDocentesController@updateinfo');
+    Route::post('turnos/inhabilitar/acdocentes', 'TurnosDocentesController@inhabilitarHorario');
 
     //Graficas
     Route::resource('graficas', 'GraficasController');

@@ -156,6 +156,33 @@ $(document).ready(function () {
 			horas.push(id_time);
 		}
 	});
+	$("#inhabilitar_horario_doc").on("click", async (event) => {
+		var docidmunber = $("#select_doc_horario").val();
+		Swal.fire({
+			title: 'Esta seguro de inhabilitar la asignación de turnos?',
+			text: "Los cambios no podran ser revertidos!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Si, inhabilitar!',
+			cancelButtonText: 'No, cancelar'
+		}).then(async (result) => {
+			if (result.value) {
+				$("#wait").show();
+				let response = await horariosService.inhabilitarHorario({ docidmunber: docidmunber });
+				consultar_horario(docidmunber);
+				console.log(response);
+				toastr.success("Inhabilitado con éxito", "", {
+					positionClass: "toast-top-right",
+					timeOut: "4000",
+				});
+				
+			}
+		});
+
+
+	})
 	$("#guardar_horario_doc").click(async function () {
 		var mydata = [];
 		var docidmunber = $("#select_doc_horario").val();
@@ -286,7 +313,7 @@ $(document).ready(function () {
 	});
 
 	$("#inicio").on("change", async function () {
-		
+
 		getAsistenciasDocente();
 	});
 	$("#fin").on("change", async function () {
@@ -632,7 +659,7 @@ async function getAsistenciasDocente() {
 			var datahorassemanales = res.horas_semanales.find(datoshs => datoshs.trnd_docidnumber === value.idnumber);
 			var datafaltas = res.faltas.find(datosfalta => datosfalta.docidnumber === value.idnumber);
 			//var asistencia_label_d = res.asistencia.find(datosfalta => datosfalta.docidnumber === value.idnumber);
-	
+
 
 			if (datasistencias) { asistencia_label = datasistencias.asistencia_label; }
 			if (datasistencias) { asistencias = datasistencias.asistencia; }
@@ -664,25 +691,25 @@ async function getAsistenciasDocente() {
 }
 
 function formatearHoras(minutos) {
-    const duracion = moment.duration(minutos, 'minutes');
+	const duracion = moment.duration(minutos, 'minutes');
 
-    const horas = Math.floor(duracion.asHours());
-    const minutosRestantes = duracion.minutes();
+	const horas = Math.floor(duracion.asHours());
+	const minutosRestantes = duracion.minutes();
 
-    let resultado = '';
+	let resultado = '';
 
-    if (horas > 0) {
-        resultado += horas + (horas === 1 ? ' hora' : ' horas');
-    }
+	if (horas > 0) {
+		resultado += horas + (horas === 1 ? ' hora' : ' horas');
+	}
 
-    if (minutosRestantes > 0) {
-        if (resultado !== '') {
-            resultado += ', ';
-        }
+	if (minutosRestantes > 0) {
+		if (resultado !== '') {
+			resultado += ', ';
+		}
 
-        resultado += minutosRestantes +
-            (minutosRestantes === 1 ? ' minuto' : ' minutos');
-    }
+		resultado += minutosRestantes +
+			(minutosRestantes === 1 ? ' minuto' : ' minutos');
+	}
 
-    return resultado || '0 minutos';
+	return resultado || '0 minutos';
 }

@@ -18,7 +18,7 @@ export class HorariosService {
         const topics = await response.json();
         return topics;
     }
-    async updateAsigTurno(request,id) {
+    async updateAsigTurno(request, id) {
         const response = await fetch(BASE_URL + 'turnos/' + id, {
             method: 'PUT',
             headers: {
@@ -38,7 +38,7 @@ export class HorariosService {
         return topics;
 
     }
-    async deleteTurno(id, request={}) {
+    async deleteTurno(id, request = {}) {
         const response = await fetch(BASE_URL + "turnos/" + id, {
             method: 'DELETE',
             headers: {
@@ -57,7 +57,7 @@ export class HorariosService {
         const topics = await response.json();
         return topics;
     }
-    async deleteAllTurnos(){
+    async deleteAllTurnos() {
         const response = await fetch(BASE_URL + "turnos/delete/all", {
             method: 'DELETE',
             headers: {
@@ -75,7 +75,7 @@ export class HorariosService {
         const topics = await response.json();
         return topics;
     }
-    async getReporteAsistenciaDocente(request={}) {
+    async getReporteAsistenciaDocente(request = {}) {
         const response = await fetch(BASE_URL + "turnos/docentes/reporte/asis?" + new URLSearchParams(request), {
             method: 'GET',
             headers: {
@@ -94,7 +94,7 @@ export class HorariosService {
         return topics;
     }
 
-    async updateTurnosDocente(request){
+    async updateTurnosDocente(request) {
         const response = await fetch(BASE_URL + "turnos/acdocentes", {
             method: 'POST',
             headers: {
@@ -114,7 +114,26 @@ export class HorariosService {
         return topics;
     }
 
-    async asigTurnoEst(request){
+    async inhabilitarHorario(request={}) {
+        const response = await fetch(BASE_URL + "turnos/inhabilitar/acdocentes", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+    async asigTurnoEst(request) {
         const response = await fetch(BASE_URL + "turnos", {
             method: 'POST',
             headers: {
@@ -134,8 +153,8 @@ export class HorariosService {
         return topics;
     }
 
-    async getAsistenciaReport(request={}) {
-        const response = await fetch(BASE_URL + "turnos/asistencia?"+ new URLSearchParams(request), {
+    async getAsistenciaReport(request = {}) {
+        const response = await fetch(BASE_URL + "turnos/asistencia?" + new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -154,7 +173,7 @@ export class HorariosService {
     }
 
     async detallesAsistencia(id) {
-        const response = await fetch(BASE_URL + "turnos/asistencia/detalles/"+id, {
+        const response = await fetch(BASE_URL + "turnos/asistencia/detalles/" + id, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -172,8 +191,8 @@ export class HorariosService {
         return topics;
     }
 
-    async search(request={}) {
-        const response = await fetch(BASE_URL + "turnos/buscar/index?"+ new URLSearchParams(request), {
+    async search(request = {}) {
+        const response = await fetch(BASE_URL + "turnos/buscar/index?" + new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
