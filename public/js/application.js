@@ -190,7 +190,9 @@ function validateForm(form) {
 function validateForms(formulario) {
 
     const $form = $(formulario);
-
+    if($form == null){
+        return false;
+    }
     let valido = true;
     let firstError = null;
 

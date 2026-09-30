@@ -4,8 +4,10 @@ namespace App\Traits;
 
 use App\Nota;
 use App\Segmento;
-use DB;
+
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait AsigNotas
 {
@@ -41,7 +43,7 @@ trait AsigNotas
         'docidnumber' => $request['docidnumber'],
         'tbl_org_id' => $request['tbl_org_id'],
       ]);
-    } 
+    }
 
     Nota::create([
 
@@ -324,17 +326,20 @@ trait AsigNotas
 
   function getNotas()
   {
+
     $notas = DB::table("notas")
-      ->join("origen_notas", "origen_notas.id", "=", "notas.orgntsid")
       ->join("users as docente", "docente.idnumber", "=", "notas.docidnumber")
       ->join("cptonotas", "cptonotas.id", "=", "notas.cptnotaid")
+      ->join("periodo", "periodo.id", "=", "notas.perid")
       ->select(
-        "nota",
-        "expidnumber",
-        "estidnumber",
-        "docidnumber",
-        "origen_notas.orgntsnombre",
-        "segid",
+        "notas.nota",
+        "notas.expidnumber",
+        "notas.estidnumber",
+        "notas.docidnumber",
+        "notas.segid",
+        "notas.tpntid",
+        "periodo.prddes_periodo as periodo",
+        "notas.tbl_org_id",
         DB::raw("
           LOWER(
               REPLACE(
@@ -353,15 +358,14 @@ trait AsigNotas
         "notas.created_at",
         DB::raw("concat(docente.name,' ',docente.lastname) as docente")
       )
-      ->where("tbl_org_id", $this->id)
-      ->get()->toArray();
-    /*  Nota::where("tbl_org_id","75009")
-  ->select("nota")->get(); */
+      ->where("notas.tbl_org_id", $this->id)
+      ->get();
     $notasFormateadas = [];
     foreach ($notas as $nota) {
-      // dd($nota->cpntnombre);
-      switch ($nota->cpntnombre) {
+
+      switch (($nota->cpntnombre)) {
         case 'conocimiento':
+
           $notasFormateadas['nota_conocimiento'] = number_format($nota->nota, 1, '.', '.');
           $notasFormateadas['nota_conocimientoid'] = $nota->id; // Asegúrate de tener el ID correcto
           break;
@@ -382,12 +386,36 @@ trait AsigNotas
           $notasFormateadas['docidnumber'] = $nota->docidnumber;
           $notasFormateadas['created_at'] = $nota->created_at;
           $notasFormateadas['fecha_creacion'] = getSmallDate($nota->created_at);
-          $notasFormateadas['can_edit'] = (auth()->user()->idnumber === $nota->docidnumber) ? true : false;
+
           $notasFormateadas['segmento_id'] = $nota->segid;
+          $notasFormateadas['nota_tipo'] = $nota->tpntid;
+          $notasFormateadas['nota_tipo_text'] = $nota->tpntid == 1 ? "Definitiva" : "Provisional";
+          $notasFormateadas['periodo'] = $nota->periodo;
+          $notasFormateadas['tbl_org_id'] = $nota->tbl_org_id;
 
           break;
       }
     }
+    $canEdit = false;
+
+    if (count($notas) > 0) {
+      if (
+        (auth()->user()->idnumber === $notasFormateadas['docidnumber'])
+        && $notasFormateadas['nota_tipo'] == 2
+      ) {
+        $canEdit = true;
+        Log::info('El usuario puede editar la nota porque es el docente que la asignó y es provisional.');
+      }
+      if (
+        (auth()->user()->hasRole('amatai')
+          || auth()->user()->hasRole('dirgral'))
+      ) {
+        $canEdit = true;
+      }
+      $notasFormateadas['can_edit'] = $canEdit;
+    }
+
+
 
     return $notasFormateadas;
   }

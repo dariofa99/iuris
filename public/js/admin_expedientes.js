@@ -2,11 +2,13 @@ import { UserService } from './services/users.js';
 import { ExpedientesService } from './services/expedientes.js';
 import { EncuestasService } from './services/encuestas.js';
 import { IncidenciasService } from './services/incidencias.js';
+import { NotasService } from './services/notas.js';
 
 const encuestasService = new EncuestasService();
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 const incidenciasService = new IncidenciasService();
+const notasService = new NotasService();
 
 $(document).ready(function () {
 
@@ -2022,10 +2024,12 @@ $(document).ready(function () {
             try {
                 $("#loader-container").show().css({ 'display': 'flex' })
                 $("#wait").show();
+                $("#myModal_act_create").modal("hide");
                 const result = await expedientesService.addActuacion(body)
                     .then((response) => {
                         if (response.errors) {
                             response.errors.forEach(error => {
+
                                 Swal.fire({
                                     position: 'top-end',
                                     icon: 'error',
@@ -2048,7 +2052,7 @@ $(document).ready(function () {
                                 showConfirmButton: false,
                                 timer: 2500
                             });
-                            window.location.reload(true)
+                            window.location.reload(true);
                         }
                         e.preventDefault()
                     })
@@ -2061,7 +2065,6 @@ $(document).ready(function () {
                             showConfirmButton: false,
                             timer: 5500
                         });
-                        console.error('Error al cargar el archivo:', error);
                         $("#wait").hide();
                         e.preventDefault()
                     });
@@ -2071,14 +2074,12 @@ $(document).ready(function () {
                 console.error(error);
                 e.preventDefault()
             } finally {
-                // Restablecer el estado de la barra de progreso
-                /*  const result = userService.showProgress(0)
-                 $("#loader-container").hide() */
+
                 $("#wait").hide();
                 e.preventDefault()
             }
         }
-        $("#wait").hide();
+        //$("#wait").hide();
         e.preventDefault();
     });
 
@@ -2123,11 +2124,13 @@ $(document).ready(function () {
     $(".buscar_actuacion").on("click", async function (e) {
         e.preventDefault();
         var id = $(this).val();
+
         var modal = $(this).attr('data-modal');
         $("#wait").show();
         let response = await expedientesService.getActuaciones(id);
         llenarModalDetailsAct(response);
         $(modal).modal("show");
+
         $("#actfecha_edit").val(response.created_at);
         $("#actnombre_edit").val(response.actnombre);
         $("#actdescrip_edit").val(response.actdescrip);
@@ -2212,39 +2215,28 @@ $(document).ready(function () {
     });
 
     $("#actestado").on("change", function () {
+        var label = document.querySelector("#myform_act_edit_docente #fecha_limit_doc").closest(".form-group").querySelector("label");
+        $(label).hide();
+        $("#myform_act_edit_docente #fecha_limit_doc").prop(
+            "disabled",
+            true
+        ).hide();
+        $(".addNotasAct").hide();
+        $(".addNotasAct .required").prop("disabled", true);
+
         if ($(this).val() == "104") {
-            $(".addNotasAct").show();
-            $(".addNotasAct .required").prop("disabled", false);
+            $("#myform_act_edit_docente .addNotasAct").show();
+            $("#myform_act_edit_docente .addNotasAct .required").prop("disabled", false);
 
-            $("#myform_act_edit_docente #fecha_limit_doc").prop(
-                "disabled",
-                true
-            );
-        } else if ($(this).val() == "234") {
-
-            $(".addNotasAct").hide();
-            $("#myform_act_edit_docente #fecha_limit_doc").prop(
-                "disabled",
-                true
-            );
-        } else {
-            $(".addNotasAct").hide();
-            $(".addNotasAct .required").prop("disabled", true);
+        }
+        if ($(this).val() == "102") {
+            $(label).show();
             $("#myform_act_edit_docente #fecha_limit_doc").prop(
                 "disabled",
                 false
-            );
-
+            ).show();
         }
-        if ($(this).val() == "") {
 
-            $(".addNotasAct").hide();
-            $(".addNotasAct .required").prop("disabled", true);
-            $("#myform_act_edit_docente #fecha_limit_doc").prop(
-                "disabled",
-                true
-            );
-        }
     });
 
     $("#myform_act_edit_docente input[name='fecha_limit_doc']").on("change", function (e) {
@@ -2260,10 +2252,81 @@ $(document).ready(function () {
 
     $("#btn_act_edit_docen").click(async function (e) {
         e.preventDefault();
-        if ($("#actestado").val() != 104) {
+        /* if ($("#actestado").val() != 104) {
             $("#formAddNotas .form-control").removeClass('required');
+        } */
+
+        const form = document.getElementById("myform_act_edit_docente");
+        var isvalid = validateForms(form);
+        console.log(isvalid);
+
+        if (isvalid) {
+            var request = convertFormToJSON("myform_act_edit_docente");
+            console.log(request.ntaconocimiento, request);
+            var fecha_limit = request.fecha_limit_doc;
+            if (!existeFecha(fecha_limit) && $("#actestado").val() == 102) {
+                toastr.error("Por favor, verifíque que el año de fecha limite no sea inferior o superior a un año con respecto al año actual.", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "6000",
+                });
+                return;
+            }
+
+            if (request.actestado_id == "104" && (isNaN(request.ntaaplicacion) || isNaN(request.ntaconocimiento) || isNaN(request.ntaetica))) {
+                toastr.error("Por favor, verifíque que no haya notas con espacios o caracteres extraños", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "6000",
+                });
+                return;
+            }
+            if (request.actestado_id == "104" && (request.ntaaplicacion > 5 || request.ntaconocimiento > 5 || request.ntaetica > 5)) {
+                toastr.error("Por favor, verifíque que no haya notas superiores a 5.0", "", {
+                    positionClass: "toast-top-right",
+                    timeOut: "6000",
+                });
+                return;
+            }
+
+            toastr.success("Creado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            try {
+                $("#wait").show();
+                const body = new FormData(document.getElementById('myform_act_edit_docente'));
+                $("#myModal_act_edit_docen").modal("hide");
+                let response = await expedientesService.updateActuacionDocente(body)
+                    .then((response) => {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Actualizado con éxito!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        window.location.reload(true)
+                        e.preventDefault()
+                    })
+                    .catch((error) => {
+                        console.error('Error al cargar el archivo:', error);
+                        $("#wait").hide();
+                        e.preventDefault()
+                    });
+            } catch (error) {
+                // Manejar el error
+                $("#wait").hide();
+                console.error(error);
+                e.preventDefault()
+            } finally {
+                // Restablecer el estado de la barra de progreso
+                /*  const result = userService.showProgress(0)
+                 $("#loader-container").hide() */
+                $("#wait").hide();
+                e.preventDefault()
+            }
         }
-        var errors = validateForm('myform_act_edit_docente');
+        return false;
+
         var notaapl = $("#myform_act_edit_docente input[name='ntaaplicacion']").val();
         var notacon = $("#myform_act_edit_docente input[name='ntaconocimiento']").val();
         var notaet = $("#myform_act_edit_docente input[name='ntaetica']").val();
@@ -2433,7 +2496,8 @@ $(document).ready(function () {
 
     $(".btn_new_act").on("click", function () {
         $("#actestado_id").val(101);
-        $("#lbl_title_fract").text("Crear Actuación");
+
+        $(".modal-title").text("Crear Actuación").show();
         $("#lbl_type_actuacion").text($(this).attr("data-titulo_modal"));
         $("#myformCreateAct input[name=fecha_limit]")
             .prop("disabled", false)
@@ -2445,14 +2509,16 @@ $(document).ready(function () {
                 .prop("disabled", true)
                 .hide();
             $("#myformCreateActButton").text("Crear anexo");
-            $("#lbl_title_fract").text("Crear Anexo");
+            $(".modal-title").text("Crear Anexo");
             $("#lbl_type_actuacion").text($(this).attr("data-titulo_modal"));
         }
         if ($(this).attr("id") == "btn_new_act_doct") {
             $("#actestado_id").val(140);
-            $("#lbl_title_fract").text("Crear Actuación Docente");
+            $(".modal-title").text("Crear Actuación Docente");
             $("#lbl_type_actuacion").text($(this).attr("data-titulo_modal"));
         }
+
+        $("#myModal_act_create").modal("show")
     });
 
     $("#tbl_ajax").on("click", ".btn_change_status", async function () {
@@ -2719,22 +2785,45 @@ $(document).ready(function () {
 
     $("#myform_update_notas").on('submit', async function (e) {
         e.preventDefault();
-        var errors = validateForm('myform_update_notas')
-        errors = validarNotasUpdate(errors, 'myform_update_notas');
+        const form = document.getElementById("myform_update_notas");
+        var isvalid = validateForms(form);
+        isvalid = validarNotasUpdate('myform_update_notas');
+        console.log(isvalid);
 
-        if (errors.length <= 0) {
-            var data = convertFormToJSON('myform_update_notas');
+        if (isvalid) {
+            var request = convertFormToJSON("myform_update_notas");
+            //request['tbl_org_id'] = $("#actuacion #origen").val();
+            console.log(request.ntaconocimiento, request);
             $("#wait").show();
-            await expedientesService.updateNotas(data);
+            $("#myModal_act_details").modal("hide");
+            let response = await expedientesService.updateNotas(request);
             toastr.success("Actualizado con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-            window.location.reload(true);
-            return false;
-        } else {
-
+            $("#wait").hide();
         }
+
+
+        return false;
+
+        errors = validarNotasUpdate(errors, 'myform_update_notas');
+
+        //errors = validarNotasUpdate(errors, 'myform_update_notas');
+
+        /*  if (errors.length <= 0) {
+             var data = convertFormToJSON('myform_update_notas');
+             $("#wait").show();
+             await expedientesService.updateNotas(data);
+             toastr.success("Actualizado con éxito", "", {
+                 positionClass: "toast-top-right",
+                 timeOut: "4000",
+             });
+             window.location.reload(true);
+             return false;
+         } else {
+ 
+         } */
 
     });
 
@@ -3065,9 +3154,9 @@ $(document).ready(function () {
     $("#mymodalCreateAutorizacion").on("click", "#btn_create_autorizacion", async function (e) {
         e.preventDefault();
         // var errors = validateForm("myformCreateAutorizacion");
-         $("#lbl_autor_create").closest('small').hide();
+        $("#lbl_autor_create").closest('small').hide();
         const form = document.getElementById("myformCreateAutorizacion");
-         // Log the form element to check if it's null
+        // Log the form element to check if it's null
         if (!form) return;
         var isvalid = validateForms(form);
         if (isvalid) {
@@ -3112,7 +3201,7 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
-         $("#lbl_autor_create").closest('small').show();
+        $("#lbl_autor_create").closest('small').show();
         $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname).show()
         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
         $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
@@ -3154,7 +3243,7 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
-         $("#lbl_autor_create").closest('small').show();
+        $("#lbl_autor_create").closest('small').show();
         $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname).show()
         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
         $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
@@ -3320,11 +3409,58 @@ $(document).ready(function () {
         hideButtReasCaso();
     });
 
-    $("#btn_cam_nt_act").on("click", function () {
-        $("#myModal_act_details").modal("hide");
+    $("#btn_cam_nt_act").on("click", async function () {
+        //$("#myModal_act_details").modal("hide");
         //$("#myModal_edit_notas").modal("show");
         var actuacion_id = $("#actuacion_id").val();
-        get_notas(actuacion_id, 2);
+        let res = await notasService.getNotas({ origen: 2 }, actuacion_id);
+        const form = document.getElementById("myform_update_notas");
+        form.nota_conocimiento.value = res.nota_conocimiento;
+        form.nota_conocimientoid.value = res.nota_conocimientoid;
+        form.nota_etica.value = res.nota_etica;
+        form.nota_eticaid.value = res.nota_eticaid;
+        form.nota_aplicacion.value = res.nota_aplicacion;
+        form.nota_aplicacionid.value = res.nota_aplicacionid;
+        form.nota_concepto.value = res.nota_concepto;
+        form.nota_conceptoid.value = res.nota_conceptoid;
+        form.up_tbl_org_id.value = res.tbl_org_id;
+        form.querySelector("#lbl_periodo").textContent = res.periodo;
+        form.querySelector("#lbl_tipo").textContent = res.nota_tipo_text;
+        form.querySelector("#lbldocevnameD").textContent = res.docente;
+        resetDisabledForm('myform_update_notas');
+        $("#myform_update_notas").show();
+        $("#myform_act_edit_docen").css("display", "none");
+
+        /*  $("#myform_update_notas #nota_conocimiento").val(
+             res.nota_conocimiento
+         );
+         $("#myform_update_notas #nota_conocimientoid").val(
+             res.nota_conocimientoid
+         );
+ 
+         $("#myform_update_notas #nota_etica").val(res.nota_etica);
+         $("#myform_update_notas #nota_eticaid").val(res.nota_eticaid);
+ 
+         $("#myform_update_notas #nota_aplicacion").val(res.nota_aplicacion);
+         $("#myform_update_notas #nota_aplicacionid").val(
+             res.nota_aplicacionid
+         );
+ 
+         $("#myform_update_notas #nota_concepto").val(res.nota_concepto);
+         $("#myform_update_notas #nota_conceptoid").val(res.nota_conceptoid);
+         $("#myform_update_notas #lbl_nota_gen_caso").text(res.nota_final);
+ 
+         //$("#myform_update_notas input[name='tbl_org_id']").val(res.nota_conceptoid);
+         $("#myform_update_notas #origen").val(2);
+         $("#myform_update_notas #tbl_org_id").val(actuacion_id);
+         $("#myform_update_notas #lbldocevname").text(res.docevname);
+         $("#myform_update_notas #lbldocevnameD").text(res.docente);
+         $("#myModal_edit_notas #btns_edit_notas").hide();
+         $("#myform_update_notas #lbl_tipo").text(res.nota_tipo_text); */
+        $("#wait").css("display", "none");
+
+
+        // get_notas(actuacion_id, 2);
     });
 
     $("#add_user_exp").on("click", function () {
@@ -3876,11 +4012,13 @@ function get_notas(tbl_id, origen) {
             $("#myform_update_notas #origen").val(origen);
             $("#myform_update_notas #tbl_org_id").val(tbl_id);
             $("#myform_update_notas #lbldocevname").text(res.docevname);
-
+            $("#myform_update_notas #lbldocevnameD").text(res.docente);
             $("#myModal_edit_notas #btns_edit_notas").hide();
+            $("#myform_update_notas #lbl_tipo").text(res.nota_tipo_text);
             $("#wait").css("display", "none");
 
             if (res.encontrado) {
+
                 $("#myModal_edit_notas #lbl_periodo").text(res.periodo);
                 $("#myModal_edit_notas #lbl_segmento").text(res.segmento);
                 $("#myModal_edit_notas #lbl_tipo").text(res.tipo);
@@ -3890,6 +4028,7 @@ function get_notas(tbl_id, origen) {
                 var tipo_id = res.tipo_id == "1" ? "2" : "1";
 
                 if (res.can_edit) {
+
                     if (origen == 1 && $("#expestado_id").val() == "4") {
                         $("#btn_tipo_update").attr("data-value", tipo_id);
                         $("#btn_tipo_update").show();
@@ -4043,7 +4182,7 @@ function fillModalHistoryDataCase(response) {
         });
     }
 }
-function validarNotasUpdate(errors, form) {
+function validarNotasUpdate(form) {
     var notaapl = $("#" + form + " input[id=nota_aplicacion]").val();
     var notacon = $("#" + form + " input[id=nota_conocimiento]").val();
     var notaet = $("#" + form + " input[id=nota_etica]").val();
@@ -4052,16 +4191,17 @@ function validarNotasUpdate(errors, form) {
             positionClass: "toast-top-right",
             timeOut: "6000",
         });
-        errors.push("1");
+        return false;
+
     }
     if (isNaN(notaapl) || isNaN(notacon) || isNaN(notaet)) {
         toastr.error("Por favor verifíque que no haya notas con espacios o caracteres extraños", "", {
             positionClass: "toast-top-right",
             timeOut: "6000",
         });
-        errors.push("1");
+        return false;
     }
-    return errors;
+    return true;
 }
 function validarNotas(errors, form, min = 5) {
     var notaapl = $("#" + form + " input[name=ntaaplicacion]").val();
@@ -4169,11 +4309,7 @@ function lleFormEditNotas(res, origen, tbl_id) {
     hideEditNotas();
 }
 function hideEditNotas() {
-    $("#myform_update_notas input[type='text']").prop("disabled", true);
-    $("#myform_update_notas #nota_concepto").prop("disabled", true);
-    $("#btn_cambiar_notas").show();
-    $("#btn_update_notas").hide()
-    $("#btn_cancelar_notas").hide()
+    $("#myModal_act_details").modal("hide");
 
 }
 function llenarFormEditReq(res) {
@@ -4237,6 +4373,8 @@ function llenarModalDetailsReq(res) {
 }
 
 function llenarModalDetailsAct(res) {
+    $("#myform_update_notas").hide();
+    $("#myform_act_edit_docen").show();
     var name = res.user_created.name + " " + res.user_created.lastname
     $("#fullnameest").val(name)
     $("#myform_act_edit_docen input[name='actfecha']").val(res.created_at)
@@ -4272,29 +4410,28 @@ function llenarModalDetailsAct(res) {
     hideElement('btn_cam_nt_act');
     $("#cont_notas_ac").hide();
 
+   
     if (Object.keys(res.notas_f).length > 0) {
+        var auth = $("#auth_id").val();
 
+        $("#cont_notas_ac").show();
         $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
         $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);
         $("#lbl_not_etiac").text(res.notas_f.nota_etica);
         $("#ntaconcepto_text").val(res.notas_f.nota_concepto);
         $("#cont_notas_ac #lbldocevname").text(res.notas_f.docente);
-
-        showElement('cont_notas_ac');
-        console.log('ids', segmento_id, res.notas_f.segmento_id, res.notas_f.can_edit)
         if (segmento_id == res.notas_f.segmento_id && res.notas_f.can_edit) {
             showElement('btn_cam_nt_act');
         }
-
     } else {
-        if (res.notas != null && res.notas != '') {
+        /* if (res.notas != null && res.notas != '') {
             var notas = JSON.parse(res.notas);
             $("#lbl_not_conac").text(notas.ntaconocimiento);
             $("#lbl_not_aplac").text(notas.ntaaplicacion);
             $("#lbl_not_etiac").text(notas.ntaetica);
             $("#ntaconcepto_text").val(notas.ntaconcepto);
             showElement('cont_notas_ac');
-        }
+        } */
     }
 
     $("#actuacion_id").val(res.id);

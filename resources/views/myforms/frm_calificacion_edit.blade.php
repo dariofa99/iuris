@@ -47,37 +47,50 @@
                 }
             }
         @endphp
-        {!! Form::open(['url' => '/notas/update', 'method' => 'POST', 'id' => 'myform_update_notas']) !!}
+        <form action="{{ url('/notas/update') }}" method="POST" id="myform_update_notas" class="act-form">
+        @csrf
         <input type="text" style="display:none" value="{{ $expediente->id }}" name="exp_id">
         <input type="text" style="display:none" value="" name="origen" id="origen">
         <input type="text" style="display:none" value="" name="tbl_org_id" id="tbl_org_id">
         <input type="text" style="display:none" value="" disabled name="tipo_nota_id" id="tipo_nota_id">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box-body table-responsive no-padding">
-                    <table id="tbl_cierre_cas" class="table">
+        <div class="iuris-form-card">
+            <div class="iuris-form-header">
+                <div class="iuris-form-title">
+                    <span class="iuris-form-icon"><i class="fa fa-graduation-cap" aria-hidden="true"></i></span>
+                    <div>
+                        <h5>Edición de notas</h5>
+                        <small>Evaluado por: <i id="lbldocevname"></i></small>
+                    </div>
+                </div>
+            </div>
+            <div class="iuris-form-body">
+                @if ($periodo and $segmento)
+                    <div class="iuris-detail-header">
+                        <div>
+                            <small>Período</small>
+                            <div class="iuris-detail-title" id="lbl_periodo">{{ $periodo->prddes_periodo }}</div>
+                        </div>
+                        <div>
+                            <small>Corte</small>
+                            <div class="iuris-detail-title" id="lbl_segmento">{{ $segmento->segnombre }}</div>
+                        </div>
+                        <div>
+                            <small>Tipo de nota</small>
+                            <div class="iuris-badge" id="lbl_tipo">Parcial</div>
+                        </div>
+                    </div>
+                @endif
+                <div class="iuris-table-wrapper">
+                    <table id="tbl_cierre_cas" class="table iuris-detail-table">
                         <thead>
                             <tr>
-                                <th colspan="2">
-                                    <label for="">Evaluado por: <i id="lbldocevname"> </i></label>
-                                </th>
+                                <th scope="col">Componente</th>
+                                <th scope="col">Calificación</th>
                             </tr>
-                            <tr>
-                                <th>
-                                    @if ($periodo and $segmento)
-                                        <label id="lbl_periodo">
-                                            {{ $periodo->prddes_periodo }}
-                                        </label>
-                                        --
-                                        <label id="lbl_segmento">
-                                            {{ $segmento->segnombre }}
-                                        </label>
-                                    @endif
-                                </th>
-                                <th>Tipo Nota: <label id="lbl_tipo">Parcial</label> </th>
-                            </tr>
+                        </thead>
+                        <tbody>
                             <tr class="fil_nt_co">
-                                <th>Nota Conocimiento </th>
+                                <th>Nota Conocimiento</th>
                                 <td>
                                     <div class="input-group">
                                         <input type="text" class="form-control notat" disabled id="nota_conocimiento"
@@ -121,6 +134,7 @@
                                     </div>
                                 </td>
                             </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -138,37 +152,30 @@
                         currentUser()->hasRole('dirgral') ||
                         currentUser()->hasRole('diradmin'))
                 <div class="col-md-12">
-                    <div class="btn-group">
-                        <button  type="submit" class="btn btn-success btn-sm mb-1"
-                            id="btn_update_notas">Actualizar</button>
-                    </div>
-
-                    <div class="btn-group">
-                        <a  class="btn btn-warning btn-sm mb-1" id="btn_cancelar_notas">X</a>
-                    </div>
+                    <div class="iuris-form-footer">
+                        <button type="submit" class="btn-iuris-primary" id="btn_update_notas">
+                            <i class="fa fa-save" aria-hidden="true"></i> Actualizar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="btn_cancelar_notas">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar
+                        </button>
 
                     @if ($expediente->expestado_id == '2')
-                        <div class="btn-group">
-                            <a class="btn btn-primary btn-sm mb-1" id="btn_cambiar_notas">
-                                Cambiar notas
-                            </a>
-                        </div>
+                        <button type="button" class="btn btn-outline-info" id="btn_cambiar_notas">
+                            <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar notas
+                        </button>
                     @endif
                     @if ($expediente->expestado_id == '4')
-                        <div class="btn-group">
-                            <a href="#"  class="btn btn-warning btn-sm mb-1" data-value=""
-                                id="btn_tipo_update">
-                                Cambiar notas a:
-                            </a>
-                        </div>
+                        <button type="button" class="btn btn-outline-warning" data-value="" id="btn_tipo_update">
+                            Cambiar notas a:
+                        </button>
                     @endif
                     @if ($expediente->expestado_id == '2')
-                        <div class="btn-group">
-                            <a class="btn btn-danger btn-sm mb-1" id="btn_delete_notas">
-                                Eliminar las notas 
-                            </a>
-                        </div>
+                        <button type="button" class="btn btn-outline-danger" id="btn_delete_notas">
+                            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar las notas
+                        </button>
                     @endif
+                    </div>
                 </div>
             @else
                 <div class="col-md-12">
@@ -177,7 +184,7 @@
             @endif
         </div>
 
-        {!! Form::close() !!}
+        </form>
     @endslot
 @endcomponent
 <!-- /modal -->

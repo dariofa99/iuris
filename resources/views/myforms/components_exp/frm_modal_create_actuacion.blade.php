@@ -5,117 +5,73 @@
     @endslot
 
     @slot('title')
-        <label id="lbl_title_fract"></label>
+        Actuación
     @endslot
 
 
     @slot('body')
-      
+        <form method="POST" id="myformCreateAct" enctype="multipart/form-data" class="act-form">
+            @csrf
+            <input type="hidden" name="actestado_id" id="actestado_id" value="101">
+            <input type="hidden" name="actdocnompropio" value=".">
+            <input type="hidden" name="actdocruta" value=".">
 
-        {!! Form::open(['method' => 'post', 'id' => 'myformCreateAct']) !!}
-        <div class="row">
-
-
-
-            <div class="form-group">
-                {!! Form::hidden('actestado_id', '101', ['id' => 'actestado_id', 'class' => 'form-control', 'readonly']) !!}
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('Código expediente') !!}
-                    {!! Form::text('actexpid', $expediente->expid, ['id' => 'actexpid', 'class' => 'form-control', 'readonly']) !!}
-                </div>
-            </div>
-
-
-
-
-            <!-- 					<div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
-                     {!! Form::label('Estado de la actuación') !!}
-                     {!! Form::select(
-                         'expestado_id',
-                         [
-                             '1' => 'Enviado a revisión',
-                             '2' => 'Solicitud de modificaciones',
-                             '3' => 'Enviado con correcciones',
-                             '4' => 'Aprobado',
-                         ],
-                     
-                         null,
-                         ['placeholder' => 'Selecciona...', 'class' => 'form-control', 'readonly'],
-                     ) !!}
+                        <label for="actexpid">Código expediente</label>
+                        <input type="text" name="actexpid" id="actexpid" class="form-control" value="{{ $expediente->expid }}" readonly>
                     </div>
-                   </div> -->
-
-
-            <div class="col-md-6">
-                {!! Form::label('Fecha: ') !!}
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div> 
-                    {!! Form::text('actfecha', fechaActual(), [
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                        'data-mask',
-                        'readonly',
-                    ]) !!}
                 </div>
-                <!-- /.input group -->
-            </div>
 
-
-
-
-
-
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label id="lbl_type_actuacion">Nueva actuación</label>
-                    {!! Form::text('actnombre', null, ['class' => 'form-control required', 'maxlength' => '60']) !!}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="actfecha">Fecha</label>
+                        <div class="act-date-field">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <input type="text" name="actfecha" id="actfecha" class="form-control" value="{{ fechaActual() }}" required data-inputmask="'alias': 'yyyy/mm/dd'" data-mask readonly>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            @if (currentUser()->hasRole('docente') || $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
+
                 <div class="col-md-12">
                     <div class="form-group">
-                        {!! Form::label('fecha_limit', 'Fecha limite de entrega', ['id' => 'fecha']) !!}
-                        {!! Form::date('fecha_limit',null, ['class' => 'form-control required', 'maxlength' => '60',"min"=> \Carbon\Carbon::now()->addDay(1)->format("Y-m-d")]) !!}
+                        <label for="actnombre" id="lbl_type_actuacion">Nueva actuación</label>
+                        <input type="text" name="actnombre" id="actnombre" class="form-control required" maxlength="60">
                     </div>
                 </div>
-            @endif 
 
-            <div class="col-md-12">
-                <div class="form-group">
-                    {!! Form::label('Descripción: ') !!}
-                    {!! Form::textarea('actdescrip', null, ['class' => 'form-control required', 'maxlength' => '2000', 'rows' => 5]) !!}
-                </div>
-            </div>
-            <div class="col-md-12">
-                {!! form::label('Archivo', 'Subir archivo') !!}
-                <div class="form-group">
-                    {!! form::file('actdocnomgen', null, ['class' => 'form-control required', 'id' => 'actdocnomgen','required']) !!}
-                    {!! form::hidden('actdocnompropio', '.', ['class' => 'form-control']) !!}
-                    {!! form::hidden('actdocruta', '.', ['class' => 'form-control']) !!}
-                </div>
-            </div>
+                @if (currentUser()->hasRole('docente') || $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber)
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="fecha_limit" id="fecha">Fecha límite de entrega</label>
+                            <input type="date" name="fecha_limit" id="fecha_limit" class="form-control required" maxlength="60" min="{{ \Carbon\Carbon::now()->addDay(1)->format('Y-m-d') }}">
+                        </div>
+                    </div>
+                @endif
 
-            <div class="col-md-12">
-                <div class="form-group">
-                    <br>
-                    <button id="myformCreateActButton" class="btn btn-primary btn-sm" type="button">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="actdescrip">Descripción</label>
+                        <textarea name="actdescrip" id="actdescrip" class="form-control required" maxlength="2000" rows="5"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="actdocnomgen">Subir archivo</label>
+                        <input type="file" name="actdocnomgen" id="actdocnomgen" class="form-control required" required>
+                    </div>
+                </div>
+
+                <div class="col-md-12 act-form-actions">
+                    <button id="myformCreateActButton" class="btn-act-create" type="button">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
                         Crear actuación
                     </button>
-
                 </div>
             </div>
-        </div>
-        {!! Form::close() !!}
+        </form>
     @endslot
 @endcomponent
 <!-- /modal -->

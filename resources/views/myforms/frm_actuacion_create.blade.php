@@ -9,8 +9,7 @@
                     @if ($expediente->exptipoproce_id != '1')
                         <button type="button"
                             @if (currentUser()->hasRole('docente') || $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber) id="btn_new_act_doct" @else id="btn_new_act" @endif
-                            class="btn btn-primary btn-sm btn_new_act" data-toggle="modal"
-                            data-titulo_modal="Nueva actuación" data-target="#myModal_act_create">Nueva actuación</button>
+                            class="btn btn-primary btn-sm btn_new_act">Nueva actuación</button>
                     @endif
                     <button type="button" class="btn btn-default btn-sm btn_new_act" data-toggle="modal"
                         data-target="#myModal_act_create" data-titulo_modal="Nuevo anexo" id="btn_new_anex">

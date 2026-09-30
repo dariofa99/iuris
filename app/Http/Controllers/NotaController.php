@@ -57,8 +57,8 @@ class NotaController extends Controller
     {
         $segmentoAct = $this->segmentosService->getSegmentoActivo();
         $periodoAct = $this->periodosService->getPeriodoActivo();
-        
-      //  dd($periodoAct->segmentos);
+
+        //  dd($periodoAct->segmentos);
         // $user = User::where('idnumber',3030)->first();
         if (currentUser()->hasRole("estudiante")) {
             $user = User::where('idnumber', auth()->user()->idnumber)->first();
@@ -244,7 +244,7 @@ class NotaController extends Controller
         $notas = [];
         if ($request->origen == 2) {
             $actuacion = Actuacion::find($id);
-            $notas = $actuacion->get_notas();
+            $notas = $actuacion->getNotas();
         }
         if ($request->origen == 1) {
             $expediente = Expediente::find($id);
@@ -254,9 +254,6 @@ class NotaController extends Controller
                 $days = \Carbon\Carbon::parse($nota_final['nota_conocimiento']['created_at'])->diffInDays(Carbon::now());
                 //return response()->json($days);
                 $can_edit = false;
-
-
-
                 if (
                     $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber || currentUser()->hasRole('amatai') //|| currentUser()->hasRole('dirgral')
                 ) {
@@ -268,7 +265,6 @@ class NotaController extends Controller
                 if ($days <= 1 and $can_edit) {
                     $can_edit = true;
                 }
-
                 $notas = [
                     "nota_conocimiento" => number_format($nota_final['nota_conocimiento']['nota'], 1, '.', '.'),
                     "nota_conocimientoid" => $nota_final['nota_conocimiento']['id'],
@@ -338,26 +334,22 @@ class NotaController extends Controller
 
         if ($request->ajax()) {
             $expediente = Expediente::find($request->exp_id);
-            foreach ($request->nota as $key_1 => $nota_r) {
-                foreach ($request->nota_id as $key_2 => $nota_id) {
-                    if ($key_1 == $key_2) {
-                        $nota = Nota::find($nota_id);
-                        $nota->nota = $nota_r;
-                        $nota->docidnumber = \Auth::user()->idnumber;
-                        $nota->tpntid = $request->tipo_nota_id;
-                        if ($nota->tbl_org_id == null) $nota->tbl_org_id = $request->tbl_org_id;
+            foreach ($request->nota_id as $key_1 => $nota_id) {
 
-                        $nota->save();
-                        $ex_id = $nota->expidnumber;
-                    }
-                }
+                $nota = Nota::find($nota_id);
+                $nota->nota = $request->nota[$key_1];
+                //$nota->docidnumber = \Auth::user()->idnumber;
+                $nota->tpntid = $request->tipo_nota_id;
+                $nota->tpntid  = $request->tipo_nota_id;
+                if ($nota->tbl_org_id == null) $nota->tbl_org_id = $request->tbl_org_id;
+                $nota->save();
             }
-            $final = number_format($expediente->get_nota_corte('final')['nota'], 1, '.', '.');
+           // $final = number_format($expediente->get_nota_corte('final')['nota'], 1, '.', '.');
 
             $response = [
-                "nota_final" => $final,
+               // "nota_final" => $final,
                 'user_name' => \Auth::user()->name,
-                "notas_caso" => view("myforms.frm_calificacion_create_ajax_ln", compact('expediente'))->render(),
+                //"notas_caso" => view("myforms.frm_calificacion_create_ajax_ln", compact('expediente'))->render(),
             ];
 
             return response()->json($response);
@@ -585,8 +577,8 @@ class NotaController extends Controller
         $data_user[] = $nota_ofi;
         $request['idnumber'] = $user->idnumber;
         $asistencia = $this->turnosService->getAsistencia($request);
-//dd($asistencia);
-        
+        //dd($asistencia);
+
         if (count($asistencia) > 0) {
             $nota = $asistencia[0]->nota_proporcional ?? 0;
             $nota = is_numeric($nota) ? floatval($nota) : 0;

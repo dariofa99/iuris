@@ -1,8 +1,4 @@
 @component('components.b4.modal_large')
-
-
-
-
     @slot('trigger')
         myModal_act_edit_docen
     @endslot
@@ -11,265 +7,162 @@
         Editar docente
     @endslot
 
-
     @slot('body')
         @section('msg-contenido')
             Registrado
         @endsection
         @include('msg.ajax.success')
 
-        {!! Form::open(['id' => 'myform_act_edit_docente', 'files' => true]) !!}
-        <div class="row">
-
+        <form method="POST" id="myform_act_edit_docente" enctype="multipart/form-data" class="act-form act-edit-form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
             <input type="hidden" name="idact" id="idact">
-            <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('Código expediente') !!}
-                    {!! Form::text('actexpid', $expediente->expid, ['id' => 'actexpid', 'class' => 'form-control', 'readonly']) !!}
-                </div>
-            </div>
-            <div class="col-sm-6">
-                {!! Form::label('Fecha creación: ') !!}
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">
-                            <i class="fa fa-calendar"></i>
-                        </span>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="actexpid">Código expediente</label>
+                        <input type="text" name="actexpid" id="actexpid" class="form-control"
+                            value="{{ $expediente->expid }}" readonly>
                     </div>
-                    {!! Form::text('actfecha', null, [
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                        'data-mask',
-                        'readonly',
-                    ]) !!}
                 </div>
-                <!-- /.input group -->
-            </div>
-
-
-
-
-            <div class="col-md-12">
-                <div class="form-group">
-                    {!! Form::label('Actuación') !!}
-                    {!! Form::text('actnombre', null, [
-                        'id' => 'actnombre_cr',
-                        'class' => 'form-control required',
-                        'maxlength' => '225',
-                        'readonly',
-                    ]) !!}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="actfecha">Fecha de creación</label>
+                        <div class="act-date-field">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <input type="text" name="actfecha" id="actfecha" class="form-control" required
+                                data-inputmask="'alias': 'yyyy/mm/dd'" data-mask readonly>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-
-
-            <div class="col-md-12">
-                <div class="form-group">
-                    {!! Form::label('Descripción: ') !!}
-                    {!! Form::textarea('actdescrip', null, [
-                        'id' => 'actdescrip',
-                        'class' => 'form-control required',
-                        'maxlength' => '225',
-                        'rows' => 4,
-                        'readonly',
-                    ]) !!}
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="actnombre_cr">Actuación</label>
+                        <input type="text" name="actnombre" id="actnombre_cr" class="form-control required" maxlength="225"
+                            readonly>
+                    </div>
                 </div>
-            </div>
 
-
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('Estado de la actuación') !!}
-                    {!! Form::select(
-                        'actestado_id',
-                        [
-                            '102' => 'Realizar correcciones',
-                    
-                            '104' => 'Aprobar',
-                    
-                            '234' => 'Anular',
-                        ],
-                    
-                        null,
-                        [
-                            'id' => 'actestado',
-                            'placeholder' => 'Selecciona...',
-                            'class' => 'form-control required',
-                            'required' => 'required',
-                        ],
-                    ) !!}
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="actdescrip">Descripción</label>
+                        <textarea name="actdescrip" id="actdescrip" class="form-control required" maxlength="225" rows="4" readonly></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Subir archivo </label>
-                    <div class="con-btn">
 
-                        {!! Form::file('actdocnomgen', ['class' => 'input', 'id' => 'actdocnomgen']) !!}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="actestado">Estado de la actuación</label>
+                        <select name="actestado_id" id="actestado" class="form-control required" required>
+                            <option value="">Selecciona...</option>
+                            <option value="102">Realizar correcciones</option>
+                            <option value="104">Aprobar</option>
+                            <option value="234">Anular</option>
+                        </select>
+                    </div>
+                </div>
 
-                        {{-- <label for="actdocnomgen"> <i class="fa fa-upload"> </i> <span  id="label-upload"> Subir Archivo </span></label>
-                <label for="" id="lab_doc_file"><i></i></label>  --}}
-
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="actdocnomgen">Subir archivo</label>
+                        <input type="file" name="actdocnomgen" id="actdocnomgen" class="input form-control">
 
                     </div>
-                    <label class="label-alert bg-red" id="label-alert-doc-biblioteca">Debe subir un archivo.!</label>
-
                 </div>
-            </div>
- 
-            <div class="col-md-12">
-                <div class="form-group">
-                    {!! Form::label('Fecha límite de entrega:') !!}
-                    {!! Form::date('fecha_limit_doc', null, [
-                        'min' => date('Y-m-d'),
-                        'id' => 'fecha_limit_doc',
-                        'class' => 'form-control required',
-                        'maxlength' => '225',
-                        'disabled',
-                    ]) !!}
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="fecha_limit_doc">Fecha límite de entrega</label>
+                        <input required type="date" name="fecha_limit_doc" id="fecha_limit_doc" class="form-control required"
+                            maxlength="225" min="{{ date('Y-m-d') }}" disabled>
+                    </div>
+                    <p id="error-message" class="act-edit-error" style="display: none;">La fecha debe ser superior al día
+                        actual.</p>
                 </div>
-                <p id="error-message" style="color: red; display: none;">La fecha debe ser superior al día actual.</p>
 
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <div class="col-md-12">
-                <div class="form-group">
-                    {!! Form::label('Recomendación: ') !!}
-                    {!! Form::textarea('actdocenrecomendac', null, [
-                        'id' => 'actdocenrecomendac',
-                        'class' => 'form-control required',
-                        'maxlength' => '10000',
-                        'rows' => 4,
-                    ]) !!}
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="actdocenrecomendac">Recomendación</label>
+                        <textarea required name="actdocenrecomendac" id="actdocenrecomendac" class="form-control required" maxlength="10000"
+                            rows="4"></textarea>
+                    </div>
                 </div>
-            </div>
 
-
-
-
-
-            <div id="formAddNotas" class="addNotasAct row" style="display: none">
-                @if ($segmento and $periodo)
-                    @if ($segmento->fecha_fin >= date('Y-m-d'))
-                        <div class="col-md-4">
-                            {!! Form::hidden('orgntsid', 2, ['class' => 'form-control required', 'id' => 'orgntsid']) !!}
-                            {!! Form::hidden('tpntid', 1, ['class' => 'form-control required', 'id' => 'tpntid']) !!}
+                <div id="formAddNotas" class="addNotasAct row act-grade-panel" style="display: none">
+                    @if ($segmento and $periodo)
+                        @if ($segmento->fecha_fin >= date('Y-m-d'))
+                            <div class="col-md-12 iuris-section-heading">
+                                <h4><i class="fa fa-graduation-cap" aria-hidden="true"></i> Registro de calificación</h4>
+                            </div>
+                            <input required disabled type="hidden" name="orgntsid" value="2" class="form-control required"
+                                id="orgntsid">
+                            <input type="hidden" name="tpntid" value="1" class="form-control required" id="tpntid">
                             @if ($periodo and $segmento)
-                                {!! Form::hidden('segid', $segmento->id, ['class' => 'form-control required', 'id' => 'segid']) !!}
-                                {!! Form::hidden('perid', $periodo->id, ['class' => 'form-control required', 'id' => 'perid']) !!}
+                                <input type="hidden" name="segid" value="{{ $segmento->id }}"
+                                    class="form-control required" id="segid">
+                                <input type="hidden" name="perid" value="{{ $periodo->id }}"
+                                    class="form-control required" id="perid">
                             @endif
-                            <div class="form-group">
-                                {!! Form::label('Nota conocimiento') !!}
-                                {!! Form::text('ntaconocimiento', null, [
-                                    'class' => 'form-control required',
-                                    'id' => 'ntaconocimiento',
-                                    'data-inputmask' => "'mask': ['9.9']",
-                                    'data-mask' => '',
-                                ]) !!}
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="ntaconocimiento">Nota conocimiento</label>
+                                    <input type="text" name="ntaconocimiento" id="ntaconocimiento"
+                                        class="form-control required" data-inputmask="'mask': ['9.9']" data-mask=""
+                                        required disabled>
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                {!! Form::label('Nota aplicación') !!}
-                                {!! Form::text('ntaaplicacion', null, [
-                                    'class' => 'form-control required',
-                                    'id' => 'ntaaplicacion',
-                                    'data-inputmask' => "'mask': ['9.9']",
-                                    'data-mask' => '',
-                                ]) !!}
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="ntaaplicacion">Nota aplicación</label>
+                                    <input type="text" name="ntaaplicacion" id="ntaaplicacion"
+                                        class="form-control required" data-inputmask="'mask': ['9.9']" data-mask=""
+                                        required disabled>
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                {!! Form::label('Nota Ética.') !!}
-                                {!! Form::text('ntaetica', null, [
-                                    'class' => 'form-control required',
-                                    'id' => 'ntaetica',
-                                    'data-inputmask' => "'mask': '9.9'",
-                                    'data-mask' => '',
-                                ]) !!}
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="ntaetica">Nota ética</label>
+                                    <input type="text" name="ntaetica" id="ntaetica" class="form-control required"
+                                        data-inputmask="'mask': '9.9'" data-mask="" required disabled>
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                {!! Form::label('Concepto nota: ') !!}
-                                {!! Form::textarea('ntaconcepto', null, [
-                                    'class' => 'form-control required',
-                                    'maxlength' => '100000',
-                                    'id' => 'ntaconcepto',
-                                ]) !!}
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="ntaconcepto">Concepto de la nota</label>
+                                    <textarea required disabled name="ntaconcepto" id="ntaconcepto" class="form-control required" maxlength="100000"
+                                        rows="4"></textarea>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-md-12">
+                                <div class="alert alert-warning">No se puede evaluar si no hay un corte activo.</div>
+                            </div>
+                        @endif
                     @else
-					<div class="col-md-12">
-                        <div class="alert alert-warning">
-                            No se puede evaluar si ho hay un corte activo
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">No hay un periodo o corte activo.</div>
                         </div>
-					</div>
                     @endif
+                </div>
+
+                @if ($periodo and $segmento)
+                    <div class="col-md-12 act-form-actions">
+                        <button id="btn_act_edit_docen" type="button" class="btn-act-create">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                            Actualizar
+                        </button>
+                    </div>
                 @else
-                    <div class="alert alert-warning">
-                        No hay un periodo o corte activo
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">No existe un periodo o un segmento activo.</div>
                     </div>
                 @endif
-
             </div>
+        </form>
 
+    
 
-
-
-
-
-
-
-
-
-            @if ($periodo and $segmento)
-                <div class="col-md-12" align="right">
-                    <div class="form-group">
-                        <br>
-                        {!! link_to(
-                            '#',
-                            'Actualizar',
-                            $attributes = ['id' => 'btn_act_edit_docen', 'type' => 'button', 'class' => 'btn btn-primary'],
-                            $secure = null,
-                        ) !!}
-                    </div>
-                </div>
-            @else
-                No existe un periodo o un segmento activo
-            @endif
-
-
-        </div>
-
-        {!! Form::close() !!}
     @endslot
 @endcomponent
 <!-- /modal -->
