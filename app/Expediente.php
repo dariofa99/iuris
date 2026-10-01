@@ -34,7 +34,7 @@ class Expediente extends Model
      * @var string
      */
     protected $table = 'expedientes';
-    private $origen = 1;
+    protected $origen = 1;
     private $disk = 'exp_files';
 
     /**

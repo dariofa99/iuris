@@ -2004,9 +2004,9 @@ $(document).ready(function () {
     });
 
     $("#myformCreateActButton").on("click", async function (e) {
-        var errors = validateForm('myformCreateAct');
+        var errors = validateForms(document.getElementById('myformCreateAct'));
 
-        if (errors.length <= 0) {
+        if (errors) {
 
             const body = new FormData(document.getElementById('myformCreateAct'));
             const archivo = body.get('actdocnomgen');

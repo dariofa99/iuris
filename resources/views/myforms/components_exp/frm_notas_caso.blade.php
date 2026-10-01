@@ -1,6 +1,6 @@
 <div class="row nota-caso-component">
     
-    @if (count($expediente->getNotas()) >= 0)
+    @if (count($expediente->getNotas()) > 0)
 
         @php
             $notas = $expediente->getNotas();

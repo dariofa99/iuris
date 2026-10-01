@@ -37,7 +37,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="actnombre" id="lbl_type_actuacion">Nueva actuación</label>
-                        <input type="text" name="actnombre" id="actnombre" class="form-control required" maxlength="60">
+                        <input type="text" name="actnombre" id="actnombre" class="form-control required" maxlength="60" required>
                     </div>
                 </div>
 
@@ -45,7 +45,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="fecha_limit" id="fecha">Fecha límite de entrega</label>
-                            <input type="date" name="fecha_limit" id="fecha_limit" class="form-control required" maxlength="60" min="{{ \Carbon\Carbon::now()->addDay(1)->format('Y-m-d') }}">
+                            <input type="date" name="fecha_limit" id="fecha_limit" class="form-control required" maxlength="60" min="{{ \Carbon\Carbon::now()->addDay(1)->format('Y-m-d') }}" required>
                         </div>
                     </div>
                 @endif
@@ -53,14 +53,14 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="actdescrip">Descripción</label>
-                        <textarea name="actdescrip" id="actdescrip" class="form-control required" maxlength="2000" rows="5"></textarea>
+                        <textarea name="actdescrip" id="actdescrip" class="form-control required" maxlength="2000" rows="5" required></textarea>
                     </div>
                 </div>
 
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="actdocnomgen">Subir archivo</label>
-                        <input type="file" name="actdocnomgen" id="actdocnomgen" class="form-control required" required>
+                        <input type="file" name="actdocnomgen" id="actdocnomgen" class="form-control required" {{currentUser()->hasRole('estudiante') ? 'required' : ''}}  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png">
                     </div>
                 </div>
 

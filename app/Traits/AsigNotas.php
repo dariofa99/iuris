@@ -360,6 +360,7 @@ trait AsigNotas
         DB::raw("concat(docente.name,' ',docente.lastname) as docente")
       )
       ->where("notas.tbl_org_id", $this->id)
+      ->where("notas.orgntsid", $this->origen)
       ->get();
     $notasFormateadas = [];
     foreach ($notas as $nota) {
