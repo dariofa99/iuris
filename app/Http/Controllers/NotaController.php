@@ -106,7 +106,7 @@ class NotaController extends Controller
         if ($request->ajax()) {
             $response = 0;
 
-           // return response()->json($request->all());
+            // return response()->json($request->all());
 
             $expediente  = Expediente::where('expid', $request->expid)->first();
             $expediente->estudiante;
@@ -266,7 +266,7 @@ class NotaController extends Controller
                     $can_edit = true;
                 }
                 $notas = [
-                  /*   "nota_conocimiento" => number_format($nota_final['nota_conocimiento']['nota'], 1, '.', '.'),
+                    /*   "nota_conocimiento" => number_format($nota_final['nota_conocimiento']['nota'], 1, '.', '.'),
                     "nota_conocimientoid" => $nota_final['nota_conocimiento']['id'],
                     "nota_etica" => number_format($nota_final['nota_etica']['nota'], 1, '.', '.'),
                     'nota_eticaid' => $nota_final['nota_etica']['id'],
@@ -283,15 +283,13 @@ class NotaController extends Controller
                     "tipo_id" => $nota_final['nota_aplicacion']['tipo_id'],
                     "segmento_id" => $nota_final['segmento_id'],
                     "docevname" => $nota_final['nota_conocimiento']['docevname'],
-                    "days" => $nota_final['nota_conocimiento']['created_at'] */
-                ];
+                    "days" => $nota_final['nota_conocimiento']['created_at'] */];
 
                 //  $nota_final['nota_etica']['docidnumber'] == \Auth::user()->idnumber ? $notas["can_edit"] = true:'';
-
-
+                $notas = $expediente->getNotas();
             } else {
                 $notas = $expediente->getNotas();
-                if ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber) $notas["can_edit"] = true;
+                //if ($expediente->getDocenteAsig()->idnumber == currentUser()->idnumber) $notas["can_edit"] = true;
             }
         }
         if ($request->origen == 3) {
@@ -344,10 +342,10 @@ class NotaController extends Controller
                 if ($nota->tbl_org_id == null) $nota->tbl_org_id = $request->tbl_org_id;
                 $nota->save();
             }
-           // $final = number_format($expediente->get_nota_corte('final')['nota'], 1, '.', '.');
+            // $final = number_format($expediente->get_nota_corte('final')['nota'], 1, '.', '.');
 
             $response = [
-               // "nota_final" => $final,
+                // "nota_final" => $final,
                 'user_name' => \Auth::user()->name,
                 //"notas_caso" => view("myforms.frm_calificacion_create_ajax_ln", compact('expediente'))->render(),
             ];
