@@ -1,11 +1,11 @@
-@component('components.b4.modal_medium')
+@component('components.b4.modal_large')
 
     @slot('trigger')
         myModal_edit_notas
     @endslot
 
     @slot('title')
-        Editando Notas:
+       
     @endslot
 
 
@@ -65,16 +65,16 @@
             </div>
             <div class="iuris-form-body">
                 @if ($periodo and $segmento)
-                    <div class="iuris-detail-header">
-                        <div>
+                    <div class="row iuris-detail-header mb-2">
+                        <div class="col-md-6 col-xs-12">
                             <small>Período</small>
                             <div class="iuris-detail-title" id="lbl_periodo">{{ $periodo->prddes_periodo }}</div>
                         </div>
-                        <div>
+                        {{-- <div>
                             <small>Corte</small>
                             <div class="iuris-detail-title" id="lbl_segmento">{{ $segmento->segnombre }}</div>
-                        </div>
-                        <div>
+                        </div> --}}
+                        <div class="col-md-4 col-xs-12">
                             <small>Tipo de nota</small>
                             <div class="iuris-badge" id="lbl_tipo">Parcial</div>
                         </div>
@@ -151,7 +151,7 @@
                         currentUser()->hasRole('amatai') ||
                         currentUser()->hasRole('dirgral') ||
                         currentUser()->hasRole('diradmin'))
-                <div class="col-md-12">
+                {{-- <div class="col-md-12">
                     <div class="iuris-form-footer">
                         <button type="submit" class="btn-iuris-primary" id="btn_update_notas">
                             <i class="fa fa-save" aria-hidden="true"></i> Actualizar
@@ -176,7 +176,7 @@
                         </button>
                     @endif
                     </div>
-                </div>
+                </div> --}}
             @else
                 <div class="col-md-12">
                     <label>No tiene permisos para cambiar o eliminar las notas</label>

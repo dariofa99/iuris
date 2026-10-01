@@ -399,6 +399,243 @@
   box-shadow: 0 6px 16px rgba(0, 105, 117, 0.28);
 }
 
+#myModal_add_nota_final_expedientes .modal-content {
+  overflow: hidden;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 18px 48px rgba(23, 52, 56, 0.2);
+}
+
+#myModal_add_nota_final_expedientes .modal-header {
+  align-items: center;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 0;
+  color: #fff;
+  background: var(--act-accent, #006975);
+}
+
+#myModal_add_nota_final_expedientes .modal-title {
+  margin: 0;
+  color: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+#myModal_add_nota_final_expedientes .close {
+  color: #fff;
+  opacity: 0.85;
+  text-shadow: none;
+}
+
+#myModal_add_nota_final_expedientes .modal-body {
+  padding: 1.35rem 1.4rem 1.5rem;
+  background: #fff;
+}
+
+.grade-form {
+  --act-accent: #006975;
+  --act-accent-hover: #005661;
+  --act-ink: #3a5258;
+  --act-muted: #53666b;
+  --act-border: #dce5e7;
+  --act-soft: #f7fafb;
+  --act-accent-soft: #e8f0f1;
+  padding: 0;
+}
+
+.grade-form-context {
+  margin-bottom: 1.35rem;
+  padding: 0.9rem 1rem;
+  border-left: 3px solid var(--act-accent);
+  border-radius: 0 7px 7px 0;
+  background: var(--act-soft);
+}
+
+.grade-form-eyebrow {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--act-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.grade-form-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.grade-form-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #d4e4e6;
+  border-radius: 5px;
+  color: var(--act-accent);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.grade-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+}
+
+.grade-form .form-group {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.grade-form-score .form-control {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.grade-form-concept .form-control {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.grade-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.15rem;
+  margin-top: 1.15rem;
+  border-top: 1px solid var(--act-border);
+}
+
+.grade-form-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-bottom: 1.2rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #f1dba8;
+  border-radius: 6px;
+  color: #765b21;
+  background: #fff9e9;
+  font-size: 0.9rem;
+}
+
+.nota-caso-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+
+.btn-nota-caso {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #006975;
+  border-radius: 6px;
+  color: #fff;
+  background: #006975;
+  box-shadow: 0 2px 6px rgba(0, 105, 117, 0.15);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.btn-nota-caso:hover,
+.btn-nota-caso:focus {
+  border-color: #005661;
+  color: #fff;
+  background: #005661;
+  box-shadow: 0 4px 10px rgba(0, 105, 117, 0.22);
+  text-decoration: none;
+}
+
+.btn-nota-caso:focus {
+  outline: 3px solid rgba(0, 105, 117, 0.18);
+  outline-offset: 2px;
+}
+
+.btn-nota-caso--disabled,
+.btn-nota-caso--disabled:hover,
+.btn-nota-caso--disabled:focus {
+  border-color: #dce5e7;
+  color: #65777b;
+  background: #f2f5f5;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.nota-caso-status {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.65rem;
+  border-left: 3px solid #006975;
+  border-radius: 0 5px 5px 0;
+  color: #36585d;
+  background: #e8f0f1;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.nota-caso-status i {
+  color: #006975;
+}
+
+.nota-caso-view {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #dce5e7;
+  border-radius: 5px;
+  color: #006975;
+  background: #fff;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.nota-caso-view:hover,
+.nota-caso-view:focus {
+  border-color: #006975;
+  color: #005661;
+  background: #f5fafb;
+  text-decoration: none;
+}
+
+@media (max-width: 575.98px) {
+  #myModal_add_nota_final_expedientes .modal-header,
+  #myModal_add_nota_final_expedientes .modal-body {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .grade-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .grade-form-actions,
+  .grade-form-actions .btn-act-create {
+    width: 100%;
+  }
+}
+
 @media (max-width: 575.98px) {
   .act-form-actions {
     justify-content: stretch;
@@ -5960,4 +6197,10 @@ RESPONSIVE
         grid-template-columns: 1fr;
     }
 
+}
+
+.nota-caso-component{
+  border-top: 1px solid #dce6e7;
+  border-radius: 0px;
+  margin-top: 10px !important;
 }

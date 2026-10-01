@@ -2905,23 +2905,32 @@ $(document).ready(function () {
 
     });
     $("#btn_add_nota").on("click", async function () {
-        var errors = validateForm("myform_add_nota_final_expedientes");
-        errors = validarNotas(errors, 'myform_add_nota_final_expedientes');
-        if (errors.length <= 0) {
+        var isvalid = validateForms(document.getElementById("myform_add_nota_final_expedientes"));
+
+        if (isvalid) {
             let request = convertFormToJSON("myform_add_nota_final_expedientes");
-            $("#wait").show();
+            // $("#wait").show();
             let response = await expedientesService.storeNotas(request);
             toastr.success("Notas agregadas con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
-            window.location.reload(true);
+            // window.location.reload(true);
         } else {
             toastr.error("Hay campos que son obligatorios", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
+
         }
+
+        return false;
+
+
+        errors = validarNotas(errors, 'myform_add_nota_final_expedientes');
+        if (errors.length <= 0) {
+        }
+
     });
 
     $("#btn_edit_nt_exp").on("click", async function () {
@@ -4253,45 +4262,45 @@ function lleFormEditNotas(res, origen, tbl_id) {
     //$("#myform_update_notas input[name='tbl_org_id']").val(res.nota_conceptoid);
     $("#myform_update_notas #origen").val(origen);
     $("#myform_update_notas #tbl_org_id").val(tbl_id);
-    $("#myform_update_notas #lbldocevname").text(res.docevname);
+    $("#myform_update_notas #lbldocevname").text(res.docente);
 
     $("#myModal_edit_notas #btns_edit_notas").hide();
     $("#wait").css("display", "none");
-    if (res.encontrado) {
-        $("#myModal_edit_notas #lbl_periodo").text(res.periodo);
-        $("#myModal_edit_notas #lbl_segmento").text(res.segmento);
-        $("#myModal_edit_notas #lbl_tipo").text(res.tipo);
-        $("#myModal_edit_notas #tipo_nota_id").val(res.tipo_id);
-        var tipo = res.tipo_id == "1" ? "Parcial" : "Definitiva";
-        $("#btn_tipo_update").text("Cambiar notas a: " + tipo);
-        var tipo_id = res.tipo_id == "1" ? "2" : "1";
 
-        if (res.can_edit) {
+    $("#myModal_edit_notas #lbl_periodo").text(res.periodo);
+    $("#myModal_edit_notas #lbl_segmento").text(res.segmento);
+    $("#myModal_edit_notas #lbl_tipo").text(res.nota_tipo_text);
+    $("#myModal_edit_notas #tipo_nota_id").val(res.nota_tipo);
+    var tipo = res.nota_tipo_text;
+    $("#btn_tipo_update").text("Cambiar notas a: " + tipo);
+    var tipo_id = res.nota_tipo;
+
+    if (res.can_edit) {
 
 
-            //  if (origen == 1 && $("#expestado_id").val() == "2") {
-            $("#btn_tipo_update").attr("data-value", tipo_id);
-            $("#btn_tipo_update").show();
-            $("#btn_tipo_update").attr(
-                "id",
-                "btn_tipo_nota_update"
-            );
-            //    }
+        //  if (origen == 1 && $("#expestado_id").val() == "2") {
+        $("#btn_tipo_update").attr("data-value", tipo_id);
+        $("#btn_tipo_update").show();
+        $("#btn_tipo_update").attr(
+            "id",
+            "btn_tipo_nota_update"
+        );
+        //    }
 
-            $("#myModal_edit_notas #btns_edit_notas").show();
-            $("#btn_cambiar").attr("id", "btn_cambiar_notas");
-            $("#btn_delete").attr("id", "btn_delete_notas");
-            $("#btn_update").attr("id", "btn_update_notas");
-        } else {
-            $("#myModal_edit_notas #btns_edit_notas").remove();
-            $("#btn_cambiar_notas").attr("id", "btn_cambiar");
-            $("#btn_delete_notas").attr("id", "btn_delete");
-            $("#btn_update_notas").attr("id", "btn_update");
-            //$("#btn_tipo_nota_update").attr('id', 'btn_update_tipo');
-        }
-        $("#myModal_edit_notas").modal("show");
+        $("#myModal_edit_notas #btns_edit_notas").show();
+        $("#btn_cambiar").attr("id", "btn_cambiar_notas");
+        $("#btn_delete").attr("id", "btn_delete_notas");
+        $("#btn_update").attr("id", "btn_update_notas");
+        // } else {
+        /*    $("#myModal_edit_notas #btns_edit_notas").remove();
+           $("#btn_cambiar_notas").attr("id", "btn_cambiar");
+           $("#btn_delete_notas").attr("id", "btn_delete");
+           $("#btn_update_notas").attr("id", "btn_update"); */
+        //$("#btn_tipo_nota_update").attr('id', 'btn_update_tipo');
+        // }
+
     }
-
+    $("#myModal_edit_notas").modal("show");
     if (origen == 3) {
         $("#myModal_edit_notas .fil_nt_co input[type='text']")
             .attr("type", "hidden")
@@ -4388,7 +4397,7 @@ function llenarModalDetailsAct(res) {
     $("#fecha_limit_d").val(res.fecha_limit);
     var fecha = moment(res.updated_at);
     var fechaFormateada = fecha.format('D [de] MMMM [de] YYYY');
-    var text = `<br><small>${res.docente_update.name} ${res.docente_update.lastname} - ${fechaFormateada}</small>`;
+    var text = `<span>${res.docente_update.name} ${res.docente_update.lastname} - ${fechaFormateada}</span>`;
     $("#label_nombre_docente").html(text);
     var rutadescarga = "/actpdfdownload/" + res.id + "/estudiante";
     if (res.actdocnompropio != '' && res.actdocruta != "" && res.actdocnompropio != null && res.actdocruta != null) {
@@ -4410,7 +4419,7 @@ function llenarModalDetailsAct(res) {
     hideElement('btn_cam_nt_act');
     $("#cont_notas_ac").hide();
 
-   
+
     if (Object.keys(res.notas_f).length > 0) {
         var auth = $("#auth_id").val();
 
@@ -4418,6 +4427,7 @@ function llenarModalDetailsAct(res) {
         $("#lbl_not_conac").text(res.notas_f.nota_conocimiento);
         $("#lbl_not_aplac").text(res.notas_f.nota_aplicacion);
         $("#lbl_not_etiac").text(res.notas_f.nota_etica);
+        $("#lbl_not_tipo").text(res.notas_f.nota_tipo_text);
         $("#ntaconcepto_text").val(res.notas_f.nota_concepto);
         $("#cont_notas_ac #lbldocevname").text(res.notas_f.docente);
         if (segmento_id == res.notas_f.segmento_id && res.notas_f.can_edit) {

@@ -79,12 +79,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Última actualización hecha por</label>
-                        <div id="label_nombre_docente" class="iuris-detail-title">Nombre del docente</div>
-                    </div>
-                </div>
+
 
                 <div id="datos_docente" class="col-md-12">
                     <div class="row">
@@ -113,9 +108,22 @@
                 </div>
 
                 <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Última actualización hecha por
+                            <span id="label_nombre_docente" class="iuris-detail-title">Nombre
+                                del docente</span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
                     <div class="row" id="cont_notas_ac" style="display: none;">
                         <div class="col-md-12 iuris-section-heading">
                             <h4>Notas</h4>
+                            
+                                    <span id="lbl_not_tipo" class="iuris-total">d</span>
+                                
                         </div>
                         <input type="hidden" id="actuacion_id">
                         <div class="col-md-3">
@@ -136,6 +144,8 @@
                                 <span id="lbl_not_etiac" class="iuris-total">-</span>
                             </div>
                         </div>
+
+
                         @if ($segmento)
                             <div class="col-md-3">
                                 <input type="hidden" value="{{ $segmento->id }}" id="segmento_id">
@@ -150,8 +160,8 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <label>Evaluado por</label>
-                            <i id="lbldocevname">user</i>
+                            <label>Evaluado por <i id="lbldocevname">user</i></label>
+
                         </div>
                     </div>
                 </div>
@@ -181,7 +191,7 @@
 
                     <div class=" row iuris-detail-header">
                         <div class="col-md-6 col-xs-12">
-                            <small>Período</small>
+                            <small>Periodo</small>
                             <div class="iuris-detail-title" id="lbl_periodo"></div>
                         </div>
                         {{-- <div class="col-4">
@@ -273,7 +283,8 @@
 
                                     <span class="iuris-note-type-text">
                                         <strong>Definitiva</strong>
-                                        <small>La calificación no puede ser modificada. Se tendrá en cuenta para el reporte definitivo.</small>
+                                        <small>La calificación no puede ser modificada. Se tendrá en cuenta para el reporte
+                                            definitivo.</small>
                                     </span>
                                 </span>
                             </label>
@@ -285,7 +296,8 @@
 
                                     <span class="iuris-note-type-text">
                                         <strong>Provisional</strong>
-                                        <small>La calificación aún puede ser modificada. No se tendrá en cuenta para el reporte definitivo.</small>
+                                        <small>La calificación aún puede ser modificada. No se tendrá en cuenta para el reporte
+                                            definitivo.</small>
                                     </span>
                                 </span>
                             </label>

@@ -1,105 +1,121 @@
-@component('components.modal')
+@component('components.b4.modal_large')
 
     @slot('trigger')
         myModal_add_nota_final_expedientes
     @endslot
 
     @slot('title')
-        Agregando Nota: <h5>
-            @if ($periodo and $segmento)
-                <label class="label bg-blue" style="font-size: 16px;">{{ $periodo->prddes_periodo }}</label>
-
-                <label class="label bg-blue" style="font-size: 16px;">{{ $segmento->segnombre }}</label>
-            @else
-                <div class="alert alert-warning">
-                    <i class="fa fa-info"> </i> Asegurese que esten activos el periodo y el segmento de corte!
-                </div>
-            @endif
-        </h5>
+        Registro de nota expediente
     @endslot
 
 
     @slot('body')
-     
-        {!! Form::open(['id' => 'myform_add_nota_final_expedientes']) !!}
-         <div>
-            <div class="row">
-                <div class="col-md-4">
+        <form method="POST" id="myform_add_nota_final_expedientes" class="act-form grade-form">
+            {{ csrf_field() }}
+            <input type="hidden" name="orgntsid" id="orgntsid" value="1">
+           {{--  <input type="hidden" name="tpntid" id="tpntid" value="1"> --}}
+            <input type="hidden" name="expid" id="expid" value="{{ $expediente->expid }}">
 
-                    {!! Form::hidden('orgntsid', 1, ['class' => 'form-control required', 'id' => 'orgntsid']) !!}
-                    {!! Form::hidden('tpntid', 1, ['class' => 'form-control required', 'id' => 'tpntid']) !!}
-                    {!! Form::hidden('expid', $expediente->expid, ['class' => 'form-control required', 'id' => 'expid']) !!}
-                    @if ($periodo and $segmento)
-                        {!! Form::hidden('segid', $segmento->segmento_id, ['class' => 'form-control required', 'id' => 'segid']) !!}
-                        {!! Form::hidden('perid', $periodo->periodo_id, ['class' => 'form-control required', 'id' => 'perid']) !!}
-                    @endif
-                    <div class="form-group">
-                        {!! Form::label('Nota conocimiento') !!}
-                        {!! Form::text('ntaconocimiento', null, [
-                            'placeholder'=>'5.0',
-                            'class' => 'form-control required',
-                            'id' => 'ntaconocimiento',
-                            'data-inputmask' => "'mask': ['9.9']",
-                            'data-mask' => '',
-
-                        ]) !!}
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        {!! Form::label('Nota aplicación') !!}
-                        {!! Form::text('ntaaplicacion', null, [
-                            'placeholder'=>'5.0',
-                            'class' => 'form-control required',
-                            'id' => 'ntaaplicacion',
-                            'data-inputmask' => "'mask': ['9.9']",
-                            'data-mask' => '',
-                        ]) !!}
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        {!! Form::label('Nota Ética') !!}
-                        {!! Form::text('ntaetica', null, [
-                            'placeholder'=>'5.0',
-                            'class' => 'form-control required',
-                            'id' => 'ntaetica',
-                            'data-inputmask' => "'mask': ['9.9']",
-                            'data-mask' => '',
-                        ]) !!}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        {!! Form::label('Concepto nota: ') !!}
-                        {!! Form::textarea('ntaconcepto', null, [
-                            'class' => 'form-control required',
-                            'maxlength' => '100000',
-                            'id' => 'ntaconcepto',
-                            'rows'=>'3',
-                            'placeholder'=>'Valoración de las notas',
-                        ]) !!}
-                    </div>
-                </div>
-            </div>
             @if ($periodo and $segmento)
-                <div class="row">
-                    <div class="col-md-6">
-                        <input type="button" class="btn btn-primary " id="btn_add_nota" value="Enviar">
+                <input type="hidden" name="segid" id="segid" value="{{ $segmento->segmento_id }}">
+                <input type="hidden" name="perid" id="perid" value="{{ $periodo->periodo_id }}">
+
+                <div class="grade-form-context">
+                    <span class="grade-form-eyebrow">Periodo de evaluación</span>
+                    <div class="grade-form-tags">
+                        <span class="grade-form-tag"><i class="fa fa-calendar" aria-hidden="true"></i>
+                            {{ $periodo->prddes_periodo }}</span>
+                        <span class="grade-form-tag"><i class="fa fa-bookmark" aria-hidden="true"></i>
+                            {{ $segmento->segnombre }}</span>
                     </div>
+                </div>
+            @else
+                <div class="grade-form-warning" role="alert">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    Asegúrate de que el periodo y el segmento de corte estén activos.
                 </div>
             @endif
-        </div>
+
+            <div class="grade-form-grid">
+                <div class="form-group grade-form-score">
+                    <label for="ntaconocimiento">Conocimiento</label>
+                    <input type="text" name="ntaconocimiento" id="ntaconocimiento" class="form-control required"
+                        placeholder="5.0" inputmode="decimal" autocomplete="off" required data-inputmask="'mask': ['9.9']"
+                        data-mask>
+                </div>
+
+                <div class="form-group grade-form-score">
+                    <label for="ntaaplicacion">Aplicación</label>
+                    <input type="text" name="ntaaplicacion" id="ntaaplicacion" class="form-control required"
+                        placeholder="5.0" inputmode="decimal" autocomplete="off" required data-inputmask="'mask': ['9.9']"
+                        data-mask>
+                </div>
+
+                <div class="form-group grade-form-score">
+                    <label for="ntaetica">Ética</label>
+                    <input type="text" name="ntaetica" id="ntaetica" class="form-control required" placeholder="5.0"
+                        inputmode="decimal" autocomplete="off" required data-inputmask="'mask': ['9.9']" data-mask>
+                </div>
+            </div>
+
+            <div class="form-group grade-form-concept">
+                <label for="ntaconcepto">Concepto de la nota</label>
+                <textarea name="ntaconcepto" id="ntaconcepto" class="form-control required" maxlength="100000" rows="4"
+                    placeholder="Escribe una valoración breve del desempeño..." required></textarea>
+            </div>
+
+            <div class="iuris-note-type-selector">
+                <div class="iuris-note-type-header">
+                    <div class="iuris-note-type-icon">
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <strong>Estado de la calificación</strong>
+                        <span>Seleccione el tipo de nota que desea registrar</span>
+                    </div>
+                </div>
+
+                <div class="iuris-note-type-options">
 
 
+                    <label class="iuris-note-type-option">
+                        <input type="radio" name="tpntid" value="1" checked>
 
-        {!! Form::close() !!}
+                        <span class="iuris-note-type-content">
+                            <span class="iuris-note-type-radio"></span>
+
+                            <span class="iuris-note-type-text">
+                                <strong>Definitiva</strong>
+                                <small>La calificación no puede ser modificada. Se tendrá en cuenta para el
+                                    reporte definitivo.</small>
+                            </span>
+                        </span>
+                    </label>
+                    <label class="iuris-note-type-option">
+                        <input type="radio" name="tpntid" value="2">
+
+                        <span class="iuris-note-type-content">
+                            <span class="iuris-note-type-radio"></span>
+
+                            <span class="iuris-note-type-text">
+                                <strong>Provisional</strong>
+                                <small>La calificación aún puede ser modificada. No se tendrá en cuenta para el
+                                    reporte definitivo.</small>
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            @if ($periodo and $segmento)
+                <div class="grade-form-actions">
+                    <button type="button" class="btn-act-create" id="btn_add_nota">
+                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                        <span>Guardar nota</span>
+                    </button>
+                </div>
+            @endif
+        </form>
     @endslot
 @endcomponent
 <!-- /modal -->

@@ -327,6 +327,7 @@ trait AsigNotas
   function getNotas()
   {
 
+  
     $notas = DB::table("notas")
       ->join("users as docente", "docente.idnumber", "=", "notas.docidnumber")
       ->join("cptonotas", "cptonotas.id", "=", "notas.cptnotaid")
@@ -403,8 +404,7 @@ trait AsigNotas
         (auth()->user()->idnumber === $notasFormateadas['docidnumber'])
         && $notasFormateadas['nota_tipo'] == 2
       ) {
-        $canEdit = true;
-        Log::info('El usuario puede editar la nota porque es el docente que la asignó y es provisional.');
+        $canEdit = true;       
       }
       if (
         (auth()->user()->hasRole('amatai')

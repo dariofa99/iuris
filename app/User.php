@@ -352,6 +352,7 @@ class User extends Authenticatable
         } else {
             $notas = $this->notas() 
                 ->whereDate('notas.created_at', '>', '2021-10-17')
+                 ->where('notas.tpntid', '1')
                 ->where(function ($query) use ($request) {
                     if ($request->has('segid') and $request->segid != '') {
                         $query->where('segid', $request->segid);

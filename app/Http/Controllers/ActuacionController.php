@@ -550,7 +550,7 @@ class ActuacionController extends Controller
   public function storeRevision(Request $request)
   {
 
-
+ //return response()->json($request->all());
     $actuacion =  Actuacion::find($request['idact']);
     //  return response()->json($actuacion->id);
 
@@ -602,11 +602,12 @@ class ActuacionController extends Controller
         'orgntsid' => $request->orgntsid,
         'segid' => $request->segid,
         'perid' => $request->perid,
-        'tpntid' => $request->tpntid,
+        'tpntid' => $request->tipo_nota_id,
         'expidnumber' => $request->actexpid,
         'estidnumber' => $estudiante_id,
         'docidnumber' => $docente_id,
         'tbl_org_id' => $request['idact'],
+        'tpntid ' => $request['tipo_nota_id']
       ];
       $actuacion->asignarNotas($data);
 
@@ -615,6 +616,7 @@ class ActuacionController extends Controller
 
     if ($actuacion->actcategoria_id == 223 and count($actuacion->conciliaciones) > 0) {
 
+   
       if ($request['actestado_id'] == 102) $estado_id = 176;
       if ($request['actestado_id'] == 104) $estado_id = 177;
 
@@ -673,7 +675,6 @@ class ActuacionController extends Controller
                 'parent_reporte_pdf_id' => $data->reporte->id,
                 'conciliacion_id' => $conciliacion->id
               ]);
-
               $file_en = $data->reporte->files()->where('seccion', 'encabezado')->first();
               if ($file_en) {
                 $data->reporte->files()->attach($file_en, [
@@ -681,7 +682,6 @@ class ActuacionController extends Controller
                   'configuracion' => $file_en->pivot->configuracion
                 ]);
               }
-
               $file_pie = $data->reporte->files()->where('seccion', 'pie')->first();
               if ($file_pie) {
                 $data->reporte->files()->attach($file_pie, [

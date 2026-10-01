@@ -134,6 +134,49 @@
                                         rows="4"></textarea>
                                 </div>
                             </div>
+
+                            <div class="iuris-note-type-selector">
+                                <div class="iuris-note-type-header">
+                                    <div class="iuris-note-type-icon">
+                                        <i class="fa fa-tag" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Estado de la calificación</strong>
+                                        <span>Seleccione el tipo de nota que desea registrar</span>
+                                    </div>
+                                </div>
+
+                                <div class="iuris-note-type-options">
+
+
+                                    <label class="iuris-note-type-option">
+                                        <input type="radio" name="tipo_nota_id" value="1" checked>
+
+                                        <span class="iuris-note-type-content">
+                                            <span class="iuris-note-type-radio"></span>
+
+                                            <span class="iuris-note-type-text">
+                                                <strong>Definitiva</strong>
+                                                <small>La calificación no puede ser modificada. Se tendrá en cuenta para el
+                                                    reporte definitivo.</small>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="iuris-note-type-option">
+                                        <input type="radio" name="tipo_nota_id" value="2">
+
+                                        <span class="iuris-note-type-content">
+                                            <span class="iuris-note-type-radio"></span>
+
+                                            <span class="iuris-note-type-text">
+                                                <strong>Provisional</strong>
+                                                <small>La calificación aún puede ser modificada. No se tendrá en cuenta para el
+                                                    reporte definitivo.</small>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
                         @else
                             <div class="col-md-12">
                                 <div class="alert alert-warning">No se puede evaluar si no hay un corte activo.</div>
@@ -161,7 +204,7 @@
             </div>
         </form>
 
-    
+
 
     @endslot
 @endcomponent
