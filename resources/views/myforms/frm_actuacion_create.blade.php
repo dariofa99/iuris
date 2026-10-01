@@ -1,7 +1,9 @@
 <!-- Trigger the modal with a button -->
 <div class="row">
     <div class="col-md-8">
+        
         @if (!$readonly)
+       
             @if (currentUser()->hasRole('amatai') ||
                     $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
                     currentUser()->hasRole('estudiante')) 

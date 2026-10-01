@@ -328,7 +328,7 @@ class NotaController extends Controller
     public function updateNota(Request $request)
     {
 
-        // return response()->json($request->all());
+       //  return response()->json($request->all());
 
         if ($request->ajax()) {
             $expediente = Expediente::find($request->exp_id);
