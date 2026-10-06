@@ -44,7 +44,7 @@ class HorarioDocenteController extends Controller
         }
 
         $active_asig = 'active';
-      
+
         return view('myforms.frm_asignaciones_docente_estudiante', compact('docentes_activos', 'horarios_docente', 'active_asig', 'estudiantes'));
     }
 
@@ -280,22 +280,38 @@ class HorarioDocenteController extends Controller
     {
         $asi = AsistenciaDocentes::find($id)->delete();
         //$asistencia = $this->turnosDocenteRepository->registrarAsistencia($request);
-         return response()->json(['message' => 'Asistencia eliminada correctamente']);
+        return response()->json(['message' => 'Asistencia eliminada correctamente']);
     }
-      public function actualizarAsistencia(Request $request)
+    public function actualizarAsistencia(Request $request)
     {
         // return response()->json($request->all());
-        $asi = AsistenciaDocentes::find($request->asistencia_id);//->delete();
+        $asi = AsistenciaDocentes::find($request->asistencia_id); //->delete();
 
 
-        
+
         $asistencia = $this->turnosDocenteRepository->actualizarAsistencia($request);
-         return response()->json($asistencia);
+        return response()->json($asistencia);
     }
+
+    public function reponerAsistencias(Request $request)
+    {
+        //return response()->json($request->all());
+
+        foreach ($request->fecha_reposicion as $loop => $fecha_repo) {
+            $request['fecha_repo'] = $fecha_repo;
+            $request['hora_inicio_repo'] = $request->hora_inicio_reposicion[$loop];
+            $request['hora_fin_repo'] = $request->hora_fin_reposicion[$loop];
+            $asistencia = $this->turnosDocenteRepository->actualizarAsistencia($request);
+        }
+        return response()->json([
+            "message" => 'Reposición registrada con éxito',
+        ]);
+    }
+
     public function registrarAsistencia(Request $request)
     {
         //return response()->json($request->all());
-        
+
         $asistencia = $this->turnosDocenteRepository->registrarAsistencia($request);
 
 

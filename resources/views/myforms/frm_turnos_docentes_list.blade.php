@@ -19,7 +19,8 @@
 @endsection
 
 @section('area_forms')
-
+ @include('myforms.turnos.frm_modal_registrar_turno_docente')
+ @include('myforms.turnos.frm_modal_registrar_horas_pendientes_docente')
     @include('msg.success')
     <div class="iuris-turnos-page">
         <header class="iuris-turnos-page-header">
@@ -263,6 +264,7 @@
                                                 <th>Horas pendientes</th>
                                                 <th>Horas no asistencia</th>
                                                 <th>Horas marcadas por reponer</th>
+                                                <th>Acciones</th>
 
 
                                             </tr>
@@ -291,6 +293,7 @@
         </div>
     </div>
 
+   
 
 @stop
 

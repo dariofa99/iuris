@@ -152,9 +152,9 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('personas/externas/preguntas/{id}', 'PersonasExternasController@getQuestionsById');
   Route::post('personas/externas/insert/categoria', 'PersonasExternasController@storeCategoria');
 
-  Route::get('/actuar/docente','ActuarDocenteController@consultar');
+  Route::get('/actuar/docente', 'ActuarDocenteController@consultar');
 
-  Route::get('conciliacion/personas/externas/get/categorias/by/filter', 'ConciliacionPersonasController@getByRefDataFilter');  
+  Route::get('conciliacion/personas/externas/get/categorias/by/filter', 'ConciliacionPersonasController@getByRefDataFilter');
   Route::post('conciliacion/personas/externas/add/preguntas', 'ConciliacionPersonasController@addPreguntasForm');
   Route::post('conciliaciones/add/data/persona/externa', 'ConciliacionPersonasController@store');
 
@@ -216,6 +216,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::get('turnos/docentes', 'TurnosDocentesController@index');
+    Route::get('turnos/docentes/horas/pendientes', 'TurnosDocentesController@getHorasPendientes');
     Route::get('turnos/docentes/{id}', 'TurnosDocentesController@store');
     Route::get('turnos/docentes/reporte/asis', 'TurnosDocentesController@show');
     Route::post('turnos/acdocentes', 'TurnosDocentesController@updateinfo');
@@ -236,7 +237,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Horario docente
     Route::resource('docentes/horario', 'HorarioDocenteController');
     Route::post('docentes/horario/registrar/asistencia', 'HorarioDocenteController@registrarAsistencia');
-     Route::post('docentes/horario/actualizar/asistencia', 'HorarioDocenteController@actualizarAsistencia');
+    Route::post('docentes/horario/actualizar/asistencia', 'HorarioDocenteController@actualizarAsistencia');
+    Route::post('docentes/horario/reponer/asistencias', 'HorarioDocenteController@reponerAsistencias');
     Route::delete('docentes/horario/eliminar/asistencia/{id}', 'HorarioDocenteController@eliminarAsistencia');
     Route::post('docentes/search/horario', 'HorarioDocenteController@searchHorasDocente');
     Route::post('docentes/horario/delete/all', 'HorarioDocenteController@deleteAllHorarioDocentes');
@@ -276,7 +278,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Expedientes
     Route::resource('expedientes', 'ExpedienteController');
     Route::post('expedientes/cambiar/fecha/evaluacion', 'ExpedienteController@cambiarFechaEvaluacion');
-    
+
     Route::post('expedientes/rechazar/autorizacion', 'ExpedienteController@rechazarAutorizacionNotificacion');
 
     Route::get('expedientes/historial/{exp}/{tipo}', 'ExpedienteController@historialDatosCaso');
@@ -403,8 +405,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Conciliaciones
     Route::resource('conciliaciones', 'ConciliacionesController');
     //Solicitudes
-    Route::post('conciliaciones/add/user', 'ConciliacionesController@addUser'); 
-    
+    Route::post('conciliaciones/add/user', 'ConciliacionesController@addUser');
+
 
     Route::post('conciliaciones/insert/data', 'ConciliacionesController@insertData');
     Route::post('conciliaciones/generate/documents', 'ConciliacionesController@generateDocuments');
@@ -759,8 +761,8 @@ Route::get(
 
     return view('myforms.mails.formato_correo', [
       "user_created" => $user->name,
-      "mensaje"=>"Joder",
-      "url"=>"http://iuris.com"
+      "mensaje" => "Joder",
+      "url" => "http://iuris.com"
     ]);
   }
 

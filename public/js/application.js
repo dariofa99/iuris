@@ -849,3 +849,33 @@ function toggleCampo(seccion, nombre, accion = 'hide') {
         contenedor.show();
     }
 }
+
+
+function formatearHoras(minutos) {
+	const duracion = moment.duration(minutos, 'minutes');
+
+	const horas = Math.floor(duracion.asHours());
+	const minutosRestantes = duracion.minutes();
+
+	let resultado = '';
+
+	if (horas > 0) {
+		resultado += horas + (horas === 1 ? ' hora' : ' horas');
+	}
+
+	if (minutosRestantes > 0) {
+		if (resultado !== '') {
+			resultado += ', ';
+		}
+
+		resultado += minutosRestantes +
+			(minutosRestantes === 1 ? ' minuto' : ' minutos');
+	}
+
+	return resultado || '0 minutos';
+}
+
+function formatearFecha(fecha) {
+    moment.locale('es');
+    return moment(fecha).format('DD [de] MMMM. h a');
+}

@@ -177,7 +177,7 @@ $(document).ready(function () {
 					positionClass: "toast-top-right",
 					timeOut: "4000",
 				});
-				
+
 			}
 		});
 
@@ -383,6 +383,142 @@ $(document).ready(function () {
 		} else if (name == '') {
 			getAsistenciaReport();
 		}
+	});
+
+	$("#contenrepasistenciadoc").on("click", ".btn_registrar_turno", async function () {
+		var id = $(this).attr("data-id");
+
+		let request = {
+			"start": $("#inicio").val(),
+			"end": $("#fin").val(),
+			"docidnumber": id
+		}
+
+
+		let response = await horariosService.getHorasPendientes(request);
+
+		const tbody = document.querySelector('#tabla-turnos-body');
+		$("#form_reposicion_horas_docente").hide();
+		$("#conten-inputs").html('');
+
+		tbody.innerHTML = '';
+		var fila = '';
+		var turno_id = 0;
+		var turno_docente_id = 0;
+		var minutos_pendientes = response.minutos_pendientes;
+		response.horas_pendientes.forEach(turno => {
+			turno_id = turno.id;
+			turno_docente_id = turno.turno_docente_id;
+			fila += `
+            <tr>
+                
+              
+                <td>${turno.fecha}</td>
+                <td>${turno.inicio_text}</td>
+                <td>${turno.fin_text}</td>
+                <td>${turno.minutos_reponer} minutos</td>
+               
+                <td>${turno.categoria}</td>
+				<td>
+				
+				</td>
+            </tr>
+        `;
+		});
+
+		if (response.horas_pendientes.length > 0) {
+			fila += `
+            <tr>
+				<td colspan="3"><strong>Total de minutos pendientes:</strong></td>	              
+                <td colspan="1">${formatearHoras(response.minutos_pendientes)}</td>
+				<td colspan="3">
+				<button class="btn btn-sm btn-iuris-primary btn_registrar_reposicion_turno" data-id="${turno_id}" data-turno-id="${turno_docente_id}" data-docente-id="${response.docente.idnumber}">
+					<i class="fas fa-plus"></i> Agregar reposición
+				</button>
+				</td>           
+            </tr>
+        `;
+		}else{
+			fila += `
+            <tr>
+				<td colspan="6">
+				<strong>No tiene minutos pendientes:</strong>
+				</td>	              
+                       
+            </tr>`;
+		}
+
+		tbody.innerHTML += fila;
+
+		$("#avatar_docente_pendiente").attr("src", response.docente.img_profile);
+		$("#avatar_docente_pendiente").attr("alt", response.docente.img_profile);
+		$("#nombre_docente_pendiente").text(response.docente.name + ' ' + response.docente.lastname);
+
+		$("#myModal_registrar_horas_pendientes_docente").modal("show");
+
+		return response;
+
+		var formData = document.getElementById("turnosdoc");
+		formData.querySelectorAll(".iuris-option").forEach(function (option) {
+			console.log(option);
+			// Selecionar solo la opción de asistencia pendiente y eliminar las demás
+			option.querySelector('input').checked = false; // Desmarcar todas las opciones
+			if (option.id != "tipo_asis_pendiente_option") {
+				option.style.display = "none";
+			} else {
+				option.querySelector('input').checked = true;
+			}
+		});
+		$(".iuris-form-footer").css("display", "block");
+		$(".iuris-form-footer button").each(function (button) {
+			var button = $(this);
+
+			if (button.attr("id") != "btnRegistrarTurnoDocente") {
+				button.css({ "display": "none" }) // Ocultar los botones que no sean el de registrar turno
+			}
+		});
+		$("#myModal_reporasistencia").modal("show");
+	});
+
+
+	$("#tabla-turnos-body").on("click", ".btn_registrar_reposicion_turno", async function () {
+		let asistencia_id = $(this).data("id");
+		let turnoDocenteId = $(this).data("turno-id");
+		let docenteId = $(this).data("docente-id");
+		const form = document.getElementById("form_reposicion_horas_docente");
+		form.reset(); // Reinicia el formulario
+		form.querySelector("#idnumber_docente").value = docenteId;
+		form.querySelector("#turno_id").value = turnoDocenteId;
+		form.querySelector("#asistencia_id").value = asistencia_id;
+		//console.log(form);
+		$("#form_reposicion_horas_docente").show();
+		$("#conten-inputs").append(getReporteReposicionFormInputs());
+
+	});
+
+	$("#form_reposicion_horas_docente").on("submit", async function (e) {
+		e.preventDefault();
+		const form = document.getElementById("form_reposicion_horas_docente");
+
+		let isvalid = validateForms(form);
+
+		if (isvalid) {
+			let request = convertFormToJSON("form_reposicion_horas_docente");
+			let response = await horariosService.reponerAsistencias(request);
+			if (response) {
+				 	Swal.fire({
+						title: 'Reposición registrada con éxito',
+						icon: 'success',
+						timer: 2000,
+					});
+					$("#myModal_registrar_horas_pendientes_docente").modal("hide"); 
+				await getAsistenciasDocente();
+			}
+		}
+
+
+
+
 	});
 
 });/////////////////////////////////////////////////////
@@ -651,9 +787,11 @@ async function getAsistenciasDocente() {
 			var asistencias = 0;
 			var permisos = 0;
 			var reposiciones = 0;
+			var horas_pendientes = 0;
 			var horas_semanales = 0;
 			var faltas = 0;
 			var datasistencias = res.asistencia.find(datosasis => datosasis.docidnumber === value.idnumber);
+			var datahoraspendientes = res.horas_pendientes.find(datoshp => datoshp.docidnumber === value.idnumber);
 			var datapermisos = res.permisos.find(datosper => datosper.docidnumber === value.idnumber);
 			var datareposiciones = res.reposicion.find(datosrepo => datosrepo.docidnumber === value.idnumber);
 			var datahorassemanales = res.horas_semanales.find(datoshs => datoshs.trnd_docidnumber === value.idnumber);
@@ -667,7 +805,9 @@ async function getAsistenciasDocente() {
 			if (datareposiciones) { reposiciones = datareposiciones.reposicion; }
 			if (datahorassemanales) { horas_semanales = datahorassemanales.minutos_rango; }
 			if (datafaltas) { faltas = datafaltas.faltas; }
+			if (datahoraspendientes) { horas_pendientes = datahoraspendientes.minutos_pendientes; }
 
+			faltas = parseInt(horas_pendientes);
 
 			datosasis += '<tr>' +
 
@@ -678,8 +818,9 @@ async function getAsistenciasDocente() {
 				'<td>' + parseInt((horas_semanales / 60)) + '</td>' +
 				'<td>' + (asistencia_label) + '</td>' +
 				'<td>' + formatearHoras(parseInt((horas_semanales)) - round(asistencias)) + '</td>' +
-				'<td>' + round(faltas / 60) + '</td>' +
-				'<td>' + round(reposiciones / 60) + '</td>' +
+				'<td>' + formatearHoras(faltas) + '</td>' +
+				'<td>' + formatearHoras(reposiciones) + '</td>' +
+				'<td>' + '<button class="btn btn-sm btn-iuris-primary btn_registrar_turno" data-id="' + value.idnumber + '">Detalles</button>' + '</td>' +
 
 				'</tr>';
 
@@ -690,26 +831,77 @@ async function getAsistenciasDocente() {
 	$("#wait").hide();
 }
 
-function formatearHoras(minutos) {
-	const duracion = moment.duration(minutos, 'minutes');
+function getReporteReposicionFormInputs() {
+	//return "";
+	return `   <div class="row" id="div_reposicion" style="border-top: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 1px;">
+                            <div class="col-md-12">
+                                <div class="iuris-section-title">
 
-	const horas = Math.floor(duracion.asHours());
-	const minutosRestantes = duracion.minutes();
+                                    <i class="fas fa-calendar-alt"></i>
 
-	let resultado = '';
+                                    <span>Fecha de reposición del turno</span>
 
-	if (horas > 0) {
-		resultado += horas + (horas === 1 ? ' hora' : ' horas');
-	}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
 
-	if (minutosRestantes > 0) {
-		if (resultado !== '') {
-			resultado += ', ';
-		}
+                                <div class="form-group">
 
-		resultado += minutosRestantes +
-			(minutosRestantes === 1 ? ' minuto' : ' minutos');
-	}
+                                    <label class="iuris-form-label">
+                                        Fecha
+                                    </label>
 
-	return resultado || '0 minutos';
+                                    <div class="iuris-input-icon">
+
+                                        <i class="far fa-clock"></i>
+
+                                        <input type="date" value="" class="form-control" required=""
+                                            id="fecha_reposicion" name="fecha_reposicion[]">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+
+                                <div class="form-group">
+
+                                    <label class="iuris-form-label">
+                                        Hora inicio
+                                    </label>
+
+                                    <div class="iuris-input-icon">
+
+                                        <i class="far fa-clock"></i>
+
+                                        <input type="time" class="form-control" required="" name="hora_inicio_reposicion[]"
+                                            id="hora_inicio_reposicion">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <div class="form-group">
+
+                                    <label class="iuris-form-label">
+                                        Hora fin
+                                    </label>
+
+                                    <div class="iuris-input-icon">
+
+                                        <i class="far fa-clock"></i>
+
+                                        <input type="time" class="form-control" required="" id="hora_fin_reposicion"
+                                            name="hora_fin_reposicion[]">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>`;
 }

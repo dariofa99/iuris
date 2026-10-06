@@ -159,7 +159,7 @@
                             <span class="iuris-option-text">
 
                                 <strong>Pendiente</strong>
-
+ 
                                 <small>
                                     Pendiente de registrar turno.
                                 </small>
@@ -173,7 +173,7 @@
 
                     <!-- ASISTENCIA -->
 
-                    <label class="iuris-option">
+                    <label class="iuris-option" id="tipo_asis_asistencia_option">
 
                         <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_asistencia" value="149" checked>
 
@@ -200,7 +200,7 @@
 
                     <!-- PERMISO -->
 
-                    <label class="iuris-option">
+                    <label class="iuris-option" id="tipo_asis_permiso_option">
 
                         <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_permiso" value="150">
 
@@ -226,7 +226,7 @@
 
                     <!-- PERMISO -->
 
-                    <label class="iuris-option">
+                    <label class="iuris-option" id="tipo_asis_no_asistencia_option">
 
                         <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_no_asistencia" value="284">
 

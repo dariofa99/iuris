@@ -254,7 +254,7 @@ function showCalendar(docente_id) {
             */
             var text = '';
             if (event.asistencia_id != null) {
-                
+
                 text = `(${moment(event.hora_inicio_asis, "HH:mm:ss").format("h:mm A")} - ${moment(event.hora_fin_asis, "HH:mm:ss").format("h:mm A")})`;
             }
 
@@ -333,6 +333,9 @@ function showCalendar(docente_id) {
             resetDisabledForm("turnosdoc");
             $("#turnosdoc #tipo_asis_pendiente_option").hide();
             //limpiarForm("turnosdoc");
+            $(".iuris-option").each(function (option, index) {               
+                $(this).css("display", "block");
+            });
 
             $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio);
             $("#turnosdoc #turno_id").val(calEvent.id);
@@ -371,8 +374,8 @@ function showCalendar(docente_id) {
                         $("#turnosdoc #hora_fin_repo").val("");
                     }
                 }
-                if(calEvent.tipo_asis == 285 && calEvent.es_reposicion){
-                     $("#turnosdoc #tipo_asis_pendiente_option").show();
+                if (calEvent.tipo_asis == 285 && calEvent.es_reposicion) {
+                    $("#turnosdoc #tipo_asis_pendiente_option").show();
                 }
                 //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
             }

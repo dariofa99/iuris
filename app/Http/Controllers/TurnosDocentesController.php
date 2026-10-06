@@ -75,11 +75,11 @@ class TurnosDocentesController extends Controller
             ->where('estado', 1)
             ->first();
         $turnos_doc = TurnosDocente::where('trnd_docidnumber', $request->id)
-        ->where('trndid_periodo', $periodo->id)
-        ->where('activo',1)
-        ->orderBy('trnd_hora_inicio', 'ASC')->get();
+            ->where('trndid_periodo', $periodo->id)
+            ->where('activo', 1)
+            ->orderBy('trnd_hora_inicio', 'ASC')->get();
         return response()->json(
-            
+
             $turnos_doc->toArray()
 
         );
@@ -94,18 +94,18 @@ class TurnosDocentesController extends Controller
      */
     public function show()
     {
-       // dd("aa");
+        // dd("aa");
         $response = [];
         $periodo = $this->periodoService->getPeriodoActivo();
         $prdfecha_inicio = $periodo->prdfecha_inicio;
         $prdfecha_fin = $periodo->prdfecha_fin;
-        if(request()->has('start') && request()->get("start") == "undefined" && request()->has('end')  && request()->get("end") == "undefined"){
+        if (request()->has('start') && request()->get("start") == "undefined" && request()->has('end')  && request()->get("end") == "undefined") {
             return response()->json([
-                    'errors' => 'Las fechas inicial no puede ser mayor que la fecha final.'
-                ], 200);
+                'errors' => 'Las fechas inicial no puede ser mayor que la fecha final.'
+            ], 200);
         }
         if (request()->has('start') && request()->get("start") != "undefined" && request()->has('end')  && request()->get("end") != "undefined") {
-           
+
             if (Carbon::parse(request()->get('start'))->gt(Carbon::parse(request()->get('end')))) {
                 return response()->json([
                     'errors' => 'La fecha inicial no puede ser mayor que la fecha final.'
@@ -196,6 +196,13 @@ class TurnosDocentesController extends Controller
             ->select('docidnumber', DB::raw('SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS faltas'))
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
 
+        $response['horas_pendientes'] = DB::table('asistencia_docentes')
+            ->where('reposicion', '0')
+            ->where('minutos_reponer', '>', '0')
+            ->whereDate('inicio', '>=', $prdfecha_inicio)
+            ->whereDate('fin', '<=', $prdfecha_fin)
+            ->select('docidnumber', DB::raw('SUM(minutos_reponer) AS minutos_pendientes'))
+            ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
         //$permisos = DB::select('SELECT `docidnumber`, SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS permisos FROM `asistencia_docentes` WHERE `reposicion`=0 AND `tipo_asis` = 150	GROUP BY `docidnumber` ORDER BY `docidnumber` DESC');   
         $response['reposicion'] = $reposicion = DB::table('asistencia_docentes')
             ->where('categoria', 'reposicion')
@@ -208,6 +215,71 @@ class TurnosDocentesController extends Controller
         return response()->json($response);
     }
 
+    public function getHorasPendientes(Request $request)
+    {
+        $response = [];
+        $periodo = $this->periodoService->getPeriodoActivo();
+        $prdfecha_inicio = $periodo->prdfecha_inicio;
+        $prdfecha_fin = $periodo->prdfecha_fin;
+        if (request()->has('start') && request()->get("start") == "undefined" && request()->has('end')  && request()->get("end") == "undefined") {
+            return response()->json([
+                'errors' => 'Las fechas inicial no puede ser mayor que la fecha final.'
+            ], 200);
+        }
+        if (request()->has('start') && request()->get("start") != "undefined" && request()->has('end')  && request()->get("end") != "undefined") {
+
+            if (Carbon::parse(request()->get('start'))->gt(Carbon::parse(request()->get('end')))) {
+                return response()->json([
+                    'errors' => 'La fecha inicial no puede ser mayor que la fecha final.'
+                ], 200);
+            }
+            $prdfecha_inicio = request()->get('start');
+            $prdfecha_fin = request()->get('end');
+        }
+
+
+        if (!$periodo) {
+            return response()->json([
+                'errors' => 'No hay un periodo activo actualmente.'
+            ], 200);
+        }
+
+
+        $data = DB::table('asistencia_docentes')
+
+            ->where('reposicion', '0')
+            ->where('minutos_reponer', '>', '0')
+            ->whereDate('inicio', '>=', $prdfecha_inicio)
+            ->whereDate('fin', '<=', $prdfecha_fin)
+            ->where('docidnumber', '=', $request->get('docidnumber'))
+            ->select('turno_docente_id','asistencia_docentes.id', 'turno_docente_id', 'docidnumber', 'minutos_reponer', 'inicio', 'fin', 'descripcion', 'categoria')
+            ->orderBy('docidnumber', 'desc')->get();
+        $minutos_pendientes = $data->sum('minutos_reponer');
+        $docente = $this->userService->findWithFilter(
+            [
+                'idnumber' => $request->get('docidnumber')
+            ]
+        );
+
+        $data = $data->map(function ($item) {
+            $item->fecha = getSmallDate(Carbon::parse($item->inicio)->format('Y-m-d'));
+            $item->inicio_text = getHour(Carbon::parse($item->inicio));
+            $item->fin_text = getHour(Carbon::parse($item->fin));
+            return $item;
+        });
+
+
+        $response['horas_pendientes'] = $data;
+        $response['minutos_pendientes'] = $minutos_pendientes;
+        $docente->img_profile = $docente->image && file_exists(public_path('thumbnails/' . $docente->image))
+            ? asset('thumbnails/' . $docente->image)
+            : asset('thumbnails/default.jpg');
+        $response['docente'] = $docente;
+
+
+
+        return response()->json($response);
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -264,14 +336,14 @@ class TurnosDocentesController extends Controller
     {
         $periodo = $this->periodoService->getPeriodoActivo();
         $turnos_doc = TurnosDocente::where('trnd_docidnumber', $request->docidmunber)
-        ->where(['trndid_periodo'=> $periodo->id , 'activo'=>1] )
-        ->orderBy('trnd_hora_inicio', 'ASC')->update([
-            'activo'=>0
-        ]);
-   
-        $turnos_doc= TurnosDocente::where('trnd_docidnumber', $request->docidmunber)
-        ->where(['trndid_periodo'=> $periodo->id , 'activo'=>0] )
-        ->orderBy('trnd_hora_inicio', 'ASC')->get();
+            ->where(['trndid_periodo' => $periodo->id, 'activo' => 1])
+            ->orderBy('trnd_hora_inicio', 'ASC')->update([
+                'activo' => 0
+            ]);
+
+        $turnos_doc = TurnosDocente::where('trnd_docidnumber', $request->docidmunber)
+            ->where(['trndid_periodo' => $periodo->id, 'activo' => 0])
+            ->orderBy('trnd_hora_inicio', 'ASC')->get();
         return response()->json($turnos_doc);
     }
 

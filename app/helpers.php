@@ -129,6 +129,14 @@ function getMonthAndYear($date)
     return $fecha;
 }
 
+function getHour($date)
+{
+    $created_at = Carbon::parse($date);
+    $fecha = $created_at->format('g:i A');
+
+    return $fecha;
+}
+
 function getMessagesForPro($estado, $expid)
 {
     $messages = [

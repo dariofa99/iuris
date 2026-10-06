@@ -114,7 +114,7 @@ export class HorariosService {
         return topics;
     }
 
-    async inhabilitarHorario(request={}) {
+    async inhabilitarHorario(request = {}) {
         const response = await fetch(BASE_URL + "turnos/inhabilitar/acdocentes", {
             method: 'POST',
             headers: {
@@ -153,8 +153,47 @@ export class HorariosService {
         return topics;
     }
 
+    async reponerAsistencias(request) {
+        const response = await fetch(BASE_URL + "docentes/horario/reponer/asistencias", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            },
+            body: JSON.stringify(request)
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
     async getAsistenciaReport(request = {}) {
         const response = await fetch(BASE_URL + "turnos/asistencia?" + new URLSearchParams(request), {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            console.log(response);
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
+
+    async getHorasPendientes(request = {}) {
+        const response = await fetch(BASE_URL + "turnos/docentes/horas/pendientes?" + new URLSearchParams(request), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
