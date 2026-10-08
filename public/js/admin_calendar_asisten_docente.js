@@ -114,6 +114,32 @@ $(function () {
             $("#div_reposicion").hide();
         }
 
+    });
+
+    
+
+    $("#div_reposicion").on('click', '#btnEliminarReposicion', async function (e) {
+        e.preventDefault();
+        let asistencia_id = $(this).data('asistencia-id');
+        let reposicion_id = $(this).data('reposicion-id');
+
+        if (!asistencia_id || asistencia_id == 0) {
+            toastr.error("No se puede eliminar la reposición, no hay asistencia registrada", "Atención!", {
+                positionClass: "toast-top-right",
+                timeOut: "4000",
+            });
+            return;
+        }
+        let response = await horariosDocenteService.deleteReposicion(reposicion_id, { asistencia_id: asistencia_id });
+        toastr.success("Reposición eliminada con éxito", "", {
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+        });
+       // $("#calendar").fullCalendar('refetchEvents');
+       // $("#myModal_reporasistencia").modal('hide');
+
+        
+
     })
 
 });
@@ -362,16 +388,22 @@ function showCalendar(docente_id) {
                     $("#turnosdoc #fecha_repo").val(calEvent.fecha_reposicion);
                     $("#turnosdoc #hora_inicio_repo").val(calEvent.hora_inicio_reposicion);
                     $("#turnosdoc #hora_fin_repo").val(calEvent.hora_fin_reposicion);
+                   // $("#turnosdoc #tipo_asis_pendiente_option").hide();
                     disabledForm("turnosdoc")
                     $("#turnosdoc #btnActualizarTurnoDocente").text("Debe eliminar la reposición").prop("disabled", true).show();
                     $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", true).show();
+                    $("#turnosdoc #btnEliminarReposicion").attr("data-reposicion-id", calEvent.reposicion_id).prop("disabled", false).show();
+                    $("#turnosdoc #btnEliminarReposicion").attr("data-asistencia-id", calEvent.asistencia_id).prop("disabled", false).show();
                     if (!calEvent.has_reposicion) {
                         $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", false).show();
                         $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", false).show();
+                        $("#turnosdoc #btnEliminarReposicion").attr("data-reposicion-id", 0).prop("disabled", false).hide();
+                        $("#turnosdoc #btnEliminarReposicion").attr("data-asistencia-id", 0).prop("disabled", false).hide();
                         resetDisabledForm("turnosdoc")
                         $("#turnosdoc #fecha_repo").val("");
                         $("#turnosdoc #hora_inicio_repo").val("");
                         $("#turnosdoc #hora_fin_repo").val("");
+                        
                     }
                 }
                 if (calEvent.tipo_asis == 285 && calEvent.es_reposicion) {
@@ -389,7 +421,7 @@ function showCalendar(docente_id) {
 
 
 function contentRepos() {
-    return ` <div class="col-md-12">
+    return ` <div class="col-md-10">
                         <div class="iuris-section-title">
 
                             <i class="fas fa-calendar-alt"></i>
@@ -398,6 +430,16 @@ function contentRepos() {
 
                         </div>
                     </div>
+
+                    <div class="col-md-2">
+                        <div class="iuris-section-title">
+
+
+                            <button type="button" class="btn-iuris-success btn-sm btnEliminarReposicion" id="btnEliminarReposicion"><i class="fas fa-trash-alt"></i> Eliminar</button>
+
+                        </div>
+                    </div>
+
                     <div class="col-md-4">
 
                         <div class="form-group">

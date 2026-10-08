@@ -6204,3 +6204,9 @@ RESPONSIVE
   border-radius: 0px;
   margin-top: 10px !important;
 }
+
+#div_reposicion{
+  border: 1px solid #dce6e7;
+  padding: 10px;
+  border-radius: 5px;
+}

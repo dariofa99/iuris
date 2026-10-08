@@ -64,8 +64,7 @@
                     <form id="form_reposicion_horas_docente">
 
                         <input type="hidden" name="idnumber_docente" id="idnumber_docente">
-                        <input type="hidden" name="turno_id" id="turno_id">
-                        <input type="hidden" name="asistencia_id" id="asistencia_id">
+                       
 
 
                          <div id="conten-inputs">

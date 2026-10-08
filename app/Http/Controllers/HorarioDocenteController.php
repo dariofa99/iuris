@@ -276,15 +276,17 @@ class HorarioDocenteController extends Controller
         $horarios = DB::table('asigna_docent_ests')->delete();
     }
 
-    public function eliminarAsistencia(Request $request, $id)
+    public function eliminarAsistencia(Request $request, int $id)
     {
-        $asi = AsistenciaDocentes::find($id)->delete();
+        return response()->json($request->all());
+        
+         $asi = AsistenciaDocentes::find($id)->delete();
         //$asistencia = $this->turnosDocenteRepository->registrarAsistencia($request);
-        return response()->json(['message' => 'Asistencia eliminada correctamente']);
+        return response()->json(['message' => $asi]);
     }
     public function actualizarAsistencia(Request $request)
     {
-        // return response()->json($request->all());
+         return response()->json($request->all());
         $asi = AsistenciaDocentes::find($request->asistencia_id); //->delete();
 
 
@@ -295,14 +297,43 @@ class HorarioDocenteController extends Controller
 
     public function reponerAsistencias(Request $request)
     {
-        //return response()->json($request->all());
+        // return response()->json($request->all());
 
         foreach ($request->fecha_reposicion as $loop => $fecha_repo) {
             $request['fecha_repo'] = $fecha_repo;
+            $request['asistencia_id'] = $request->asistencias_id[$loop];
+            $request['turno_id'] = $request->turnos_id[$loop];
             $request['hora_inicio_repo'] = $request->hora_inicio_reposicion[$loop];
             $request['hora_fin_repo'] = $request->hora_fin_reposicion[$loop];
             $asistencia = $this->turnosDocenteRepository->actualizarAsistencia($request);
+            return response()->json($asistencia);
         }
+        return response()->json([
+            "message" => 'Reposición registrada con éxito',
+        ]);
+    }
+
+
+
+    public function eliminarReposicion(Request $request, int $id)
+    {
+        return response()->json($request->all());
+
+        $asistencia = AsistenciaDocentes::find($id)->delete();
+        if ($asistencia) {
+            $reposicion = $asistencia->asistenciaOrigen()->first();
+            // return response()->json(['message' => $reposicion]);
+            if ($reposicion and $reposicion->minutos_reponer > 10000) {
+                $minutos_repo = Carbon::parse($asistencia->inicio)->diffInMinutes(Carbon::parse($asistencia->fin));
+                $reposicion->minutos_reponer = $reposicion->minutos_reponer + $minutos_repo;
+                $reposicion->save();
+                $asistencia->delete();
+                return response()->json([
+                    'message' => "Eliminación de asistencia y reposición exitosa"
+                ]);
+            }
+        }
+        //
         return response()->json([
             "message" => 'Reposición registrada con éxito',
         ]);

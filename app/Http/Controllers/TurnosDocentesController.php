@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AsistenciaDocentes;
 use Illuminate\Http\Request;
 use App\TurnosDocente;
 use App\Periodo;
@@ -204,7 +205,7 @@ class TurnosDocentesController extends Controller
             ->select('docidnumber', DB::raw('SUM(minutos_reponer) AS minutos_pendientes'))
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
         //$permisos = DB::select('SELECT `docidnumber`, SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS permisos FROM `asistencia_docentes` WHERE `reposicion`=0 AND `tipo_asis` = 150	GROUP BY `docidnumber` ORDER BY `docidnumber` DESC');   
-        $response['reposicion'] = $reposicion = DB::table('asistencia_docentes')
+        $response['reposicion'] = DB::table('asistencia_docentes')
             ->where('categoria', 'reposicion')
             ->where('tipo_asis', '285')
             ->whereDate('inicio', '>=', $prdfecha_inicio)
@@ -244,16 +245,16 @@ class TurnosDocentesController extends Controller
             ], 200);
         }
 
+        $data = AsistenciaDocentes::
 
-        $data = DB::table('asistencia_docentes')
-
-            ->where('reposicion', '0')
+             where('reposicion', '0')
             ->where('minutos_reponer', '>', '0')
             ->whereDate('inicio', '>=', $prdfecha_inicio)
             ->whereDate('fin', '<=', $prdfecha_fin)
             ->where('docidnumber', '=', $request->get('docidnumber'))
-            ->select('turno_docente_id','asistencia_docentes.id', 'turno_docente_id', 'docidnumber', 'minutos_reponer', 'inicio', 'fin', 'descripcion', 'categoria')
+            ->select('turno_docente_id', 'asistencia_docentes.id', 'turno_docente_id', 'docidnumber', 'minutos_reponer', 'inicio', 'fin', 'descripcion', 'categoria')
             ->orderBy('docidnumber', 'desc')->get();
+
         $minutos_pendientes = $data->sum('minutos_reponer');
         $docente = $this->userService->findWithFilter(
             [
@@ -265,6 +266,16 @@ class TurnosDocentesController extends Controller
             $item->fecha = getSmallDate(Carbon::parse($item->inicio)->format('Y-m-d'));
             $item->inicio_text = getHour(Carbon::parse($item->inicio));
             $item->fin_text = getHour(Carbon::parse($item->fin));
+            $item->repos_marcadas = $item->reposiciones->map(function ($reposicion) {
+
+                return [
+                    'id' => $reposicion->id,
+                    'fecha' => (Carbon::parse($reposicion->inicio)->format('Y-m-d')),
+                    'inicio' => (Carbon::parse($reposicion->inicio)->format('H:i')),
+                    'fin' => (Carbon::parse($reposicion->fin)->format('H:i')),
+                    'turno_id' => $reposicion->turno_docente_id,
+                ];
+            });
             return $item;
         });
 

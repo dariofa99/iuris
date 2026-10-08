@@ -1,5 +1,9 @@
 import { HorariosService } from "./services/turnos.js";
+import { HorariosDocenteService } from "./services/horarios_docente.js";
+
+
 const horariosService = new HorariosService();
+const horariosDocenteService = new HorariosDocenteService();
 var dias = [];
 var checks_bd = [];
 var horas = [];
@@ -410,20 +414,38 @@ $(document).ready(function () {
 			turno_id = turno.id;
 			turno_docente_id = turno.turno_docente_id;
 			fila += `
-            <tr>
-                
-              
+            <tr>     
                 <td>${turno.fecha}</td>
                 <td>${turno.inicio_text}</td>
                 <td>${turno.fin_text}</td>
-                <td>${turno.minutos_reponer} minutos</td>
-               
+                <td>${turno.minutos_reponer} minutos</td>               
                 <td>${turno.categoria}</td>
 				<td>
-				
+				<button class="btn btn-sm btn-iuris-primary btn_registrar_reposicion_turno" data-minutos="${turno.minutos_reponer}" data-fecha="${turno.fecha}" data-id="${turno_id}" data-turno-id="${turno_docente_id}" data-docente-id="${response.docente.idnumber}">
+					<i class="fas fa-plus"> </i> Agregar reposición
+				</button>
 				</td>
             </tr>
         `;
+
+			turno.repos_marcadas.forEach(reposicion => {
+				console.log(reposicion);
+				$("#form_reposicion_horas_docente").show();
+				$("#conten-inputs").append(getReporteReposicionFormInputs(
+					turno.id,
+					turno.turno_docente_id,
+					turno.fecha,
+					turno.minutos_reponer,
+					reposicion.id,
+					reposicion.fecha,
+					reposicion.inicio,
+					reposicion.fin
+
+				));
+			});
+
+
+
 		});
 
 		if (response.horas_pendientes.length > 0) {
@@ -432,17 +454,15 @@ $(document).ready(function () {
 				<td colspan="3"><strong>Total de minutos pendientes:</strong></td>	              
                 <td colspan="1">${formatearHoras(response.minutos_pendientes)}</td>
 				<td colspan="3">
-				<button class="btn btn-sm btn-iuris-primary btn_registrar_reposicion_turno" data-id="${turno_id}" data-turno-id="${turno_docente_id}" data-docente-id="${response.docente.idnumber}">
-					<i class="fas fa-plus"></i> Agregar reposición
-				</button>
+				
 				</td>           
             </tr>
         `;
-		}else{
+		} else {
 			fila += `
             <tr>
 				<td colspan="6">
-				<strong>No tiene minutos pendientes:</strong>
+				<strong>No tiene  pendientes:</strong>
 				</td>	              
                        
             </tr>`;
@@ -481,20 +501,37 @@ $(document).ready(function () {
 	});
 
 
-	$("#tabla-turnos-body").on("click", ".btn_registrar_reposicion_turno", async function () {
-		let asistencia_id = $(this).data("id");
-		let turnoDocenteId = $(this).data("turno-id");
-		let docenteId = $(this).data("docente-id");
-		const form = document.getElementById("form_reposicion_horas_docente");
-		form.reset(); // Reinicia el formulario
-		form.querySelector("#idnumber_docente").value = docenteId;
-		form.querySelector("#turno_id").value = turnoDocenteId;
-		form.querySelector("#asistencia_id").value = asistencia_id;
-		//console.log(form);
-		$("#form_reposicion_horas_docente").show();
-		$("#conten-inputs").append(getReporteReposicionFormInputs());
+	$("#tabla-turnos-body").on(
+		"click",
+		".btn_registrar_reposicion_turno",
+		async function () {
 
-	});
+			let asistencia_id = $(this).data("id");
+			let turnoDocenteId = $(this).data("turno-id");
+			let docenteId = $(this).data("docente-id");
+			let fecha = $(this).data("fecha");
+			let minutos = $(this).data("minutos");
+
+			const form = document.getElementById(
+				"form_reposicion_horas_docente"
+			);
+
+			//form.reset();
+
+			form.querySelector("#idnumber_docente").value = docenteId;
+
+			$("#form_reposicion_horas_docente").show();
+
+			$("#conten-inputs").append(
+				getReporteReposicionFormInputs(
+					asistencia_id,
+					turnoDocenteId,
+					fecha,
+					minutos
+				)
+			);
+		}
+	);
 
 	$("#form_reposicion_horas_docente").on("submit", async function (e) {
 		e.preventDefault();
@@ -505,19 +542,57 @@ $(document).ready(function () {
 		if (isvalid) {
 			let request = convertFormToJSON("form_reposicion_horas_docente");
 			let response = await horariosService.reponerAsistencias(request);
-			if (response) {
-				 	Swal.fire({
-						title: 'Reposición registrada con éxito',
-						icon: 'success',
-						timer: 2000,
-					});
-					$("#myModal_registrar_horas_pendientes_docente").modal("hide"); 
-				await getAsistenciasDocente();
+			if (response.status) {
+				Swal.fire({
+					title: response.message,
+					icon: 'success',
+					timer: 2000,
+				});
+				//$("#myModal_registrar_horas_pendientes_docente").modal("hide");
+				//await getAsistenciasDocente();
+			} else {
+				Swal.fire({
+					title: response.message,
+					icon: 'error',
+					timer: 2000,
+				});
 			}
+		}
+	});
+
+
+
+	$("#form_reposicion_horas_docente").on("click", ".btn-eliminar-reposicion", async function (e) {
+
+		if ($(this).data("reposicion-id") === "") {
+			$(this).closest(".div-reposicion").remove();
+			return;
+		} else {
+			let response = await horariosDocenteService.deleteAsistencia($(this).data("reposicion-id"));
+			$(this).closest(".div-reposicion").remove();
 		}
 
 
+	});
 
+	$("#form_reposicion_horas_docente").on("change", "input[type='time']", async function (e) {
+
+		const $reposicion = $(this);
+
+		const turnoId = $reposicion.closest('.div-reposicion').find('input[name="turnos_id[]"]').val();
+
+		let result = agruparMinutosPorTurno();
+		var min_rep = result.find(tr => tr.turno_id == turnoId);
+		if (min_rep != undefined) {
+			if (min_rep.minutos > min_rep.minutos_rp) {
+				toastr.error("Hay horas que sobrepasan", "", {
+					positionClass: "toast-top-center",
+					timeOut: "4000",
+				});
+			}
+		}
+
+		console.log(result, turnoId, min_rep)
 
 	});
 
@@ -808,7 +883,6 @@ async function getAsistenciasDocente() {
 			if (datahoraspendientes) { horas_pendientes = datahoraspendientes.minutos_pendientes; }
 
 			faltas = parseInt(horas_pendientes);
-
 			datosasis += '<tr>' +
 
 				'<td>' + parseInt(key + 1) + '</td>' +
@@ -819,7 +893,7 @@ async function getAsistenciasDocente() {
 				'<td>' + (asistencia_label) + '</td>' +
 				'<td>' + formatearHoras(parseInt((horas_semanales)) - round(asistencias)) + '</td>' +
 				'<td>' + formatearHoras(faltas) + '</td>' +
-				'<td>' + formatearHoras(reposiciones) + '</td>' +
+				'<td>' + formatearHoras(parseInt(reposiciones)) + '</td>' +
 				'<td>' + '<button class="btn btn-sm btn-iuris-primary btn_registrar_turno" data-id="' + value.idnumber + '">Detalles</button>' + '</td>' +
 
 				'</tr>';
@@ -831,77 +905,193 @@ async function getAsistenciasDocente() {
 	$("#wait").hide();
 }
 
-function getReporteReposicionFormInputs() {
-	//return "";
-	return `   <div class="row" id="div_reposicion" style="border-top: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 1px;">
-                            <div class="col-md-12">
-                                <div class="iuris-section-title">
+function getReporteReposicionFormInputs(
+	asistencia_id,
+	turno_docente_id,
+	fecha,
+	minutos,
+	reposicion_id = "",
+	fecha_reposicion = "",
+	hora_inicio_reposicion = "",
+	hora_fin_reposicion = ""
+) {
+	let key = $(".div-reposicion").length + 1;
+	return `
+        <div class="row div-reposicion" id="reposicion_${key}"
+             style="border-top: 1px solid #ccc;
+                    padding: 10px;
+                    margin-top: 10px;
+                    border-radius: 1px;">
 
-                                    <i class="fas fa-calendar-alt"></i>
+					 <input type="hidden"
+					 name=minutos[]
+                   id="minutos_${key}"
+                   value="${minutos}">
 
-                                    <span>Fecha de reposición del turno</span>
 
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+            <input type="hidden"
+                   name="resposicion_id[]"
+                   value="${reposicion_id}">
 
-                                <div class="form-group">
+            <input type="hidden"
+                   name="turnos_id[]"
+                   value="${turno_docente_id}">
 
-                                    <label class="iuris-form-label">
-                                        Fecha
-                                    </label>
+            <input type="hidden"
+                   name="asistencias_id[]"
+                   value="${asistencia_id}">
 
-                                    <div class="iuris-input-icon">
+            <div class="col-md-12">
 
-                                        <i class="far fa-clock"></i>
+                <div class="iuris-section-title">
+                    <i class="fas fa-calendar-alt"></i>
 
-                                        <input type="date" value="" class="form-control" required=""
-                                            id="fecha_reposicion" name="fecha_reposicion[]">
+                    <span>
+                        Fecha de reposición del turno
+                        (${fecha} - ${minutos} minutos)
+                    </span>
+                </div>
 
-                                    </div>
+            </div>
 
-                                </div>
+            <div class="col-md-4">
 
-                            </div>
-                            <div class="col-md-4">
+                <div class="form-group">
 
-                                <div class="form-group">
+                    <label class="iuris-form-label">
+                        Fecha
+                    </label>
 
-                                    <label class="iuris-form-label">
-                                        Hora inicio
-                                    </label>
+                    <div class="iuris-input-icon">
 
-                                    <div class="iuris-input-icon">
+                        <i class="far fa-calendar"></i>
 
-                                        <i class="far fa-clock"></i>
+                        <input type="date"
+                               class="form-control"
+                               required
+                               name="fecha_reposicion[]"
+                               value="${fecha_reposicion}">
 
-                                        <input type="time" class="form-control" required="" name="hora_inicio_reposicion[]"
-                                            id="hora_inicio_reposicion">
+                    </div>
 
-                                    </div>
+                </div>
 
-                                </div>
+            </div>
 
-                            </div>
+            <div class="col-md-4">
 
-                            <div class="col-md-4">
+                <div class="form-group">
 
-                                <div class="form-group">
+                    <label class="iuris-form-label">
+                        Hora inicio
+                    </label>
 
-                                    <label class="iuris-form-label">
-                                        Hora fin
-                                    </label>
+                    <div class="iuris-input-icon">
 
-                                    <div class="iuris-input-icon">
+                        <i class="far fa-clock"></i>
 
-                                        <i class="far fa-clock"></i>
+                        <input type="time"
+                               class="form-control"
+                               required
+                               name="hora_inicio_reposicion[]"
+                               value="${hora_inicio_reposicion}">
 
-                                        <input type="time" class="form-control" required="" id="hora_fin_reposicion"
-                                            name="hora_fin_reposicion[]">
-                                    </div>
+                    </div>
 
-                                </div>
+                </div>
 
-                            </div>
-                        </div>`;
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="form-group">
+
+                    <label class="iuris-form-label">
+                        Hora fin
+                    </label>
+
+                    <div class="iuris-input-icon">
+
+                        <i class="far fa-clock"></i>
+
+                        <input type="time"
+                               class="form-control"
+                               required
+                               name="hora_fin_reposicion[]"
+                               value="${hora_fin_reposicion}">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        	   <div class="col-md-12">
+
+                <div class="form-group">   
+
+                   
+
+                       
+
+                        <input type="button" data-reposicion-id="${reposicion_id}"
+                               class="btn btn-danger btn-sm btn-eliminar-reposicion"
+                               value="Eliminar reposición" data-key="${key}">
+
+
+                </div>
+
+            </div>
+		</div>
+    `;
+}
+
+function agruparMinutosPorTurno() {
+	const turnos = {};
+
+	$('#conten-inputs .div-reposicion').each(function () {
+		const $reposicion = $(this);
+
+		const turnoId = $reposicion.find('input[name="turnos_id[]"]').val();
+		const fecha = $reposicion.find('input[name="fecha_reposicion[]"]').val();
+		const horaInicio = $reposicion.find('input[name="hora_inicio_reposicion[]"]').val();
+		const horaFin = $reposicion.find('input[name="hora_fin_reposicion[]"]').val();
+		const minutos_rp = $reposicion.find('input[name="minutos[]"]').val();
+
+
+
+
+		if (!turnoId || !fecha || !horaInicio || !horaFin) {
+			return;
+		}
+
+		const inicio = moment(`${fecha} ${horaInicio}`, 'YYYY-MM-DD HH:mm');
+		const fin = moment(`${fecha} ${horaFin}`, 'YYYY-MM-DD HH:mm');
+
+		//console.log(inicio);
+
+		if (!inicio.isValid() || !fin.isValid()) {
+			return;
+		}
+
+		console.log(turnoId, fecha, horaInicio, horaFin);
+
+		const minutos = fin.diff(inicio, 'minutes');
+
+		if (minutos <= 0) {
+			return;
+		}
+
+		if (!turnos[turnoId]) {
+			turnos[turnoId] = {
+				turno_id: turnoId,
+				minutos: 0,
+				minutos_rp: minutos_rp
+			};
+		}
+
+		turnos[turnoId].minutos += minutos;
+	});
+
+	return Object.values(turnos);
 }

@@ -2915,12 +2915,13 @@ $(document).ready(function () {
 
         if (isvalid) {
             let request = convertFormToJSON("myform_add_nota_final_expedientes");
-            // $("#wait").show();
+            $("#wait").show();
             let response = await expedientesService.storeNotas(request);
             toastr.success("Notas agregadas con éxito", "", {
                 positionClass: "toast-top-right",
                 timeOut: "4000",
             });
+            $("#myModal_add_nota_final_expedientes").modal("hide")
             window.location.reload(true);
         } else {
             toastr.error("Hay campos que son obligatorios", "", {

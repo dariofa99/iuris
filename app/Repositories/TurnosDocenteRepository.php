@@ -231,16 +231,16 @@ class TurnosDocenteRepository
 
     public function actualizarAsistencia(Request $request)
     {
-        
+
 
         try {
             $turno_docente = TurnosDocente::find($request->turno_id);
             $asistencia = AsistenciaDocentes::find($request->asistencia_id);
             if (!$asistencia) {
-                return response()->json(['error' => 'Asistencia no encontrada.'], 404);
+                return 'Asistencia no encontrada.';
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al buscar la asistencia: ' . $e->getMessage()], 500);
+            return 'Error al buscar la asistencia: ' . $e->getMessage();
         }
 
         if ($request->has('fecha_turno') && $request->has('hora_inicio') && $request->has('hora_fin')) {
@@ -270,7 +270,6 @@ class TurnosDocenteRepository
             } else {
                 $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
                 $minutos_turno = Carbon::parse($turno_docente->trnd_hora_inicio)->diffInMinutes(Carbon::parse($turno_docente->trnd_hora_fin));
-
                 $minutos_reponer = $asistencia->minutos_reponer; // $minutos_turno - $minutos_de_atencion;
             }
 
@@ -298,6 +297,36 @@ class TurnosDocenteRepository
                 $request->fecha_repo . ' ' . $request->hora_fin_repo . ":00"
             )->format('Y-m-d H:i:s');
 
+
+            $minutos_repo = Carbon::parse($inicio_repo)
+                ->diffInMinutes(Carbon::parse($fin_repo));
+
+            $asistencia->minutos_reponer = $asistencia->minutos_reponer -  $minutos_repo;
+
+            if($asistencia->minutos_reponer<0){
+                 return [
+                    'status' => false,
+                    'message' => 'Verifique que no sobrepase el número de minutos pendientes.'.$asistencia->minutos_reponer
+                ];
+            }
+
+            $asistencia->save();
+
+            //verificar si ya existe una reposición para esta asistencia en esa fecha y hora, si existe actualizarla, si no crear una nueva
+            $reposicion_existente = AsistenciaDocentes::where('docidnumber', $turno_docente->trnd_docidnumber)
+                ->where('id', '!=', $asistencia->id)
+                ->where('inicio', '<', $fin_repo)
+                ->where('fin', '>', $inicio_repo)
+                ->first();
+
+
+            // return response()->json(['error' =>  $reposicion_existente], 400);
+            if ($reposicion_existente) {
+                return [
+                    'status' => false,
+                    'message' => 'Ya existe una reposición para esta asistencia en la misma fecha y hora.'
+                ];
+            }
             $reposicion = AsistenciaDocentes::create([
                 'docidnumber' => $turno_docente->trnd_docidnumber,
                 'tipo_asis' => 285,
@@ -311,6 +340,9 @@ class TurnosDocenteRepository
             $asistencia->reposiciones()->attach($reposicion->id);
         }
 
-        return $asistencia;
+        return [
+            'status' => true,
+            'message' => 'Registrado con éxito'
+        ];;
     }
 }
