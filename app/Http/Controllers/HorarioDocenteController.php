@@ -286,7 +286,7 @@ class HorarioDocenteController extends Controller
     }
     public function actualizarAsistencia(Request $request)
     {
-         return response()->json($request->all());
+        // return response()->json($request->all());
         $asi = AsistenciaDocentes::find($request->asistencia_id); //->delete();
 
 

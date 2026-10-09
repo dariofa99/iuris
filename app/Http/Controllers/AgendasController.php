@@ -101,12 +101,28 @@ class AgendasController extends Controller
             ], 400);
         }
 
-        $request['fecha_inicial'] = $periodo_act->prdfecha_inicio;
-        $request['fecha_final'] = $periodo_act->prdfecha_fin;
+        $periodStart = Carbon::parse(
+            $periodo_act->prdfecha_inicio
+        )->startOfDay();
+        $periodEnd = Carbon::parse(
+            $periodo_act->prdfecha_fin
+        )->startOfDay();
 
-        $rangeStart = Carbon::parse(
-            $request['fecha_inicial'] ?? Carbon::today()
-        );
+        $rangeStart = $request->filled('start')
+            ? Carbon::parse($request->input('start'))->startOfDay()
+            : $periodStart->copy();
+
+        if ($rangeStart->lt($periodStart)) {
+            $rangeStart = $periodStart->copy();
+        }
+
+        $requestedEnd = $request->filled('end')
+            ? Carbon::parse($request->input('end'))->startOfDay()->subDay()
+            : $periodEnd->copy();
+
+        $rangeEnd = $requestedEnd->gt($periodEnd)
+            ? $periodEnd->copy()
+            : $requestedEnd;
 
         $can_delete = true;
 
@@ -114,19 +130,12 @@ class AgendasController extends Controller
             currentUser()->hasRole('amatai') ||
             currentUser()->hasRole('estudiante')
         ) {
-            $rangeStart = Carbon::now();
+            $today = Carbon::today();
+            if ($rangeStart->lt($today)) {
+                $rangeStart = $today;
+            }
             $can_delete = false;
         }
-
-        $rangeEndRequest = $request['fecha_final']
-            ? Carbon::parse($request['fecha_final'])
-            : Carbon::parse('2027-05-31');
-
-        $maxEnd = Carbon::parse($request['fecha_final']);
-
-        $rangeEnd = $rangeEndRequest->lte($maxEnd)
-            ? $rangeEndRequest
-            : $maxEnd;
 
 
         // ============================================================
@@ -166,6 +175,7 @@ class AgendasController extends Controller
             "trnd_docidnumber" => $docenteId
         ])
             ->where("trndid_periodo", $periodo_act->id)
+            ->where("activo", 1)
             ->get();
 
 

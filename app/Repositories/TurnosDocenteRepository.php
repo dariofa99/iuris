@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Log;
 class TurnosDocenteRepository
 {
 
-    public function obtenerPorPeriodo($periodoId)
+    public function obtenerPorPeriodo(
+        $periodoId,
+        Carbon $fechaInicio,
+        Carbon $fechaFinExclusiva
+    )
     {
         $turnos = AppTurnosDocente::join(
             'users',
@@ -65,7 +69,19 @@ class TurnosDocenteRepository
         // UNA SOLA CONSULTA PARA TODOS LOS TURNOS
         // =====================================================
 
-        $asistencias = AsistenciaDocentes::with('reposiciones')
+        $asistencias = AsistenciaDocentes::with([
+            'reposiciones' => function ($query) use ($fechaInicio, $fechaFinExclusiva) {
+                $query->where(
+                    $query->qualifyColumn('inicio'),
+                    '>=',
+                    $fechaInicio
+                )->where(
+                    $query->qualifyColumn('inicio'),
+                    '<',
+                    $fechaFinExclusiva
+                );
+            }
+        ])
             ->leftJoin(
                 'referencias_tablas',
                 'asistencia_docentes.tipo_asis',
@@ -76,6 +92,33 @@ class TurnosDocenteRepository
                 'asistencia_docentes.turno_docente_id',
                 $turnoIds
             )
+            ->where(function ($query) use ($fechaInicio, $fechaFinExclusiva) {
+                $query->where(function ($query) use ($fechaInicio, $fechaFinExclusiva) {
+                    $query->where(
+                        'asistencia_docentes.inicio',
+                        '>=',
+                        $fechaInicio
+                    )
+                        ->where(
+                            'asistencia_docentes.inicio',
+                            '<',
+                            $fechaFinExclusiva
+                        );
+                })->orWhereHas(
+                    'reposiciones',
+                    function ($query) use ($fechaInicio, $fechaFinExclusiva) {
+                        $query->where(
+                            $query->qualifyColumn('inicio'),
+                            '>=',
+                            $fechaInicio
+                        )->where(
+                            $query->qualifyColumn('inicio'),
+                            '<',
+                            $fechaFinExclusiva
+                        );
+                    }
+                );
+            })
             ->where(function ($query) {
 
                 if (request()->has("docente_id") and request()->get("docente_id") != "") {

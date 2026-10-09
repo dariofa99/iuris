@@ -18,23 +18,39 @@ class CalendarioDocenteService
     }
 
     /**
-     * Obtiene los turnos del periodo y los
+     * Obtiene los turnos y asistencias del rango solicitado y los
      * convierte en eventos para FullCalendar.
      */
     public function obtenerEventos($periodo)
     {
+        $fechaInicio = Carbon::parse(
+            request()->input('start')
+        )->startOfDay();
+
+        $fechaFinExclusiva = Carbon::parse(
+            request()->input('end')
+        )->startOfDay();
+
         $turnos = $this->turnosDocenteRepository
-            ->obtenerPorPeriodo($periodo->id);
-        // return $turnos;
+            ->obtenerPorPeriodo(
+                $periodo->id,
+                $fechaInicio,
+                $fechaFinExclusiva
+            );
+
         return $this->generarEventos(
             $turnos,
-            $periodo
+            $periodo,
+            $fechaInicio,
+            $fechaFinExclusiva
         );
     }
 
     private function generarEventos(
         $turnos,
-        $periodo
+        $periodo,
+        $fechaInicio,
+        $fechaFinExclusiva
     ) {
         $eventos = [];
 
@@ -44,13 +60,10 @@ class CalendarioDocenteService
      * =====================================================
      */
 
-        $fechaInicio = Carbon::parse(
-            request()->input('start')
-        )->startOfDay();
-
-        $fechaFin = Carbon::parse(
-            request()->input('end')
-        )->subDay()->endOfDay();
+        $fechaFin = $fechaFinExclusiva
+            ->copy()
+            ->subDay()
+            ->endOfDay();
 
 
         /*

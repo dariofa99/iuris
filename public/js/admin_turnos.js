@@ -512,35 +512,41 @@ $(document).ready(function () {
 			let fecha = $(this).data("fecha");
 			let minutos = $(this).data("minutos");
 
-			const form = document.getElementById(
+			/* const form = document.getElementById(
 				"form_reposicion_horas_docente"
 			);
 
 			//form.reset();
 
-			form.querySelector("#idnumber_docente").value = docenteId;
+			form.querySelector("#idnumber_docente").value = docenteId; */
 
-			$("#form_reposicion_horas_docente").show();
-
-			$("#conten-inputs").append(
+			//$("#form_reposicion_horas_docente").show();
+			let content = $(this).parent().parent();
+			content.after(getReporteReposicionFormInputs(
+					asistencia_id,
+					turnoDocenteId,
+					fecha,
+					minutos
+				));
+			/* $("#conten-inputs").append(
 				getReporteReposicionFormInputs(
 					asistencia_id,
 					turnoDocenteId,
 					fecha,
 					minutos
 				)
-			);
+			); */
 		}
 	);
 
-	$("#form_reposicion_horas_docente").on("submit", async function (e) {
+	$("#tabla-turnos-body").on("submit",".form_reposicion_horas_docente", async function (e) {
 		e.preventDefault();
-		const form = document.getElementById("form_reposicion_horas_docente");
+		const form = this.closest("form");
 
 		let isvalid = validateForms(form);
-
+		let idForm = form.getAttribute("id");
 		if (isvalid) {
-			let request = convertFormToJSON("form_reposicion_horas_docente");
+			let request = convertFormToJSON(idForm);
 			let response = await horariosService.reponerAsistencias(request);
 			if (response.status) {
 				Swal.fire({
@@ -562,20 +568,20 @@ $(document).ready(function () {
 
 
 
-	$("#form_reposicion_horas_docente").on("click", ".btn-eliminar-reposicion", async function (e) {
+	$("#tabla-turnos-body").on("click", ".btn-eliminar-reposicion", async function (e) {
 
 		if ($(this).data("reposicion-id") === "") {
-			$(this).closest(".div-reposicion").remove();
+			$(this).closest("tr").remove();
 			return;
 		} else {
 			let response = await horariosDocenteService.deleteAsistencia($(this).data("reposicion-id"));
-			$(this).closest(".div-reposicion").remove();
+			$(this).closest("tr").remove();
 		}
 
 
 	});
 
-	$("#form_reposicion_horas_docente").on("change", "input[type='time']", async function (e) {
+	$("#tabla-turnos-body").on("change", "input[type='time']", async function (e) {
 
 		const $reposicion = $(this);
 
@@ -916,18 +922,20 @@ function getReporteReposicionFormInputs(
 	hora_fin_reposicion = ""
 ) {
 	let key = $(".div-reposicion").length + 1;
-	return `
-        <div class="row div-reposicion" id="reposicion_${key}"
-             style="border-top: 1px solid #ccc;
-                    padding: 10px;
-                    margin-top: 10px;
-                    border-radius: 1px;">
+	return `<tr><td colspan="6">
+	<form class="form_reposicion_horas_docente" id="form_reposicion_horas_docente_${key}">
+                        <input type="hidden" name="idnumber_docente" id="idnumber_docente">
+                        <div id="conten-inputs">
+						        <div class="row div-reposicion" id="reposicion_${key}"
+									style="border-top: 1px solid #ccc;
+											padding: 10px;
+											margin-top: 10px;
+											border-radius: 1px;">
 
 					 <input type="hidden"
 					 name=minutos[]
                    id="minutos_${key}"
                    value="${minutos}">
-
 
             <input type="hidden"
                    name="resposicion_id[]"
@@ -1028,7 +1036,7 @@ function getReporteReposicionFormInputs(
 
         	   <div class="col-md-12">
 
-                <div class="form-group">   
+                
 
                    
 
@@ -1039,10 +1047,21 @@ function getReporteReposicionFormInputs(
                                value="Eliminar reposición" data-key="${key}">
 
 
-                </div>
+                 <button class="btn btn-sm btn-iuris-primary" type="submit" id="btn_reponer_horas_docente">
+                                    Registrar reposición
+                                </button>
 
             </div>
 		</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                               
+                            </div>
+                        </div>
+                    </form>
+
+</td></tr>
     `;
 }
 

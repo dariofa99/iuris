@@ -40,20 +40,21 @@
     @include('content.navbar')
 @endsection
 @section('titulo_area')
-    @if (currentUser()->hasRole('estudiante') or currentUser()->hasRole("amatai"))        
+    @if (currentUser()->hasRole('estudiante') or currentUser()->hasRole('amatai'))
         <h3>Agenda: Seleccione un docente para ver su horario</h3>
 
         <select name="docente_id" id="docente_id" class="form-control selectpicker" data-live-search="true" data-size="7"
             data-style="btn-info" data-width="auto">
             <option value="">-- Seleccione un docente --</option>
             @foreach ($docentes as $docente)
-            @if($docente->idnumber == '27088946' or $docente->idnumber == '13067219' 
-            or $docente->idnumber == '1085338820' 
-            or $docente->idnumber == '1085334623' )
-                
-                <option value="{{ $docente->idnumber }}"> {{ strtoupper($docente->full_name) }}
-                </option>
-            @endif
+                @if ($docente->idnumber == '27088946' 
+                or $docente->idnumber == '13067219'
+                or $docente->idnumber == '1085334623'
+                or $docente->idnumber == '1085338820'
+                )
+                    <option value="{{ $docente->idnumber }}"> {{ strtoupper($docente->full_name) }}
+                    </option>
+                @endif
             @endforeach
         </select>
     @endif
@@ -115,6 +116,5 @@
     {!! Html::script('plugins/fullcalendar/dist/locale/es.js') !!}
     <script src="{{ asset('/plugins/bootstrap-select/bootstrap.js') }}"></script>
 
-    <script type="module" src={{ asset('js/admin_cal_cita_docentes.js?v='. config('app_config.asset_version')) }}></script>
+    <script type="module" src={{ asset('js/admin_cal_cita_docentes.js?v=' . config('app_config.asset_version')) }}></script>
 @endpush
-  

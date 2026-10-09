@@ -61,27 +61,7 @@
                         </table>
                     </div>
                     <hr>
-                    <form id="form_reposicion_horas_docente">
-
-                        <input type="hidden" name="idnumber_docente" id="idnumber_docente">
-                       
-
-
-                         <div id="conten-inputs">
-
-                         </div>
-
-                     
-
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <button class="btn btn-sm btn-iuris-primary" type="submit" id="btn_reponer_horas_docente">
-                                    Registrar reposición
-                                </button>
-                            </div>
-                        </div>
-
-                    </form>
+                    
                 </div>
             </div>
         </div>
