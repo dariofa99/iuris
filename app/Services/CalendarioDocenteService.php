@@ -435,9 +435,7 @@ class CalendarioDocenteService
                     $reposicion =
                         $asistencia->reposiciones->first();
 
-                    Log::info(
-                        "REPOSICIÓN: " . json_encode($reposicion)
-                    );
+                   
                     $evento['has_reposicion'] =
                         true;
 

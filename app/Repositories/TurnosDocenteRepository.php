@@ -17,8 +17,7 @@ class TurnosDocenteRepository
         $periodoId,
         Carbon $fechaInicio,
         Carbon $fechaFinExclusiva
-    )
-    {
+    ) {
         $turnos = AppTurnosDocente::join(
             'users',
             'turnos_docentes.trnd_docidnumber',
@@ -202,6 +201,7 @@ class TurnosDocenteRepository
         }
 
 
+
         $inicio = Carbon::createFromFormat(
             'Y-m-d H:i:s',
             $request->fecha_turno . ' ' . ($request->asistencia_id != null ? $request->hora_inicio : $request->hora_inicio)
@@ -211,6 +211,8 @@ class TurnosDocenteRepository
             'Y-m-d H:i:s',
             $request->fecha_turno . ' ' . ($request->asistencia_id != null ? $request->hora_fin : $request->hora_fin)
         )->format('Y-m-d H:i:s');
+
+        $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
 
         if ($request->tipo_asis == 284) {
             $minutos_reponer = Carbon::parse($turno_docente->trnd_hora_inicio)->diffInMinutes(Carbon::parse($turno_docente->trnd_hora_fin));
@@ -224,7 +226,7 @@ class TurnosDocenteRepository
                 $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_fin)
             )->format('Y-m-d H:i:s');
         } else {
-            $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
+
             $minutos_turno = Carbon::parse($turno_docente->trnd_hora_inicio)->diffInMinutes(Carbon::parse($turno_docente->trnd_hora_fin));
 
             $minutos_reponer = $minutos_turno - $minutos_de_atencion;
@@ -254,6 +256,14 @@ class TurnosDocenteRepository
                 $request->fecha_repo . ' ' . $request->hora_fin_repo . ":00"
             )->format('Y-m-d H:i:s');
 
+
+
+            $minutos_turno = Carbon::parse($turno_docente->trnd_hora_inicio)->diffInMinutes(Carbon::parse($turno_docente->trnd_hora_fin));
+
+            $minutos_de_reposicion = Carbon::parse($inicio_repo)->diffInMinutes(Carbon::parse($fin_repo));
+
+            $minutos_reponer = $minutos_turno - $minutos_de_reposicion;
+
             $reposicion = AsistenciaDocentes::create([
                 'docidnumber' => $turno_docente->trnd_docidnumber,
                 'tipo_asis' => 285,
@@ -262,10 +272,10 @@ class TurnosDocenteRepository
                 'descripcion' => $request->descripregisdocasis,
                 'categoria' => $request->categoria ?? "reposicion",
                 'turno_docente_id' => $turno_docente->id,
-                // 'minutos_reponer' => $request->minutos_reponer
+                'minutos_reponer' => $minutos_reponer
             ]);
 
-            Log::info("Asistencia ID: " . $asistencia->id . " - Reposición ID: " . $reposicion->id);
+            // Log::info("Asistencia ID: " . $asistencia->id . " - Reposición ID: " . $reposicion->id);
             $asistencia->reposiciones()->attach($reposicion->id);
         }
 
@@ -277,11 +287,13 @@ class TurnosDocenteRepository
 
 
         try {
-            $turno_docente = TurnosDocente::find($request->turno_id);
+
             $asistencia = AsistenciaDocentes::find($request->asistencia_id);
+
             if (!$asistencia) {
                 return 'Asistencia no encontrada.';
             }
+            $turno_docente = TurnosDocente::find($asistencia->turno_docente_id);
         } catch (\Exception $e) {
             return 'Error al buscar la asistencia: ' . $e->getMessage();
         }
@@ -300,7 +312,7 @@ class TurnosDocenteRepository
             )->format('Y-m-d H:i:s');
 
             if ($request->tipo_asis == 284) {
-                $minutos_reponer = $asistencia->minutos_reponer; // Carbon::parse($turno_docente->trnd_hora_inicio)->diffInMinutes(Carbon::parse($turno_docente->trnd_hora_fin));
+                $minutos_reponer = $asistencia->minutos_reponer; // Carbon::parse
                 $inicio = Carbon::createFromFormat(
                     'Y-m-d H:i:s',
                     $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_inicio)
@@ -310,10 +322,32 @@ class TurnosDocenteRepository
                     'Y-m-d H:i:s',
                     $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_fin)
                 )->format('Y-m-d H:i:s');
-            } else {
+            } else if ($request->tipo_asis == "149") {
                 $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
-                $minutos_turno = Carbon::parse($turno_docente->trnd_hora_inicio)->diffInMinutes(Carbon::parse($turno_docente->trnd_hora_fin));
-                $minutos_reponer = $asistencia->minutos_reponer; // $minutos_turno - $minutos_de_atencion;
+                $tdini = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_inicio)
+                )->format('Y-m-d H:i:s');
+
+                $tdfin = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_fin)
+                )->format('Y-m-d H:i:s');
+
+                $minutos_turno = Carbon::parse($tdini)->diffInMinutes(Carbon::parse($tdfin));
+                $asistencia->minutos_reponer = $minutos_turno - $minutos_de_atencion;
+                Log::info("Asistencia ID: " . $asistencia->id . " - Minutos a reponer: " . $asistencia->minutos_reponer);
+            } else {
+
+                if ($asistencia->minutos_reponer  > 0) {
+                    $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
+
+                    $minutos_diff = $minutos_de_atencion - $asistencia->minutos_reponer;
+
+                    $minutos_turno = $asistencia->minutos_reponer - $minutos_diff;
+                    // $minutos_reponer = $asistencia->minutos_reponer; // $minutos_turno - $minutos_de_atencion;
+                    $asistencia->minutos_reponer = $minutos_turno;
+                }
             }
 
 
@@ -325,11 +359,14 @@ class TurnosDocenteRepository
             $asistencia->descripcion = $request->descripregisdocasis == '' ? "Sin descripción" : $request->descripregisdocasis;
             //$asistencia->categoria = $request->categoria ?? "turno";
             //$asistencia->turno_docente_id = $turno_docente->id;
-            $asistencia->minutos_reponer = $minutos_reponer;
+
             $asistencia->save();
         }
 
+       // dd($request->all());
         if ($request->has('fecha_repo') && $request->has('hora_inicio_repo') && $request->has('hora_fin_repo')) {
+
+
             $inicio_repo = Carbon::createFromFormat(
                 'Y-m-d H:i:s',
                 $request->fecha_repo . ' ' . $request->hora_inicio_repo . ":00"
@@ -341,15 +378,41 @@ class TurnosDocenteRepository
             )->format('Y-m-d H:i:s');
 
 
+            $tdini = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $request->fecha_repo . ' ' . ($turno_docente->trnd_hora_inicio)
+            )->format('Y-m-d H:i:s');
+
+            $tdfin = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $request->fecha_repo . ' ' . ($turno_docente->trnd_hora_fin)
+            )->format('Y-m-d H:i:s');
+
+
+
+
+
             $minutos_repo = Carbon::parse($inicio_repo)
                 ->diffInMinutes(Carbon::parse($fin_repo));
 
-            $asistencia->minutos_reponer = $asistencia->minutos_reponer -  $minutos_repo;
 
-            if($asistencia->minutos_reponer<0){
-                 return [
+
+            if ($request->has("tipo_asis") and $request->tipo_asis == 150) {
+                $minutos_turno = Carbon::parse($tdini)->diffInMinutes(Carbon::parse($tdfin));
+                $asistencia->minutos_reponer = $minutos_turno -  $minutos_repo;
+                
+            } else {
+
+                $asistencia->minutos_reponer =  $asistencia->minutos_reponer -  $minutos_repo;
+            }
+
+
+            //dd($asistencia->minutos_reponer);
+
+            if ($asistencia->minutos_reponer < 0) {
+                return [
                     'status' => false,
-                    'message' => 'Verifique que no sobrepase el número de minutos pendientes.'.$asistencia->minutos_reponer
+                    'message' => 'Verifique que no sobrepase el número de minutos pendientes.' . $asistencia->minutos_reponer
                 ];
             }
 
@@ -370,7 +433,7 @@ class TurnosDocenteRepository
                     'message' => 'Ya existe una reposición para esta asistencia en la misma fecha y hora.'
                 ];
             }
-            $reposicion = AsistenciaDocentes::create([
+             $reposicion = AsistenciaDocentes::create([
                 'docidnumber' => $turno_docente->trnd_docidnumber,
                 'tipo_asis' => 285,
                 'inicio' => $inicio_repo,
@@ -380,7 +443,7 @@ class TurnosDocenteRepository
                 'turno_docente_id' => $turno_docente->id,
                 // 'minutos_reponer' => $request->minutos_reponer
             ]);
-            $asistencia->reposiciones()->attach($reposicion->id);
+            $asistencia->reposiciones()->attach($reposicion->id); 
         }
 
         return [

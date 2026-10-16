@@ -4,7 +4,7 @@
     @endslot
 
     @slot('title')
-    @endslot
+    @endslot 
 
 
     @slot('body')
@@ -59,6 +59,21 @@
                         </div>
 
                     </div>
+
+                </div>
+
+                
+                <div class="iuris-divider"></div>
+
+
+                <!-- HORARIO -->
+
+                <div class="iuris-section-title">
+
+                    <i class="far fa-calendar"></i>
+
+                    <span>Fecha del turno:</span>
+                    <span id="fecha_turno_text"></span>
 
                 </div>
 

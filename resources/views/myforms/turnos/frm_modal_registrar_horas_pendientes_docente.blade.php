@@ -1,69 +1,72 @@
-@component('components.b4.modal_large')
+@component('components.b4.modal_extra_large')
     @slot('trigger')
         myModal_registrar_horas_pendientes_docente
     @endslot
 
     @slot('title')
-        <label id="titulo_modal"></label>
+        <span id="titulo_modal"></span>
     @endslot
 
     @slot('footer')
     @endslot
+
     @slot('body')
         @include('msg.ajax.success')
 
-
-
-        <div id="content-data" class="row">
-            <div class="col-md-12">
-                <div class="iuris-turno-docente mb-3">
-                    <div class="iuris-docente-avatar">
-                        <img src="http://iuris.amatai.local/thumbnails/default.jpg" alt="Andrés Alfonso Benítez Caicedo"
-                            id="avatar_docente_pendiente" class="iuris-avatar">
-                    </div>
-
-                    <div class="iuris-turno-docente-info">
-                        <span class="iuris-label-form">Docente</span>
-                        <div class="iuris-turno-docente-name" id="nombre_docente_pendiente">
-                            Andrés Alfonso Benítez Caicedo
+        <div class="iuris-turnos-page iuris-pending-hours">
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="iuris-pending-teacher" aria-label="Docente seleccionado">
+                        <div class="iuris-docente-avatar">
+                            <img src="{{ asset('thumbnails/default.jpg') }}" alt="" id="avatar_docente_pendiente">
                         </div>
-                    </div>
-                </div>
-
-                <div class="iuris-form-card">
-                    <div class="iuris-form-header">
-                        <div class="iuris-form-title">
-                            <span class="iuris-form-icon">
-                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                            </span>
-                            <div>
-                                <h5>Horas por reponer</h5>
-                                <small>Listado de minutos (horas) pendientes de reposición</small>
-                            </div>
+                        <div class="iuris-pending-teacher-info">
+                            <span class="iuris-turnos-eyebrow">DOCENTE</span>
+                            <h2 class="iuris-turnos-page-header-title" id="nombre_docente_pendiente">
+                                Andrés Alfonso Benítez Caicedo
+                            </h2>
+                            <p>Consulta sus horas pendientes y reposiciones registradas.</p>
                         </div>
-
-
-                    </div>
-
-                    <div class="iuris-table-wrapper">
-                        <table class="table iuris-detail-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Hora inicio</th>
-                                    <th scope="col">Hora fin</th>
-                                    <th scope="col">Minutos</th>
-                                    <th scope="col">Descripción</th>
-                                    <th scope="col">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabla-turnos-body"></tbody>
-                        </table>
-                    </div>
-                    <hr>
-                    
+                    </section>
                 </div>
             </div>
+
+            <section class="card card-tabs iuris-turnos-panel" aria-label="Horas pendientes del docente">
+                <div class="card-header iuris-turnos-tabs-header">
+                    <ul class="nav nav-tabs iuris-turnos-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="horas-asistencia-tab" href="#horas-asistencia"
+                                data-toggle="tab" role="tab" aria-controls="horas-asistencia" aria-selected="true">
+                                <i class="far fa-clock" aria-hidden="true"></i>
+                                Registro de horas pendientes
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="asistencias-reponer-tab" data-toggle="tab"
+                                href="#asistencias-reponer" role="tab" aria-controls="asistencias-reponer"
+                                aria-selected="false">
+                                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                                Turnos registrados para reposición
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body iuris-turnos-panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="horas-asistencia" role="tabpanel"
+                            aria-labelledby="horas-asistencia-tab">
+                            @include('myforms.turnos.horas_pendientes_component')
+                        </div>
+
+                        <div class="tab-pane fade" id="asistencias-reponer" role="tabpanel"
+                            aria-labelledby="asistencias-reponer-tab">
+                            @include('myforms.turnos.reposiciones_component')
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     @endslot
 @endcomponent

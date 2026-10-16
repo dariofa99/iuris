@@ -213,6 +213,8 @@ class TurnosDocentesController extends Controller
             ->select('docidnumber', DB::raw('SUM(TIMESTAMPDIFF(MINUTE, `inicio`, `fin`)) AS reposicion'))
             ->groupBy('docidnumber')->orderBy('docidnumber', 'desc')->get();
 
+
+
         return response()->json($response);
     }
 
@@ -245,9 +247,8 @@ class TurnosDocentesController extends Controller
             ], 200);
         }
 
-        $data = AsistenciaDocentes::
-
-             where('reposicion', '0')
+        $data = AsistenciaDocentes::with('turno')
+            ->where('reposicion', '0')
             ->where('minutos_reponer', '>', '0')
             ->whereDate('inicio', '>=', $prdfecha_inicio)
             ->whereDate('fin', '<=', $prdfecha_fin)
@@ -262,7 +263,7 @@ class TurnosDocentesController extends Controller
             ]
         );
 
-        $data = $data->map(function ($item) {
+            $data = $data->map(function ($item) {
             $item->fecha = getSmallDate(Carbon::parse($item->inicio)->format('Y-m-d'));
             $item->inicio_text = getHour(Carbon::parse($item->inicio));
             $item->fin_text = getHour(Carbon::parse($item->fin));
@@ -277,8 +278,17 @@ class TurnosDocentesController extends Controller
                 ];
             });
             return $item;
-        });
+        }); 
 
+
+        $response['reposiciones'] = AsistenciaDocentes::with('asistenciaOrigen')
+            ->where('categoria', 'reposicion')
+            ->where('tipo_asis', '285')
+            ->whereDate('inicio', '>=', $prdfecha_inicio)
+            ->whereDate('fin', '<=', $prdfecha_fin)
+            ->where('docidnumber', '=', $request->get('docidnumber'))
+            ->select('id', 'tipo_asis', 'docidnumber', 'inicio', 'fin', 'descripcion')
+            ->orderBy('docidnumber', 'desc')->get();
 
         $response['horas_pendientes'] = $data;
         $response['minutos_pendientes'] = $minutos_pendientes;

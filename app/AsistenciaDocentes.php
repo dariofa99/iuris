@@ -36,6 +36,11 @@ class AsistenciaDocentes extends Model
          ->withPivot('asistencia_id', 'asistencia_repo_id', 'id')->withTimestamps();
    }
 
+    public function turno()
+   {
+      return $this->belongsTo(TurnosDocente::class, 'turno_docente_id');
+   }
+
    public function asistenciaOrigen()
    {
       return $this->belongsToMany(

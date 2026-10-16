@@ -278,16 +278,33 @@ class HorarioDocenteController extends Controller
 
     public function eliminarAsistencia(Request $request, int $id)
     {
-        return response()->json($request->all());
-        
-         $asi = AsistenciaDocentes::find($id)->delete();
+        $asistencia = AsistenciaDocentes::find($id);
+        if ($asistencia) {
+            $asistenciaPadre = $asistencia->asistenciaOrigen()->first();
+            if ($asistenciaPadre != null) {
+                $minutos_eliminados = Carbon::parse($asistencia->inicio)->diffInMinutes(Carbon::parse($asistencia->fin));
+                $asistenciaPadre->minutos_reponer = $asistenciaPadre->minutos_reponer + $minutos_eliminados;
+                $asistenciaPadre->save();
+                $asistencia->delete();
+            } else {
+                $asistencia->delete();
+            }
+            return response()->json([
+                "status" => true,
+                'message' => "Eliminación de asistencia y reposición exitosa"
+            ]);
+        }
+
         //$asistencia = $this->turnosDocenteRepository->registrarAsistencia($request);
-        return response()->json(['message' => $asi]);
+        return response()->json([
+            "status" => true,
+            'message' => "No hay asistencia con ese identificador"
+        ]);
     }
     public function actualizarAsistencia(Request $request)
     {
         // return response()->json($request->all());
-        $asi = AsistenciaDocentes::find($request->asistencia_id); //->delete();
+        // $asi = AsistenciaDocentes::find($request->asistencia_id); //->delete();
 
 
 
@@ -315,11 +332,11 @@ class HorarioDocenteController extends Controller
 
 
 
-    public function eliminarReposicion(Request $request, int $id)
+    /*  public function eliminarReposicion(Request $request, int $id)
     {
         return response()->json($request->all());
 
-        $asistencia = AsistenciaDocentes::find($id)->delete();
+        $asistencia = AsistenciaDocentes::find($id);
         if ($asistencia) {
             $reposicion = $asistencia->asistenciaOrigen()->first();
             // return response()->json(['message' => $reposicion]);
@@ -337,7 +354,7 @@ class HorarioDocenteController extends Controller
         return response()->json([
             "message" => 'Reposición registrada con éxito',
         ]);
-    }
+    } */
 
     public function registrarAsistencia(Request $request)
     {

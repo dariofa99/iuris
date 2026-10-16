@@ -6210,3 +6210,108 @@ RESPONSIVE
   padding: 10px;
   border-radius: 5px;
 }
+
+/* =========================================================
+   IURIS - HORAS PENDIENTES DEL DOCENTE
+========================================================= */
+
+.iuris-pending-hours .iuris-pending-teacher {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border: 1px solid #dce8e9;
+  border-radius: 8px;
+  background: linear-gradient(110deg, #f4f8f8 0%, #fff 75%);
+}
+
+.iuris-pending-hours .iuris-docente-avatar {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  margin: 0;
+  border-color: #cde3e6;
+}
+
+.iuris-pending-hours .iuris-pending-teacher-info {
+  min-width: 0;
+}
+
+.iuris-pending-hours .iuris-pending-teacher-info h2 {
+  margin: 3px 0;
+  color: #263f45;
+  font-size: 17px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.iuris-pending-hours .iuris-pending-teacher-info p {
+  margin: 0;
+  color: #71858a;
+  font-size: 12px;
+}
+
+.iuris-pending-hours .iuris-turnos-panel {
+  margin-bottom: 0;
+}
+
+.iuris-pending-hours .iuris-turnos-panel-body {
+  padding: 16px;
+}
+
+.iuris-pending-hours .iuris-form-card {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.iuris-pending-hours .iuris-table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.iuris-pending-hours .iuris-detail-table {
+  min-width: 720px;
+}
+
+.iuris-pending-hours .iuris-detail-table thead th {
+  white-space: nowrap;
+}
+
+.iuris-pending-hours .iuris-detail-table tbody td:nth-child(5) {
+  min-width: 180px;
+}
+
+@media (max-width: 575.98px) {
+  .iuris-pending-hours .iuris-pending-teacher {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .iuris-pending-hours .iuris-docente-avatar {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .iuris-pending-hours .iuris-pending-teacher-info h2 {
+    font-size: 15px;
+  }
+
+  .iuris-pending-hours .iuris-pending-teacher-info p {
+    font-size: 11px;
+  }
+
+  .iuris-pending-hours .iuris-turnos-panel-body {
+    padding: 10px;
+  }
+
+  .iuris-pending-hours .iuris-turnos-tabs {
+    gap: 14px;
+  }
+
+  .iuris-pending-hours .iuris-turnos-tabs .nav-link {
+    min-height: 46px;
+    font-size: 11px;
+  }
+}

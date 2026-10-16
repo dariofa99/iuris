@@ -1,5 +1,8 @@
 import { HorariosDocenteService } from "./services/horarios_docente.js";
 const horariosDocenteService = new HorariosDocenteService();
+let fechaOriginal = null;
+let horaInicioOriginal = null;
+let horaFinOriginal = null;
 $(function () {
 
     showCalendar();
@@ -102,21 +105,27 @@ $(function () {
 
     $(".iuris-novedades").on('change', 'input[type="radio"]', async function (e) {
         e.preventDefault();
-        console.log($(this).val());
         var tipo_asis = $(this).val();
         $("#div_reposicion").html("");
         if (tipo_asis == "150") {
             var content = contentRepos();
             $("#div_reposicion").html(content);
             $("#div_reposicion").show();
+            $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
+            $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
+        }else if (tipo_asis == "284") {
+            $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
+            $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
         } else {
             $("#div_reposicion").html("");
             $("#div_reposicion").hide();
+            $("#turnosdoc #hora_inicio").removeAttr("readonly");
+            $("#turnosdoc #hora_fin").removeAttr("readonly");
         }
 
     });
 
-    
+
 
     $("#div_reposicion").on('click', '#btnEliminarReposicion', async function (e) {
         e.preventDefault();
@@ -135,10 +144,10 @@ $(function () {
             positionClass: "toast-top-right",
             timeOut: "4000",
         });
-       // $("#calendar").fullCalendar('refetchEvents');
-       // $("#myModal_reporasistencia").modal('hide');
+        // $("#calendar").fullCalendar('refetchEvents');
+        // $("#myModal_reporasistencia").modal('hide');
 
-        
+
 
     })
 
@@ -350,6 +359,8 @@ function showCalendar(docente_id) {
         },
         eventClick: function (calEvent, jsEvent, view) {
             console.log(calEvent);
+            $("#turnosdoc #btnActualizar").text("Actualizar").attr("id", "btnActualizarTurnoDocente").prop("disabled", false).show();
+
             $("#turnosdoc #asistencia_id").val("");
             $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", false).show();
             $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", true).hide();
@@ -357,12 +368,11 @@ function showCalendar(docente_id) {
             $("#div_reposicion").hide();
             $("#div_reposicion").html("");
             resetDisabledForm("turnosdoc");
-            $("#turnosdoc #tipo_asis_pendiente_option").hide();
-            //limpiarForm("turnosdoc");
-            $(".iuris-option").each(function (option, index) {               
-                $(this).css("display", "block");
-            });
+            $("#turnosdoc #tipo_asis_pendiente_option").css("display", "none");
 
+            horaInicioOriginal = calEvent.hora_inicio;
+            horaFinOriginal = calEvent.hora_fin;
+            fechaOriginal = calEvent.fecha_turno;
             $("#turnosdoc #hora_inicio").val(calEvent.hora_inicio);
             $("#turnosdoc #turno_id").val(calEvent.id);
             $("#turnosdoc #fecha_turno").val(calEvent.fecha_turno);
@@ -372,6 +382,7 @@ function showCalendar(docente_id) {
             $("#turnosdoc #avatar_docente").attr("alt", calEvent.nombre);
             $(".iuris-novedades input[value='149']").prop("checked", true);
             $("#descripregisdocasis").val("");
+            $("#turnosdoc #fecha_turno_text").text(formatearFecha(calEvent.fecha_turno));
             if (calEvent.asistencia_id != null) {
                 $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", false).show();
                 $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", false).show();
@@ -381,14 +392,14 @@ function showCalendar(docente_id) {
                 $("#turnosdoc #hora_fin").val(calEvent.hora_fin_asis);
                 $("#descripregisdocasis").val(calEvent.descripcion);
                 $("#turnosdoc #asistencia_id").val(calEvent.asistencia_id);
-                if (calEvent.tipo_asis == 150) {
+                if (calEvent.tipo_asis == 150 || calEvent.has_reposicion) {
                     $("#div_reposicion").show();
                     $("#div_reposicion").html(contentRepos());
 
                     $("#turnosdoc #fecha_repo").val(calEvent.fecha_reposicion);
                     $("#turnosdoc #hora_inicio_repo").val(calEvent.hora_inicio_reposicion);
                     $("#turnosdoc #hora_fin_repo").val(calEvent.hora_fin_reposicion);
-                   // $("#turnosdoc #tipo_asis_pendiente_option").hide();
+                    $("#turnosdoc #tipo_asis_pendiente_option").hide();
                     disabledForm("turnosdoc")
                     $("#turnosdoc #btnActualizarTurnoDocente").text("Debe eliminar la reposición").prop("disabled", true).show();
                     $("#turnosdoc #btnEliminarAsistenciaDocente").text("Eliminar asistencia").prop("disabled", true).show();
@@ -403,11 +414,12 @@ function showCalendar(docente_id) {
                         $("#turnosdoc #fecha_repo").val("");
                         $("#turnosdoc #hora_inicio_repo").val("");
                         $("#turnosdoc #hora_fin_repo").val("");
-                        
+
                     }
                 }
                 if (calEvent.tipo_asis == 285 && calEvent.es_reposicion) {
                     $("#turnosdoc #tipo_asis_pendiente_option").show();
+                    $("#turnosdoc #btnActualizarTurnoDocente").text("Solo puede eliminar la reposición").attr("id", "btnActualizar").prop("disabled", true).show();
                 }
                 //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
             }
@@ -435,7 +447,7 @@ function contentRepos() {
                         <div class="iuris-section-title">
 
 
-                            <button type="button" class="btn-iuris-success btn-sm btnEliminarReposicion" id="btnEliminarReposicion"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                            
 
                         </div>
                     </div>

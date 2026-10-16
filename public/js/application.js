@@ -876,6 +876,13 @@ function formatearHoras(minutos) {
 }
 
 function formatearFecha(fecha) {
+  
+    
     moment.locale('es');
-    return moment(fecha).format('DD [de] MMMM. h a');
+    const fechaMoment = moment(fecha);
+    const formato = typeof fecha === 'string' && !/[T ]\d{1,2}:\d{2}/.test(fecha)
+        ? 'DD [de] MMMM'
+        : 'DD [de] MMMM. h a';
+
+    return fechaMoment.format(formato);
 }
