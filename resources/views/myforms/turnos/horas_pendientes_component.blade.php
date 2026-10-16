@@ -11,7 +11,6 @@
                   </div>
               </div>
           </header>
-
           <div class="iuris-table-wrapper">
               <table class="table iuris-detail-table">
                   <thead>
