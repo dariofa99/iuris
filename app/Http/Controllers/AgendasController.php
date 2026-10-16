@@ -127,7 +127,7 @@ class AgendasController extends Controller
         $can_delete = true;
 
         if (
-            currentUser()->hasRole('amatai') ||
+            currentUser()->hasRole('amatais') ||
             currentUser()->hasRole('estudiante')
         ) {
             $today = Carbon::today();

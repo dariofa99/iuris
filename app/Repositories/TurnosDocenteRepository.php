@@ -312,7 +312,6 @@ class TurnosDocenteRepository
             )->format('Y-m-d H:i:s');
 
             if ($request->tipo_asis == 284) {
-                $minutos_reponer = $asistencia->minutos_reponer; // Carbon::parse
                 $inicio = Carbon::createFromFormat(
                     'Y-m-d H:i:s',
                     $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_inicio)
@@ -322,6 +321,11 @@ class TurnosDocenteRepository
                     'Y-m-d H:i:s',
                     $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_fin)
                 )->format('Y-m-d H:i:s');
+
+                $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
+                $asistencia->minutos_reponer = $minutos_de_atencion;
+
+
             } else if ($request->tipo_asis == "149") {
                 $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
                 $tdini = Carbon::createFromFormat(
@@ -336,7 +340,7 @@ class TurnosDocenteRepository
 
                 $minutos_turno = Carbon::parse($tdini)->diffInMinutes(Carbon::parse($tdfin));
                 $asistencia->minutos_reponer = $minutos_turno - $minutos_de_atencion;
-                Log::info("Asistencia ID: " . $asistencia->id . " - Minutos a reponer: " . $asistencia->minutos_reponer);
+                
             } else {
 
                 if ($asistencia->minutos_reponer  > 0) {

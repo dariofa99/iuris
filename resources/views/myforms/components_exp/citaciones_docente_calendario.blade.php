@@ -40,7 +40,8 @@
     @include('content.navbar')
 @endsection
 @section('titulo_area')
-    @if (currentUser()->hasRole('estudiante') or currentUser()->hasRole('amatai'))
+    @if (currentUser()->hasRole('estudiante') 
+    or currentUser()->hasRole('amatai') || currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral'))
         <h3>Agenda: Seleccione un docente para ver su horario</h3>
 
         <select name="docente_id" id="docente_id" class="form-control selectpicker" data-live-search="true" data-size="7"
