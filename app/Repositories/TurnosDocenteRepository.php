@@ -68,7 +68,8 @@ class TurnosDocenteRepository
         // UNA SOLA CONSULTA PARA TODOS LOS TURNOS
         // =====================================================
 
-        $asistencias = AsistenciaDocentes::with([
+        $asistencias = AsistenciaDocentes::with('reposiciones')
+    /*     with([
             'reposiciones' => function ($query) use ($fechaInicio, $fechaFinExclusiva) {
                 $query->where(
                     $query->qualifyColumn('inicio'),
@@ -80,7 +81,7 @@ class TurnosDocenteRepository
                     $fechaFinExclusiva
                 );
             }
-        ])
+        ]) */
             ->leftJoin(
                 'referencias_tablas',
                 'asistencia_docentes.tipo_asis',
