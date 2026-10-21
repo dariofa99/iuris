@@ -324,9 +324,9 @@ trait AsigNotas
     return $notas;
   }
 
-  function getNotas()
+  function getNotas($origen = null)
   {
-
+          $origen = $origen ?? $this->origen;
   
     $notas = DB::table("notas")
       ->join("users as docente", "docente.idnumber", "=", "notas.docidnumber")
@@ -360,7 +360,7 @@ trait AsigNotas
         DB::raw("concat(docente.name,' ',docente.lastname) as docente")
       )
       ->where("notas.tbl_org_id", $this->id)
-      ->where("notas.orgntsid", $this->origen)
+      ->where("notas.orgntsid", $origen)
       ->get();
     $notasFormateadas = [];
     foreach ($notas as $nota) {

@@ -164,9 +164,12 @@ $(document).ready(function () {
         buscarExp()
     });
 
-    $("#btnCancelar").click(function () {
+    $("#btnCancelar").click(function (e) {
+        e.preventDefault();
         $("#contselecestcasos").hide();
         $("#inputestudianteasignado").show()
+        $(".iuris-case-editable-value").show();
+        $(".iuris-case-field-control").hide();
         $("#btnActualizar").hide();
         $("#btnCancelar").hide();
         $("#btnEditar").show();
@@ -205,6 +208,7 @@ $(document).ready(function () {
 
     });
     $("#btnActualizar").on("click", async function (e) {
+        e.preventDefault();
         var errors = validateForm("form_expediente_edit");
         if (errors.length <= 0) {
             var form = convertFormToJSON("form_expediente_edit");
@@ -228,9 +232,12 @@ $(document).ready(function () {
         }
 
     });
-    $("#btnEditar").click(function () {
+    $("#btnEditar").click(function (e) {
+        e.preventDefault();
         $("#contselecestcasos").show();
         $("#inputestudianteasignado").hide()
+        $(".iuris-case-editable-value").hide();
+        $(".iuris-case-field-control").show();
         $("#btnActualizar").show();
         $("#btnCancelar").show();
         $("#btnEditar").hide();
@@ -1978,6 +1985,7 @@ $(document).ready(function () {
     });
 
     $(".chk_change_shared").on("click", async function (e) {
+        e.preventDefault();
         var id = $(this).attr('data-id');
         var status = $(this).attr('data-status') == 0 ? 1 : 0;
         var request = {
@@ -1990,15 +1998,31 @@ $(document).ready(function () {
             positionClass: "toast-top-right",
             timeOut: "4000",
         });
+        var $shareButton = $(this);
+        var $advisoryCard = $shareButton.closest(".iuris-advisory-card");
+        var $shareIcon = $("#switch_edit" + id);
         if (status) {
-            $("#switch_edit" + id)
-                .removeClass("switch-off")
-                .addClass("switch-on");
-        } else if (!status) {
-            $("#switch_edit" + id)
-                .removeClass("switch-on")
-                .addClass("switch-off");
+            $shareIcon
+                .removeClass("fa-toggle-off switch-off")
+                .addClass("fa-toggle-on switch-on");
+            $advisoryCard.find(".iuris-advisory-status")
+                .removeClass("is-private")
+                .addClass("is-shared")
+                .html('<i class="fa fa-eye" aria-hidden="true"></i> Compartido con estudiante');
+            $shareButton.find("span").text("Visible");
+            $shareButton.attr("aria-label", "Dejar de compartir asesoría");
+        } else {
+            $shareIcon
+                .removeClass("fa-toggle-on switch-on")
+                .addClass("fa-toggle-off switch-off");
+            $advisoryCard.find(".iuris-advisory-status")
+                .removeClass("is-shared")
+                .addClass("is-private")
+                .html('<i class="fa fa-eye-slash" aria-hidden="true"></i> Solo equipo docente');
+            $shareButton.find("span").text("Privada");
+            $shareButton.attr("aria-label", "Compartir asesoría con estudiante");
         }
+        $shareButton.attr("data-status", status);
 
         $("#wait").hide();
     });
@@ -2075,7 +2099,7 @@ $(document).ready(function () {
                 e.preventDefault()
             } finally {
 
-                $("#wait").hide();
+                //$("#wait").hide();
                 e.preventDefault()
             }
         }
@@ -2409,6 +2433,7 @@ $(document).ready(function () {
             try {
                 $("#loader-container").show().css({ 'display': 'flex' })
                 $("#wait").show();
+                $("#myModal_act_add_revision").modal("hide");
                 const result = await expedientesService.addActuacion(body)
                     .then((response) => {
                         if (response.errors) {
@@ -2450,7 +2475,7 @@ $(document).ready(function () {
                             timer: 5500
                         });
                         console.error('Error al cargar el archivo:', error);
-                        $("#wait").hide();
+                        //$("#wait").hide();
                         e.preventDefault()
                     });
             } catch (error) {
@@ -3011,7 +3036,24 @@ $(document).ready(function () {
         };
         $("#wait").show();
         let response = await expedientesService.update(request, request.expediente_id);
-        $("#lbl_expfecha_res").text(request.expfecha_res);
+        const [year, month, day] = request.expfecha_res.split("-").map(Number);
+        const fechaRespuesta = new Date(year, month - 1, day);
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        const diasParaRespuesta = Math.round((fechaRespuesta - hoy) / 86400000);
+        const badgeDias = $("#lbl_dias_para_respuesta");
+        $("#lbl_expfecha_res").text(
+            `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`
+        );
+        badgeDias.removeClass("high medium low");
+        if (diasParaRespuesta > 0) {
+            badgeDias.addClass("high").text(`Faltan ${diasParaRespuesta} ${diasParaRespuesta === 1 ? "día" : "días"}`);
+        } else if (diasParaRespuesta === 0) {
+            badgeDias.addClass("medium").text("Vence hoy");
+        } else {
+            const diasVencida = Math.abs(diasParaRespuesta);
+            badgeDias.addClass("low").text(`Vencida hace ${diasVencida} ${diasVencida === 1 ? "día" : "días"}`);
+        }
         $("#fechalimitres").modal("hide");
         $("#wait").hide();
         toastr.success("Actualizado con éxito", "", {
@@ -4536,5 +4578,3 @@ async function changeSelectSearchExp(value) {
         default:
     }
 }
-
-

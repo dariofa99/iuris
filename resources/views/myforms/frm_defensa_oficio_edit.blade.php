@@ -4,9 +4,6 @@
 @push('styles')
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
-    <style>
-
-    </style>
 @endpush
 
 @section('navbar')
@@ -18,17 +15,19 @@
     @if (currentUser()->hasRole('solicitante'))
         Casos
     @else
-        @include('myforms.components_exp.frm_datos_docente')
+      <div class="row mb-2">
+            <div class="col-md-12">
+                <a href="#" class="btn-atrasexed  btn btn-sm bg-gray f-right" style="color:#777">
+                    <i class="fa fa-backward"></i> Atrás</a>
+            </div>
+        </div>
     @endif
 
 @endsection
 
 
 @section('area_buttons')
-    <div class="float-right" style="float: right !important;">
-        <a href="#" class="btn-atrasexed  btn bg-gray" style="color:#777">
-            <i class="fa fa-backward"></i> Atrás</a>
-    </div>
+    
 @endsection
 
 
@@ -37,7 +36,11 @@
         if (!currentUser()->hasRole('estudiante')) {
             $disabled = 'disabled';
         } else {
-            if ($expediente->expestado_id == '1' or $expediente->expestado_id == '3' or $expediente->expestado_id == '6') {
+            if (
+                $expediente->expestado_id == '1' or
+                $expediente->expestado_id == '3' or
+                $expediente->expestado_id == '6'
+            ) {
                 $disabled = '';
             } else {
                 $disabled = 'disabled';
@@ -46,40 +49,43 @@
     @endphp
     @include('msg.alerts')
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+     @include('myforms.components_exp.frm_datos_docente')
 
-        <li class="nav-item">
+    <div class="dofi-edit-page">
+        <ul class="nav nav-tabs dofi-tabs" id="myTab" role="tablist">
+
+      {{--   <li class="nav-item">
             <a class="nav-link active urlactive" id="chat-tab" data-toggle="tab" href="#chat_tab" role="tab"
                 aria-controls="chat_tab" aria-selected="false">
                 Oficina virtual
             </a>
         </li>
-
+ --}}
         <li class="nav-item">
-            <a class="nav-link urlactive" id="case_data-client" data-toggle="tab" href="#case_data" role="tab"
-                aria-controls="case_data" aria-selected="false">
-                Datos del caso
+            <a class="nav-link active urlactive" id="case-data-tab" data-toggle="tab" href="#case_data" role="tab"
+                aria-controls="case_data" aria-selected="true">
+                <i class="fa fa-folder-open" aria-hidden="true"></i> Datos del caso
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link urlactive" id="act-data" data-toggle="tab" href="#act_data" role="tab"
-                aria-controls="act_data" aria-selected="true">
-                Actuaciones
+            <a class="nav-link urlactive" id="act-data-tab" data-toggle="tab" href="#act_data" role="tab"
+                aria-controls="act_data" aria-selected="false">
+                <i class="fa fa-gavel" aria-hidden="true"></i> Actuaciones
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link urlactive" id="requerimientos_tab" data-toggle="tab" href="#requerimientos" role="tab"
+            <a class="nav-link urlactive" id="requerimientos-tab" data-toggle="tab" href="#requerimientos" role="tab"
                 aria-controls="requerimientos" aria-selected="false">
-                Cita o req. a solicitante
+                <i class="fa fa-bell" aria-hidden="true"></i> Cita o req. a solicitante
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link urlactive" id="cierre_caso-tab" data-toggle="tab" href="#cierre_caso" role="tab"
                 aria-controls="cierre_caso" aria-selected="false">
-                Cierre de caso
+                <i class="fa fa-flag-checkered" aria-hidden="true"></i> Cierre de caso
             </a>
         </li>
         @if (count($expediente->asignaciones) > 1 ||
@@ -90,49 +96,81 @@
                 $expediente->expestado_id != 2)
             <li class="nav-item">
                 <a class="nav-link urlactive" id="reasignar-tab" data-toggle="tab" href="#reasignar_caso" role="tab"
-                    aria-controls="reasignar" aria-selected="false">
-                    Reasignar Caso
+                    aria-controls="reasignar_caso" aria-selected="false">
+                    <i class="fa fa-exchange" aria-hidden="true"></i> Reasignar caso
                 </a>
             </li>
         @endif
         <li class="nav-item">
             <a class="nav-link urlactive" id="citaciones-tab" data-toggle="tab" href="#citaciones" role="tab"
                 aria-controls="citaciones" aria-selected="false">
-                Citaciones
+                <i class="fa fa-users" aria-hidden="true"></i> Citaciones
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link urlactive" id="autorizaciones-tab" data-toggle="tab" href="#autorizaciones" role="tab"
                 aria-controls="autorizaciones" aria-selected="false">
-                Autorizaciones
+                <i class="fa fa-check-square" aria-hidden="true"></i> Autorizaciones
             </a>
         </li>
         @if ($expediente->asignacion->procesojud_id != 1)
             <li class="nav-item">
                 <a class="nav-link urlactive" id="judicial-tab" data-toggle="tab" href="#judicial" role="tab"
                     aria-controls="judicial" aria-selected="false">
-                    Judicial
+                    <i class="fa fa-balance-scale" aria-hidden="true"></i> Judicial
                 </a>
             </li>
         @endif
 
     </ul>
 
-    <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
+    <div class="tab-content mt-3" id="myTabContent">
 
-        <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
+        {{-- <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
             <div class="row">
                 <div class="col-md-12 content_oficina_virtual" id="content_oficina_virtual">
                     @include('myforms.components_exp.frm_oficina_virtual')
-                </div> <!-- /.md12-->
+                </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
-            @include('myforms.components_exp.frm_datos_caso_dofi')
-            @include('myforms.components_exp.frm_asesorias_caso')
-            @include('myforms.components_exp.frm_notas_caso')
+        <div class="tab-pane fade show active" id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
+            <section class="iuris-form-card">
+                <header class="iuris-form-header">
+                    <div class="iuris-form-title">
+                        <span class="iuris-form-icon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                        <h5>Información del caso</h5>
+                    </div>
+                </header>
+                <div class="iuris-form-body">
+                    @include('myforms.components_exp.frm_datos_caso_dofi')
+                </div>
+            </section>
+
+            <section class="iuris-form-card">
+                <header class="iuris-form-header">
+                    <div class="iuris-form-title">
+                        <span class="iuris-form-icon"><i class="fa fa-comments" aria-hidden="true"></i></span>
+                        <h5>Asesorías y comentarios</h5>
+                    </div>
+                </header>
+                <div class="iuris-form-body">
+                    @include('myforms.components_exp.frm_asesorias_caso')
+                </div>
+            </section>
+
+            <section class="iuris-form-card">
+                <header class="iuris-form-header">
+                    <div class="iuris-form-title">
+                        <span class="iuris-form-icon"><i class="fa fa-star" aria-hidden="true"></i></span>
+                        <h5>Evaluación del caso</h5>
+                    </div>
+                </header>
+                <div class="iuris-form-body">
+                    @include('myforms.components_exp.frm_notas_caso')
+                </div>
+            </section>
         </div>
 
         <div class="tab-pane fade " id="act_data" role="tabpanel" aria-labelledby="act-data-tab">
@@ -188,6 +226,7 @@
                 </div>
             </div>
         @endif
+    </div>
     </div>
     @include('myforms.frm_add_asesoria_docente')
     @include('myforms.frm_update_asesoria_docente')

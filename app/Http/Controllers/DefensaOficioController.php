@@ -9,6 +9,7 @@ use App\Expediente;
 use App\User;
 use App\AsignacionCaso;
 use App\Jobs\ProcessEmailSendNotificarDirector;
+use App\Jobs\ProcessSendNotificationGeneral;
 use App\Notifications\UserNotification;
 use App\Services\AsignacionCasosService;
 use App\Services\EstadosCasoService;
@@ -151,11 +152,11 @@ class DefensaOficioController extends Controller
   {
 
     $active_expe = 'active';
-    $estudiantes = $this->userService->getUsersByRoleName('estudiante');
+    $estudiantes = $this->userService->getEstudiantesConCurso();
 
     // $user = User::with('role')->where('role.id',6)->get();
 
-    //   dd($users);
+    //   dd($estudiantes[0]);
 
     return view('myforms.frm_defensa_oficio_create', ['active_expe' => $active_expe, 'estudiantes' => $estudiantes]);
   }
@@ -196,7 +197,7 @@ class DefensaOficioController extends Controller
     $user = $this->userService->store($request); */
 
 
-    
+
 
 
     $request['exptipoproce_id'] = 3;
@@ -210,12 +211,9 @@ class DefensaOficioController extends Controller
     $request['expidnumber'] = $expediente->expid;
     $request['ref_estado_id'] = $expediente->expestado_id;
     $request['ref_motivo_estado_id'] = 13;
-    $estado_caso = $this->estadoCasoService->store($request); 
-    $user = $expediente->estudiante;
-    $user->notification = 'Nueva notificación de caso';
-    $user->link_to = '/defensas/oficio/' . $expediente->expid . '/edit';
-    $user->mensaje = 'Se ha asignado una defensa de oficio. Número: ' . $expediente->expid;
-    $user->notify(new UserNotification($user));
+    $estado_caso = $this->estadoCasoService->store($request);
+   
+    //$user->notify(new UserNotification($user));
     if (
       $expediente->expramaderecho_id == 37
       or $expediente->expramaderecho_id == 39
@@ -225,6 +223,23 @@ class DefensaOficioController extends Controller
       ProcessEmailSendNotificarDirector::dispatch($expediente)
         ->onConnection('database')->onQueue('emails');
     }
+
+    $user = $expediente->estudiante;
+   
+    $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
+
+    $concepto = 'Estimad@ ' . $user->name . ' ' . $user->lastname . ',  se le informa que se ha asignado una defensa de oficio con número: ' . $expediente->expid. ", recuerde que debe gestionar la respectiva posesión antes de ".getLongDate($request->get('expfechalimite')) . ", de lo contrario el sistema evaluará con notas de 0.0.";
+    
+  
+
+    //$concepto .= "\n" . "Expediente: " . $expediente->expid;
+    $concepto_html = nl2br(e($concepto));
+    $subject = 'Asignación de Defensa de Oficio';
+    $url = url('/defensas/oficio/' . $expediente->expid . '/edit');
+    ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+
+
+
     /* $notifications = view('layouts.notifications',compact('user'))->render();
         NewPush::channel('notifications_'.$request['expidnumberest']) 
         ->message(['render'=>$render,'notifications'=>$notifications])->publish();  */
@@ -324,7 +339,7 @@ class DefensaOficioController extends Controller
       ->where('role_id', '6')
 
       ->select(
-        'users.id', 
+        'users.id',
         'users.idnumber',
 
         DB::raw('CONCAT(users.name," ",users.lastname) as full_name'),

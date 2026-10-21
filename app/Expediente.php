@@ -278,8 +278,47 @@ class Expediente extends Model
         }
     }
 
+    function getDaysForPosesion()
+    {
+
+        $segmento = $this->getSegmentoActivo();
+
+
+        try {
+            $diasParaRespuesta = $this->expfechalimite
+                ? \Carbon\Carbon::today()->diffInDays(\Carbon\Carbon::parse($this->expfechalimite)->startOfDay(), false)
+                : null;
+
+            if ($diasParaRespuesta < 0 and $this->expestado_id == 1) {
+                $notas = $this->getNotas(5);
+                if (count($notas) == 0) {
+                    $data = [
+                        'ntaaplicacion' => 0,
+                        'ntaconocimiento' => 0,
+                        'ntaetica' => 0,
+                        'ntaconcepto' => 'Evaluado por sistema (fecha límite de posesión vencida)',
+                        'orgntsid' => 5,
+                        'segid' => $segmento->segmento_id,
+                        'perid' => $segmento->perid,
+                        'tpntid' => 1,
+                        'expidnumber' => $this->expid,
+                        'estidnumber' => $this->expidnumberest,
+                        'docidnumber' => Auth::user()->idnumber,
+                        'tbl_org_id' => $this->id,
+                    ];
+                    $this->asignarNotas($data);
+                }
+            }
+
+
+            return $diasParaRespuesta;
+        } catch (\ErrorException $e) {
+            return 'Error';
+        }
+    }
+
     function getDaysOrColorForClose($item = '', $now = null)
-    {    
+    {
         $asig = $this->getAsignacion();
         $periodo = $this->getPeriodoActivo();
         try {

@@ -51,7 +51,7 @@ class ProcessSendNotificationGeneral implements ShouldQueue
                         $this->concepto,
                         $this->user_created,
                         $this->subject,
-                        $this->url
+                        $this->url 
                     ));
             }
         }else{

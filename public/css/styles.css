@@ -282,6 +282,10 @@
 	-webkit-box-shadow: 0px 8px 24px -7px rgba(0, 0, 0, 0.75);
 	-moz-box-shadow: 0px 8px 24px -7px rgba(0, 0, 0, 0.75);
 	box-shadow: 0px 8px 24px -7px rgba(0, 0, 0, 0.75);
+	border-radius: 0.5rem; 
+	background-color: #ffffff; 
+	padding: 2px;
+	margin: 2px;
 }
 
 #wait {
@@ -1095,21 +1099,19 @@ body {
 
 .btn-notificar-incidencia {
 	display: inline-block;
-	background: linear-gradient(135deg, #ffffff, #fbfbfb);
-	color: #3052cc !important;
-	font-weight: 600;
+	
 	padding: 8px 16px;
-	border-radius: 25px;
+	border-radius: 3px;
 
 	text-decoration: none;
 	transition: all 0.3s ease;
-	box-shadow: 0 4px 10px rgba(152, 161, 163, 0.3);
+	
 }
 
 .btn-notificar-incidencia:hover {
 
 	transform: translateY(-2px);
-	box-shadow: 0 6px 12px rgba(0, 150, 199, 0.4);
+	
 	text-decoration: none;
 
 }

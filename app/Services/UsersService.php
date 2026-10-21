@@ -25,6 +25,7 @@ interface UsersService {
     public function changeSede(User $user);
     public function update(User $user,Request $request):User;
     public function updateProfilePicture(User $user,Request $request):User;
+    public function getEstudiantesConCurso(): array;
     
    
 }

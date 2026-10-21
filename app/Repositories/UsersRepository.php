@@ -159,6 +159,33 @@ class UsersRepository extends BaseRepository implements UsersService
     return $users->toArray();
   }
 
+  public function getEstudiantesConCurso(): array
+  {
+
+    $this->applyValidateSede();
+    $users = $this->query->whereHas('roles', function ($query) {
+        return $query->where('roles.name', "estudiante");
+      })
+      ->where(function ($query) {
+        if ($this->verifyStatus) {
+          return $query->where('users.active', true);
+        }
+      })
+       ->whereHas('turno')
+      ->where(function ($query) {
+        //if (!currentUser()->hasRole('amatai')) {
+        return $query->where('users.idnumber', '<>', 3030);
+        //}
+      })->select(
+        'users.active',
+        'users.id',
+        'users.idnumber',
+        'users.cursando_id',
+        DB::raw('CONCAT(users.name," ",users.lastname) as full_name')
+      )->get();
+    return $users->toArray();
+  }
+
   public function findUserByNameOrLastNameAndRole($name, $role, $verify_status = false): array
   {
     $this->applyValidateSede();
@@ -198,7 +225,7 @@ class UsersRepository extends BaseRepository implements UsersService
   }
 
   public function getDocentes(): array
-  { 
+  {
     $users = DB::table('users')
       ->leftjoin('role_user', 'users.id', '=', 'role_user.user_id')
       ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
@@ -438,4 +465,3 @@ class UsersRepository extends BaseRepository implements UsersService
     }
   }
 }
- 

@@ -12,7 +12,8 @@
 
             <a class="nota-caso-view" id="btn_edit_nt_exp"><i class="fa fa-eye" aria-hidden="true"></i> Ver notas</a>
         </div>
-    @else
+    @elseif( currentUser()->hasRole('docente') or currentUser()->hasRole('amatai') or currentUser()->hasRole('dirgral'))
+
         <div class="col-md-12 nota-caso-toolbar">
             @if ($expediente->expestado_id == 4 || $expediente->expestado_id == 2)
                 <button type="button" class="btn-nota-caso add_nota_expedientes" data-toggle="modal"

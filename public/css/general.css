@@ -2566,7 +2566,7 @@
 
 .iuris-form-card .form-control {
 
-  height: 36px;
+  
 
   /* font-size: 14px; */
 
@@ -2786,6 +2786,646 @@
     width: 100%;
   }
 
+}
+
+.iuris-assigned-teacher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid #dce5e7;
+  border-radius: 8px;
+  background: linear-gradient(115deg, #fff 0%, #f8fbfb 100%);
+  box-shadow: 0 3px 12px rgba(38, 63, 69, 0.05);
+}
+
+.iuris-assigned-teacher-profile {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.iuris-assigned-teacher-photo {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border: 2px solid #d7e8ea;
+  border-radius: 50%;
+  background: #eaf4f5;
+  object-fit: cover;
+}
+
+.iuris-assigned-teacher-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.iuris-assigned-teacher-label {
+  color: #71858a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.iuris-assigned-teacher-info strong {
+  color: #263f45;
+  font-size: 0.94rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.iuris-assigned-teacher-status {
+  color: #71858a;
+  font-size: 0.73rem;
+}
+
+.iuris-assigned-teacher-status.is-assigned .fa {
+  margin-right: 0.2rem;
+  color: #3a9a65;
+  font-size: 0.55rem;
+  vertical-align: 1px;
+}
+
+.iuris-assigned-teacher-status.is-pending .fa {
+  margin-right: 0.2rem;
+  color: #c18a1b;
+  font-size: 0.55rem;
+  vertical-align: 1px;
+}
+
+.iuris-assigned-teacher-actions {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.iuris-teacher-actions-toggle,
+.iuris-teacher-history,
+.iuris-teacher-request-action,
+.iuris-teacher-assign,
+.iuris-teacher-disable,
+.iuris-teacher-report {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid #d5e2e4;
+  border-radius: 3px;
+  background: #fff;
+  color: #426067;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.iuris-teacher-actions-toggle:hover,
+.iuris-teacher-actions-toggle:focus,
+.iuris-teacher-history:hover,
+.iuris-teacher-history:focus,
+.iuris-teacher-request-action:hover,
+.iuris-teacher-request-action:focus {
+  border-color: #9fc8cd;
+  background: #edf6f7;
+  color: #005f6a;
+  box-shadow: 0 2px 7px rgba(0, 105, 117, 0.1);
+}
+
+.iuris-teacher-actions-toggle .fa-chevron-down {
+  margin-left: 0.15rem;
+  font-size: 0.65rem;
+}
+
+.iuris-teacher-assign {
+  border-color: #006975;
+  background: #006975;
+  color: #fff;
+}
+
+.iuris-teacher-assign:hover,
+.iuris-teacher-assign:focus {
+  border-color: #005661;
+  background: #005661;
+  color: #fff;
+}
+
+.iuris-teacher-disable {
+  border-color: #f0d9d7;
+  background: #fffafa;
+  color: #a64b45;
+}
+
+.iuris-teacher-disable:hover,
+.iuris-teacher-disable:focus {
+  border-color: #dba8a4;
+  background: #fff0ef;
+  color: #923a34;
+}
+
+.iuris-teacher-report {
+  border-color: transparent;
+  background: #edf3f4;
+  color: #536c71;
+}
+
+.iuris-teacher-report:hover,
+.iuris-teacher-report:focus {
+  border-color: #d0e0e2;
+  background: #e2eef0;
+  color: #005f6a;
+}
+
+.iuris-teacher-actions-menu {
+  min-width: 205px;
+  margin-top: 0.4rem;
+  padding: 0.35rem;
+  border: 1px solid #dce7e9;
+  border-radius: 4px;
+  box-shadow: 0 8px 22px rgba(35, 57, 62, 0.14);
+}
+
+.iuris-teacher-actions-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 3px;
+  color: #344f55;
+  font-size: 0.82rem;
+}
+
+.iuris-teacher-actions-menu .dropdown-item:hover,
+.iuris-teacher-actions-menu .dropdown-item:focus {
+  background: #edf6f7;
+  color: #006975;
+}
+
+.iuris-teacher-actions-menu .fa {
+  width: 15px;
+  color: #71858a;
+  text-align: center;
+}
+
+@media (max-width: 767.98px) {
+  .iuris-assigned-teacher {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .iuris-assigned-teacher-actions {
+    justify-content: flex-start;
+    width: 100%;
+    padding-top: 0.7rem;
+    border-top: 1px solid #e8eef0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .iuris-assigned-teacher {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .iuris-assigned-teacher-photo {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .iuris-assigned-teacher-actions > .btn,
+  .iuris-assigned-teacher-actions > .dropdown {
+    flex: 1 1 auto;
+  }
+
+  .iuris-assigned-teacher-actions > .dropdown > .btn {
+    width: 100%;
+  }
+
+  .iuris-teacher-report {
+    flex: 1 1 100% !important;
+  }
+}
+
+.iuris-advisories {
+  margin: 0 0 1rem;
+  padding: 1.25rem;
+  border: 1px solid #dce5e7;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(38, 63, 69, 0.05);
+}
+
+.iuris-advisories-header,
+.iuris-advisories-heading,
+.iuris-advisory-card-header,
+.iuris-advisory-author,
+.iuris-advisory-meta,
+.iuris-advisory-footer,
+.iuris-advisory-share-button {
+  display: flex;
+  align-items: center;
+}
+
+.iuris-advisories-header {
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.iuris-advisories-heading {
+  min-width: 0;
+  gap: 0.85rem;
+}
+
+.iuris-advisories-icon,
+.iuris-advisories-empty-icon {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #eaf4f5;
+  color: #006975;
+  font-size: 1.2rem;
+}
+
+.iuris-advisories-eyebrow {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: #71858a;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.iuris-advisories-heading h3 {
+  margin: 0;
+  color: #263f45;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.iuris-advisories-heading p {
+  margin: 0.25rem 0 0;
+  color: #71858a;
+  font-size: 0.85rem;
+}
+
+.iuris-advisories-add {
+  display: inline-flex;
+  min-height: 40px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #006975;
+  border-radius: 6px;
+  background: #006975;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.iuris-advisories-add:hover,
+.iuris-advisories-add:focus {
+  border-color: #005661;
+  background: #005661;
+  color: #fff;
+  box-shadow: 0 3px 9px rgba(0, 105, 117, 0.2);
+}
+
+.iuris-advisories-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.iuris-advisory-card {
+  overflow: visible;
+  border: 1px solid #e2eaec;
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.iuris-advisory-card:hover {
+  border-color: #c9dfe2;
+  box-shadow: 0 4px 12px rgba(38, 63, 69, 0.06);
+}
+
+.iuris-advisory-card-header {
+  min-height: 68px;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #edf1f2;
+  background: #fbfcfc;
+  border-radius: 8px 8px 0 0;
+}
+
+.iuris-advisory-author {
+  min-width: 170px;
+  flex: 1 1 auto;
+  gap: 0.65rem;
+}
+
+.iuris-advisory-avatar {
+  display: flex;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eaf4f5;
+  color: #006975;
+}
+
+.iuris-advisory-label {
+  display: block;
+  margin-bottom: 0.1rem;
+  color: #71858a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.iuris-advisory-author h4 {
+  margin: 0;
+  color: #263f45;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.iuris-advisory-meta {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.85rem;
+  color: #71858a;
+  font-size: 0.76rem;
+}
+
+.iuris-advisory-status,
+.iuris-advisory-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.iuris-advisory-status {
+  padding: 0.28rem 0.55rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.iuris-advisory-status.is-shared {
+  background: #e8f5ed;
+  color: #287a49;
+}
+
+.iuris-advisory-status.is-private {
+  background: #f0f2f3;
+  color: #68777b;
+}
+
+.iuris-advisory-date {
+  white-space: nowrap;
+}
+
+.iuris-advisory-actions {
+  flex: 0 0 auto;
+}
+
+.iuris-advisory-menu-toggle {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #71858a;
+}
+
+.iuris-advisory-menu-toggle:hover,
+.iuris-advisory-menu-toggle:focus,
+.iuris-advisory-actions.open .iuris-advisory-menu-toggle {
+  border-color: #dce7e9;
+  background: #fff;
+  color: #006975;
+}
+
+.iuris-advisory-menu {
+  min-width: 190px;
+  padding: 0.35rem;
+  border: 1px solid #dce7e9;
+  border-radius: 7px;
+  box-shadow: 0 8px 22px rgba(35, 57, 62, 0.14);
+}
+
+.iuris-advisory-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 4px;
+  color: #344f55;
+  font-size: 0.84rem;
+}
+
+.iuris-advisory-menu .dropdown-item:hover,
+.iuris-advisory-menu .dropdown-item:focus {
+  background: #edf6f7;
+  color: #006975;
+}
+
+.iuris-advisory-menu .fa {
+  width: 15px;
+  color: #71858a;
+  text-align: center;
+}
+
+.iuris-advisory-menu .btn_delete_asesoria_caso:hover .fa {
+  color: #c0392b;
+}
+
+.iuris-advisory-content {
+  padding: 1rem;
+}
+
+.iuris-advisory-content p {
+  margin: 0;
+  color: #40595e;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.iuris-advisory-footer {
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-top: 1px solid #edf1f2;
+  background: #fbfcfc;
+  border-radius: 0 0 8px 8px;
+}
+
+.iuris-advisory-share-label {
+  color: #71858a;
+  font-size: 0.79rem;
+}
+
+.iuris-advisory-share-button {
+  gap: 0.4rem;
+  padding: 0.25rem 0.45rem;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #006975;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.iuris-advisory-share-button:hover,
+.iuris-advisory-share-button:focus {
+  background: #eaf4f5;
+  color: #005661;
+}
+
+.iuris-advisory-share-button .fa {
+  font-size: 1.2rem;
+}
+
+.iuris-advisory-share-button .switch-off {
+  color: #849398;
+}
+
+.iuris-advisories-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  border: 1px dashed #cbdde0;
+  border-radius: 7px;
+  background: #fbfcfc;
+}
+
+.iuris-advisories-empty-icon {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
+  background: #f0f5f6;
+  color: #82979b;
+  font-size: 1rem;
+}
+
+.iuris-advisories-empty strong {
+  color: #344f55;
+  font-size: 0.9rem;
+}
+
+.iuris-advisories-empty p {
+  margin: 0.2rem 0 0;
+  color: #71858a;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 767.98px) {
+  .iuris-advisories {
+    padding: 1rem;
+  }
+
+  .iuris-advisory-card-header {
+    flex-wrap: wrap;
+  }
+
+  .iuris-advisory-author {
+    min-width: 0;
+  }
+
+  .iuris-advisory-meta {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 3rem;
+  }
+
+  .iuris-advisory-actions {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .iuris-advisories {
+    padding: 0.8rem;
+  }
+
+  .iuris-advisories-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .iuris-advisories-heading {
+    align-items: flex-start;
+  }
+
+  .iuris-advisories-icon {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+
+  .iuris-advisories-heading h3 {
+    font-size: 1.02rem;
+  }
+
+  .iuris-advisories-heading p {
+    font-size: 0.78rem;
+  }
+
+  .iuris-advisories-add {
+    width: 100%;
+  }
+
+  .iuris-advisory-card-header {
+    gap: 0.65rem;
+    padding: 0.7rem;
+  }
+
+  .iuris-advisory-meta {
+    gap: 0.4rem 0.6rem;
+    padding-left: 0;
+  }
+
+  .iuris-advisory-content {
+    padding: 0.8rem;
+  }
+
+  .iuris-advisory-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 0.6rem 0.8rem;
+  }
 }
 
 /* ============================================
@@ -6314,4 +6954,497 @@ RESPONSIVE
     min-height: 46px;
     font-size: 11px;
   }
+}
+
+.dofi-edit-page .dofi-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0.4rem;
+  border: 1px solid #dce5e7;
+  border-radius: 9px;
+  background: #f5f9f9;
+  scrollbar-width: thin;
+}
+
+.dofi-edit-page .dofi-tabs .nav-item {
+  flex: 0 0 auto;
+}
+
+.dofi-edit-page .dofi-tabs .nav-link {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #65777b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.dofi-edit-page .dofi-tabs .nav-link i {
+  color: #006975;
+}
+
+.dofi-edit-page .dofi-tabs .nav-link:hover,
+.dofi-edit-page .dofi-tabs .nav-link:focus {
+  border-color: #dce5e7;
+  color: #005661;
+  background: #fff;
+}
+
+.dofi-edit-page .dofi-tabs .nav-link.active {
+  border-color: #006975;
+  color: #fff;
+  background: #006975;
+  box-shadow: 0 2px 6px rgba(0, 105, 117, 0.18);
+}
+
+.dofi-edit-page .dofi-tabs .nav-link.active i {
+  color: #fff;
+}
+
+.dofi-deadline-row {
+  margin-top: 0.35rem;
+}
+
+.dofi-deadline-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 78px;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d4e4e6;
+  border-left: 4px solid #006975;
+  border-radius: 7px;
+  background: linear-gradient(110deg, #f4f8f8 0%, #fff 75%);
+  box-shadow: 0 2px 8px rgba(38, 63, 69, 0.05);
+}
+
+.dofi-deadline-icon {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  color: #006975;
+  background: #e8f0f1;
+  font-size: 1.1rem;
+}
+
+.dofi-deadline-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dofi-deadline-label {
+  color: #65777b;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.dofi-deadline-info strong {
+  color: #263f45;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.dofi-deadline-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.dofi-deadline-actions .badge-asistencia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.dofi-deadline-actions .badge-asistencia.high {
+  color: #006975;
+  background: #e8f0f1;
+}
+
+.dofi-deadline-actions .badge-asistencia.medium {
+  color: #765b21;
+  background: #fff5d7;
+}
+
+.dofi-deadline-actions .badge-asistencia.low {
+  color: #b34e41;
+  background: #fbecea;
+}
+
+.dofi-deadline-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #dce5e7;
+  border-radius: 5px;
+  color: #006975;
+  background: #fff;
+  font-weight: 600;
+}
+
+.dofi-deadline-edit:hover,
+.dofi-deadline-edit:focus {
+  border-color: #006975;
+  color: #005661;
+  background: #f5fafb;
+}
+
+.iuris-student-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #dce5e7;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(38, 63, 69, 0.05);
+}
+
+.iuris-student-details {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.iuris-student-profile {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.iuris-student-photo {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  border: 2px solid #cde3e6;
+  border-radius: 50%;
+  background: #e8f0f1;
+  object-fit: cover;
+}
+
+.iuris-student-identity {
+  min-width: 0;
+}
+
+.iuris-student-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #71858a;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.iuris-student-name {
+  color: #263f45;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.iuris-student-selector {
+  width: 320px;
+  max-width: 100%;
+  margin-top: 0.4rem;
+}
+
+.iuris-student-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+}
+
+.iuris-student-links a {
+  color: #006975;
+  font-weight: 600;
+}
+
+.iuris-student-links a:hover,
+.iuris-student-links a:focus {
+  color: #005661;
+  text-decoration: underline;
+}
+
+.iuris-student-course {
+  display: flex;
+  min-width: 145px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid #e5edef;
+}
+
+.iuris-case-actions {
+  flex: 0 0 auto;
+  max-width: 42%;
+  padding-left: 1rem;
+  border-left: 1px solid #e5edef;
+}
+
+.iuris-case-actions-toggle {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #cbdde0;
+  border-radius: 7px;
+  background: #f8fbfb;
+  color: #006975;
+  font-weight: 600;
+  box-shadow: 0 2px 7px rgba(38, 63, 69, 0.06);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.iuris-case-actions-toggle:hover,
+.iuris-case-actions-toggle:focus,
+.iuris-case-actions.open .iuris-case-actions-toggle {
+  border-color: #8dbdc3;
+  background: #edf6f7;
+  color: #005661;
+  box-shadow: 0 4px 12px rgba(0, 105, 117, 0.12);
+}
+
+.iuris-case-actions-toggle .fa-chevron-down {
+  margin-left: 0.15rem;
+  font-size: 0.7rem;
+}
+
+.iuris-case-actions-menu {
+  min-width: 230px;
+  margin-top: 0.45rem;
+  padding: 0.4rem;
+  border: 1px solid #dce7e9;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(35, 57, 62, 0.16);
+}
+
+.iuris-case-actions-menu > li > a {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 5px;
+  color: #344f55;
+  font-size: 0.9rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.iuris-case-actions-menu > li > a:hover,
+.iuris-case-actions-menu > li > a:focus {
+  background: #edf6f7;
+  color: #006975;
+}
+
+.iuris-case-actions-menu > li > a .fa {
+  width: 16px;
+  color: #628187;
+  text-align: center;
+}
+
+.iuris-case-actions-menu > li + li {
+  margin-top: 2px;
+}
+
+.iuris-case-actions-menu .iuris-case-action-notice {
+  padding: 0.65rem 0.75rem;
+  border-top: 1px solid #e5edef;
+  color: #657b80;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.iuris-case-actions-menu .iuris-case-action-notice > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.iuris-case-actions-menu .iuris-case-action-notice .fa {
+  margin-top: 2px;
+  color: #b78112;
+}
+
+.iuris-case-summary {
+  margin: 0 15px 1rem;
+  padding: 1rem;
+  border: 1px solid #dce5e7;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(38, 63, 69, 0.04);
+}
+
+.iuris-case-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid #edf1f2;
+}
+
+.iuris-case-summary-header h4 {
+  margin: 0;
+  color: #263f45;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.iuris-case-summary-header > .fa {
+  color: #78aeb5;
+  font-size: 1.2rem;
+}
+
+.iuris-case-summary-eyebrow {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #71858a;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.iuris-case-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.iuris-case-summary-item {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid #edf1f2;
+  border-radius: 6px;
+  background: #fbfcfc;
+}
+
+.iuris-case-summary-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #71858a;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.iuris-case-summary-value {
+  display: block;
+  color: #263f45;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.iuris-case-summary-value > .fa {
+  margin-right: 0.3rem;
+  color: #628187;
+}
+
+.iuris-case-field-control {
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 767.98px) {
+  .iuris-student-overview,
+  .iuris-student-details {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .iuris-student-overview {
+    gap: 1rem;
+    padding: 0.85rem;
+  }
+
+  .iuris-student-details {
+    gap: 0.85rem;
+  }
+
+  .iuris-student-course {
+    min-width: 0;
+    padding: 0.65rem 0 0;
+    border-top: 1px solid #e5edef;
+    border-left: 0;
+  }
+
+  .iuris-case-actions {
+    max-width: none;
+    padding: 0.75rem 0 0;
+    border-left: 0;
+    border-top: 1px solid #e5edef;
+  }
+
+  .iuris-case-actions-menu {
+    right: auto;
+    left: 0;
+  }
+
+  .iuris-case-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .dofi-edit-page .dofi-tabs .nav-link {
+    min-height: 40px;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .dofi-deadline-panel {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    padding: 0.75rem;
+  }
+
+  .dofi-deadline-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+    padding-left: calc(42px + 0.7rem);
+  }
+
+  .iuris-case-summary {
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0.8rem;
+  }
+
+  .iuris-case-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
 }

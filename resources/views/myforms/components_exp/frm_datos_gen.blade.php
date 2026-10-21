@@ -1,3 +1,59 @@
+@php
+    $diasParaRespuesta = $expediente->getDaysForPosesion();
+        
+@endphp
+
+@if ($expediente->exptipoproce_id == 3 and $expediente->expestado_id == 1)
+    <div class="row dofi-deadline-row">
+        <div class="col-12">
+            <section class="dofi-deadline-panel" aria-label="Fecha límite de respuesta">
+                <span class="dofi-deadline-icon" aria-hidden="true">
+                    <i class="fa fa-calendar"></i>
+                </span>
+
+                <div class="dofi-deadline-info">
+                    <span class="dofi-deadline-label">Fecha límite de respuesta</span>
+                    <strong id="lbl_expfecha_res">
+                        {{ getLongDate($expediente->expfechalimite) }}
+                    </strong>
+                </div>
+
+                <div class="dofi-deadline-actions">
+                    @if ($diasParaRespuesta > 0)
+                        <span id="lbl_dias_para_respuesta" class="badge-asistencia high" aria-live="polite">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            Faltan {{ $diasParaRespuesta }} {{ $diasParaRespuesta === 1 ? 'día' : 'días' }}
+                        </span>
+                    @elseif ($diasParaRespuesta === 0)
+                        <span id="lbl_dias_para_respuesta" class="badge-asistencia medium" aria-live="polite">
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                            Vence hoy
+                        </span>
+                    @else
+                        <span id="lbl_dias_para_respuesta" class="badge-asistencia low" aria-live="polite">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            Vencida hace {{ abs($diasParaRespuesta) }}
+                            {{ abs($diasParaRespuesta) === 1 ? 'día' : 'días' }}
+                        </span>
+                    @endif
+
+                    @if (
+                        !$readonly and
+                            (currentUser()->hasRole('docente') or
+                                currentUser()->hasRole('diradmin') or
+                                currentUser()->hasRole('dirgral') or
+                                currentUser()->hasRole('amatai')))
+                        <a class="btn btn-sm dofi-deadline-edit" data-toggle="modal" data-target="#fechalimitres">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            Cambiar fecha
+                        </a>
+                    @endif
+                </div>
+            </section>
+        </div>
+    </div>
+@endif
+
 <div class="row">
     <input type="hidden" value="{{ $expediente->id }}" id="expediente_id" name="expediente_id">
     @if ($expediente->getAsignacion())
@@ -5,241 +61,285 @@
             name="fecha_asig">
         <input type="hidden" value="{{ $expediente->getAsignacion()->id }}" id="id_asig" name="id_asig">
     @endif
-    @if (!currentUser()->hasRole('estudiante'))
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>Estudiante asignado</label>
-                <input id="inputestudianteasignado" readonly type="text"
-                    value="{{ $expediente->estudiante->name }} {{ $expediente->estudiante->lastname }}"
-                    class="form-control">
-                <div id="contselecestcasos" style="display: none">
-                    <select data-live-search="true" disabled required id="selectexpidnumberest"
-                        class="required form-control disabled-fun3 selectpicker">
-                        @foreach ($estudiantes as $key => $estudiante)
-                            <option {{ $expediente->expidnumberest != $estudiante['idnumber'] ?: 'selected' }}
-                                value="{{ $estudiante['idnumber'] }}">
-                                {{ $estudiante['full_name'] }}
-                            </option>
-                        @endforeach
-                    </select>
 
-                    <input type="hidden" name="oldexpidnumberest" value="{{ $expediente->expidnumberest }}"
-                        id="oldexpidnumberest">
-                    <input type="hidden" name="expidnumberest" id="idnumberest" disabled>
+    @php
+        $fotoEstudiante =
+            $expediente->estudiante->image && is_file(public_path('thumbnails/' . $expediente->estudiante->image))
+                ? asset('thumbnails/' . $expediente->estudiante->image)
+                : asset('thumbnails/default.jpg');
+    @endphp
+    <div class="col-12">
+        <section class="iuris-student-overview">
+            <div class="iuris-student-details">
+                <div class="iuris-student-profile">
+                    <img src="{{ $fotoEstudiante }}"
+                        alt="Foto de {{ $expediente->estudiante->name }} {{ $expediente->estudiante->lastname }}"
+                        class="iuris-student-photo">
 
-                </div>
-                @if (currentUser()->hasRole('amatai'))
-                    <a href="{{ url('/users/'.$expediente->estudiante->id.'/edit') }}"
-                        target="_blank" rel="noopener noreferrer">
-                        <b><small>Cédula: {{ $expediente->estudiante->idnumber }} </small></b>
+                    <div class="iuris-student-identity">
+                        <span class="iuris-student-label">Estudiante asignado</span>
+                        <div id="inputestudianteasignado" class="iuris-student-name">
+                            {{ $expediente->estudiante->name }} {{ $expediente->estudiante->lastname }}
+                        </div>
 
-                    </a>
-                     <a href="{{ url('/notas/ver/estudiante?idnumber=' . $expediente->estudiante->idnumber . '&origen=expedientes&expid=' . $expediente->expid) }}"
-                        target="_blank" rel="noopener noreferrer">
-                        <b><small>Ver notas</small></b>
+                        <div id="contselecestcasos" class="iuris-student-selector" style="display: none">
+                            <select data-live-search="true" disabled required id="selectexpidnumberest"
+                                class="required form-control disabled-fun3 selectpicker"
+                                aria-label="Cambiar estudiante asignado">
+                                @foreach ($estudiantes as $key => $estudiante)
+                                    <option {{ $expediente->expidnumberest != $estudiante['idnumber'] ?: 'selected' }}
+                                        value="{{ $estudiante['idnumber'] }}">
+                                        {{ $estudiante['full_name'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    </a>
-                @endif
-            </div>
-        </div>
+                        <input type="hidden" name="oldexpidnumberest" value="{{ $expediente->expidnumberest }}"
+                            id="oldexpidnumberest">
+                        <input type="hidden" name="expidnumberest" id="idnumberest" disabled>
 
-        <div class="col-md-3">
-            <div class="form-group">
-                <label>Curso</label><br>
-                @if ($expediente->estudiante->curso->id != 1 and $expediente->estudiante->turno)
-                    <label style="margin-left:8px; padding:2px 4px 2px 4px;border-radius:5px; font-size:13px"
-                        class="label {{ $expediente->getColorTurno($expediente->estudiante->turno->color->ref_value) }}">
-
-                        {{ $expediente->estudiante->curso->ref_nombre }}
-                        @if ($expediente->estudiante->turno)
-                            {{ $expediente->getMjs($expediente->estudiante->turno->horario->ref_value) }}
-                        @endif
-                    </label>
-                @else
-                    <label style="margin-left:8px;" class="label bg-orange">
-                        Sin curso asignado
-                    </label>
-                @endif
-            </div>
-        </div>
-
-        @if ($expediente->expfecha_res)
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Fecha respuesta</label>
-                    <p>
-                        <label for="" id="lbl_expfecha_res">
-                            {{ $expediente->expfecha_res }}
-                        </label>
-                        @if (
-                            !$readonly and
-                                (currentUser()->hasRole('docente') or
-                                    currentUser()->hasRole('diradmin') or
-                                    currentUser()->hasRole('dirgral') or
-                                    currentUser()->hasRole('amatai')))
-                            &nbsp;&nbsp;
-                            <a style="cursor: pointer;" data-toggle="modal" data-target="#fechalimitres">
-                                Modificar
-                            </a>
-                        @endif
-                    </p>
-                </div>
-            </div>
-        @endif
-        <div class="col-md-2 ">
-
-            @if ($expediente->asignacion)
-
-                @if (auth()->user()->can('editar_datos_caso'))
-                    <a class="btn btn-primary btn-sm btn-block" id="btnEditar"><i class="fa fa-edit"> </i>
-                        Editar</a>
-                    <a class="btn btn-success btn-block btn-sm" id="btnActualizar" style="display: none;">
-                        <i class="fa  fa-check-circle"> </i>
-                        Actualizar</a>
-                    <a class="btn btn-danger btn-sm btn-block" style="display: none;" id="btnCancelar">
-                        <i class="fa  fa-remove"> </i>
-                        Cancelar</a>
-                @endif
-
-                @if (
-                    $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                        $expediente->asignacion->procesojud_id == 1 and
-                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                            //currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('amatai'))
-                    <a href="#" id="btn_act_proc_jur"
-                        class="btn-block btn btn-sm btn-warning btn_act_proc_jur mt-1">
-                        Activar como proceso jurídico
-                    </a>
-                @endif
-
-                @if (
-                    $expediente->getDocenteAsig()->idnumber != 'Sin asignar' and
-                        $expediente->exptipoproce_id != 1 and
-                        $expediente->getDocenteAsig()->idnumber == currentUser()->idnumber ||
-                            //currentUser()->hasRole('diradmin') ||
-                            currentUser()->hasRole('dirgral') ||
-                            currentUser()->hasRole('amatai'))
-                    @if ($expediente->expestado_id == 1 || $expediente->expestado_id == 3)
-                        @if ($expediente->validateVacations())
-                            {!! $expediente->validateVacations() !!}
-                        @else
-                            <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
-                                Activar pausa
-                            </a>
-                        @endif
-                    @endif
-
-                    @if ($expediente->validateVacations())
-                        {!! $expediente->validateVacations() !!}
-                    @else
-                        <a href="#" id="btn_quit_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
-                            Admin. pausa
-                        </a>
-                    @endif
-
-                @endif
-
-                @if (!$readonly)
-                    <div class="pull-right" style="margin-top:1px;">
-                        @if (currentUser()->can('tomar_caso') and $expediente->getDocenteAsig()->name == 'Sin asignar')
-                            <a class="btn btn-sm btn-success btn-block" id="btnTomarCaso"><i class="fa fa-check"> </i>
-                                Tomar Caso</a>
+                        @if (currentUser()->hasRole('amatai') or currentUser()->hasRole('dirgral') or currentUser()->hasRole('diradmin'))
+                            <div class="iuris-student-links">
+                                <a href="{{ url('/users/' . $expediente->estudiante->id . '/edit') }}" target="_blank"
+                                    rel="noopener noreferrer">
+                                    <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                                    Cédula: {{ $expediente->estudiante->idnumber }}
+                                </a>
+                                <a href="{{ url('/notas/ver/estudiante?idnumber=' . $expediente->estudiante->idnumber . '&origen=expedientes&expid=' . $expediente->expid) }}"
+                                    target="_blank" rel="noopener noreferrer">
+                                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                    Ver notas
+                                </a>
+                            </div>
                         @endif
                     </div>
-                @endif
-            @else
-                Error en la asignación
-            @endif
-        </div>
-    @endif
-</div>
-<div class="row">
-    <div class="col-md-2">
-        @if (currentUser()->hasRole('estudiante'))
-            <a href="#" id="btn_act_pausa_exp" class="btn btn-block btn-sm btn-info mt-1">
-                Ver pausas
-            </a>
-        @endif
-    </div>
-</div>
-<div class="row">
+                </div>
 
-    <div class="col-md-2">
-        <div class="form-group">
-            {!! Form::label('Número expediente') !!}
-            {!! Form::text('expid', null, ['class' => 'form-control', 'readonly', 'id' => 'expid']) !!}
-        </div>
-    </div>
-    <div class="col-sm-2">
-        {!! Form::label('Fecha Expediente: ') !!}
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">
-                    <i class="fa fa-calendar"></i>
-                </span>
+               
+
+                <div class="iuris-student-course">
+                    <span class="iuris-student-label">Curso</span>
+                    @if ($expediente->estudiante->curso->id != 1 and $expediente->estudiante->turno)
+                        <span style="padding: 0.2em 0.5em; font-size: 0.9em;"
+                            class="badge label {{ $expediente->getColorTurno($expediente->estudiante->turno->color->ref_value) }}">
+                            {{ $expediente->estudiante->curso->ref_nombre }}
+                            {{ $expediente->getMjs($expediente->estudiante->turno->horario->ref_value) }}
+                        </span>
+                    @else
+                        <span class="badge  label bg-orange">Sin curso asignado</span>
+                    @endif
+                </div>
+
+                 <div style="border-left: 1px solid #ccc; padding-left: 1em; margin-left: 1em;">
+                    <span class="iuris-case-summary-label">Fecha de asignación</span>
+                    <span class="iuris-case-summary-value">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        {{ getSmallDate($expediente->asignacion->fecha_asig) }}
+                        <small class="text-muted">({{ TiempoTrans($expediente->asignacion->fecha_asig)}})</small>
+                    </span>
+                </div>
+
             </div>
-            {!! Form::text('expfecha', null, [
-                'class' => 'form-control',
-                'required' => 'required',
-                'data-inputmask' => "'alias': 'yyyy/mm/dd'",
-                'data-mask',
-                'readonly',
-            ]) !!}
-        </div>
 
-        <!-- /.input group -->
+            <div class="iuris-case-actions">
+                @if ($expediente->asignacion)
+                    @php
+                        $docenteAsignado = $expediente->getDocenteAsig();
+                        $puedeEditarCaso = auth()->user()->can('editar_datos_caso');
+                        $puedeActivarProceso =
+                            $docenteAsignado->idnumber != 'Sin asignar' &&
+                            $expediente->asignacion->procesojud_id == 1 &&
+                            ($docenteAsignado->idnumber == currentUser()->idnumber ||
+                                currentUser()->hasRole('dirgral') ||
+                                currentUser()->hasRole('amatai'));
+                        $puedeGestionarPausas =
+                            $docenteAsignado->idnumber != 'Sin asignar' &&
+                            $expediente->exptipoproce_id != 1 &&
+                            ($docenteAsignado->idnumber == currentUser()->idnumber ||
+                                currentUser()->hasRole('dirgral') ||
+                                currentUser()->hasRole('amatai'));
+                        $puedeTomarCaso =
+                            !$readonly && currentUser()->can('tomar_caso') && $docenteAsignado->name == 'Sin asignar';
+                        $periodoVacaciones = $puedeGestionarPausas ? $expediente->validateVacations() : false;
+                        $esEstudiante = currentUser()->hasRole('estudiante');
+                    @endphp
+
+                    @if ($esEstudiante || $puedeEditarCaso || $puedeActivarProceso || $puedeGestionarPausas || $puedeTomarCaso)
+                        <div class="dropdown">
+                            <button type="button" class="btn iuris-case-actions-toggle dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                Acciones
+                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right iuris-case-actions-menu" role="menu"
+                                aria-label="Acciones del expediente">
+                                @if ($esEstudiante)
+                                    <li>
+                                        {{-- <a href="#" id="btn_act_pausa_exp" role="menuitem"
+                                                >
+                                                Ver pausas
+                                            </a> --}}
+
+                                        <a href="#" id="btn_act_pausa_exp" role="menuitem">
+                                            <i class="fa fa-clock" aria-hidden="true"></i>
+                                            Ver pausas
+                                        </a>
+                                    </li>
+                                @endif
+                                @if ($puedeEditarCaso)
+                                    <li>
+                                        <a href="#" id="btnEditar" role="menuitem">
+                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                            Editar datos del caso
+                                        </a>
+                                        <a href="#" id="btnActualizar" role="menuitem" style="display: none;">
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            Guardar cambios
+                                        </a>
+                                        <a href="#" id="btnCancelar" role="menuitem" style="display: none;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                            Cancelar edición
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if ($puedeActivarProceso)
+                                    <li>
+                                        <a href="#" id="btn_act_proc_jur" class="btn_act_proc_jur"
+                                            role="menuitem">
+                                            <i class="fa fa-balance-scale" aria-hidden="true"></i>
+                                            Activar proceso jurídico
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if ($puedeGestionarPausas)
+                                    @if ($periodoVacaciones)
+                                        <li class="iuris-case-action-notice" role="presentation">
+                                            <span>
+                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                {!! $periodoVacaciones !!}
+                                            </span>
+                                        </li>
+                                    @else
+                                        @if ($expediente->expestado_id == 1 || $expediente->expestado_id == 3)
+                                            <li>
+                                                <a href="#" id="btn_act_pausa_exp" role="menuitem">
+                                                    <i class="fa fa-pause" aria-hidden="true"></i>
+                                                    Activar pausa
+                                                </a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <a href="#" id="btn_quit_pausa_exp" role="menuitem">
+                                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                                Administrar pausas
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endif
+
+                                @if ($puedeTomarCaso)
+                                    <li>
+                                        <a href="#" id="btnTomarCaso" role="menuitem">
+                                            <i class="fa fa-check" aria-hidden="true"></i>
+                                            Tomar caso
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+                    @endif
+                @else
+                    <span class="text-danger">Error en la asignación</span>
+                @endif
+            </div>
+        </section>
     </div>
 
-    <div class="col-md-4">
-        <div class="form-group">
-            {!! Form::label('Rama del Derecho: ') !!}
-            @if ($expediente->exptipoproce_id != 3)
-                {!! Form::select('expramaderecho_id', $rama_derecho, $expediente->rama_derecho->id, [
-                    'placeholder' => 'Selecciona...',
-                    'class' => 'form-control disabled required',
-                    'required' => 'required',
-                    'disabled',
-                    'id' => 'expramaderecho_id',
-                ]) !!}
-            @else
-                {!! Form::select('expramaderecho_id', $rama_derecho_defensas, $expediente->rama_derecho->id, [
-                    'placeholder' => 'Selecciona...',
-                    'class' => 'form-control disabled required',
-                    'required' => 'required',
-                    'disabled',
-                    'id' => 'expramaderecho_id',
-                ]) !!}
-            @endif
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-            {!! Form::label('Estado del caso') !!}
-            {!! Form::select('expestado_id', $estadosPluck, null, [
-                'placeholder' => 'Selecciona...',
-                'class' => 'form-control required',
-                'required' => 'required',
-                'disabled',
-                'id' => 'expestado_id',
-            ]) !!}
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-            {!! Form::label('Tipo procedimiento: ') !!}
+</div>
 
+@if ($expediente->exptipoproce_id != 3)
+    @php($ramasDerecho = $rama_derecho)
+@else
+    @php($ramasDerecho = $rama_derecho_defensas)
+@endif
+<section class="iuris-case-summary" aria-label="Información del expediente">
+    <div class="iuris-case-summary-header">
+        <div>
+            <span class="iuris-case-summary-eyebrow">Resumen</span>
+            <h4>Información del expediente</h4>
+        </div>
+        <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+    </div>
+    <div class="iuris-case-summary-grid">
+        <div class="iuris-case-summary-item">
+            <span class="iuris-case-summary-label">Número de expediente</span>
+            <span class="iuris-case-summary-value">{{ old('expid', $expediente->expid) }}</span>
+            <input type="hidden" name="expid" id="expid" value="{{ old('expid', $expediente->expid) }}">
+        </div>
+        <div class="iuris-case-summary-item">
+            <span class="iuris-case-summary-label">Fecha del expediente</span>
+            <span class="iuris-case-summary-value">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                {{ getSmallDate($expediente->expfecha) }}
+            </span>
+        </div>
 
-            <select name="exptipoproce_id" id="exptipoproce_id" class="form-control disabled required"
-                disabled="disabled" required="required">
-                @foreach ($tipo_proceso as $tipo_p)
-                    <option @if ($tipo_p->id == $expediente->exptipoproce_id) selected @endif value="{{ $tipo_p->id }}">
-                        {{ $tipo_p->ref_tipproceso }}</option>
+        <div class="iuris-case-summary-item">
+            <span class="iuris-case-summary-label">Rama del Derecho</span>
+            <span class="iuris-case-summary-value iuris-case-editable-value" id="expramaderecho_display">
+                {{ $ramasDerecho[$expediente->rama_derecho->id] ?? 'Sin rama asignada' }}
+            </span>
+            <div class="iuris-case-field-control" style="display: none;">
+                <select name="expramaderecho_id" id="expramaderecho_id" class="form-control disabled required"
+                    required disabled>
+                    <option value="">Selecciona...</option>
+                    @foreach ($ramasDerecho as $id => $rama)
+                        <option value="{{ $id }}"
+                            {{ (string) $expediente->rama_derecho->id === (string) $id ? 'selected' : '' }}>
+                            {{ $rama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="iuris-case-summary-item">
+            <span class="iuris-case-summary-label">Estado del caso</span>
+            <span class="iuris-case-summary-value">
+                {{ $estadosPluck[$expediente->expestado_id] ?? 'Sin estado' }}
+            </span>
+            <select id="expestado_id" class="sr-only" tabindex="-1" aria-hidden="true" disabled>
+                @foreach ($estadosPluck as $id => $estado)
+                    <option value="{{ $id }}"
+                        {{ (string) $expediente->expestado_id === (string) $id ? 'selected' : '' }}>
+                        {{ $estado }}
+                    </option>
                 @endforeach
             </select>
-
+        </div>
+        <div class="iuris-case-summary-item">
+            <span class="iuris-case-summary-label">Tipo de procedimiento</span>
+            <span class="iuris-case-summary-value iuris-case-editable-value" id="exptipoproce_display">
+                @foreach ($tipo_proceso as $tipo_p)
+                    @if ($tipo_p->id == $expediente->exptipoproce_id)
+                        {{ $tipo_p->ref_tipproceso }}
+                    @endif
+                @endforeach
+            </span>
+            <div class="iuris-case-field-control" style="display: none;">
+                <select name="exptipoproce_id" id="exptipoproce_id" class="form-control disabled required" disabled
+                    required>
+                    @foreach ($tipo_proceso as $tipo_p)
+                        <option value="{{ $tipo_p->id }}"
+                            {{ $tipo_p->id == $expediente->exptipoproce_id ? 'selected' : '' }}>
+                            {{ $tipo_p->ref_tipproceso }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
     </div>
-
-</div>
+</section>

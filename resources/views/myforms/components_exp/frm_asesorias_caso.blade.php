@@ -1,98 +1,137 @@
-<div class="row">
-    <div class="col-md-12">
-        <label>Comentarios:</label>
-    </div>
-</div>
+@php
+    $esEstudiante = currentUser()->hasRole('estudiante');
+    $puedeVerTodasAsesorias = currentUser()->hasRole('dirgral') ||
+        currentUser()->hasRole('diradmin') ||
+        currentUser()->hasRole('docente') ||
+        currentUser()->hasRole('coordprac') ||
+        currentUser()->hasRole('amatai');
+    $asesoriasVisibles = $expediente->asesorias_docente()
+        ->where('estado', true)
+        ->get()
+        ->filter(function ($asesoria) use ($esEstudiante, $puedeVerTodasAsesorias) {
+            return ($esEstudiante && $asesoria->apl_shared) || $puedeVerTodasAsesorias;
+        });
+@endphp
 
-<!--comentarios-->
-<div class="row">
-    <div class="col-md-12">
-        <!--cont-comentarios-->
-        <div class="cont-comentarios">
-            @if (count($expediente->asesorias_docente) <= 0)
-                <label> No existen comentarios para este caso </label>
-            @else
-                @foreach ($expediente->asesorias_docente()->where(['estado' => true])->get() as $asesoria)
-                    @if (
-                        (currentUser()->hasRole('estudiante') && $asesoria->apl_shared) ||
-                            (currentUser()->hasRole('dirgral') ||
-                                currentUser()->hasRole('diradmin') ||
-                                currentUser()->hasRole('docente') ||
-                                currentUser()->hasRole('coordprac') ||
-                                currentUser()->hasRole('amatai')))
-                        <div class="row">
+<section class="iuris-advisories" aria-labelledby="iuris-advisories-title">
+    <header class="iuris-advisories-header">        
 
-                            <div class="col-md-4">
-                                <label>{{ $asesoria->docente->name }} {{ $asesoria->docente->lastname }}: </label>
-                            </div>
+        @if (currentUser()->hasRole('docente') ||
+            currentUser()->hasRole('amatai') ||
+            currentUser()->hasRole('diradmin') ||
+            currentUser()->hasRole('coordprac') ||
+            currentUser()->hasRole('dirgral'))
+            <button
+                type="button"
+                class="btn iuris-advisories-add"
+                data-toggle="modal"
+                data-target="#myModal_add_asesoria_docente"
+            >
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Agregar asesoría
+            </button>
+        @endif
+    </header>
 
-
-                            @if (!$readonly and $asesoria->docente->idnumber == Auth::user()->idnumber)
-                            <div class="col-md-4"></div>
-                                <div class="col-md-4">                     
-                                    <div class="tolls float-right ml-2">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-cog" title="Clic para Editar o Eliminar"></i>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                              <a style="cursor: pointer" class="dropdown-item btn_edit_asesoria_caso" data-id="{{ $asesoria->id }}">Editar</a>
-                                              <a style="cursor: pointer" class="dropdown-item btn_delete_asesoria_caso" data-id="{{ $asesoria->id }}">Eliminar</a>
-                                             
-                                            </div>
-                                          </div>                                 
-                                    </div>
-                                    <div class="float-right" style="min-height: 25px;">
-                                        <i>Compartir con estudiante: </i>
-                                        <i data-id="{{ $asesoria->id }}" data-status="{{$asesoria->apl_shared}}"  class="fa fa-toggle-on {{$asesoria->apl_shared ? 'switch-on':'switch-off'}} chk_change_shared" id="switch_edit{{ $asesoria->id }}"></i>
-                                    </div>
-                                </div>
-                            @elseif(!currentUser()->hasRole('estudiante'))
-                                <div class="col-md-8">
-                                    <div style="float:right">
-                                        @if ($asesoria->apl_shared)
-                                            <i style="color: green" id="switch_edit{{ $asesoria->id }}">Compartido</i>
-                                        @else
-                                            <i style="color: red" id="switch_edit{{ $asesoria->id }}">Sin compartir</i>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="cont-text">
-                                    {!! Form::textarea('asesorias_docente', $asesoria->comentario, 
-                                    [
-                                        'class' => 'form-control textarea-asesorias-docente',
-                                        'readonly',
-                                        'rows'=>'8'
-                                    ]) !!}
-                                </div>
-                                <div class="cont-fecha">
-                                    <i> {{ $asesoria->created_at }}</i>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            @endif
+    @if ($asesoriasVisibles->isEmpty())
+        <div class="iuris-advisories-empty">
+            <span class="iuris-advisories-empty-icon" aria-hidden="true">
+                <i class="fa fa-comment"></i>
+            </span>
+            <div>
+                <strong>No hay asesorías para mostrar</strong>
+                <p>Las nuevas orientaciones registradas aparecerán aquí.</p>
+            </div>
         </div>
-        <!--cont-comentarios-->
-    </div>
-</div>
-<div class="row">
-    @if ((currentUser()->hasRole('docente') 
-    || currentUser()->hasRole('amatai') ||
-     currentUser()->hasRole('diradmin') ||
-      currentUser()->hasRole('coordprac') ||
-     currentUser()->hasRole('dirgral')))
-        <div class="col-md-6">
-            <hr>
+    @else
+        <div class="iuris-advisories-list">
+            @foreach ($asesoriasVisibles as $asesoria)
+                <article class="iuris-advisory-card">
+                    <header class="iuris-advisory-card-header">
+                        <div class="iuris-advisory-author">
+                            <span class="iuris-advisory-avatar" aria-hidden="true">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <div>
+                                <span class="iuris-advisory-label">Docente</span>
+                                <h4>{{ $asesoria->docente->name }} {{ $asesoria->docente->lastname }}</h4>
+                            </div>
+                        </div>
 
-            <input type="button" class="btn btn-success btn-sm" value="Agregar Asesoría" data-toggle="modal"
-                data-target="#myModal_add_asesoria_docente">
+                        <div class="iuris-advisory-meta">
+                            @if ($asesoria->apl_shared)
+                                <span class="iuris-advisory-status is-shared">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    Compartido con estudiante
+                                </span>
+                            @else
+                                <span class="iuris-advisory-status is-private">
+                                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                    Solo equipo docente
+                                </span>
+                            @endif
+
+                            <time class="iuris-advisory-date" datetime="{{ $asesoria->created_at }}">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                {{ \Carbon\Carbon::parse($asesoria->created_at)->format('d/m/Y H:i') }}
+                            </time>
+                        </div>
+
+                        @if (!$readonly && $asesoria->docente->idnumber == Auth::user()->idnumber)
+                            <div class="dropdown iuris-advisory-actions">
+                                <button
+                                    type="button"
+                                    class="btn iuris-advisory-menu-toggle"
+                                    id="advisory-actions-{{ $asesoria->id }}"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    aria-label="Acciones para la asesoría de {{ $asesoria->docente->name }}"
+                                >
+                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right iuris-advisory-menu"
+                                    aria-labelledby="advisory-actions-{{ $asesoria->id }}">
+                                    <a href="#" class="dropdown-item btn_edit_asesoria_caso" data-id="{{ $asesoria->id }}">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        Editar asesoría
+                                    </a>
+                                    <a href="#" class="dropdown-item btn_delete_asesoria_caso" data-id="{{ $asesoria->id }}">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        Eliminar asesoría
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                    </header>
+
+                    <div class="iuris-advisory-content">
+                        <p>{{ $asesoria->comentario }}</p>
+                    </div>
+
+                    @if (!$readonly && $asesoria->docente->idnumber == Auth::user()->idnumber)
+                        <footer class="iuris-advisory-footer">
+                            <span class="iuris-advisory-share-label">
+                                Compartir esta asesoría con el estudiante
+                            </span>
+                            <button
+                                type="button"
+                                class="iuris-advisory-share-button chk_change_shared"
+                                data-id="{{ $asesoria->id }}"
+                                data-status="{{ $asesoria->apl_shared }}"
+                                aria-label="{{ $asesoria->apl_shared ? 'Dejar de compartir asesoría' : 'Compartir asesoría con estudiante' }}"
+                            >
+                                <i
+                                    id="switch_edit{{ $asesoria->id }}"
+                                    class="fa {{ $asesoria->apl_shared ? 'fa-toggle-on switch-on' : 'fa-toggle-off switch-off' }}"
+                                    aria-hidden="true"
+                                ></i>
+                                <span>{{ $asesoria->apl_shared ? 'Visible' : 'Privada' }}</span>
+                            </button>
+                        </footer>
+                    @endif
+                </article>
+            @endforeach
         </div>
     @endif
-</div>
-<!--comentarios-->
+</section>

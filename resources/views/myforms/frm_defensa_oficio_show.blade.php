@@ -18,17 +18,17 @@
     @if (currentUser()->hasRole('solicitante'))
         Casos
     @else
-        @include('myforms.components_exp.frm_datos_docente')
+       <div class="float-right" style="float: right !important;">
+        <a href="#" class="btn-atrasexed  btn bg-gray" style="color:#777">
+            <i class="fa fa-backward"></i> Atrás</a>
+    </div>
     @endif
 
 @endsection
 
 
 @section('area_buttons')
-    <div class="float-right" style="float: right !important;">
-        <a href="#" class="btn-atrasexed  btn bg-gray" style="color:#777">
-            <i class="fa fa-backward"></i> Atrás</a>
-    </div>
+    
 @endsection
 
 
@@ -46,17 +46,19 @@
     @endphp
     @include('msg.alerts')
 
+     @include('myforms.components_exp.frm_datos_docente')
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-        <li class="nav-item">
-            <a class="nav-link active urlactive" id="chat-tab" data-toggle="tab" href="#chat_tab" role="tab"
+      {{--   <li class="nav-item">
+            <a class="nav-link  urlactive" id="chat-tab" data-toggle="tab" href="#chat_tab" role="tab"
                 aria-controls="chat_tab" aria-selected="false">
                 Oficina virtual
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
-            <a class="nav-link urlactive" id="case_data-client" data-toggle="tab" href="#case_data" role="tab"
+            <a class="nav-link active urlactive" id="case_data-client" data-toggle="tab" href="#case_data" role="tab"
                 aria-controls="case_data" aria-selected="false">
                 Datos del caso
             </a>
@@ -113,7 +115,7 @@
 
     <div class="tab-content" id="myTabContent" style="margin-top: 10px !important">
 
-        <div class="tab-pane fade show active" id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
+        <div class="tab-pane fade " id="chat_tab" role="tabpanel" aria-labelledby="chat-tab">
             <div class="row">
                 <div class="col-md-12 content_oficina_virtual" id="content_oficina_virtual">
                     {{-- @include('myforms.components_exp.frm_oficina_virtual') --}}
@@ -121,7 +123,7 @@
             </div>
         </div>
 
-        <div class="tab-pane fade " id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
+        <div class="tab-pane fade show active" id="case_data" role="tabpanel" aria-labelledby="case-data-tab">
             @include('myforms.components_exp.frm_datos_caso_dofi')
             @include('myforms.components_exp.frm_asesorias_caso')
             @include('myforms.components_exp.frm_notas_caso')
