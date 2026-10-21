@@ -13,6 +13,7 @@ storage/*
 /config/app_config.php
 .env
 .env.example
+.env.iuris
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
