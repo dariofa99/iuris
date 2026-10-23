@@ -3,6 +3,7 @@ const horariosDocenteService = new HorariosDocenteService();
 let fechaOriginal = null;
 let horaInicioOriginal = null;
 let horaFinOriginal = null;
+let esReposicion = false;
 $(function () {
 
     showCalendar();
@@ -107,15 +108,37 @@ $(function () {
         e.preventDefault();
         var tipo_asis = $(this).val();
         $("#div_reposicion").html("");
+
         if (tipo_asis == "150") {
             var content = contentRepos();
             $("#div_reposicion").html(content);
             $("#div_reposicion").show();
             $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
             $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
-        }else if (tipo_asis == "284") {
+        } else if (tipo_asis == "284") {
             $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
             $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
+        } else if (tipo_asis == "149") {
+            if (esReposicion) {
+                const confirmation = await Swal.fire({
+                    icon: "warning",
+                    title: "¿Registrar asistencia?",
+                    text: "Se registrará en el turno: " + $("#turnosdoc #hora_inicio").val() + " - " + $("#turnosdoc #hora_fin").val(),
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, registrar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true,
+                    color: "#000000",
+                    confirmButtonColor: "#2c50a5",
+                    cancelButtonColor: "#56595e"
+                });
+
+                if (!confirmation.isConfirmed) return;
+                $("#turnosdoc #btnActualizar").attr("id", "btnActualizarTurnoDocente")
+                $("#btnActualizarTurnoDocente").click();
+            } else {
+
+            }
         } else {
             $("#div_reposicion").html("");
             $("#div_reposicion").hide();
@@ -358,9 +381,10 @@ function showCalendar(docente_id) {
 
         },
         eventClick: function (calEvent, jsEvent, view) {
-            console.log(calEvent);
+            esReposicion = false;
+            console.log(calEvent)
             $("#turnosdoc #btnActualizar").text("Actualizar").attr("id", "btnActualizarTurnoDocente").prop("disabled", false).show();
-
+            $("#turnosdoc #es_reposicion").val(0)
             $("#turnosdoc #asistencia_id").val("");
             $("#turnosdoc #btnRegistrarTurnoDocente").text("Guardar asistencia").prop("disabled", false).show();
             $("#turnosdoc #btnActualizarTurnoDocente").text("Actualizar asistencia").prop("disabled", true).hide();
@@ -417,9 +441,11 @@ function showCalendar(docente_id) {
 
                     }
                 }
-                if (calEvent.tipo_asis == 285 && calEvent.es_reposicion) {
+                if (calEvent.es_reposicion) {
+                    $("#turnosdoc #es_reposicion").val(1)
+                    if (calEvent.tipo_asis == 285) esReposicion = true
                     $("#turnosdoc #tipo_asis_pendiente_option").show();
-                    $("#turnosdoc #btnActualizarTurnoDocente").text("Solo puede eliminar la reposición").attr("id", "btnActualizar").prop("disabled", true).show();
+                    $("#turnosdoc #btnActualizarTurnoDocente").text("Solo puede eliminar o registrar asistencia").attr("id", "btnActualizar").prop("disabled", true).show();
                 }
                 //$("#turnosdoc #btnRegistrarTurnoDocente").text("Actualizar Asistencia").prop("disabled", true);
             }

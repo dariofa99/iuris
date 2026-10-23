@@ -230,7 +230,6 @@ class TurnosDocentesController extends Controller
             ], 200);
         }
         if (request()->has('start') && request()->get("start") != "undefined" && request()->has('end')  && request()->get("end") != "undefined") {
-
             if (Carbon::parse(request()->get('start'))->gt(Carbon::parse(request()->get('end')))) {
                 return response()->json([
                     'errors' => 'La fecha inicial no puede ser mayor que la fecha final.'
@@ -239,14 +238,11 @@ class TurnosDocentesController extends Controller
             $prdfecha_inicio = request()->get('start');
             $prdfecha_fin = request()->get('end');
         }
-
-
         if (!$periodo) {
             return response()->json([
                 'errors' => 'No hay un periodo activo actualmente.'
             ], 200);
         }
-
         $data = AsistenciaDocentes::with('turno')
             ->where('reposicion', '0')
             ->where('minutos_reponer', '>', '0')
@@ -265,8 +261,8 @@ class TurnosDocentesController extends Controller
 
             $data = $data->map(function ($item) {
             $item->fecha = getSmallDate(Carbon::parse($item->inicio)->format('Y-m-d'));
-            $item->inicio_text = getHour(Carbon::parse($item->inicio));
-            $item->fin_text = getHour(Carbon::parse($item->fin));
+            $item->inicio_text = getHour(Carbon::parse($item->turno->trnd_hora_inicio));
+            $item->fin_text = getHour(Carbon::parse($item->turno->trnd_hora_fin));
             $item->repos_marcadas = $item->reposiciones->map(function ($reposicion) {
 
                 return [

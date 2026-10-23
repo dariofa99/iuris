@@ -7403,6 +7403,11 @@ RESPONSIVE
   box-shadow: 0 2px 8px rgba(38, 63, 69, 0.05);
 }
 
+.dofi-deadline-panel--documents {
+  min-height: 0;
+  padding: 0.55rem 0.7rem;
+}
+
 .dofi-deadline-icon {
   display: inline-flex;
   width: 42px;
@@ -7731,33 +7736,49 @@ RESPONSIVE
 
 .iuris-possession-documents {
   display: grid;
-  gap: 0.4rem;
-  margin-top: 0.55rem;
+  width: 100%;
+  min-width: 0;
+  gap: 0.35rem;
 }
 
-.iuris-possession-documents > a {
-  display: flex;
+.iuris-possession-document {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.3fr) minmax(0, 1fr) 32px;
   min-width: 0;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.55rem 0.7rem;
+  padding: 0.35rem 0.45rem;
   border: 1px solid #e1eaec;
   border-radius: 3px;
   background: #fff;
+}
+
+.iuris-possession-category {
+  overflow: hidden;
+  color: #71858a;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iuris-possession-link {
+   min-width: 0;
+  align-items: center;
+  gap: 0.55rem;
   color: #006975;
-  font-size: 0.82rem;
+  font-size: 0.90rem;
   text-decoration: none;
   transition: border-color 0.18s ease, background 0.18s ease;
 }
 
-.iuris-possession-documents > a:hover,
-.iuris-possession-documents > a:focus {
-  border-color: #a9c7cb;
-  background: #f5fafa;
+.iuris-possession-link:hover,
+.iuris-possession-link:focus {
   color: #005661;
+  text-decoration: underline;
 }
 
-.iuris-possession-documents > a > span {
+.iuris-possession-link > .iuris-possession-name {
   min-width: 0;
   flex: 1 1 auto;
   overflow: hidden;
@@ -7765,15 +7786,43 @@ RESPONSIVE
   white-space: nowrap;
 }
 
-.iuris-possession-documents > a > small {
+.iuris-possession-link > small {
   flex: 0 0 auto;
   color: #71858a;
   font-size: 0.74rem;
 }
 
-.iuris-possession-documents > a > .fa-external-link-alt {
+.iuris-possession-link > .fa-file-pdf {
+  flex: 0 0 auto;
+  color: #b34e41;
+}
+
+.iuris-possession-link > .fa-external-link-alt {
+  flex: 0 0 auto;
   color: #82979b;
   font-size: 0.72rem;
+}
+
+.iuris-possession-delete {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #f0d2cf;
+  border-radius: 3px;
+  background: #fff7f6;
+  color: #a42626;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.iuris-possession-delete:hover,
+.iuris-possession-delete:focus {
+  border-color: #a42626;
+  background: #a42626;
+  color: #fff;
 }
 
 .iuris-deadline-modal-actions {
@@ -7820,6 +7869,15 @@ RESPONSIVE
 }
 
 @media (max-width: 575.98px) {
+  .iuris-possession-document {
+    grid-template-columns: minmax(0, 1fr) 32px;
+    gap: 0.35rem 0.55rem;
+  }
+
+  .iuris-possession-category {
+    grid-column: 1 / -1;
+  }
+
   .iuris-possession-upload {
     gap: 0.65rem;
     padding: 0.7rem;

@@ -4,7 +4,7 @@
     @endslot
 
     @slot('title')
-    @endslot 
+    @endslot
 
 
     @slot('body')
@@ -12,9 +12,10 @@
             <input type="hidden" name="turno_id" id="turno_id">
             <input type="hidden" name="asistencia_id" id="asistencia_id">
             <input type="hidden" name="fecha_turno" id="fecha_turno">
+            <input type="hidden" name="es_reposicion" id="es_reposicion">
             <!-- ============================================
-                                                             HEADER
-                                                        ============================================= -->
+                                                                                     HEADER
+                                                                                ============================================= -->
 
             <div class="iuris-form-header">
 
@@ -35,8 +36,8 @@
 
 
             <!-- ============================================
-                                                             BODY
-                                                        ============================================= -->
+                                                                                     BODY
+                                                                                ============================================= -->
 
             <div class="iuris-form-body">
 
@@ -62,7 +63,7 @@
 
                 </div>
 
-                
+
                 <div class="iuris-divider"></div>
 
 
@@ -157,13 +158,14 @@
                 </div>
 
 
-                <div class="iuris-novedades" >
+                <div class="iuris-novedades">
 
-                       <!-- PENDIENTE -->
+                    <!-- PENDIENTE -->
 
                     <label class="iuris-option" id="tipo_asis_pendiente_option">
 
-                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_pendiente" value="285" checked>
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_pendiente" value="285"
+                            checked>
 
                         <span class="iuris-option-content">
 
@@ -174,7 +176,7 @@
                             <span class="iuris-option-text">
 
                                 <strong>Pendiente</strong>
- 
+
                                 <small>
                                     Pendiente de registrar turno.
                                 </small>
@@ -190,7 +192,8 @@
 
                     <label class="iuris-option" id="tipo_asis_asistencia_option">
 
-                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_asistencia" value="149" checked>
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_asistencia"
+                            value="149" checked>
 
                         <span class="iuris-option-content">
 
@@ -243,7 +246,8 @@
 
                     <label class="iuris-option" id="tipo_asis_no_asistencia_option">
 
-                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_no_asistencia" value="284">
+                        <input type="radio" class="required" required name="tipo_asis" id="tipo_asis_no_asistencia"
+                            value="284">
 
                         <span class="iuris-option-content">
                             <span class="iuris-option-icon falta">
@@ -287,47 +291,36 @@
 
 
             <!-- ============================================
-                                                             FOOTER
-                                                        ============================================= -->
+                                                                                     FOOTER
+                                                                                ============================================= -->
 
-            <div class="iuris-form-footer">
+            <div class="iuris-form-footerx">
 
-                <div class="iuris-required">
-
-                    <i class="fas fa-info-circle"></i>
-
-                    Verifique la información antes de guardar.
-
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" id="btnRegistrarTurnoDocente" class="btn btn-iuris-primary">
+                            <i class="fas fa-save mr-1"></i>
+                            Guardar cambios
+                        </button>
+                        <button type="button" id="btnEliminarAsistenciaDocente" class="btn btn-danger m-2">
+                            <i class="fas fa-trash-alt mr-1"></i>
+                            Eliminar turno
+                        </button>
+                        <button type="button" id="btnActualizarTurnoDocente" class="btn btn-iuris-primary">
+                            <i class="fas fa-save mr-1"></i>
+                            Actualizar cambios
+                        </button>
+                    </div>
                 </div>
-
-
-                <button type="button" id="btnRegistrarTurnoDocente" class="btn btn-iuris-primary">
-
-                    <i class="fas fa-save mr-1"></i>
-
-                    Guardar cambios
-
-                </button>
-
-                <button type="button" id="btnEliminarAsistenciaDocente" class="btn btn-danger">
-
-                    <i class="fas fa-trash-alt mr-1"></i>
-
-                    Eliminar turno
-
-                </button>
-
-                <button type="button" id="btnActualizarTurnoDocente" class="btn btn-iuris-primary">
-
-                    <i class="fas fa-save mr-1"></i>
-
-                    Actualizar cambios
-
-                </button>
-
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="iuris-required">
+                            <i class="fas fa-info-circle"></i>
+                            Verifique la información antes de guardar.
+                        </div>
+                    </div>
+                </div>
             </div>
-
-
         </form>
     @endslot
 @endcomponent

@@ -14,32 +14,33 @@
 @if ($fechaAsignacion && \Carbon\Carbon::parse($fechaAsignacion)->startOfDay()->gt($fechaCortePosesion) and $expediente->exptipoproce_id == 3 and $expediente->expestado_id == 1)
     <div class="row dofi-deadline-row">
         <div class="col-12">
-            <section class="dofi-deadline-panel" style="background-color: antiquewhite !important"
+            <section class="dofi-deadline-panel{{ $documentosPosesion->isNotEmpty() ? ' dofi-deadline-panel--documents' : '' }}"
                 aria-label="Fecha límite de respuesta">
 
                 @if ($documentosPosesion->isNotEmpty())
-                    <label class="iuris-possession-upload">
-
-                        <div class="iuris-possession-documents" aria-label="Documentos de posesión cargados">
-                            @foreach ($documentosPosesion as $documento)
-                                {{ $documento->categoryInExpediente->first()->ref_nombre ?? 'Documento de posesión' }}
-                                <a href="/conciliaciones/download/file/{{ $documento->id }}" target="_blank"
+                    <div class="iuris-possession-documents" aria-label="Documentos de posesión cargados">
+                        @foreach ($documentosPosesion as $documento)
+                            <article class="iuris-possession-document">
+                                <span class="iuris-possession-category">
+                                    {{ $documento->categoryInExpediente->first()->ref_nombre ?? 'Documento de posesión' }}
+                                </span>
+                                <a class="iuris-possession-link"
+                                    href="/conciliaciones/download/file/{{ $documento->id }}" target="_blank"
                                     rel="noopener noreferrer">
                                     <i class="fas fa-file-pdf" aria-hidden="true"></i>
-                                    <span>{{ $documento->original_name }}</span>
-                                    <small>{{ number_format($documento->size / 1048576, 2) }} MB</small>
+                                    <span class="iuris-possession-name">{{ $documento->original_name }}</span>
+                                    <small> &middot; {{ number_format($documento->size / 1048576, 2) }} MB</small>
                                     <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                                 </a>
-                                <i id="btn_delete_doc" data-id="{{ $documento->pivot->id }}"
-                                    style="background-color: #a42626;
-                                            width: 20px;
-                                            border-radius: 3px;
-                                            text-align:center;
-                                            color: rgb(255, 255, 255)">
-                                    <i class="fas fa-trash"></i></i>
-                            @endforeach
-                        </div>
-                    </label>
+                                <button type="button" class="iuris-possession-delete"
+                                    data-id="{{ $documento->pivot->id }}"
+                                    aria-label="Eliminar {{ $documento->original_name }}"
+                                    title="Eliminar documento">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </article>
+                        @endforeach
+                    </div>
                 @else
                     <div class="dofi-deadline-info">
                         <span class="dofi-deadline-label">Fecha límite de respuesta</span>

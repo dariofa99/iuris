@@ -682,4 +682,4 @@ function formatearHoras(minutos) {
     }
 
     return resultado || '0 minutos';
-}
+} 

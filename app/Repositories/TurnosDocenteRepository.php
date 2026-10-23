@@ -69,7 +69,7 @@ class TurnosDocenteRepository
         // =====================================================
 
         $asistencias = AsistenciaDocentes::with('reposiciones')
-    /*     with([
+            /*     with([
             'reposiciones' => function ($query) use ($fechaInicio, $fechaFinExclusiva) {
                 $query->where(
                     $query->qualifyColumn('inicio'),
@@ -325,23 +325,22 @@ class TurnosDocenteRepository
 
                 $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
                 $asistencia->minutos_reponer = $minutos_de_atencion;
-
-
             } else if ($request->tipo_asis == "149") {
-                $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
-                $tdini = Carbon::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_inicio)
-                )->format('Y-m-d H:i:s');
+                if ($request->input("es_reposicion")==0) {
+                    $minutos_de_atencion = Carbon::parse($inicio)->diffInMinutes(Carbon::parse($fin));
+                    $tdini = Carbon::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_inicio)
+                    )->format('Y-m-d H:i:s');
 
-                $tdfin = Carbon::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_fin)
-                )->format('Y-m-d H:i:s');
+                    $tdfin = Carbon::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $request->fecha_turno . ' ' . ($turno_docente->trnd_hora_fin)
+                    )->format('Y-m-d H:i:s');
 
-                $minutos_turno = Carbon::parse($tdini)->diffInMinutes(Carbon::parse($tdfin));
-                $asistencia->minutos_reponer = $minutos_turno - $minutos_de_atencion;
-                
+                    $minutos_turno = Carbon::parse($tdini)->diffInMinutes(Carbon::parse($tdfin));
+                    $asistencia->minutos_reponer = $minutos_turno - $minutos_de_atencion;
+                }
             } else {
 
                 if ($asistencia->minutos_reponer  > 0) {

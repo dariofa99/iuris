@@ -4027,19 +4027,18 @@ $(document).ready(function () {
         $("#btn_subir_documentopose").prop("disabled", false);
     });
 
-    $("#btn_delete_doc").on("click", async function (e) {
+    $(document).on("click", ".iuris-possession-delete", async function (e) {
         e.preventDefault();
         let id = $(this).data("id")
         const confirmation = await Swal.fire({
             icon: "warning",
             title: "¿Eliminar documento?",
-            text: "Se eliminará el documento de este expediente.",
+            text: "Se eliminará el documento de este expediente.\nTenga en cuenta que el sistema puede poner notas de cero (0.0) despues de esta acción.",
             showCancelButton: true,
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
             reverseButtons: true,
-            background: "#1a1f2c",
-            color: "#f4f5fa",
+            color: "#000000",
             confirmButtonColor: "#dc3545",
             cancelButtonColor: "#424a5d"
         });
@@ -4065,7 +4064,7 @@ $(document).ready(function () {
                 timeOut: "5000",
             });
         } finally {
-            //$("#wait").hide();
+            $("#wait").hide();
         }
     })
 
