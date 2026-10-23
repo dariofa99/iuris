@@ -25,8 +25,6 @@ class AutorizacionesController extends Controller
     public function __construct(
         ExpedientesService $expedienteService,
         AutorizacionesService $autorizacionesService
-
-
     ) {
         $this->middleware('permission:ver_autorizaciones',   ['only' => ['index']]);
         $this->expedienteService = $expedienteService;
@@ -164,6 +162,11 @@ class AutorizacionesController extends Controller
                 $url = url("/expedientes/{$expediente->expid}/edit#autorizaciones");
                 ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
             }
+            if ($request->estado == 0) {
+                $autorizacion->fecha_autorizado = null;
+                $autorizacion->user_aprobo_id = currentUser()->id;
+                $autorizacion->estado_id = 281;
+            }
         } else {
             if (currentUser()->hasRole("estudiante")) {
                 $autorizacion->fecha_autorizado = null;
@@ -171,7 +174,6 @@ class AutorizacionesController extends Controller
                 $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
                 $subject = 'Solicitud de autorización';
                 $url = url("/expedientes/{$autorizacion->asignacion->expediente->expid}/edit#autorizaciones");
-
                 $diradminEmail = config('app_config.diradminemail');
                 $concepto = "Se ha solicitado la aprobación de una solicitud de autorización por el estudiante. \n\n";
                 // $concepto .= $request->concepto;

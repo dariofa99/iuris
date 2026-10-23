@@ -69,7 +69,7 @@ $(document).ready(function () {
                 cols: 500  // Número de columnas del textarea
             },
             //value: '', // Valor inicial del textarea
-            inputValue: 'Por favor, actualice la información del formulario indicando ¿para qué requiere la autorización?', // Valor inicial del textarea
+            inputValue: '', // Valor inicial del textarea
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Si, rechazar',

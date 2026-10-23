@@ -282,6 +282,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('expedientes/rechazar/autorizacion', 'ExpedienteController@rechazarAutorizacionNotificacion');
 
+    Route::post('expedientes/add/documento', 'ExpedienteController@addDocumento');
+    
+    Route::delete('expedientes/delete/documento/{id}', 'ExpedienteController@deleteDocumento');
+
+
     Route::get('expedientes/historial/{exp}/{tipo}', 'ExpedienteController@historialDatosCaso');
     Route::get('expedientes/selectconest/{texcon}', 'ExpedienteController@selectest');
     Route::post('expedientes/coordinador/update/{id}', 'ExpedienteController@update');

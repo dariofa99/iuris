@@ -56,6 +56,11 @@ class ExpedientesComposer
 		);
 		$rama_derecho_defensas = $rama_derecho = RamaDerecho::where('categoria', 'defensas')
 		->pluck('ramadernombre', 'id');;
+
+		$cat_documeexp = $this->referenciasService->getReferenciasByFilter(
+			['tabla_ref' => 'exp_has_files', 'categoria' => 'category_documents_posesion']
+		);
+
 		//$tipo_archivo = TipoArchivo::pluck('tiparchinombre','id');
 		//$reqasis = DB::table('ref_reqasis')->select('reqid_refasis','ref_reqasistencia')->get();
 		$reqasis = ReqAsistencia::all();
@@ -121,7 +126,8 @@ class ExpedientesComposer
 			'rama_derecho' => $rama_derecho,
 			'cat_projexp' => $cat_projexp,
 			'est_projexp' => $est_projexp,
-			'reframa_derecho'=>$reframa_derecho  ,
+			'reframa_derecho'=>$reframa_derecho,
+			'cat_documeexp'=>$cat_documeexp 
 			
 		])
 			->with(['rdata_enf_dif' => $rdata_enf_dif])

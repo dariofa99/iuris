@@ -34,4 +34,10 @@ class File extends Model
         ->withPivot('id','concepto','file_id','type_status_id','user_id','category_id')->withTimestamps(); 
    }
 
+    public function categoryInExpediente(){
+      return $this->belongsToMany(TablaReferencia::class, 'exp_has_files', 'file_id', 'category_id')
+            ->withPivot('asig_caso_id', 'expidnumber', 'id','type_status_id', 'category_id', 'useridnumber','file_id')
+            ->withTimestamps();
+   }
+
 }

@@ -72,6 +72,11 @@ return [
             'root' => storage_path('app/conciliacion_files'),
             'url' => 'app/conciliacion_files',
         ],
+        'expediente_files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/expediente_files'),
+            'url' => 'app/expediente_files',
+        ],
 
          'coment_files' => [
             'driver' => 'local',

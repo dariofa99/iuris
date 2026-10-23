@@ -56,6 +56,11 @@ class CreateCaseLogsTable extends Migration
             $table->integer('type_status_id')->unsigned();
             $table->foreign('type_status_id')->references('id')->on('referencias_tablas')
             ->onDelete('cascade')->onUpdate('cascade');
+
+             $table->integer('category_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('referencias_tablas')
+            ->onDelete('cascade')->onUpdate('cascade');
+
             
             $table->timestamps();
         });

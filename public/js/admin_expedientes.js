@@ -3385,7 +3385,7 @@ $(document).ready(function () {
                 cols: 500  // Número de columnas del textarea
             },
             //value: '', // Valor inicial del textarea
-            inputValue: 'Por favor, actualice la información del formulario indicando ¿para qué requiere la autorización?', // Valor inicial del textarea
+            inputValue: '', // Valor inicial del textarea
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Si, rechazar',
@@ -3923,112 +3923,152 @@ $(document).ready(function () {
         $("#archivo").click();
     });
 
+    $("#btn_subir_respuesta").on("click", async function (e) {
+        e.preventDefault();
+        const progressDiv = document.querySelector('.progressbarwait');
+        progressDiv.textContent = `${parseInt(0)}%`;
+        progressDiv.style.width = `${parseInt(0)}%`;
+        $("#MyModalUploadDocumentoPosesion").modal("show");
+    });
 
-    /*  $("#form_incidencia").on("submit", async function (e) {
-         e.preventDefault();
-         var formData = new FormData(document.getElementById("form_incidencia"));
-         formData.append('id_asig', $("#id_asig").val());
-         var res = await incidenciasService.store(formData);
-         toastr.success("Incidencia creada con éxito", "", {
-             positionClass: "toast-top-right",
-             timeOut: "4000",
-         });
-         $("#myModal_notificar_incidencia").modal("hide");
-         location.reload();
- 
-     }); */
+    $("#documento_posesion").on('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
 
-
-    /*     $("#myModal_notificar_incidencia").on("click", '.btn_act_incidencia', async function (e) {
-            e.preventDefault();
-            //Remover inputs previos
-            $("#myModal_actualizar_incidencia form input[name='is_update']").remove();
-            $("#myModal_actualizar_incidencia form input[name='hestado_id']").remove();
-            $("#myModal_actualizar_incidencia input[name='estado_id']").val($(this).data("estado"))
-            $("#myModal_actualizar_incidencia input[name='id']").val($(this).data("id"))
-            if ($(this).data("estado") == 273) {
-                Swal.fire({
-                    title: '¿Estás seguro de marcar como resuelta la incidencia?',
-                    text: "¡No podrás revertir esto!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, resolver',
-                    cancelButtonText: 'Cancelar'
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        // Aquí puedes agregar la lógica para eliminar la incidencia
-                        var request = convertFormToJSON("form_act_incidencia")
-                        request['motivo'] = "Incidencia resuelta";
-                        var res = await incidenciasService.update(request)
-                        $("#wait").hide()
-                        toastr.success("Actualizado con éxito", "", {
-                            positionClass: "toast-top-right",
-                            timeOut: "4000",
-                        });
-                        location.reload(true);
-                    }
-                });
-            } else if ($(this).data("estado") == 'update') {
-                var old_motivo = $("#old_motivo-" + $(this).data("id")).val();
-                $(".char_count").text(old_motivo.length + "/200");
-                $("#myModal_actualizar_incidencia textarea[name='motivo']").val(old_motivo);
-                var input = `<input type="hidden" name="is_update" value="true">`;
-                var inputId = `<input type="hidden" name="hestado_id" value="${$(this).data("id")}">`;
-                $("#myModal_actualizar_incidencia form").append(input);
-                $("#myModal_actualizar_incidencia form").append(inputId);
-                $("#myModal_actualizar_incidencia #lbl_title_fract").text("Actualizando incidencia");
-                $("#myModal_actualizar_incidencia").modal("show");
-                $("#myModal_notificar_incidencia").modal("hide");
-            } else if ($(this).data("estado") == 272) {
-                $("#myModal_notificar_incidencia").modal("hide");
-                $("#myModal_actualizar_incidencia #lbl_title_fract").text("Solicitar revisión de incidencia");
-                $("#myModal_actualizar_incidencia").modal("show");
-            } else {
-                $("#myModal_notificar_incidencia").modal("hide");
-                $("#myModal_actualizar_incidencia #lbl_title_fract").text("Rechazar incidencia");
-                $("#myModal_actualizar_incidencia").modal("show");
-    
+            //solo pdf
+            if (file.type !== "application/pdf") {
+                $("#btn_subir_documentopose").css("background-color", "#006975");
+                $("#documento_posesion_label").css("color", "red");
+                document.getElementById('documento_posesion_label').
+                    innerText = "El archivo debe ser un PDF.";
+                $("#btn_subir_documentopose").prop("disabled", true);
+                return;
             }
-        }); */
 
-    /*  $("#form_act_incidencia").on("submit", async function (e) {
-         e.preventDefault();
- 
-         var request = convertFormToJSON("form_act_incidencia")
-         request['id_asig'] = $("#id_asig").val();
-         $("#wait").show()
-         var res = await incidenciasService.update(request)
-         $("#wait").hide()
-         toastr.success("Actualizado con éxito", "", {
-             positionClass: "toast-top-right",
-             timeOut: "4000",
-         });
-         location.reload(true);
- 
-     }); */
+            const progressDiv = document.querySelector('.progressbarwait');
+            progressDiv.textContent = `${parseInt(0)}%`;
+            progressDiv.style.width = `${parseInt(0)}%`;
+            //Tamaños
+            //MB
+            const fileSizeMB = file.size / (1024 * 1024);
+            //KB
+            const fileSizeKB = file.size / 1024;
 
-    /*    $("#tbl_incidencias").on("click", '.btn_inmostradetalles', function (e) {
-           e.preventDefault()
-   
-           const id = $(this).data("id");
-           const detalle = $("#deta-" + id);
-           const icon = $(this).find("i");
-   
-           if (!detalle.is(":visible")) {
-               //$(".row-incidencia").hide()
-               icon.removeClass("fa-eye").addClass("fa-eye-slash");
-               $("#row-incidencia-" + id).show();
-               detalle.show();
-   
-           } else {
-               icon.removeClass("fa-eye-slash").addClass("fa-eye");
-               $(".row-incidencia").show()
-               detalle.hide();
-           }
-   
-       }); */
+            let sizeText = '';
+            if (fileSizeMB >= 1) {
+                sizeText = fileSizeMB.toFixed(2) + ' MB';
+            } else {
+                sizeText = fileSizeKB.toFixed(2) + ' KB';
+            }
+            //validar no mayor a 10MB
+            if (fileSizeMB > 10) {
+                $("#btn_subir_documentopose").css("background-color", "#006975");
+                $("#documento_posesion_label").css("color", "red");
+                document.getElementById('documento_posesion_label').
+                    innerText = "El archivo es demasiado grande. El tamaño máximo permitido es de 10 MB.";
+                $("#btn_subir_documentopose").prop("disabled", true);
+            } else {
+                $("#btn_subir_documentopose").prop("disabled", false).css("background-color", "#006975c4");
+                $("#documento_posesion_label").css("color", "black");
+                document.getElementById('documento_posesion_label').innerText = file.name + ' (' + sizeText + ')';
+            }
+
+
+        }
+    });
+
+    $("#limpiarformdoc").on("click", function (e) {
+        $("#btn_subir_documentopose").css("background-color", "#006975");
+        $("#documento_posesion_label").css("color", "black");
+        document.getElementById('documento_posesion_label').
+            innerText = "Suba el archivo.";
+        $("#btn_subir_documentopose").prop("disabled", false);
+        $("#documento_posesion").val("");
+    });
+    $("#btn_subir_documentopose").on("click", async function (e) {
+        e.preventDefault();
+        var formData = new FormData();
+        var fileInput = document.getElementById('documento_posesion');
+        var file = fileInput.files[0];
+        if (file.type !== "application/pdf") {
+            $("#btn_subir_documentopose").css("background-color", "#006975");
+            $("#documento_posesion_label").css("color", "red");
+            document.getElementById('documento_posesion_label').
+                innerText = "El archivo debe ser un PDF.";
+            $("#btn_subir_documentopose").prop("disabled", true);
+            return;
+        }
+
+        if (!file) {
+            toastr.error("Debe seleccionar un archivo", "", {
+                positionClass: "toast-top-right",
+                timeOut: "3000",
+            });
+            return;
+
+        }
+        formData.append('documento_posesion', file);
+        formData.append('expid', $("#expid").val());
+        formData.append('category_id', $("#categoria_documento_posesion").val());
+        formData.append('fecha_respuesta', $("#fecha_respuesta").val());
+        $("#btn_subir_documentopose").css("background-color", "#006975c4");
+        $("#btn_subir_documentopose").prop("disabled", true);
+        let res = await expedientesService.addDocumento(formData);
+        if (res.success) {
+            toastr.success("Documento subido con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "3000",
+            });
+            $("#MyModalUploadDocumentoPosesion").modal("hide");
+            $("#wait").show();
+            window.location.reload(true);
+        }
+        $("#btn_subir_documentopose").css("background-color", "#006975");
+        $("#btn_subir_documentopose").prop("disabled", false);
+    });
+
+    $("#btn_delete_doc").on("click", async function (e) {
+        e.preventDefault();
+        let id = $(this).data("id")
+        const confirmation = await Swal.fire({
+            icon: "warning",
+            title: "¿Eliminar documento?",
+            text: "Se eliminará el documento de este expediente.",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            reverseButtons: true,
+            background: "#1a1f2c",
+            color: "#f4f5fa",
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#424a5d"
+        });
+
+        if (!confirmation.isConfirmed) return;
+        let request = {
+            expid: $("#expid").val()
+        }
+        $("#wait").show();
+        try {
+            let res = await expedientesService.deleteDocumento(id, request);
+            if (!res.success) {
+                throw new Error(res.message || "No se pudo eliminar el documento.");
+            }
+            toastr.success("Documento eliminado con éxito", "", {
+                positionClass: "toast-top-right",
+                timeOut: "3000",
+            });
+            window.location.reload(true);
+        } catch (error) {
+            toastr.error(error.message || "No se pudo eliminar el documento.", "", {
+                positionClass: "toast-top-right",
+                timeOut: "5000",
+            });
+        } finally {
+            //$("#wait").hide();
+        }
+    })
+
 
 
 });//////////////////////////////////////////////

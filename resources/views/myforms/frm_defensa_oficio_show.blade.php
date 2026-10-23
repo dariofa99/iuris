@@ -33,6 +33,7 @@
 
 
 @section('area_forms')
+    <div class="dofi-show-page">
     @php
         if (!currentUser()->hasRole('estudiante')) {
             $disabled = 'disabled';
@@ -216,6 +217,7 @@
         @include('myforms.frm_expediente_user_details')
     @endif
 
+    </div>
 @stop
 @push('scripts')
     <!-- aqui van los scripts de cada vista -->

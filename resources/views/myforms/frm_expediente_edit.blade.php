@@ -98,7 +98,7 @@
                 <li class="nav-item">
                     <a class="nav-link urlactive" id="reasignar-tab" data-toggle="tab" href="#reasignar_caso" role="tab"
                         aria-controls="reasignar_caso" aria-selected="false">
-                        <i class="fa fa-exchange" aria-hidden="true"></i> Reasignar caso
+                        <i class="fas fa-tags" aria-hidden="true"></i> Reasignar caso
                     </a>
                 </li>
             @endif
@@ -244,6 +244,7 @@
     @include('myforms.components_exp.frm_modal_exp_edit_cierre_caso')
     @include('myforms.frm_modal_details_not_caso')
     @include('myforms.components_exp.frm_modal_fechalimitres')
+    @include('myforms.components_exp.frm_modal_subir_documento_posesion')
     @include('myforms.components_exp.frm_modal_show_details_estadocaso')
     @include('myforms.components_exp.frm_modal_citaciones_estudiante')
     @include('myforms.frm_requerimiento_edit')

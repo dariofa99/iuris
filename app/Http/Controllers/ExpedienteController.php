@@ -42,9 +42,11 @@ use PDF;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class ExpedienteController extends Controller
 {
@@ -159,12 +161,11 @@ class ExpedienteController extends Controller
     if ($request['exptipoproce_id'] == 1) {
       //solo para consultas de asesoria   
       //$this->expedienteService->asignarDocente($asignacion_caso);
-      $result = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); 
-     
+      $result = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id);
     } else {
 
       $result = $this->expedienteService->asignargDocenteSeguimiento($asignacion_caso, $expediente->exptipoproce_id); // si tiene en cuenta la rama del derecho
-    
+
     }
     if ($request->has('solicitud_id')) {
       //si viene desde solicitudes
@@ -1706,39 +1707,38 @@ join rama_derecho rd on rd.id = e.expramaderecho_id
 where e.expidnumberest = '1004193598'
 and (e.expestado_id != 8)
 group by rd.subrama ;*/
-try {
+    try {
       $expedientes = DB::table('expedientes as e')
-      ->join('rama_derecho as rd', 'rd.id', '=', 'e.expramaderecho_id')
-      ->join("users as es", "es.idnumber", "=", "e.expidnumberest")
-      ->where('e.expidnumberest', $idnumber)
-      ->where('e.expestado_id', '!=', 8)
-      ->select(
-        'rd.subrama',
-        DB::raw('count(rd.subrama) as total'),
-        DB::raw('SUM(IF(e.expestado_id = 1, 1, 0)) AS Abiertos'),
-        DB::raw('SUM(IF(e.expestado_id = 2, 1, 0)) AS Cerrados'),
-        DB::raw('SUM(IF(e.expestado_id = 3, 1,  0)) AS Rechazados'),
-        DB::raw('SUM(IF(e.expestado_id = 4, 1, 0)) AS En_solicitud_de_cierre'),
-        DB::raw('SUM(IF(e.expestado_id = 5, 1, 0)) AS Cerrado_sistema'),
-        DB::raw('SUM(IF(e.expestado_id = 6, 1, 0)) AS Pausados')
-      )
-      ->groupBy('rd.subrama')
-      ->get();
-    $estudiante = User::where("idnumber", $idnumber)->first();
-   
-    $estudiante->image = url('thumbnails/'.$estudiante->image);
+        ->join('rama_derecho as rd', 'rd.id', '=', 'e.expramaderecho_id')
+        ->join("users as es", "es.idnumber", "=", "e.expidnumberest")
+        ->where('e.expidnumberest', $idnumber)
+        ->where('e.expestado_id', '!=', 8)
+        ->select(
+          'rd.subrama',
+          DB::raw('count(rd.subrama) as total'),
+          DB::raw('SUM(IF(e.expestado_id = 1, 1, 0)) AS Abiertos'),
+          DB::raw('SUM(IF(e.expestado_id = 2, 1, 0)) AS Cerrados'),
+          DB::raw('SUM(IF(e.expestado_id = 3, 1,  0)) AS Rechazados'),
+          DB::raw('SUM(IF(e.expestado_id = 4, 1, 0)) AS En_solicitud_de_cierre'),
+          DB::raw('SUM(IF(e.expestado_id = 5, 1, 0)) AS Cerrado_sistema'),
+          DB::raw('SUM(IF(e.expestado_id = 6, 1, 0)) AS Pausados')
+        )
+        ->groupBy('rd.subrama')
+        ->get();
+      $estudiante = User::where("idnumber", $idnumber)->first();
 
-    return response()->json([
-      "data" => $expedientes,
-      "estudiante" => $estudiante
-    ]);
-} catch (\Throwable $th) {
-   return response()->json([
-      "data" => [],
-      "estudiante" => null
-    ]);
-}
+      $estudiante->image = url('thumbnails/' . $estudiante->image);
 
+      return response()->json([
+        "data" => $expedientes,
+        "estudiante" => $estudiante
+      ]);
+    } catch (\Throwable $th) {
+      return response()->json([
+        "data" => [],
+        "estudiante" => null
+      ]);
+    }
   }
 
   public function rechazarAutorizacionNotificacion(Request $request)
@@ -1760,5 +1760,84 @@ try {
     $autorizacion->save();
 
     return response()->json($request->all());
+  }
+
+  public function addDocumento(Request $request)
+  {
+    $expediente = $this->expedienteService->findWithFilter([
+      'expid' => $request->expid
+    ]);
+
+    if ($request->has("documento_posesion")) {
+      $file = $expediente->uploadFile($request->file('documento_posesion'), '/expediente_' . $expediente->id);
+      $expediente->documentos()->attach(
+        $file,
+        [
+          'asig_caso_id' => $expediente->asignacion->id,
+          'expidnumber' => $expediente->expid,
+          'useridnumber' => currentUser()->idnumber,
+          'type_status_id' => 1,
+          'category_id' => $request->category_id
+        ]
+      );
+    }
+
+    return response()->json([
+      "success" => true,
+      "message" => "Documento agregado correctamente"
+    ]);
+  }
+  public function deleteDocumento(Request $request, $id)
+  {
+    $expediente = $this->expedienteService->findWithFilter([
+      'expid' => $request->expid
+    ]);
+
+    if (!$expediente) {
+      return response()->json([
+        'success' => false,
+        'message' => 'No se encontró el expediente'
+      ], 404);
+    }
+
+    $file = $expediente->documentos()
+      ->wherePivot('id', $id)
+      ->first();
+
+    if (!$file) {
+      return response()->json([
+        'success' => false,
+        'message' => 'El documento no está asociado a este expediente'
+      ], 404);
+    }
+
+    if (empty($file->encrypt_name)) {
+        return response()->json([
+        'success' => false,
+        'message' => 'No se pudo localizar el archivo almacenado'
+      ], 500);
+    }
+
+    $storagePath = 'expediente_' . $expediente->id . '/' . basename($file->encrypt_name);
+    $disk = Storage::disk('expediente_files');
+
+    if ($disk->exists($storagePath) && !$disk->delete($storagePath)) {
+     
+      return response()->json([
+        'success' => false,
+        'message' => 'No se pudo eliminar el archivo del almacenamiento'
+      ], 500);
+    }
+
+    DB::table('exp_has_files')
+      ->where('id', $id)
+      ->where('expidnumber', $expediente->expid)
+      ->delete();
+
+
+    return response()->json([
+      "success" => true,
+      "message" => "Documento eliminado correctamente"
+    ]);
   }
 }

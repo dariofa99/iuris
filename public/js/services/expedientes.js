@@ -1048,6 +1048,23 @@ export class ExpedientesService {
         const topics = await response.json();
         return topics;
     }
+     async deleteDocumento(id, request) {
+        const response = await fetch(BASE_URL + "expedientes/delete/documento/" + id + "?" + new URLSearchParams(request), {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $("#token").attr("content"),
+            }
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            throw new Error(message);
+        }
+        const topics = await response.json();
+        return topics;
+    }
     async updatePausa(id, request) {
         const response = await fetch(BASE_URL + 'expedientes/update/pausa/' + id, {
             method: 'PUT',
@@ -1068,7 +1085,7 @@ export class ExpedientesService {
         return topics;
     }
     showProgress(percentage) {
-        const progressDiv = document.getElementById('progressbarwait');
+        const progressDiv = document.querySelector('.progressbarwait');
         progressDiv.textContent = `${parseInt(percentage)}%`;
         progressDiv.style.width = `${parseInt(percentage)}%`;
 
@@ -1092,6 +1109,39 @@ export class ExpedientesService {
         }
         const topics = await response.json();
         return topics;
+    }
+
+    async addDocumento(formData) {
+        const progressDiv = document.querySelector('.progressbarwait');
+        progressDiv.textContent = `${parseInt(0)}%`;
+        progressDiv.style.width = `${parseInt(0)}%`;
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', BASE_URL + 'expedientes/add/documento', true);
+            xhr.setRequestHeader('X-CSRF-Token', $("#token").attr("content")); // Agrega la cabecera X-CSRF-Token
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentage = (event.loaded / event.total) * 100;
+                    this.showProgress(percentage);
+                }
+            });
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (error) {
+                        reject(new Error('Error al analizar la respuesta JSON'));
+                    }
+                } else {
+                    reject(new Error(`Upload failed with status: ${xhr.status}`));
+                }
+            };
+            xhr.onerror = () => {
+                reject(new Error('Upload failed'));
+            };
+            xhr.send(formData);
+        });
     }
 }
 

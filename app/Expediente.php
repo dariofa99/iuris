@@ -35,7 +35,7 @@ class Expediente extends Model
      */
     protected $table = 'expedientes';
     protected $origen = 1;
-    private $disk = 'exp_files';
+    private $disk = 'expediente_files';
 
     /**
      * The attributes that are mass assignable.
@@ -184,6 +184,12 @@ class Expediente extends Model
             ->withTimestamps();
     }
 
+      public function documentos()
+    {
+        return $this->belongsToMany(File::class, 'exp_has_files', 'expidnumber', 'file_id', 'expid', 'id')
+            ->withPivot('asig_caso_id', 'expidnumber', 'id','type_status_id', 'category_id', 'useridnumber','file_id')
+            ->withTimestamps();
+    }
 
     public function solicitudes()
     {

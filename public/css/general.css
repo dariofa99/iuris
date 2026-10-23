@@ -2788,6 +2788,383 @@
 
 }
 
+.dofi-show-page,
+.dofi-show-page *:not(i):not(.fa) {
+  font-size: 16px !important;
+}
+
+.dofi-show-page textarea,
+.dofi-show-page input,
+.dofi-show-page select,
+.dofi-show-page button {
+  line-height: 1.5;
+}
+
+#mymodalShowAlerts .modal-content {
+  overflow: hidden;
+  border: 1px solid #dce7e9;
+  border-radius: 6px;
+  color: #344f55;
+  box-shadow: 0 16px 42px rgba(29, 53, 58, 0.2);
+}
+
+#mymodalShowAlerts .modal-header {
+  padding: 0.85rem 1.2rem;
+  border-bottom: 1px solid #e8eef0;
+  background: #f8fbfb;
+  color: #263f45;
+}
+
+#mymodalShowAlerts .modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+#mymodalShowAlerts .modal-body {
+  padding: 1rem;
+}
+
+#mymodalShowAlerts .modal-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e8eef0;
+  background: #fbfcfc;
+}
+
+#mymodalShowAlerts #btnNotFalse {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #d7aaaa;
+  border-radius: 3px;
+  background: #fff;
+  color: #9c4845;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+#mymodalShowAlerts #btnNotFalse:hover,
+#mymodalShowAlerts #btnNotFalse:focus {
+  border-color: #b94a48;
+  background: #fff5f4;
+  color: #843d39;
+}
+
+.iuris-circular {
+  max-width: 100%;
+  color: #344f55;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.iuris-circular-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d5e5e7;
+  border-left: 4px solid #006975;
+  border-radius: 4px;
+  background: linear-gradient(110deg, #f0f7f8 0%, #fff 80%);
+}
+
+.iuris-circular-header-icon {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #e0eff1;
+  color: #006975;
+  font-size: 1.25rem;
+}
+
+.iuris-circular-eyebrow {
+  display: block;
+  margin-bottom: 0.1rem;
+  color: #006975;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.iuris-circular-header h2 {
+  margin: 0;
+  color: #263f45;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.iuris-circular-header p {
+  margin: 0.15rem 0 0;
+  color: #71858a;
+  font-size: 0.9rem;
+}
+
+.iuris-circular-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #dce7e9;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.iuris-circular-intro-icon {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e8f0f1;
+  color: #006975;
+  font-size: 0.85rem;
+}
+
+.iuris-circular-intro h3,
+.iuris-circular-section-heading h3 {
+  margin: 0 0 0.35rem;
+  color: #263f45;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.iuris-circular-intro p {
+  margin: 0 0 0.55rem;
+  color: #40595e;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.iuris-circular-deadline {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #dce7e9;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.iuris-circular-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.8rem;
+}
+
+.iuris-circular-section-icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #e8f0f1;
+  color: #006975;
+}
+
+.iuris-circular-section-heading h3 {
+  margin-bottom: 0.1rem;
+}
+
+.iuris-circular-section-heading p {
+  margin: 0;
+  color: #71858a;
+  font-size: 0.84rem;
+}
+
+.iuris-circular-steps {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iuris-circular-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid #edf1f2;
+  border-radius: 3px;
+  background: #fbfcfc;
+}
+
+.iuris-circular-step-icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #eaf4f5;
+  color: #006975;
+}
+
+.iuris-circular-steps h4 {
+  margin: 0 0 0.2rem;
+  color: #344f55;
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.iuris-circular-steps p {
+  margin: 0;
+  color: #526b70;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.iuris-circular-path {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  padding: 0.55rem 0.7rem;
+  border-left: 3px solid #d5a23b;
+  background: #fbf8ef;
+  color: #5d512f;
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+
+.iuris-circular-path > .fa {
+  color: #b48627;
+}
+
+.iuris-circular-path strong span {
+  padding: 0 0.2rem;
+  color: #a17a24;
+}
+
+.iuris-circular-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #ecd1ce;
+  border-left: 4px solid #b94a48;
+  border-radius: 4px;
+  background: #fff8f7;
+}
+
+.iuris-circular-warning-icon {
+  padding-top: 0.1rem;
+  color: #b94a48;
+  font-size: 1.1rem;
+}
+
+.iuris-circular-warning h3 {
+  margin: 0 0 0.25rem;
+  color: #843d39;
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.iuris-circular-warning p {
+  margin: 0;
+  color: #604a48;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.iuris-circular-tips {
+  margin-bottom: 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dce7e9;
+  border-radius: 4px;
+  background: #f8fbfb;
+}
+
+.iuris-circular-tips h3 {
+  margin: 0 0 0.5rem;
+  color: #344f55;
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.iuris-circular-tips h3 .fa {
+  margin-right: 0.35rem;
+  color: #006975;
+}
+
+.iuris-circular-tips ul {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #526b70;
+  font-size: 0.95rem;
+}
+
+.iuris-circular-thanks {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #d6e8dd;
+  border-radius: 4px;
+  background: #f5faf6;
+  color: #456653;
+  font-size: 0.95rem;
+}
+
+.iuris-circular-thanks .fa {
+  margin-top: 0.15rem;
+  color: #39875b;
+}
+
+@media (max-width: 575.98px) {
+  #mymodalShowAlerts .modal-body {
+    padding: 0.7rem;
+  }
+
+  .iuris-circular-header {
+    gap: 0.7rem;
+    padding: 0.8rem;
+  }
+
+  .iuris-circular-header-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    font-size: 1rem;
+  }
+
+  .iuris-circular-header h2 {
+    font-size: 1.12rem;
+  }
+
+  .iuris-circular-header p {
+    font-size: 0.8rem;
+  }
+
+  .iuris-circular-intro,
+  .iuris-circular-deadline {
+    padding: 0.75rem;
+  }
+
+  .iuris-circular-steps li {
+    gap: 0.55rem;
+    padding: 0.65rem;
+  }
+
+  .iuris-circular-step-icon {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+}
+
 .iuris-assigned-teacher {
   display: flex;
   align-items: center;
@@ -3273,7 +3650,7 @@
 .iuris-advisory-content p {
   margin: 0;
   color: #40595e;
-  font-size: 0.92rem;
+  font-size: 16px;
   line-height: 1.65;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -4728,7 +5105,7 @@ min-height: 82px;
 
 resize: vertical;
 
-font-size: 13px;
+font-size: 16px;
 
 
 }
@@ -7020,7 +7397,7 @@ RESPONSIVE
   min-height: 78px;
   padding: 0.85rem 1rem;
   border: 1px solid #d4e4e6;
-  border-left: 4px solid #006975;
+  border-left: 4px solid #cd581f;
   border-radius: 7px;
   background: linear-gradient(110deg, #f4f8f8 0%, #fff 75%);
   box-shadow: 0 2px 8px rgba(38, 63, 69, 0.05);
@@ -7109,6 +7486,355 @@ RESPONSIVE
   border-color: #006975;
   color: #005661;
   background: #f5fafb;
+}
+
+.iuris-deadline-modal {
+  padding: 0.15rem;
+}
+
+.iuris-deadline-modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #263f45;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.iuris-deadline-modal-title .fa {
+  color: #006975;
+}
+
+.iuris-deadline-modal-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dce7e9;
+  border-radius: 5px;
+  background: #f7fafb;
+}
+
+.iuris-deadline-modal-person {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.iuris-deadline-modal-icon {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #e8f0f1;
+  color: #006975;
+}
+
+.iuris-deadline-modal-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #71858a;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.iuris-deadline-modal-person strong,
+.iuris-deadline-modal-case strong {
+  display: block;
+  color: #263f45;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.iuris-deadline-modal-case {
+  flex: 0 0 auto;
+  padding-left: 1rem;
+  border-left: 1px solid #dce7e9;
+}
+
+.iuris-deadline-modal-field {
+  margin: 0;
+}
+
+.iuris-deadline-modal-field > label {
+  margin-bottom: 0.45rem;
+  color: #344f55;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.iuris-document-category {
+  margin-bottom: 1.1rem;
+}
+
+.iuris-document-category-control {
+  position: relative;
+}
+
+.iuris-document-category-control > .fa-folder-open {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 0.85rem;
+  color: #628187;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.iuris-document-category-control select.form-control {
+  height: 46px;
+  padding: 0.55rem 2.5rem 0.55rem 2.4rem;
+  border: 1px solid #cbdde0;
+  border-radius: 4px;
+  background: #fff;
+  color: #263f45;
+  font-size: 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: 0 1px 2px rgba(38, 63, 69, 0.04);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.iuris-document-category-control select.form-control:hover {
+  border-color: #9bbbc0;
+}
+
+.iuris-document-category-control select.form-control:focus {
+  border-color: #006975;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 105, 117, 0.12);
+}
+
+.iuris-document-category-chevron {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  color: #628187;
+  font-size: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.iuris-deadline-modal-input {
+  position: relative;
+}
+
+.iuris-deadline-modal-input > .fa {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 0.8rem;
+  color: #628187;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.iuris-deadline-modal-input .form-control {
+  height: 44px;
+  padding-left: 2.35rem;
+  border: 1px solid #cbdde0;
+  border-radius: 4px;
+  color: #263f45;
+  font-size: 1rem;
+  box-shadow: none;
+}
+
+.iuris-deadline-modal-input .form-control:focus {
+  border-color: #006975;
+  box-shadow: 0 0 0 3px rgba(0, 105, 117, 0.12);
+}
+
+.iuris-deadline-modal-field > small {
+  display: block;
+  margin-top: 0.45rem;
+  color: #71858a;
+  font-size: 0.8rem;
+}
+
+.iuris-possession-upload {
+  display: flex;
+  min-height: 82px;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0.85rem;
+  border: 1px dashed #a9c7cb;
+  border-radius: 4px;
+  background: #f8fbfb;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.iuris-possession-upload:hover {
+  border-color: #006975;
+  background: #f0f7f8;
+}
+
+.iuris-possession-upload-input:focus + .iuris-possession-upload {
+  border-color: #006975;
+  box-shadow: 0 0 0 3px rgba(0, 105, 117, 0.12);
+}
+
+.iuris-possession-upload-icon {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #e8f0f1;
+  color: #006975;
+  font-size: 1.1rem;
+}
+
+.iuris-possession-upload-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.iuris-possession-upload-copy strong {
+  color: #344f55;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.iuris-possession-upload-copy > span {
+  color: #71858a;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.iuris-possession-upload-action {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #cbdde0;
+  border-radius: 3px;
+  background: #fff;
+  color: #006975;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.iuris-possession-documents {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.iuris-possession-documents > a {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #e1eaec;
+  border-radius: 3px;
+  background: #fff;
+  color: #006975;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.iuris-possession-documents > a:hover,
+.iuris-possession-documents > a:focus {
+  border-color: #a9c7cb;
+  background: #f5fafa;
+  color: #005661;
+}
+
+.iuris-possession-documents > a > span {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iuris-possession-documents > a > small {
+  flex: 0 0 auto;
+  color: #71858a;
+  font-size: 0.74rem;
+}
+
+.iuris-possession-documents > a > .fa-external-link-alt {
+  color: #82979b;
+  font-size: 0.72rem;
+}
+
+.iuris-deadline-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  margin-top: 1.35rem;
+  padding-top: 1rem;
+  border-top: 1px solid #edf1f2;
+}
+
+.iuris-deadline-modal-actions .btn {
+  min-height: 38px;
+  padding: 0.5rem 0.85rem;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.iuris-deadline-modal-cancel {
+  border: 1px solid #d5e2e4;
+  background: #fff;
+  color: #526b70;
+}
+
+.iuris-deadline-modal-cancel:hover,
+.iuris-deadline-modal-cancel:focus {
+  border-color: #afc5c9;
+  background: #f5f9f9;
+  color: #344f55;
+}
+
+.iuris-deadline-modal-submit {
+  border: 1px solid #006975;
+  background: #006975;
+  color: #fff;
+}
+
+.iuris-deadline-modal-submit:hover,
+.iuris-deadline-modal-submit:focus {
+  border-color: #005661;
+  background: #005661;
+  color: #fff;
+}
+
+@media (max-width: 575.98px) {
+  .iuris-possession-upload {
+    gap: 0.65rem;
+    padding: 0.7rem;
+  }
+
+  .iuris-possession-upload-icon {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+
+  .iuris-possession-upload-action {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }
 
 .iuris-student-overview {

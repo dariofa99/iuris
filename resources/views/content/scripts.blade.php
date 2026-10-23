@@ -11,21 +11,24 @@
     });
 
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualFinPeriodo");
+        localStorage.removeItem("keyCircularActualActPHP");
 
-        var keyCir = localStorage.getItem("keyCircularActualActPHP"); 
+        var keyCir = localStorage.getItem("keyCircularDefensasOficio");
         $("#modal_t").text("");
         var message = '';
-         
+
         if (keyCir == null) {
-            message = getCircularMant();
+            message = getHtmlCircular();
             $("#modal-show-alerts-content").html(message);
-           // $("#mymodalShowAlerts").modal("show");
+            $("#mymodalShowAlerts").modal("show");
         } else {
             $("#modal_t").text("");
-            // message = getMotivationalMessage();
+           /*  message = getHtmlCircular();
+            $("#modal-show-alerts-content").html(message);
+            $("#mymodalShowAlerts").modal("show"); */
+
         }
-      
+
 
         //var message = getMantenimientoMessage();
     @endif
@@ -734,18 +737,18 @@
     }
 
     function getCircularMant() {
-    
-    var message = '';
 
-   /*  $("#contentNotButtonDis").append($("<button>", {
-        class: "btn btn-danger",
-        id: "btnNotFalse",
-        text: "No volver a mostrar",
-        "data-not": "keyCircularActualActPHP"
-    })); */
+        var message = '';
 
-    if (keyCir == null) {
-        message = `
+        /*  $("#contentNotButtonDis").append($("<button>", {
+             class: "btn btn-danger",
+             id: "btnNotFalse",
+             text: "No volver a mostrar",
+             "data-not": "keyCircularActualActPHP"
+         })); */
+
+        if (keyCir == null) {
+            message = `
             <div class="alert alert-warning" role="alert" style="font-size:16px;">
                 <h4><strong>⚠️ Aviso Importante</strong></h4>
                 <p>
@@ -762,10 +765,10 @@
                 </p>
             </div>
         `;
-    }
+        }
 
-    return message;
-}
+        return message;
+    }
 
     function getCircular() {
         var keyCir = localStorage.getItem("keyCircularActualTurnos");
@@ -782,14 +785,14 @@
 
     function getHtmlCircularFinPeriodo() {
 
-    $("#contentNotButtonDis").append($("<button>", {
-        class: "btn btn-danger",
-        id: "btnNotFalse",
-        text: "No volver a mostrar",
-        "data-not": "keyCircularActualFinPeriodo"
-    }));
+        $("#contentNotButtonDis").append($("<button>", {
+            class: "btn btn-danger",
+            id: "btnNotFalse",
+            text: "No volver a mostrar",
+            "data-not": "keyCircularActualFinPeriodo"
+        }));
 
-    return `
+        return `
 
 <div class="container-fluid">
 
@@ -953,190 +956,141 @@
 </div>
 
     `;
-}
+    }
+
     function getHtmlCircular() {
         $("#contentNotButtonDis").append($("<button>", {
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCircularActualIncidenciasU"
+            "data-not": "keyCircularDefensasOficio"
         }));
 
         return `
-<div class="container-fluid">
-
-      <!-- Punto de enfoque para narrador -->
+<div class="iuris-circular">
     <div id="modalContentStart" tabindex="-1"></div>
-
-    <!-- Área invisible para narración automática -->
     <div id="modal-announce" class="sr-only" aria-live="assertive" aria-atomic="true">
-        Información importante sobre la gestión de incidencias en la plataforma IURIS.
+        Circular para estudiantes sobre plazos, toma de posesión y registro de documentos de defensas de oficio en IURIS.
     </div>
 
-    <div class="text-center mb-4">
-        <h4 class="font-weight-bold">
-            <i class="fas fa-exclamation-circle text-primary"></i>
-            Información importante sobre la gestión de incidencias
-        </h4>
-        <p class="text-muted">Plataforma IURIS</p>
-    </div>
-
-    <div class="alert alert-primary" role="alert" style="font-size: 15px;">
-        <i class="fas fa-info-circle"></i>
-        Estimados(as) administrativos, docentes y estudiantes:
-        Con el propósito de mejorar la claridad en las solicitudes de incidencias y fortalecer la trazabilidad,
-        se ha implementado una nueva función en la plataforma <strong>IURIS</strong>.
-    </div>
-
-    <p class="text-justify">
-        Esta actualización permite centralizar y organizar solicitudes como eliminación o modificación de notas,
-        cambios de docente, reapertura de casos, ajustes administrativos, entre otros.<br>
-       <b>Para garantizar exactitud y evitar errores, las solicitudes para eliminar notas requieren información detallada.</b>
-    </p>
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white py-2">
-            <i class="fas fa-edit"></i>
-            Ejemplos de solicitud correcta
+    <header class="iuris-circular-header">
+        <span class="iuris-circular-header-icon" aria-hidden="true">
+            <i class="fas fa-gavel"></i>
+        </span>
+        <div>
+            <span class="iuris-circular-eyebrow">Plataforma IURIS</span>
+            <h2>Circular informativa</h2>
+            <p>Defensas de oficio · Plazos y registro de documentos</p>
         </div>
-        <div class="card-body">
-            <ul>
-                <li class="mb-2">
-                    “Eliminar nota de cero relacionada con la actuación "Demanda X".
-                    aplicada el <strong>15 de septiembre de 2025</strong> por vencimiento del plazo.
-                    ”
+    </header>
 
-                </li>
-
-                <li class="mb-2">
-                    “Eliminar notas de cero
-                     correspondientes al periodo
-                    <strong>10 de septiembre → 11 de noviembre de 2025</strong>.”
-                </li>
-
-                             
-
-            </ul>
-
-            <small class="text-secondary">
-                Ser explícito evita duplicidades, malos entendidos y solicitudes no autorizadas.
-            </small>
+    <section class="iuris-circular-intro">
+        <div class="iuris-circular-intro-icon" aria-hidden="true">
+            <i class="fas fa-info"></i>
         </div>
-    </div>
-
-    <h5 class="font-weight-bold mb-3">
-        <i class="fas fa-map-marker-alt text-danger"></i>
-        ¿Dónde encontrar la nueva función?
-    </h5>
-
-    <div class="card mb-3 shadow-sm">
-        <div class="card-body">
-            <h6 class="font-weight-bold">
-                <i class="fas fa-folder-open text-info"></i>
-                1. Administración de Expedientes
-            </h6>
-            <h5 class="mb-2 text-justify mt-2">
-                 <i class="fas fa-paper-plane text-info"></i>
-                 <b>PASO UNO:</b>
-                Encontrará un botón para reportar incidencias directamente desde la gestión de expedientes.
-            </h5>
-            <div class="text-center">
-                <img src="{{ asset('dist/img/update/Diapositiva1.JPG') }}"
-                     class="img-fluid rounded shadow" style="max-height: 400px;"
-                     alt="Ubicación del botón en expedientes">
-            </div>
-             <h5 class="mb-2 text-justify mt-2">
-                <i class="fas fa-paper-plane text-info"></i>
-                <b>PASO DOS:</b> Pestaña “Reporte” — Reporte de incidencia
-            </h5>
-
-            <p class="text-justify">
-                Esta pestaña está destinada a la creación de una nueva solicitud de incidencia.
-                Aquí usted podrá realizar el reporte incluyendo todos los detalles importantes.
+        <div>
+            <h3>Apreciados estudiantes:</h3>
+            <p>
+            Con el propósito de garantizar el cumplimiento oportuno de las actuaciones
+                asignadas y fortalecer el seguimiento de los expedientes, a partir de la fecha, cuando se le asigne una defensa de oficio recibirá un correo electrónico
+                con la fecha límite para presentarse ante el juzgado o la entidad correspondiente
+                y, según el caso, solicitar el radicado o formalizar la toma de posesión.
             </p>
-
-            <p class="font-weight-bold mb-1">Opciones disponibles:</p>
-            <ul>
-                <li>Eliminación o modificación de nota</li>
-                <li>Cambio de docente</li>
-                <li>Reapertura de caso</li>
-                <li>Ajustes en turnos</li>
-                <li>Otros incidentes administrativos</li>
-            </ul>
-
-            <p class="text-justify">
-                Luego deberá redactar el motivo explicando claramente la situación.
-                Se recomienda incluir:
-            </p>
-
-            <ul>
-                <li>Código del expediente</li>
-                <li>Tipo de nota o actuación</li>
-                <li>Fechas o periodos involucrados</li>
-                <li>Detalles que eviten confusiones o rechazos</li>
-            </ul>
-
-            
-            <p class="text-justify">
-                Una vez enviada la solicitud, esta será revisada por el administrador y podrá recibir el estado:
-                <strong>Aprobada</strong>, <strong>Rechazada</strong> o <strong>Pendiente de revisión</strong>.
-            </p>
-
-                <h5 class="mb-2 text-justify mt-2">
-                <i class="fas fa-paper-plane text-info"></i>
-                <b>PASO TRES:</b> “Mis solicitudes” — Seguimiento y gestión
-            </h5>
-
-            <p class="text-justify">
-                Esta pestaña muestra todas las incidencias enviadas y su evolución.
-                Su diseño permite un seguimiento claro, accesible y ordenado.
-            </p>
-
-            <p class="font-weight-bold mb-1">Aquí podrá:</p>
-
-            <ul>
-                <li>Consultar el estado de cada solicitud:
-                    <strong>En revisión, Aprobada o Rechazada</strong>.</li>
-                <li>Leer los comentarios del administrador.</li>
-                <li>Editar una solicitud que aún esté en revisión.</li>
-                <li>Volver a solicitar revisión si fue rechazada y existe nueva información.</li>
-            </ul>
-
-            <p class="text-justify mb-0">
-                Este flujo permite que cada incidencia tenga un registro histórico completo,
-                facilitando la trazabilidad, la transparencia y el correcto manejo del expediente.
+            <p class="mb-0">
+                Una vez realizada la gestión, registre en <strong>IURIS</strong>, dentro del
+                expediente asignado y antes de la fecha indicada, el soporte de posesión,
+                el radicado o el comprobante de envío de documentos, según corresponda.
             </p>
         </div>
-    </div>
+    </section>
 
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <h6 class="font-weight-bold">
-                <i class="fas fa-list-alt text-success"></i>
-                2. Menú lateral → Incidencias
-            </h6>
-            <p class="mb-2 text-justify">
-                Para incidencias que no se relacionan con un caso, como turnos o cuentas, encontrará el enlace en el menú lateral, opción "Incidencias", enlace "Solicitar atención".
-                Siga las instrucciones mencionadas en los pasos anteriores.
-                <br>
-            </p>
-            <div class="text-center">
-                <img src="{{ asset('dist/img/update/Diapositiva2.JPG') }}"
-                     class="img-fluid rounded shadow" style="max-height: 400px;"
-                     alt="Ubicación del botón incidencias en menú lateral">
+    <section class="iuris-circular-deadline" aria-label="Pasos para cumplir con la defensa asignada">
+        <div class="iuris-circular-section-heading">
+            <span class="iuris-circular-section-icon" aria-hidden="true">
+                <i class="fas fa-clock"></i>
+            </span>
+            <div>
+                <h3>Qué debe hacer</h3>
+                <p>Complete estos pasos dentro del plazo informado por correo.</p>
             </div>
         </div>
-    </div>
 
-    <div class="alert mt-4" role="alert">
-        <i class="fas fa-check-circle"></i>
-        Agradecemos su colaboración.
-    </div>
+        <ol class="iuris-circular-steps">
+            <li>
+                <span class="iuris-circular-step-icon" aria-hidden="true">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <div>
+                    <h4>Revise la notificación</h4>
+                    <p>Consulte el correo registrado en IURIS para conocer la fecha límite y las instrucciones de su asignación.</p>
+                </div>
+            </li>
 
+             <li>
+                <span class="iuris-circular-step-icon" aria-hidden="true">
+                    <i class="fas fa-file"></i>
+                </span>
+                <div>
+                    <h4>Solicite la autorización</h4>
+                    <p>Acérquese con el/la docente asignada/o y solicite la respectiva autorización. Diligencie la autorización y solicite la aprobación con dirección administrativa.</p>
+                </div>
+            </li>
+            <li>
+                <span class="iuris-circular-step-icon" aria-hidden="true">
+                    <i class="fas fa-landmark"></i>
+                </span>
+                <div>
+                    <h4>Realice la gestión correspondiente</h4>
+                    <p>Preséntese ante el juzgado o la entidad indicada, con la respectiva autorización, para solicitar el radicado o formalizar la posesión de la defensa.</p>
+                </div>
+            </li>
+            <li>
+                <span class="iuris-circular-step-icon" aria-hidden="true">
+                    <i class="fas fa-file-upload"></i>
+                </span>
+                <div>
+                    <h4>Registre el soporte en IURIS</h4>
+                    <p>Cargue el documento en el expediente asignado, en la sección:</p>
+                    <div class="iuris-circular-path">
+                        <i class="fas fa-folder-open" aria-hidden="true"></i>
+                        <strong>Expediente <span aria-hidden="true">›</span> Datos del caso <span aria-hidden="true">›</span> Documento de posesión</strong>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <section class="iuris-circular-warning" role="alert">
+        <span class="iuris-circular-warning-icon" aria-hidden="true">
+            <i class="fas fa-exclamation-triangle"></i>
+        </span>
+        <div>
+            <h3>Importante: respete la fecha límite</h3>
+            <p>
+                El soporte debe quedar cargado en el expediente correcto antes de la fecha
+                indicada en el correo. Si no se registra dentro del plazo establecido,
+                <strong>el sistema evaluará la actividad con una calificación de cero (0,0)</strong>.
+            </p>
+        </div>
+    </section>
+
+    <section class="iuris-circular-tips">
+        <h3><i class="fas fa-clipboard-check" aria-hidden="true"></i> Recomendaciones</h3>
+        <ul>
+            <li>Revise regularmente su correo y la carpeta de correo no deseado.</li>
+            <li>Verifique la fecha límite y cargue el archivo con anticipación.</li>
+            <li>Confirme que el documento esté en el expediente correcto y se haya registrado correctamente.</li>
+        </ul>
+    </section>
+
+    <footer class="iuris-circular-thanks">
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        Gracias por su compromiso y por atender oportunamente las responsabilidades de su defensa asignada.
+    </footer>
 </div>
     `;
-
     }
+
 
     function getHtmlCircularD() {
         return `

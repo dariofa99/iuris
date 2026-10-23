@@ -1,54 +1,98 @@
 @php
-    $diasParaRespuesta = $expediente->getDaysForPosesion();
-        
+    $diasParaRespuesta = 0;
+    $fechaAsignacion = $expediente->asignacion->fecha_asig ?? null;
+    $fechaCortePosesion = \Carbon\Carbon::createFromFormat('d/m/Y', '22/10/2026')->startOfDay();
+
+    if ($fechaAsignacion && \Carbon\Carbon::parse($fechaAsignacion)->startOfDay()->gt($fechaCortePosesion)) {
+        $diasParaRespuesta = $expediente->getDaysForPosesion();
+    }
+
+    $documentosPosesion = $expediente->documentos()->get();
+
 @endphp
 
-@if ($expediente->exptipoproce_id == 3 and $expediente->expestado_id == 1)
+@if ($fechaAsignacion && \Carbon\Carbon::parse($fechaAsignacion)->startOfDay()->gt($fechaCortePosesion) and $expediente->exptipoproce_id == 3 and $expediente->expestado_id == 1)
     <div class="row dofi-deadline-row">
         <div class="col-12">
-            <section class="dofi-deadline-panel" aria-label="Fecha límite de respuesta">
-                <span class="dofi-deadline-icon" aria-hidden="true">
-                    <i class="fa fa-calendar"></i>
-                </span>
+            <section class="dofi-deadline-panel" style="background-color: antiquewhite !important"
+                aria-label="Fecha límite de respuesta">
 
-                <div class="dofi-deadline-info">
-                    <span class="dofi-deadline-label">Fecha límite de respuesta</span>
-                    <strong id="lbl_expfecha_res">
-                        {{ getLongDate($expediente->expfechalimite) }}
-                    </strong>
-                </div>
+                @if ($documentosPosesion->isNotEmpty())
+                    <label class="iuris-possession-upload">
 
-                <div class="dofi-deadline-actions">
-                    @if ($diasParaRespuesta > 0)
-                        <span id="lbl_dias_para_respuesta" class="badge-asistencia high" aria-live="polite">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
-                            Faltan {{ $diasParaRespuesta }} {{ $diasParaRespuesta === 1 ? 'día' : 'días' }}
-                        </span>
-                    @elseif ($diasParaRespuesta === 0)
-                        <span id="lbl_dias_para_respuesta" class="badge-asistencia medium" aria-live="polite">
-                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                            Vence hoy
-                        </span>
-                    @else
-                        <span id="lbl_dias_para_respuesta" class="badge-asistencia low" aria-live="polite">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                            Vencida hace {{ abs($diasParaRespuesta) }}
-                            {{ abs($diasParaRespuesta) === 1 ? 'día' : 'días' }}
-                        </span>
-                    @endif
+                        <div class="iuris-possession-documents" aria-label="Documentos de posesión cargados">
+                            @foreach ($documentosPosesion as $documento)
+                                {{ $documento->categoryInExpediente->first()->ref_nombre ?? 'Documento de posesión' }}
+                                <a href="/conciliaciones/download/file/{{ $documento->id }}" target="_blank"
+                                    rel="noopener noreferrer">
+                                    <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                                    <span>{{ $documento->original_name }}</span>
+                                    <small>{{ number_format($documento->size / 1048576, 2) }} MB</small>
+                                    <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                                </a>
+                                <i id="btn_delete_doc" data-id="{{ $documento->pivot->id }}"
+                                    style="background-color: #a42626;
+                                            width: 20px;
+                                            border-radius: 3px;
+                                            text-align:center;
+                                            color: rgb(255, 255, 255)">
+                                    <i class="fas fa-trash"></i></i>
+                            @endforeach
+                        </div>
+                    </label>
+                @else
+                    <div class="dofi-deadline-info">
+                        <span class="dofi-deadline-label">Fecha límite de respuesta</span>
+                        <strong id="lbl_expfecha_res">
+                            {{ getLongDate($expediente->expfechalimite) }}
+                        </strong>
+                    </div>
 
-                    @if (
-                        !$readonly and
-                            (currentUser()->hasRole('docente') or
-                                currentUser()->hasRole('diradmin') or
-                                currentUser()->hasRole('dirgral') or
-                                currentUser()->hasRole('amatai')))
-                        <a class="btn btn-sm dofi-deadline-edit" data-toggle="modal" data-target="#fechalimitres">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                            Cambiar fecha
-                        </a>
-                    @endif
-                </div>
+                    <div class="dofi-deadline-actions">
+                        @if ($diasParaRespuesta > 0)
+                            <span id="lbl_dias_para_respuesta" class="badge-asistencia high" aria-live="polite">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                Faltan {{ $diasParaRespuesta }} {{ $diasParaRespuesta === 1 ? 'día' : 'días' }}
+                            </span>
+                        @elseif ($diasParaRespuesta === 0)
+                            <span id="lbl_dias_para_respuesta" class="badge-asistencia medium" aria-live="polite">
+                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                Vence hoy
+                            </span>
+                        @else
+                            <span id="lbl_dias_para_respuesta" class="badge-asistencia low" aria-live="polite">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                Vencida hace {{ abs($diasParaRespuesta) }}
+                                {{ abs($diasParaRespuesta) === 1 ? 'día' : 'días' }}
+                            </span>
+                        @endif
+
+                        @if (
+                            !$readonly and
+                                (currentUser()->hasRole('diradmin') or currentUser()->hasRole('dirgral') or currentUser()->hasRole('amatai')))
+                            <a class="btn btn-sm dofi-deadline-edit" data-toggle="modal" data-target="#fechalimitres">
+                                <i class="fa fa-pen" aria-hidden="true"></i>
+                                Cambiar fecha
+                            </a>
+                        @endif
+                        @if (
+                            !$readonly and
+                                (currentUser()->hasRole('estudiante') or
+                                    currentUser()->hasRole('diradmin') or
+                                    currentUser()->hasRole('dirgral') or
+                                    currentUser()->hasRole('amatai')))
+                            <a style="background-color: #d9c022;" class="btn btn-sm dofi-deadline-edit"
+                                id="btn_subir_respuesta">
+                                <i class="fa fa-file-pdf" aria-hidden="true"></i>
+                                Subir documento de posesión
+                            </a>
+                        @endif
+                    </div>
+                @endif
+
+
+
+
             </section>
         </div>
     </div>
@@ -116,7 +160,7 @@
                     </div>
                 </div>
 
-               
+
 
                 <div class="iuris-student-course">
                     <span class="iuris-student-label">Curso</span>
@@ -131,12 +175,12 @@
                     @endif
                 </div>
 
-                 <div style="border-left: 1px solid #ccc; padding-left: 1em; margin-left: 1em;">
+                <div style="border-left: 1px solid #ccc; padding-left: 1em; margin-left: 1em;">
                     <span class="iuris-case-summary-label">Fecha de asignación</span>
                     <span class="iuris-case-summary-value">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                         {{ getSmallDate($expediente->asignacion->fecha_asig) }}
-                        <small class="text-muted">({{ TiempoTrans($expediente->asignacion->fecha_asig)}})</small>
+                        <small class="text-muted">({{ TiempoTrans($expediente->asignacion->fecha_asig) }})</small>
                     </span>
                 </div>
 
