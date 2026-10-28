@@ -101,7 +101,7 @@ class AgendasController extends Controller
             ], 400);
         }
 
-        $periodStart = Carbon::parse(
+        /* $periodStart = Carbon::parse(
             $periodo_act->prdfecha_inicio
         )->startOfDay();
         $periodEnd = Carbon::parse(
@@ -122,6 +122,39 @@ class AgendasController extends Controller
 
         $rangeEnd = $requestedEnd->gt($periodEnd)
             ? $periodEnd->copy()
+            : $requestedEnd; */
+
+        $periodStart = Carbon::parse($periodo_act->prdfecha_inicio)->startOfDay();
+        $periodEnd = Carbon::parse($periodo_act->prdfecha_fin)->startOfDay();
+
+        $today = Carbon::today();
+
+        $rangeStart = $request->filled('start')
+            ? Carbon::parse($request->input('start'))->startOfDay()
+            : $today->copy();
+
+        // No permitir fechas anteriores al inicio del periodo ni a hoy
+        if ($rangeStart->lt($periodStart)) {
+            $rangeStart = $periodStart->copy();
+        }
+
+        if ($rangeStart->lt($today)) {
+            $rangeStart = $today->copy();
+        }
+
+        $maxEnd = $today->copy()->addDays(15);
+
+        // El límite final será el menor entre los 15 días y el final del periodo
+        $maxEnd = $maxEnd->gt($periodEnd)
+            ? $periodEnd->copy()
+            : $maxEnd;
+
+        $requestedEnd = $request->filled('end')
+            ? Carbon::parse($request->input('end'))->startOfDay()->subDay()
+            : $maxEnd->copy();
+
+        $rangeEnd = $requestedEnd->gt($maxEnd)
+            ? $maxEnd->copy()
             : $requestedEnd;
 
         $can_delete = true;
