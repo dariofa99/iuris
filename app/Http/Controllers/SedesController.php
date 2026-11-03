@@ -26,8 +26,8 @@ class SedesController extends Controller
      */
     public function index(Request $request)
     { 
-        broadcast(new PruebaMessage())->toOthers();
-        $sedes  = $this->getSedes($request);
+       /*  broadcast(new PruebaMessage())->toOthers();
+        $sedes  = $this->getSedes($request); */
        return view("myforms.sedes.index",compact('sedes'));
     }
 
@@ -127,7 +127,7 @@ class SedesController extends Controller
 
            $sedes = Sede::all();       
 
-           broadcast(new PruebaMessage())->toOthers();
+          // broadcast(new PruebaMessage())->toOthers();
      
 
 

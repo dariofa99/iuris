@@ -299,7 +299,7 @@ $(function () {
 
       }).then((result) => {
         if (result.value) {
-          window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2";
+      /*     window.location = "/solicitudes/recepcion/conciliacion/" + response.conciliacion.token + "/?id=" + response.conciliacion.id + "&paso=2"; */
         }
       });
     }
@@ -1071,7 +1071,7 @@ $(function () {
             'send_notification': true
           }
           const response = await conciliacionService.updateEstado(request);
-          window.location.reload(true)
+        //  window.location.reload(true)
           $("#wait").hide();
 
         }

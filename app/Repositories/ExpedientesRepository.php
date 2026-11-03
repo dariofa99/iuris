@@ -370,7 +370,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         //$antes = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $asig_doc = $this->getDocentesAsigByTypeProcessAndRama($tipoproce, $subRama);
         $docentes = $this->usersService->getDocentesByRama($subRama);
-     
+
         $this->request['asig_caso_id']  = $asignacion_caso->id;
         if (count($docentes) > 0 and count($asig_doc) > 0) {
             if (count($docentes) == count($asig_doc)) {
@@ -390,7 +390,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
                 $this->request['docidnumber']  = $person_with_min_casos->docidnumber;
 
-                
+
 
                 $asignacion = $this->asignacionDocenteCasoService->store($this->request);
                 return;
@@ -711,16 +711,12 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     {
 
 
-        //$peri = $this->periodoService->getPeriodoActivo();
-        /* if(!$request->has('periodo') || $request->periodo == '') {
-             $periodo = $this->periodoService->getPeriodoActivo();
-             $request->merge(['periodo' => $periodo->id]);
-        } */
+
 
         if (!$request->has('dias_sin_actuaciones') || $request->dias_sin_actuaciones == '') {
             $request['dias_sin_actuaciones'] = 40;
         }
-        // dd($request->all());
+
         $dias_limite = max(1, (int) $request->input('dias_sin_actuaciones', 40));
         $casos = DB::table('expedientes')
             ->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
@@ -755,6 +751,20 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                         'expedientes.expidnumberest'
                     );
             }, 'fecha_ultima_actuacion')
+
+            ->selectSub(function ($query) {
+
+                $query->from('asesorias_docente')
+                    ->selectRaw('MAX(created_at)')
+                    ->whereColumn(
+                        'asesorias_docente.expidnumber',
+                        'expedientes.expid'
+                    )
+                    ->whereColumn(
+                        'asesorias_docente.docidnumber',
+                        'asignacion_docente_caso.docidnumber'
+                    );
+            }, 'fecha_ultimo_comentario')
 
             // Última modificación/redacción del caso
             ->selectSub(function ($query) {

@@ -1,26 +1,24 @@
 @php
     $docenteAsignado = $expediente->getDocenteAsig();
-    $fotoDocente = !empty($docenteAsignado->image) &&
-        is_file(public_path('thumbnails/' . $docenteAsignado->image))
+    $fotoDocente =
+        !empty($docenteAsignado->image) && is_file(public_path('thumbnails/' . $docenteAsignado->image))
             ? asset('thumbnails/' . $docenteAsignado->image)
             : asset('thumbnails/default.jpg');
 @endphp
 
 <input type="hidden" value="{{ $docenteAsignado->idnumber }}" name="doc_id_number" id="doc_id_number">
-<input type="hidden" value="{{ $docenteAsignado->name }} {{ $docenteAsignado->lastname }}"
-    name="doc_full_name" id="doc_full_name">
+<input type="hidden" value="{{ $docenteAsignado->name }} {{ $docenteAsignado->lastname }}" name="doc_full_name"
+    id="doc_full_name">
 
 <section class="iuris-assigned-teacher" aria-label="Docente asesor del expediente">
     <div class="iuris-assigned-teacher-profile">
-        <img
-            src="{{ $fotoDocente }}"
-            class="iuris-assigned-teacher-photo"
-            alt="Foto de {{ $docenteAsignado->name }} {{ $docenteAsignado->lastname }}"
-        >
+        <img src="{{ $fotoDocente }}" class="iuris-assigned-teacher-photo"
+            alt="Foto de {{ $docenteAsignado->name }} {{ $docenteAsignado->lastname }}">
         <div class="iuris-assigned-teacher-info">
             <span class="iuris-assigned-teacher-label">Docente asesor</span>
             <strong>{{ $docenteAsignado->name }} {{ $docenteAsignado->lastname }}</strong>
-            <span class="iuris-assigned-teacher-status {{ $docenteAsignado->name == 'Sin asignar' ? 'is-pending' : 'is-assigned' }}">
+            <span
+                class="iuris-assigned-teacher-status {{ $docenteAsignado->name == 'Sin asignar' ? 'is-pending' : 'is-assigned' }}">
                 <i class="fa fa-circle" aria-hidden="true"></i>
                 {{ $docenteAsignado->name == 'Sin asignar' ? 'Pendiente de asignación' : 'Asignado al caso' }}
             </span>
@@ -29,18 +27,10 @@
 
     <div class="iuris-assigned-teacher-actions">
         @if (!$readonly)
-            @if (
-                currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') and
-                    $docenteAsignado->name != 'Sin asignar')
+            @if (currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai') and $docenteAsignado->name != 'Sin asignar')
                 <div class="dropdown">
-                    <button
-                        type="button"
-                        class="btn iuris-teacher-actions-toggle dropdown-toggle"
-                        id="teacherActionsMenu"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                    >
+                    <button type="button" class="btn iuris-teacher-actions-toggle dropdown-toggle"
+                        id="teacherActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-sliders" aria-hidden="true"></i>
                         Gestionar docente
                         <i class="fa fa-chevron-down" aria-hidden="true"></i>
@@ -63,8 +53,7 @@
                 </div>
             @endif
 
-            @if (
-                currentUser()->hasRole('coordprac') ||
+            @if (currentUser()->hasRole('coordprac') ||
                     currentUser()->hasRole('diradmin') ||
                     currentUser()->hasRole('dirgral') ||
                     currentUser()->hasRole('amatai') and
@@ -104,7 +93,8 @@
                             (currentUser()->hasRole('diradmin') ||
                                 currentUser()->hasRole('dirgral') ||
                                 currentUser()->hasRole('amatai')))
-                    <a href="#" class="btn iuris-teacher-request-action btn_change_doc_exp btn-notificar-incidencia"
+                    <a href="#"
+                        class="btn iuris-teacher-request-action btn_change_doc_exp btn-notificar-incidencia"
                         id="btn_send_exp_change">
                         <i class="fa fa-random" aria-hidden="true"></i>
                         Solicitar cambio
@@ -116,9 +106,8 @@
                 $docenteAsignado->name == 'Sin asignar' and
                     currentUser()->hasRole('diradmin') || currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
                 <a href="#" class="btn iuris-teacher-assign btn_change_doc_exp btn-notificar-incidencia"
-                    id="btn_asig_exp_doc"
-                    data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
-                    data-idnumber="{{ Auth::user()->idnumber }}">
+                    id="btn_asig_exp_doc" data-lastname="{{ Auth::user()->lastname }}"
+                    data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}">
                     <i class="fa fa-user-plus" aria-hidden="true"></i>
                     Asignar docente
                 </a>
@@ -127,12 +116,10 @@
 
         @if (
             !$docenteAsignado->hasRole('docente_prueba') and
-                currentUser()->hasRole('dirgral') ||
-                    currentUser()->hasRole('amatai'))
+                currentUser()->hasRole('dirgral') || currentUser()->hasRole('amatai'))
             <a href="#" class="btn iuris-teacher-disable btn_change_doc_exp btn-notificar-incidencia"
-                id="btn_dar_baja_exp"
-                data-lastname="{{ Auth::user()->lastname }}" data-name="{{ Auth::user()->name }}"
-                data-idnumber="{{ Auth::user()->idnumber }}">
+                id="btn_dar_baja_exp" data-lastname="{{ Auth::user()->lastname }}"
+                data-name="{{ Auth::user()->name }}" data-idnumber="{{ Auth::user()->idnumber }}">
                 <i class="fa fa-user-times" aria-hidden="true"></i>
                 Dar de baja
             </a>
@@ -143,5 +130,23 @@
             <i class="fa fa-bolt" aria-hidden="true"></i>
             Notificar incidencia
         </a>
+
+        @if (!currentUser()->hasRole('estudiante') and !currentUser()->hasRole('docente'))
+            @if ($expediente->encuesta == null and $expediente->expfecha == date('Y-m-d'))
+                <a href="#" class="btn_start_test btn iuris-teacher-report btn-notificar-incidencia" style="color:#ffffff;background-color:#054c64;border:1px solid #054c64;" id="btn_start_test">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Realizar encuesta</a>
+                  
+            @elseif($expediente->expfecha != date('Y-m-d'))
+                <span class="badge bg-red">
+                    El límite de tiempo para realizar la encuesta se ha vencido
+                </span>
+            @else
+                <span class="badge bg-green">
+                    La encuesta ya fue realizada por la persona usuaria
+                </span>
+            @endif
+        @endif
+
     </div>
 </section>

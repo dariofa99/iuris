@@ -222,7 +222,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a target="_blank" href="{{ route('expedientes.show', $caso->expid) }}"
+                                        <a target="_blank" href="{{ route('expedientes.edit', $caso->expid) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="fa fa-eye"></i>
                                             Ver expediente
@@ -267,6 +267,24 @@
                                         @else
                                             <span class="text-warning">
                                                 Sin redacción
+                                            </span>
+                                        @endif
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>Último comentario</th>
+
+                                    <td>
+
+                                        @if ($caso->fecha_ultimo_comentario)
+                                           {{ getSmallDateWithHour($caso->fecha_ultimo_comentario) }} (<small>{{ \Carbon\Carbon::parse($caso->fecha_ultimo_comentario)->diffForHumans() }})</small>
+                                        @else
+                                            <span class="text-warning">
+                                                Sin comentario
                                             </span>
                                         @endif
 
