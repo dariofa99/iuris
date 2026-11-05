@@ -31,7 +31,12 @@
                                     <span class="iuris-possession-name">{{ $documento->original_name }}</span>
                                     <small> &middot; {{ number_format($documento->size / 1048576, 2) }} MB</small>
                                     <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                                    <small> Agregado &middot; {{ getLongDate($documento->created_at) }}</small>
                                 </a>
+                                 <span class="iuris-possession-category">
+                                    Fecha limite: <br>
+                                    {{ getLongDate($expediente->expfechalimite) ?? 'Documento de posesión' }}
+                                </span>
                                 <button type="button" class="iuris-possession-delete"
                                     data-id="{{ $documento->pivot->id }}"
                                     aria-label="Eliminar {{ $documento->original_name }}"

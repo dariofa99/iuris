@@ -11,9 +11,9 @@
     });
 
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularActualActPHP");
+        localStorage.removeItem("keyCircularDefensasOficio");
 
-        var keyCir = localStorage.getItem("keyCircularDefensasOficio");
+        var keyCir = localStorage.getItem("keyCircularDefensasOficioDos");
         $("#modal_t").text("");
         var message = '';
 
@@ -963,7 +963,7 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCircularDefensasOficio"
+            "data-not": "keyCircularDefensasOficioDos"
         }));
 
         return `
@@ -980,7 +980,7 @@
         <div>
             <span class="iuris-circular-eyebrow">Plataforma IURIS</span>
             <h2>Circular informativa</h2>
-            <p>Defensas de oficio · Plazos y registro de documentos</p>
+            <p>Recuerde: cargue el archivo en Datos del caso, no en Actuaciones.</p>
         </div>
     </header>
 
@@ -992,14 +992,14 @@
             <h3>Apreciados estudiantes:</h3>
             <p>
             Con el propósito de garantizar el cumplimiento oportuno de las actuaciones
-                asignadas y fortalecer el seguimiento de los expedientes, a partir de la fecha, cuando se le asigne una defensa de oficio recibirá un correo electrónico
+                asignadas y fortalecer el seguimiento de los expedientes, se recuerda que, cuando se le asigne una defensa de oficio recibirá un correo electrónico
                 con la fecha límite para presentarse ante el juzgado o la entidad correspondiente
                 y, según el caso, solicitar el radicado o formalizar la toma de posesión.
             </p>
             <p class="mb-0">
-                Una vez realizada la gestión, registre en <strong>IURIS</strong>, dentro del
-                expediente asignado y antes de la fecha indicada, el soporte de posesión,
-                el radicado o el comprobante de envío de documentos, según corresponda.
+                <strong>Importante:</strong> registre el soporte de posesión,
+                el radicado o el comprobante de envío de documentos en <strong>Expediente &gt; Datos del caso</strong>, no en
+                <strong>Actuaciones</strong>.
             </p>
         </div>
     </section>

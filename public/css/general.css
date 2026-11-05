@@ -7743,7 +7743,7 @@ RESPONSIVE
 
 .iuris-possession-document {
   display: grid;
-  grid-template-columns: minmax(110px, 0.3fr) minmax(0, 1fr) 32px;
+  grid-template-columns: minmax(110px, 0.3fr) minmax(0, 1fr) minmax(0, 0.3fr) 32px;
   min-width: 0;
   align-items: center;
   gap: 0.55rem;
