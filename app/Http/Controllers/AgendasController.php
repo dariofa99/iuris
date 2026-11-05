@@ -142,8 +142,8 @@ class AgendasController extends Controller
             $rangeStart = $today->copy();
         }
 
-        //$maxEnd = $today->copy()->addDays(15);
-        $maxEnd = Carbon::parse("2026-11-20")->startOfDay();
+        $maxEnd = $today->copy()->addDays(15);
+        //$maxEnd = Carbon::parse("2026-11-20")->startOfDay();
 
         // El límite final será el menor entre los 15 días y el final del periodo
         $maxEnd = $maxEnd->gt($periodEnd)

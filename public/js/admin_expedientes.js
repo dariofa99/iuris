@@ -3909,7 +3909,7 @@ $(document).ready(function () {
 
 
     // Actualizar nombre del archivo
-    document.getElementById('archivo').addEventListener('change', function (e) {
+    $('#archivo').on('change', function (e) {
         const file = e.target.files[0];
 
         if (file) {
@@ -3939,8 +3939,7 @@ $(document).ready(function () {
             if (file.type !== "application/pdf") {
                 $("#btn_subir_documentopose").css("background-color", "#006975");
                 $("#documento_posesion_label").css("color", "red");
-                document.getElementById('documento_posesion_label').
-                    innerText = "El archivo debe ser un PDF.";
+                $("#documento_posesion_label").text("El archivo debe ser un PDF.");
                 $("#btn_subir_documentopose").prop("disabled", true);
                 return;
             }
@@ -3964,13 +3963,12 @@ $(document).ready(function () {
             if (fileSizeMB > 10) {
                 $("#btn_subir_documentopose").css("background-color", "#006975");
                 $("#documento_posesion_label").css("color", "red");
-                document.getElementById('documento_posesion_label').
-                    innerText = "El archivo es demasiado grande. El tamaño máximo permitido es de 10 MB.";
+                $("#documento_posesion_label").text("El archivo es demasiado grande. El tamaño máximo permitido es de 10 MB.");
                 $("#btn_subir_documentopose").prop("disabled", true);
             } else {
                 $("#btn_subir_documentopose").prop("disabled", false).css("background-color", "#006975c4");
                 $("#documento_posesion_label").css("color", "black");
-                document.getElementById('documento_posesion_label').innerText = file.name + ' (' + sizeText + ')';
+                $("#documento_posesion_label").text(file.name + ' (' + sizeText + ')');
             }
 
 
