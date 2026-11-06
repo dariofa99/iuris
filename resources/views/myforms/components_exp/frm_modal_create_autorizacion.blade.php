@@ -172,6 +172,35 @@
                                             style="font-weight: 600; color: #006975;"></span>
                                     </small>
                                 </div>
+
+                                <div id="autorizacion_estados" class="form-group col-md-12">
+                                    <article class="iuris-autorizacion-estado">
+                                        <div class="iuris-autorizacion-estado__content">
+                                            <span class="iuris-autorizacion-estado__badge">
+                                                <i class="fas fa-times-circle"></i>
+                                                Rechazado
+                                            </span>
+                                            <span class="iuris-autorizacion-estado__comment">
+                                                <i class="fas fa-comment-dots"></i>
+                                                Ejemplo
+                                            </span>
+                                        </div>
+
+                                        <footer class="iuris-autorizacion-estado__meta">
+                                            <span>
+                                                <i class="fas fa-user"></i>
+                                                Usuario #1
+                                            </span>
+                                            <time>
+                                                <i class="far fa-clock"></i>
+                                                2026-11-05 17:55:39
+                                            </time>
+                                        </footer>
+                                    </article>
+                                </div>
+
+
+
                                 <div class="form-group col-md-12">
                                     <button type="button" id="btn_create_autorizacion" class="btn-iuris-primary">
                                         <i class="fas fa-save mr-2"></i>

@@ -2456,6 +2456,79 @@
   margin-bottom: 20px;
 }
 
+.iuris-autorizacion-estado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border: 1px solid #e5ebed;
+  border-left: 3px solid #006975;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .04);
+  color: #34474b;
+}
+
+.iuris-autorizacion-estado__content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.iuris-autorizacion-estado__badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border: 1px solid #f1c7ca;
+  border-radius: 20px;
+  background: #fff5f5;
+  color: #b02a37;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.iuris-autorizacion-estado__comment {
+  min-width: 0;
+  color: #34474b;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.iuris-autorizacion-estado__comment i {
+  margin-right: 4px;
+  color: #006975;
+}
+
+.iuris-autorizacion-estado__meta {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+  gap: 4px 12px;
+  color: #71858a;
+  font-size: 11px;
+}
+
+.iuris-autorizacion-estado__meta i {
+  margin-right: 5px;
+  color: #006975;
+}
+
+@media (max-width: 600px) {
+  .iuris-autorizacion-estado {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .iuris-autorizacion-estado__content {
+    width: 100%;
+  }
+}
+
 
 /* ============================================
                HEADER
@@ -2649,6 +2722,152 @@
   background: #006975;
 
   border-color: #006975;
+}
+
+.iuris-autorizacion-table {
+  min-width: 760px;
+}
+
+.iuris-autorizacion-table thead th {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.iuris-autorizacion-table th:last-child {
+  min-width: 250px;
+}
+
+.iuris-autorizacion-actions-cell {
+  min-width: 250px;
+}
+
+.iuris-autorizacion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.iuris-autorizacion-actions .btn {
+  flex: 0 1 auto;
+  min-height: 27px;
+  max-width: 100%;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--edit {
+  border-color: #b8d7f0;
+  background: #eaf4fb;
+  color: #286090;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--edit:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--edit:focus {
+  background: #d7eaf7;
+  color: #204d74;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--delete {
+  border-color: #efc3c6;
+  background: #fff0f0;
+  color: #b02a37;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--delete:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--delete:focus {
+  background: #f9dfe1;
+  color: #842029;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--authorize {
+  border-color: #b7dfcc;
+  background: #eaf6ef;
+  color: #23734d;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--authorize:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--authorize:focus {
+  background: #d8efe2;
+  color: #185c3b;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--revoke {
+  border-color: #f0d7a5;
+  background: #fff7e6;
+  color: #8a6116;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--revoke:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--revoke:focus {
+  background: #f9ebc9;
+  color: #69480f;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--details {
+  border-color: #b8dadd;
+  background: #eaf5f6;
+  color: #006975;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--details:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--details:focus {
+  background: #d7ebed;
+  color: #004f58;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--download {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--download:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--download:focus {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--notify {
+  border-color: #f0d7a5;
+  background: #fff7e6;
+  color: #8a6116;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--notify:hover,
+.iuris-autorizacion-actions .iuris-autorizacion-action--notify:focus {
+  background: #f9ebc9;
+  color: #69480f;
+}
+
+.iuris-autorizacion-actions .iuris-autorizacion-action--notified {
+  border-color: #d5dce2;
+  background: #f3f5f7;
+  color: #65717c;
+}
+
+.iuris-autorizacion-status {
+  display: inline-block;
+  max-width: 100%;
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #eef7f8;
+  color: #006975;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: normal;
+}
+
+@media (max-width: 767px) {
+  .iuris-autorizacion-table {
+    min-width: 700px;
+  }
 }
 
 

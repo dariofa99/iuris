@@ -1759,6 +1759,15 @@ group by rd.subrama ;*/
     $autorizacion->estado_id = 283;
     $autorizacion->save();
 
+
+    $autorizacion->estados()->attach(
+      $autorizacion->estado_id,
+      [
+        'comentario' => $request->asunto,
+        'user_id' => currentUser()->id
+      ]
+    );
+
     return response()->json($request->all());
   }
 
@@ -1812,7 +1821,7 @@ group by rd.subrama ;*/
     }
 
     if (empty($file->encrypt_name)) {
-        return response()->json([
+      return response()->json([
         'success' => false,
         'message' => 'No se pudo localizar el archivo almacenado'
       ], 500);
@@ -1822,7 +1831,7 @@ group by rd.subrama ;*/
     $disk = Storage::disk('expediente_files');
 
     if ($disk->exists($storagePath) && !$disk->delete($storagePath)) {
-     
+
       return response()->json([
         'success' => false,
         'message' => 'No se pudo eliminar el archivo del almacenamiento'

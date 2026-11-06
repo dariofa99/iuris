@@ -17,26 +17,24 @@
         </div>
     </div>
  @endif
+ <hr>
  <div class="row">
      <div class="col-md-12">
-         <table class="table" id="table_list_autorizaciones">
-             <thead>
-                 <th>
-                     Nombre del estudiante
-                 </th>
-                 <th>
-                     Calidad
-                 </th>
-                 <th>
-                     Tipo de proceso
-                 </th>
-                 <th>
-                     Estado
-                 </th>
-             </thead>
-             <tbody>
-                 @include('myforms.components_exp.frm_autorizaciones_ajax')
-             </tbody>
-         </table>
+         <div class="iuris-table-wrapper">
+             <table class="table iuris-detail-table iuris-autorizacion-table" id="table_list_autorizaciones">
+                 <thead>
+                     <tr>
+                         <th>Nombre del estudiante</th>
+                         <th>Calidad</th>
+                         <th>Tipo de proceso</th>
+                         <th>Estado</th>
+                         <th>Acciones</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     @include('myforms.components_exp.frm_autorizaciones_ajax')
+                 </tbody>
+             </table>
+         </div>
      </div>
  </div>

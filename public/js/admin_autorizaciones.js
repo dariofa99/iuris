@@ -5,7 +5,7 @@ const expedientesService = new ExpedientesService();
 $(document).ready(function () {
     $("#content_list_autorizaciones").on("click", ".btn_change_estado_autorizacion", async function (e) {
         var id = $(this).attr("data-id");
-        var request = { estado: $(this).attr("data-estado") == 0 ? 1 : 0, vista: "expedientes",'vista':'autorizaciones' };
+        var request = { estado: $(this).attr("data-estado") == 0 ? 1 : 0, vista: "expedientes", 'vista': 'autorizaciones' };
         $("#wait").show();
         let res = await expedientesService.updateAutorizacion(request, id);
         //$("#content_list_autorizaciones").html(res.view);
@@ -18,7 +18,7 @@ $(document).ready(function () {
         return false;
     });
 
-     $("#table_list_autorizaciones").on("click", ".btn_detalles_autorizacion", async function (e) {
+    $("#table_list_autorizaciones").on("click", ".btn_detalles_autorizacion", async function (e) {
         var id = $(this).attr("data-id");
         $("#wait").show();
         let res = await expedientesService.editAutorizacion(id);
@@ -45,7 +45,40 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
-         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
+
+        $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname);
+        var estadoHtml = '';
+        res.estados_historial.forEach(function (estado) {
+            estadoHtml += `
+                <article class="iuris-autorizacion-estado">
+                                        <div class="iuris-autorizacion-estado__content">
+                                            <span class="iuris-autorizacion-estado__badge" style="background-color: ${estado.estado.color};color:#fff;">
+                                               
+                                                ${estado.estado.ref_nombre}
+                                            </span>
+                                            <span class="iuris-autorizacion-estado__comment">
+                                                <i class="fas fa-comment-dots"></i>
+                                                ${estado.comentario}
+                                            </span>
+                                        </div>
+
+                                        <footer class="iuris-autorizacion-estado__meta">
+                                            <span>
+                                                <i class="fas fa-user"></i>
+                                                ${estado.user.name} ${estado.user.lastname}
+                                            </span>
+                                            <time>
+                                                <i class="far fa-clock"></i>
+                                                ${estado.created_at_formatted}
+                                            </time>
+                                        </footer>
+                                    </article>
+            `;
+
+        });
+        $("#autorizacion_estados").html(estadoHtml);
+
+        $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
         $("#myformEditAutorizacion input[name=juzgado]").val(res.juzgado);
         $("#myformEditAutorizacion select[name=genero]").val(res.genero);
         $("#myformEditAutorizacion button").hide();
@@ -58,7 +91,7 @@ $(document).ready(function () {
         e.preventDefault();
         var id = $(this).attr("data-id");
         var request = { estado: $(this).attr("data-estado") == 0 ? 1 : 0, vista: "expedientes", id: id };
-       Swal.fire({
+        Swal.fire({
             title: "Notificar rechazo de autorización",
             html: "<small>Se enviará un correo al estudiante notificando el rechazo de la autorización. A continuación, indique el motivo del rechazo.</small>",
             icon: "warning",
@@ -95,7 +128,7 @@ $(document).ready(function () {
                     } else {
                         $("#wait").hide();
 
-                         Swal.fire({
+                        Swal.fire({
                             title: "Notificación enviada con éxito",
                             html: "<h4>De clic en OK para cargar los cambios o refresque la página</h4>",
                             icon: "info",
@@ -105,7 +138,7 @@ $(document).ready(function () {
                             if (result.value) {
                                 window.location.reload(true)
                             }
-                        }); 
+                        });
                     }
                 } else {
                     Swal.showValidationMessage('La descripción no puede estar vacía'); // Muestra un mensaje de validación personalizado
@@ -166,7 +199,7 @@ function fillModalHistoryDataCase(response) {
         $("#modal-conten-js").html(inforhis);
         $("#mymodaljs").modal("show");
     }
-} 
+}
 function validarNotas(errors, form) {
     var notaapl = $("#" + form + " input[name=ntaaplicacion]").val();
     var notacon = $("#" + form + " input[name=ntaconocimiento]").val();

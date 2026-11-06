@@ -3204,7 +3204,7 @@ $(document).ready(function () {
         }
         resetForm('myformCreateAutorizacion');
         $("#lbl_autor_create").closest('small').hide();
-        console.log($("#lbl_autor_create").closest('small'));
+        $("#autorizacion_estados").html("");
         $("#mymodalCreateAutorizacion").modal("show");
     });
 
@@ -3259,6 +3259,8 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
+
+        $("#autorizacion_estados").html("");
         $("#lbl_autor_create").closest('small').show();
         $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname).show()
         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);
@@ -3301,6 +3303,36 @@ $(document).ready(function () {
         $("#myformEditAutorizacion input[name=num_radicado]").val(
             res.num_radicado
         );
+        var estadoHtml = '';
+        res.estados_historial.forEach(function (estado) {
+            estadoHtml += `
+                <article class="iuris-autorizacion-estado">
+                                        <div class="iuris-autorizacion-estado__content">
+                                            <span class="iuris-autorizacion-estado__badge" style="background-color: ${estado.estado.color};color:#fff;">
+                                               
+                                                ${estado.estado.ref_nombre}
+                                            </span>
+                                            <span class="iuris-autorizacion-estado__comment">
+                                                <i class="fas fa-comment-dots"></i>
+                                                ${estado.comentario}
+                                            </span>
+                                        </div>
+
+                                        <footer class="iuris-autorizacion-estado__meta">
+                                            <span>
+                                                <i class="fas fa-user"></i>
+                                                ${estado.user.name} ${estado.user.lastname}
+                                            </span>
+                                            <time>
+                                                <i class="far fa-clock"></i>
+                                                ${estado.created_at_formatted}
+                                            </time>
+                                        </footer>
+                                    </article>
+            `;
+
+        });
+        $("#autorizacion_estados").html(estadoHtml);
         $("#lbl_autor_create").closest('small').show();
         $("#lbl_autor_create").text(res.user.name + " " + res.user.lastname).show()
         $("#myformEditAutorizacion textarea[name=concepto]").val(res.concepto);

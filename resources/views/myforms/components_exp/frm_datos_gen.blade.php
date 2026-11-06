@@ -2,19 +2,23 @@
     $diasParaRespuesta = 0;
     $fechaAsignacion = $expediente->asignacion->fecha_asig ?? null;
     $fechaCortePosesion = \Carbon\Carbon::createFromFormat('d/m/Y', '22/10/2026')->startOfDay();
-
+    $documentosPosesion = $expediente->documentos()->get();
     if ($fechaAsignacion && \Carbon\Carbon::parse($fechaAsignacion)->startOfDay()->gt($fechaCortePosesion)) {
-        $diasParaRespuesta = $expediente->getDaysForPosesion();
+        $diasParaRespuesta = $expediente->getDaysForPosesion($documentosPosesion);
     }
 
-    $documentosPosesion = $expediente->documentos()->get();
+    
 
 @endphp
 
-@if ($fechaAsignacion && \Carbon\Carbon::parse($fechaAsignacion)->startOfDay()->gt($fechaCortePosesion) and $expediente->exptipoproce_id == 3 and $expediente->expestado_id == 1)
+@if (
+    $fechaAsignacion && \Carbon\Carbon::parse($fechaAsignacion)->startOfDay()->gt($fechaCortePosesion) and
+        $expediente->exptipoproce_id == 3 and
+        $expediente->expestado_id == 1)
     <div class="row dofi-deadline-row">
         <div class="col-12">
-            <section class="dofi-deadline-panel{{ $documentosPosesion->isNotEmpty() ? ' dofi-deadline-panel--documents' : '' }}"
+            <section
+                class="dofi-deadline-panel{{ $documentosPosesion->isNotEmpty() ? ' dofi-deadline-panel--documents' : '' }}"
                 aria-label="Fecha límite de respuesta">
 
                 @if ($documentosPosesion->isNotEmpty())
@@ -24,23 +28,21 @@
                                 <span class="iuris-possession-category">
                                     {{ $documento->categoryInExpediente->first()->ref_nombre ?? 'Documento de posesión' }}
                                 </span>
-                                <a class="iuris-possession-link"
-                                    href="/conciliaciones/download/file/{{ $documento->id }}" target="_blank"
-                                    rel="noopener noreferrer">
+                                <a class="iuris-possession-link" href="/conciliaciones/download/file/{{ $documento->id }}"
+                                    target="_blank" rel="noopener noreferrer">
                                     <i class="fas fa-file-pdf" aria-hidden="true"></i>
                                     <span class="iuris-possession-name">{{ $documento->original_name }}</span>
                                     <small> &middot; {{ number_format($documento->size / 1048576, 2) }} MB</small>
                                     <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                                     <small> Agregado &middot; {{ getLongDate($documento->created_at) }}</small>
                                 </a>
-                                 <span class="iuris-possession-category">
+                                <span class="iuris-possession-category">
                                     Fecha limite: <br>
                                     {{ getLongDate($expediente->expfechalimite) ?? 'Documento de posesión' }}
                                 </span>
                                 <button type="button" class="iuris-possession-delete"
                                     data-id="{{ $documento->pivot->id }}"
-                                    aria-label="Eliminar {{ $documento->original_name }}"
-                                    title="Eliminar documento">
+                                    aria-label="Eliminar {{ $documento->original_name }}" title="Eliminar documento">
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             </article>

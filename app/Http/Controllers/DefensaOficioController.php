@@ -238,11 +238,6 @@ class DefensaOficioController extends Controller
     $url = url('/defensas/oficio/' . $expediente->expid . '/edit');
     ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
 
-
-
-    /* $notifications = view('layouts.notifications',compact('user'))->render();
-        NewPush::channel('notifications_'.$request['expidnumberest']) 
-        ->message(['render'=>$render,'notifications'=>$notifications])->publish();  */
     if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
       return response()->json($expediente);
     }

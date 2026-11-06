@@ -134,13 +134,17 @@ class AgendasController extends Controller
             : $today->copy();
 
         // No permitir fechas anteriores al inicio del periodo ni a hoy
+       
         if ($rangeStart->lt($periodStart)) {
             $rangeStart = $periodStart->copy();
         }
 
-        if ($rangeStart->lt($today)) {
+         if(currentUser()->hasRole('estudiante')) {
+             if ($rangeStart->lt($today)) {
             $rangeStart = $today->copy();
         }
+        }
+       
 
         $maxEnd = $today->copy()->addDays(15);
         //$maxEnd = Carbon::parse("2026-11-20")->startOfDay();

@@ -14,9 +14,23 @@ class Autorizacion extends Model
      * @var array
      */
     protected $fillable = [
-        'nombre_estudiante', 'num_identificacion', 'doc_expedicion', 'num_carne', 'calidad_de',
-        'tipo_proceso', 'num_radicado', 'juzgado', 'estado','estado_notificado', 'asig_caso_id', 'user_solicitante_id',
-        'user_aprobo_id', 'genero', 'fecha_autorizado','concepto','estado_id'
+        'nombre_estudiante',
+        'num_identificacion',
+        'doc_expedicion',
+        'num_carne',
+        'calidad_de',
+        'tipo_proceso',
+        'num_radicado',
+        'juzgado',
+        'estado',
+        'estado_notificado',
+        'asig_caso_id',
+        'user_solicitante_id',
+        'user_aprobo_id',
+        'genero',
+        'fecha_autorizado',
+        'concepto',
+        'estado_id'
     ];
 
 
@@ -31,9 +45,22 @@ class Autorizacion extends Model
     }
 
     public function ref_estado()
-   {
-      return $this->belongsTo(TablaReferencia::class, 'estado_id', 'id');
-   }
+    {
+        return $this->belongsTo(TablaReferencia::class, 'estado_id', 'id');
+    }
+
+    public function estados()
+    {
+        return $this->belongsToMany(TablaReferencia::class, 'autorizaciones_has_estados', 'autorizacion_id', 'estado_id')
+            ->withPivot('id', 'estado_id', 'autorizacion_id','comentario','user_id')
+            ->withTimestamps();
+    }
+
+
+    public function estadosHistorial()
+{
+    return $this->hasMany(AutorizacionEstado::class, 'autorizacion_id');
+}
 
     public function sedes()
     {

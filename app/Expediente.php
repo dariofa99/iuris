@@ -284,9 +284,12 @@ class Expediente extends Model
         }
     }
 
-    function getDaysForPosesion()
+    function getDaysForPosesion($documentosPosesion)
     {
 
+        if($documentosPosesion->isNotEmpty()) return null;
+
+      
         $segmento = $this->getSegmentoActivo();
 
 

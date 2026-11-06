@@ -94,13 +94,20 @@ class AutorizacionesController extends Controller
                 ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
 
                 $diradminEmail = config("app_config.diradminemail");
-                $concepto = "Se ha creado una nueva solicitud de autorización por el docente asesor: \n\n";
-                $concepto .= $request->concepto;
-                $concepto .= "\n\n";
-                $concepto .= "\n" . "Expediente: " . $expediente->expid;
+                $concepto_ = "Se ha creado una nueva solicitud de autorización por el docente asesor:\n";
+                $concepto_ .= $request->concepto;
+                //$concepto .= "\n\n";
+                $concepto = "\n" .$concepto_ ."\n" . "Expediente: " . $expediente->expid;
                 $concepto_html = nl2br(e($concepto));
                 ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
-                Log::info('Notificación de autorización enviada', ['email' => $diradminEmail]);
+
+                $autorizacion->estados()->attach(
+                    $autorizacion->estado_id,
+                    [
+                        'comentario' => $concepto_,
+                        'user_id' => currentUser()->id
+                    ]
+                );
             }
 
             return response()->json(['view' => $view]);
@@ -128,7 +135,11 @@ class AutorizacionesController extends Controller
      */
     public function edit($id)
     {
-        $autorizacion =  Autorizacion::with(['user'])->find($id);
+        $autorizacion =  Autorizacion::with([
+            'user',
+            'estadosHistorial.user',
+            'estadosHistorial.estado',
+        ])->find($id);
         return response()->json($autorizacion);
     }
 
@@ -148,24 +159,43 @@ class AutorizacionesController extends Controller
 
         if ($request->has('estado')) {
             if ($request->estado == 1) {
+
+
                 $autorizacion->fecha_autorizado = date('Y-m-d');
                 $autorizacion->user_aprobo_id = currentUser()->id;
                 $autorizacion->estado_id = 282;
                 $expediente = $autorizacion->asignacion->expediente;
 
+
+
                 $user = $expediente->estudiante;
                 $user_created = Auth::user()->name . ' ' . Auth::user()->lastname;
-                $concepto = "Su solicitud de autorización ha sido aprobada por dirección administrativa. \n\n";
-                $concepto .= "\n" . "Expediente: " . $expediente->expid;
+                $concepto_ = "Su solicitud de autorización ha sido aprobada por dirección administrativa.";
+                $concepto = $concepto_ ."\n\n\n" . "Expediente: " . $expediente->expid;
                 $concepto_html = nl2br(e($concepto));
                 $subject = 'Solicitud de autorización aprobada';
                 $url = url("/expedientes/{$expediente->expid}/edit#autorizaciones");
                 ProcessSendNotificationGeneral::dispatch($user, $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+
+                $autorizacion->estados()->attach(
+                    $autorizacion->estado_id,
+                    [
+                        'comentario' => $concepto_,
+                        'user_id' => currentUser()->id
+                    ]
+                );
             }
             if ($request->estado == 0) {
                 $autorizacion->fecha_autorizado = null;
                 $autorizacion->user_aprobo_id = currentUser()->id;
                 $autorizacion->estado_id = 281;
+                $autorizacion->estados()->attach(
+                    $autorizacion->estado_id,
+                    [
+                        'comentario' => "Se ha cancelado la solicitud de autorización.",
+                        'user_id' => currentUser()->id
+                    ]
+                );
             }
         } else {
             if (currentUser()->hasRole("estudiante")) {
@@ -175,12 +205,19 @@ class AutorizacionesController extends Controller
                 $subject = 'Solicitud de autorización';
                 $url = url("/expedientes/{$autorizacion->asignacion->expediente->expid}/edit#autorizaciones");
                 $diradminEmail = config('app_config.diradminemail');
-                $concepto = "Se ha solicitado la aprobación de una solicitud de autorización por el estudiante. \n\n";
+                $concepto_ = "Se ha solicitado la aprobación de una solicitud de autorización por el estudiante.";
                 // $concepto .= $request->concepto;
-                $concepto .= "\n";
-                $concepto .= "\n" . "Expediente: " . $autorizacion->asignacion->expediente->expid;
+                $concepto = $concepto_ . "\n\n\n\n" . "Expediente: " . $autorizacion->asignacion->expediente->expid;
                 $concepto_html = nl2br(e($concepto));
                 ProcessSendNotificationGeneral::dispatch([$diradminEmail], $concepto_html, $user_created, $subject, $url)->onConnection('database')->onQueue('emails');
+
+                $autorizacion->estados()->attach(
+                    $autorizacion->estado_id,
+                    [
+                        'comentario' => $concepto_,
+                        'user_id' => currentUser()->id
+                    ]
+                );
             }
         }
         $autorizacion->save();
