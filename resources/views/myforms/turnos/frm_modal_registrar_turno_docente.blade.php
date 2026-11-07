@@ -14,8 +14,8 @@
             <input type="hidden" name="fecha_turno" id="fecha_turno">
             <input type="hidden" name="es_reposicion" id="es_reposicion">
             <!-- ============================================
-                                                                                     HEADER
-                                                                                ============================================= -->
+                                                                                             HEADER
+                                                                                        ============================================= -->
 
             <div class="iuris-form-header">
 
@@ -36,8 +36,8 @@
 
 
             <!-- ============================================
-                                                                                     BODY
-                                                                                ============================================= -->
+                                                                                             BODY
+                                                                                        ============================================= -->
 
             <div class="iuris-form-body">
 
@@ -291,27 +291,28 @@
 
 
             <!-- ============================================
-                                                                                     FOOTER
-                                                                                ============================================= -->
+                                                                                             FOOTER
+                                                                                        ============================================= -->
 
             <div class="iuris-form-footerx">
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="button" id="btnRegistrarTurnoDocente" class="btn btn-iuris-primary">
-                            <i class="fas fa-save mr-1"></i>
-                            Guardar cambios
-                        </button>
-                        <button type="button" id="btnEliminarAsistenciaDocente" class="btn btn-danger m-2">
-                            <i class="fas fa-trash-alt mr-1"></i>
-                            Eliminar turno
-                        </button>
-                        <button type="button" id="btnActualizarTurnoDocente" class="btn btn-iuris-primary">
-                            <i class="fas fa-save mr-1"></i>
-                            Actualizar cambios
-                        </button>
+                @if (currentUser()->can('registrar_turno_docente'))
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" id="btnRegistrarTurnoDocente" class="btn btn-iuris-primary">
+                                <i class="fas fa-save mr-1"></i>
+                                Guardar cambios
+                            </button>
+                            <button type="button" id="btnEliminarAsistenciaDocente" class="btn btn-danger m-2">
+                                <i class="fas fa-trash-alt mr-1"></i>
+                                Eliminar turno
+                            </button>
+                            <button type="button" id="btnActualizarTurnoDocente" class="btn btn-iuris-primary">
+                                <i class="fas fa-save mr-1"></i>
+                                Actualizar cambios
+                            </button>
+                        </div>
                     </div>
-                </div>
+                @endif
                 <div class="row">
                     <div class="col-md-12">
                         <div class="iuris-required">

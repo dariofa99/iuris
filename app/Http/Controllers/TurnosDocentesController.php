@@ -20,6 +20,7 @@ class TurnosDocentesController extends Controller
     {
         $this->periodoService = $periodoService;
         $this->userService = $userService;
+        $this->middleware('permission:ver_horarios_docente', ['only' => ['index', 'show']]);
     }
 
     /**
@@ -48,7 +49,7 @@ class TurnosDocentesController extends Controller
                 'role_user.role_id',
                 'roles.display_name'
             )->orderBy('users.created_at', 'desc')->get();
-        // dd($docentes);
+         //dd($docentes);
         return view('myforms.frm_turnos_docentes_list', compact('docentes'))->render();
         //
     }

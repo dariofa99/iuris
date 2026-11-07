@@ -353,7 +353,8 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (currentUser()->hasRole('amatai') ||
+                                @if (currentUser()->can('ver_horarios_docente')
+                                || currentUser()->hasRole('amatai') ||
                                         currentUser()->hasRole('diradmin') ||
                                         currentUser()->hasRole('dirgral') ||
                                         currentUser()->hasRole('coordprac'))
@@ -363,6 +364,7 @@
                                         </a>
                                     </li>
                                 @endif
+                              
                             </ul>
                         </li>
                     @endif

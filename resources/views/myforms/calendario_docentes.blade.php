@@ -18,12 +18,12 @@
 @section('area_forms')
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-4">
 
             <div class="iuris-horario-filters">
 
                 <!-- Tipo de horario -->
-                <div class="iuris-horario-filter">
+                {{-- <div class="iuris-horario-filter">
 
                     <div class="iuris-horario-filter-icon">
                         <i class="far fa-calendar-alt"></i>
@@ -45,7 +45,7 @@
                         </select>
                     </div>
 
-                </div>
+                </div> --}}
 
 
                 <!-- Docente -->

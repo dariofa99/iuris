@@ -12,6 +12,8 @@
     Agenda
 @endsection
 @section('area_buttons')
+
+@if(currentUser()->can('ver_horarios_docente'))
     <div class="row">
         <div class="col-md-6 col-sm-offset-6">
             <select class="form-control" id="horariourl">
@@ -22,6 +24,7 @@
 
         </div>
     </div>
+    @endif
 @endsection
 
 @section('area_forms')

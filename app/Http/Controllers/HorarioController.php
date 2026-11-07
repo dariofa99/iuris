@@ -25,6 +25,7 @@ class HorarioController extends Controller
   {
     $this->usersService = $usersService;
     $this->calendarioDocenteService = $calendarioDocenteService;
+    //$this->middleware('permission:ver_horarios_docente', ['only' => ['calendario']]);
   }
 
   /**
@@ -325,6 +326,9 @@ class HorarioController extends Controller
       return view('myforms.frm_calendariogen', compact('active_calendar', 'events', 'docentes', 'tipo'));
     } elseif ($tipo == "docentes") {
 
+    if(!Auth::user()->can('ver_horarios_docente')){
+      abort(403, 'No tienes permiso para acceder a esta página.');
+    }
 
 /*  $events = $this->calendarioDocenteService->obtenerTurnos($periodo);
  dd($events); */
