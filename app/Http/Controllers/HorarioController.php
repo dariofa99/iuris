@@ -330,8 +330,6 @@ class HorarioController extends Controller
       abort(403, 'No tienes permiso para acceder a esta página.');
     }
 
-/*  $events = $this->calendarioDocenteService->obtenerTurnos($periodo);
- dd($events); */
 
       if (request()->ajax()) {
         $events = $this->calendarioDocenteService->obtenerEventos($periodo);
@@ -342,7 +340,6 @@ class HorarioController extends Controller
 
        return view(
         'myforms.calendario_docentes',
-
         compact( 'tipo','docentes')
       );
 

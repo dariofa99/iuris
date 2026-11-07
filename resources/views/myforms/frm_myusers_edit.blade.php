@@ -82,16 +82,30 @@
 
                 {{-- ROL --}}
                 <span class="iuris-profile-role" id="lbl_rol_name">
-                    {{ count($user->roles) > 0 ? $user->roles[0]->name : 'Sin rol' }}
+                    
+                    @forelse ($user->roles as $rol)
+                        <span>
+                            {{ $rol->display_name }} <br>
+                        </span>
+                    @empty
+                        <span>
+                            Sin rol
+                        </span>
+                    @endforelse
                 </span>
 
 
                 {{-- ESTADO --}}
-                <span class="iuris-profile-status">
+                <span class="iuris-profile-status"
+                    style="color: white; background-color: {{ $user->active == true ? '#28a745' : '#dc3545' }}">
 
                     <i class="fa fa-circle"></i>
 
-                    Usuario activo
+                    @if ($user->active == true)
+                        Activo
+                    @else
+                        Inactivo
+                    @endif
 
                 </span>
 
@@ -106,7 +120,8 @@
 
 
                 {{-- DATOS docente --}}
-                <button type="button" class="iuris-profile-menu-item active" data-tab-target="docente_tab">
+
+                {{--  <button type="button" class="iuris-profile-menu-item active" data-tab-target="docente_tab">
 
                     <span class="iuris-profile-menu-icon">
                         <i class="fa fa-graduation-cap"></i>
@@ -117,11 +132,11 @@
                         <small>Información del docente</small>
                     </span>
 
-                </button>
+                </button> --}}
 
 
                 {{-- DATOS GENERALES --}}
-                <button type="button" class="iuris-profile-menu-item" data-tab-target="settings">
+                <button type="button" class="iuris-profile-menu-item active" data-tab-target="settings">
 
                     <span class="iuris-profile-menu-icon">
                         <i class="fa fa-user"></i>
@@ -169,7 +184,7 @@
                 <button type="button" class="iuris-profile-menu-item" data-tab-target="economica_tab">
 
                     <span class="iuris-profile-menu-icon">
-                        <i class="fa fa-line-chart"></i>
+                        <i class="fa fa-credit-card" aria-hidden="true"></i>
                     </span>
 
                     <span>
@@ -247,7 +262,7 @@
                         {{-- =============================================
                         DATOS GENERALES
                     ============================================== --}}
-                        <div class="iuris-profile-tab " id="settings">
+                        <div class="iuris-profile-tab active" id="settings">
 
                             @include('myforms.components_user.user_edit_form')
 
@@ -256,7 +271,7 @@
                         {{-- =============================================
                         INFORMACIÓN DOCENTE
                     ============================================== --}}
-                        <div class="iuris-profile-tab active" id="docente_tab">
+                        <div class="iuris-profile-tab" id="docente_tab">
 
                             <div class="row">
 
@@ -461,10 +476,10 @@
 
             /*   var message = `<h5>Estimado estudiante debido a cambios de horario se habilitará la 
           asignación del curso en el transcurso de esta semana.</h5>`;
-                                                 
-                                                 Comunícate con el director
-                                                 
-                                                  */
+                                                     
+                                                     Comunícate con el director
+                                                     
+                                                      */
 
             $("#modal-show-alerts-content").html(message);
             $("#mymodalShowAlerts").modal("show")
