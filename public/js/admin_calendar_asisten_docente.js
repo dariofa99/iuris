@@ -108,7 +108,8 @@ $(function () {
         e.preventDefault();
         var tipo_asis = $(this).val();
         $("#div_reposicion").html("");
-
+        $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", false);
+        $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", false);
         if (tipo_asis == "150") {
             var content = contentRepos();
             $("#div_reposicion").html(content);
@@ -458,7 +459,9 @@ function showCalendar(docente_id) {
 }
 
 
-function contentRepos() {
+function 
+
+contentRepos() {
     return ` <div class="col-md-10">
                         <div class="iuris-section-title">
 

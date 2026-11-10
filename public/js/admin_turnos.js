@@ -16,7 +16,7 @@ $(document).ready(function () {
 	$('#fin').val(fin.format('YYYY-MM-DD'));
 
 	/* const inicioSemana = hoy.clone().startOf('IsoWeek');
-	const finSemana = hoy.clone().endOf('Week');
+	const finSemana = hoy.clone().endOf('Week'); 
 
 	$("#inicio").val(inicioSemana.format('YYYY-MM-DD'))
 	$("#fin").val(finSemana.format('YYYY-MM-DD')) */

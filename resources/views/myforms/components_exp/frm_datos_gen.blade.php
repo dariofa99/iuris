@@ -191,7 +191,7 @@
                     @if($expediente->exptipoproce_id == 1)
                     <small>
                         <label class="pull-center badge-colors dis-block"
-                            style="border-radius:8px;border: 2px solid {{ $expediente->getDaysOrColorForClose('color') }}; color : {{ $expediente->getDaysOrColorForClose('color') }}">
+                            style="border-radius:2px;border: 2px solid {{ $expediente->getDaysOrColorForClose('color') }}; color : {{ $expediente->getDaysOrColorForClose('color') }}">
                             {{ $expediente->getDaysOrColorForClose('mensaje') }}
 
                         </label>

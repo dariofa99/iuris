@@ -411,7 +411,7 @@ export class UserService {
   async resetPasswordAccount(request) {
     const response = await fetch(BASE_URL + 'usuarios/reset/password/account', {
       method: 'POST',
-      headers: {
+      headers: { 
         "Content-Type": "application/json",
         //'Content-Type': 'application/x-www-form-urlencoded',
         "Accept": "application/json",

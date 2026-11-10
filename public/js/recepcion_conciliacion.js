@@ -238,48 +238,7 @@ $(function () {
       $("#myModal_detalles_recuperar_cuenta").modal("show");
 
       return;
-      Swal.fire({
-        icon: "warning",
-        title: "¡Cuenta ya registrada!",
-        html: `
-        <div style="font-size:15px; line-height:1.6">
-
-            <p style="margin-bottom:10px">
-                Los datos ingresados ya tienen una cuenta asociada.
-            </p>
-
-            <p style="color:#6c757d; font-size:14px">
-                Puedes iniciar sesión o recuperar tu contraseña si la olvidaste.
-            </p>
-
-        </div>
-    `,
-        showCancelButton: true,
-        confirmButtonText: "🔐 Iniciar sesión",
-        cancelButtonText: "🔁 Recuperar contraseña",
-        confirmButtonColor: "#0d6efd",
-        cancelButtonColor: "#6c757d",
-        width: 520,
-        padding: "2rem",
-        backdrop: `
-        rgba(0,0,0,0.5)
-    `,
-        customClass: {
-          popup: "rounded-4 shadow-lg",
-          confirmButton: "btn btn-primary px-4 m-1",
-          cancelButton: "btn btn-outline-secondary px-4 m1"
-        },
-        buttonsStyling: false,
-        allowOutsideClick: true
-      }).then((result) => {
-
-        if (result.isConfirmed) {
-          window.location.href = "/login";
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          window.location.href = "/recovery/account";
-        }
-
-      });
+     
 
 
       response.errors.forEach(error => {

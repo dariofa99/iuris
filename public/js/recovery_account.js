@@ -138,9 +138,45 @@ $(document).ready(function () {
             toastr.success("Contraseña restablecida con éxito", "", {
                 timeOut: "4000",
             });
-            setTimeout(function () {
-                window.location.href = "/login";
-            }, 2000);
+
+            Swal.fire({
+                icon: "warning",
+                title: "¡Cuenta restablecida con éxito!",
+                html: `
+                        <div style="font-size:15px; line-height:1.6">
+                            <p style="margin-bottom:10px">
+                                Los datos ingresados ya tienen una cuenta asociada.
+                            </p>
+                            <p style="color:#6c757d; font-size:14px">
+                                Puedes iniciar sesión.
+                            </p>
+                        </div>`,
+                showCancelButton: false,
+                confirmButtonText: "🔐 Iniciar sesión",                
+                confirmButtonColor: "#0d6efd",                
+                width: 520,
+                padding: "2rem",
+                backdrop: `rgba(0,0,0,0.5)`,
+                customClass: {
+                    popup: "rounded-4 shadow-lg",
+                    confirmButton: "btn btn-primary px-4 m-1",
+                    cancelButton: "btn btn-outline-secondary px-4 m1"
+                },
+                buttonsStyling: false,
+                allowOutsideClick: true
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    window.location.href = "/login";
+                } 
+            });
+
+
+
+
+            /*  setTimeout(function () {
+                 window.location.href = "/login";
+             }, 2000); */
         } else {
             toastr.error("Error al restablecer la contraseña", "", {
                 timeOut: "4000",

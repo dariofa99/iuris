@@ -16,7 +16,7 @@ $(document).ready(function () {
         if (filas > 0) {
             var errors = validateForm('myFormCalendar');
             if (errors.length <= 0) {
-                var data = convertFormToJSON('myFormCalendar');
+                var data = convertFormToJSON('myFormCalendar'); 
                // console.log(data);
             } else {
                 toastr.error("Ups! Parece hay campos obligatorios sin marcar. ", "", {

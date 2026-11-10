@@ -1,17 +1,20 @@
-@component('components.b4.modal_medium')
+@component('components.b4.modal_large')
     @slot('trigger')
         myModal_detalles_recuperar_cuenta
     @endslot
 
     @slot('title')
-        Cuenta ya registrada
+        ¡Atención!
     @endslot
 
 
     @slot('body')
         <div class="text-center py-2">
             <div class="text-info mb-3" aria-hidden="true">
-                <i class="fas fa-info-circle fa-3x"></i>
+                <i class="fas fa-info-circle fa-3x">
+                    Cuenta ya registrada
+                </i>
+                
             </div>
 
             <div class="alert alert-info" role="status">
