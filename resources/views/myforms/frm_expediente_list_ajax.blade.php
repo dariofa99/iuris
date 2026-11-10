@@ -43,7 +43,7 @@
                          @else
                              Defensa de Oficio
                          @endif
-                     </td>
+                     </td> 
  
                      <td>
                          @if ($expediente->exptipoproce_id == '1' and $expediente->expestado_id != '2' and $expediente->expestado_id != '5' and !currentUser()->hasRole('solicitante'))

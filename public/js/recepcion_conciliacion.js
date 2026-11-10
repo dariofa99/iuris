@@ -234,6 +234,10 @@ $(function () {
     let response = await solicitudesService.solicitar(request);
     if (response.errors) {
       Swal.close();
+
+      $("#myModal_detalles_recuperar_cuenta").modal("show");
+
+      return;
       Swal.fire({
         icon: "warning",
         title: "¡Cuenta ya registrada!",

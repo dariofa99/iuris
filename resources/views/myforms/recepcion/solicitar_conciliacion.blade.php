@@ -125,6 +125,7 @@
     @include('myforms.conciliaciones.componentes.modal_create_document')
      @include('myforms.conciliaciones.componentes.modal_create_anexo')
     @include('myforms.recepcion.frm_modal_infoinderminada')
+    @include('myforms.recepcion.frm_modal_recuperar_cuenta_detalles')
 
 @endsection
 @push('scripts')

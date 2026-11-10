@@ -7,8 +7,6 @@
         $diasParaRespuesta = $expediente->getDaysForPosesion($documentosPosesion);
     }
 
-    
-
 @endphp
 
 @if (
@@ -190,6 +188,15 @@
                         {{ getSmallDate($expediente->asignacion->fecha_asig) }}
                         <small class="text-muted">({{ TiempoTrans($expediente->asignacion->fecha_asig) }})</small>
                     </span>
+                    @if($expediente->exptipoproce_id == 1)
+                    <small>
+                        <label class="pull-center badge-colors dis-block"
+                            style="border-radius:8px;border: 2px solid {{ $expediente->getDaysOrColorForClose('color') }}; color : {{ $expediente->getDaysOrColorForClose('color') }}">
+                            {{ $expediente->getDaysOrColorForClose('mensaje') }}
+
+                        </label>
+                    </small>
+                    @endif
                 </div>
 
             </div>

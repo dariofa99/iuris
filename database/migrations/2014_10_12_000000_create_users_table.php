@@ -53,6 +53,7 @@ class CreateUsersTable extends Migration
 
 
             $table->date('fechanacimien')->nullable();
+            $table->boolean('has_apoyo')->default(1);
             $table->string('pbesena',5)->nullable();            
             $table->boolean('pbepersondiscap')->default(0);
             $table->string('pbevictimconflic',5)->nullable();
