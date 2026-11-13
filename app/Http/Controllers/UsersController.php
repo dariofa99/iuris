@@ -622,9 +622,9 @@ class UsersController extends Controller
       ]);
 
       $user->password = ($request->password);
+      $user->active = 1;
       $user->save();
       $user->roles()->sync(8);
-
       return  response()->json([
         'success' => true,
         'message-success' => 'La contraseña se actualizó con éxito, ahora puede iniciar sesión'

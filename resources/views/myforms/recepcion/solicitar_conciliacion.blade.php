@@ -11,13 +11,16 @@
         $pasos = $pasos ?? [];
     @endphp
 
-    <div class="container-fluid">
+    <div class="container-fluid solicitar-conciliacion-page">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Si presenta algún problema para diligenciar el formulario, por favor comuníquese al correo
+                <div class="alert alert-dismissible fade show solicitar-conciliacion-help" role="alert">
+                    <i class="fas fa-life-ring" aria-hidden="true"></i>
+                    <div class="solicitar-conciliacion-help-copy">
+                        <strong>¿Necesitas ayuda con el formulario?</strong>
+                        Si presenta algún problema para diligenciarlo, por favor comuníquese al correo
                         darioj99@udenar.edu.co o acérquese a las oficinas de la Universidad de Nariño, sede centro.
-                    </strong>
+                    </div>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -29,14 +32,21 @@
 
             <div class="col-md-10">
 
-                <div class="card">
-                    <div class="card-header">
-                        <br>
-
-                        @include('myforms.recepcion.menu_buttons', [
-                            'paso' => $paso,
-                            'pasos' => $pasos,
-                        ])
+                <div class="card solicitar-conciliacion-card">
+                    <div class="card-header solicitar-conciliacion-header iuris-gradient-banner">
+                        <div class="iuris-gradient-banner-content">
+                            <div class="solicitar-conciliacion-heading">
+                                <span class="solicitar-conciliacion-kicker">Atención virtual IURIS</span>
+                                <h1>Solicitud de conciliación</h1>
+                                <p>Completa cada paso para registrar y continuar con tu solicitud.</p>
+                            </div>
+                            <div class="solicitar-conciliacion-progress">
+                                @include('myforms.recepcion.menu_buttons', [
+                                    'paso' => $paso,
+                                    'pasos' => $pasos,
+                                ])
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body" id="content_data_conciliaciones">
                         <div class="content_message">
@@ -60,60 +70,53 @@
                             ])
                         @endif
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
+                    <div class="card-footer solicitar-conciliacion-footer">
+                        @if ($paso > 2)
+                            @php
+                                $paso_an = $paso;
+                                if ($paso == 7) {
+                                    if (!$pasos[5]['visible']) {
+                                        $paso_an = 6;
+                                    }
+                                }
+                            @endphp
+                            <a class="btn btn-outline-secondary" aria-label="Volver al paso anterior"
+                                href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso={{ $paso_an - 1 }}">
+                                <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>
+                                Anterior
+                            </a>
+                        @else
+                            <span></span>
+                        @endif
 
-                            <div class="col-md-12">
-                                @if ($paso > 2)
-                                    @php
-                                        $paso_an = $paso;
-                                        if ($paso == 7) {
-                                            if (!$pasos[5]['visible']) {
-                                                $paso_an = 6;
-                                            }
-                                        }
-                                    @endphp
-                                    <a
-                                        href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso={{ $paso_an - 1 }}">
-                                        <i style="cursor: pointer" class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                        <div class="solicitar-conciliacion-footer-actions">
+                            @if (isset($conciliacion))
+                                @if (intval($paso) == 6)
+                                    <a class="btn btn-success solicitar-conciliacion-next" id="btn_siguiente_replegal"
+                                        href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=7">
+                                        Siguiente
+                                        <i class="fas fa-arrow-right ml-1" aria-hidden="true"></i>
+                                    </a>
+                                @else
+                                    <a href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso={{ intval($paso) + 1 }}"
+                                        data-step="{{ intval($paso) + 1 }}" class="btn btn-success solicitar-conciliacion-next"
+                                        data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}"
+                                        id="{{ $pasos[$paso - 1]['id'] }}">
+                                        Siguiente
+                                        <i class="fas fa-arrow-right ml-1" aria-hidden="true"></i>
                                     </a>
                                 @endif
+                            @else
+                                <button type="button" data-step="2" class="btn btn-success solicitar-conciliacion-next"
+                                    data-type="205" id="btn_registrar_conc">
+                                    Siguiente
+                                    <i class="fas fa-arrow-right ml-1" aria-hidden="true"></i>
+                                </button>
+                            @endif
 
-
-
-                                @if (isset($conciliacion))
-                                    @if (intval($paso) == 6)
-                                        <a class="btn btn-success" id="btn_siguiente_replegal"
-                                            href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=7">
-                                            Siguiente
-                                        </a>
-                                    @else
-                                        <a href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso={{ intval($paso) + 1 }}"
-                                            data-step="{{ intval($paso) + 1 }}" class="btn btn-success"
-                                            data-type="{{ $pasos[$paso - 1]['tipo_usuario'] }}"
-                                            id="{{ $pasos[$paso - 1]['id'] }}">
-                                            Siguiente
-                                        </a>
-                                    @endif
-                                @else
-                                    {{--    <a class="btn btn-success" id="btn_no_apoderado" style="display:none"
-                                        href="/solicitudes/recepcion/conciliacion/{{ $conciliacion->token }}?id={{ Request::get('id') }}&paso=4">
-                                        Siguiente
-                                    </a>  --}}
-
-                                    <button type="button" data-step="2" class="btn btn-success" data-type="205"
-                                        id="btn_registrar_conc">
-                                        Siguiente
-                                    </button>
-                                @endif
-
-
-
-                                <a href="/login" class="btn btn-default">
-                                    Cancelar
-                                </a>
-
-                            </div>
+                            <a href="/login" class="btn btn-default solicitar-conciliacion-cancel">
+                                Cancelar
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -123,7 +126,7 @@
     </div>
     @include('myforms.conciliaciones.componentes.modal_create_hechos_pretenciones')
     @include('myforms.conciliaciones.componentes.modal_create_document')
-     @include('myforms.conciliaciones.componentes.modal_create_anexo')
+    @include('myforms.conciliaciones.componentes.modal_create_anexo')
     @include('myforms.recepcion.frm_modal_infoinderminada')
     @include('myforms.recepcion.frm_modal_recuperar_cuenta_detalles')
 

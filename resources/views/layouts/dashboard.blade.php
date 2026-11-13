@@ -73,7 +73,7 @@ if (!isset($modo_nav_crl)) {
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed @yield('body_class')">
     <div id="fondo_background">
 
     </div>

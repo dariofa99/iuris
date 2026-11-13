@@ -48,6 +48,10 @@ $(document).ready(function () {
                         });
                     });
                 }
+
+
+
+
             } else
                 if (!response.exists) {
                     toastr.error("No se encontró una cuenta con esos datos", "", {
@@ -138,37 +142,96 @@ $(document).ready(function () {
             toastr.success("Contraseña restablecida con éxito", "", {
                 timeOut: "4000",
             });
-
+            limpiarForm("myFormResetAccount")
             Swal.fire({
-                icon: "warning",
+                icon: "success",
                 title: "¡Cuenta restablecida con éxito!",
                 html: `
-                        <div style="font-size:15px; line-height:1.6">
-                            <p style="margin-bottom:10px">
-                                Los datos ingresados ya tienen una cuenta asociada.
+                        <div class="text-left">
+                            <p class="text-center mb-4">
+                                Tu contraseña fue actualizada. Inicia sesión para acceder a tu cuenta.
                             </p>
-                            <p style="color:#6c757d; font-size:14px">
-                                Puedes iniciar sesión.
-                            </p>
+
+                            <form id="swalLoginForm">
+                                <div class="form-group">
+                                    <label for="swalLoginUsername">Usuario</label>
+                                    <input id="swalLoginUsername" type="text" class="form-control"
+                                        placeholder="Correo electrónico o número de cédula"
+                                        autocomplete="username" required>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="swalLoginPassword">Contraseña</label>
+                                    <input id="swalLoginPassword" type="password" class="form-control"
+                                        placeholder="Ingresa tu contraseña nueva"
+                                        autocomplete="current-password" required>
+                                </div>
+                            </form>
+
+                            <div class="text-right">
+                                <a href="/password/reset" class="small">¿Olvidaste tu contraseña?</a>
+                            </div>
                         </div>`,
                 showCancelButton: false,
-                confirmButtonText: "🔐 Iniciar sesión",                
-                confirmButtonColor: "#0d6efd",                
-                width: 520,
-                padding: "2rem",
+                confirmButtonText: "Iniciar sesión",
+                width: 480,
+                padding: "1.75rem",
                 backdrop: `rgba(0,0,0,0.5)`,
                 customClass: {
                     popup: "rounded-4 shadow-lg",
-                    confirmButton: "btn btn-primary px-4 m-1",
-                    cancelButton: "btn btn-outline-secondary px-4 m1"
+                    confirmButton: "btn btn-primary px-4"
                 },
                 buttonsStyling: false,
-                allowOutsideClick: true
+                allowOutsideClick: false,
+                didOpen: () => {
+                    document.getElementById("swalLoginUsername").focus();
+                },
+                preConfirm: () => {
+                    const username = document.getElementById("swalLoginUsername").value.trim();
+                    const password = document.getElementById("swalLoginPassword").value;
+                    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+                    if (!username || !password) {
+                        Swal.showValidationMessage("Ingresa tu usuario y contraseña para continuar.");
+                        return false;
+                    }
+
+                    if (!csrfMeta || !csrfMeta.content) {
+                        Swal.showValidationMessage("No fue posible iniciar sesión. Recarga la página e inténtalo de nuevo.");
+                        return false;
+                    }
+
+                    return { username, password, csrfToken: csrfMeta.content };
+                }
             }).then((result) => {
 
-                if (result.isConfirmed) {
-                    window.location.href = "/login";
-                } 
+                if (!result.isConfirmed || !result.value) {
+                    return;
+                }
+               
+
+                 const loginForm = document.createElement("form");
+                loginForm.method = "POST";
+                loginForm.action = "/login";
+
+                const formFields = {
+                    _token: result.value.csrfToken,
+                    user_name: result.value.username,
+                    password: result.value.password
+                };
+
+                Object.keys(formFields).forEach((name) => {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = name;
+                    input.value = formFields[name];
+                    loginForm.appendChild(input);
+                });
+
+                document.body.appendChild(loginForm);
+                 console.log(formFields);
+                
+                loginForm.submit(); 
+
             });
 
 

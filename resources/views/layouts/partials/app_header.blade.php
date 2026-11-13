@@ -1,6 +1,4 @@
 
-
-
 <div class="row" style="background-color: #222d32; opacity: 1; margin-right: 0px;">
     <div class="col-md-3 image d-none d-sm-inline-block" style="padding-left: 50px;">
         <a href="/">

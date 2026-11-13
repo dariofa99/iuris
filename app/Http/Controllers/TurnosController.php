@@ -354,7 +354,7 @@ class TurnosController extends Controller
                 if ($request->has('data_search') and $request->get('data_search') != '') {
                     return $query->where('cursos.id', $request->data_search);
                 }
-            })
+            }) 
             ->select(
                 "turnos.id as id",
                 'users.idnumber',

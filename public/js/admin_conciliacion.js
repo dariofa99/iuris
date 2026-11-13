@@ -25,6 +25,54 @@ $(document).ready(function () {
 
   }
 
+  $("#tramites-continuar").on("click", function (e) {
+    $("#tramites-tab").trigger("click")
+  });
+  $("#valida_regla").on("change", function (e) {
+    e.preventDefault();
+    $("#btn_continuar_conciliacion").prop("disabled", true)
+    $("#btn_continuar_expedientes").prop("disabled", true)
+    if ($(this).is(":checked")) {
+      $("#btn_continuar_conciliacion").prop("disabled", false);
+      $("#btn_continuar_expedientes").prop("disabled", false);
+    }
+  });
+  $("#btn_continuar_conciliacion").on("click",async function (e) {
+    e.preventDefault();
+    $("#wait").show();
+    var auth_user = JSON.parse($("#authdata").val())
+    var request = {
+      estado_id: 240,
+      solicitante_id: auth_user.id,
+      mail_solicitante: auth_user.email,
+      categoria_id: 219
+    }
+    console.log(request);
+     let response = await conciliacionService.registrar_conciliacion(request);
+
+    $("#wait").show();
+    if (response.errors_email) {
+      response.errors_email.forEach(element => {
+        toastr.error(element, "", {
+          positionClass: "toast-top-right",
+          timeOut: "4000",
+        });
+      });
+      if (response.conciliacion && response.conciliacion.id != undefined) {
+        window.location = "/conciliaciones/" + response.conciliacion.id + "/edit";
+      }
+    } else if (response.errors) {
+
+    } else if (response.id != undefined && response.id != null) {
+      toastr.success("Conciliación creada con éxito", "", {
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+      });
+      window.location = "/conciliaciones/" + response.id + "/edit";
+    } 
+
+  });
+
   $("#myform_asig_nota_conciliacion").on("submit", function (e) {
     e.preventDefault();
     var request = convertFormToJSON("myform_asig_nota_conciliacion");//  $(this).serialize();
@@ -107,6 +155,11 @@ $(document).ready(function () {
   });
   $("#btn_new_conciliacion").on("click", function (e) {
     e.preventDefault();
+
+    $("#myModal_mensaje_solicitud_conciliacion").modal("show");
+
+    return;
+
     Swal.fire({
       title: "Esta seguro de solicitar una nueva conciliación?",
       html: "<h3>No podrá revertir los cambios</h3>",
@@ -125,7 +178,7 @@ $(document).ready(function () {
           solicitante_id: auth_user.id,
           mail_solicitante: auth_user.email,
           categoria_id: 219
-        }      
+        }
         let response = await conciliacionService.registrar_conciliacion(request);
 
         $("#wait").show();
@@ -770,7 +823,7 @@ $(document).ready(function () {
     if (errors.length <= 0 && formatVal != "<p><br></p>" && formatVal != "") {
       $("#myFormNotificationSend input[name=cuerpo_correo]").val(formatVal);
       //var request = convertFormToJSON("myFormNotificationSend");
-     // request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
+      // request['conciliacion_id'] = $("input[name='conciliacion_id']").val();
       let request = new FormData(this);
       request.append('conciliacion_id', $("input[name='conciliacion_id']").val());
 

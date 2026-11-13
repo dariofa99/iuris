@@ -78,7 +78,7 @@ class LoginController extends Controller
                 $clave = 'email';
             } else {
                 Session::flash('message-danger', ' Crédenciales de autenticación incorrectas');
-                return Redirect::back();
+                return Redirect::to('/login');
             }
         }
         $request["clave"] = $clave;
@@ -112,6 +112,7 @@ class LoginController extends Controller
                 }
                 if (currentUser()->solicitudes()->whereIn('type_status_id', [162, 165])->first()) {
                     $solicitud = currentUser()->solicitudes()->whereIn('type_status_id', [162, 165])->first();
+                    return Redirect::to('oficina/solicitante');
                     return Redirect::to('/oficina/solicitante/solicitud/' . $solicitud->id);
                 } else {
                     return Redirect::to('oficina/solicitante');
@@ -121,7 +122,7 @@ class LoginController extends Controller
         }
 
         Session::flash('message-danger', ' Crédenciales de autenticación incorrectas');
-        return Redirect::back();
+        return Redirect::to("/login");
     }
 
     /**
