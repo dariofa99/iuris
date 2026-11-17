@@ -330,6 +330,7 @@ class Expediente extends Model
     {
         $asig = $this->getAsignacion();
         $periodo = $this->getPeriodoActivo();
+        $this->getDaysForEvaHechos();
         try {
             $periodo = $this->getPeriodoActivo();
             $now = Carbon::now();
@@ -1092,7 +1093,6 @@ class Expediente extends Model
     public function getDaysForEvaHechos()
     {
 
-    
         $validVacations = $this->validateVacationsPause();
         if ($validVacations) {
             return $validVacations;

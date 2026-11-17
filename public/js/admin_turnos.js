@@ -404,27 +404,6 @@ $(document).ready(function () {
 		$("#nombre_docente_pendiente").text(response.docente.name + ' ' + response.docente.lastname);
 		$("#myModal_registrar_horas_pendientes_docente").modal("show");
 		return response;
-
-		var formData = document.getElementById("turnosdoc");
-		formData.querySelectorAll(".iuris-option").forEach(function (option) {
-			console.log(option);
-			// Selecionar solo la opción de asistencia pendiente y eliminar las demás
-			option.querySelector('input').checked = false; // Desmarcar todas las opciones
-			if (option.id != "tipo_asis_pendiente_option") {
-				option.style.display = "none";
-			} else {
-				option.querySelector('input').checked = true;
-			}
-		});
-		$(".iuris-form-footer").css("display", "block");
-		$(".iuris-form-footer button").each(function (button) {
-			var button = $(this);
-
-			if (button.attr("id") != "btnRegistrarTurnoDocente") {
-				button.css({ "display": "none" }) // Ocultar los botones que no sean el de registrar turno
-			}
-		});
-		$("#myModal_reporasistencia").modal("show");
 	});
 
 

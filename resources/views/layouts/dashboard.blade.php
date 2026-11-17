@@ -164,7 +164,7 @@ if (!isset($modo_nav_crl)) {
             });
             $("#wait").hide()
         });
-        var channel = Echo.join('chat');
+    /*    var channel = Echo.join('chat');
         channel.listen('.event-chat', function(data) {
             console.log(data);
             //chat.render(data);
@@ -180,7 +180,7 @@ if (!isset($modo_nav_crl)) {
         channel.listen('.solicitud-estados', function(data) {
             console.log(data);
             //chat.render(data);
-        })
+        })*/
     </script>
     <!-- PAGE PLUGINS -->
     @stack('scripts')

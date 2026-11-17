@@ -108,17 +108,23 @@ $(function () {
         e.preventDefault();
         var tipo_asis = $(this).val();
         $("#div_reposicion").html("");
-        $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", false);
-        $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", false);
+        if (!esReposicion) {
+            $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", false);
+            $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", false);
+        }
+
         if (tipo_asis == "150") {
             var content = contentRepos();
             $("#div_reposicion").html(content);
             $("#div_reposicion").show();
-            $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
-            $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
+
+
         } else if (tipo_asis == "284") {
-            $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
-            $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
+            if (!esReposicion) {
+                $("#turnosdoc #hora_inicio").val(horaInicioOriginal).attr("readonly", true);
+                $("#turnosdoc #hora_fin").val(horaFinOriginal).attr("readonly", true);
+
+            }
         } else if (tipo_asis == "149") {
             if (esReposicion) {
                 const confirmation = await Swal.fire({
@@ -459,9 +465,9 @@ function showCalendar(docente_id) {
 }
 
 
-function 
+function
 
-contentRepos() {
+    contentRepos() {
     return ` <div class="col-md-10">
                         <div class="iuris-section-title">
 
