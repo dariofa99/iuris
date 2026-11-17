@@ -399,8 +399,9 @@ class ExpedienteController extends Controller
 
     $estudiantes = $this->userService->getUsersByRoleName('estudiante');
     $expediente->setNotActLimit();
+    $expediente->getDaysForEvaHechos();
 
-
+   
 
 
     if ($expediente->isValidEvaPause()) {

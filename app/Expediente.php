@@ -1092,6 +1092,7 @@ class Expediente extends Model
     public function getDaysForEvaHechos()
     {
 
+    
         $validVacations = $this->validateVacationsPause();
         if ($validVacations) {
             return $validVacations;
@@ -1112,11 +1113,14 @@ class Expediente extends Model
         if ($asignacion->fecha_asig < $periodo->prdfecha_inicio) {
             $fecha_1 = Carbon::parse($periodo->prdfecha_inicio);
         }
+
+     
+
         if ($historial) {
 
             $fecha_2 = Carbon::parse($historial->created_at)->endOfDay();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
-            //  dd($evaluar);
+           //  dd($this->asignacion);
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
                 $segmento = $this->getSegmentoActivo();
                 $expediente = $this;
@@ -1124,17 +1128,19 @@ class Expediente extends Model
                 $docente_id = Auth::user()->idnumber;
                 $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
                 $asignacion->evaluado_hechos = 1;
+                $asignacion->fecha_eva  = Carbon::now();
                 $asignacion->save();
+             //    dd($evaluar);      
                 return $evaluar['dias_pausado'];
             }
-            //dd($evaluar);        
+              //  dd($this->expestado_id);
             return $evaluar['dias_pausado'];
         } else {
 
             //$fecha_1 = $this->getDaysAfterAsig();; // Carbon::parse($asignacion->fecha_asig);
             $fecha_2 = Carbon::now();
             $evaluar = $this->getExpedienteService()->getDaysForEval($asignacion, $fecha_1, $fecha_2, 50);
-            //dd($evaluar);
+          //  dd($evaluar);
             if ($evaluar['dias_pausado'] > 5 and $asignacion->evaluado_hechos == 0) {
 
                 $segmento = $this->getSegmentoActivo();
@@ -1143,6 +1149,7 @@ class Expediente extends Model
                 $docente_id = Auth::user()->idnumber;
                 $this->evaluarExpd($segmento, $expediente, $message, $docente_id);
                 $asignacion->evaluado_hechos = 1;
+                $asignacion->fecha_eva  = Carbon::now();
                 $asignacion->save();
                 return $evaluar['dias_pausado'];
             }
@@ -1161,7 +1168,7 @@ class Expediente extends Model
             'orgntsid' => 4,
             'segid' => $segmento->id,
             'perid' => $segmento->perid,
-            'tpntid' => 2,
+            'tpntid' => 1,
             'expidnumber' => $expediente->expid,
             'estidnumber' => $expediente->expidnumberest,
             'docidnumber' => $docente_id,
@@ -1385,7 +1392,7 @@ class Expediente extends Model
         return false;
     }
 
-    public function isValidNotaMax()
+    public function isValidNotaMax() 
     {
         $asignacion = $this->asignacion;
         $estado = $this->estados()->where('ref_estado_id', 4)->first();
