@@ -188,6 +188,7 @@
     @include('myforms.components_exp.frm_modal_exp_edit_cierre_caso')
     @include('myforms.frm_modal_details_not_caso')
     @include('myforms.components_exp.frm_modal_fechalimitres')
+    @include('myforms.components_exp.frm_modal_add_url_expediente')
     @include('myforms.components_exp.frm_modal_show_details_estadocaso')
     @include('myforms.components_exp.frm_modal_citaciones_estudiante')
     @include('myforms.frm_requerimiento_edit')

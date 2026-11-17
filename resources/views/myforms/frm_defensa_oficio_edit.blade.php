@@ -256,6 +256,7 @@
     @include('myforms.components_exp.frm_modal_notificar_incidencia', [
         'categorias_incidencia' => $categorias_incidencia,
     ])
+    @include('myforms.components_exp.frm_modal_add_url_expediente')
     @include('myforms.components_exp.frm_modal_actualizar_incidencia')
     @if (count($expediente->solicitudes) > 0)
         @include('myforms.components_exp.frm_modal_videollamada', [

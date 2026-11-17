@@ -199,6 +199,7 @@
     @include('myforms.components_exp.frm_modal_gestion_judicial')
     @include('myforms.components_exp.frm_modal_pausar_expediente')
     @include('myforms.components_exp.frm_modal_pausas_expediente')
+    @include('myforms.components_exp.frm_modal_add_url_expediente')
     @include('myforms.components_exp.frm_modal_actualizar_incidencia')
     @include('myforms.components_exp.frm_modal_notificar_incidencia', [
         'categorias_incidencia' => $categorias_incidencia,

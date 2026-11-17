@@ -246,6 +246,7 @@
     @include('myforms.components_exp.frm_modal_fechalimitres')
     @include('myforms.components_exp.frm_modal_subir_documento_posesion')
     @include('myforms.components_exp.frm_modal_show_details_estadocaso')
+    @include('myforms.components_exp.frm_modal_add_url_expediente')
     @include('myforms.components_exp.frm_modal_citaciones_estudiante')
     @include('myforms.frm_requerimiento_edit')
     @include('myforms.frm_requerimiento_asist')

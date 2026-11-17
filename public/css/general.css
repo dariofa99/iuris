@@ -8375,6 +8375,65 @@ RESPONSIVE
   color: #628187;
 }
 
+.iuris-case-summary-value.iuris-case-judicial-url {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.iuris-case-judicial-url-link,
+.iuris-case-judicial-url-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid #dce8e9;
+  border-radius: 999px;
+  background: #f1f7f7;
+  color: #37656b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.iuris-case-judicial-url-link {
+  padding: 0.32rem 0.6rem;
+}
+
+.iuris-case-judicial-url-link:hover,
+.iuris-case-judicial-url-link:focus {
+  border-color: #b9d1d3;
+  background: #e7f1f1;
+  color: #264f55;
+  text-decoration: none;
+}
+
+.iuris-case-judicial-url-add {
+  padding: 0.32rem 0.65rem;
+}
+
+.iuris-case-judicial-url-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0;
+  border: 1px solid #dce5e7;
+  border-radius: 50%;
+  background: #fff;
+  color: #628187;
+}
+
+.iuris-case-judicial-url-edit:hover,
+.iuris-case-judicial-url-edit:focus {
+  border-color: #b9d1d3;
+  background: #f1f7f7;
+  color: #37656b;
+}
+
 .iuris-case-field-control {
   margin-top: 0.2rem;
 }

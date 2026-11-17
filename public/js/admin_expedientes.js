@@ -24,6 +24,49 @@ $(document).ready(function () {
 
     });
 
+    $("#btnEditarUrlExpJudicial").on("click", function (e) {
+        e.preventDefault();
+        $("#myModal_exp_url_add").modal("show");
+
+    });
+
+    $("#btn_add_url").on("click", async function (e) {
+        e.preventDefault();
+        const form = document.getElementById("frm_add_url_log");
+        var isvalid = validateForms(form);
+        if (isvalid) {            
+            var request = convertFormToJSON("frm_add_url_log");
+            //validar si es url valida
+
+            let urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
+            if (!urlPattern.test(request['url_exp_judicial'])) {
+                toastr.error("Por favor, ingrese una URL válida.", "Error", {
+                    timeOut: "4000",
+                });
+                return;
+            }
+            request['expediente_id'] = $("#expediente_id").val();
+            $("#wait").show();
+             $("#myModal_exp_url_add").modal("hide");
+
+            let response = await expedientesService.update(request, request['expediente_id']);
+            if(response.error){
+                toastr.error(response.error, "Error", {
+                    timeOut: "4000",
+                });
+            }else{
+                toastr.success("Se actualizó con éxito", "Espere", {
+                    timeOut: "4000",
+                });
+                window.location.reload(true);
+            }
+          
+        }
+    });
+
+
+
+
     $("#myform_req_edit").on("keyup", "textarea[name='reqdescrip']", async function (e) {
         e.preventDefault();
         var text = $(this).val();
