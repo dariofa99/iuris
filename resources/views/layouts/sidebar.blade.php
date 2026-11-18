@@ -1,70 +1,50 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-{{ $sidebar_modo }}-primary elevation-4"
-    style="background-color:{{ config('app.name') == 'ConciliApp' ? 'rgb(74, 41, 123)' : '#222d32' }}">
+<aside
+    class="main-sidebar iuris-sidebar {{ config('app.name') == 'ConciliApp' ? 'iuris-sidebar--conciliapp' : '' }} sidebar-{{ $sidebar_modo }}-primary elevation-4">
     <!-- Brand Logo -->
-
-    <a href="/home" class="brand-link"
-        style="background-color: {{ config('app.name') == 'ConciliApp' ? '#ffffff' : '#374850' }} !important; padding: .4125rem .5rem;text-align: center;">
+    <a href="/home" class="brand-link iuris-sidebar__brand">
         @if (config('app.name') == 'ConciliApp')
-            <img src="{{ asset('dist/img/conciliapplogohor.png') }}" alt="Sis Image" style="height: 45px;">
+            <img src="{{ asset('dist/img/conciliapplogohor.png') }}" alt="ConciliApp"
+                class="iuris-sidebar__brand-logo iuris-sidebar__brand-logo--conciliapp">
         @else
-            <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="Lybra" class="img-fluid"
-                style="border-radius: 20px;height:42px">
-            <span class="brand-text font-weight-{{ $sidebar_brand_modo }}"></span> IURIS </span>
+            <img src="{{ asset('dist/img/consultorios-min.png') }}" alt="IURIS" class="iuris-sidebar__brand-logo">
+            <span class="brand-text font-weight-{{ $sidebar_brand_modo }} iuris-sidebar__brand-name">IURIS</span>
         @endif
-
     </a>
 
 
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="user-panel iuris-sidebar__user d-flex">
             <div class="image">
                 <a href="/users/{{ auth()->user()->id }}/edit" title="Ingresar a perfil">
                     <img src="{{ is_file(public_path('thumbnails/' . currentUser()->image)) ? asset('thumbnails/' . currentUser()->image) : asset('thumbnails/default.jpg') }}"
                         id="image_profile_user_sidebar" class="img-circle elevation-2 image_profile" alt="User Image">
                 </a>
             </div>
-            <div class="info">
-                <small>
-                    <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
-                        title="Ingresar a perfil">{{ Auth::user()->name }}<br>
-                        Ver perfil
-                    </a>
-                </small>
+            <div class="info iuris-sidebar__user-info">
+                <a href="/users/{{ auth()->user()->id }}/edit" id="name_profile_user_sidebar"
+                    class="iuris-sidebar__profile" title="Ingresar a perfil">
+                    <span class="iuris-sidebar__user-name">{{ Auth::user()->name }}</span>
+                    <span class="iuris-sidebar__profile-label">Ver perfil</span>
+                </a>
 
                 @if (currentUser()->turno)
-                    <span style="width: 20px; height:20px; border-radius:10px" title="Color del turno"
-                        class="badge {{ currentUser()->getColorTurno(currentUser()->turno->color->ref_value) }}">.</span>
-                @else
+                    <span title="Color del turno"
+                        class="badge iuris-sidebar__shift-badge {{ currentUser()->getColorTurno(currentUser()->turno->color->ref_value) }}">.</span>
                 @endif
                 @if (currentUser()->hasRole('estudiante') and currentUser()->turno != null)
-                    <br>
-                    <small>
-                        <a>
-
-                            Horario: {{ currentUser()->turno->horario->ref_nombre }}
-
-                        </a>
+                    <span class="iuris-sidebar__schedule">
+                        <i class="far fa-clock" aria-hidden="true"></i>
+                        {{ currentUser()->turno->horario->ref_nombre }}
+                    </span>
                 @endif
-                <br>
-                <a href="{{ route('logout.index') }}">
+                <a href="{{ route('logout.index') }}" class="iuris-sidebar__logout">
                     <i class="fas fa-sign-out-alt"></i>
-
                     {{ __('Salir') }}
                 </a>
-                </small>
-
-
-
-
-
             </div>
-
-            <hr>
-
-
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
@@ -72,9 +52,9 @@
 
         <!-- Sidebar Menu -->
         @if (!isset($ocultar_menu))
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
+            <nav class="mt-2 iuris-sidebar__nav">
+                <ul class="nav nav-pills nav-sidebar flex-column iuris-sidebar__menu" data-widget="treeview"
+                    role="menu" data-accordion="false">
                     <li
                         class="nav-item has-treeview {{ (!Route::is('expedientes.index') and !Route::is('expedientes.create') and !Route::is('expedientes.edit')) ?:
                             'menu-open' }}">
@@ -353,8 +333,8 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (currentUser()->can('ver_horarios_docente')
-                                || currentUser()->hasRole('amatai') ||
+                                @if (currentUser()->can('ver_horarios_docente') ||
+                                        currentUser()->hasRole('amatai') ||
                                         currentUser()->hasRole('diradmin') ||
                                         currentUser()->hasRole('dirgral') ||
                                         currentUser()->hasRole('coordprac'))
@@ -364,7 +344,7 @@
                                         </a>
                                     </li>
                                 @endif
-                              
+
                             </ul>
                         </li>
                     @endif
@@ -471,11 +451,9 @@
                         </li>
                     @endif
 
-
-                    <li
-                        class="nav-item has-treeview {{ (!Route::is('periodos.index') and !Route::is('segmentos.index')) ?: 'menu-open' }}">
+                    <li class="nav-item has-treeview {{ !Route::is('horarios.index') ?: 'menu-open' }}">
                         <a href="#" class="nav-link">
-                            <i class="fas fa-comment-dots"></i>
+                            <i class="nav-icon fas fa-comment-dots"></i>
                             <p>
                                 Incidencias
                                 <i class="fas fa-angle-left right"></i>
@@ -487,9 +465,27 @@
                                     <p>Solicitar atención</p>
                                 </a>
                             </li>
-
                         </ul>
                     </li>
+
+
+                    {{-- <li class="nav-item has-treeview {{ !Route::is('incidencias') ?: 'menu-open' }}">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-comment-dots"></i>
+                            <p>
+                                Incidencias
+                                <i class="fas fa-angle-left right"> </i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item ml-3">
+                                <a href="{{ route('incidencias.index') }}" class="nav-link">
+                                    <p>Solicitar atención</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li> --}}
 
 
 

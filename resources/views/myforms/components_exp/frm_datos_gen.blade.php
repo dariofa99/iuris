@@ -389,26 +389,27 @@
                 @endforeach
             </span>
 
-            <span class="iuris-case-summary-value iuris-case-judicial-url">
-                @if ($expediente->url_exp_judicial)
-                    <a class="iuris-case-judicial-url-link" href="{{ $expediente->url_exp_judicial }}" target="_blank"
-                        rel="noopener noreferrer" title="Abrir expediente judicial">
-                        <i class="fa fa-link" aria-hidden="true"></i>
-                        <span>Ver expediente</span>
-                    </a>
-                    <button type="button" class="btn btn-sm iuris-case-judicial-url-edit"
-                        id="btnEditarUrlExpJudicial" title="Editar URL" aria-label="Editar URL">
-                        <i class="fa fa-edit" aria-hidden="true"></i>
-                    </button>
-                @else
-                    <button type="button" class="btn btn-sm iuris-case-judicial-url-add"
-                        id="btnEditarUrlExpJudicial">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        <span>Agregar URL</span>
-                    </button>
-                @endif
-            </span>
-
+            @if ($expediente->exptipoproce_id!=1)
+                <span class="iuris-case-summary-value iuris-case-judicial-url">
+                    @if ($expediente->url_exp_judicial)
+                        <a class="iuris-case-judicial-url-link" href="{{ $expediente->url_exp_judicial }}"
+                            target="_blank" rel="noopener noreferrer" title="Abrir expediente judicial">
+                            <i class="fa fa-link" aria-hidden="true"></i>
+                            <span>Ver expediente</span>
+                        </a>
+                        <button type="button" class="btn btn-sm iuris-case-judicial-url-edit"
+                            id="btnEditarUrlExpJudicial" title="Editar URL" aria-label="Editar URL">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </button>
+                    @else
+                        <button type="button" class="btn btn-sm iuris-case-judicial-url-add"
+                            id="btnEditarUrlExpJudicial">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            <span>Agregar URL</span>
+                        </button>
+                    @endif
+                </span>
+            @endif
             <div class="iuris-case-field-control" style="display: none;">
                 <select name="exptipoproce_id" id="exptipoproce_id" class="form-control disabled required" disabled
                     required>

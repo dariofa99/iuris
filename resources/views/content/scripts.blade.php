@@ -11,9 +11,9 @@
     });
 
     @if (Session::has('message-information') && config('app.name') != 'ConciliApp')
-        localStorage.removeItem("keyCircularDefensasOficio");
+        localStorage.removeItem("keyCircularDefensasOficioDos");
 
-        var keyCir = localStorage.getItem("keyCircularDefensasOficioDos");
+        var keyCir = localStorage.getItem("keyCircularUrlExpediente");
         $("#modal_t").text("");
         var message = '';
 
@@ -42,7 +42,7 @@
     })
 
     $("#mymodalShowAlerts").on('shown.bs.modal', function() {
-        $("#modal-announce").text("Información importante. Modal abierto con instrucciones sobre incidencias.");
+        $("#modal-announce").text("Información importante. Modal abierto.");
         $("#modalContentStart").focus();
     });
 
@@ -963,14 +963,14 @@
             class: "btn btn-danger",
             id: "btnNotFalse",
             text: "No volver a mostrar",
-            "data-not": "keyCircularDefensasOficioDos"
+            "data-not": "keyCircularUrlExpediente"
         }));
 
         return `
 <div class="iuris-circular">
     <div id="modalContentStart" tabindex="-1"></div>
     <div id="modal-announce" class="sr-only" aria-live="assertive" aria-atomic="true">
-        Circular para estudiantes sobre plazos, toma de posesión y registro de documentos de defensas de oficio en IURIS.
+        Nueva función para registrar en IURIS el enlace de consulta del expediente judicial.
     </div>
 
     <header class="iuris-circular-header">
@@ -979,8 +979,8 @@
         </span>
         <div>
             <span class="iuris-circular-eyebrow">Plataforma IURIS</span>
-            <h2>Circular informativa</h2>
-            <p>Recuerde: cargue el archivo en Datos del caso, no en Actuaciones.</p>
+            <h2>Enlace de consulta del expediente judicial</h2>
+            <p>Registre en IURIS la URL que le proporcione el despacho judicial.</p>
         </div>
     </header>
 
@@ -991,70 +991,57 @@
         <div>
             <h3>Apreciados estudiantes:</h3>
             <p>
-            Con el propósito de garantizar el cumplimiento oportuno de las actuaciones
-                asignadas y fortalecer el seguimiento de los expedientes, se recuerda que, cuando se le asigne una defensa de oficio recibirá un correo electrónico
-                con la fecha límite para presentarse ante el juzgado o la entidad correspondiente
-                y, según el caso, solicitar el radicado o formalizar la toma de posesión.
+                Ahora puede asociar a cada expediente en IURIS el enlace oficial que le entregue
+                el despacho judicial para consultar los documentos disponibles. Así tendrá más
+                fácil acceso a ese recurso desde el expediente correspondiente.
             </p>
             <p class="mb-0">
-                <strong>Importante:</strong> registre el soporte de posesión,
-                el radicado o el comprobante de envío de documentos en <strong>Expediente &gt; Datos del caso</strong>, no en
-                <strong>Actuaciones</strong>.
+                Cuando reciba la URL del despacho, ingrésela en el campo habilitado para el enlace
+                de consulta del expediente. Asegúrese de registrarla en el expediente correcto.
             </p>
         </div>
     </section>
 
-    <section class="iuris-circular-deadline" aria-label="Pasos para cumplir con la defensa asignada">
+    <section class="iuris-circular-deadline" aria-label="Pasos para registrar el enlace de consulta">
         <div class="iuris-circular-section-heading">
             <span class="iuris-circular-section-icon" aria-hidden="true">
-                <i class="fas fa-clock"></i>
+                <i class="fas fa-link"></i>
             </span>
             <div>
-                <h3>Qué debe hacer</h3>
-                <p>Complete estos pasos dentro del plazo informado por correo.</p>
+                <h3>Cómo usar esta función</h3>
+                <p>Guarde el enlace para encontrarlo fácilmente cuando consulte el expediente.</p>
             </div>
         </div>
 
         <ol class="iuris-circular-steps">
             <li>
                 <span class="iuris-circular-step-icon" aria-hidden="true">
-                    <i class="fas fa-envelope"></i>
-                </span>
-                <div>
-                    <h4>Revise la notificación</h4>
-                    <p>Consulte el correo registrado en IURIS para conocer la fecha límite y las instrucciones de su asignación.</p>
-                </div>
-            </li>
-
-             <li>
-                <span class="iuris-circular-step-icon" aria-hidden="true">
-                    <i class="fas fa-file"></i>
-                </span>
-                <div>
-                    <h4>Solicite la autorización</h4>
-                    <p>Acérquese con el/la docente asignada/o y solicite la respectiva autorización. Diligencie la autorización y solicite la aprobación con dirección administrativa.</p>
-                </div>
-            </li>
-            <li>
-                <span class="iuris-circular-step-icon" aria-hidden="true">
                     <i class="fas fa-landmark"></i>
                 </span>
                 <div>
-                    <h4>Realice la gestión correspondiente</h4>
-                    <p>Preséntese ante el juzgado o la entidad indicada, con la respectiva autorización, para solicitar el radicado o formalizar la posesión de la defensa.</p>
+                    <h4>Solicite o reciba la URL oficial</h4>
+                    <p>Use el enlace de consulta que le suministre el despacho judicial para ese expediente.</p>
+                </div>
+            </li>
+
+            <li>
+                <span class="iuris-circular-step-icon" aria-hidden="true">
+                    <i class="fas fa-folder-open"></i>
+                </span>
+                <div>
+                    <h4>Abra el expediente correspondiente</h4>
+                    <p>Verifique que está en el expediente judicial al que pertenece el enlace.</p>
                 </div>
             </li>
             <li>
                 <span class="iuris-circular-step-icon" aria-hidden="true">
-                    <i class="fas fa-file-upload"></i>
+                    <i class="fas fa-link"></i>
                 </span>
                 <div>
-                    <h4>Registre el soporte en IURIS</h4>
-                    <p>Cargue el documento en el expediente asignado, en la sección:</p>
-                    <div class="iuris-circular-path">
-                        <i class="fas fa-folder-open" aria-hidden="true"></i>
-                        <strong>Expediente <span aria-hidden="true">›</span> Datos del caso <span aria-hidden="true">›</span> Documento de posesión</strong>
-                    </div>
+                    <h4>Registre el enlace en IURIS</h4>
+                    <p>Ingrese, en DATOS DEL CASO, apartado RESUMEN, la URL en el campo de enlace de consulta habilitado y guarde los cambios.</p>
+                
+                    <img src="{{ asset('dist/img/update/funcionalidadUrl.png') }}" alt="Guía de registro de enlace" class="img-fluid mt-2" style="max-width: 100%; border-radius: 8px;">
                 </div>
             </li>
         </ol>
@@ -1062,30 +1049,29 @@
 
     <section class="iuris-circular-warning" role="alert">
         <span class="iuris-circular-warning-icon" aria-hidden="true">
-            <i class="fas fa-exclamation-triangle"></i>
+            <i class="fas fa-shield-alt"></i>
         </span>
         <div>
-            <h3>Importante: respete la fecha límite</h3>
+            <h3>Use únicamente el enlace oficial</h3>
             <p>
-                El soporte debe quedar cargado en el expediente correcto antes de la fecha
-                indicada en el correo. Si no se registra dentro del plazo establecido,
-                <strong>el sistema evaluará la actividad con una calificación de cero (0,0)</strong>.
+                Registre la URL que le proporcione el despacho judicial. El acceso a los documentos
+                puede depender de los permisos o credenciales definidos por ese despacho.
             </p>
         </div>
     </section>
 
     <section class="iuris-circular-tips">
-        <h3><i class="fas fa-clipboard-check" aria-hidden="true"></i> Recomendaciones</h3>
+        <h3><i class="fas fa-clipboard-check" aria-hidden="true"></i> Antes de guardar</h3>
         <ul>
-            <li>Revise regularmente su correo y la carpeta de correo no deseado.</li>
-            <li>Verifique la fecha límite y cargue el archivo con anticipación.</li>
-            <li>Confirme que el documento esté en el expediente correcto y se haya registrado correctamente.</li>
+            <li>Copie la dirección completa tal como se la entregó el despacho.</li>
+            <li>Compruebe que está registrándola en el expediente correcto.</li>
+            <li>Si el enlace no permite consultar los documentos, comuníquese con el despacho judicial.</li>
         </ul>
     </section>
 
     <footer class="iuris-circular-thanks">
         <i class="fas fa-check-circle" aria-hidden="true"></i>
-        Gracias por su compromiso y por atender oportunamente las responsabilidades de su defensa asignada.
+        Esta función facilita el acceso al enlace de consulta asociado a cada expediente.
     </footer>
 </div>
     `;

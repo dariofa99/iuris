@@ -8438,6 +8438,94 @@ RESPONSIVE
   margin-top: 0.2rem;
 }
 
+.iuris-url-form {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0.25rem 0.25rem 0;
+}
+
+.iuris-url-form__intro {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e5ebed;
+  border-radius: 8px;
+  background: #f7f9fa;
+}
+
+.iuris-url-form__intro p {
+  margin: 0;
+  color: #52686d;
+  font-size: 0.88rem;
+}
+
+.iuris-url-form__icon {
+  display: inline-flex;
+  flex: 0 0 2.25rem;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 7px;
+  background: #e7f1f1;
+  color: #37656b;
+}
+
+.iuris-url-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.iuris-url-form label {
+  margin-bottom: 0.4rem;
+  color: #34474b;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.iuris-url-form__input .input-group-text {
+  border-color: #dce5e7;
+  background: #f7f9fa;
+  color: #628187;
+}
+
+.iuris-url-form__input .form-control {
+  height: calc(1.5em + 0.75rem + 2px);
+  border-color: #dce5e7;
+  color: #34474b;
+  box-shadow: none;
+}
+
+.iuris-url-form__input .form-control:focus {
+  border-color: #78aeb5;
+  box-shadow: 0 0 0 2px rgba(0, 105, 117, 0.08);
+}
+
+.iuris-url-form .form-text {
+  margin-top: 0.4rem;
+  font-size: 0.76rem;
+}
+
+.iuris-url-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid #edf1f2;
+}
+
+.iuris-url-form__actions .btn-light {
+  border: 1px solid #dce5e7;
+  color: #52686d;
+}
+
+.iuris-url-form__actions .btn-iuris-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 @media (max-width: 767.98px) {
   .iuris-student-overview,
   .iuris-student-details {
@@ -8553,6 +8641,340 @@ RESPONSIVE
   border-radius: 10px;
   background: var(--iuris-teal-soft);
   color: var(--iuris-teal);
+}
+
+.main-header.iuris-topbar {
+  position: relative;
+  min-height: 64px;
+  padding: 0.55rem 1.25rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(110deg, #29474f 0%, #223d44 100%);
+  box-shadow: 0 4px 16px rgba(17, 39, 45, 0.16);
+}
+
+.iuris-topbar::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #69b8b8, #a4d9d4);
+  content: "";
+}
+
+.iuris-topbar .navbar-nav {
+  align-items: center;
+  flex-direction: row;
+  gap: 0.45rem;
+}
+
+.main-header.iuris-topbar .navbar-nav .nav-link {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #d7e5e6;
+  font-size: 1.05rem;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.main-header.iuris-topbar .navbar-nav .nav-link:hover,
+.main-header.iuris-topbar .navbar-nav .nav-link:focus {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.main-header.iuris-topbar .navbar-nav .nav-link:focus-visible {
+  outline: 2px solid #8dd3d0;
+  outline-offset: 2px;
+}
+
+.iuris-topbar .navbar-badge {
+  top: 3px;
+  right: 2px;
+  min-width: 17px;
+  padding: 0.18rem 0.3rem;
+  border: 2px solid #29474f;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  line-height: 1;
+}
+
+.iuris-topbar .glass-dropdown {
+  max-width: calc(100vw - 1rem);
+  margin-top: 0.45rem;
+  border-color: #e2ebed;
+}
+
+.iuris-topbar--conciliapp::before {
+  background: linear-gradient(90deg, #4a297b, #9b7ac4);
+}
+
+.main-header.iuris-topbar--conciliapp {
+  background: linear-gradient(110deg, #4a297b 0%, #372062 100%);
+}
+
+.main-header.iuris-topbar--conciliapp .navbar-nav .nav-link:hover,
+.main-header.iuris-topbar--conciliapp .navbar-nav .nav-link:focus {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.main-sidebar.iuris-sidebar {
+  background: linear-gradient(180deg, #1d3740 0%, #142a31 100%);
+  box-shadow: 8px 0 28px rgba(17, 39, 45, 0.18);
+}
+
+.iuris-sidebar .brand-link {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent !important;
+  color: #fff;
+}
+
+.iuris-sidebar__brand-logo {
+  width: 40px;
+  height: 40px;
+  padding: 3px;
+  border-radius: 12px;
+  background: #fff;
+  object-fit: contain;
+}
+
+.iuris-sidebar__brand-name {
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em;
+}
+
+.iuris-sidebar .sidebar {
+  padding: 0.35rem 0.65rem 1rem;
+}
+
+.iuris-sidebar .user-panel.iuris-sidebar__user {
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.55rem 0 1rem !important;
+  padding: 0.85rem 0.7rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.iuris-sidebar__user .image {
+  flex: 0 0 auto;
+  padding-left: 0;
+}
+
+.iuris-sidebar__user .image img {
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  object-fit: cover;
+}
+
+.iuris-sidebar__user .info.iuris-sidebar__user-info {
+  position: static;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.iuris-sidebar__profile {
+  display: block;
+  min-width: 0;
+  color: #fff !important;
+  line-height: 1.25;
+}
+
+.iuris-sidebar__profile:hover {
+  text-decoration: none;
+}
+
+.iuris-sidebar__user-name,
+.iuris-sidebar__profile-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iuris-sidebar__user-name {
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.iuris-sidebar__profile-label {
+  margin-top: 0.15rem;
+  color: #a9c1c5;
+  font-size: 0.875rem;
+}
+
+.iuris-sidebar__shift-badge {
+  width: 0.65rem !important;
+  height: 0.65rem !important;
+  margin-top: 0.45rem;
+  padding: 0 !important;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50% !important;
+  font-size: 0;
+  vertical-align: middle;
+}
+
+.iuris-sidebar__schedule {
+  display: block;
+  margin-top: 0.45rem;
+  color: #bfd0d2;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.iuris-sidebar__schedule i {
+  margin-right: 0.25rem;
+  color: #7bc5c4;
+}
+
+.iuris-sidebar__logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+  padding: 0.28rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  color: #d3e0e1 !important;
+  font-size: 0.875rem;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.iuris-sidebar__logout:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+}
+
+.iuris-sidebar__nav {
+  margin-top: 0.35rem !important;
+}
+
+.iuris-sidebar__menu > .nav-item {
+  margin-bottom: 0.25rem;
+}
+
+.iuris-sidebar__menu .nav-link {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  margin: 0;
+  padding: 0.62rem 0.75rem;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  color: #c1d0d2;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.iuris-sidebar__menu > .nav-item > .nav-link,
+.iuris-sidebar__menu > .nav-item > .nav-link > p {
+  font-size: 18px !important;
+  font-weight: 500;
+}
+
+.iuris-sidebar__menu .nav-link p {
+  margin: 0;
+  line-height: 1.3;
+}
+
+.iuris-sidebar__menu .nav-link .nav-icon {
+  width: 1.35rem;
+  margin-right: 0.55rem;
+  color: #8eb3b7;
+  font-size: 1rem;
+  text-align: center;
+  transition: color 0.18s ease;
+}
+
+.iuris-sidebar__menu .nav-link:hover,
+.iuris-sidebar__menu .menu-open > .nav-link {
+  border-left-color: #69b8b8;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.iuris-sidebar__menu .nav-link:hover .nav-icon,
+.iuris-sidebar__menu .menu-open > .nav-link .nav-icon {
+  color: #8dd3d0;
+}
+
+.iuris-sidebar__menu .nav-link.active {
+  border-left-color: #83d2cd;
+  background: linear-gradient(90deg, rgba(91, 177, 177, 0.28), rgba(91, 177, 177, 0.1));
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(141, 211, 208, 0.08);
+}
+
+.iuris-sidebar__menu .nav-treeview {
+  margin: 0.2rem 0 0.45rem 0.85rem;
+  padding: 0.15rem 0 0.15rem 0.45rem;
+  border-left: 1px solid rgba(177, 206, 208, 0.2);
+}
+
+.iuris-sidebar__menu .nav-treeview > .nav-item {
+  margin-left: 0 !important;
+}
+
+.iuris-sidebar__menu .nav-treeview .nav-link {
+  min-height: 38px;
+  padding: 0.45rem 0.65rem;
+  border-left: 0;
+  border-radius: 6px;
+  color: #afc2c5;
+  font-size: 16px !important;
+}
+
+.iuris-sidebar__menu .nav-treeview .nav-link > p {
+  font-size: 16px !important;
+}
+
+.iuris-sidebar__menu .nav-treeview .nav-link:hover,
+.iuris-sidebar__menu .nav-treeview .nav-link.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.iuris-sidebar--conciliapp {
+  background: linear-gradient(180deg, #4a297b 0%, #33205b 100%);
+}
+
+.iuris-sidebar--conciliapp .brand-link {
+  background: #fff !important;
+}
+
+.iuris-sidebar__brand-logo--conciliapp {
+  width: auto;
+  max-width: 190px;
+  height: 45px;
+  padding: 0;
+  background: transparent;
+}
+
+@media (max-width: 575.98px) {
+  .main-header.iuris-topbar {
+    min-height: 58px;
+    padding: 0.45rem 0.75rem;
+  }
 }
 
 .solicitante-portal-page {
