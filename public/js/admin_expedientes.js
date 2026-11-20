@@ -1,5 +1,5 @@
 import { UserService } from './services/users.js';
-import { ExpedientesService } from './services/expedientes.js';
+import { ExpedientesService } from './services/expedientes.js?v=1';
 import { EncuestasService } from './services/encuestas.js';
 import { IncidenciasService } from './services/incidencias.js';
 import { NotasService } from './services/notas.js';
