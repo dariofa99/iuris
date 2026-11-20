@@ -235,8 +235,8 @@ class SegmentosController extends Controller
 					$this->Asignotasnewdatos($data);
 					$asignacion->evaluado_hechos = 1;
 					$asignacion->save();
-					Log::info("Evaluado {$expediente->expidnumberest}");
-					Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+					//Log::info("Evaluado {$expediente->expidnumberest}");
+					//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 				}
 			} else {
 
@@ -290,8 +290,8 @@ class SegmentosController extends Controller
 								}
 							}
 							if ($dias_sin_hechos > 5) {
-								Log::info("Evaluadorr {$expediente->expidnumberest}");
-								//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+								//Log::info("Evaluadorr {$expediente->expidnumberest}");
+								////Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 
 								$data = [
 									'ntaaplicacion' => 0,
@@ -310,8 +310,8 @@ class SegmentosController extends Controller
 								$this->Asignotasnewdatos($data);
 								$asignacion->evaluado_hechos = 1;
 								$asignacion->save();
-								Log::info("Evaluado {$expediente->expidnumberest}");
-								Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+								//Log::info("Evaluado {$expediente->expidnumberest}");
+								//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 							}
 						}
 					}
@@ -340,8 +340,8 @@ class SegmentosController extends Controller
 					'tbl_org_id' => $expediente->id,
 				];
 				$this->Asignotasnewdatos($data);
-				Log::info("Evaluado {$expediente->expidnumberest}");
-				Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+				//Log::info("Evaluado {$expediente->expidnumberest}");
+				//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 			}
 			//Evalua actuaciones
 
@@ -397,8 +397,8 @@ class SegmentosController extends Controller
 									$fecha_eva = Carbon::now();
 									$asignacion->fecha_eva = $fecha_eva;
 									$asignacion->save();
-									Log::info("Evaluado {$expediente->expidnumberest}");
-									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+									//Log::info("Evaluado {$expediente->expidnumberest}");
+									//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 								}
 							} else {
 								//no tuvo pausas
@@ -435,8 +435,8 @@ class SegmentosController extends Controller
 									$fecha_eva = Carbon::now();
 									$asignacion->fecha_eva = $fecha_eva;
 									$asignacion->save();
-									Log::info("Evaluado {$expediente->expidnumberest}");
-									Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+									//Log::info("Evaluado {$expediente->expidnumberest}");
+									//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 								}
 							}
 						}
@@ -487,8 +487,8 @@ class SegmentosController extends Controller
 						$fecha_eva = Carbon::now();
 						$asignacion->fecha_eva = $fecha_eva;
 						$asignacion->save();
-						Log::info("Evaluado {$expediente->expidnumberest}");
-						Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+						//Log::info("Evaluado {$expediente->expidnumberest}");
+						//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 					}
 				}
 			}
@@ -525,8 +525,8 @@ class SegmentosController extends Controller
 							$request['ref_estado_id'] = $expediente->expestado_id;
 							$request['ref_motivo_estado_id'] = 12;
 							$estado_caso = $this->estadoCasoService->store($request);
-							Log::info("Evaluado {$expediente->expidnumberest}");
-							Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
+							//Log::info("Evaluado {$expediente->expidnumberest}");
+							//Log::info("Evaluado {$expediente->expid} {$data['ntaconcepto']}");
 						}
 					}
 				}
@@ -738,7 +738,7 @@ class SegmentosController extends Controller
 			} else {
 				$dias_pausado = Carbon::parse($fecha_pI)
 					->diffInDays($fecha_pF);
-				//Log::info($pausas);
+				////Log::info($pausas);
 				if (isset($pausas[$key_p + 1])) {
 					$fecha_next = $pausas[$key_p + 1]->fecha_inicial;
 					//buscar vacaciones entre pausas
@@ -764,7 +764,7 @@ class SegmentosController extends Controller
 			//$dias_vacaciones_p = $dias_vacaciones_p - $dias_vacaciones;
 		}
 		$dias_pausa = $dias_pausa + $dias_vacaciones;
-		Log::info("dias_pausa{$dias_pausa} Paso el {$dias_vacaciones}");
+		//Log::info("dias_pausa{$dias_pausa} Paso el {$dias_vacaciones}");
 
 		return $dias_pausa;
 	}
@@ -920,7 +920,7 @@ class SegmentosController extends Controller
 			['operador' => ">=", "value" => $fecha2]
 		]);
 
-		//Log::info($esta_pausado);
+		////Log::info($esta_pausado);
 		//La actuacion se venció mientras estaba en vacaciones
 		$esta_vacaciones = $this->vacacionesService->getByDates([
 			['operador' => "<=", "value" => $fecha2],
@@ -989,8 +989,8 @@ class SegmentosController extends Controller
 	}
 	private function Asignotasnewdatos($request)
 	{
-		Log::info("Evaluado {$request['estidnumber']}");
-		Log::info("Evaluado {$request['expidnumber']}");
+		//Log::info("Evaluado {$request['estidnumber']}");
+		//Log::info("Evaluado {$request['expidnumber']}");
 
 		Nota::create([
 

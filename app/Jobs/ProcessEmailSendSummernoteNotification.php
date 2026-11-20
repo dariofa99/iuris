@@ -34,7 +34,7 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
        
 
     ) {
-       // Log::info($users);
+       // //Log::info($users);
         $this->users = $users;
         $this->cuerpo_correo = $cuerpo_correo;
         $this->conciliacion = $conciliacion;
@@ -51,8 +51,8 @@ class ProcessEmailSendSummernoteNotification implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("Iniciando proceso de notificación por correo...{$this->getRealPath}");
-      //  Log::info("Usuarios a notificar 2: ".implode(", ", $this->users)); 
+        //Log::info("Iniciando proceso de notificación por correo...{$this->getRealPath}");
+      //  //Log::info("Usuarios a notificar 2: ".implode(", ", $this->users)); 
         Notification::send($this->users, new NotificationsSummernote(
             $this->cuerpo_correo,
             $this->conciliacion,

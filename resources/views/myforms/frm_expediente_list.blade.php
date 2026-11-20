@@ -191,7 +191,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div id="table_list_model">
+                <div id="table_list_model_exp">
 
                     @include('myforms.frm_expediente_list_ajax')
 

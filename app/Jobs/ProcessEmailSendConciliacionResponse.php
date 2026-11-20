@@ -29,7 +29,7 @@ class ProcessEmailSendConciliacionResponse implements ShouldQueue
         $asunto,
         $user_created
     ) {
-         Log::info($users);
+         //Log::info($users);
         $this->users = $users;
         $this->cuerpo_correo = $cuerpo_correo;
         $this->conciliacion = $conciliacion;
@@ -44,7 +44,7 @@ class ProcessEmailSendConciliacionResponse implements ShouldQueue
      */
     public function handle()
     {
-        Log::info($this->cuerpo_correo);
+        //Log::info($this->cuerpo_correo);
         Mail::to($this->users)->send(new RegConciliacionCorregir(
             $this->users,
             $this->cuerpo_correo,

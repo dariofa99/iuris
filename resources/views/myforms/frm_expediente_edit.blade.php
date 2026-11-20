@@ -28,7 +28,7 @@
 
 @section('area_buttons')
 
-   
+
 @endsection
 
 
@@ -50,8 +50,8 @@
     @endphp
     @include('msg.alerts')
 
-     @include('myforms.components_exp.frm_datos_docente')
-     
+    @include('myforms.components_exp.frm_datos_docente')
+
     <div class="dofi-edit-page">
         <ul class="nav nav-tabs dofi-tabs" id="myTab" role="tablist">
 
@@ -265,11 +265,11 @@
     @include('myforms.frm_modal_general')
     @include('myforms.components_exp.frm_modal_actualizar_incidencia')
 
-    @if (count($expediente->solicitudes) > 0)
-        @include('myforms.components_exp.frm_modal_videollamada', [
+   {{--  @if (count($expediente->solicitudes) > 0)
+     @include('myforms.components_exp.frm_modal_videollamada', [
             'user_idnumber' => $expediente->expidnumber,
-        ])
-    @endif
+        ]) 
+    @endif --}}
     @if (currentUser()->hasRole('coordprac') || currentUser()->hasRole('estudiante'))
         @include('myforms.frm_expediente_user_edit', [
             'user' => $expediente->solicitante,

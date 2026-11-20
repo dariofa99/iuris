@@ -44,7 +44,7 @@ class UserEvent
         ->setModelDescription(json_encode($item))
         ->setTable($item->getTable())
         ->store();
-        Log::info("Item Created Event Fire: ".$item);
+        //Log::info("Item Created Event Fire: ".$item);
     }
 
 
@@ -67,7 +67,7 @@ class UserEvent
         ->setModelDescription(json_encode($item->getChanges()))
         ->setTable($item->getTable())
         ->store();
-        Log::info("Item Updated Event Fire: ".$item);
+        //Log::info("Item Updated Event Fire: ".$item);
 
     }
 
@@ -89,7 +89,7 @@ class UserEvent
         AuditLog::setEvent('deleted')
         ->setModelDescription(json_encode($item))
         ->setTable($item->getTable())->store();
-        Log::info("Item Deleted Event Fire: ".$item);
+        //Log::info("Item Deleted Event Fire: ".$item);
 
     }
 

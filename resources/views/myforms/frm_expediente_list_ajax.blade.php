@@ -1,5 +1,5 @@
  <div class="table-responsive no-padding">
-     <table style="font-size: 15px !important" id="tbl_users" class="table table-bordered table-striped dataTable"
+     <table style="font-size: 15px !important" id="tbl_expedientes" class="table table-bordered table-striped dataTable"
          role="grid">
          <thead>
              <tr>
@@ -19,7 +19,7 @@
          <tbody>
 
              @foreach ($expedientes as $expediente)
-                 <tr role="row">
+                 <tr role="row" class="fila_expediente_list" data-id="{{$expediente->id}}">
                      <td>{{ $expediente->expid }}</td>
                      @if ($expediente->solicitante and !currentUser()->hasRole('solicitante'))
                          <td>

@@ -276,7 +276,7 @@ class TurnosDocenteRepository
                 'minutos_reponer' => $minutos_reponer
             ]);
 
-            // Log::info("Asistencia ID: " . $asistencia->id . " - Reposición ID: " . $reposicion->id);
+            // //Log::info("Asistencia ID: " . $asistencia->id . " - Reposición ID: " . $reposicion->id);
             $asistencia->reposiciones()->attach($reposicion->id);
         }
 

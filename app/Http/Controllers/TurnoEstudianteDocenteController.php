@@ -171,7 +171,7 @@ class TurnoEstudianteDocenteController extends Controller
                     $turno->hora_fin = $request->hora_fin; */
 
                     /*  $child = $turno->parents()->first();
-                    Log::info($child);
+                    //Log::info($child);
                     if ($child) {
                         $parent = TurnoEstudianteDocente::find($child->pivot->teparent_id);
                         $parent->estado_id = 260; //pendiente

@@ -283,7 +283,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('expedientes/rechazar/autorizacion', 'ExpedienteController@rechazarAutorizacionNotificacion');
 
     Route::post('expedientes/add/documento', 'ExpedienteController@addDocumento');
-    
+
     Route::delete('expedientes/delete/documento/{id}', 'ExpedienteController@deleteDocumento');
 
 
@@ -315,6 +315,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('expediente/sharestream/{id}', 'ExpedienteController@shareStream');
     Route::post('expedientes/asignar/conciliacion', 'ExpedienteController@asigConciliacion');
     Route::get('expedientes/get/exp/rama/student/{idnumber}', 'ExpedienteController@getExpedientesRamaEstudiante');
+    Route::post('expedientes/set/evaluaciones/data/{id}', 'ExpedienteController@SetDataExpEdit');
+
+
+
     //Ediar usuarios desde Expedientes
     Route::resource('expuser', 'ExpedienteUserController');
 

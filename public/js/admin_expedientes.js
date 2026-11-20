@@ -12,16 +12,37 @@ const notasService = new NotasService();
 
 $(document).ready(function () {
 
+    $("#table_list_model_exp").on("click", ".pagination a", async function (e) {
+        e.preventDefault();
+        var page = $(this).attr("href");
+        $("#wait").show();
+        await pagination(page);
+        $("#wait").hide();
+        //window.history.pushState(null, "", page);
+    });
+    async function pagination(route) {
+        let topics = await expedientesService.paginate(route);
+        console.log(topics);
+        
+        if (topics.view) {
+            $("#table_list_model_exp").html(topics.view);
+        } else {
+            $("#table_list_model_exp").html(topics);
+        }
+        SetEvaluacionesExp();
+        window.history.pushState(null, "", route);
+        return topics;
+    }
+
+    SetEvaluacionesExp();
     $("#myform_req").on("keyup", "textarea[name='reqdescrip']", async function (e) {
         e.preventDefault();
         var text = $(this).val();
-        console.log(text.length)
         $("#reqdescrip-length").text(text.length + "/400");
         if (text.length > 400) {
             $(this).val(text.substring(0, 400));
             $("#reqdescrip-length").text("400/400");
         }
-
     });
 
     $("#btnEditarUrlExpJudicial").on("click", function (e) {
@@ -34,7 +55,7 @@ $(document).ready(function () {
         e.preventDefault();
         const form = document.getElementById("frm_add_url_log");
         var isvalid = validateForms(form);
-        if (isvalid) {            
+        if (isvalid) {
             var request = convertFormToJSON("frm_add_url_log");
             //validar si es url valida
 
@@ -47,20 +68,20 @@ $(document).ready(function () {
             }
             request['expediente_id'] = $("#expediente_id").val();
             $("#wait").show();
-             $("#myModal_exp_url_add").modal("hide");
+            $("#myModal_exp_url_add").modal("hide");
 
             let response = await expedientesService.update(request, request['expediente_id']);
-            if(response.error){
+            if (response.error) {
                 toastr.error(response.error, "Error", {
                     timeOut: "4000",
                 });
-            }else{
+            } else {
                 toastr.success("Se actualizó con éxito", "Espere", {
                     timeOut: "4000",
                 });
                 window.location.reload(true);
             }
-          
+
         }
     });
 
@@ -325,6 +346,7 @@ $(document).ready(function () {
             $("#wait").show();
             let res = await index_page(page, data);
             $("#wait").hide();
+            SetEvaluacionesExp();
             /* 
             index_page(page, data);
             window.history.pushState(null, "", page + "?" + data);
@@ -4144,7 +4166,7 @@ $(document).ready(function () {
 
 
 });//////////////////////////////////////////////
-function get_notas(tbl_id, origen) {
+/* function get_notas(tbl_id, origen) {
     var route = "/notas/" + tbl_id + "/edit";
     $.ajax({
         url: route,
@@ -4246,6 +4268,22 @@ function get_notas(tbl_id, origen) {
             $("#wait").css("display", "none");
         },
     });
+}
+ */
+async function SetEvaluacionesExp() {
+    var expId = $("#expediente_id").val();
+    if (expId != null) {
+        let response = await expedientesService.setDataExpEdit({ "id": expId })
+    } else {
+        $(".fila_expediente_list").each(async function (e) {
+            let id = $(this).data("id")
+            if (id != null) {
+                let response = await expedientesService.setDataExpEdit({ "id": id })
+                console.log(id);
+                
+            }
+        });
+    }
 }
 
 

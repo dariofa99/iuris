@@ -28,7 +28,7 @@ class ProcessEmailSendNotificarDirector implements ShouldQueue
      */
     public function __construct(Expediente $expediente)
     {
-        Log::info($expediente);
+        //Log::info($expediente);
         $this->expediente = $expediente;        
     }
 
@@ -46,7 +46,7 @@ class ProcessEmailSendNotificarDirector implements ShouldQueue
         $message .= "Estudiante: " . $this->expediente->estudiante->name . " " . $this->expediente->estudiante->lastname . "<br>";
         $message .= "Docente: " . $this->expediente->getDocenteAsig()->name . " " . $this->expediente->getDocenteAsig()->lastname . "<br></h4>";
         Notification::send($this->user, new NotificarDirector($this->expediente,$message));
-       Log::info(env("NOTIFICATION_DIR_EMAIL"));
-       Log::info($this->user);
+       //Log::info(env("NOTIFICATION_DIR_EMAIL"));
+       //Log::info($this->user);
     }
 }

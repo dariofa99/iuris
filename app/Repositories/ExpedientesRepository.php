@@ -466,7 +466,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             ];
 
             $total = $dias_pausado_1 + $dias_pausado_2;
-            // Log::info($fecha_in_2);
+            // //Log::info($fecha_in_2);
         } elseif (count($_vacaciones) > 0) {
             //Si solo vencio en vacaciones            
             $fecha_fin_1 = Carbon::parse($_vacaciones[0]->fecha_inicio);
@@ -489,7 +489,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 'fecha_inicial' => $fecha_in_2
             ];
             $total = $dias_pausado_1 + $dias_pausado_2;
-            // Log::info($fecha_in_2);
+            // //Log::info($fecha_in_2);
         } else {
 
             //Si no se creo ni en vacaciones ni pausas                
@@ -506,7 +506,7 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                 'fecha_iniciales' => $fecha_2
             ];
             $total = $dias_pausado - $dias_pausado_1;
-            // Log::info(" * $fecha_1");
+            // //Log::info(" * $fecha_1");
         }
     }
 
@@ -525,18 +525,18 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
             if (!$this->estaBloqueado($fecha, $pausas, $vacaciones)) {
                 $diasContados++;
-                //Log::info("Contando dia: " . $fecha->toDateString() . " - Dias contados: $diasContados");
+                ////Log::info("Contando dia: " . $fecha->toDateString() . " - Dias contados: $diasContados");
             } else {
                 $dias_pausado++;
-                // Log::info("Dia bloqueado: " . $fecha->toDateString() . " - Dias pausados: $dias_pausado");
+                // //Log::info("Dia bloqueado: " . $fecha->toDateString() . " - Dias pausados: $dias_pausado");
             }
 
             if ($diasContados < $diasObjetivo) {
                 $fecha->addDay();
-                // Log::info("Siguiente dia a evaluar: " . $fecha->toDateString());
+                // //Log::info("Siguiente dia a evaluar: " . $fecha->toDateString());
             }
             $diaspasados++;
-            // Log::info("Dias pasados: $diaspasados");
+            // //Log::info("Dias pasados: $diaspasados");
         }
 
         return $fecha;
@@ -623,11 +623,11 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                     if ($_vacacion->fecha_fin > $pausas_[0]->fecha_final) {
                         $days_pausado += getDiffDays($pausas_[0]->fecha_final, $_vacacion->fecha_fin);
 
-                        //  Log::info(getDiffDays($pausas_[0]->fecha_final, $_vacacion->fecha_fin) . 'fecha final de la pausa: ' . $pausas_[0]->fecha_final . " - $_vacacion->fecha_fin");
+                        //  //Log::info(getDiffDays($pausas_[0]->fecha_final, $_vacacion->fecha_fin) . 'fecha final de la pausa: ' . $pausas_[0]->fecha_final . " - $_vacacion->fecha_fin");
                     }
                 } else {
                     $days_pausado += getDiffDays($_vacacion->fecha_inicio, $_vacacion->fecha_fin);
-                    // Log::info(getDiffDays($_vacacion->fecha_inicio, $_vacacion->fecha_fin) . ' fecha final de la pausa: ' . $_vacacion->fecha_inicio . " - $_vacacion->fecha_fin");
+                    // //Log::info(getDiffDays($_vacacion->fecha_inicio, $_vacacion->fecha_fin) . ' fecha final de la pausa: ' . $_vacacion->fecha_inicio . " - $_vacacion->fecha_fin");
                 }
             }
 

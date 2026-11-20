@@ -219,7 +219,7 @@ class TurnosController extends Controller
             ->get();
         foreach ($turnos as $turno) {
             $user = User::where('idnumber', $turno->trnid_estudent)->first();
-            Log::info('User: ' . $user->idnumber . ' Cursando ID: ' . $user->cursando_id);
+            //Log::info('User: ' . $user->idnumber . ' Cursando ID: ' . $user->cursando_id);
             if ($user and ($user->cursando_id == 116 || $user->cursando_id == 117)) {
                 // $user->cursando_id = 1;
                 $user->active = 0;

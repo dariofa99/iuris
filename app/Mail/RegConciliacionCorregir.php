@@ -26,7 +26,7 @@ class RegConciliacionCorregir extends Mailable
         $asunto,
         $user_created
     ) {
-       // Log::info($users);
+       // //Log::info($users);
         $this->users = $users;
         $this->cuerpo_correo = $cuerpo_correo;
         $this->conciliacion = $conciliacion;

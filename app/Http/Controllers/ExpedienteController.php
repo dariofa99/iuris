@@ -352,8 +352,44 @@ class ExpedienteController extends Controller
     $expediente = $this->expedienteService->findWithFilter([
       'expid' => $id
     ]);
+    $estudiante = $expediente->estudiante;
     //dd($expediente->asignacion);
     if (!$expediente) return view('errors.error', compact('url'));
+
+    if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
+    if (currentUser()->hasRole("estudiante")) {
+      if (Auth::user()->id != $estudiante->id) {
+        return view('errors.error', compact('url'));
+      }
+      if (
+        $expediente->expestado_id != '1'
+        and $expediente->expestado_id != '3'
+        and $expediente->expestado_id != '6'
+      ) {
+        //	Session::flash('message-success', 'Actualizado con éxito...!');
+        return redirect('/expedientes/' . $expediente->expid);
+      }
+    } elseif (currentUser()->hasRole("solicitante")) {
+      if (Auth::user()->idnumber != $expediente->expidnumber) {
+        $url = '/expedientes/';
+        return view('errors.error', compact('url'));
+      }
+    }
+    $estudiantes = $this->userService->getEstudiantesConCurso();
+    $readonly = false;
+    $asignacion = $expediente->asignacion;
+    return view(
+      'myforms.frm_expediente_edit',
+      compact('estudiantes', 'expediente', 'asignacion', 'readonly')
+    );
+  }
+
+
+  public function SetDataExpEdit(Request $request, $id)
+  {
+    $expediente = $this->expedienteService->findWithFilter([
+      'id' => $id
+    ]);
     //if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
     $estudiante = $expediente->estudiante;
     $asignacion = $expediente->asignacion;
@@ -397,13 +433,12 @@ class ExpedienteController extends Controller
     }
 
 
-    $estudiantes = $this->userService->getUsersByRoleName('estudiante');
+
     $expediente->setNotActLimit();
     $expediente->getDaysForEvaHechos();
 
-   
 
-
+ 
     if ($expediente->isValidEvaPause()) {
 
       $request['expestado_id'] = 1;
@@ -459,37 +494,13 @@ class ExpedienteController extends Controller
           $estudiante->notify(new UserNotification($estudiante));
         }
       }
+
     }
-    if ($expediente->exptipoproce_id == '3')  return redirect()->route('oficio.edit', $id);
-    if (currentUser()->hasRole("estudiante")) {
-      if (Auth::user()->id != $estudiante->id) {
-        return view('errors.error', compact('url'));
-      }
-      if (
-        $expediente->expestado_id != '1'
-        and $expediente->expestado_id != '3'
-        and $expediente->expestado_id != '6'
-      ) {
-        //	Session::flash('message-success', 'Actualizado con éxito...!');
-        return redirect('/expedientes/' . $expediente->expid);
-      }
-    } elseif (currentUser()->hasRole("solicitante")) {
-      if (Auth::user()->idnumber != $expediente->expidnumber) {
-        $url = '/expedientes/';
-        return view('errors.error', compact('url'));
-      }
-    }
-    /*  if (!currentUser()->can("admin_expedientes")) {
-      return redirect('/expedientes/' . $expediente->expid);
-    } */
-    $readonly = false;
-    return view(
-      'myforms.frm_expediente_edit',
-      compact('estudiantes', 'expediente', 'asignacion', 'readonly')
-    );
+
+    return response()->json([
+      "message"=>"Registro exitoso"
+    ]);
   }
-
-
 
   public function getUsers()
   {

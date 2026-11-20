@@ -63,7 +63,7 @@ class NotificationsSummernote extends Notification
             ]);
 
         // 👇 Adjuntar archivo si existe
-        Log::info('Adjuntando archivo: ' . $this->getRealPath);
+        //Log::info('Adjuntando archivo: ' . $this->getRealPath);
 
         if ($this->getRealPath != "" && file_exists($this->getRealPath)) {
             $mail->attach($this->getRealPath, [

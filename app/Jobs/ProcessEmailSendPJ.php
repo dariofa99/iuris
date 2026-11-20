@@ -30,7 +30,7 @@ class ProcessEmailSendPJ implements ShouldQueue
      */
     public function __construct(Expediente $expediente,$status,$userName)
     {
-        Log::info($expediente);
+        //Log::info($expediente);
         $this->expediente = $expediente;
         $this->status = $status;
         $this->userService = App::make(UsersService::class);

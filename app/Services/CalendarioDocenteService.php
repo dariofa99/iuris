@@ -630,7 +630,7 @@ class CalendarioDocenteService
                      * =====================================
                      */
                   
-                        Log::info(
+                        //Log::info(
                             $reposicion
                         );
                         $eventos[] = [
