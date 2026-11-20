@@ -1,5 +1,5 @@
 import { UserService } from './services/users.js';
-import { ExpedientesService } from './services/expedientes.js';
+import { ExpedientesService } from './services/expedientes.js?v=1';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 $(document).ready(function () {

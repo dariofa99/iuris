@@ -4278,14 +4278,12 @@ async function SetEvaluacionesExp() {
         $(".fila_expediente_list").each(async function (e) {
             let id = $(this).data("id")
             if (id != null) {
-                let response = await expedientesService.setDataExpEdit({ "id": id })
-                console.log(id);
+                let response = await expedientesService.setDataExpEdit({ "id": id })               
                 
             }
         });
     }
 }
-
 
 function hideButtReasCaso() {
 
