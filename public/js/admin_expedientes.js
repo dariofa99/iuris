@@ -1,5 +1,5 @@
 import { UserService } from './services/users.js';
-import { ExpedientesService } from './services/expedientes.js?v=1';
+import { ExpedientesService } from './services/expedientes.js?v=1.0.1';
 import { EncuestasService } from './services/encuestas.js';
 import { IncidenciasService } from './services/incidencias.js';
 import { NotasService } from './services/notas.js';
@@ -630,9 +630,9 @@ $(document).ready(function () {
     $("#btn_act_proc_jur").on("click", function (e) {
         e.preventDefault();
         Swal.fire({
-            title: '¿Esta seguro de marcar el caso como proceso judicial?',
+            title: '¿Esta seguro de marcar el expediente como proceso judicial?',
             icon: 'info',
-            text: "Recuerde que solo el Director general podra revertir los cambios.",
+            text: "Recuerde que solo Dirección General podra revertir los cambios.",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             /* cancelButtonColor: '#d33', */
@@ -655,6 +655,38 @@ $(document).ready(function () {
         });
 
     });
+
+       $("#btn_act_proc_genero").on("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: '¿Esta seguro de marcar el expediente como proceso con enfoque de género?',
+            icon: 'info',
+            text: "",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            /* cancelButtonColor: '#d33', */
+            confirmButtonText: 'Si, marcar',
+            cancelButtonText: 'No, cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                $("#wait").show();
+            
+                let request = {                    
+                    'is_exp_genero': 1
+                }
+                //body.append('comentario', "Solicitud de docente");
+                let response = await expedientesService.update(request,$("#expediente_id").val());
+                toastr.success("Se actalizó con éxito", "", {
+                    timeOut: "4000",
+                });
+                $("#btn_act_proc_genero").find('span').text("Desactivar proceso como enfoque de género");
+                $("#wait").hide();
+                //window.location.reload(true);
+            }
+        });
+
+    });
+
     $("#btn_ges_judexp").on("click", function (e) {
         e.preventDefault();
         var estado = $(this).attr("data-estado");

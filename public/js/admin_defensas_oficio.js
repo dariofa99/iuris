@@ -1,5 +1,5 @@
 import { UserService } from './services/users.js';
-import { ExpedientesService } from './services/expedientes.js?v=1';
+import { ExpedientesService } from './services/expedientes.js?v=1.0.1';
 const userService = new UserService();
 const expedientesService = new ExpedientesService();
 

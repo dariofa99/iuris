@@ -146,8 +146,8 @@ class AgendasController extends Controller
         }
        
 
-       // $maxEnd = $today->copy()->addDays(15);
-        $maxEnd = Carbon::parse("2026-11-20")->startOfDay();
+        $maxEnd = $today->copy()->addDays(15);
+       // $maxEnd = Carbon::parse("2026-11-18")->startOfDay();
 
         // El límite final será el menor entre los 15 días y el final del periodo
         $maxEnd = $maxEnd->gt($periodEnd)
@@ -201,7 +201,7 @@ class AgendasController extends Controller
             $docente->min_atencion != null &&
             $docente->min_atencion != "" &&
             $docente->min_atencion < 40 &&
-            $docente->min_atencion > 20
+            $docente->min_atencion > 10
             ? $docente->min_atencion
             : 40;
 

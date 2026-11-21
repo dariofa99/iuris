@@ -611,8 +611,9 @@ class ExpedienteController extends Controller
         }
       }
     }
+   
     $expediente = $this->expedienteService->update($expediente, $request);
-
+ return response()->json([$request->all(),$asignacion_caso]);
     if (!$request->ajax()) {
       Session::flash('message-success', 'Actualizado con éxito...!');
       if ($expediente->exptipoproce_id == 3) {
@@ -1459,6 +1460,31 @@ class ExpedienteController extends Controller
   public function storeProcJudicial(Request $request)
   {
     // return response()->json($request->all());
+    $expediente = $this->expedienteService->find($request->expid);
+    $asignacion_caso = $expediente->asignacion;;
+    $estado_caso_old = $asignacion_caso->procesojud_id;
+    $request['procesojud_id'] = $request->estado_id;
+    $asignacion_caso = $this->asignacionCasoService->update($asignacion_caso, $request);
+    $request['estado_id'] = $asignacion_caso->procesojud_id;
+    $request['asig_caso_id'] = $asignacion_caso->id;
+    $procjudi = $this->procjucicialService->store($request);
+    if ($request->has('fileprocjud') and $request->fileprocjud != '') {
+      $procjudi = $this->procjucicialService->saveFile($procjudi, $request);
+    }
+    $expediente->setRelations([]);
+    ProcessEmailSendPJ::dispatch(
+      $expediente,
+      $request->estado_id,
+      Auth::user()->name . " " . Auth::user()->lastname
+    )->onConnection('database')->onQueue('emails');
+    return response()->json($expediente);
+  }
+
+   public function storeProcGenero(Request $request)
+  {
+    $expediente = $this->expedienteService->find($request->expid);
+
+     return response()->json($request->all());
     $expediente = $this->expedienteService->find($request->expid);
     $asignacion_caso = $expediente->asignacion;;
     $estado_caso_old = $asignacion_caso->procesojud_id;

@@ -1,5 +1,5 @@
 import { FormatosService } from './services/formatos_documentos.js';
-import { ExpedientesService } from './services/expedientes.js';
+import { ExpedientesService } from './services/expedientes.js?v=1.0.1';
 import { ConciliacionService } from './services/conciliaciones.js';
 import { ReferenciasService } from './services/referencias.js';
 const conciliacionService = new ConciliacionService();

@@ -68,7 +68,8 @@ class Expediente extends Model
         'exppersondemandada',
         'expfechalimite',
         'expfecha_res',
-        'url_exp_judicial'
+        'url_exp_judicial',
+        'is_exp_genero'
     ];
 
 

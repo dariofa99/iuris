@@ -222,9 +222,22 @@
                             !$readonly && currentUser()->can('tomar_caso') && $docenteAsignado->name == 'Sin asignar';
                         $periodoVacaciones = $puedeGestionarPausas ? $expediente->validateVacations() : false;
                         $esEstudiante = currentUser()->hasRole('estudiante');
+
+                        $puedeActivarGenero =
+                            $docenteAsignado->idnumber != 'Sin asignar' &&
+                            ($docenteAsignado->idnumber == currentUser()->idnumber ||
+                                currentUser()->can('act_expediente_genero'));
+
+                                
                     @endphp
 
-                    @if ($esEstudiante || $puedeEditarCaso || $puedeActivarProceso || $puedeGestionarPausas || $puedeTomarCaso)
+                    @if (
+                        $esEstudiante ||
+                            $puedeEditarCaso ||
+                            $puedeActivarProceso ||
+                            $puedeGestionarPausas ||
+                            $puedeTomarCaso ||
+                            $puedeActivarGenero)
                         <div class="dropdown">
                             <button type="button" class="btn iuris-case-actions-toggle dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -236,11 +249,6 @@
                                 aria-label="Acciones del expediente">
                                 @if ($esEstudiante)
                                     <li>
-                                        {{-- <a href="#" id="btn_act_pausa_exp" role="menuitem"
-                                                >
-                                                Ver pausas
-                                            </a> --}}
-
                                         <a href="#" id="btn_act_pausa_exp" role="menuitem">
                                             <i class="fa fa-clock" aria-hidden="true"></i>
                                             Ver pausas
@@ -273,41 +281,51 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if ($puedeActivarGenero)
+                                    <li>
+                                        <a href="#" id="btn_act_proc_genero" class="btn_act_proc_jur"
+                                            role="menuitem">
+                                            <i class="fa fa-venus-mars" aria-hidden="true"></i>
+                                            <span> {{ $expediente->is_exp_genero ? 'Desactivar' : 'Activar' }} proceso
+                                                como enfoque de género</span>
+                                        </a>
+                                    </li>
+                                    @endif
 
-                                @if ($puedeGestionarPausas)
-                                    @if ($periodoVacaciones)
-                                        <li class="iuris-case-action-notice" role="presentation">
-                                            <span>
-                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                                {!! $periodoVacaciones !!}
-                                            </span>
-                                        </li>
-                                    @else
-                                        @if ($expediente->expestado_id == 1 || $expediente->expestado_id == 3)
+                                    @if ($puedeGestionarPausas)
+                                        @if ($periodoVacaciones)
+                                            <li class="iuris-case-action-notice" role="presentation">
+                                                <span>
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    {!! $periodoVacaciones !!}
+                                                </span>
+                                            </li>
+                                        @else
+                                            @if ($expediente->expestado_id == 1 || $expediente->expestado_id == 3)
+                                                <li>
+                                                    <a href="#" id="btn_act_pausa_exp" role="menuitem">
+                                                        <i class="fa fa-pause" aria-hidden="true"></i>
+                                                        Activar pausa
+                                                    </a>
+                                                </li>
+                                            @endif
                                             <li>
-                                                <a href="#" id="btn_act_pausa_exp" role="menuitem">
-                                                    <i class="fa fa-pause" aria-hidden="true"></i>
-                                                    Activar pausa
+                                                <a href="#" id="btn_quit_pausa_exp" role="menuitem">
+                                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                                    Administrar pausas
                                                 </a>
                                             </li>
                                         @endif
+                                    @endif
+
+                                    @if ($puedeTomarCaso)
                                         <li>
-                                            <a href="#" id="btn_quit_pausa_exp" role="menuitem">
-                                                <i class="fa fa-cog" aria-hidden="true"></i>
-                                                Administrar pausas
+                                            <a href="#" id="btnTomarCaso" role="menuitem">
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                                Tomar caso
                                             </a>
                                         </li>
                                     @endif
-                                @endif
-
-                                @if ($puedeTomarCaso)
-                                    <li>
-                                        <a href="#" id="btnTomarCaso" role="menuitem">
-                                            <i class="fa fa-check" aria-hidden="true"></i>
-                                            Tomar caso
-                                        </a>
-                                    </li>
-                                @endif
                             </ul>
                         </div>
                     @endif
@@ -389,7 +407,7 @@
                 @endforeach
             </span>
 
-            @if ($expediente->exptipoproce_id!=1)
+            @if ($expediente->exptipoproce_id != 1)
                 <span class="iuris-case-summary-value iuris-case-judicial-url">
                     @if ($expediente->url_exp_judicial)
                         <a class="iuris-case-judicial-url-link" href="{{ $expediente->url_exp_judicial }}"

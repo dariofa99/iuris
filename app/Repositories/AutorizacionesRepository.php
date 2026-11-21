@@ -20,7 +20,7 @@ class AutorizacionesRepository extends BaseRepository implements AutorizacionesS
         $this->applyValidateSede();     
         $this->query = $this->query
         ->whereHas('asignacion.expediente',function($query){
-            $query->whereIn('expestado_id',[1,3,4]);
+            $query->whereIn('expestado_id',[1,3,4,6]);
         })->search($request);  
         $autorizaciones = $this->query->orderBy('autorizaciones.created_at','desc')
         ->paginate(20); 

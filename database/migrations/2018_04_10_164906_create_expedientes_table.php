@@ -52,6 +52,7 @@ class CreateExpedientesTable extends Migration
             //eliminados $table->string('expcierrecasocpto',2)->default('0');
             $table->string('url_exp_judicial', 100)->nullable();
             $table->string('expidnumberdocen', 12)->nullable();
+            $table->boolean("is_exp_genero")->default(0);
             $table->date('expfecha_res')->nullable();
             $table->string('expusercreated', 12)->nullable();
             $table->string('expuserupdated', 12)->nullable();

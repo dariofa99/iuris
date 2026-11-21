@@ -1038,6 +1038,37 @@ export class ExpedientesService {
         });
     }
 
+    async storeProcGenero(formData) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', BASE_URL + 'expedientes/store/proceso/genero', true);
+            xhr.setRequestHeader('X-CSRF-Token', $("#token").attr("content")); // Agrega la cabecera X-CSRF-Token
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentage = (event.loaded / event.total) * 100;
+                    this.showProgress(percentage);
+                }
+            });
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (error) {
+                        reject(new Error('Error al analizar la respuesta JSON'));
+                    }
+                } else {
+                    reject(new Error(`Upload failed with status: ${xhr.status}`));
+                }
+            };
+            xhr.onerror = () => {
+                reject(new Error('Upload failed'));
+            };
+            xhr.send(formData);
+        });
+    }
+
+
     async editExpProcJudicial(id) {
         const response = await fetch(BASE_URL + "expedientes/proceso/judicial/" + id + "/edit", {
             method: 'GET',

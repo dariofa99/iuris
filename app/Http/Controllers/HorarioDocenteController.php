@@ -189,7 +189,7 @@ class HorarioDocenteController extends Controller
             )->orderBy('users.created_at', 'desc')->get();
 
         return ($users);
-    }
+    } 
 
     public function searchEstud(Request $request)
     {
