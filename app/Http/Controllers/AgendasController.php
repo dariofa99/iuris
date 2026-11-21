@@ -147,6 +147,7 @@ class AgendasController extends Controller
        
 
         $maxEnd = $today->copy()->addDays(15);
+
        // $maxEnd = Carbon::parse("2026-11-18")->startOfDay();
 
         // El límite final será el menor entre los 15 días y el final del periodo
@@ -207,7 +208,7 @@ class AgendasController extends Controller
 
 
         // ============================================================
-        // HORARIOS DEL DOCENTE
+        // HORARIOS DEL DOCENTEs
         // ============================================================
         $horarios = TurnosDocente::where([
             "trnd_docidnumber" => $docenteId
