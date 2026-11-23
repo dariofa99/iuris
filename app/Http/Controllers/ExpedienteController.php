@@ -115,7 +115,7 @@ class ExpedienteController extends Controller
     return view('myforms.frm_expediente_list', compact('expedientes', 'count_colors'));
   }
 
-
+ 
   /**
    * Show the form for creating a new resource.
    *

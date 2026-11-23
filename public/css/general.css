@@ -1092,6 +1092,656 @@
   filter: brightness(0.95);
 }
 
+/* Filtros destacados de expedientes */
+.iuris-expediente-quick-filters {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.iuris-expediente-quick-filters > .iuris-expediente-my-cases,
+.iuris-expediente-quick-filters > .iuris-expediente-special-filter {
+  flex: 1 1 0;
+}
+
+.iuris-expediente-special-filters {
+  margin: 4px 0 14px;
+  overflow: hidden;
+  border: 1px solid #dce7e8;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(36, 55, 70, .06);
+}
+
+.iuris-expediente-special-filters__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5edef;
+  background: linear-gradient(135deg, #f7fafb 0%, #edf6f6 100%);
+}
+
+.iuris-expediente-special-filters__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 8px;
+  background: var(--iuris-teal);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 105, 117, .18);
+}
+
+.iuris-expediente-special-filters__title {
+  display: block;
+  color: var(--iuris-text);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.iuris-expediente-special-filters__header small {
+  color: var(--iuris-muted);
+  font-size: 11px;
+}
+
+.iuris-expediente-special-filters__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+
+.iuris-expediente-special-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  margin: 0;
+  padding: 9px 10px;
+  border: 1px solid #e1eaeb;
+  border-radius: 8px;
+  background: #fbfdfd;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.iuris-expediente-special-filter:hover {
+  border-color: #b8d1d3;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 105, 117, .07);
+}
+
+.iuris-expediente-special-filter__info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.iuris-expediente-special-filter__info strong,
+.iuris-expediente-special-filter__info small {
+  display: block;
+}
+
+.iuris-expediente-special-filter__info strong {
+  margin-bottom: 2px;
+  color: var(--iuris-text);
+  font-size: 12px;
+}
+
+.iuris-expediente-special-filter__info small {
+  color: var(--iuris-muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.iuris-expediente-special-filter__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 50%;
+  background: #e8f4f4;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-special-filter__icon--gender {
+  background: #f3edf8;
+  color: #6f4a86;
+}
+
+.iuris-expediente-filter-switch {
+  flex: 0 0 52px;
+}
+
+.iuris-expediente-filter-switch input:checked+.slider {
+  background: var(--iuris-teal);
+}
+
+@media (max-width: 767px) {
+  .iuris-expediente-special-filters__options {
+    grid-template-columns: 1fr;
+  }
+
+  .iuris-expediente-special-filter {
+    min-height: 58px;
+  }
+}
+
+/* Busqueda moderna de expedientes */
+.iuris-expediente-search-column {
+  padding-right: 8px;
+}
+
+.iuris-expediente-search-card {
+  margin-bottom: 14px;
+  overflow: visible;
+  border: 1px solid #dce7e8;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(36, 55, 70, .06);
+}
+
+.iuris-expediente-search-card__header {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5edef;
+  background: linear-gradient(135deg, #f7fafb 0%, #edf6f6 100%);
+}
+
+.iuris-expediente-search-card__title,
+.iuris-expediente-my-cases {
+  display: flex;
+  align-items: center;
+}
+
+.iuris-expediente-search-card__title {
+  gap: 10px;
+}
+
+.iuris-expediente-search-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--iuris-teal);
+  color: #fff;
+}
+
+.iuris-expediente-search-card__title strong,
+.iuris-expediente-search-card__title small {
+  display: block;
+}
+
+.iuris-expediente-search-card__title strong {
+  color: var(--iuris-text);
+  font-size: 14px;
+}
+
+.iuris-expediente-search-card__title small {
+  color: var(--iuris-muted);
+  font-size: 11px;
+}
+
+.iuris-expediente-search-card__body {
+  padding: 10px 12px 12px;
+}
+
+.iuris-expediente-my-cases {
+  width: 100%;
+  min-height: 56px;
+  gap: 9px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border: 1px solid #e1eaeb;
+  border-radius: 8px;
+  background: #fbfdfd;
+  cursor: pointer;
+}
+
+.iuris-expediente-my-cases__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 50%;
+  background: #e8f4f4;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-my-cases > span:nth-child(2) {
+  flex: 0 0 48px;
+}
+
+.iuris-expediente-my-cases strong,
+.iuris-expediente-my-cases small {
+  display: block;
+}
+
+.iuris-expediente-my-cases strong {
+  color: var(--iuris-text);
+  font-size: 12px;
+}
+
+.iuris-expediente-my-cases small {
+  color: var(--iuris-muted);
+  font-size: 11px;
+}
+
+.iuris-expediente-search-fields {
+  align-items: flex-end;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #edf2f2;
+}
+
+.iuris-expediente-search-field {
+  margin-bottom: 4px;
+}
+
+.iuris-expediente-search-field label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--iuris-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .35px;
+  text-transform: uppercase;
+}
+
+.iuris-expediente-search-field label i {
+  margin-right: 4px;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-control {
+  height: 38px;
+  border: 1px solid #d4e2e3;
+  border-radius: 6px;
+  color: var(--iuris-text);
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.iuris-expediente-control:focus {
+  border-color: var(--iuris-teal);
+  box-shadow: 0 0 0 3px rgba(0, 105, 117, .1);
+}
+
+.iuris-expediente-search-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.iuris-expediente-search-button,
+.iuris-expediente-advanced-button {
+  height: 38px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s ease;
+}
+
+.iuris-expediente-search-button {
+  border: 1px solid var(--iuris-teal);
+  background: var(--iuris-teal);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 105, 117, .16);
+}
+
+.iuris-expediente-search-button:hover,
+.iuris-expediente-search-button:focus {
+  background: var(--iuris-teal-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.iuris-expediente-advanced-button {
+  border: 1px solid #d4e2e3;
+  background: #fff;
+  color: var(--iuris-text);
+}
+
+.iuris-expediente-advanced-button:hover,
+.iuris-expediente-advanced-button:focus {
+  border-color: var(--iuris-teal);
+  color: var(--iuris-teal);
+  background: var(--iuris-teal-soft);
+}
+
+/* Tabla moderna de expedientes */
+.iuris-expediente-table-card {
+  overflow: visible;
+  border: 1px solid #dce7e8;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(36, 55, 70, .06);
+}
+
+.iuris-expediente-table-card [id^="myModal-"] {
+  z-index: 1065;
+}
+
+/* El desplegable Bootstrap Select debe quedar sobre la tabla */
+.iuris-expediente-search-card .bootstrap-select {
+  position: relative;
+  z-index: 1060;
+}
+
+.iuris-expediente-search-card .bootstrap-select.open {
+  z-index: 1061;
+}
+
+.iuris-expediente-search-card .bootstrap-select .dropdown-menu {
+  position: absolute;
+  z-index: 1062;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #d4e2e3;
+  border-radius: 7px;
+  box-shadow: 0 10px 24px rgba(36, 55, 70, .16);
+}
+
+.iuris-expediente-table-card__header {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #e5edef;
+  background: linear-gradient(135deg, #f7fafb 0%, #edf6f6 100%);
+}
+
+.iuris-expediente-table-card__header strong,
+.iuris-expediente-table-card__header small {
+  display: block;
+}
+
+.iuris-expediente-table-card__header strong {
+  color: var(--iuris-text);
+  font-size: 14px;
+}
+
+.iuris-expediente-table-card__header strong i {
+  margin-right: 6px;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-table-card__header small {
+  color: var(--iuris-muted);
+  font-size: 11px;
+}
+
+.iuris-expediente-table-wrap {
+  margin: 0;
+  border-radius: 0;
+}
+
+.iuris-expediente-table {
+  margin: 0;
+  color: var(--iuris-text);
+  font-size: 13px;
+}
+
+.iuris-expediente-table > thead > tr > th {
+  border: 0;
+  border-bottom: 1px solid #dbe7e8;
+  background: #006975;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .25px;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.iuris-expediente-table > tbody > tr > td {
+  border: 0;
+  border-bottom: 1px solid #edf2f2;
+  padding: 9px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.iuris-expediente-table > tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+.iuris-expediente-table > tbody > tr {
+  transition: background .16s ease, box-shadow .16s ease;
+}
+
+.iuris-expediente-table > tbody > tr:nth-child(even) {
+  background: #f8fbfb;
+}
+
+.iuris-expediente-table > tbody > tr:hover {
+  background: #edf7f7;
+  box-shadow: inset 3px 0 0 var(--iuris-teal);
+}
+
+.iuris-expediente-action {
+  width: 100%;
+  height: 30px;
+  margin-top: 4px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  transition: .18s ease;
+}
+
+.iuris-expediente-action--edit {
+  border: 1px solid var(--iuris-teal);
+  background: #fff;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-action--edit:hover,
+.iuris-expediente-action--edit:focus {
+  background: var(--iuris-teal);
+  color: #fff;
+}
+
+.iuris-expediente-action--details {
+  border: 1px solid #b8cdd0;
+  background: #fff;
+  color: var(--iuris-text);
+}
+
+.iuris-expediente-action--details:hover,
+.iuris-expediente-action--details:focus {
+  border-color: #14828b;
+  background: #edf7f7;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-table-card__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 12px;
+  border-top: 1px solid #edf2f2;
+  background: #fbfdfd;
+}
+
+.iuris-expediente-table-card__footer .pagination {
+  margin: 0;
+}
+
+.iuris-expediente-table-card__footer .pagination > li > a,
+.iuris-expediente-table-card__footer .pagination > li > span {
+  border-color: #dce7e8;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-table-card__footer .pagination > .active > span {
+  border-color: var(--iuris-teal);
+  background: var(--iuris-teal);
+  color: #fff;
+}
+
+@media (max-width: 991px) {
+  .iuris-expediente-search-column {
+    padding-right: 15px;
+  }
+
+  .iuris-expediente-search-actions {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .iuris-expediente-search-fields {
+    row-gap: 8px;
+  }
+
+  .iuris-expediente-search-actions {
+    flex-wrap: wrap;
+  }
+
+  .iuris-expediente-search-button,
+  .iuris-expediente-advanced-button {
+    flex: 1 1 140px;
+  }
+
+  .iuris-expediente-table-card__footer {
+    justify-content: center;
+  }
+}
+
+/* Vista compacta y usable de filtros de expedientes */
+.iuris-expediente-search-card__body {
+  padding: 8px 10px;
+}
+
+.iuris-expediente-quick-filters {
+  margin-bottom: 8px;
+}
+
+.iuris-expediente-my-cases,
+.iuris-expediente-special-filter--compact {
+  min-height: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 6px 9px;
+}
+
+.iuris-expediente-my-cases {
+  gap: 7px;
+}
+
+.iuris-expediente-my-cases strong {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.iuris-expediente-my-cases strong i,
+.iuris-expediente-special-filter--compact .iuris-expediente-special-filter__info i {
+  margin-right: 5px;
+  color: var(--iuris-teal);
+}
+
+.iuris-expediente-special-filter--compact {
+  min-width: 0;
+}
+
+.iuris-expediente-special-filter--compact .iuris-expediente-special-filter__info {
+  gap: 3px;
+}
+
+.iuris-expediente-special-filter--compact .iuris-expediente-special-filter__info strong {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.iuris-expediente-filter-switch {
+  display: inline-block;
+  flex: 0 0 48px;
+  min-width: 48px;
+  max-width: 48px;
+  height: 26px;
+  width: 48px;
+}
+
+.iuris-expediente-my-cases .iuris-expediente-filter-switch {
+  margin-left: auto;
+}
+
+.iuris-expediente-filter-switch .slider::before {
+  width: 20px;
+  height: 20px;
+}
+
+.iuris-expediente-filter-switch input:checked+.slider::before {
+  transform: translateX(22px);
+}
+
+.iuris-expediente-search-fields {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid #edf2f2;
+}
+
+.iuris-expediente-search-field {
+  margin-bottom: 0;
+}
+
+.iuris-expediente-search-field label {
+  margin-bottom: 3px;
+  font-size: 9px;
+}
+
+.iuris-expediente-control,
+.iuris-expediente-search-button,
+.iuris-expediente-advanced-button {
+  height: 34px;
+}
+
+.iuris-expediente-search-actions {
+  margin-bottom: 0;
+}
+
+@media (max-width: 991px) {
+  .iuris-expediente-quick-filters {
+    flex-wrap: wrap;
+  }
+
+  .iuris-expediente-quick-filters > .iuris-expediente-my-cases,
+  .iuris-expediente-quick-filters > .iuris-expediente-special-filter {
+    flex: 1 1 180px;
+  }
+}
+
+@media (max-width: 767px) {
+  .iuris-expediente-quick-filters {
+    flex-direction: column;
+  }
+
+  .iuris-expediente-my-cases,
+  .iuris-expediente-special-filter--compact {
+    width: 100%;
+  }
+}
+
 .invalid-feedback {
   display: block;
   font-size: .85rem;

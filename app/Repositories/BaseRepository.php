@@ -28,11 +28,11 @@ class BaseRepository
     protected function applyValidateSede()
     {
         if ($this->model != null) $this->query = $this->model;
-        if ($this->validateSede and method_exists($this->model, 'sedes')) {
+       /*  if ($this->validateSede and method_exists($this->model, 'sedes')) {
             $this->query = $this->query->whereHas('sedes', function ($query1) {
                 $query1->where(['sede_id' => session('sede')->id_sede]);
             });
-        }
+        } */
     }
     public function findWithFilter(array $filter): ?Model
     {

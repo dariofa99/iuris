@@ -289,8 +289,8 @@ class CalendarioDocenteService
              * =============================================
              * EVENTO
              * ============================================= */
-   
-  
+
+
                 $evento = [
 
                     'id' =>
@@ -431,11 +431,11 @@ class CalendarioDocenteService
                     && $asistencia->reposiciones
                     && $asistencia->reposiciones->isNotEmpty()
                 ) {
-                  
+
                     $reposicion =
                         $asistencia->reposiciones->first();
 
-                   
+
                     $evento['has_reposicion'] =
                         true;
 
@@ -474,7 +474,6 @@ class CalendarioDocenteService
 
 
                 $eventos[] = $evento;
-
             }
         }
 
@@ -629,17 +628,11 @@ class CalendarioDocenteService
                      * EVENTO DE REPOSICIÓN
                      * =====================================
                      */
-                  
-                        //Log::info(
-                            $reposicion
-                        );
+
+
                         $eventos[] = [
-
-                            
-
                             'id' =>
                             $idEvento,
-
                             'title' =>
                             $nombre,
 

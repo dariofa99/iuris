@@ -5,7 +5,7 @@
     <!-- aqui van los estilos de cada vista -->
     <link rel="stylesheet" href="{{ asset('/plugins/bootstrap-select/bootstrap.css') }}">
 @endpush
- 
+
 @section('navbar')
     <!-- aqui va el menu de cada vista -->
     @include('content.navbar')
@@ -40,145 +40,168 @@
 
     <div class="cd">
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12 iuris-expediente-search-column">
                 <form action="{{ route('expedientes.index') }}" method="GET" id="myformExpFilter">
-                    <div class="row">
-                        <div class="col-md-12">
-                            @if (currentUser()->active_asignacion || currentUser()->hasRole('docente') || currentUser()->hasRole('docente_prueba'))
-                                <input type="hidden" name="search_onlyMy_exp" value="off">
-                                <input type="checkbox" aria-describedby="desChkVerMisCasos"
-                                    @if (
-                                        !Request::has('search_onlyMy_exp') ||
-                                            (Request::has('search_onlyMy_exp') and Request::input('search_onlyMy_exp') != 'off')) checked @endif name="search_onlyMy_exp"
-                                    id="search_onlyMy_exp">
-                                <label for="search_onlyMy_exp">Solo listar mis casos asignados</label>
-                                {{--  <span id="desChkVerMisCasos" style="font-size: 0px !important;height: 0px;width:0px;position:absolute">
-                                        Marcar para ver solo casos asignados
-                                    </span> --}}
-                            @endif
-                        </div>
-                        <div class="col-md-12">
-                            <input type="checkbox" name="search_onlyProJur" value="search_onlyProJur" id="search_onlyProJur"
-                                @if (Request::has('search_onlyProJur')) checked @endif>
-                            <label for="search_onlyProJur">
-                                Solo listar asuntos marcados como jurídicos
-                            </label>
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="tipo_busqueda">Busqueda de expedientes</span>
-                                <select name="tipo_busqueda" id='tipo_busqueda' class="form-control form-control-sm"
-                                    placeholder="Seleccione..." required="required">
-                                    <option value="">Seleccione...</option>
-                                    @if (currentUser()->hasRole('diradmin') or
-                                            currentUser()->hasRole('dirgral') or
-                                            currentUser()->hasRole('amatai') or
-                                            currentUser()->hasRole('coordprac'))
+                    <div class="iuris-expediente-search-card">
+                        <div class="iuris-expediente-search-card__body">
+                            <div class="iuris-expediente-quick-filters">
+                                @if (currentUser()->active_asignacion || currentUser()->hasRole('docente') || currentUser()->hasRole('docente_prueba'))
+                                    <input type="hidden" name="search_onlyMy_exp" value="off">
+                                    <label class="iuris-expediente-my-cases" for="search_onlyMy_exp">
+                                        <span>
+                                            <strong><i class="fa fa-user"></i> Mis casos asignados</strong>
+                                        </span>
+                                        <span class="switch iuris-expediente-filter-switch">
+                                            <input type="checkbox" aria-describedby="desChkVerMisCasos"
+                                                @if (
+                                                    !Request::has('search_onlyMy_exp') ||
+                                                        (Request::has('search_onlyMy_exp') and Request::input('search_onlyMy_exp') != 'off')) checked @endif name="search_onlyMy_exp"
+                                                id="search_onlyMy_exp">
+                                            <span class="slider"></span>
+                                        </span>
+                                    </label>
+                                @endif
+                                <label class="iuris-expediente-special-filter iuris-expediente-special-filter--compact"
+                                    for="search_onlyProJur">
+                                    <span class="iuris-expediente-special-filter__info">
+                                        <i class="fa fa-gavel"></i>
+                                        <strong>Ver procesos jurídicos</strong>
+                                    </span>
+                                    <span class="switch iuris-expediente-filter-switch">
+                                        <input type="checkbox" name="search_onlyProJur" value="search_onlyProJur"
+                                            id="search_onlyProJur" @if (Request::has('search_onlyProJur')) checked @endif>
+                                        <span class="slider"></span>
+                                    </span>
+                                </label>
+                                <label class="iuris-expediente-special-filter iuris-expediente-special-filter--compact"
+                                    for="search_onlyProGenero">
+                                    <span class="iuris-expediente-special-filter__info">
+                                        <i class="fa fa-venus-mars"></i>
+                                        <strong>Ver procesos con asunto de género</strong>
+                                    </span>
+                                    <span class="switch iuris-expediente-filter-switch">
+                                        <input type="checkbox" name="search_onlyProGenero" value="search_onlyProGenero"
+                                            id="search_onlyProGenero" @if (Request::has('search_onlyProGenero')) checked @endif>
+                                        <span class="slider"></span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="row iuris-expediente-search-fields">
+                                <div class="col-md-3 iuris-expediente-search-field">
+                                    <label for="tipo_busqueda"><i class="fa fa-sliders"></i> Criterio de búsqueda</label>
+                                    <select name="tipo_busqueda" id='tipo_busqueda'
+                                        class="form-control iuris-expediente-control" placeholder="Seleccione..."
+                                        required="required">
+                                        <option value="">Seleccione...</option>
+                                        @if (currentUser()->hasRole('diradmin') or
+                                                currentUser()->hasRole('dirgral') or
+                                                currentUser()->hasRole('amatai') or
+                                                currentUser()->hasRole('coordprac'))
+                                            <option
+                                                {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'idnumber_doc' ? 'selected' : '') }}
+                                                value="idnumber_doc">
+                                                Casos por docente
+                                            </option>
+                                        @endif
                                         <option
-                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'idnumber_doc' ? 'selected' : '') }}
-                                            value="idnumber_doc">
-                                            Casos por docente
-                                        </option>
-                                    @endif
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'codido_exp' ? 'selected' : '') }}
-                                        value="codido_exp">
-                                        Número de Expediente
-                                    </option>
-
-                                    @if (!currentUser()->hasRole('estudiante'))
-                                        <option value="estudiante_num"
-                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante_num' ? 'selected' : '') }}>
-                                            Documento de identificación (estudiante)
-                                        </option>
-                                        <option value="estudiante"
-                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante' ? 'selected' : '') }}>
-                                            Nombre o apellidos (estudiante)
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'codido_exp' ? 'selected' : '') }}
+                                            value="codido_exp">
+                                            Número de Expediente
                                         </option>
 
-                                        <option value="solicitante_num"
-                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected' : '') }}>
-                                            Documento de identificación (solicitante)
+                                        @if (!currentUser()->hasRole('estudiante'))
+                                            <option value="estudiante_num"
+                                                {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante_num' ? 'selected' : '') }}>
+                                                Documento de identificación (estudiante)
+                                            </option>
+                                            <option value="estudiante"
+                                                {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estudiante' ? 'selected' : '') }}>
+                                                Nombre o apellidos (estudiante)
+                                            </option>
+
+                                            <option value="solicitante_num"
+                                                {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante_num' ? 'selected' : '') }}>
+                                                Documento de identificación (solicitante)
+                                            </option>
+                                        @endif
+                                        <option
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante' ? 'selected' : '') }}
+                                            value="solicitante">
+                                            Nombre o apellidos (solicitante)</option>
+                                        <option
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estado' ? 'selected' : '') }}
+                                            value="estado">
+                                            Estado
                                         </option>
-                                    @endif
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'solicitante' ? 'selected' : '') }}
-                                        value="solicitante">
-                                        Nombre o apellidos (solicitante)</option>
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'estado' ? 'selected' : '') }}
-                                        value="estado">
-                                        Estado
-                                    </option>
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'tipo_consulta' ? 'selected' : '') }}
-                                        value="tipo_consulta">Tipo de Consulta</option>
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'rama_derecho' ? 'selected' : '') }}
-                                        value="rama_derecho">Rama del Derecho</option>
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'fecha_creacion' ? 'selected' : '') }}
-                                        value="fecha_creacion">
-                                        Fecha de Creación
-                                    </option>
-                                    {{--   <option
+                                        <option
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'tipo_consulta' ? 'selected' : '') }}
+                                            value="tipo_consulta">Tipo de Consulta</option>
+                                        <option
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'rama_derecho' ? 'selected' : '') }}
+                                            value="rama_derecho">Rama del Derecho</option>
+                                        <option
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'fecha_creacion' ? 'selected' : '') }}
+                                            value="fecha_creacion">
+                                            Fecha de Creación
+                                        </option>
+                                        {{--   <option
                                     {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'fecha_rango' ? 'selected' : '') }}
                                     value="fecha_rango">
                                     Rango Fechas
                                 </option> --}}
-                                    <option
-                                        {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'all' ? 'selected' : '') }}
-                                        value="all">
-                                        Todo (limpiar)
-                                    </option>
-                                </select>
-                        </div>
-                        <div class="col-md-5">
-                            <span>Ingrese un valor</span>
-                            {!! Form::select('data', [], null, [
-                                'class' => 'form-control form-control-sm selectpicker select_data_users',
-                                'data-live-search' => 'true',
-                                'required' => 'required',
-                                'id' => 'select_data_users',
-                                'data-width' => '100%',
-                                'title' => 'Esperando tipo de busqueda',
-                                'data-live-search-placeholder' => 'Escriba un valor...',
-                            ]) !!}
+                                        <option
+                                            {{ Request::has('tipo_busqueda') and (Request::get('tipo_busqueda') == 'all' ? 'selected' : '') }}
+                                            value="all">
+                                            Todo (limpiar)
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5 iuris-expediente-search-field">
+                                    <label for="select_data_users"><i class="fa fa-pencil"></i> Ingrese un valor</label>
+                                    {!! Form::select('data', [], null, [
+                                        'class' => 'form-control selectpicker select_data_users iuris-expediente-control',
+                                        'data-live-search' => 'true',
+                                        'required' => 'required',
+                                        'id' => 'select_data_users',
+                                        'data-width' => '100%',
+                                        'title' => 'Esperando tipo de busqueda',
+                                        'data-live-search-placeholder' => 'Escriba un valor...',
+                                    ]) !!}
 
-                            <input type="date" required id="data_date" name="data"
-                                class="form-control form-control-sm" style="display: none">
-
-
-                            <table width="100%" style="display: none;width:100% !important">
-                                <tr>
-                                    <td>
-                                        <span>Fecha inicio</span>
-                                        <input type="date" name="dataIni" class="form-control form-control-sm">
-                                    </td>
-                                    <td>
-                                        <span>Fecha fin</span>
-                                        <input type="date" name="dataFin" class="form-control form-control-sm">
-                                    </td>
-                                </tr>
-                            </table>
+                                    <input type="date" required id="data_date" name="data"
+                                        class="form-control iuris-expediente-control" style="display: none">
 
 
+                                    <table width="100%" style="display: none;width:100% !important">
+                                        <tr>
+                                            <td>
+                                                <span>Fecha inicio</span>
+                                                <input type="date" name="dataIni" class="form-control form-control-sm">
+                                            </td>
+                                            <td>
+                                                <span>Fecha fin</span>
+                                                <input type="date" name="dataFin" class="form-control form-control-sm">
+                                            </td>
+                                        </tr>
+                                    </table>
 
-                        </div>
-                        <div class="col-md-4">
-                            <br>
-                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-search"> </i> Buscar
-                            </button>
-                            @if (currentUser()->hasRole('diradmin') ||
-                                    currentUser()->hasRole('dirgral') ||
-                                    currentUser()->hasRole('coordprac') ||
-                                    currentUser()->hasRole('amatai'))
-                                <button type="button" id="btn_exp_bus_avz" class="btn btn-sm btn-default"><i
-                                        class="fa fa-cogs">
-                                    </i> Avanzada </button>
-                            @endif
+
+
+                                </div>
+                                <div class="col-md-4 iuris-expediente-search-actions">
+                                    <button type="submit" class="btn iuris-expediente-search-button"><i
+                                            class="fa fa-search"></i> Buscar
+                                    </button>
+                                    @if (currentUser()->hasRole('diradmin') ||
+                                            currentUser()->hasRole('dirgral') ||
+                                            currentUser()->hasRole('coordprac') ||
+                                            currentUser()->hasRole('amatai'))
+                                        <button type="button" id="btn_exp_bus_avz"
+                                            class="btn iuris-expediente-advanced-button"><i class="fa fa-cogs">
+                                            </i> Avanzada </button>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
 

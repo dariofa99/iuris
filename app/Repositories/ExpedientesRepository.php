@@ -49,6 +49,11 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
     }
     public function index(Request $request)
     {
+        $onlyMyExpedientes = $request->has('search_onlyMy_exp')
+            && $request->input('search_onlyMy_exp') != 'off';
+        $onlyJuridicalExpedientes = (bool) $request->get('search_onlyProJur');
+        $onlyGenderExpedientes = (bool) $request->get('search_onlyProGenero');
+
         //dd("");
         //$this->query = $this->model;
         $order = "CASE
@@ -82,12 +87,10 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $this->applyValidateSede();
         return $this->query //->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
             // ->where('expedientes.expidnumberest', '<>', 3030)
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request, $onlyMyExpedientes) {
                 if (
-                    !$request->has('data') and
-                    !$request->has('search_onlyMy_exp')
-                    || ($request->has('search_onlyMy_exp')
-                        and $request->input('search_onlyMy_exp') != 'off')
+                    !$request->has('data')
+                    && !$onlyMyExpedientes
                 ) {
                     $query->where([
                         ["expestado_id", "<>", 2],
@@ -98,12 +101,15 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
             })
             ->where(function ($query) use ($request) {
                 if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-                    and (!$request->has('search_onlyMy_exp')
-                        || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
+                    && $request->has('search_onlyMy_exp')
+                    && $request->input('search_onlyMy_exp') != 'off'
                 ) {
-                    $query->whereHas('asignaciones.asig_docente', function ($q) {
-                        $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
-                            ->where('asignacion_docente_caso.activo', 1);
+                    $query->whereHas('asignaciones', function ($q) {
+                        $q->where('asignacion_caso.activo', 1)
+                            ->whereHas('asig_docente', function ($docente) {
+                                $docente->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
+                                    ->where('asignacion_docente_caso.activo', 1);
+                            });
                     });
                 } else if (currentUser()->hasRole('estudiante')) {
                     $query->whereHas('asignaciones', function ($q) {
@@ -113,12 +119,15 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                     });
                 }
             })
-            ->where(function ($query) use ($request) {
-                if ($request->get('search_onlyProJur')) {
+            ->where(function ($query) use ($onlyJuridicalExpedientes, $onlyGenderExpedientes) {
+                if ($onlyJuridicalExpedientes) {
                     $query->whereHas('asignaciones', function ($q) {
                         $q->where('asignacion_caso.procesojud_id', '<>', 1)
                             ->where('asignacion_caso.activo', '=', 1);
                     });
+                }
+                if ($onlyGenderExpedientes) {
+                    $query->where('expedientes.is_exp_genero', 1);
                 }
             })
             ->Criterio($request)
@@ -129,16 +138,24 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
 
     public function getColorsAsesorias(Request $request)
     {
+        $onlyMyExpedientes = $request->has('search_onlyMy_exp')
+            && $request->input('search_onlyMy_exp') != 'off';
+        $onlyJuridicalExpedientes = (bool) $request->get('search_onlyProJur');
+        $onlyGenderExpedientes = (bool) $request->get('search_onlyProGenero');
+
         $this->query = $this->model;
         $this->applyValidateSede();
         return $this->query->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request, $onlyMyExpedientes) {
                 if ((currentUser()->hasRole('docente') || currentUser()->active_asignacion)
-                    and (!$request->has('search_onlyMy_exp') || ($request->has('search_onlyMy_exp') and $request->input('search_onlyMy_exp') != 'off'))
+                    && $onlyMyExpedientes
                 ) {
-                    $query->whereHas('asignaciones.asig_docente', function ($q) {
-                        $q->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
-                            ->where('asignacion_docente_caso.activo', 1);
+                    $query->whereHas('asignaciones', function ($q) {
+                        $q->where('asignacion_caso.activo', 1)
+                            ->whereHas('asig_docente', function ($docente) {
+                                $docente->where('asignacion_docente_caso.docidnumber', Auth::user()->idnumber)
+                                    ->where('asignacion_docente_caso.activo', 1);
+                            });
                     });
                 } else if (currentUser()->hasRole('estudiante')) {
                     dd("");
@@ -147,9 +164,12 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
                         ->where('asignacion_caso.asigest_id', '=', currentUser()->idnumber);
                 }
             })
-            ->where(function ($query) use ($request) {
-                if ($request->get('search_onlyProJur')) {
+            ->where(function ($query) use ($onlyJuridicalExpedientes, $onlyGenderExpedientes) {
+                if ($onlyJuridicalExpedientes) {
                     $query->where('asignacion_caso.procesojud_id', '<>', 1);
+                }
+                if ($onlyGenderExpedientes) {
+                    $query->where('expedientes.is_exp_genero', 1);
                 }
             })
             ->Criterio($request)
@@ -210,7 +230,6 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         $request['expuserupdated'] = currentUser()->idnumber;
         $expediente->fill($request->all());
         $expediente->save();
-        // Event::dispatch('expediente.updated', $expediente);
         return $expediente;
     }
 

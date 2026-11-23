@@ -1,5 +1,12 @@
- <div class="table-responsive no-padding">
-     <table style="font-size: 15px !important" id="tbl_expedientes" class="table table-bordered table-striped dataTable"
+ <div class="iuris-expediente-table-card">
+ <div class="iuris-expediente-table-card__header">
+     <div>
+         <strong><i class="fa fa-folder-open"></i> Listado de expedientes</strong>
+         <small>{{ $expedientes->total() }} resultado(s)</small>
+     </div>
+ </div>
+ <div class="table-responsive iuris-expediente-table-wrap">
+     <table id="tbl_expedientes" class="table iuris-expediente-table dataTable"
          role="grid">
          <thead>
              <tr>
@@ -164,7 +171,7 @@
                                  'expedientes.edit',
                                  $title = 'Editar',
                                  $parameters = $expediente->expid,
-                                 $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
+                                 $attributes = ['class' => 'btn iuris-expediente-action iuris-expediente-action--edit btn-edit-le'],
                              ) !!}
                          @elseif (currentUser()->hasRole('estudiante') || currentUser()->hasRole('docente') || currentUser()->hasRole('coordprac') and
                                  $expediente->expestado_id != '1' and
@@ -174,12 +181,12 @@
                                  'expedientes.show',
                                  $title = 'Ver',
                                  $parameters = $expediente->expid,
-                                 $attributes = ['class' => 'btn btn-primary btn-block mt-1 btn-sm btn-edit-le'],
+                                 $attributes = ['class' => 'btn iuris-expediente-action iuris-expediente-action--edit btn-edit-le'],
                              ) !!}
                          
                          @endif
                          <!-- Trigger the modal with a button -->
-                         <button type="button" class="btn btn-block mt-1 btn-success btn-sm" data-toggle="modal"
+                         <button type="button" class="btn iuris-expediente-action iuris-expediente-action--details" data-toggle="modal"
                              data-target="#myModal-{{ $expediente->id }}">Detalles</button>
                          <!-- Modal -->
                          @include('myforms.frm_modal_detalles_expedientes', [
@@ -193,7 +200,10 @@
      </table>
  </div>
 
- {{ $expedientes->appends(request()->query())->links() }} 
+ <div class="iuris-expediente-table-card__footer">
+     {{ $expedientes->appends(request()->query())->links() }}
+ </div>
+ </div>
 
  <script>
      (function() {

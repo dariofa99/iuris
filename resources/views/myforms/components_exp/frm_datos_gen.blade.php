@@ -228,7 +228,6 @@
                             ($docenteAsignado->idnumber == currentUser()->idnumber ||
                                 currentUser()->can('act_expediente_genero'));
 
-                                
                     @endphp
 
                     @if (

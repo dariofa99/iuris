@@ -198,6 +198,9 @@ $(document).ready(function () {
         if ($("#search_onlyProJur").is(":checked")) {
             request['search_onlyProJur'] = 'search_onlyProJur';
         }
+        if ($("#search_onlyProGenero").is(":checked")) {
+            request['search_onlyProGenero'] = 'search_onlyProGenero';
+        }
         $("#wait").show();
         var page = "expedientes";
         let res = await index_page(page, request);
@@ -213,6 +216,9 @@ $(document).ready(function () {
         if ($("#search_onlyProJur").is(":checked")) {
             request['search_onlyProJur'] = 'search_onlyProJur';
         }
+        if ($("#search_onlyProGenero").is(":checked")) {
+            request['search_onlyProGenero'] = 'search_onlyProGenero';
+        }
         var opselected = $("#myformExpFilter select[name='tipo_busqueda']").val();
         var dataselected = $("#myformExpFilter select[name='data']").val();;
         var fechaselected = $("#myformExpFilter input[id='data_date']").val();;
@@ -225,6 +231,9 @@ $(document).ready(function () {
         $("#wait").hide();
     }
     $("#search_onlyProJur").on("change", async function () {
+        buscarExp()
+    });
+    $("#search_onlyProGenero").on("change", async function () {
         buscarExp()
     });
 
@@ -319,9 +328,10 @@ $(document).ready(function () {
         $("#mymodalNuevaCitacion").modal("show");
     });
 
-    $('#table_list_model').on('click', "a.btn-edit-le", function () {
+    $('#table_list_model_exp').on('click', "a.btn-edit-le", function () {
         var url = window.location;
         // Check browser support
+       // alert(url);
         if (typeof (Storage) !== "undefined") {
             // Store
             localStorage.setItem("dirreg", url);
@@ -341,6 +351,9 @@ $(document).ready(function () {
             }
             if ($("#search_onlyProJur").is(":checked")) {
                 data['search_onlyProJur'] = 'search_onlyProJur';
+            }
+            if ($("#search_onlyProGenero").is(":checked")) {
+                data['search_onlyProGenero'] = 'search_onlyProGenero';
             }
             var page = "expedientes";
             $("#wait").show();
@@ -658,28 +671,35 @@ $(document).ready(function () {
 
        $("#btn_act_proc_genero").on("click", function (e) {
         e.preventDefault();
+        var isGeneroActivo = $(this).find('span').text().toLowerCase().indexOf("desactivar") !== -1;
         Swal.fire({
-            title: '¿Esta seguro de marcar el expediente como proceso con enfoque de género?',
+            title: isGeneroActivo
+                ? '¿Esta seguro de desactivar el enfoque de género?'
+                : '¿Esta seguro de marcar el expediente como proceso con enfoque de género?',
             icon: 'info',
             text: "",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             /* cancelButtonColor: '#d33', */
-            confirmButtonText: 'Si, marcar',
+            confirmButtonText: isGeneroActivo ? 'Si, desactivar' : 'Si, marcar',
             cancelButtonText: 'No, cancelar'
         }).then(async (result) => {
             if (result.value) {
                 $("#wait").show();
             
                 let request = {                    
-                    'is_exp_genero': 1
+                    'is_exp_genero': isGeneroActivo ? 0 : 1
                 }
                 //body.append('comentario', "Solicitud de docente");
                 let response = await expedientesService.update(request,$("#expediente_id").val());
                 toastr.success("Se actalizó con éxito", "", {
                     timeOut: "4000",
                 });
-                $("#btn_act_proc_genero").find('span').text("Desactivar proceso como enfoque de género");
+                $("#btn_act_proc_genero").find('span').text(
+                    isGeneroActivo
+                        ? "Activar proceso como enfoque de género"
+                        : "Desactivar proceso como enfoque de género"
+                );
                 $("#wait").hide();
                 //window.location.reload(true);
             }
