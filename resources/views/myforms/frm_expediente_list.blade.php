@@ -49,7 +49,7 @@
                                     <input type="hidden" name="search_onlyMy_exp" value="off">
                                     <label class="iuris-expediente-my-cases" for="search_onlyMy_exp">
                                         <span>
-                                            <strong><i class="fa fa-user"></i> Mis casos asignados</strong>
+                                            <strong><i class="fa fa-user"></i> <span class="iuris-expediente-filter-label--desktop">Mis casos asignados</span><span class="iuris-expediente-filter-label--mobile">Mis casos</span></strong>
                                         </span>
                                         <span class="switch iuris-expediente-filter-switch">
                                             <input type="checkbox" aria-describedby="desChkVerMisCasos"
@@ -65,7 +65,7 @@
                                     for="search_onlyProJur">
                                     <span class="iuris-expediente-special-filter__info">
                                         <i class="fa fa-gavel"></i>
-                                        <strong>Ver procesos jurídicos</strong>
+                                        <strong><span class="iuris-expediente-filter-label--desktop">Ver procesos jurídicos</span><span class="iuris-expediente-filter-label--mobile">Jurídicos</span></strong>
                                     </span>
                                     <span class="switch iuris-expediente-filter-switch">
                                         <input type="checkbox" name="search_onlyProJur" value="search_onlyProJur"
@@ -77,7 +77,7 @@
                                     for="search_onlyProGenero">
                                     <span class="iuris-expediente-special-filter__info">
                                         <i class="fa fa-venus-mars"></i>
-                                        <strong>Ver procesos con asunto de género</strong>
+                                        <strong><span class="iuris-expediente-filter-label--desktop">Ver procesos con asunto de género</span><span class="iuris-expediente-filter-label--mobile">Género</span></strong>
                                     </span>
                                     <span class="switch iuris-expediente-filter-switch">
                                         <input type="checkbox" name="search_onlyProGenero" value="search_onlyProGenero"
