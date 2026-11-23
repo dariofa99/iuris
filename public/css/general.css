@@ -1,6 +1,17 @@
 /* =====================================
            ESTILOS MODERNOS PARA FILTROS
            ===================================== */
+:root {
+  --iuris-base-font-size: 14px;
+  --iuris-teal: #006975;
+  --iuris-teal-dark: #005661;
+  --iuris-teal-gradient: linear-gradient(120deg, #006975 0%, #14828b 58%, #2a9a91 100%);
+  --iuris-teal-soft: #e8f4f4;
+  --iuris-page-surface: #f3f6fa;
+  --iuris-text: #243746;
+  --iuris-muted: #637381;
+}
+
 
 .filter-section {
   background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
@@ -1499,7 +1510,7 @@
 .iuris-expediente-table {
   margin: 0;
   color: var(--iuris-text);
-  font-size: 18px;
+  font-size: var(--iuris-base-font-size);
 }
 
 .iuris-expediente-table > thead > tr > th {
@@ -1507,7 +1518,7 @@
   border-bottom: 1px solid #dbe7e8;
   background: #006975;
   color: #fff;
-  font-size: 16px;
+  font-size: var(--iuris-base-font-size);
   font-weight: 800;
   letter-spacing: .25px;
   text-align: center;
@@ -1520,7 +1531,7 @@
   border: 0;
   border-bottom: 1px solid #edf2f2;
   padding: 9px 8px;
-  font-size: 18px;
+  font-size: var(--iuris-base-font-size);
   text-align: center;
   vertical-align: middle;
 }
@@ -1547,7 +1558,7 @@
   min-height: 40px;
   margin-top: 4px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: var(--iuris-base-font-size);
   font-weight: 700;
   line-height: 1.2;
   transition: .18s ease;
@@ -1811,16 +1822,16 @@
   }
 
   .iuris-expediente-table {
-    font-size: 18px;
+    font-size: var(--iuris-base-font-size);
   }
 
   .iuris-expediente-table > tbody > tr > td {
-    font-size: 18px;
+    font-size: var(--iuris-base-font-size);
   }
 
   .iuris-expediente-action {
     min-height: 40px;
-    font-size: 16px;
+    font-size: var(--iuris-base-font-size);
   }
 }
 
@@ -9331,15 +9342,6 @@ RESPONSIVE
 
 }
 
-:root {
-  --iuris-teal: #006975;
-  --iuris-teal-dark: #005661;
-  --iuris-teal-gradient: linear-gradient(120deg, #006975 0%, #14828b 58%, #2a9a91 100%);
-  --iuris-teal-soft: #e8f4f4;
-  --iuris-page-surface: #f3f6fa;
-  --iuris-text: #243746;
-  --iuris-muted: #637381;
-}
 
 .iuris-gradient-banner {
   position: relative;
@@ -10453,7 +10455,7 @@ RESPONSIVE
 /* Tipografia base de la aplicacion */
 body {
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: var(--iuris-base-font-size);
 }
 
 input,
@@ -10465,7 +10467,7 @@ textarea,
 .select2-results__option,
 .bootstrap-select > .dropdown-toggle {
   font-family: inherit;
-  font-size: 16px;
+  font-size: var(--iuris-base-font-size);
 }
 
 .solicitar-conciliacion-footer .solicitar-conciliacion-cancel {
@@ -10555,4 +10557,44 @@ textarea,
   .solicitar-conciliacion-footer-actions {
     margin-left: 0;
   }
+}
+
+/* Tipografia uniforme para busqueda y tabla de expedientes */
+.iuris-expediente-search-card .iuris-expediente-my-cases strong,
+.iuris-expediente-search-card .iuris-expediente-special-filter__info strong,
+.iuris-expediente-search-card .iuris-expediente-search-field label,
+.iuris-expediente-search-card .iuris-expediente-control,
+.iuris-expediente-search-card .bootstrap-select > .dropdown-toggle,
+.iuris-expediente-search-card .bootstrap-select .dropdown-menu li a,
+.iuris-expediente-search-card .bootstrap-select .bs-searchbox .form-control,
+.iuris-expediente-search-button,
+.iuris-expediente-advanced-button,
+.iuris-expediente-table-card__header strong,
+.iuris-expediente-table-card__header small,
+.iuris-expediente-table-card__footer .pagination > li > a,
+.iuris-expediente-table-card__footer .pagination > li > span {
+  font-size: var(--iuris-base-font-size);
+}
+
+.iuris-expediente-table > thead > tr > th,
+.iuris-expediente-table > tbody > tr > td,
+.iuris-expediente-table > tbody > tr > td .badge,
+.iuris-expediente-table > tbody > tr > td .badge-colors,
+.iuris-expediente-action {
+  font-size: var(--iuris-base-font-size);
+}
+
+.iuris-expediente-table .iuris-expediente-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 82px;
+  max-width: 100%;
+  min-height: 36px;
+  margin: 3px 2px;
+  padding: 5px 10px;
+  font-size: var(--iuris-base-font-size) !important;
+  line-height: 1.2;
+  white-space: nowrap;
 }
