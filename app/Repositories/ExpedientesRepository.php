@@ -85,6 +85,9 @@ class ExpedientesRepository extends BaseRepository implements ExpedientesService
         }
 
         $this->applyValidateSede();
+        if((!$request->has('search_onlyMy_exp') and currentUser()->hasRole('docente')) || currentUser()->active_asignacion){
+            $request->merge(['search_onlyMy_exp' => 'on']);
+        }
         return $this->query //->join('asignacion_caso', 'asignacion_caso.asigexp_id', '=', 'expedientes.expid')
             // ->where('expedientes.expidnumberest', '<>', 3030)
             ->where(function ($query) use ($request, $onlyMyExpedientes) {

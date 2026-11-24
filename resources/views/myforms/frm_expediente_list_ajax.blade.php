@@ -75,7 +75,7 @@
 
                      </td>
                      <td>
-                         
+                      
                          @if ($expediente->expestado_id == '1')
                              <span class="pull-center badge bg-green dis-block">
                                  @if ($expediente->exptipoproce_id != '1')
@@ -85,7 +85,7 @@
                                      </div>
                                  @endif
                                  @if (!currentUser()->hasRole('solicitante'))
-                                     {{ $expediente->estado->nombre_estado }}
+                                     {{ $expediente->estado->nombre_estado }} 
                                  @else
                                      En proceso
                                  @endif

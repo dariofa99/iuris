@@ -49,7 +49,7 @@
                                     <input type="hidden" name="search_onlyMy_exp" value="off">
                                     <label class="iuris-expediente-my-cases" for="search_onlyMy_exp">
                                         <span>
-                                            <strong><i class="fa fa-user"></i> <span class="iuris-expediente-filter-label--desktop">Mis casos asignados</span><span class="iuris-expediente-filter-label--mobile">Mis casos</span></strong>
+                                            <strong><i class="fa fa-user"></i> <span class="iuris-expediente-filter-label--desktop">Solo ver mis casos asignados</span><span class="iuris-expediente-filter-label--mobile">Mis casos</span></strong>
                                         </span>
                                         <span class="switch iuris-expediente-filter-switch">
                                             <input type="checkbox" aria-describedby="desChkVerMisCasos"
